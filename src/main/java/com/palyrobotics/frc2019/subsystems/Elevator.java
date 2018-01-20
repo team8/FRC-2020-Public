@@ -1,5 +1,6 @@
 package com.palyrobotics.frc2019.subsystems;
 
+
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.config.Gains;
@@ -48,6 +49,9 @@ public class Elevator extends Subsystem {
     private ElevatorState mElevatorState;
     private ClimberState mClimberState;
     private GearboxState mGearboxState;
+
+    //The variable used in the state machine
+    private ElevatorState mState;
 
     //Values for the bottom/top positions to be calibrated
     private Optional<Double> kElevatorBottomPosition = Optional.empty();
@@ -219,12 +223,6 @@ public class Elevator extends Subsystem {
                     break;
             }
         }
-        mElevatorWantedPosition.ifPresent(aDouble -> mWriter.addData("elevatorWantedPosition", aDouble));
-        mWriter.addData("elevatorSetpoint", mOutput.getSetpoint());
-        mWriter.addData("elevatorPosition", mRobotState.elevatorPosition);
-        mWriter.addData("elevatorVelocity", mRobotState.elevatorVelocity);
-        mClimberWantedPosition.ifPresent(aDouble -> mWriter.addData("climberWantedPosition", aDouble));
-        mWriter.addData("climberSetpoint", mOutput.getSetpoint());
     }
 
     /**
@@ -339,6 +337,7 @@ public class Elevator extends Subsystem {
                     return true;
                 }
             } else return true;
+
         }
         return false;
     }

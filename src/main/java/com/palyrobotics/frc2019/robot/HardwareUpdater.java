@@ -31,7 +31,6 @@ class HardwareUpdater {
 	//Subsystem references
 	private Drive mDrive;
 	private Arm mArm;
-
 	private Elevator mElevator;
 	private Shooter mShooter;
 	private Pusher mPusher;
@@ -412,6 +411,7 @@ class HardwareUpdater {
 		}
 		robotState.elevatorPosition = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition();
 		robotState.elevatorVelocity = HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark.getEncoder().getVelocity();
+
 		// Change HFX Talon location
 		robotState.elevatorHFX = HardwareAdapter.getInstance().getDrivetrain().rightMasterTalon.getSensorCollection().isRevLimitSwitchClosed();
 

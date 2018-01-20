@@ -88,7 +88,6 @@ public class RobotState {
     public double elevatorVelocity = 0;
     public boolean elevatorHFX = false;
 
-
 	//Robot position
 	public final int kObservationBufferSize = 100;
 	public final double kMaxTargetAge = 0.4;

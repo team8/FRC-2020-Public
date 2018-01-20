@@ -63,7 +63,6 @@ public class RoutineManagerTest {
 		mRoutineManager.reset(commands);
 		MockRoutine mRoutine = new MockRoutine();
 //		DrivetrainRoutine mDriveRoutine = new DrivetrainRoutine();
-
 		mRoutineManager.addNewRoutine(mRoutine);
 //		mRoutineManager.addNewRoutine(mDriveRoutine);
 
