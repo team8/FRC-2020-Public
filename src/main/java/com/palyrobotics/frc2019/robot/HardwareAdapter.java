@@ -55,6 +55,24 @@ public class HardwareAdapter {
 		}
 	}
 
+    /**
+     *  Elevator - 2 WPI_TalonSRx, 1 HFX, 1 Encoder
+     */
+    public static class ElevatorHardware {
+        private static ElevatorHardware instance = new ElevatorHardware();
+
+        private static ElevatorHardware getInstance() {
+            return instance;
+        }
+
+        public final WPI_TalonSRX elevatorMasterTalon;
+        public final WPI_TalonSRX elevatorSlaveTalon;
+
+        protected ElevatorHardware() {
+            elevatorMasterTalon = new WPI_TalonSRX(Constants.kForsetiElevatorMasterTalonID);
+            elevatorSlaveTalon = new WPI_TalonSRX(Constants.kForsetiElevatorSlaveTalonID);
+        }
+    }
 
 	/**
 	 * Arm - 1 WPI_TalonSRX, 1 WPI_VictorSPX
@@ -192,6 +210,10 @@ public class HardwareAdapter {
 	public DrivetrainHardware getDrivetrain() {
 		return DrivetrainHardware.getInstance();
 	}
+
+	public ElevatorHardware getElevator() {
+	    return ElevatorHardware.getInstance();
+    }
 
 	public ArmHardware getArm(){
 		return ArmHardware.getInstance(); 

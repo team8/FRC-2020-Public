@@ -59,6 +59,19 @@ public class Constants {
     public static double kLowerPlatformLength = 48.0;
     public static double kCargoLineGap = 21.5;
 
+    /**
+     * Elevator Constants
+     */
+    public static final double kNominalUpwardsOutput = 0.1;
+    public static final double kElevatorTopBottomDifferenceInches = 0.0;
+    public static final double kElevatorHFXAcceptableError = 0.01;
+    public static final double kElevatorBottomPositionInches = 0;
+    public static final double kElevatorHoldVoltage = 0.11;
+
+    public static double kElevatorUncalibratedManualPower;
+    public static double kElevatorClosedLoopManualControlPositionSensitivity = 500;//250;
+    public static double kElevatorConstantDownPower;
+
 	/**
 	 * Arm Constants
 	 */
@@ -106,6 +119,7 @@ public class Constants {
 	public static final double kDriveTicksPerInch = 4096 / (6.25 * Math.PI);
 	public static final double kArmTicksPerInch = 0;
 	public static final double kPusherTicksPerInch = 0;
+    public static final double kElevatorTicksPerInch = 0;
 	public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90;
 	public static final double kDriveSpeedUnitConversion = 4096 / (6.25 * Math.PI * 10);
 
@@ -127,6 +141,9 @@ public class Constants {
 	public static final double kAcceptableTurnAngleError = 5;
 	public static final double kAcceptableGyroZeroError = 3;
 	public static final double kAcceptableEncoderZeroError = 50;
+
+    public static final double kElevatorAcceptablePositionError = 40;
+    public static final double kElevatorAcceptableVelocityError = 0.01;
 
 	public static final double kArmAcceptableVelocityError = 0;
 	public static final double kArmAcceptableEncoderError = 0;
@@ -218,6 +235,12 @@ public class Constants {
 	public static final int kVidarRightDriveMasterDeviceID = 15;
 	public static final int kVidarRightDriveSlave1DeviceID = 14;
 	public static final int kVidarRightDriveSlave2DeviceID = 13;
+
+	//ELEVATOR
+    public static final int kForsetiElevatorMasterTalonID = 0;
+    public static final int kForsetiElevatorSlaveTalonID = 0;
+    public static final int kForsetiElevatorHFXID = 0;
+
 
 	//ARM
 	public static final int kForesetiArmMasterTalonID = 12;

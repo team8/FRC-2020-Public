@@ -70,6 +70,34 @@ public class Gains {
 	public static final double kVidarCascadingTurnkD = 5;
 	public static final double kVidarCascadingTurnIzone = 7.0;
 
+	//Elevator Gains
+    public static final double kForsetiElevatorHoldkP = 2.0;//0.1;
+    public static final double kForsetiElevatorHoldkI = 0;//0.002 / 2;
+    public static final double kForsetiElevatorHoldkD = 30.0;//85 / 2;
+    public static final double kForsetiElevatorHoldkF = 0;//2.624 / 2;
+    public static final int kForsetiElevatorHoldkIzone = 0;//800 / 2;
+    public static final double kForsetiElevatorHoldkRampRate = 0.0;
+    public static final Gains elevatorHold = new Gains(kForsetiElevatorHoldkP, kForsetiElevatorHoldkI, kForsetiElevatorHoldkD, kForsetiElevatorHoldkF,
+            kForsetiElevatorHoldkIzone, kForsetiElevatorHoldkRampRate);
+
+    public static final double kForsetiElevatorDownPositionkP = 0.3;
+    public static final double kForsetiElevatorDownPositionkI = 0.0;
+    public static final double kForsetiElevatorDownPositionkD = 50;
+    public static final double kForsetiElevatorDownPositionkF = 0.0;
+    public static final int kForsetiElevatorDownPositionkIzone = 0;
+    public static final double kForsetiElevatorDownPositionkRampRate = 0.0;
+    public static final Gains elevatorDownwardsPosition = new Gains(kForsetiElevatorDownPositionkP, kForsetiElevatorDownPositionkI, kForsetiElevatorDownPositionkD,
+            kForsetiElevatorDownPositionkF, kForsetiElevatorDownPositionkIzone, kForsetiElevatorDownPositionkRampRate);
+
+    public static final double kForsetiElevatorPositionkP = 2.0;
+    public static final double kForsetiElevatorPositionkI = 0.0;
+    public static final double kForsetiElevatorPositionkD = 70.0;
+    public static final double kForsetiElevatorPositionkF = 0.0;
+    public static final int kForsetiElevatorPositionkIzone = 0;
+    public static final double kForsetiElevatorPositionkRampRate = 0.0;
+    public static final Gains elevatorPosition = new Gains(kForsetiElevatorPositionkP, kForsetiElevatorPositionkI, kForsetiElevatorPositionkD,
+            kForsetiElevatorPositionkF, kForsetiElevatorPositionkIzone, kForsetiElevatorPositionkRampRate);
+
 	//Arm Constants 
 	public static final double kVidarArmDownPositionkP = 0.3;
 	public static final double kVidarArmDownPositionkI = 0.0;

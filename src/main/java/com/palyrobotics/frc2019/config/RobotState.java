@@ -82,7 +82,12 @@ public class RobotState {
 	public double pusherPosition = 0;
 	public double pusherVelocity = 0;
 	public boolean hasPusherStickyFaults = false;
-	
+
+	//Elevator sensor data
+    public double elevatorPosition = 0;
+    public double elevatorVelocity = 0;
+    public boolean elevatorHFX = false;
+
 
 	//Robot position
 	public final int kObservationBufferSize = 100;
