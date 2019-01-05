@@ -35,9 +35,9 @@ public class TestTrajectoryAutoMode extends AutoModeBase {
 		List<Waypoint> path = new ArrayList<>();
 
 		//Path 1: Forward and left
-		path.add(new Waypoint(new Translation2d(0, 0), 72.0));
-		path.add(new Waypoint(new Translation2d(110, 0), 72.0));
-		path.add(new Waypoint(new Translation2d(110, 80), 0.0));
+//		path.add(new Waypoint(new Translation2d(0, 0), 72.0));
+//		path.add(new Waypoint(new Translation2d(110, 0), 72.0));
+//		path.add(new Waypoint(new Translation2d(110, 80), 0.0));
 //		path.add(new Waypoint(new Translation2d(70, -70), 72.0));
 //		path.add(new Waypoint(new Translation2d(140, 0), 72.0));
 //		path.add(new Waypoint(new Translation2d(70, 70), 72.0));
@@ -51,6 +51,18 @@ public class TestTrajectoryAutoMode extends AutoModeBase {
 		 * Translation2d(120, 60), 6.0)); path.add(new Waypoint(new Translation2d(180,0), 6.0)); path.add(new Waypoint(new Translation2d(120,-60), 6.0));
 		 * path.add(new Waypoint(new Translation2d(60, 0), 6.0)); path.add(new Waypoint(new Translation2d(0, 0), 0.0));
 		 */
+
+		//Path 3: Full ten-point test course
+		path.add(new Waypoint(new Translation2d(0, 0)));
+		path.add(new Waypoint(new Translation2d(120, 0)));
+		path.add(new Waypoint(new Translation2d(0, 180)));
+		path.add(new Waypoint(new Translation2d(0, 225)));
+		path.add(new Waypoint(new Translation2d(120, 225)));
+		path.add(new Waypoint(new Translation2d(120, 200)));
+		path.add(new Waypoint(new Translation2d(60, 200)));
+		path.add(new Waypoint(new Translation2d(60, 100)));
+		path.add(new Waypoint(new Translation2d(120, 100)));
+		path.add(new Waypoint(new Translation2d(160, 125)));
 
 		ArrayList<Routine> routines = new ArrayList<>();
 //		routines.add(new DriveSensorResetRoutine());

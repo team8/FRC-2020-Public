@@ -1,14 +1,24 @@
 package com.palyrobotics.frc2018.util.trajectory;
 
-import javax.swing.text.html.Option;
+import com.palyrobotics.frc2018.config.Constants;
+import com.palyrobotics.frc2018.util.logger.Logger;
+
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * A Path is a recording of the path that the robot takes. Path objects consist of a List of Waypoints that the robot passes by. Using multiple Waypoints in a
  * Path object and the robot's current speed, the code can extrapolate future Waypoints and predict the robot's motion. It can also dictate the robot's motion
  * along the set path.
- * 
- * @author Team 254
+ *
+ * Various changes to path construction were made in accordance with team 1712's whitepaper: https://www.chiefdelphi.com/media/papers/3488?
+ *  These improvements are represented by the following methods:
+ *  {@link #injectPoints(List)} injectPoints}
+ *  {@link #smoothen(List) smoothen}
+ *  {@link #setVelocities(List) setVelocities}
+ *  {@link #getCurvature(Translation2d, Translation2d, Translation2d) getCurvature}
+ *
+ * @author Team 254, Calvin Yan
  */
 public class Path {
 	protected static final double kSegmentCompletePercentage = .9;
@@ -65,14 +75,17 @@ public class Path {
 
 	public Path(List<Waypoint> waypoints) {
 		mMarkersCrossed = new HashSet<String>();
+		injectPoints(waypoints);
+		smoothen(waypoints);
+		setVelocities(waypoints);
 		mWaypoints = waypoints;
 		mSegments = new ArrayList<PathSegment>();
 		for(int i = 0; i < waypoints.size() - 1; ++i) {
 			mSegments.add(new PathSegment(waypoints.get(i).position, waypoints.get(i + 1).position, waypoints.get(i).speed));
 		}
-		// If first waypoint is (0, 0), it is already complete
+		//The first waypoint is already complete
 		//If 1, assume sticking a point before this and this point needs to stay
-		if(mWaypoints.size() > 1 && mWaypoints.get(0).position.getX() == 0 && mWaypoints.get(0).position.getY() == 0) {
+		if(mWaypoints.size() > 1) {
 			Waypoint first_waypoint = mWaypoints.get(0);
 			if(first_waypoint.marker.isPresent()) {
 				mMarkersCrossed.add(first_waypoint.marker.get());
@@ -129,6 +142,112 @@ public class Path {
 			}
 		}
 		return rv;
+	}
+
+	// Add intermediate, closely-spaced points between waypoints to improve following
+	private void injectPoints(List<Waypoint> waypoints) {
+		// Path to insert points into
+		ArrayList<Waypoint> newPoints = new ArrayList<>(waypoints);
+
+		int index = 0; // Keep track of the index in newPoints to insert points into
+
+		for (int i = 0; i < waypoints.size() - 1; i++) {
+			Translation2d start = waypoints.get(i).position;
+			Translation2d end = waypoints.get(i+1).position;
+			double length = Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2));
+			// Portion of the segment's length occupied by one interval; needed for the interpolate() function
+			double interpolateX = Constants.kInsertionSpacingInches / length;
+			// Insert points on the segment using interpolation
+			for (double j = interpolateX; j < 1; j += interpolateX) {
+				newPoints.add(index++, new Waypoint(start.interpolate(end, j), waypoints.get(i+1).speed));
+			}
+			// Increment pointer so it inserts between the next pair of waypoints
+			index++;
+		}
+		waypoints = newPoints;
+	}
+
+	// Smooth the path using gradient descent; inspired by https://github.com/KHEngineering/SmoothPathPlanner/blob/11059aa2ec314ba20b364aeea3c968aca2672b49/src/usfirst/frc/team2168/robot/FalconPathPlanner.java#L214
+	private void smoothen(List<Waypoint> waypoints) {
+		ArrayList<Waypoint> oldPts = new ArrayList<>(waypoints);
+		ArrayList<Waypoint> newPts = new ArrayList<>(waypoints);
+		// Sum of the horizontal and vertical shifts of each point in one iteration of smoothing
+		double change = Constants.kSmoothingTolerance;
+		int numIters = 0;
+		// Perform smoothing passes until convergence
+		while (change >= Constants.kSmoothingTolerance && numIters <= Constants.kSmoothingMaxIters) {
+			change = 0.0;
+			// Smooth all points except for the final one
+			// We deleted the first waypoint at (0, 0) but for smoothing code to work we have to pretend it's still there
+			for (int i = 0; i < oldPts.size() - 1; i++) {
+				double x1 = (i > 0) ? newPts.get(i-1).position.getX() : 0;
+				double y1 = (i > 0) ? newPts.get(i-1).position.getY() : 0;
+				double x2 = newPts.get(i).position.getX();
+				double y2 = newPts.get(i).position.getY();
+				double x3 = newPts.get(i+1).position.getX();
+				double y3 = newPts.get(i+1).position.getY();
+				double x4 = oldPts.get(i).position.getX();
+				double y4 = oldPts.get(i).position.getY();
+
+				double changeX = Constants.kSmoothingWeightData * (x4 - x2) + Constants.kSmoothingWeight * (x1 + x3 - (2.0 * x2));
+				double changeY = Constants.kSmoothingWeightData * (y4 - y2) + Constants.kSmoothingWeight * (y1 + y3 - (2.0 * y2));
+				x2 += changeX;
+				y2 += changeY;
+				newPts.set(i, new Waypoint(new Translation2d(x2, y2), oldPts.get(i).speed));
+				change += Math.abs(changeX + changeY);
+			}
+			numIters++;
+		}
+
+		waypoints = newPts;
+	}
+
+	/*
+	 * Automatically calculate target velocities throughout the path. For each waypoint before the last one,
+	 * the velocity is the smaller value between Constants.kPathFollowingMaxVel and k/curvature, where k is an arbitrary constant.
+	 */
+
+	public void setVelocities(List<Waypoint> waypoints) {
+		for (int i = 0; i < waypoints.size() - 1; i++) {
+			Translation2d previous = (i == 0) ? new Translation2d(0, 0) : waypoints.get(i - 1).position;
+			Translation2d current = waypoints.get(i).position;
+			Translation2d next = waypoints.get(i + 1).position;
+			double maxVel = Math.min(Constants.kPathFollowingMaxVel, Constants.kTurnVelocityReduction / getCurvature(previous, current, next));
+			waypoints.set(i, new Waypoint(current, maxVel));
+		}
+	}
+
+	/*
+	 * Determine curvature of the circular arc connecting the current waypoint with those directly before and after it
+	 * Used for curvature calculation and adjustments to velocity around turns
+	 *
+	 * @param previous
+	 *            - the first waypoint in the path to be connected
+	 * @param current
+	 *            - the second waypoint to be connected. The curvature calculation applies to this point
+	 * @param next
+	 * 			  - the third waypoint in the path to be connected
+	 * @return - A circular arc representing the path, null if the arc is degenerate
+	 */
+	private static double getCurvature(Translation2d previous, Translation2d current, Translation2d next) {
+		double x1 = previous.getX();
+		double y1 = previous.getY();
+		double x2 = current.getX();
+		double y2 = current.getY();
+		double x3 = next.getX();
+		double y3 = next.getY();
+
+		// Avoid a divide by zero error
+		if (x1 == x2) x1 += .001;
+		double k1 = 0.5 * (x1 * x1 + y1 * y1 - x2 * x2 - y2 * y2)/(x1 - x2);
+		double k2 = (y1 - y2)/(x1 - x2);
+		double b = 0.5 * (x2 * x2 - 2 * x2 * k1 + y2 * y2 - x3 * x3 + 2 * x3 * k1 - y3 * y3)/(x3 * k2 - y3 + y2 - x2 * k2);
+		double a = k1 - k2 * b;
+
+		double radius = Math.sqrt(Math.pow(x1 - a, 2) + Math.pow(y1 - b, 2));
+		if (Double.isNaN(radius)) return 0;
+		return 1 / radius;
+
 	}
 
 	public Set<String> getMarkersCrossed() {

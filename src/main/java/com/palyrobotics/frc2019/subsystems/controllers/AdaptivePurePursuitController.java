@@ -23,13 +23,6 @@ import java.util.logging.Level;
 
 /**
  * Implements an adaptive pure pursuit controller. See: https://www.ri.cmu.edu/pub_files/pub1/kelly_alonzo_1994_4/kelly_alonzo_1994_4 .pdf
- * 
- * Improvements to the algorithm implemented from team 1712's whitepaper: https://www.chiefdelphi.com/media/papers/3488?
- * These improvements are represented by the following methods:
- * {@link #injectPoints(Path)} injectPoints}
- * {@link #smoothen(ArrayList) smoothen}
- * {@link #getCurvature(Translation2d, Translation2d, Translation2d) getCurvature}
- * {@link #setVelocities() setVelocities}
  *
  * Basically, we find a spot on the path we'd like to follow and calculate the wheel speeds necessary to make us land on that spot. The target spot is a
  * specified distance ahead of us, and we look further ahead the greater our tracking error.
@@ -48,11 +41,10 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 	double mPathCompletionTolerance;
 
 	public AdaptivePurePursuitController(double fixed_lookahead, double max_accel, double nominal_dt, Path path, boolean reversed,
-			double path_completion_tolerance) {
+										 double path_completion_tolerance) {
 		mFixedLookahead = fixed_lookahead;
 		mMaxAccel = max_accel;
-		mPath = new Path(smoothen(injectPoints(path)));
-		setVelocities();
+		mPath = path;
 		mDt = nominal_dt;
 		mLastCommand = null;
 		mReversed = reversed;
@@ -61,7 +53,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 
 	/**
 	 * Calculate the robot's required Delta (movement along an arc) based on the current robot pose and lookahead point.
-	 * 
+	 *
 	 * @param robot_pose
 	 *            - the current position of the robot denoted by its translation and rotation from the original position
 	 * @param now
@@ -73,13 +65,13 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		if(mReversed) {
 			pose = new RigidTransform2d(robot_pose.getTranslation(), robot_pose.getRotation().rotateBy(Rotation2d.fromRadians(Math.PI)));
 		}
-		
+
 		double distance_from_path = mPath.update(robot_pose.getTranslation());
 
 		PathSegment.Sample lookahead_point = mPath.getLookaheadPoint(robot_pose.getTranslation(), distance_from_path + mFixedLookahead);
 //		System.out.println("Current point = " + robot_pose.getTranslation() + " " + "Lookahead point = " + lookahead_point.translation);
 		//if (!mPath.getWaypoints().isEmpty()) System.out.println("First point = " + mPath.getWaypoints().get(0).position.toString());
-		
+
 		Optional<Circle> circle = joinPath(pose, lookahead_point.translation);
 
 		double speed = lookahead_point.speed;
@@ -115,7 +107,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		if(Math.abs(speed) > max_allowed_speed) {
 			speed = max_allowed_speed * Math.signum(speed);
 		}
-		
+
 		/*final double kMinSpeed = 4.0;
 		if(Math.abs(speed) < kMinSpeed) {
 			//Hack for dealing with problems tracking very low speeds with
@@ -137,7 +129,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 
 	/**
 	 * Returns the list of labeled waypoints (markers) that the robot has passed
-	 * 
+	 *
 	 * @return a set of Strings representing each of the crossed markers
 	 */
 	public Set<String> getMarkersCrossed() {
@@ -159,7 +151,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 
 	/**
 	 * Connect the current position and lookahead point with a circular arc
-	 * 
+	 *
 	 * @param robot_pose
 	 *            - the current translation and rotation of the robot
 	 * @param lookahead_point
@@ -197,41 +189,8 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 	}
 
 	/**
-	 * Determine curvature of the circular arc connecting the current waypoint with those directly before and after it
-	 * Used for curvature calculation and adjustments to velocity around turns
-	 *
-	 * @param previous
-	 *            - the first waypoint in the path to be connected
-	 * @param current
-	 *            - the second waypoint to be connected. The curvature calculation applies to this point
-	 * @param next
-	 * 			  - the third waypoint in the path to be connected
-	 * @return - A circular arc representing the path, null if the arc is degenerate
-	 */
-	public static double getCurvature(Translation2d previous, Translation2d current, Translation2d next) {
-		double x1 = previous.getX();
-		double y1 = previous.getY();
-		double x2 = current.getX();
-		double y2 = current.getY();
-		double x3 = next.getX();
-		double y3 = next.getY();
-
-		// Avoid a divide by zero error
-		if (x1 == x2) x1 += .001;
-		double k1 = 0.5 * (x1 * x1 + y1 * y1 - x2 * x2 - y2 * y2)/(x1 - x2);
-		double k2 = (y1 - y2)/(x1 - x2);
-		double b = 0.5 * (x2 * x2 - 2 * x2 * k1 + y2 * y2 - x3 * x3 + 2 * x3 * k1 - y3 * y3)/(x3 * k2 - y3 + y2 - x2 * k2);
-		double a = k1 - k2 * b;
-
-		double radius = Math.sqrt(Math.pow(x1 - a, 2) + Math.pow(y1 - b, 2));
-		if (Double.isNaN(radius)) return 0;
-		return 1 / radius;
-
-	}
-
-	/**
 	 * Calculate the next Delta and convert it to a drive signal
-	 * 
+	 *
 	 * @param state
 	 *            - the current robot state, currently unused
 	 * @return the left and right drive voltage outputs needed to move in the calculated Delta
@@ -260,80 +219,6 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 				right = new TalonSRXOutput(ControlMode.Velocity, Gains.forsetiVelocity, setpoint.right * Constants.kDriveSpeedUnitConversion);
 //		System.out.println("Left output = " + left + " " + "Right output = " + right);
 		return new DriveSignal(left, right);
-	}
-
-	// Add intermediate, closely-spaced points between waypoints to improve following
-	private ArrayList<Waypoint> injectPoints(Path path) {
-		// Path to insert points into
-		ArrayList<Waypoint> newPoints = new ArrayList<>(path.getWaypoints());
-		ArrayList<PathSegment> segments = new ArrayList<>(path.getSegments());
-
-		int index = 0; // Keep track of the index in newPoints to insert points into
-
-		for (PathSegment segment : segments) {
-			Translation2d start = segment.getStart();
-			Translation2d end = segment.getEnd();
-			// Portion of the segment's length occupied by one interval; needed for the interpolate() function
-			double interpolateX = Constants.kInsertionSpacingInches / segment.getLength();
-			// Insert points on the segment using interpolation
-			for (double i = interpolateX; i < 1; i += interpolateX) {
-				newPoints.add(index++, new Waypoint(start.interpolate(end, i),segment.getSpeed()));
-			}
-			// Increment pointer so it inserts between the next pair of waypoints
-			index++;
-		}
-		return newPoints;
-	}
-
-	// Smooth the path using gradient descent; inspired by https://github.com/KHEngineering/SmoothPathPlanner/blob/11059aa2ec314ba20b364aeea3c968aca2672b49/src/usfirst/frc/team2168/robot/FalconPathPlanner.java#L214
-	private ArrayList<Waypoint> smoothen(ArrayList<Waypoint> pts) {
-		ArrayList<Waypoint> oldPts = new ArrayList<>(pts);
-		ArrayList<Waypoint> newPts = new ArrayList<>(pts);
-		// Sum of the horizontal and vertical shifts of each point in one iteration of smoothing
-		double change = Constants.kSmoothingTolerance;
-		int numIters = 0;
-		// Perform smoothing passes until convergence
-		while (change >= Constants.kSmoothingTolerance && numIters <= Constants.kSmoothingMaxIters) {
-			change = 0.0;
-			// Smooth all points except for the final one
-			// We deleted the first waypoint at (0, 0) but for smoothing code to work we have to pretend it's still there
-			for (int i = 0; i < oldPts.size() - 1; i++) {
-				double x1 = (i > 0) ? newPts.get(i-1).position.getX() : 0;
-				double y1 = (i > 0) ? newPts.get(i-1).position.getY() : 0;
-				double x2 = newPts.get(i).position.getX();
-				double y2 = newPts.get(i).position.getY();
-				double x3 = newPts.get(i+1).position.getX();
-				double y3 = newPts.get(i+1).position.getY();
-				double x4 = oldPts.get(i).position.getX();
-				double y4 = oldPts.get(i).position.getY();
-
-				double changeX = Constants.kSmoothingWeightData * (x4 - x2) + Constants.kSmoothingWeight * (x1 + x3 - (2.0 * x2));
-				double changeY = Constants.kSmoothingWeightData * (y4 - y2) + Constants.kSmoothingWeight * (y1 + y3 - (2.0 * y2));
-				x2 += changeX;
-				y2 += changeY;
-				newPts.set(i, new Waypoint(new Translation2d(x2, y2), oldPts.get(i).speed));
-				change += Math.abs(changeX + changeY);	
-			}
-			numIters++;
-		}
-
-		return newPts;
-	}
-
-	/*
-	 * Automatically calculate target velocities throughout the path. For each waypoint before the last one,
-	 * the velocity is the smaller value between Constants.kPathFollowingMaxVel and k/curvature, where k is an arbitrary constant.
-	 */
-
-	public void setVelocities() {
-		List<Waypoint> points = mPath.getWaypoints();
-		for (int i = 0; i < points.size() - 1; i++) {
-			Translation2d previous = (i == 0) ? new Translation2d(0, 0) : points.get(i - 1).position;
-			Translation2d current = points.get(i).position;
-			Translation2d next = points.get(i+1).position;
-			double maxVel = Math.min(Constants.kPathFollowingMaxVel, Constants.kTurnVelocityReduction/getCurvature(previous, current, next));
-			points.set(i, new Waypoint(current, maxVel));
-		}
 	}
 
 

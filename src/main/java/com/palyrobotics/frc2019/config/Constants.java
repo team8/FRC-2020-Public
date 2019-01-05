@@ -224,7 +224,7 @@ public class Constants {
 	public static final double kSmoothingWeightData = 1 - kSmoothingWeight;
 	public static final double kSmoothingTolerance = 0.001; // When the change in path falls below the threshold it is basically converged
 	public static final double kSmoothingMaxIters = 10000;
-	public static final double kTurnVelocityReduction = 5; // A constant for reducing following speed during turns; 1 for slowest turning, 5 for fastest
+	public static final double kTurnVelocityReduction = 2; // A constant for reducing following speed during turns; 1 for slowest turning, 5 for fastest
 	public static final double kDriveWheelDiameterInches = 6.25;
 	public static final double kTrackLengthInches = 8.2;
 	public static final double kTrackWidthInches = 25.4;
@@ -232,7 +232,7 @@ public class Constants {
 	public static final double kTrackScrubFactor = .9;
 	public static final double kPathFollowingLookahead = 35.0;
 	public static final double kPathFollowingMaxAccel = 120;
-	public static final double kPathFollowingMaxVel = 200.0;
+	public static final double kPathFollowingMaxVel = 100.0;
 	//public static final double kPathFollowingMaxVel = 5 * kPathFollowingMaxAccel;
 	public static final double kPathFollowingTolerance = 0.20;
 
