@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2018.util.trajectory;
+package com.palyrobotics.frc2019.util.trajectory;
 
 /**
  * InverseInterpolable is an interface used by an Interpolating Tree as the Key type. Given two endpoint keys and a third query key, an InverseInterpolable

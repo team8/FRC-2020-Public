@@ -1,17 +1,17 @@
-package com.palyrobotics.frc2018.subsystems;
+package com.palyrobotics.frc2019.subsystems;
 
-import com.palyrobotics.frc2018.config.Commands;
-import com.palyrobotics.frc2018.config.Constants;
-import com.palyrobotics.frc2018.config.RobotState;
-import com.palyrobotics.frc2018.config.dashboard.DashboardManager;
-import com.palyrobotics.frc2018.config.dashboard.DashboardValue;
-import com.palyrobotics.frc2018.subsystems.controllers.*;
-import com.palyrobotics.frc2018.util.csvlogger.CSVWriter;
-import com.palyrobotics.frc2018.util.CheesyDriveHelper;
-import com.palyrobotics.frc2018.util.DriveSignal;
-import com.palyrobotics.frc2018.util.Pose;
-import com.palyrobotics.frc2018.util.logger.Logger;
-import com.palyrobotics.frc2018.util.trajectory.Path;
+import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
+import com.palyrobotics.frc2019.config.dashboard.DashboardValue;
+import com.palyrobotics.frc2019.subsystems.controllers.*;
+import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2019.util.CheesyDriveHelper;
+import com.palyrobotics.frc2019.util.DriveSignal;
+import com.palyrobotics.frc2019.util.Pose;
+import com.palyrobotics.frc2019.util.logger.Logger;
+import com.palyrobotics.frc2019.util.trajectory.Path;
 
 import java.util.logging.Level;
 

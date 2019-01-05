@@ -1,6 +1,6 @@
-package com.palyrobotics.frc2018.vision.util;
+package com.palyrobotics.frc2019.vision.util;
 
-import com.palyrobotics.frc2018.config.Constants;
+import com.palyrobotics.frc2019.config.Constants;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

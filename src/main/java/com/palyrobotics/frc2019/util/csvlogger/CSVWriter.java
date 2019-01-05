@@ -1,6 +1,6 @@
-package com.palyrobotics.frc2018.util.csvlogger;
+package com.palyrobotics.frc2019.util.csvlogger;
 
-import com.palyrobotics.frc2018.config.RobotState;
+import com.palyrobotics.frc2019.config.RobotState;
 
 import java.io.File;
 import java.io.FileWriter;

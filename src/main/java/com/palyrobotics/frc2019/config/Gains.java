@@ -1,7 +1,7 @@
-package com.palyrobotics.frc2018.config;
+package com.palyrobotics.frc2019.config;
 
-import com.palyrobotics.frc2018.config.dashboard.DashboardManager;
-import com.palyrobotics.frc2018.util.logger.Logger;
+import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
+import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.logging.Level;
 

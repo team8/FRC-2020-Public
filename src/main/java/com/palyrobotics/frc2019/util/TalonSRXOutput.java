@@ -1,7 +1,7 @@
-package com.palyrobotics.frc2018.util;
+package com.palyrobotics.frc2019.util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.palyrobotics.frc2018.config.Gains;
+import com.palyrobotics.frc2019.config.Gains;
 
 /**
  * Created by Nihar on 1/14/17. Mocks the output of a CANTalon's configuration Allows passthrough of -1 to 1 mSignal Allows configuration for offboard SRX

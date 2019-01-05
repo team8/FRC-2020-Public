@@ -1,10 +1,10 @@
-package com.palyrobotics.frc2018.behavior.routines.intake;
+package com.palyrobotics.frc2019.behavior.routines.intake;
 
-import com.palyrobotics.frc2018.behavior.Routine;
-import com.palyrobotics.frc2018.config.Commands;
-import com.palyrobotics.frc2018.subsystems.Intake;
-import com.palyrobotics.frc2018.subsystems.Subsystem;
-import com.palyrobotics.frc2018.util.logger.Logger;
+import com.palyrobotics.frc2019.behavior.Routine;
+import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.subsystems.Intake;
+import com.palyrobotics.frc2019.subsystems.Subsystem;
+import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.logging.Level;
 

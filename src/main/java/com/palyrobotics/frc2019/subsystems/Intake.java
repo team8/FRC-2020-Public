@@ -1,13 +1,13 @@
-package com.palyrobotics.frc2018.subsystems;
+package com.palyrobotics.frc2019.subsystems;
 
-import com.palyrobotics.frc2018.config.Commands;
-import com.palyrobotics.frc2018.config.Constants;
-import com.palyrobotics.frc2018.config.RobotState;
-import com.palyrobotics.frc2018.robot.HardwareAdapter;
-import com.palyrobotics.frc2018.util.LEDColor;
-import com.palyrobotics.frc2018.util.TalonSRXOutput;
-import com.palyrobotics.frc2018.util.csvlogger.CSVWriter;
-import com.palyrobotics.frc2018.util.logger.LeveledString;
+import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.robot.HardwareAdapter;
+import com.palyrobotics.frc2019.util.LEDColor;
+import com.palyrobotics.frc2019.util.TalonSRXOutput;
+import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2019.util.logger.LeveledString;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**

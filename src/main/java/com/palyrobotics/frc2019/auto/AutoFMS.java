@@ -1,6 +1,6 @@
-package com.palyrobotics.frc2018.auto;
+package com.palyrobotics.frc2019.auto;
 
-import com.palyrobotics.frc2018.util.logger.Logger;
+import com.palyrobotics.frc2019.util.logger.Logger;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import java.util.logging.Level;

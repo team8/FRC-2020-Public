@@ -1,11 +1,11 @@
-package com.palyrobotics.frc2018.vision;
+package com.palyrobotics.frc2019.vision;
 
-import com.palyrobotics.frc2018.config.Constants;
-import com.palyrobotics.frc2018.vision.networking.VisionDataReceiver;
-import com.palyrobotics.frc2018.vision.networking.VisionVideoServer;
-import com.palyrobotics.frc2018.vision.util.AbstractVisionThread;
-import com.palyrobotics.frc2018.vision.util.commandline.CommandExecutor;
-import com.palyrobotics.frc2018.vision.util.commandline.DeviceStatus;
+import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.vision.networking.VisionDataReceiver;
+import com.palyrobotics.frc2019.vision.networking.VisionVideoServer;
+import com.palyrobotics.frc2019.vision.util.AbstractVisionThread;
+import com.palyrobotics.frc2019.vision.util.commandline.CommandExecutor;
+import com.palyrobotics.frc2019.vision.util.commandline.DeviceStatus;
 
 import java.util.logging.Level;
 

@@ -1,7 +1,7 @@
-package com.palyrobotics.frc2018.subsystems;
+package com.palyrobotics.frc2019.subsystems;
 
-import com.palyrobotics.frc2018.config.Commands;
-import com.palyrobotics.frc2018.config.RobotState;
+import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.config.RobotState;
 
 public abstract class Subsystem {
 	private String mName;

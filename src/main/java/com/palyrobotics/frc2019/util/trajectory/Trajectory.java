@@ -1,6 +1,6 @@
-package com.palyrobotics.frc2018.util.trajectory;
+package com.palyrobotics.frc2019.util.trajectory;
 
-import com.palyrobotics.frc2018.util.ChezyMath;
+import com.palyrobotics.frc2019.util.ChezyMath;
 
 /**
  * Implementation of a Trajectory using arrays as the underlying storage mechanism.

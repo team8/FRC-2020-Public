@@ -1,6 +1,6 @@
-package com.palyrobotics.frc2018.vision.networking.recievers;
+package com.palyrobotics.frc2019.vision.networking.recievers;
 
-import com.palyrobotics.frc2018.vision.util.AbstractVisionServer;
+import com.palyrobotics.frc2019.vision.util.AbstractVisionServer;
 
 import java.io.DataInputStream;
 import java.io.EOFException;

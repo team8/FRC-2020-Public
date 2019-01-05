@@ -1,8 +1,8 @@
-package com.palyrobotics.frc2018.vision.util.data;
+package com.palyrobotics.frc2019.vision.util.data;
 
-import com.palyrobotics.frc2018.vision.util.synchronization.AutoCloseableLock;
-import com.palyrobotics.frc2018.vision.util.synchronization.DataExistsCallback;
-import com.palyrobotics.frc2018.vision.util.synchronization.ReadWriteLock;
+import com.palyrobotics.frc2019.vision.util.synchronization.AutoCloseableLock;
+import com.palyrobotics.frc2019.vision.util.synchronization.DataExistsCallback;
+import com.palyrobotics.frc2019.vision.util.synchronization.ReadWriteLock;
 
 public class SynchronizedVisionDataUnit<T> extends VisionDataUnit<T> {
 

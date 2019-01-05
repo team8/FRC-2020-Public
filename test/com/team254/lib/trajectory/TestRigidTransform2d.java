@@ -1,8 +1,8 @@
 package com.team254.lib.trajectory;
 
-import com.palyrobotics.frc2018.util.trajectory.RigidTransform2d;
-import com.palyrobotics.frc2018.util.trajectory.Rotation2d;
-import com.palyrobotics.frc2018.util.trajectory.Translation2d;
+import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
+import com.palyrobotics.frc2019.util.trajectory.Rotation2d;
+import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

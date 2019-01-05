@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2018.util.trajectory;
+package com.palyrobotics.frc2019.util.trajectory;
 
 import edu.wpi.first.wpilibj.Timer;
 

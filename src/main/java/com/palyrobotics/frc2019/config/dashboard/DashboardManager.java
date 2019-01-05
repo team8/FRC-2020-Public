@@ -1,6 +1,6 @@
-package com.palyrobotics.frc2018.config.dashboard;
+package com.palyrobotics.frc2019.config.dashboard;
 
-import com.palyrobotics.frc2018.util.logger.Logger;
+import com.palyrobotics.frc2019.util.logger.Logger;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 

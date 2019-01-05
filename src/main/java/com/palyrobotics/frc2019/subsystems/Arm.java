@@ -1,11 +1,11 @@
-package com.palyrobotics.frc2018.subsystems;
+package com.palyrobotics.frc2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.palyrobotics.frc2018.config.Commands;
-import com.palyrobotics.frc2018.config.Constants;
-import com.palyrobotics.frc2018.config.Gains;
-import com.palyrobotics.frc2018.config.RobotState;
-import com.palyrobotics.frc2018.util.TalonSRXOutput;
+import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Gains;
+import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.util.TalonSRXOutput;
 
 public class Arm extends Subsystem {
 	private static Arm instance = new Arm("Arm");

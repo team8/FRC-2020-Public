@@ -1,7 +1,7 @@
-package com.palyrobotics.frc2018.behavior;
+package com.palyrobotics.frc2019.behavior;
 
-import com.palyrobotics.frc2018.config.Commands;
-import com.palyrobotics.frc2018.subsystems.Subsystem;
+import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.subsystems.Subsystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;

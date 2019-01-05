@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2018.util.trajectory;
+package com.palyrobotics.frc2019.util.trajectory;
 
 import com.palyrobotics.frc2018.config.Constants;
 import com.palyrobotics.frc2018.util.logger.Logger;

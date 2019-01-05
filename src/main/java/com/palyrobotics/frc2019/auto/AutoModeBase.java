@@ -1,8 +1,8 @@
-package com.palyrobotics.frc2018.auto;
+package com.palyrobotics.frc2019.auto;
 
-import com.palyrobotics.frc2018.behavior.Routine;
-import com.palyrobotics.frc2018.config.AllianceDistances;
-import com.palyrobotics.frc2018.config.AutoDistances;
+import com.palyrobotics.frc2019.behavior.Routine;
+import com.palyrobotics.frc2019.config.AllianceDistances;
+import com.palyrobotics.frc2019.config.AutoDistances;
 
 public abstract class AutoModeBase {
 	protected boolean active = false;

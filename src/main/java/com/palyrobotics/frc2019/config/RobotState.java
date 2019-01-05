@@ -1,11 +1,11 @@
-package com.palyrobotics.frc2018.config;
+package com.palyrobotics.frc2019.config;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.palyrobotics.frc2018.behavior.Routine;
-import com.palyrobotics.frc2018.util.JoystickInput;
-import com.palyrobotics.frc2018.util.Pose;
-import com.palyrobotics.frc2018.util.XboxInput;
-import com.palyrobotics.frc2018.util.trajectory.*;
+import com.palyrobotics.frc2019.behavior.Routine;
+import com.palyrobotics.frc2019.util.JoystickInput;
+import com.palyrobotics.frc2019.util.Pose;
+import com.palyrobotics.frc2019.util.XboxInput;
+import com.palyrobotics.frc2019.util.trajectory.*;
 
 import java.util.*;
 

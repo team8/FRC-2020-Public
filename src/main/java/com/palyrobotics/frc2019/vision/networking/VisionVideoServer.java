@@ -1,7 +1,7 @@
-package com.palyrobotics.frc2018.vision.networking;
+package com.palyrobotics.frc2019.vision.networking;
 
-import com.palyrobotics.frc2018.vision.VisionData;
-import com.palyrobotics.frc2018.vision.util.AbstractVisionServer;
+import com.palyrobotics.frc2019.vision.VisionData;
+import com.palyrobotics.frc2019.vision.util.AbstractVisionServer;
 
 import java.io.*;
 import java.util.concurrent.ConcurrentLinkedQueue;

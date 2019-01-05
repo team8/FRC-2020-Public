@@ -1,7 +1,7 @@
-package com.palyrobotics.frc2018.vision.util.commandline;
+package com.palyrobotics.frc2019.vision.util.commandline;
 
-import com.palyrobotics.frc2018.config.Constants;
-import com.palyrobotics.frc2018.util.logger.Logger;
+import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.logging.Level;
 

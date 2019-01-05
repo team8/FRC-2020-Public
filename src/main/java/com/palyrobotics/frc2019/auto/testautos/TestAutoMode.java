@@ -1,13 +1,13 @@
-package com.palyrobotics.frc2018.auto.testautos;
+package com.palyrobotics.frc2019.auto.testautos;
 
-import com.palyrobotics.frc2018.auto.AutoModeBase;
-import com.palyrobotics.frc2018.behavior.Routine;
-import com.palyrobotics.frc2018.behavior.SequentialRoutine;
-import com.palyrobotics.frc2018.behavior.routines.drive.*;
-import com.palyrobotics.frc2018.config.Constants;
-import com.palyrobotics.frc2018.config.Gains;
-import com.palyrobotics.frc2018.util.DriveSignal;
-import com.palyrobotics.frc2018.util.logger.Logger;
+import com.palyrobotics.frc2019.auto.AutoModeBase;
+import com.palyrobotics.frc2019.behavior.Routine;
+import com.palyrobotics.frc2019.behavior.SequentialRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.*;
+import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Gains;
+import com.palyrobotics.frc2019.util.DriveSignal;
+import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.logging.Level;

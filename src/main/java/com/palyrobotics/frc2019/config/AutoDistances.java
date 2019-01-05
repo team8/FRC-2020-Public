@@ -1,10 +1,10 @@
-package com.palyrobotics.frc2018.config;
+package com.palyrobotics.frc2019.config;
 
 import java.io.File;
 import java.util.logging.Level;
 
-import com.palyrobotics.frc2018.util.logger.Logger;
-import com.palyrobotics.frc2018.util.JSONFormatter;
+import com.palyrobotics.frc2019.util.logger.Logger;
+import com.palyrobotics.frc2019.util.JSONFormatter;
 
 /**
  * Created by Eric on 2/12/18

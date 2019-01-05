@@ -1,8 +1,8 @@
-package com.palyrobotics.frc2018.util;
+package com.palyrobotics.frc2019.util;
 
-import com.palyrobotics.frc2018.config.Commands;
-import com.palyrobotics.frc2018.config.Constants;
-import com.palyrobotics.frc2018.config.RobotState;
+import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.RobotState;
 
 /**
  * CheesyDriveHelper implements the calculations used in CheesyDrive for teleop control. Returns a DriveSignal for the motor output

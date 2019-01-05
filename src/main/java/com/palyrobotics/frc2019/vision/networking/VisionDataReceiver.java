@@ -1,7 +1,7 @@
-package com.palyrobotics.frc2018.vision.networking;
+package com.palyrobotics.frc2019.vision.networking;
 
-import com.palyrobotics.frc2018.vision.VisionData;
-import com.palyrobotics.frc2018.vision.networking.recievers.SocketReceiver;
+import com.palyrobotics.frc2019.vision.VisionData;
+import com.palyrobotics.frc2019.vision.networking.recievers.SocketReceiver;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

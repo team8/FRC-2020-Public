@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2018.util.trajectory;
+package com.palyrobotics.frc2019.util.trajectory;
 
 /**
  * A PathSegment consists of two Translation2d objects (the start and end points) as well as the speed of the robot.

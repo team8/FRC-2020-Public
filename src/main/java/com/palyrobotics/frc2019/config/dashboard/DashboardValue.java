@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2018.config.dashboard;
+package com.palyrobotics.frc2019.config.dashboard;
 
 public class DashboardValue {
 

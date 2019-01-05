@@ -1,13 +1,13 @@
-package com.palyrobotics.frc2018.auto.testautos;
+package com.palyrobotics.frc2019.auto.testautos;
 
-import com.palyrobotics.frc2018.auto.AutoModeBase;
-import com.palyrobotics.frc2018.behavior.Routine;
-import com.palyrobotics.frc2018.behavior.SequentialRoutine;
-import com.palyrobotics.frc2018.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2018.behavior.routines.drive.DriveSensorResetRoutine;
-import com.palyrobotics.frc2018.util.trajectory.Path;
-import com.palyrobotics.frc2018.util.trajectory.Path.Waypoint;
-import com.palyrobotics.frc2018.util.trajectory.Translation2d;
+import com.palyrobotics.frc2019.auto.AutoModeBase;
+import com.palyrobotics.frc2019.behavior.Routine;
+import com.palyrobotics.frc2019.behavior.SequentialRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
+import com.palyrobotics.frc2019.util.trajectory.Path;
+import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
+import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 
 import java.util.ArrayList;
 import java.util.List;

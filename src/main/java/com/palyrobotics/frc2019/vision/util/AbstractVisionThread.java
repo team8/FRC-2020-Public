@@ -1,6 +1,6 @@
-package com.palyrobotics.frc2018.vision.util;
+package com.palyrobotics.frc2019.vision.util;
 
-import com.palyrobotics.frc2018.util.logger.Logger;
+import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.logging.Level;
 

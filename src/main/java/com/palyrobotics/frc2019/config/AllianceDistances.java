@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2018.config;
+package com.palyrobotics.frc2019.config;
 
 /**
  * Contains the field distances for an alliance
