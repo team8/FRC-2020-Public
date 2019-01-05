@@ -1,0 +1,1 @@
+scp admin@roborio-8-frc.local:/home/lvuser/canlog.csv canlog.csv
