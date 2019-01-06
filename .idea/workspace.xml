@@ -2,380 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="85d3b774-2889-44db-ad29-f6e79ac3b95c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/Routine.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/Gains.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/driveteam/DriverProfiles$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/driveteam/OperatorProfiles$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/driveteam/OperatorProfiles.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/HardwareAdapter.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Drive$DriveController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Intake.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/CheesyDriveHelper$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/LEDColor.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/archive/ProportionalDriveHelper.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/Kinematics.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/VisionData$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/networking/VisionVideoServer$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/networking/recievers/SocketReceiver$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/auto/AutoGrapher.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/auto/AutoModeSelectorTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/auto/PointTester.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/behavior/DrivetrainRoutine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/behavior/ElevatorCustomPositioningRoutineTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/behavior/IntakeRoutineTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/behavior/MockRoutine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/behavior/RoutineManagerTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/config/CalibrationCalculator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/config/CommandsTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/config/MockCommands.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/config/MockRobotState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/config/RobotStateTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/robot/MockRobot.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/subsystems/ClimberTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/subsystems/DriveTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/subsystems/ElevatorSimulation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/subsystems/ElevatorTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/subsystems/IntakeTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/subsystems/SubsystemUpdateTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/suites/IntegrationTestSuite.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/suites/UnitTestSuite.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/util/CheesyDriveHelperTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/util/JSONFormatterTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/util/MockJoystickInput.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/util/MockJoystickInputTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/util/RandomTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/vision/AndroidComputerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileContent/fileContent.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.9/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/taskHistory/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.9/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.9/taskHistory/taskHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FRC-2019-Private.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FRC-2019-Private.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/AutoFMS$Side.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/AutoFMS$Side.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/AutoFMS.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/AutoFMS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/AutoModeBase$Alliance.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/AutoModeBase$Alliance.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/AutoModeBase$Decision.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/AutoModeBase$Decision.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/AutoModeBase$Priority.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/AutoModeBase$Priority.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/AutoModeBase$SecondSideDecision.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/AutoModeBase$SecondSideDecision.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/AutoModeBase$StartingPosition.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/AutoModeBase$StartingPosition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/AutoModeBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/AutoModeBase.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/AutoModeSelector.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/AutoModeSelector.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/modes/BaselineAutoMode.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/modes/BaselineAutoMode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/testautos/FTestAuto.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/testautos/FTestAuto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/testautos/TestAutoMode.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/testautos/TestAutoMode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/auto/testautos/TestTrajectoryAutoMode.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/auto/testautos/TestTrajectoryAutoMode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/ParallelRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/ParallelRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/Routine.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/RoutineManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/RoutineManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/SequentialRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/SequentialRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/TimedRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/TimedRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/WaypointTriggerRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/WaypointTriggerRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/TimeoutRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/TimeoutRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/BBTurnAngleRoutine$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/BBTurnAngleRoutine$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/BBTurnAngleRoutine$GyroBBState.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/BBTurnAngleRoutine$GyroBBState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/BBTurnAngleRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/BBTurnAngleRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/CascadingGyroEncoderTurnAngleRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/CascadingGyroEncoderTurnAngleRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/DrivePathRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/DrivePathRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/DriveSensorResetRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/DriveSensorResetRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/DriveStraightRoutine$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/DriveStraightRoutine$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/DriveStraightRoutine$DriveStraightRoutineState.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/DriveStraightRoutine$DriveStraightRoutineState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/DriveStraightRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/DriveStraightRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/DriveTimeRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/DriveTimeRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/DriveUntilHasCubeRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/DriveUntilHasCubeRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/EncoderDriveRoutine$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/EncoderDriveRoutine$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/EncoderDriveRoutine$EncoderDriveRoutineStates.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/EncoderDriveRoutine$EncoderDriveRoutineStates.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/EncoderDriveRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/EncoderDriveRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/EncoderTurnAngleRoutine$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/EncoderTurnAngleRoutine$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/EncoderTurnAngleRoutine$State.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/EncoderTurnAngleRoutine$State.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/EncoderTurnAngleRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/EncoderTurnAngleRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/GyroMotionMagicTurnAngleRoutine$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/GyroMotionMagicTurnAngleRoutine$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/GyroMotionMagicTurnAngleRoutine$State.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/GyroMotionMagicTurnAngleRoutine$State.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/GyroMotionMagicTurnAngleRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/GyroMotionMagicTurnAngleRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/SafetyTurnAngleRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/SafetyTurnAngleRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/TalonSRXRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/TalonSRXRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/TimedDriveRoutine$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/TimedDriveRoutine$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/TimedDriveRoutine$DriveStraightRoutineState.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/TimedDriveRoutine$DriveStraightRoutineState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/drive/TimedDriveRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/drive/TimedDriveRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/intake/IntakeCloseRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/intake/IntakeCloseRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/intake/IntakeCubeRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/intake/IntakeCubeRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/intake/IntakeOpenRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/intake/IntakeOpenRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/intake/IntakeSensorStopRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/intake/IntakeSensorStopRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/behavior/routines/intake/IntakeWheelRoutine.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/behavior/routines/intake/IntakeWheelRoutine.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/AllianceDistances.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/AllianceDistances.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/AutoDistances$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/AutoDistances$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/AutoDistances.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/AutoDistances.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/Commands$Setpoints.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/Commands$Setpoints.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/Commands.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/Commands.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/Constants$DriverName.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/Constants$DriverName.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/Constants$FieldName.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/Constants$FieldName.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/Constants$OperatorName.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/Constants$OperatorName.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/Constants$RobotName.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/Constants$RobotName.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/Constants.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/Constants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/Gains$TrajectoryGains.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/Gains$TrajectoryGains.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/Gains.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/RobotState$GamePeriod.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/RobotState$GamePeriod.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/RobotState.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/RobotState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/dashboard/DashboardManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/dashboard/DashboardManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/dashboard/DashboardValue.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/dashboard/DashboardValue.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/driveteam/DriveTeam.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/driveteam/DriveTeam.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/driveteam/DriverProfiles$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/driveteam/DriverProfiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/config/driveteam/DriverProfiles.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/driveteam/OperatorProfiles$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/config/driveteam/OperatorProfiles.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/HardwareAdapter$ArmHardware.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/HardwareAdapter$ArmHardware.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/HardwareAdapter$DrivetrainHardware.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/HardwareAdapter$DrivetrainHardware.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/HardwareAdapter$IntakeHardware.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/HardwareAdapter$IntakeHardware.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/HardwareAdapter$Joysticks.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/HardwareAdapter$Joysticks.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/HardwareAdapter$MiscellaneousHardware.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/HardwareAdapter$MiscellaneousHardware.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/HardwareAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/HardwareUpdater$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/HardwareUpdater$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/HardwareUpdater.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/HardwareUpdater.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/OperatorInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/OperatorInterface.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/Robot.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/Robot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/robot/Serializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/robot/Serializer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Arm$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Arm$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Arm$ArmState.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Arm$ArmState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Arm.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Arm.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Drive$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Drive$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Drive$DriveController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Drive$DriveState.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Drive$DriveState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Drive.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Drive.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Intake$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Intake$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Intake$OpenCloseState.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Intake$OpenCloseState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Intake$WheelState.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Intake$WheelState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Intake.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/Subsystem.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/Subsystem.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/controllers/AdaptivePurePursuitController$Circle.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/controllers/AdaptivePurePursuitController$Circle.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/controllers/AdaptivePurePursuitController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/controllers/AdaptivePurePursuitController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/controllers/BangBangTurnAngleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/controllers/BangBangTurnAngleController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/controllers/CascadingGyroEncoderTurnAngleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/controllers/CascadingGyroEncoderTurnAngleController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/controllers/DriveStraightController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/controllers/DriveStraightController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/controllers/EncoderTurnAngleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/controllers/EncoderTurnAngleController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/controllers/GyroMotionMagicTurnAngleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/controllers/GyroMotionMagicTurnAngleController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/controllers/TalonSRXDriveController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/controllers/TalonSRXDriveController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/controllers/TalonSRXDriveController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/controllers/TalonSRXDriveController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/subsystems/controllers/TimedDriveController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/subsystems/controllers/TimedDriveController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/CheesyDriveHelper$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/CheesyDriveHelper.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/CheesyDriveHelper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/ChezyMath.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/ChezyMath.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/ClimberSignal.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/ClimberSignal.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/DoubleClickTimer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/DoubleClickTimer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/DriveSignal.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/DriveSignal.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/JSONFormatter.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/JSONFormatter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/JoystickInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/JoystickInput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/LEDColor$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/LEDColor$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/LEDColor$Color.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/LEDColor$Color.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/LEDColor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/Pose.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/Pose.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/SynchronousPID.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/SynchronousPID.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/TalonSRXOutput.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/TalonSRXOutput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/WaitTimer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/WaitTimer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/XboxController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/XboxController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/XboxInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/XboxInput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/archive/ProportionalDriveHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/csvlogger/CSVWriter.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/csvlogger/CSVWriter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/logger/LeveledString.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/logger/LeveledString.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/logger/Logger.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/logger/Logger.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/logger/LoggerConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/logger/LoggerConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/logger/TimestampedString.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/logger/TimestampedString.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/Interpolable.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/Interpolable.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/InterpolatingDouble.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/InterpolatingDouble.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/InterpolatingTreeMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/InterpolatingTreeMap.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/InverseInterpolable.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/InverseInterpolable.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/Kinematics$DriveVelocity.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/Kinematics$DriveVelocity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/Kinematics.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/LegacyTrajectoryFollower.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/LegacyTrajectoryFollower.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/Path$Waypoint.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/Path$Waypoint.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/Path.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/Path.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/PathSegment$ClosestPointReport.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/PathSegment$ClosestPointReport.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/PathSegment$Sample.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/PathSegment$Sample.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/PathSegment.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/PathSegment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/RigidTransform2d$Delta.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/RigidTransform2d$Delta.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/RigidTransform2d.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/RigidTransform2d.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/Rotation2d.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/Rotation2d.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/Trajectory$Pair.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/Trajectory$Pair.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/Trajectory$Segment.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/Trajectory$Segment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/Trajectory.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/Trajectory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/TrajectoryFollower$TrajectoryConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/TrajectoryFollower$TrajectoryConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/TrajectoryFollower$TrajectorySetpoint.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/TrajectoryFollower$TrajectorySetpoint.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/TrajectoryFollower.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/TrajectoryFollower.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/util/trajectory/Translation2d.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/util/trajectory/Translation2d.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/VisionData$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/VisionData$ByteExistsCallback.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/VisionData$ByteExistsCallback.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/VisionData$DoubleExistsCallback.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/VisionData$DoubleExistsCallback.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/VisionData.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/VisionData.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/VisionManager$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/VisionManager$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/VisionManager$State.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/VisionManager$State.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/VisionManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/VisionManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/networking/VisionDataReceiver.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/networking/VisionDataReceiver.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/networking/VisionVideoServer$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/networking/VisionVideoServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/networking/VisionVideoServer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/networking/recievers/SocketReceiver$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/networking/recievers/SocketReceiver.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/networking/recievers/SocketReceiver.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/AbstractVisionServer$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/AbstractVisionServer$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/AbstractVisionServer$ServerState.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/AbstractVisionServer$ServerState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/AbstractVisionServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/AbstractVisionServer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/AbstractVisionThread$ThreadState.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/AbstractVisionThread$ThreadState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/AbstractVisionThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/AbstractVisionThread.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/VisionUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/VisionUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/commandline/CommandExecutor.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/commandline/CommandExecutor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/commandline/DeviceStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/commandline/DeviceStatus.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/commandline/RuntimeExecutor.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/commandline/RuntimeExecutor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/data/SynchronizedVisionDataUnit.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/data/SynchronizedVisionDataUnit.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/data/VisionDataUnit.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/data/VisionDataUnit.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/synchronization/AutoCloseableLock.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/synchronization/AutoCloseableLock.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/synchronization/DataExistsCallback.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/synchronization/DataExistsCallback.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2018/vision/util/synchronization/ReadWriteLock.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/com/palyrobotics/frc2019/vision/util/synchronization/ReadWriteLock.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/libs/FRC-2019-Private.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/FRC-2019-Private.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/AutoFMS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/AutoFMS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/AutoModeBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/AutoModeBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/AutoModeSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/AutoModeSelector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/modes/BaselineAutoMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/modes/BaselineAutoMode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/testautos/FTestAuto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/testautos/FTestAuto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/testautos/TestAutoMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/testautos/TestAutoMode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/testautos/TestTrajectoryAutoMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/testautos/TestTrajectoryAutoMode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/ParallelRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/ParallelRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/Routine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/Routine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/RoutineManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/RoutineManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/SequentialRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/SequentialRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/TimedRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/TimedRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/WaypointTriggerRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/WaypointTriggerRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/TimeoutRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/TimeoutRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/BBTurnAngleRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/BBTurnAngleRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/CascadingGyroEncoderTurnAngleRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/CascadingGyroEncoderTurnAngleRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/DrivePathRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/DrivePathRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/DriveSensorResetRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/DriveSensorResetRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/DriveStraightRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/DriveStraightRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/DriveTimeRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/DriveTimeRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/DriveUntilHasCubeRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/DriveUntilHasCubeRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/EncoderDriveRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/EncoderDriveRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/EncoderTurnAngleRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/EncoderTurnAngleRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/GyroMotionMagicTurnAngleRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/GyroMotionMagicTurnAngleRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/SafetyTurnAngleRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/SafetyTurnAngleRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/TalonSRXRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/TalonSRXRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/TimedDriveRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/drive/TimedDriveRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/intake/IntakeCloseRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/intake/IntakeCloseRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/intake/IntakeCubeRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/intake/IntakeCubeRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/intake/IntakeOpenRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/intake/IntakeOpenRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/intake/IntakeSensorStopRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/intake/IntakeSensorStopRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/intake/IntakeWheelRoutine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/routines/intake/IntakeWheelRoutine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/AllianceDistances.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/AllianceDistances.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/AutoDistances.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/AutoDistances.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/Commands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/Commands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/Gains.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/Gains.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/RobotState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/RobotState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/dashboard/DashboardManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/dashboard/DashboardManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/dashboard/DashboardValue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/dashboard/DashboardValue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/driveteam/DriveTeam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/driveteam/DriveTeam.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/driveteam/DriverProfiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/driveteam/DriverProfiles.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/driveteam/OperatorProfiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/driveteam/OperatorProfiles.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/HardwareAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/HardwareAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/HardwareUpdater.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/HardwareUpdater.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/OperatorInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/OperatorInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/Robot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/Serializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/Serializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/package-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/Arm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/Arm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/Drive.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/Drive.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/Intake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/Intake.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/Subsystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/Subsystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/AdaptivePurePursuitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/AdaptivePurePursuitController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/BangBangTurnAngleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/BangBangTurnAngleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/CascadingGyroEncoderTurnAngleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/CascadingGyroEncoderTurnAngleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/DriveStraightController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/DriveStraightController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/EncoderTurnAngleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/EncoderTurnAngleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/GyroMotionMagicTurnAngleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/GyroMotionMagicTurnAngleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/TalonSRXDriveController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/TalonSRXDriveController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/TimedDriveController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/subsystems/controllers/TimedDriveController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/CheesyDriveHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/CheesyDriveHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/ChezyMath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/ChezyMath.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/ClimberSignal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/ClimberSignal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/DoubleClickTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/DoubleClickTimer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/DriveSignal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/DriveSignal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/JSONFormatter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/JSONFormatter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/JoystickInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/JoystickInput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/LEDColor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/LEDColor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/Pose.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/Pose.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/SynchronousPID.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/SynchronousPID.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/TalonSRXOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/TalonSRXOutput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/WaitTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/WaitTimer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/XboxController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/XboxController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/XboxInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/XboxInput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/archive/ProportionalDriveHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/archive/ProportionalDriveHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/archive/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/archive/package-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/csvlogger/CSVWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/csvlogger/CSVWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/logger/LeveledString.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/logger/LeveledString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/logger/Logger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/logger/Logger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/logger/LoggerConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/logger/LoggerConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/logger/TimestampedString.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/logger/TimestampedString.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Interpolable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Interpolable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/InterpolatingDouble.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/InterpolatingDouble.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/InterpolatingTreeMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/InterpolatingTreeMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/InverseInterpolable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/InverseInterpolable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Kinematics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Kinematics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/LegacyTrajectoryFollower.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/LegacyTrajectoryFollower.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Path.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Path.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/PathSegment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/PathSegment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/RigidTransform2d.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/RigidTransform2d.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Rotation2d.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Rotation2d.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Trajectory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Trajectory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/TrajectoryFollower.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/TrajectoryFollower.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Translation2d.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/util/trajectory/Translation2d.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/VisionData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/VisionData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/VisionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/VisionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/networking/VisionDataReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/networking/VisionDataReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/networking/VisionVideoServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/networking/VisionVideoServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/networking/recievers/SocketReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/networking/recievers/SocketReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/AbstractVisionServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/AbstractVisionServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/AbstractVisionThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/AbstractVisionThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/VisionUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/VisionUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/commandline/CommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/commandline/CommandExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/commandline/DeviceStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/commandline/DeviceStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/commandline/RuntimeExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/commandline/RuntimeExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/data/SynchronizedVisionDataUnit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/data/SynchronizedVisionDataUnit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/data/VisionDataUnit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/data/VisionDataUnit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/synchronization/AutoCloseableLock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/synchronization/AutoCloseableLock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/synchronization/DataExistsCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/synchronization/DataExistsCallback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/synchronization/ReadWriteLock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/vision/util/synchronization/ReadWriteLock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/auto/AutoGrapher.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/auto/AutoModeSelectorTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/auto/PointTester.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/behavior/DrivetrainRoutine.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/behavior/ElevatorCustomPositioningRoutineTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/behavior/IntakeRoutineTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/behavior/MockRoutine.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/behavior/RoutineManagerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/config/CalibrationCalculator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/config/CommandsTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/config/MockCommands.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/config/MockRobotState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/config/RobotStateTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/robot/MockRobot.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/subsystems/ClimberTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/subsystems/DriveTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/subsystems/ElevatorSimulation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/subsystems/ElevatorTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/subsystems/IntakeTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/subsystems/SubsystemUpdateTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/suites/IntegrationTestSuite.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/suites/UnitTestSuite.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/util/CheesyDriveHelperTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/util/JSONFormatterTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/util/MockJoystickInput.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/util/MockJoystickInputTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/util/RandomTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/vision/AndroidComputerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/vision/frame.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/vision/frame.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/palyrobotics/frc2018/vision/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/palyrobotics/frc2019/vision/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/team254/lib/trajectory/AdaptivePurePursuitControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/team254/lib/trajectory/AdaptivePurePursuitControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/team254/lib/trajectory/KinematicsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/team254/lib/trajectory/KinematicsTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/team254/lib/trajectory/PathTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/team254/lib/trajectory/PathTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/team254/lib/trajectory/TestRigidTransform2d.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/team254/lib/trajectory/TestRigidTransform2d.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -391,92 +19,7 @@
     </projectState>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/AutoDistances.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/modes/BaselineAutoMode.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="42" selection-start-line="5" selection-start-column="42" selection-end-line="5" selection-end-column="42" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/com/palyrobotics/frc2019/auto/AutoGrapher.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="9" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="9" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/Routine.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="44" selection-start-line="44" selection-end-line="44" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/SequentialRoutine.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/HardwareUpdater.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/Constants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="32" selection-start-column="32" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -495,21 +38,20 @@
         <option value="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/SequentialRoutine.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/Constants.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/HardwareUpdater.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/OperatorInterface.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="830" />
+    <option name="width" value="1920" />
+    <option name="height" value="992" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -584,6 +126,15 @@
             <path>
               <item name="FRC-2019-Private" type="b2602c69:ProjectViewProjectNode" />
               <item name="FRC-2019-Private" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="frc2019" type="462c0819:PsiDirectoryNode" />
+              <item name="robot" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FRC-2019-Private" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FRC-2019-Private" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -620,12 +171,14 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1546669085510" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1546670006571" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
   </component>
@@ -681,16 +234,15 @@
     <option name="totallyTimeSpent" value="679000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="830" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1280" height="714" extended-state="6" />
     <layout>
-      <window_info id="Image Layers" />
-      <window_info id="Capture Tool" />
-      <window_info id="UI Designer" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2532189" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25686592" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="UI Designer" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3292683" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -705,9 +257,7 @@
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="12" />
       <window_info anchor="bottom" id="Build" order="13" weight="0.32963988" />
-      <window_info anchor="right" id="Palette" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="bottom" id="Messages" order="14" weight="0.3292683" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -715,12 +265,62 @@
       <window_info anchor="right" id="Maven" order="4" />
       <window_info anchor="right" id="Palette&#9;" order="5" />
       <window_info anchor="right" id="Database" order="6" />
+      <window_info anchor="right" id="Palette" order="7" />
+      <window_info anchor="right" id="Capture Analysis" order="8" />
+      <window_info anchor="right" id="Theme Preview" order="9" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/test/com/palyrobotics/frc2019/auto/AutoGrapher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="825">
+          <caret line="55" column="93" selection-start-line="55" selection-start-column="93" selection-end-line="55" selection-end-column="93" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="42" selection-start-line="5" selection-start-column="42" selection-end-line="5" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/modes/BaselineAutoMode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/AutoDistances.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/com/palyrobotics/frc2019/auto/PointTester.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/com/palyrobotics/frc2019/auto/AutoModeSelectorTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="28" column="11" lean-forward="true" selection-start-line="28" selection-start-column="11" selection-end-line="28" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/behavior/Routine.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="555">
@@ -738,13 +338,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/Constants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="32" selection-start-column="32" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/HardwareUpdater.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -752,40 +345,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/AutoDistances.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/config/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+        <state>
+          <caret column="32" selection-start-column="32" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/OperatorInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/modes/BaselineAutoMode.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/robot/Robot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+        <state relative-caret-position="-2849">
+          <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/palyrobotics/frc2019/auto/testautos/TestAutoMode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="42" selection-start-line="5" selection-start-column="42" selection-end-line="5" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/com/palyrobotics/frc2019/auto/AutoGrapher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="9" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="29">
+          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
         </state>
       </provider>
     </entry>

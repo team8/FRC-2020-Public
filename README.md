@@ -1,4 +1,4 @@
-Team 8 Paly Robotics - FRC 2018 Robot Software [![CircleCI](https://circleci.com/gh/team8/FRC-2018-Offseason.svg?style=svg&circle-token=c88c81a00417a86b3aeda18a41b3bf7b24fd8f26)](https://circleci.com/gh/team8/FRC-2018-Offseason)
+Team 8 Paly Robotics - FRC 2019 Robot Software [![CircleCI](https://circleci.com/gh/team8/FRC-2019-Private.svg?style=svg)](https://circleci.com/gh/team8/FRC-2019-Private)
 ================================================
 ## Robot description 
 Robot code for Team 8's 2018 PowerUp FRC robot, Forseti
