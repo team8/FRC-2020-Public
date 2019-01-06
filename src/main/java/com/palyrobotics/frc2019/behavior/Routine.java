@@ -26,7 +26,7 @@ public abstract class Routine {
 	protected final RobotState robotState = RobotState.getInstance();
 
 	//Called to start a routine
-	public abstract void start();
+	public abstract 								void start();
 
 	//Update method, returns modified commands
 	public abstract Commands update(Commands commands);

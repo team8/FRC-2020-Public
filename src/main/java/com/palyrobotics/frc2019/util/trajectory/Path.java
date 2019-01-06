@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2019.util.trajectory;
 
-import com.palyrobotics.frc2018.config.Constants;
-import com.palyrobotics.frc2018.util.logger.Logger;
+import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.*;
 import java.util.logging.Level;
