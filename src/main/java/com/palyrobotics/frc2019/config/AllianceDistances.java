@@ -30,4 +30,5 @@ public class AllianceDistances {
     public double kRightRocketCloseY = 21.75;
     public double kLeftLoadingY = 26.0;
     public double kRightLoadingY = 25.5;
+    public double kFieldWidth = 324.0;
 }
