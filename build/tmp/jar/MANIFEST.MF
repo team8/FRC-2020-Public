@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Robot-Class: com.palyrobotics.frc2019.robot.Robot
-Main-Class: edu.wpi.first.wpilibj.RobotBase
-

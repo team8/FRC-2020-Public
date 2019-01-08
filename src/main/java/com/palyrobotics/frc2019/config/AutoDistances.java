@@ -23,12 +23,18 @@ public class AutoDistances {
 	
 	private static void loadField() { // Make sure to ant deploy constants to roboRIO
 		switch (Constants.kFieldName) {
-			case AZN:
-				field = JSONFormatter.loadFileDirectory("constants/fields", "AZNField.json");
+			case DMR:
+				field = JSONFormatter.loadFileDirectory("constants/fields", "DMRField.json");
 				break;
-			case AZN_PRACTICE:
-				field = JSONFormatter.loadFileDirectory("constants/fields", "AZNPracticeField.json");
+			case DMR_PRACTICE:
+				field = JSONFormatter.loadFileDirectory("constants/fields", "DMRPracticeField.json");
 				break;
+            case GNR:
+                field = JSONFormatter.loadFileDirectory("constants/fields", "GNRField.json");
+                break;
+            case GNR_PRACTICE:
+                field = JSONFormatter.loadFileDirectory("constants/fields", "GNRPracticeField.json");
+                break;
 			case CMP:
 				field = JSONFormatter.loadFileDirectory("constants/fields", "CMPField.json");
 				break;
@@ -55,53 +61,57 @@ public class AutoDistances {
 			Logger.getInstance().logRobotThread(Level.FINE, "Field json file not found");
 			return;
 		}
-		
-		red.kBaseLineDistanceInches = getDoubleValue("kRedBaseLineDistanceInches");
-		blue.kBaseLineDistanceInches = getDoubleValue("kBlueBaseLineDistanceInches");
-		red.kRightSwitchX = getDoubleValue("kRedRightSwitchX");
-		red.kRightSwitchY = getDoubleValue("kRedRightSwitchY");
-		blue.kRightSwitchY = getDoubleValue("kBlueRightSwitchX");
-		blue.kRightSwitchY = getDoubleValue("kBlueRightSwitchY");
-		red.kLeftSwitchX= getDoubleValue("kRedLeftSwitchX");
-		red.kLeftSwitchY= getDoubleValue("kRedLeftSwitchY");
-		blue.kLeftSwitchX = getDoubleValue("kBlueLeftSwitchX");
-		blue.kLeftSwitchY = getDoubleValue("kBlueLeftSwitchY");
-		blue.kPyramidFromRightY = getDoubleValue("kBluePyramidFromRightY");
-		red.kPyramidFromRightY = getDoubleValue("kRedPyramidFromRightY");
-		blue.kLeftScaleX = getDoubleValue("kBlueLeftScaleX");
-		blue.kLeftScaleY = getDoubleValue("kBlueLeftScaleY");
-		blue.kRightScaleX = getDoubleValue("kBlueRightScaleX");
-		blue.kRightScaleY = getDoubleValue("kBlueRightScaleY");
-		red.kLeftScaleX = getDoubleValue("kRedLeftScaleX");
-		red.kLeftScaleY = getDoubleValue("kRedLeftScaleY");
-		red.kRightScaleX = getDoubleValue("kRedRightScaleX");
-		red.kRightScaleY = getDoubleValue("kRedRightScaleY");
-		blue.kPyramidWidth = getDoubleValue("kBluePyramidWidth");
-		blue.kPyramidLength = getDoubleValue("kBluePyramidLength");
-		red.kPyramidWidth = getDoubleValue("kRedPyramidWidth");
-		red.kPyramidLength = getDoubleValue("kRedPyramidLength");
-		red.kLeftCornerOffset = getDoubleValue("kRedLeftCornerOffset");
-		red.kRightCornerOffset = getDoubleValue("kRedRightCornerOffset");
-		blue.kLeftCornerOffset = getDoubleValue("kBlueLeftCornerOffset");
-		blue.kRightCornerOffset = getDoubleValue("kBlueRightCornerOffset");
-		red.kFieldWidth = getDoubleValue("kFieldWidth");
-		blue.kFieldWidth = getDoubleValue("kFieldWidth");
-		blue.kLeftToCenterY = getDoubleValue("kBlueLeftToCenterY");
-		red.kLeftToCenterY = getDoubleValue("kRedLeftToCenterY");
-		blue.kScaleSwitchMidlineX = getDoubleValue("kBlueScaleSwitchMidlineX");
-		red.kScaleSwitchMidlineX = getDoubleValue("kRedScaleSwitchMidlineX");
-		red.kSwitchPlateWidth = getDoubleValue("kSwitchPlateWidth");
-		red.kSwitchPlateLength = getDoubleValue("kSwitchPlateLength");
-		red.kScalePlateWidth = getDoubleValue("kScalePlateWidth");
-		red.kScalePlateLength = getDoubleValue("kScalePlateLength");
-		blue.kSwitchPlateWidth = getDoubleValue("kSwitchPlateWidth");
-		blue.kSwitchPlateLength = getDoubleValue("kSwitchPlateLength");
-		blue.kScalePlateWidth = getDoubleValue("kScalePlateWidth");
-		blue.kScalePlateLength = getDoubleValue("kScalePlateLength");
-		blue.kRightPlatformY = getDoubleValue("kBlueRightPlatformY");
-		blue.kLeftPlatformY = getDoubleValue("kBlueLeftPlatformY");
-		red.kLeftPlatformY = getDoubleValue("kRedLeftPlatformY");
-		red.kRightPlatformY = getDoubleValue("kRedRightPlatformY");
+
+        blue.kDepotFromLeftY = getDoubleValue("kBlueDepotFromLeftY");
+        red.kDepotFromLeftY = getDoubleValue("kRedDepotFromLeftY");
+        blue.kDepotFromRightY =	getDoubleValue("kBlueDepotFromRightY");
+        red.kDepotFromRightY = getDoubleValue("kRedDepotFromRightY");
+        blue.kLevel2FromRightY = getDoubleValue("kBlueLevel2FromRightY");
+        red.kLevel2FromRightY = getDoubleValue("kRedLevel2FromRightY");
+        blue.kLevel2FromLeftY = getDoubleValue("kBlueLevel2FromLeftY");
+        red.kLevel2FromLeftY	= getDoubleValue("kRedLevel2FromLeftY");
+        blue.kLevel1FromLeftY = getDoubleValue("kBlueLevel1FromLeftY");
+        red.kLevel1FromLeftY	= getDoubleValue("kRedLevel1FromLeftY");
+        blue.kLevel1FromRightY = getDoubleValue("kBlueLevel1FromRightY");
+        red.kLevel1FromRightY = getDoubleValue("kRedLevel1FromRightY");
+        blue.kCargoOffsetX = getDoubleValue("kBlueCargoOffsetX");
+        red.kCargoOffsetX = getDoubleValue("kRedCargoOffsetX");
+        blue.kCargoOffsetY = getDoubleValue("kBlueCargoOffsetY");
+        red.kCargoOffsetY = getDoubleValue("kRedCargoOffsetY");
+        blue.kLevel1CargoX = getDoubleValue("kBlueLevel1CargoX");
+        red.kLevel1CargoX = getDoubleValue("kRedLevel1CargoX");
+        blue.kCargoLeftY = getDoubleValue("kBlueCargoLeftY");
+        red.kCargoLeftY	= getDoubleValue("kRedCargoLeftY");
+        blue.kCargoRightY = getDoubleValue("kBlueCargoRightY");
+        red.kCargoRightY = getDoubleValue("kRedCargoRightY");
+        blue.kMidlineLeftRocketFarX = getDoubleValue("kBlueMidlineLeftRocketFarX");
+        red.kMidlineLeftRocketFarX = getDoubleValue("kRedMidlineLeftRocketFarX");
+        blue.kMidlineRightRocketFarX = getDoubleValue("kBlueMidlineRightRocketFarX");
+        red.kMidlineRightRocketFarX = getDoubleValue("kRedMidlineRightRocketFarX");
+        blue.kHabLeftRocketCloseX = getDoubleValue("kBlueHabLeftRocketCloseX");
+        red.kHabLeftRocketCloseX = getDoubleValue("kRedHabLeftRocketCloseX");
+        blue.kHabRightRocketCloseX = getDoubleValue("kBlueHabRightRocketCloseX");
+        red.kHabRightRocketCloseX = getDoubleValue("kRedHabRightRocketCloseX");
+        blue.kHabLeftRocketMidX = getDoubleValue("kBlueHabLeftRocketMidX");
+        red.kHabLeftRocketMidX = getDoubleValue("kRedHabLeftRocketMidX");
+        blue.kHabRightRocketMidX = getDoubleValue("kBlueHabRightRocketMidX");
+        red.kHabRightRocketMidX = getDoubleValue("kRedHabRightRocketMidX");
+        blue.kLeftRocketFarY = getDoubleValue("kBlueLeftRocketFarY");
+        red.kLeftRocketFarY = getDoubleValue("kRedLeftRocketFarY");
+        blue.kRightRocketFarY = getDoubleValue("kBlueRightRocketFarY");
+        red.kRightRocketFarY = getDoubleValue("kRedRightRocketFarY");
+        blue.kLeftRocketMidY = getDoubleValue("kBlueLeftRocketMidY");
+        red.kLeftRocketMidY	= getDoubleValue("kRedLeftRocketMidY");
+        blue.kRightRocketMidY = getDoubleValue("kBlueRightRocketMidY");
+        red.kRightRocketMidY = getDoubleValue("kRedRightRocketMidY");
+        blue.kLeftRocketCloseY = getDoubleValue("kBlueLeftRocketCloseY");
+        red.kLeftRocketCloseY = getDoubleValue("kRedLeftRocketCloseY");
+        blue.kRightRocketCloseY = getDoubleValue("kBlueRightRocketCloseY");
+        red.kRightRocketCloseY = getDoubleValue("kRedRightRocketCloseY");
+        blue.kLeftLoadingY = getDoubleValue("kBlueLeftLoadingY");
+        red.kLeftLoadingY = getDoubleValue("kRedLeftLoadingY");
+        blue.kRightLoadingY = getDoubleValue("kBlueRightLoadingY");
+        red.kRightLoadingY = getDoubleValue("kRedRightLoadingY");
 	}
 	
 	/**

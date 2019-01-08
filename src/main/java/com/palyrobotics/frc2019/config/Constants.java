@@ -15,8 +15,8 @@ public class Constants {
 	}
 
 	public enum FieldName {
-		//we goin to cmp bois
-		TEAM_8, TEAM_254, AZN_PRACTICE, AZN, SVR_PRACTICE, SVR, CMP_PRACTICE, CMP
+		//we goin to cmp bois <- for sure :send-it:
+		TEAM_8, TEAM_254, SVR, SVR_PRACTICE, GNR, GNR_PRACTICE, DMR, DMR_PRACTICE, CMP, CMP_PRACTICE
 	}
 
 	//Initialization constants
@@ -61,6 +61,16 @@ public class Constants {
 	public static double kAlpha;
 	public static double kCyclesUntilStop;
 
+    /**
+     * Physical field constants
+     */
+    public static double kUpperPlatformLength =  48.0;
+    public static double kLevel1Width = 150.0;
+    public static double kLevel2Width = 40.0;
+    public static double kLevel3Width = 48.0;
+    public static double kLowerPlatformLength = 48.0;
+    public static double kCargoLineGap = 21.5;
+
 	/**
 	 * Arm Constants
 	 */
@@ -71,10 +81,10 @@ public class Constants {
 	public static final double kArmBackPosition = 0.0;
 	public static final double kArmTopPosition = 0.0;
 
-	public static double kArmTopScalingConstant; 
-	public static double kArmBottomScalingConstant; 
-	public static double kArmCalibratedManualPower; 
-	public static double kArmScaledManualPower; 
+	public static double kArmTopScalingConstant;
+	public static double kArmBottomScalingConstant;
+	public static double kArmCalibratedManualPower;
+	public static double kArmScaledManualPower;
 	public static double kArmUncalibratedManualPower = .62;
 	public static double kArmClosedLoopManualControlPositionSensitivity = 500;//250;
 	public static double kArmConstantDownPower;
@@ -102,7 +112,7 @@ public class Constants {
 	 * Unit conversions for Talons
 	 */
 	public static final double kDriveTicksPerInch = 4096 / (6.25 * Math.PI);
-	public static final double kArmTicksPerInch = 0; 
+	public static final double kArmTicksPerInch = 0;
 	public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90;
 	public static final double kDriveSpeedUnitConversion = 4096 / (6.25 * Math.PI * 10);
 
@@ -190,10 +200,10 @@ public class Constants {
 	public static final int kForsetiRightDriveSlave1DeviceID = 14;
 	public static final int kForsetiRightDriveSlave2DeviceID = 13;
 
-	//ARM 
+	//ARM
 	public static final int kForesetiArmMasterTalonID = 12;
 	public static final int kForsetiArmSlaveVictorID = 11;
-	public static final int kForsetiArmPotID = 0; 
+	public static final int kForsetiArmPotID = 0;
 
 	//INTAKE
 	public static final int kForsetiIntakeMasterDeviceID = 3;

@@ -2,7 +2,6 @@ package com.palyrobotics.frc2019.auto;
 
 import com.palyrobotics.frc2019.auto.AutoFMS.Side;
 import com.palyrobotics.frc2019.auto.AutoModeBase.*;
-import com.palyrobotics.frc2019.auto.modes.*;
 import com.palyrobotics.frc2019.auto.testautos.FTestAuto;
 import com.palyrobotics.frc2019.auto.testautos.TestAutoMode;
 import com.palyrobotics.frc2019.util.logger.Logger;
