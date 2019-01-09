@@ -40,12 +40,13 @@ public class Robot extends TimedRobot {
 	//Subsystem controllers
 	private Drive mDrive = Drive.getInstance();
 	private Elevator mElevator = Elevator.getInstance();
+	private Shovel mShovel = Shovel.getInstance();
 	private Arm mArm = Arm.getInstance();
 	private Shooter mShooter = Shooter.getInstance();
 	private Pusher mPusher = Pusher.getInstance();
 
 	//Hardware Updater
-	private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mArm, mElevator, mShooter, mPusher);
+	private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mArm, mElevator, mShooter, mPusher, mShovel);
 
 	// Started boolean for if auto has been started.
 	private boolean mAutoStarted = false;

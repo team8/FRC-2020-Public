@@ -7,7 +7,6 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.*;
-import com.palyrobotics.frc2019.util.LEDColor;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
 import com.palyrobotics.frc2019.util.logger.Logger;
@@ -33,9 +32,12 @@ class HardwareUpdater {
 	//Subsystem references
 	private Drive mDrive;
 	private Arm mArm;
+
 	private Elevator mElevator;
 	private Shooter mShooter;
 	private Pusher mPusher;
+
+	private Shovel mShovel;
 
 	private double lastVelocity = 0;
 	private double maxA = 0;
@@ -44,12 +46,12 @@ class HardwareUpdater {
 	/**
 	 * Hardware Updater for Vidar
 	 */
-	protected HardwareUpdater(Drive drive, Arm arm, Elevator elevator, Shooter shooter, Pusher pusher) {
+	protected HardwareUpdater(Drive drive, Arm arm, Elevator elevator, Shooter shooter, Pusher pusher, Shovel shovel) {
 		this.mDrive = drive;
-		this.mArm = arm;
 		this.mElevator = elevator;
 		this.mShooter = shooter;
 		this.mPusher = pusher;
+		this.mShovel = shovel;
 	}
 
 	/**
@@ -113,8 +115,6 @@ class HardwareUpdater {
         WPI_TalonSRX rightMasterTalon = HardwareAdapter.getInstance().getDrivetrain().rightMasterTalon;
 		WPI_VictorSPX rightSlave1Victor = HardwareAdapter.getInstance().getDrivetrain().rightSlave1Victor;
         WPI_VictorSPX rightSlave2Victor = HardwareAdapter.getInstance().getDrivetrain().rightSlave2Victor;
-
-		disableBrakeMode();
 
         leftMasterTalon.enableVoltageCompensation(true);
         leftSlave1Victor.enableVoltageCompensation(true);
@@ -337,6 +337,18 @@ class HardwareUpdater {
 		pusherUltrasonicLeft.setAutomaticMode(true);
 		pusherUltrasonicLeft.setEnabled(true);
 	}
+
+	void configureShovelHardware() {
+		WPI_VictorSPX shovelVictor = HardwareAdapter.getInstance().getShovel().ShovelVictor;
+
+		shovelVictor.setNeutralMode(NeutralMode.Brake);
+		shovelVictor.configOpenloopRamp(0.09, 0);
+		shovelVictor.enableVoltageCompensation(true);
+		shovelVictor.configVoltageCompSaturation(14, 0);
+		shovelVictor.configForwardSoftLimitEnable(false, 0);
+		shovelVictor.configReverseSoftLimitEnable(false, 0);
+	}
+
 	/**
 	 * Updates all the sensor data taken from the hardware
 	 */
@@ -586,6 +598,7 @@ class HardwareUpdater {
 		updateArm();
 		updateShooter();
 		updatePusher();
+		updateShovel();
 		updateMiscellaneousHardware();
 	}
 
@@ -664,6 +677,11 @@ class HardwareUpdater {
 	 */
 	private void updatePusher() {
 		HardwareAdapter.getInstance().getPusher().pusherVictor.set(mPusher.getPusherOutput());
+	}
+
+	private void updateShovel() {
+		HardwareAdapter.getInstance().getShovel().ShovelVictor.set(mShovel.getVictorOutput());
+		HardwareAdapter.getInstance().getShovel().upDownSolenoid.set(mShovel.getUpDownOutput());
 	}
 
 	void enableBrakeMode() {
