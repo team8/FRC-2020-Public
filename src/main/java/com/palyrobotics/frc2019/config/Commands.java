@@ -113,6 +113,8 @@ public class Commands {
 		copy.wantedShovelUpDownState = this.wantedShovelUpDownState;
 		copy.wantedFingersOpenCloseState = this.wantedFingersOpenCloseState;
 		copy.wantedFingersExpelState = this.wantedFingersExpelState;
+		copy.wantedShovelWheelState = this.wantedShovelWheelState;
+		copy.wantedShovelUpDownState = this.wantedShovelUpDownState;
 		copy.disableArmScaling = this.disableArmScaling;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.customShooterSpeed = this.customShooterSpeed;

@@ -31,6 +31,7 @@ class HardwareUpdater {
 	//Subsystem references
 	private Drive mDrive;
 	private Arm mArm;
+
 	private Elevator mElevator;
 	private Shooter mShooter;
 	private Pusher mPusher;
@@ -676,6 +677,9 @@ class HardwareUpdater {
 		HardwareAdapter.getInstance().getPusher().pusherVictor.set(mPusher.getPusherOutput());
 	}
 
+    /**
+     * Updates the shovel
+     */
 	private void updateShovel() {
 		HardwareAdapter.getInstance().getShovel().ShovelVictor.set(mShovel.getVictorOutput());
 		HardwareAdapter.getInstance().getShovel().upDownSolenoid.set(mShovel.getUpDownOutput());
