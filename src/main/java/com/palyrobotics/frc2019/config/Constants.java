@@ -189,7 +189,6 @@ public class Constants {
 	public static final int kShovelMotorVelocity = 0;
 	public static final int kShovelExpellingMotorVelocity = 0;
 	public static final int kShovelSmallExpelMotorVelocity = 0;
-
 	public static final int kMaxShovelCurrentDraw = 0;
 
 	/**
