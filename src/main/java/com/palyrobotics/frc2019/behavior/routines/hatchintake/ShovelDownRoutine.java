@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2019.behavior.routines.Shovel;
+package com.palyrobotics.frc2019.behavior.routines.hatchintake;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;

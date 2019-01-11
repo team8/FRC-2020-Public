@@ -183,18 +183,13 @@ public class Constants {
 	public static final double kIntakeFreeSpinCurrent = 5;
 
 	/**
-<<<<<<< HEAD
 	 * Shovel
-=======
-	 * Hatch Intake
->>>>>>> 73a3889... Added Shovel
 	 */
 	public static final int kShovelID = 0;
 	public static final int kShovelUpDownSolenoid = 0;
 	public static final int kShovelMotorVelocity = 0;
 	public static final int kShovelExpellingMotorVelocity = 0;
 	public static final int kShovelSmallExpelMotorVelocity = 0;
-
 	public static final int kMaxShovelCurrentDraw = 0;
 
 	/**
