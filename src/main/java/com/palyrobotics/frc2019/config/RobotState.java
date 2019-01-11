@@ -50,9 +50,11 @@ public class RobotState {
 	public ArrayList<Double> mRightReadings = new ArrayList<>();
 	public ArrayList<Double> mRightSorted = new ArrayList<>();
 
+	//Hatch Intake
+	public boolean hasHatch = false;
 
 	//Tracks total current from kPDP
-	public double totalCurrentDraw = 0;
+	public double shovelCurrentDraw = 0;
 
 	//Tracks pressure in compressor
     public double compressorPressure = 0;

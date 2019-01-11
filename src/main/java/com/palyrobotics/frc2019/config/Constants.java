@@ -166,6 +166,16 @@ public class Constants {
 	public static final double kIntakeStallCoefficientB = 4.27;
 	public static final double kIntakeFreeSpinCurrent = 5;
 
+	/**
+	 * Shovel
+	 */
+	public static final int kShovelID = 0;
+	public static final int kShovelUpDownSolenoid = 0;
+	public static final int kShovelMotorVelocity = 0;
+	public static final int kShovelExpellingMotorVelocity = 0;
+	public static final int kShovelSmallExpelMotorVelocity = 0;
+	public static final int kMaxShovelCurrentDraw = 0;
+
 	public static boolean operatorXBoxController = true;
 
 	//Weird units, it's in sum of joystick inputs. 50 updates/sec, add 1.0 at max power every cycle, so this is half a second of max power

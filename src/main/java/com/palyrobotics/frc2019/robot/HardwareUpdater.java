@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -27,6 +28,7 @@ import java.util.logging.Level;
 /**
  * Should only be used in robot package.
  */
+
 class HardwareUpdater {
 
 	//Subsystem references
@@ -435,9 +437,14 @@ class HardwareUpdater {
 //        //Update compressor pressure
 //        robotState.compressorPressure = HardwareAdapter.getInstance().getMiscellaneousHardware().compressorSensor.getVoltage() * Constants.kForsetiCompressorVoltageToPSI; //TODO: Implement the constant!
 //
-//        //Update battery voltage
-//        PowerDistributionPanel pdp = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp;
-//        robotState.totalCurrentDraw = pdp.getTotalCurrent() - pdp.getCurrent(Constants.kForsetiCompressorDeviceID); //TODO: Implement this!
+
+        PowerDistributionPanel pdp = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp;
+        robotState.shovelCurrentDraw = pdp.getTotalCurrent() - pdp.getCurrent(Constants.kShovelID);
+		if (robotState.shovelCurrentDraw > Constants.kMaxShovelCurrentDraw) {
+			robotState.hasHatch = true;
+		} else {
+			robotState.hasHatch = false;
+		}
 
 		//Update arm sensors
 		robotState.armPosition = HardwareAdapter.getInstance().getArm().armMasterTalon.getSelectedSensorPosition(0);
