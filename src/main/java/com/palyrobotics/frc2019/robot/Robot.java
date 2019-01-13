@@ -19,7 +19,6 @@ import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-
 import java.util.logging.Level;
 
 public class Robot extends TimedRobot {

@@ -34,7 +34,7 @@ public class RobotState {
 
 	//Updated by autoInit, teleopInit, disabledInit
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;
-
+	
 	//Drivetrain
 	public ControlMode leftControlMode = ControlMode.Disabled;
 	public ControlMode rightControlMode = ControlMode.Disabled;

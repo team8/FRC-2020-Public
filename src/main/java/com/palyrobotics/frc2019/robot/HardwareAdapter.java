@@ -32,8 +32,8 @@ public class HardwareAdapter {
         public final WPI_TalonSRX rightMasterTalon;
 		public final WPI_VictorSPX rightSlave1Victor;
 		public final WPI_VictorSPX rightSlave2Victor;
-
-        public final PigeonIMU gyro;
+		
+		public final PigeonIMU gyro;
 
 		public static void resetSensors() {
 			instance.gyro.setYaw(0, 0);

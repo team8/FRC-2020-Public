@@ -1,7 +1,5 @@
 package com.palyrobotics.frc2019.util;
 
-import edu.wpi.first.wpilibj.util.BoundaryException;
-
 /**
  * Class implements a PID Control SubsystemLoop.
  * <p>
@@ -178,7 +176,7 @@ public class SynchronousPID {
 	 */
 	public void setInputRange(double minimumInput, double maximumInput) {
 		if(minimumInput > maximumInput) {
-			throw new BoundaryException("Lower bound is greater than upper bound");
+			throw new IllegalArgumentException("Lower bound is greater than upper bound");
 		}
 		m_minimumInput = minimumInput;
 		m_maximumInput = maximumInput;
@@ -195,7 +193,7 @@ public class SynchronousPID {
 	 */
 	public void setOutputRange(double minimumOutput, double maximumOutput) {
 		if(minimumOutput > maximumOutput) {
-			throw new BoundaryException("Lower bound is greater than upper bound");
+			throw new IllegalArgumentException("Lower bound is greater than upper bound");
 		}
 		m_minimumOutput = minimumOutput;
 		m_maximumOutput = maximumOutput;
