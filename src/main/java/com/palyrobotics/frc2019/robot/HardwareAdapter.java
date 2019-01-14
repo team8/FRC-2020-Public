@@ -109,6 +109,20 @@ public class HardwareAdapter {
 		}
 	}
 
+	public static class ShooterHardware{
+		private static ShooterHardware instance = new ShooterHardware();
+
+		private static ShooterHardware getInstance() { return instance; }
+
+		public final WPI_TalonSRX masterTalon;
+		public final WPI_TalonSRX slaveTalon;
+
+		protected ShooterHardware() {
+			masterTalon = new WPI_TalonSRX(Constants.kShooterMasterDeviceID);
+			slaveTalon = new WPI_TalonSRX(Constants.kShooterSlaveDeviceID);
+		}
+	}
+
 	//Joysticks for operator interface
 	public static class Joysticks {
 		private static Joysticks instance = new Joysticks();
@@ -165,6 +179,8 @@ public class HardwareAdapter {
 	public IntakeHardware getIntake() {
 		return IntakeHardware.getInstance();
 	}
+
+	public ShooterHardware getShooter() { return ShooterHardware.getInstance(); }
 
 	public Joysticks getJoysticks() {
 		return Joysticks.getInstance();

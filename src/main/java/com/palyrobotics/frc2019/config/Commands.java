@@ -4,6 +4,7 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Arm;
 import com.palyrobotics.frc2019.subsystems.Intake;
+import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.util.DriveSignal;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
@@ -35,9 +36,11 @@ public class Commands {
 	//Store WantedStates for each subsystem state machine
 	public Drive.DriveState wantedDriveState = Drive.DriveState.NEUTRAL;
 	public Arm.ArmState wantedArmState = Arm.ArmState.IDLE;
+	public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
 	public Intake.WheelState wantedIntakingState = Intake.WheelState.IDLE;
 	public Intake.OpenCloseState wantedIntakeOpenCloseState = Intake.OpenCloseState.CLOSED;
 	public boolean disableArmScaling = true;
+	public boolean customShooterSpeed = false;
 	public boolean customIntakeSpeed = false;
 
 	public void addWantedRoutine(Routine wantedRoutine) {
@@ -90,6 +93,7 @@ public class Commands {
 		copy.wantedIntakeOpenCloseState = this.wantedIntakeOpenCloseState;
 		copy.disableArmScaling = this.disableArmScaling;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
+		copy.customShooterSpeed = this.customShooterSpeed;
 		copy.customIntakeSpeed = this.customIntakeSpeed;
 
 		for(Routine r : this.wantedRoutines) {

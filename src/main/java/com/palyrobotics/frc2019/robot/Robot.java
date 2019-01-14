@@ -13,6 +13,7 @@ import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
 import com.palyrobotics.frc2019.subsystems.Arm;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Intake;
+import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.util.LEDColor;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2019.util.logger.Logger;
@@ -43,8 +44,9 @@ public class Robot extends TimedRobot {
 	private Drive mDrive = Drive.getInstance();
 	private Intake mIntake = Intake.getInstance();
 	private Arm mArm = Arm.getInstance();
+	private Shooter mShooter = Shooter.getInstance();
 	//Hardware Updater
-	private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mArm, mIntake);
+	private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mArm, mIntake, mShooter);
 
 	// Started boolean for if auto has been started.
 	private boolean mAutoStarted = false;

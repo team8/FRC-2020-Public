@@ -9,6 +9,7 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Arm;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Intake;
+import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.util.ClimberSignal;
 import com.palyrobotics.frc2019.util.LEDColor;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
@@ -35,6 +36,7 @@ class HardwareUpdater {
 	private Drive mDrive;
 	private Arm mArm;
 	private Intake mIntake;
+	private Shooter mShooter;
 
 	private double lastVelocity = 0;
 	private double maxA = 0;
@@ -43,10 +45,11 @@ class HardwareUpdater {
 	/**
 	 * Hardware Updater for Forseti
 	 */
-	protected HardwareUpdater(Drive drive, Arm arm, Intake intake) {
+	protected HardwareUpdater(Drive drive, Arm arm, Intake intake, Shooter shooter) {
 		this.mDrive = drive;
 		this.mArm = arm;
 		this.mIntake = intake;
+		this.mShooter = shooter;
 	}
 
 	/**
@@ -76,12 +79,17 @@ class HardwareUpdater {
 		//Disable intake talons
 		HardwareAdapter.getInstance().getIntake().masterTalon.set(ControlMode.Disabled, 0);
 		HardwareAdapter.getInstance().getIntake().slaveTalon.set(ControlMode.Disabled, 0);
+
+		//Disable shooter talons
+		HardwareAdapter.getInstance().getShooter().masterTalon.set(ControlMode.Disabled, 0);
+		HardwareAdapter.getInstance().getShooter().slaveTalon.set(ControlMode.Disabled, 0);
 	}
 
 	void configureHardware() {
 		configureDriveHardware();
 		configureArmHardware();
 		configureIntakeHardware();
+		configureShooterHardware();
 	}
 
 	void configureDriveHardware() {
@@ -265,6 +273,33 @@ class HardwareUpdater {
 		ultrasonic2.setAutomaticMode(true);
 		ultrasonic2.setAutomaticMode(true);
 
+	}
+
+	void configureShooterHardware() {
+		WPI_TalonSRX masterTalon = HardwareAdapter.getInstance().getShooter().masterTalon;
+		WPI_TalonSRX slaveTalon = HardwareAdapter.getInstance().getShooter().slaveTalon;
+
+		masterTalon.setInverted(false);
+		slaveTalon.setInverted(false);
+
+		slaveTalon.follow(masterTalon);
+
+		masterTalon.setNeutralMode(NeutralMode.Brake);
+		slaveTalon.setNeutralMode(NeutralMode.Brake);
+
+		masterTalon.configOpenloopRamp(0.09, 0);
+		slaveTalon.configOpenloopRamp(0.09, 0);
+
+		masterTalon.enableVoltageCompensation(true);
+		slaveTalon.enableVoltageCompensation(true);
+
+		masterTalon.configVoltageCompSaturation(14, 0);
+		slaveTalon.configVoltageCompSaturation(14, 0);
+
+		masterTalon.configForwardSoftLimitEnable(false, 0);
+		masterTalon.configReverseSoftLimitEnable(false, 0);
+		slaveTalon.configForwardSoftLimitEnable(false, 0);
+		slaveTalon.configReverseSoftLimitEnable(false, 0);
 	}
 
 	/**

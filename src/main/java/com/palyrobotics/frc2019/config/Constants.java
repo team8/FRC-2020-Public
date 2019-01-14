@@ -219,6 +219,10 @@ public class Constants {
 	public static final int kForsetiIntakeMasterDeviceID = 3;
 	public static final int kForsetiIntakeSlaveDeviceID = 4;
 
+	//SHOOTER
+	public static final int kShooterMasterDeviceID = 0;
+	public static final int kShooterSlaveDeviceID = 1;
+
 	//PCM 0
 	public static final int kForsetiIntakeUpDownSolenoidForwardID = 2;
 	public static final int kForsetiIntakeUpDownSolenoidReverseID = 5;
