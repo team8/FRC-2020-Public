@@ -2,8 +2,7 @@ package com.palyrobotics.frc2019.config;
 
 public class Constants {
 	public enum RobotName {
-		VIDAR,
-		HAL
+        VIDAR
 	}
 
 	public enum DriverName {
@@ -278,6 +277,7 @@ public class Constants {
 	//PCM 0
 	public static final int kVidarIntakeUpDownSolenoidForwardID = 2;
 	public static final int kVidarIntakeUpDownSolenoidReverseID = 5;
+
 	//PCM 1
 	public static final int kInOutSolenoidA = 0;
 	public static final int kInOutSolenoidB = 1;
