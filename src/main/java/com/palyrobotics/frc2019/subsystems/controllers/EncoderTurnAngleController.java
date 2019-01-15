@@ -30,7 +30,7 @@ public class EncoderTurnAngleController implements DriveController {
 		this.maxAccel = 72 * Constants.kDriveSpeedUnitConversion;
 		this.maxVel = 36 * Constants.kDriveSpeedUnitConversion;
 
-		if(Constants.kRobotName.equals(Constants.RobotName.FORSETI)) {
+		if(Constants.kRobotName.equals(Constants.RobotName.VIDAR)) {
 			mGains = new Gains(6.0, 0.01, 210, 2.0, 50, 0.0);
 		}
 

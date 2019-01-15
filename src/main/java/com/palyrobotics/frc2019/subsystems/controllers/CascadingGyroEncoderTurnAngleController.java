@@ -54,7 +54,7 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
             double currentHeading = mCachedPose.heading;
             double error = mTargetHeading - currentHeading;
 
-            if(Math.abs(error) < Gains.kForsetiCascadingTurnIzone) {
+            if(Math.abs(error) < Gains.kVidarCascadingTurnIzone) {
                 mErrorIntegral += error;
             } else {
                 mErrorIntegral = 0.0;
@@ -63,7 +63,7 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
             mErrorDerivative = (error - mLastError) / Constants.kNormalLoopsDt;
 
 //            Manually calculate PID output for velocity loop
-            mTarget = (Gains.kForsetiCascadingTurnkP * error + Gains.kForsetiCascadingTurnkI * mErrorIntegral + Gains.kForsetiCascadingTurnkD * mErrorDerivative);
+            mTarget = (Gains.kVidarCascadingTurnkP * error + Gains.kVidarCascadingTurnkI * mErrorIntegral + Gains.kVidarCascadingTurnkD * mErrorDerivative);
 
             if((Math.abs(mTarget) - Math.abs(mLastTarget))/Constants.kNormalLoopsDt > (Constants.kPathFollowingMaxAccel+25) * Constants.kDriveSpeedUnitConversion) {
                 System.out.println((Math.abs(mTarget) - Math.abs(mLastTarget))/Constants.kNormalLoopsDt);
@@ -74,14 +74,14 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
             mLastTarget = mTarget;
 
 //            System.out.println("error: " + error);
-//            System.out.println("P: " + (Gains.kForsetiCascadingTurnkP * error));
-//            System.out.println("I: " + (Gains.kForsetiCascadingTurnkI * mErrorIntegral));
-//            System.out.println("D: " + (Gains.kForsetiCascadingTurnkD * mErrorDerivative));
+//            System.out.println("P: " + (Gains.kVidarCascadingTurnkP * error));
+//            System.out.println("I: " + (Gains.kVidarCascadingTurnkI * mErrorIntegral));
+//            System.out.println("D: " + (Gains.kVidarCascadingTurnkD * mErrorDerivative));
 
             DashboardManager.getInstance().updateCANTable("angle", Double.toString(mTarget));
 
-            mLeftOutput.setVelocity(-mTarget, Gains.forsetiVelocity);
-            mRightOutput.setVelocity(mTarget, Gains.forsetiVelocity);
+            mLeftOutput.setVelocity(-mTarget, Gains.vidarVelocity);
+            mRightOutput.setVelocity(mTarget, Gains.vidarVelocity);
              
             mLastError = error;
 

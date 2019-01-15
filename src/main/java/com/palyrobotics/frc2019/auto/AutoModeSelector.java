@@ -260,7 +260,6 @@ public class AutoModeSelector {
 		return mAutoModes.get(index);
 	}
 
-	//TODO: what's this supposed to do
 	/**
 	 * Called during disabled in order to access dashboard and set auto mode
 	 *

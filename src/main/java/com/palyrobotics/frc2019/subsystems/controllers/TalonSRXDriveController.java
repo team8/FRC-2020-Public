@@ -135,9 +135,9 @@ public class TalonSRXDriveController implements Drive.DriveController {
 		if(mCachedState == null) {
 			return false;
 		}
-		double positionTolerance = (mSignal.leftMotor.gains.equals(Gains.forsetiShortDriveMotionMagicGains)) ? Constants.kAcceptableShortDrivePositionError
+		double positionTolerance = (mSignal.leftMotor.gains.equals(Gains.vidarShortDriveMotionMagicGains)) ? Constants.kAcceptableShortDrivePositionError
 				: Constants.kAcceptableDrivePositionError;
-		double velocityTolerance = (mSignal.leftMotor.gains.equals(Gains.forsetiShortDriveMotionMagicGains)) ? Constants.kAcceptableShortDriveVelocityError
+		double velocityTolerance = (mSignal.leftMotor.gains.equals(Gains.vidarShortDriveMotionMagicGains)) ? Constants.kAcceptableShortDriveVelocityError
 				: Constants.kAcceptableDriveVelocityError;
 
 		//Motion magic is not PID so ignore whether talon closed loop error is around

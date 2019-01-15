@@ -2,16 +2,16 @@ package com.palyrobotics.frc2019.config;
 
 public class Constants {
 	public enum RobotName {
-		FORSETI,
+		VIDAR,
 		HAL
 	}
 
 	public enum DriverName {
-		ERIC
+		BRYAN
 	}
 
 	public enum OperatorName {
-		JACOB
+		GRIFFIN
 	}
 
 	public enum FieldName {
@@ -20,22 +20,10 @@ public class Constants {
 	}
 
 	//Initialization constants
-	public static final RobotName kRobotName = RobotName.FORSETI;
-	public static final DriverName kDriverName = DriverName.ERIC;
-	public static final OperatorName kOperatorName = OperatorName.JACOB;
+	public static final RobotName kRobotName = RobotName.VIDAR;
+	public static final DriverName kDriverName = DriverName.BRYAN;
+	public static final OperatorName kOperatorName = OperatorName.GRIFFIN;
 	public static final FieldName kFieldName = FieldName.TEAM_8;
-
-	//Android app information
-	public static final String kPackageName = "com.frc8.team8vision.visionapp2018";
-	public static final int kVisionManagerUpdateRate = 100; //Update rate in milliseconds
-	public static final int kVisionVideoReceiverUpdateRate = 10;
-	public static final int kVisionVideoServerUpdateRate = 10;
-	public static final int kVisionDataPort = 8009;
-	public static final int kVisionVideoReceiverSocketPort = 8008;
-	public static final int kVisionVideoSocketPort = 5800;
-	public static final boolean kVisionUseTimeout = true;
-	public static final int kVisionMaxTimeoutWait = 5000;
-	public static final long kServerReconnectWait = 1000;
 
 	/**
 	 * Cheesy Drive Constants Set by DriverProfiles
@@ -209,36 +197,36 @@ public class Constants {
 	public static final int kEndEditableArea = 0;
 
 	/*
-	 * ************************************ Forseti ELECTRONIC CONSTANTS ************************************
+	 * ************************************ Vidar ELECTRONIC CONSTANTS ************************************
 	 */
 	//PDP
-	public static final int kForsetiPDPDeviceID = 0;
+	public static final int kVidarPDPDeviceID = 0;
 
 	//Compressor
-    public static final int kForsetiCompressorSensorDeviceID = 0;
-    public static final int kForsetiCompressorDeviceID = 0;
-    public static final int kForsetiCompressorVoltageToPSI = 0;
-    public static final int kForsetiPressureCurrentProductThreshold = 0;
-    public static final int kForsetiCompressorMaxPSI = 120;
+    public static final int kVidarCompressorSensorDeviceID = 0;
+    public static final int kVidarCompressorDeviceID = 0;
+    public static final int kVidarCompressorVoltageToPSI = 0;
+    public static final int kVidarPressureCurrentProductThreshold = 0;
+    public static final int kVidarCompressorMaxPSI = 120;
 
 	//DRIVETRAIN
 	//PDP slots for drivetrain 0, 1, 2, 3, 12, 13
-	public static final int kForsetiLeftDriveMasterDeviceID = 0;
-	public static final int kForsetiLeftDriveSlave1DeviceID = 1;
-	public static final int kForsetiLeftDriveSlave2DeviceID = 2;
+	public static final int kVidarLeftDriveMasterDeviceID = 0;
+	public static final int kVidarLeftDriveSlave1DeviceID = 1;
+	public static final int kVidarLeftDriveSlave2DeviceID = 2;
 
-	public static final int kForsetiRightDriveMasterDeviceID = 15;
-	public static final int kForsetiRightDriveSlave1DeviceID = 14;
-	public static final int kForsetiRightDriveSlave2DeviceID = 13;
+	public static final int kVidarRightDriveMasterDeviceID = 15;
+	public static final int kVidarRightDriveSlave1DeviceID = 14;
+	public static final int kVidarRightDriveSlave2DeviceID = 13;
 
 	//ARM
 	public static final int kForesetiArmMasterTalonID = 12;
-	public static final int kForsetiArmSlaveVictorID = 11;
-	public static final int kForsetiArmPotID = 0;
+	public static final int kVidarArmSlaveVictorID = 11;
+	public static final int kVidarArmPotID = 0;
 
 	//INTAKE
-	public static final int kForsetiIntakeMasterDeviceID = 3;
-	public static final int kForsetiIntakeSlaveDeviceID = 4;
+	public static final int kVidarIntakeMasterDeviceID = 3;
+	public static final int kVidarIntakeSlaveDeviceID = 4;
 
 	//SHOOTER
 	public static final int kShooterMasterDeviceID = 0;
@@ -249,8 +237,8 @@ public class Constants {
 	public static final int kVidarPusherPotID = 0;
 
 	//PCM 0
-	public static final int kForsetiIntakeUpDownSolenoidForwardID = 2;
-	public static final int kForsetiIntakeUpDownSolenoidReverseID = 5;
+	public static final int kVidarIntakeUpDownSolenoidForwardID = 2;
+	public static final int kVidarIntakeUpDownSolenoidReverseID = 5;
 	//PCM 1
 	public static final int kInOutSolenoidA = 0;
 	public static final int kInOutSolenoidB = 1;

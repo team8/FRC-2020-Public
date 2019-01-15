@@ -34,9 +34,9 @@ public class GyroMotionMagicTurnAngleController implements DriveController {
 		mCachedPose = priorSetpoint;
 		mTargetHeading = priorSetpoint.heading + angle;
 
-		mGains = Gains.forsetiTurnMotionMagicGains;
-		mCruiseVel = (int) Gains.kForsetiTurnMotionMagicCruiseVelocity;
-		mMaxAccel = (int) Gains.kForsetiTurnMotionMagicMaxAcceleration;
+		mGains = Gains.vidarTurnMotionMagicGains;
+		mCruiseVel = (int) Gains.kVidarTurnMotionMagicCruiseVelocity;
+		mMaxAccel = (int) Gains.kVidarTurnMotionMagicMaxAcceleration;
 		kInchesPerDegree = Constants.kDriveInchesPerDegree;
 		kTicksPerInch = Constants.kDriveTicksPerInch;
 		kTolerance = Constants.kAcceptableTurnAngleError;

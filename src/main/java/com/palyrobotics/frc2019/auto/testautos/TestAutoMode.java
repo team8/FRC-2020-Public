@@ -43,8 +43,8 @@ public class TestAutoMode extends AutoModeBase {
 	private Routine testF() {
 		double power = 0.1;
 		DriveSignal signal = DriveSignal.getNeutralSignal();
-		signal.leftMotor.setVelocity(20 * Constants.kDriveSpeedUnitConversion, Gains.forsetiVelocity);
-		signal.rightMotor.setVelocity(20 * Constants.kDriveSpeedUnitConversion, Gains.forsetiVelocity);
+		signal.leftMotor.setVelocity(20 * Constants.kDriveSpeedUnitConversion, Gains.vidarVelocity);
+		signal.rightMotor.setVelocity(20 * Constants.kDriveSpeedUnitConversion, Gains.vidarVelocity);
 
 //		signal.leftMotor.setPercentOutput(0.4);
 //		signal.rightMotor.setPercentOutput(0.4);
@@ -52,13 +52,6 @@ public class TestAutoMode extends AutoModeBase {
 	}
 
 	private SequentialRoutine getDrive() {
-		Gains mShortGains = Gains.forsetiLongDriveMotionMagicGains;
-		DriveSignal driveBackup = DriveSignal.getNeutralSignal();
-		double driveBackupSetpoint = 60 * Constants.kDriveTicksPerInch;
-		driveBackup.leftMotor.setMotionMagic(-1 * driveBackupSetpoint, mShortGains, (int) Gains.kForsetiLongDriveMotionMagicCruiseVelocity,
-				(int) Gains.kForsetiLongDriveMotionMagicMaxAcceleration);
-		driveBackup.rightMotor.setMotionMagic(driveBackupSetpoint, mShortGains, (int) Gains.kForsetiLongDriveMotionMagicCruiseVelocity,
-				(int) Gains.kForsetiLongDriveMotionMagicMaxAcceleration);
 
 		ArrayList<Routine> sequence = new ArrayList<>();
 //		sequence.add(new IntakeDownRoutine());

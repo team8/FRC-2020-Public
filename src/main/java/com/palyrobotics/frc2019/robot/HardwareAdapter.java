@@ -45,12 +45,12 @@ public class HardwareAdapter {
 		}
 
 		protected DrivetrainHardware() {
-			leftMasterTalon = new WPI_TalonSRX(Constants.kForsetiLeftDriveMasterDeviceID);
-			leftSlave1Victor = new WPI_VictorSPX(Constants.kForsetiLeftDriveSlave1DeviceID);
-			leftSlave2Victor = new WPI_VictorSPX(Constants.kForsetiLeftDriveSlave2DeviceID);
-            rightMasterTalon = new WPI_TalonSRX(Constants.kForsetiRightDriveMasterDeviceID);
-			rightSlave1Victor = new WPI_VictorSPX(Constants.kForsetiRightDriveSlave1DeviceID);
-			rightSlave2Victor = new WPI_VictorSPX(Constants.kForsetiRightDriveSlave2DeviceID);
+			leftMasterTalon = new WPI_TalonSRX(Constants.kVidarLeftDriveMasterDeviceID);
+			leftSlave1Victor = new WPI_VictorSPX(Constants.kVidarLeftDriveSlave1DeviceID);
+			leftSlave2Victor = new WPI_VictorSPX(Constants.kVidarLeftDriveSlave2DeviceID);
+            rightMasterTalon = new WPI_TalonSRX(Constants.kVidarRightDriveMasterDeviceID);
+			rightSlave1Victor = new WPI_VictorSPX(Constants.kVidarRightDriveSlave1DeviceID);
+			rightSlave2Victor = new WPI_VictorSPX(Constants.kVidarRightDriveSlave2DeviceID);
 
 			gyro = new PigeonIMU(0);
 		}
@@ -73,8 +73,8 @@ public class HardwareAdapter {
 
 		protected ArmHardware() {
 			armMasterTalon = new WPI_TalonSRX(Constants.kForesetiArmMasterTalonID); 
-			armSlaveVictor = new WPI_VictorSPX(Constants.kForsetiArmSlaveVictorID); 
-			armPot = new AnalogPotentiometer(Constants.kForsetiArmPotID, 360, 0);
+			armSlaveVictor = new WPI_VictorSPX(Constants.kVidarArmSlaveVictorID);
+			armPot = new AnalogPotentiometer(Constants.kVidarArmPotID, 360, 0);
 		}
 	}
 	/**
@@ -95,9 +95,9 @@ public class HardwareAdapter {
 		public final Spark LED;
 
 		protected IntakeHardware() {
-			masterTalon = new WPI_VictorSPX(Constants.kForsetiIntakeMasterDeviceID);
-			slaveTalon = new WPI_VictorSPX(Constants.kForsetiIntakeSlaveDeviceID);
-			if (Constants.kRobotName == Constants.RobotName.FORSETI) {
+			masterTalon = new WPI_VictorSPX(Constants.kVidarIntakeMasterDeviceID);
+			slaveTalon = new WPI_VictorSPX(Constants.kVidarIntakeSlaveDeviceID);
+			if (Constants.kRobotName == Constants.RobotName.VIDAR) {
 				inOutSolenoid = new DoubleSolenoid(0,Constants.kInOutSolenoidA, Constants.kInOutSolenoidB);
 			}
 			else {

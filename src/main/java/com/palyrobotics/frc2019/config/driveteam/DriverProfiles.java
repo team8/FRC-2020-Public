@@ -10,7 +10,7 @@ public class DriverProfiles {
 	 */
 	public static void configureConstants() {
 		switch(Constants.kDriverName) {
-			case ERIC:
+			case BRYAN:
 				Constants.kDeadband = 0.02;
 
 				Constants.kMaxAccelRate = 0.0225;

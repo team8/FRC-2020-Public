@@ -215,8 +215,8 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 			setpoint = new Kinematics.DriveVelocity(setpoint.left * scaling, setpoint.right * scaling);
 		}
 
-		final TalonSRXOutput left = new TalonSRXOutput(ControlMode.Velocity, Gains.forsetiVelocity, setpoint.left * Constants.kDriveSpeedUnitConversion),
-				right = new TalonSRXOutput(ControlMode.Velocity, Gains.forsetiVelocity, setpoint.right * Constants.kDriveSpeedUnitConversion);
+		final TalonSRXOutput left = new TalonSRXOutput(ControlMode.Velocity, Gains.vidarVelocity, setpoint.left * Constants.kDriveSpeedUnitConversion),
+				right = new TalonSRXOutput(ControlMode.Velocity, Gains.vidarVelocity, setpoint.right * Constants.kDriveSpeedUnitConversion);
 //		System.out.println("Left output = " + left + " " + "Right output = " + right);
 		return new DriveSignal(left, right);
 	}

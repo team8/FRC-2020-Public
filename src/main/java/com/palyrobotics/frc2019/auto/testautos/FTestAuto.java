@@ -64,7 +64,7 @@ public class FTestAuto extends AutoModeBase {
     }
 
     private ParallelRoutine getDrive() {
-//        Gains mShortGains = Gains.forsetiShortDriveMotionMagicGains;
+//        Gains mShortGains = Gains.vidarShortDriveMotionMagicGains;
 //
         DriveSignal driveBackup = DriveSignal.getNeutralSignal();
         driveBackup.leftMotor.setPercentOutput(.6);

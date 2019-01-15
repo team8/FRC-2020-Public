@@ -152,7 +152,7 @@ public class CheesyDriveHelper {
 	public double remapThrottle(double initialThrottle) {
 		double x = Math.abs(initialThrottle);
 		switch(Constants.kDriverName) {
-			case ERIC:
+			case BRYAN:
 				//Reversal of directions
 				//Stick a 0 cycle in between
 				if(initialThrottle * mOldThrottle < 0) {

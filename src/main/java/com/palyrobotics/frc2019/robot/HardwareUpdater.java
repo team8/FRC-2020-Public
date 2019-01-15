@@ -44,7 +44,7 @@ class HardwareUpdater {
 	private double maxV = 0;
 
 	/**
-	 * Hardware Updater for Forseti
+	 * Hardware Updater for Vidar
 	 */
 	protected HardwareUpdater(Drive drive, Arm arm, Intake intake, Shooter shooter, Pusher pusher) {
 		this.mDrive = drive;
@@ -263,7 +263,7 @@ class HardwareUpdater {
 		slaveTalon.configReverseSoftLimitEnable(false, 0);
 
 		//Reverse right side
-		if (Constants.kRobotName == Constants.RobotName.FORSETI) {
+		if (Constants.kRobotName == Constants.RobotName.VIDAR) {
 			masterTalon.setInverted(true);
 		}
 		else {
@@ -531,7 +531,7 @@ class HardwareUpdater {
 
 
 //        //Update compressor pressure
-//        robotState.compressorPressure = HardwareAdapter.getInstance().getMiscellaneousHardware().compressorSensor.getVoltage() * Constants.kForsetiCompressorVoltageToPSI; //TODO: Implement the constant!
+//        robotState.compressorPressure = HardwareAdapter.getInstance().getMiscellaneousHardware().compressorSensor.getVoltage() * Constants.kVidarCompressorVoltageToPSI; //TODO: Implement the constant!
 //
 
         PowerDistributionPanel pdp = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp;
@@ -601,7 +601,7 @@ class HardwareUpdater {
     private boolean shouldCompress() {
 //        double currentDraw = RobotState.getInstance().totalCurrentDraw;
 //        double pressure = RobotState.getInstance().compressorPressure;
-//        return currentDraw * pressure < Constants.kForsetiPressureCurrentProductThreshold; //TODO: Implement this!
+//        return currentDraw * pressure < Constants.kVidarPressureCurrentProductThreshold; //TODO: Implement this!
     	return !(RobotState.getInstance().gamePeriod == RobotState.GamePeriod.AUTO);
     }
 
