@@ -10,6 +10,7 @@ import com.palyrobotics.frc2019.subsystems.Arm;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Intake;
 import com.palyrobotics.frc2019.subsystems.Shooter;
+import com.palyrobotics.frc2019.subsystems.Pusher;
 import com.palyrobotics.frc2019.util.ClimberSignal;
 import com.palyrobotics.frc2019.util.LEDColor;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
@@ -37,6 +38,7 @@ class HardwareUpdater {
 	private Arm mArm;
 	private Intake mIntake;
 	private Shooter mShooter;
+	private Pusher mPusher;
 
 	private double lastVelocity = 0;
 	private double maxA = 0;
@@ -45,11 +47,12 @@ class HardwareUpdater {
 	/**
 	 * Hardware Updater for Forseti
 	 */
-	protected HardwareUpdater(Drive drive, Arm arm, Intake intake, Shooter shooter) {
+	protected HardwareUpdater(Drive drive, Arm arm, Intake intake, Shooter shooter, Pusher pusher) {
 		this.mDrive = drive;
 		this.mArm = arm;
 		this.mIntake = intake;
 		this.mShooter = shooter;
+		this.mPusher = pusher;
 	}
 
 	/**
@@ -90,6 +93,7 @@ class HardwareUpdater {
 		configureArmHardware();
 		configureIntakeHardware();
 		configureShooterHardware();
+		configurePusherHardware();
 	}
 
 	void configureDriveHardware() {
@@ -302,6 +306,15 @@ class HardwareUpdater {
 		slaveTalon.configReverseSoftLimitEnable(false, 0);
 	}
 
+	void configurePusherHardware() {
+		Ultrasonic ultrasonic1 = HardwareAdapter.getInstance().getPusher().pusherUltrasonic1;
+		Ultrasonic ultrasonic2 = HardwareAdapter.getInstance().getPusher().pusherUltrasonic2;
+
+		ultrasonic1.setAutomaticMode(true);
+		ultrasonic1.setEnabled(true);
+		ultrasonic2.setAutomaticMode(true);
+		ultrasonic2.setAutomaticMode(true);
+	}
 	/**
 	 * Updates all the sensor data taken from the hardware
 	 */
@@ -439,6 +452,43 @@ class HardwareUpdater {
 //		System.out.println("Right: " + mUltrasonicRight.getRangeInches());
 //		System.out.println(robotState.hasCube);
 
+		//Left Side Cargo Distance from Pusher
+		Ultrasonic mPusherUltrasonicLeft = HardwareAdapter.getInstance().getPusher().pusherUltrasonic1;
+		robotState.mLeftPusherReadings.add(mPusherUltrasonicLeft.getRangeInches());
+		if(robotState.mLeftPusherReadings.size() > 10) {
+			robotState.mLeftPusherReadings.remove(0);
+		}
+
+		int pusherLeftTotal = 0;
+		for (int i = 0; i < robotState.mLeftPusherReadings.size(); i++) {
+			if (robotState.mLeftPusherReadings.get(i) < Constants.kPusherCargoTolerance) {
+				pusherLeftTotal += 1;
+			}
+		}
+
+		//Right Side Cargo Distance from Pusher
+		Ultrasonic mPusherUltrasonicRight = HardwareAdapter.getInstance().getPusher().pusherUltrasonic2;
+		robotState.mRightPusherReadings.add(mPusherUltrasonicRight.getRangeInches());
+		if(robotState.mRightPusherReadings.size() > 10) {
+			robotState.mRightPusherReadings.remove(0);
+		}
+
+		int pusherRightTotal = 0;
+		for (int i = 0; i < robotState.mRightPusherReadings.size(); i++) {
+			if (robotState.mRightPusherReadings.get(i) < Constants.kPusherCargoTolerance) {
+				pusherRightTotal += 1;
+			}
+		}
+
+		if (pusherLeftTotal > Constants.kPusherRequiredUltrasonicCount && pusherRightTotal > Constants.kPusherRequiredUltrasonicCount) {
+			robotState.hasPusherCargo = false;
+		}
+		else {
+			robotState.hasPusherCargo = true;
+		}
+
+		robotState.cargoPusherDistance = (mPusherUltrasonicLeft.getRangeInches() +
+				mPusherUltrasonicRight.getRangeInches())/2;
 
 		robotState.drivePose.leftError = Optional.of(leftMasterTalon.getClosedLoopError(0));
 		robotState.drivePose.rightError = Optional.of(rightMasterTalon.getClosedLoopError(0));
@@ -498,6 +548,8 @@ class HardwareUpdater {
 		updateDrivetrain();
 		updateArm();
 		updateIntake();
+		updateShooter();
+		updatePusher();
 		updateMiscellaneousHardware();
 	}
 
@@ -536,7 +588,6 @@ class HardwareUpdater {
 	 * Updates the arm
 	 */
 	private void updateArm() {
-
 		if(mArm.getIsAtTop()) {
 			TalonSRXOutput armHoldOutput = new TalonSRXOutput();
 			armHoldOutput.setPercentOutput(Constants.kArmHoldVoltage);
@@ -556,6 +607,21 @@ class HardwareUpdater {
 		HardwareAdapter.getInstance().getIntake().slaveTalon.set(mIntake.getTalonOutput().getSetpoint());
 		HardwareAdapter.getInstance().getIntake().inOutSolenoid.set(mIntake.getOpenCloseOutput() ? Value.kReverse : Value.kForward);
 		HardwareAdapter.getInstance().getIntake().LED.set(LEDColor.getValue(LEDColor.getColor()));
+	}
+
+	/**
+	 * Updates the pusher
+	 */
+	private void updatePusher() {
+		HardwareAdapter.getInstance().getPusher().inOutSolenoid.set(mPusher.getInOutOutput());
+	}
+
+	/**
+	 * Updates the shooter
+	 */
+	private void updateShooter() {
+		HardwareAdapter.getInstance().getShooter().masterTalon.set(mShooter.getTalonOutput().getSetpoint());
+		HardwareAdapter.getInstance().getShooter().slaveTalon.set(mShooter.getTalonOutput().getSetpoint());
 	}
 
 	void enableBrakeMode() {

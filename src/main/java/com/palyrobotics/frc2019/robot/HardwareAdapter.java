@@ -3,6 +3,7 @@ package com.palyrobotics.frc2019.robot;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.util.XboxController;
@@ -109,6 +110,25 @@ public class HardwareAdapter {
 		}
 	}
 
+	/**
+	 * Pusher - 1 Solenoid, 2 Ultrasonics
+	 */
+	public static class PusherHardware {
+		private static PusherHardware instance = new PusherHardware();
+
+		private static PusherHardware getInstance() { return instance; }
+
+		public final Solenoid inOutSolenoid;
+		public final Ultrasonic pusherUltrasonic1;
+		public final Ultrasonic pusherUltrasonic2;
+
+		protected PusherHardware() {
+			inOutSolenoid = new Solenoid(0, Constants.kPusherInOutSolenoid);
+			pusherUltrasonic1 = new Ultrasonic(Constants.kPusherRightUltrasonicPing, Constants.kPusherRightUltrasonicEcho);
+			pusherUltrasonic2 = new Ultrasonic(Constants.kPusherLeftUltrasonicPing, Constants.kPusherLeftUltrasonicEcho);
+		}
+	}
+
 	public static class ShooterHardware{
 		private static ShooterHardware instance = new ShooterHardware();
 
@@ -181,6 +201,8 @@ public class HardwareAdapter {
 	}
 
 	public ShooterHardware getShooter() { return ShooterHardware.getInstance(); }
+
+	public PusherHardware getPusher() { return PusherHardware.getInstance(); }
 
 	public Joysticks getJoysticks() {
 		return Joysticks.getInstance();

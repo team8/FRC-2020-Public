@@ -99,6 +99,10 @@ public class Constants {
 	public static final double kIntakeCubeInchTolerance = 3;
     public static final double kIntakeCloseRoutineCloseNow = 5.8;
     public static final int kRequiredUltrasonicCount = 6;
+    public static final int kPusherRightUltrasonicPing = 0;
+    public static final int kPusherRightUltrasonicEcho = 0;
+	public static final int kPusherLeftUltrasonicPing = 0;
+	public static final int kPusherLeftUltrasonicEcho = 0;
 
 	/*
 	 * Control loop constants for both robots
@@ -175,6 +179,13 @@ public class Constants {
 	public static final int kShovelExpellingMotorVelocity = 0;
 	public static final int kShovelSmallExpelMotorVelocity = 0;
 	public static final int kMaxShovelCurrentDraw = 0;
+
+	/**
+	 * Pusher
+	 */
+	public static final int kPusherInOutSolenoid = 0;
+	public static final int kPusherCargoTolerance = 0;
+	public static final int kPusherRequiredUltrasonicCount = 0;
 
 	public static boolean operatorXBoxController = true;
 

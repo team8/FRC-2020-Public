@@ -5,6 +5,7 @@ import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Arm;
 import com.palyrobotics.frc2019.subsystems.Intake;
 import com.palyrobotics.frc2019.subsystems.Shooter;
+import com.palyrobotics.frc2019.subsystems.Pusher;
 import com.palyrobotics.frc2019.util.DriveSignal;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
@@ -39,6 +40,7 @@ public class Commands {
 	public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
 	public Intake.WheelState wantedIntakingState = Intake.WheelState.IDLE;
 	public Intake.OpenCloseState wantedIntakeOpenCloseState = Intake.OpenCloseState.CLOSED;
+	public Pusher.PusherState wantedPusherInOutState = Pusher.PusherState.IN;
 	public boolean disableArmScaling = true;
 	public boolean customShooterSpeed = false;
 	public boolean customIntakeSpeed = false;
@@ -91,6 +93,7 @@ public class Commands {
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.wantedIntakingState = this.wantedIntakingState;
 		copy.wantedIntakeOpenCloseState = this.wantedIntakeOpenCloseState;
+		copy.wantedPusherInOutState = this.wantedPusherInOutState;
 		copy.disableArmScaling = this.disableArmScaling;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.customShooterSpeed = this.customShooterSpeed;
