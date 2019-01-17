@@ -46,6 +46,8 @@ public class Commands {
 	public boolean customShooterSpeed = false;
 	public boolean customIntakeSpeed = false;
 	public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.CALIBRATING;
+	public Elevator.ClimberState wantedClimberState = Elevator.ClimberState.INACTIVE;
+	public Elevator.GearboxState wantedGearboxState = Elevator.GearboxState.ELEVATOR;
 
 	public void addWantedRoutine(Routine wantedRoutine) {
 		for(Routine routine : wantedRoutines) {
@@ -70,6 +72,7 @@ public class Commands {
 		public Optional<DriveSignal> drivePowerSetpoint = Optional.empty();
 		public Optional<Double> armPositionSetpoint = Optional.empty();
 		public Optional<Double> elevatorPositionSetpoint = Optional.empty();
+		public Optional<Double> climberPositionSetpoint = Optional.empty();
 
 		/**
 		 * Resets all the setpoints
@@ -78,6 +81,7 @@ public class Commands {
 			drivePowerSetpoint = Optional.empty();
 			armPositionSetpoint = Optional.empty();
 			elevatorPositionSetpoint = Optional.empty();
+			climberPositionSetpoint = Optional.empty();
 		}
 	}
 
@@ -96,6 +100,8 @@ public class Commands {
 		copy.wantedArmState = this.wantedArmState;
 		copy.wantedShooterState = this.wantedShooterState;
 		copy.wantedElevatorState = this.wantedElevatorState;
+		copy.wantedClimberState = this.wantedClimberState;
+		copy.wantedGearboxState = this.wantedGearboxState;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.wantedIntakingState = this.wantedIntakingState;
@@ -115,7 +121,8 @@ public class Commands {
 		//Copy optionals that are present
 		robotSetpoints.drivePowerSetpoint.ifPresent((DriveSignal signal) -> copy.robotSetpoints.drivePowerSetpoint = Optional.of(signal));
 		robotSetpoints.elevatorPositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.elevatorPositionSetpoint = Optional.of(elevatorPositionSetpoint));
-		return copy;
+        robotSetpoints.climberPositionSetpoint.ifPresent((Double climberPositionSetpoint) -> copy.robotSetpoints.climberPositionSetpoint = Optional.of(climberPositionSetpoint));
+        return copy;
 	}
 
 	@Override

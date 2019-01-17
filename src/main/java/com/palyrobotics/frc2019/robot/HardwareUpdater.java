@@ -660,13 +660,18 @@ class HardwareUpdater {
      * Updates the elevator
      */
     private void updateElevator() {
-        if(mElevator.getIsAtTop() && mElevator.movingUpwards()) {
-            TalonSRXOutput elevatorHoldOutput = new TalonSRXOutput();
-            elevatorHoldOutput.setPercentOutput(Constants.kElevatorHoldVoltage);
-            updateTalonSRX(HardwareAdapter.getInstance().getElevator().elevatorMasterTalon, elevatorHoldOutput);
+        if(mElevator.getmGearboxState() == Elevator.GearboxState.ELEVATOR) {
+            if (mElevator.getIsAtTop() && mElevator.movingUpwards()) {
+                TalonSRXOutput elevatorHoldOutput = new TalonSRXOutput();
+                elevatorHoldOutput.setPercentOutput(Constants.kElevatorHoldVoltage);
+                updateTalonSRX(HardwareAdapter.getInstance().getElevator().elevatorMasterTalon, elevatorHoldOutput);
+            } else {
+                updateTalonSRX(HardwareAdapter.getInstance().getElevator().elevatorMasterTalon, mElevator.getOutput());
+            }
         } else {
             updateTalonSRX(HardwareAdapter.getInstance().getElevator().elevatorMasterTalon, mElevator.getOutput());
         }
+        HardwareAdapter.getInstance().getElevator().elevatorDoubleSolenoid.set(mElevator.getSolenoidOutput());
     }
 
     /**

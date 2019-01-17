@@ -56,7 +56,7 @@ public class HardwareAdapter {
 	}
 
     /**
-     *  Elevator - 2 WPI_TalonSRx, 1 HFX, 1 Encoder
+     *  Elevator - 2 WPI_TalonSRx, 1 HFX, 1 Encoder, 1 DoubleSolenoid
      */
     public static class ElevatorHardware {
         private static ElevatorHardware instance = new ElevatorHardware();
@@ -67,10 +67,12 @@ public class HardwareAdapter {
 
         public final WPI_TalonSRX elevatorMasterTalon;
         public final WPI_TalonSRX elevatorSlaveTalon;
+        public final DoubleSolenoid elevatorDoubleSolenoid;
 
         protected ElevatorHardware() {
-            elevatorMasterTalon = new WPI_TalonSRX(Constants.kForsetiElevatorMasterTalonID);
-            elevatorSlaveTalon = new WPI_TalonSRX(Constants.kForsetiElevatorSlaveTalonID);
+            elevatorMasterTalon = new WPI_TalonSRX(Constants.kVidarElevatorMasterTalonID);
+            elevatorSlaveTalon = new WPI_TalonSRX(Constants.kVidarElevatorSlaveTalonID);
+            elevatorDoubleSolenoid = new DoubleSolenoid(Constants.kVidarElevatorDoubleSolenoidForwardsID, Constants.kVidarElevatorDoubleSolenoidReverseID);
         }
     }
 
