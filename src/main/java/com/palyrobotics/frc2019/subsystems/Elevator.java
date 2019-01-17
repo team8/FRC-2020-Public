@@ -50,9 +50,6 @@ public class Elevator extends Subsystem {
     private ClimberState mClimberState;
     private GearboxState mGearboxState;
 
-    //The variable used in the state machine
-    private ElevatorState mState;
-
     //Values for the bottom/top positions to be calibrated
     private Optional<Double> kElevatorBottomPosition = Optional.empty();
     private Optional<Double> kElevatorTopPosition = Optional.empty();
