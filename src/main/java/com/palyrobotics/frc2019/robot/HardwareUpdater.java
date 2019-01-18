@@ -590,7 +590,6 @@ class HardwareUpdater {
 		updateShovel();
 		updateFingers();
 		updateAutoPlacer();
-
 		updateMiscellaneousHardware();
 	}
 

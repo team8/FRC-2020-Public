@@ -108,15 +108,11 @@ public class Commands {
 		copy.wantedGearboxState = this.wantedGearboxState;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
-
 		copy.wantedPusherInOutState = this.wantedPusherInOutState;
-
 		copy.wantedShovelWheelState = this.wantedShovelWheelState;
 		copy.wantedShovelUpDownState = this.wantedShovelUpDownState;
-
 		copy.wantedFingersOpenCloseState = this.wantedFingersOpenCloseState;
 		copy.wantedFingersExpelState = this.wantedFingersExpelState;
-
 		copy.disableArmScaling = this.disableArmScaling;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.customShooterSpeed = this.customShooterSpeed;
