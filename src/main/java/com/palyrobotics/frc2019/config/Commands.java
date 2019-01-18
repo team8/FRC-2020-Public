@@ -90,6 +90,7 @@ public class Commands {
 		Commands copy = new Commands();
 		copy.wantedDriveState = this.wantedDriveState;
 		copy.wantedArmState = this.wantedArmState;
+		copy.wantedShooterState = this.wantedShooterState;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.wantedIntakingState = this.wantedIntakingState;
 		copy.wantedIntakeOpenCloseState = this.wantedIntakeOpenCloseState;

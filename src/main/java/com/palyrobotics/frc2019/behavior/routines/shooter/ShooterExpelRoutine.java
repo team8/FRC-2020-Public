@@ -6,7 +6,7 @@ import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 
 /**
- * @author Jason
+ * @author Jason, Alan
  */
 public class ShooterExpelRoutine extends Routine {
 
@@ -36,6 +36,7 @@ public class ShooterExpelRoutine extends Routine {
     public Commands update(Commands commands) {
 
         commands.wantedShooterState = wantedShooterState;
+        commands.customShooterSpeed = false;
 
         return commands;
     }
@@ -58,6 +59,6 @@ public class ShooterExpelRoutine extends Routine {
 
     @Override
     public String getName() {
-        return "IntakeWheelRoutine";
+        return "ShooterExpelRoutine";
     }
 }

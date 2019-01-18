@@ -244,6 +244,7 @@ public class Robot extends TimedRobot {
 	private void startSubsystems() {
 		mDrive.start();
 		mArm.start();
+		mShooter.start();
 		mIntake.start();
 		mPusher.start();
 	}
@@ -251,6 +252,7 @@ public class Robot extends TimedRobot {
 	private void updateSubsystems() {
 		mDrive.update(commands, robotState);
 		mArm.update(commands, robotState);
+		mShooter.update(commands, robotState);
 		mIntake.update(commands, robotState);
 		mPusher.update(commands, robotState);
 	}
@@ -258,6 +260,7 @@ public class Robot extends TimedRobot {
 	private void stopSubsystems() {
 		mDrive.stop();
 		mArm.stop();
+		mShooter.stop();
 		mIntake.stop();
 		mPusher.stop();
 	}

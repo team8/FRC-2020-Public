@@ -82,12 +82,12 @@ class HardwareUpdater {
 		HardwareAdapter.getInstance().getIntake().masterTalon.set(ControlMode.Disabled, 0);
 		HardwareAdapter.getInstance().getIntake().slaveTalon.set(ControlMode.Disabled, 0);
 
-		//Disable shooter talons
-		HardwareAdapter.getInstance().getShooter().masterTalon.set(ControlMode.Disabled, 0);
-		HardwareAdapter.getInstance().getShooter().slaveTalon.set(ControlMode.Disabled, 0);
-
 		//Disable pusher talons
 		HardwareAdapter.getInstance().getPusher().pusherVictor.set(ControlMode.Disabled, 0);
+
+		// Disable shooter talons
+		HardwareAdapter.getInstance().getShooter().shooterMasterVictor.set(ControlMode.Disabled, 0);
+		HardwareAdapter.getInstance().getShooter().shooterSlaveVictor.set(ControlMode.Disabled, 0);
 	}
 
 	void configureHardware() {
@@ -263,12 +263,7 @@ class HardwareUpdater {
 		slaveTalon.configReverseSoftLimitEnable(false, 0);
 
 		//Reverse right side
-		if (Constants.kRobotName == Constants.RobotName.VIDAR) {
-			masterTalon.setInverted(true);
-		}
-		else {
-			masterTalon.setInverted(false);
-		}
+        masterTalon.setInverted(true);
 		slaveTalon.setInverted(false);
 
 		//Set slave talons to follower mode
@@ -282,30 +277,30 @@ class HardwareUpdater {
 	}
 
 	void configureShooterHardware() {
-		WPI_TalonSRX masterTalon = HardwareAdapter.getInstance().getShooter().masterTalon;
-		WPI_TalonSRX slaveTalon = HardwareAdapter.getInstance().getShooter().slaveTalon;
+		WPI_VictorSPX masterVictor = HardwareAdapter.getInstance().getShooter().shooterMasterVictor;
+		WPI_VictorSPX slaveVictor = HardwareAdapter.getInstance().getShooter().shooterSlaveVictor;
 
-		masterTalon.setInverted(false);
-		slaveTalon.setInverted(false);
+		masterVictor.setInverted(false);
+		slaveVictor.setInverted(false);
 
-		slaveTalon.follow(masterTalon);
+		slaveVictor.follow(masterVictor);
 
-		masterTalon.setNeutralMode(NeutralMode.Brake);
-		slaveTalon.setNeutralMode(NeutralMode.Brake);
+		masterVictor.setNeutralMode(NeutralMode.Brake);
+		slaveVictor.setNeutralMode(NeutralMode.Brake);
 
-		masterTalon.configOpenloopRamp(0.09, 0);
-		slaveTalon.configOpenloopRamp(0.09, 0);
+		masterVictor.configOpenloopRamp(0.09, 0);
+		slaveVictor.configOpenloopRamp(0.09, 0);
 
-		masterTalon.enableVoltageCompensation(true);
-		slaveTalon.enableVoltageCompensation(true);
+		masterVictor.enableVoltageCompensation(true);
+		slaveVictor.enableVoltageCompensation(true);
 
-		masterTalon.configVoltageCompSaturation(14, 0);
-		slaveTalon.configVoltageCompSaturation(14, 0);
+		masterVictor.configVoltageCompSaturation(14, 0);
+		slaveVictor.configVoltageCompSaturation(14, 0);
 
-		masterTalon.configForwardSoftLimitEnable(false, 0);
-		masterTalon.configReverseSoftLimitEnable(false, 0);
-		slaveTalon.configForwardSoftLimitEnable(false, 0);
-		slaveTalon.configReverseSoftLimitEnable(false, 0);
+		masterVictor.configForwardSoftLimitEnable(false, 0);
+		masterVictor.configReverseSoftLimitEnable(false, 0);
+		slaveVictor.configForwardSoftLimitEnable(false, 0);
+		slaveVictor.configReverseSoftLimitEnable(false, 0);
 	}
 
 	void configurePusherHardware() {
@@ -605,7 +600,15 @@ class HardwareUpdater {
     	return !(RobotState.getInstance().gamePeriod == RobotState.GamePeriod.AUTO);
     }
 
-	/**
+    /**
+     * Updates the shooter
+     */
+    private void updateShooter() {
+        HardwareAdapter.getInstance().getShooter().shooterMasterVictor.set(mShooter.getOutput());
+    }
+
+
+    /**
 	 * Updates the arm
 	 */
 	private void updateArm() {
@@ -635,14 +638,6 @@ class HardwareUpdater {
 	 */
 	private void updatePusher() {
 		HardwareAdapter.getInstance().getPusher().pusherVictor.set(mPusher.getPusherOutput());
-	}
-
-	/**
-	 * Updates the shooter
-	 */
-	private void updateShooter() {
-		HardwareAdapter.getInstance().getShooter().masterTalon.set(mShooter.getTalonOutput().getSetpoint());
-		HardwareAdapter.getInstance().getShooter().slaveTalon.set(mShooter.getTalonOutput().getSetpoint());
 	}
 
 	void enableBrakeMode() {

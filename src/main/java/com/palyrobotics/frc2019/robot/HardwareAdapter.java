@@ -1,6 +1,5 @@
 package com.palyrobotics.frc2019.robot;
 
-import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -136,12 +135,12 @@ public class HardwareAdapter {
 
 		private static ShooterHardware getInstance() { return instance; }
 
-		public final WPI_TalonSRX masterTalon;
-		public final WPI_TalonSRX slaveTalon;
+		public final WPI_VictorSPX shooterMasterVictor;
+		public final WPI_VictorSPX shooterSlaveVictor;
 
 		protected ShooterHardware() {
-			masterTalon = new WPI_TalonSRX(Constants.kShooterMasterDeviceID);
-			slaveTalon = new WPI_TalonSRX(Constants.kShooterSlaveDeviceID);
+			shooterMasterVictor = new WPI_VictorSPX(Constants.kVidarShooterMasterVictorDeviceID);
+			shooterSlaveVictor = new WPI_VictorSPX(Constants.kVidarShooterSlaveVictorDeviceID);
 		}
 	}
 

@@ -6,21 +6,24 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
 
 public class Shooter extends Subsystem{
-    public static Shooter instance = new Shooter();
+    public static Shooter instance = new Shooter("Shooter");
 
     public static Shooter getInstance() { return instance; }
 
-    public static void resetInstance() { instance = new Shooter(); }
+    public static void resetInstance() { instance = new Shooter("Shooter"); }
 
-    private TalonSRXOutput mTalonOutput = new TalonSRXOutput();
+    private double mOutput;
 
     public enum ShooterState {
-        EXPELLING, IDLE
+        EXPELLING,
+        IDLE
     }
 
     private ShooterState mState = ShooterState.IDLE;
 
-    protected Shooter() { super("Shooter"); }
+    protected Shooter(String name) {
+        super(name);
+    }
 
     @Override
     public void start() {
@@ -38,21 +41,23 @@ public class Shooter extends Subsystem{
 
         switch(mState) {
             case IDLE:
-                mTalonOutput.setPercentOutput(0);
+                mOutput = 0;
                 break;
             case EXPELLING:
                 if (commands.customShooterSpeed) {
-                    mTalonOutput.setPercentOutput(robotState.operatorXboxControllerInput.leftTrigger); //TODO: change control?
+                    mOutput = robotState.operatorXboxControllerInput.leftTrigger; //TODO: change control?
                 } else {
-                    mTalonOutput.setPercentOutput(Constants.kExpellingMotorVelocity);
+                    mOutput = Constants.kExpellingMotorVelocity;
                 }
         }
     }
 
-    public TalonSRXOutput getTalonOutput() { return mTalonOutput; }
+    public double getOutput() {
+        return mOutput;
+    }
 
     @Override
     public String getStatus() {
-        return "Shooter State: " + mState + "\nTalon Output: " + mTalonOutput.getSetpoint();
+        return "Shooter State: " + mState + "\nVictor Output: " + mOutput;
     }
 }
