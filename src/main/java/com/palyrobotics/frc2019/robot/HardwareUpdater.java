@@ -16,11 +16,11 @@ import com.palyrobotics.frc2019.util.trajectory.Rotation2d;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
-import java.util.*;
+import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -36,8 +36,8 @@ class HardwareUpdater {
 	private Elevator mElevator;
 	private Shooter mShooter;
 	private Pusher mPusher;
-
 	private Shovel mShovel;
+	private Fingers mFingers;
 
 	private double lastVelocity = 0;
 	private double maxA = 0;
@@ -46,12 +46,13 @@ class HardwareUpdater {
 	/**
 	 * Hardware Updater for Vidar
 	 */
-	protected HardwareUpdater(Drive drive, Arm arm, Elevator elevator, Shooter shooter, Pusher pusher, Shovel shovel) {
+	protected HardwareUpdater(Drive drive, Arm arm, Elevator elevator, Shooter shooter, Pusher pusher, Shovel shovel, Fingers fingers) {
 		this.mDrive = drive;
 		this.mElevator = elevator;
 		this.mShooter = shooter;
 		this.mPusher = pusher;
 		this.mShovel = shovel;
+		this.mFingers = fingers;
 	}
 
 	/**
@@ -232,7 +233,6 @@ class HardwareUpdater {
 		slaveVictor.configVoltageCompSaturation(14, 0);
 
 		masterTalon.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, HardwareAdapter.getInstance().getDrivetrain().rightMasterTalon.getDeviceID(), 0);
-//		masterTalon.configForwardLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, HardwareAdapter.getInstance().getDrivetrain().rightMasterTalon.getDeviceID(), 0);
 
 		masterTalon.overrideLimitSwitchesEnable(true);
 		slaveVictor.overrideLimitSwitchesEnable(true);
@@ -546,20 +546,7 @@ class HardwareUpdater {
 
 		robotState.addObservations(time, odometry, velocity);
 
-//		System.out.println(odometry.getTranslation());
-		//System.out.println("Odometry = " + odometry.getTranslation().getX());
-//		System.out.println("Velocity = " + velocity.dx);
-//		System.out.println("Gyro angle = " + robotState.drivePose.heading);
-//		System.out.println("Latest field to vehicle = " + robotState.getLatestFieldToVehicle().toString());
-//		System.out.println("Encoder estimate = " + left_distance);
-
 		double cv = (robotState.drivePose.leftEncVelocity + robotState.drivePose.rightEncVelocity)/2 * 1/Constants.kDriveSpeedUnitConversion;
-
-
-
-//        //Update compressor pressure
-//        robotState.compressorPressure = HardwareAdapter.getInstance().getMiscellaneousHardware().compressorSensor.getVoltage() * Constants.kVidarCompressorVoltageToPSI; //TODO: Implement the constant!
-//
 
         PowerDistributionPanel pdp = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp;
         robotState.shovelCurrentDraw = pdp.getTotalCurrent() - pdp.getCurrent(Constants.kShovelID);
@@ -599,6 +586,7 @@ class HardwareUpdater {
 		updateShooter();
 		updatePusher();
 		updateShovel();
+		updateFingers();
 		updateMiscellaneousHardware();
 	}
 
@@ -682,6 +670,14 @@ class HardwareUpdater {
 	private void updateShovel() {
 		HardwareAdapter.getInstance().getShovel().ShovelVictor.set(mShovel.getVictorOutput());
 		HardwareAdapter.getInstance().getShovel().upDownSolenoid.set(mShovel.getUpDownOutput());
+	}
+
+	/**
+	 * Updates fingers
+	 */
+	private void updateFingers() {
+		HardwareAdapter.getInstance().getFingers().openCloseSolenoid.set(mFingers.getOpenCloseOutput());
+		HardwareAdapter.getInstance().getFingers().expelSolenoid.set(mFingers.getExpelOutput());
 	}
 
 	void enableBrakeMode() {

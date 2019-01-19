@@ -182,6 +182,21 @@ public class HardwareAdapter {
 			upDownSolenoid = new Solenoid(0, Constants.kShovelUpDownSolenoid);
 		}
 	}
+
+	public static class FingersHardware{
+		private static FingersHardware instance = new FingersHardware();
+
+		public static FingersHardware getInstance() { return instance; }
+
+		public final DoubleSolenoid openCloseSolenoid;
+		public final DoubleSolenoid expelSolenoid;
+
+		protected FingersHardware() {
+			openCloseSolenoid = new DoubleSolenoid(Constants.kVidarOpenCloseSolenoidForwardID, Constants.kVidarOpenCloseSolenoidReverseID);
+			expelSolenoid = new DoubleSolenoid(Constants.kVidarExpelSolenoidForwardID, Constants.kVidarExpelSolenoidReverseID);
+		}
+	}
+
 	//Joysticks for operator interface
 	public static class Joysticks {
 		private static Joysticks instance = new Joysticks();
@@ -247,6 +262,8 @@ public class HardwareAdapter {
 	public ShovelHardware getShovel() { return ShovelHardware.getInstance(); }
 
 	public PusherHardware getPusher() { return PusherHardware.getInstance(); }
+
+	public FingersHardware getFingers() { return FingersHardware.getInstance(); }
 
 	public Joysticks getJoysticks() {
 		return Joysticks.getInstance();

@@ -35,10 +35,14 @@ public class Commands {
 	public Arm.ArmState wantedArmState = Arm.ArmState.IDLE;
 
 	public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
+
 	public Pusher.PusherState wantedPusherInOutState = Pusher.PusherState.IN;
 
 	public Shovel.WheelState wantedShovelWheelState = Shovel.WheelState.IDLE;
 	public Shovel.UpDownState wantedShovelUpDownState = Shovel.UpDownState.UP;
+
+	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
+	public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
 
 	public boolean disableArmScaling = true;
 	public boolean customShooterSpeed = false;
@@ -103,9 +107,15 @@ public class Commands {
 		copy.wantedGearboxState = this.wantedGearboxState;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
+
 		copy.wantedPusherInOutState = this.wantedPusherInOutState;
+
 		copy.wantedShovelWheelState = this.wantedShovelWheelState;
 		copy.wantedShovelUpDownState = this.wantedShovelUpDownState;
+
+		copy.wantedFingersOpenCloseState = this.wantedFingersOpenCloseState;
+		copy.wantedFingersExpelState = this.wantedFingersExpelState;
+
 		copy.disableArmScaling = this.disableArmScaling;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.customShooterSpeed = this.customShooterSpeed;

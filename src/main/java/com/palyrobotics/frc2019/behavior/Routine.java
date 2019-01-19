@@ -23,11 +23,12 @@ public abstract class Routine {
 	protected final Shooter shooter = Shooter.getInstance();
 	protected final Pusher pusher = Pusher.getInstance();
 	protected final Elevator elevator = Elevator.getInstance();
+	protected final Fingers fingers = Fingers.getInstance();
 
 	protected final RobotState robotState = RobotState.getInstance();
 
 	//Called to start a routine
-	public abstract 								void start();
+	public abstract void start();
 
 	//Update method, returns modified commands
 	public abstract Commands update(Commands commands);
