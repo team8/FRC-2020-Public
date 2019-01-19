@@ -2,12 +2,12 @@ version: 2
 jobs:
   build:
     docker:
-      - image: ubuntu:16.04
+      - image: ubuntu:18.04
     steps:
       - checkout
       - run: 
           name: Get apt-add-repository
-          command: apt update && apt install software-properties-common python-software-properties -y
+          command: apt update && apt install software-properties-common -y
       - run:
           name: Get Toolchain ppa & OpenJDK ppa
           command: apt-add-repository ppa:wpilib/toolchain -y && add-apt-repository ppa:openjdk-r/ppa -y && apt update
@@ -16,7 +16,7 @@ jobs:
           command: apt install frc-toolchain -y
       - run:
           name: Get OpenJDK
-          command: apt install default-jdk -y
+          command: apt install openjdk-11-jdk -y
       - run:
           name: Build
           command: ./gradlew build
