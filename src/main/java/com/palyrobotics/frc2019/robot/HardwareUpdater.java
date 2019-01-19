@@ -12,11 +12,13 @@ import com.palyrobotics.frc2019.subsystems.Intake;
 import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.subsystems.Pusher;
 import com.palyrobotics.frc2019.util.LEDColor;
+import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
 import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.Kinematics;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.util.trajectory.Rotation2d;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
@@ -700,5 +702,13 @@ class HardwareUpdater {
 		else {
 			talon.set(output.getControlMode(), output.getSetpoint(), DemandType.Neutral, 0.0);
 		}
+	}
+
+	private void updateSparkGains(CANSparkMax spark, SparkMaxOutput output) {
+		spark.getPIDController().setP(output.getGains().P);
+		spark.getPIDController().setD(output.getGains().D);
+		spark.getPIDController().setI(output.getGains().I);
+		spark.getPIDController().setFF(output.getGains().F);
+		spark.getPIDController().setIZone(output.getGains().izone);
 	}
 }
