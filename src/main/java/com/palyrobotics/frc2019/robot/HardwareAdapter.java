@@ -111,21 +111,23 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * Pusher - 1 Solenoid, 2 Ultrasonics
+	 * Pusher - 1 WPI_VictorSPX, 2 Ultrasonics
 	 */
 	public static class PusherHardware {
 		private static PusherHardware instance = new PusherHardware();
 
 		private static PusherHardware getInstance() { return instance; }
 
-		public final Solenoid inOutSolenoid;
+		public final WPI_VictorSPX pusherVictor;
 		public final Ultrasonic pusherUltrasonic1;
 		public final Ultrasonic pusherUltrasonic2;
+		public final AnalogPotentiometer pusherPotentiometer;
 
 		protected PusherHardware() {
-			inOutSolenoid = new Solenoid(0, Constants.kPusherInOutSolenoid);
-			pusherUltrasonic1 = new Ultrasonic(Constants.kPusherRightUltrasonicPing, Constants.kPusherRightUltrasonicEcho);
-			pusherUltrasonic2 = new Ultrasonic(Constants.kPusherLeftUltrasonicPing, Constants.kPusherLeftUltrasonicEcho);
+			pusherVictor = new WPI_VictorSPX(Constants.kVidarPusherVictorID);
+			pusherUltrasonic1 = new Ultrasonic(Constants.kVidarPusherRightUltrasonicPing, Constants.kVidarPusherRightUltrasonicEcho);
+			pusherUltrasonic2 = new Ultrasonic(Constants.kVidarPusherLeftUltrasonicPing, Constants.kVidarPusherLeftUltrasonicEcho);
+			pusherPotentiometer = new AnalogPotentiometer(Constants.kVidarPusherPotID, 360, 0);
 		}
 	}
 

@@ -4,28 +4,21 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Pusher;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 import com.palyrobotics.frc2019.behavior.Routine;
-import com.palyrobotics.frc2019.util.logger.Logger;
 
-import java.util.logging.Level;
-
-public class PusherPushRoutine extends Routine {
-    private Pusher.PusherState wantedPusherState;
-
+public class PusherMiddleRoutine extends Routine {
     private boolean alreadyRan;
 
-    public PusherPushRoutine(Pusher.PusherState wantedPusherState) {
-        this.wantedPusherState = wantedPusherState;
+    @Override
+    public void start() {
+        alreadyRan = false;
     }
 
     @Override
-    public void start() { alreadyRan = false; }
-
-    @Override
     public Commands update(Commands commands) {
-        if(wantedPusherState == Pusher.PusherState.IN && robotState.hasPusherCargo) {
-            commands.wantedPusherInOutState = Pusher.PusherState.OUT;
-            alreadyRan = true;
+        if(robotState.hasPusherCargo) {
+            commands.wantedPusherInOutState = Pusher.PusherState.MIDDLE;
         }
+        alreadyRan = true;
         return commands;
     }
 
@@ -36,7 +29,7 @@ public class PusherPushRoutine extends Routine {
 
     @Override
     public boolean finished() {
-       return alreadyRan;
+        return alreadyRan;
     }
 
     @Override
@@ -46,6 +39,6 @@ public class PusherPushRoutine extends Routine {
 
     @Override
     public String getName() {
-        return "PusherPushRoutine";
+        return "PusherMiddleRoutine";
     }
 }

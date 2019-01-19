@@ -11,7 +11,6 @@ import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Intake;
 import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.subsystems.Pusher;
-import com.palyrobotics.frc2019.util.ClimberSignal;
 import com.palyrobotics.frc2019.util.LEDColor;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
 import com.palyrobotics.frc2019.util.logger.Logger;
@@ -86,6 +85,9 @@ class HardwareUpdater {
 		//Disable shooter talons
 		HardwareAdapter.getInstance().getShooter().masterTalon.set(ControlMode.Disabled, 0);
 		HardwareAdapter.getInstance().getShooter().slaveTalon.set(ControlMode.Disabled, 0);
+
+		//Disable pusher talons
+		HardwareAdapter.getInstance().getPusher().pusherVictor.set(ControlMode.Disabled, 0);
 	}
 
 	void configureHardware() {
@@ -307,13 +309,22 @@ class HardwareUpdater {
 	}
 
 	void configurePusherHardware() {
+		WPI_VictorSPX pusherVictor = HardwareAdapter.getInstance().getPusher().pusherVictor;
+
+		pusherVictor.setInverted(false);
+		pusherVictor.setNeutralMode(NeutralMode.Brake);
+		pusherVictor.configOpenloopRamp(0.09, 0);
+		pusherVictor.enableVoltageCompensation(true);
+		pusherVictor.configVoltageCompSaturation(14, 0);
+		pusherVictor.configForwardSoftLimitEnable(false, 0);
+
 		Ultrasonic ultrasonic1 = HardwareAdapter.getInstance().getPusher().pusherUltrasonic1;
 		Ultrasonic ultrasonic2 = HardwareAdapter.getInstance().getPusher().pusherUltrasonic2;
 
 		ultrasonic1.setAutomaticMode(true);
 		ultrasonic1.setEnabled(true);
 		ultrasonic2.setAutomaticMode(true);
-		ultrasonic2.setAutomaticMode(true);
+		ultrasonic2.setEnabled(true);
 	}
 	/**
 	 * Updates all the sensor data taken from the hardware
@@ -461,7 +472,7 @@ class HardwareUpdater {
 
 		int pusherLeftTotal = 0;
 		for (int i = 0; i < robotState.mLeftPusherReadings.size(); i++) {
-			if (robotState.mLeftPusherReadings.get(i) < Constants.kPusherCargoTolerance) {
+			if (robotState.mLeftPusherReadings.get(i) < Constants.kVidarPusherCargoTolerance) {
 				pusherLeftTotal += 1;
 			}
 		}
@@ -475,12 +486,12 @@ class HardwareUpdater {
 
 		int pusherRightTotal = 0;
 		for (int i = 0; i < robotState.mRightPusherReadings.size(); i++) {
-			if (robotState.mRightPusherReadings.get(i) < Constants.kPusherCargoTolerance) {
+			if (robotState.mRightPusherReadings.get(i) < Constants.kVidarPusherCargoTolerance) {
 				pusherRightTotal += 1;
 			}
 		}
 
-		if (pusherLeftTotal > Constants.kPusherRequiredUltrasonicCount && pusherRightTotal > Constants.kPusherRequiredUltrasonicCount) {
+		if (pusherLeftTotal > Constants.kVidarPusherRequiredUltrasonicCount && pusherRightTotal > Constants.kVidarPusherRequiredUltrasonicCount) {
 			robotState.hasPusherCargo = false;
 		}
 		else {
@@ -539,6 +550,16 @@ class HardwareUpdater {
 		HardwareAdapter.getInstance().getArm().armMasterTalon.clearStickyFaults(0);
 		HardwareAdapter.getInstance().getArm().armMasterTalon.getStickyFaults(armStickyFaults);
 		robotState.hasArmStickyFaults = false;
+
+		//Update pusher sensors
+		robotState.pusherPosition = HardwareAdapter.getInstance().getPusher().pusherPotentiometer.get() /
+				Constants.kPusherTicksPerInch;
+		robotState.pusherVelocity = (robotState.pusherPosition - robotState.pusherCachePosition) / Constants.kNormalLoopsDt;
+		StickyFaults pusherStickyFaults = new StickyFaults();
+		HardwareAdapter.getInstance().getPusher().pusherVictor.clearStickyFaults(0);
+		HardwareAdapter.getInstance().getPusher().pusherVictor.getStickyFaults(pusherStickyFaults);
+		robotState.hasPusherStickyFaults = false;
+		robotState.pusherCachePosition = robotState.pusherPosition;
 	}
 
 	/**
@@ -613,7 +634,7 @@ class HardwareUpdater {
 	 * Updates the pusher
 	 */
 	private void updatePusher() {
-		HardwareAdapter.getInstance().getPusher().inOutSolenoid.set(mPusher.getInOutOutput());
+		HardwareAdapter.getInstance().getPusher().pusherVictor.set(mPusher.getPusherOutput());
 	}
 
 	/**

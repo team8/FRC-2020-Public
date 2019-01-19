@@ -247,17 +247,20 @@ public class Robot extends TimedRobot {
 		mDrive.start();
 		mArm.start();
 		mIntake.start();
+		mPusher.start();
 	}
 
 	private void updateSubsystems() {
 		mDrive.update(commands, robotState);
 		mArm.update(commands, robotState);
 		mIntake.update(commands, robotState);
+		mPusher.update(commands, robotState);
 	}
 
 	private void stopSubsystems() {
 		mDrive.stop();
 		mArm.stop();
 		mIntake.stop();
+		mPusher.stop();
 	}
 }

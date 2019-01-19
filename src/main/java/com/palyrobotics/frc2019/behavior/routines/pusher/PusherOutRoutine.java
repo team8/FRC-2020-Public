@@ -15,7 +15,9 @@ public class PusherOutRoutine extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-        commands.wantedPusherInOutState = Pusher.PusherState.OUT;
+        if(robotState.hasPusherCargo) {
+            commands.wantedPusherInOutState = Pusher.PusherState.OUT;
+        }
         alreadyRan = true;
         return commands;
     }
