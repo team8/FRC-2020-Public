@@ -184,7 +184,8 @@ public class RoutineManager {
 		counter.put(null, 0); //for SampleRoutine
 		counter.put(Drive.getInstance(), 0);
 		counter.put(Arm.getInstance(), 0);
-		counter.put(Intake.getInstance(), 0);
+		counter.put(Elevator.getInstance(), 0);
+		counter.put(Shooter.getInstance(), 0);
 		// Count the number of times each subsystem appears
 		for (Routine routine : routines) {
 			for (Subsystem subsystem : routine.getRequiredSubsystems()) {

@@ -40,13 +40,12 @@ public class Robot extends TimedRobot {
 	//Subsystem controllers
 	private Drive mDrive = Drive.getInstance();
 	private Elevator mElevator = Elevator.getInstance();
-	private Intake mIntake = Intake.getInstance();
 	private Arm mArm = Arm.getInstance();
 	private Shooter mShooter = Shooter.getInstance();
 	private Pusher mPusher = Pusher.getInstance();
 
 	//Hardware Updater
-	private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mArm, mIntake, mElevator, mShooter, mPusher);
+	private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mArm, mElevator, mShooter, mPusher);
 
 	// Started boolean for if auto has been started.
 	private boolean mAutoStarted = false;
@@ -248,7 +247,6 @@ public class Robot extends TimedRobot {
 		mElevator.start();
 		mArm.start();
 		mShooter.start();
-		mIntake.start();
 		mPusher.start();
 	}
 
@@ -257,7 +255,6 @@ public class Robot extends TimedRobot {
 		mElevator.update(commands, robotState);
 		mArm.update(commands, robotState);
 		mShooter.update(commands, robotState);
-		mIntake.update(commands, robotState);
 		mPusher.update(commands, robotState);
 	}
 
@@ -266,7 +263,6 @@ public class Robot extends TimedRobot {
 		mElevator.stop();
 		mArm.stop();
 		mShooter.stop();
-		mIntake.stop();
 		mPusher.stop();
 	}
 }

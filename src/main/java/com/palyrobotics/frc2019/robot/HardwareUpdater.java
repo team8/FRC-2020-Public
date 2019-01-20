@@ -6,12 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.subsystems.Arm;
-import com.palyrobotics.frc2019.subsystems.Drive;
-import com.palyrobotics.frc2019.subsystems.Elevator;
-import com.palyrobotics.frc2019.subsystems.Intake;
-import com.palyrobotics.frc2019.subsystems.Shooter;
-import com.palyrobotics.frc2019.subsystems.Pusher;
+import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.LEDColor;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
@@ -22,7 +17,6 @@ import com.palyrobotics.frc2019.util.trajectory.Rotation2d;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -40,7 +34,6 @@ class HardwareUpdater {
 	private Drive mDrive;
 	private Arm mArm;
 	private Elevator mElevator;
-	private Intake mIntake;
 	private Shooter mShooter;
 	private Pusher mPusher;
 
@@ -51,11 +44,10 @@ class HardwareUpdater {
 	/**
 	 * Hardware Updater for Vidar
 	 */
-	protected HardwareUpdater(Drive drive, Arm arm, Intake intake, Elevator elevator, Shooter shooter, Pusher pusher) {
+	protected HardwareUpdater(Drive drive, Arm arm, Elevator elevator, Shooter shooter, Pusher pusher) {
 		this.mDrive = drive;
 		this.mArm = arm;
 		this.mElevator = elevator;
-		this.mIntake = intake;
 		this.mShooter = shooter;
 		this.mPusher = pusher;
 	}
@@ -592,7 +584,6 @@ class HardwareUpdater {
 		updateDrivetrain();
 		updateElevator();
 		updateArm();
-		updateIntake();
 		updateShooter();
 		updatePusher();
 		updateMiscellaneousHardware();
@@ -666,17 +657,6 @@ class HardwareUpdater {
 			updateTalonSRX(HardwareAdapter.getInstance().getArm().armMasterTalon, mArm.getOutput());
 		}
 
-	}
-
-
-	/**
-	 * Updates the intake
-	 */
-	private void updateIntake() {
-		HardwareAdapter.getInstance().getIntake().masterTalon.set(mIntake.getTalonOutput().getSetpoint());
-		HardwareAdapter.getInstance().getIntake().slaveTalon.set(mIntake.getTalonOutput().getSetpoint());
-		HardwareAdapter.getInstance().getIntake().inOutSolenoid.set(mIntake.getOpenCloseOutput() ? Value.kReverse : Value.kForward);
-		HardwareAdapter.getInstance().getIntake().LED.set(LEDColor.getValue(LEDColor.getColor()));
 	}
 
 	/**

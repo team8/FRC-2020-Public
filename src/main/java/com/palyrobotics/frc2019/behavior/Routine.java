@@ -18,7 +18,6 @@ public abstract class Routine {
 	 * Keeps access to all subsystems to modify their output and read their status
 	 */
 	protected final Drive drive = Drive.getInstance();
-	protected final Intake intake = Intake.getInstance();
 	protected final Arm arm = Arm.getInstance();
 	protected final Shooter shooter = Shooter.getInstance();
 	protected final Pusher pusher = Pusher.getInstance();
