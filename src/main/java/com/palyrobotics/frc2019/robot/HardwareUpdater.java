@@ -20,6 +20,7 @@ import com.palyrobotics.frc2019.util.trajectory.Kinematics;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.util.trajectory.Rotation2d;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
@@ -80,8 +81,8 @@ class HardwareUpdater {
 		HardwareAdapter.getInstance().getDrivetrain().rightSlave2Victor.set(ControlMode.Disabled, 0);
 
 		//Disable elevator talons
-        HardwareAdapter.getInstance().getElevator().elevatorMasterTalon.set(ControlMode.Disabled, 0);
-        HardwareAdapter.getInstance().getElevator().elevatorSlaveTalon.set(ControlMode.Disabled, 0);
+        HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.disable();
+        HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark.disable();
 
 		//Disable arm talons 
 		HardwareAdapter.getInstance().getArm().armMasterTalon.set(ControlMode.Disabled, 0);
@@ -211,37 +212,16 @@ class HardwareUpdater {
     }
 
     void configureElevatorHardware() {
-	    WPI_TalonSRX masterTalon = HardwareAdapter.getInstance().getElevator().elevatorMasterTalon;
-	    WPI_TalonSRX slaveTalon = HardwareAdapter.getInstance().getElevator().elevatorSlaveTalon;
+	    CANSparkMax masterSpark = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark;
+	    CANSparkMax slaveSpark = HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark;
 
-	    masterTalon.setInverted(true);
-	    slaveTalon.setInverted(false);
+	    masterSpark.setInverted(true);
+	    slaveSpark.setInverted(false);
 
-	    slaveTalon.follow(masterTalon);
+	    slaveSpark.follow(masterSpark);
 
-	    masterTalon.enableVoltageCompensation(true);
-	    slaveTalon.enableVoltageCompensation(true);
-
-	    masterTalon.configVoltageCompSaturation(14, 0);
-	    slaveTalon.configVoltageCompSaturation(14, 0);
-
-	    // Change HFX location later
-        masterTalon.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, HardwareAdapter.getInstance().getDrivetrain().rightMasterTalon.getDeviceID(), 0);
-
-        masterTalon.overrideLimitSwitchesEnable(true);
-        slaveTalon.overrideLimitSwitchesEnable(true);
-
-        masterTalon.configPeakOutputForward(1, 0);
-        masterTalon.configPeakOutputReverse(-1, 0);
-        slaveTalon.configPeakOutputForward(1, 0);
-        slaveTalon.configPeakOutputReverse(-1, 0);
-
-        masterTalon.configClosedloopRamp(0.4, 0);
-        masterTalon.configOpenloopRamp(0.4, 0);
-
-        masterTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-        masterTalon.setSensorPhase(true);
-        masterTalon.setSelectedSensorPosition(0, 0, 0);
+        masterSpark.setRampRate(0.4);
+        slaveSpark.setRampRate(0.4);
 	}
 
 	void configureArmHardware() {
@@ -425,8 +405,8 @@ class HardwareUpdater {
 			default:
 				break;
 		}
-		robotState.elevatorPosition = HardwareAdapter.getInstance().getElevator().elevatorMasterTalon.getSelectedSensorPosition(0);
-		robotState.elevatorVelocity = HardwareAdapter.getInstance().getElevator().elevatorSlaveTalon.getSelectedSensorVelocity(0);
+		robotState.elevatorPosition = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition();
+		robotState.elevatorVelocity = HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark.getEncoder().getVelocity();
 		// Change HFX Talon location
 		robotState.elevatorHFX = HardwareAdapter.getInstance().getDrivetrain().rightMasterTalon.getSensorCollection().isRevLimitSwitchClosed();
 
@@ -662,14 +642,14 @@ class HardwareUpdater {
     private void updateElevator() {
         if(mElevator.getmGearboxState() == Elevator.GearboxState.ELEVATOR) {
             if (mElevator.getIsAtTop() && mElevator.movingUpwards()) {
-                TalonSRXOutput elevatorHoldOutput = new TalonSRXOutput();
+                SparkMaxOutput elevatorHoldOutput = new SparkMaxOutput();
                 elevatorHoldOutput.setPercentOutput(Constants.kElevatorHoldVoltage);
-                updateTalonSRX(HardwareAdapter.getInstance().getElevator().elevatorMasterTalon, elevatorHoldOutput);
+                updateSparkMax(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark, elevatorHoldOutput);
             } else {
-                updateTalonSRX(HardwareAdapter.getInstance().getElevator().elevatorMasterTalon, mElevator.getOutput());
+                updateSparkMax(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark, mElevator.getOutput());
             }
         } else {
-            updateTalonSRX(HardwareAdapter.getInstance().getElevator().elevatorMasterTalon, mElevator.getOutput());
+            updateSparkMax(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark, mElevator.getOutput());
         }
         HardwareAdapter.getInstance().getElevator().elevatorDoubleSolenoid.set(mElevator.getSolenoidOutput());
     }
@@ -762,11 +742,26 @@ class HardwareUpdater {
 		}
 		if (output.getArbitraryFF() != 0.0 && output.getControlMode().equals(ControlMode.Position)) {
 			talon.set(output.getControlMode(), output.getSetpoint(), DemandType.ArbitraryFeedForward, output.getArbitraryFF());
-		}
-		else {
+		} else {
 			talon.set(output.getControlMode(), output.getSetpoint(), DemandType.Neutral, 0.0);
 		}
 	}
+
+    /**
+     * Helper method for processing a SparkMaxOutput
+     * @param spark
+     * @param output
+     */
+    private void updateSparkMax(CANSparkMax spark, SparkMaxOutput output) {
+        if(output.getControlType().equals(ControlType.kPosition) || output.getControlType().equals(ControlType.kVelocity)) {
+            updateSparkGains(spark, output);
+        }
+        if(output.getArbitraryFF() != 0.0 && output.getControlType().equals(ControlType.kPosition)) {
+            spark.getPIDController().setReference(output.getSetpoint(), output.getControlType(), 0, output.getArbitraryFF());
+        } else {
+            spark.getPIDController().setReference(output.getSetpoint(), output.getControlType());
+        }
+    }
 
 	private void updateSparkGains(CANSparkMax spark, SparkMaxOutput output) {
 		spark.getPIDController().setP(output.getGains().P);
@@ -774,5 +769,6 @@ class HardwareUpdater {
 		spark.getPIDController().setI(output.getGains().I);
 		spark.getPIDController().setFF(output.getGains().F);
 		spark.getPIDController().setIZone(output.getGains().izone);
+		spark.setRampRate(output.getGains().rampRate);
 	}
 }

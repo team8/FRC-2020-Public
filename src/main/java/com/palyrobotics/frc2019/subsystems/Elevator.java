@@ -5,8 +5,10 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
+import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 import java.util.Optional;
@@ -67,7 +69,7 @@ public class Elevator extends Subsystem {
     private RobotState mRobotState;
 
     //The subsystem output
-    private TalonSRXOutput mOutput = new TalonSRXOutput();
+    private SparkMaxOutput mOutput = new SparkMaxOutput();
     private DoubleSolenoid.Value mSolenoidOutput;
 
     private CSVWriter mWriter = CSVWriter.getInstance();
@@ -126,7 +128,8 @@ public class Elevator extends Subsystem {
                         mOutput.setPercentOutput(0.0);
                     } else {
                         //Control loop to hold position otherwise
-                        mOutput.setPosition(mElevatorWantedPosition.get(), Gains.elevatorHold);
+                        mOutput.setTargetPosition(mElevatorWantedPosition.get());
+                        mOutput.setGains(Gains.elevatorHold);
                     }
                     break;
                 case MANUAL_POSITIONING:
@@ -149,9 +152,11 @@ public class Elevator extends Subsystem {
                 case CUSTOM_POSITIONING:
                     //Control loop
                     if (movingDown) {
-                        mOutput.setPosition(mElevatorWantedPosition.get(), Gains.elevatorDownwardsPosition);
+                        mOutput.setTargetPosition(mElevatorWantedPosition.get());
+                        mOutput.setGains(Gains.elevatorDownwardsPosition);
                     } else {
-                        mOutput.setPosition(mElevatorWantedPosition.get(), Gains.elevatorPosition);
+                        mOutput.setTargetPosition(mElevatorWantedPosition.get());
+                        mOutput.setGains(Gains.elevatorPosition);
                     }
 
                     break;
@@ -179,7 +184,8 @@ public class Elevator extends Subsystem {
             switch(mClimberState) {
                 case HOLD:
 
-                    mOutput.setPosition(mClimberWantedPosition.get(), Gains.climberHold);
+                    mOutput.setTargetPosition(mClimberWantedPosition.get());
+                    mOutput.setGains(Gains.climberHold);
                     break;
                 case MANUAL_POSITIONING:
 
@@ -192,7 +198,8 @@ public class Elevator extends Subsystem {
                     break;
                 case CUSTOM_POSITIONING:
 
-                    mOutput.setPosition(mClimberWantedPosition.get(), Gains.climberPosition);
+                    mOutput.setTargetPosition(mClimberWantedPosition.get());
+                    mOutput.setGains(Gains.climberPosition);
 
                     break;
                 case IDLE:
@@ -323,9 +330,9 @@ public class Elevator extends Subsystem {
 
     public boolean movingUpwards() {
         //
-        if((mOutput.getControlMode() == ControlMode.PercentOutput || mOutput.getControlMode() == ControlMode.Velocity) && mOutput.getSetpoint() > Constants.kElevatorHoldVoltage) {
+        if((mOutput.getControlType() == ControlType.kDutyCycle || mOutput.getControlType() == ControlType.kVelocity) && mOutput.getSetpoint() > Constants.kElevatorHoldVoltage) {
             return true;
-        } else if(mOutput.getControlMode() == ControlMode.MotionMagic || mOutput.getControlMode() == ControlMode.Position) {
+        } else if(mOutput.getControlType() == ControlType.kPosition) {
 
             //Check calibration. If not calibrated, assume the worst and return true.
             if(isCalibrated()) {
@@ -334,11 +341,6 @@ public class Elevator extends Subsystem {
                     return true;
                 }
             } else return true;
-        } else if(mOutput.getControlMode() == ControlMode.Current) {
-            if(mOutput.getSetpoint() == 0) {
-                return false;
-            }
-            return true;
         }
         return false;
     }
@@ -396,7 +398,7 @@ public class Elevator extends Subsystem {
         mElevatorWantedPosition = Optional.empty();
     }
 
-    public TalonSRXOutput getOutput() {
+    public SparkMaxOutput getOutput() {
         return mOutput;
     }
 

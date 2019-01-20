@@ -117,8 +117,11 @@ public class Constants {
 	 * Unit conversions for Talons
 	 */
 	public static final double kDriveTicksPerInch = 4096 / (6.25 * Math.PI);
+<<<<<<< d436590a269d297a79bbacceefa8117af732a182
 	public static final double kArmTicksPerInch = 0;
 	public static final double kPusherTicksPerInch = 0;
+=======
+>>>>>>> Added updateSparkMax, updated elevator to use spark max
     public static final double kElevatorTicksPerInch = 0;
     public static final double kClimberTicksPerInch = 0;
 	public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90;
@@ -241,8 +244,9 @@ public class Constants {
 	public static final int kVidarRightDriveSlave2DeviceID = 13;
 
 	//ELEVATOR
-    public static final int kVidarElevatorMasterTalonID = 0;
-    public static final int kVidarElevatorSlaveTalonID = 0;
+    public static final int kVidarElevatorMasterSparkID = 0;
+    public static final int kVidarElevatorSlaveSparkID = 0;
+
     public static final int kVidarElevatorDoubleSolenoidForwardsID = 0;
     public static final int kVidarElevatorDoubleSolenoidReverseID = 0;
 

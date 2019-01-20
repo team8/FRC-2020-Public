@@ -6,6 +6,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.util.XboxController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.*;
 
 /**
@@ -56,7 +58,7 @@ public class HardwareAdapter {
 	}
 
     /**
-     *  Elevator - 2 WPI_TalonSRx, 1 HFX, 1 Encoder, 1 DoubleSolenoid
+     *  Elevator - 2 CANSparkMax, 1 HFX, 1 Encoder, 1 DoubleSolenoid
      */
     public static class ElevatorHardware {
         private static ElevatorHardware instance = new ElevatorHardware();
@@ -65,13 +67,13 @@ public class HardwareAdapter {
             return instance;
         }
 
-        public final WPI_TalonSRX elevatorMasterTalon;
-        public final WPI_TalonSRX elevatorSlaveTalon;
+        public final CANSparkMax elevatorMasterSpark;
+        public final CANSparkMax elevatorSlaveSpark;
         public final DoubleSolenoid elevatorDoubleSolenoid;
 
         protected ElevatorHardware() {
-            elevatorMasterTalon = new WPI_TalonSRX(Constants.kVidarElevatorMasterTalonID);
-            elevatorSlaveTalon = new WPI_TalonSRX(Constants.kVidarElevatorSlaveTalonID);
+            elevatorMasterSpark = new CANSparkMax(Constants.kVidarElevatorMasterSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
+            elevatorSlaveSpark = new CANSparkMax(Constants.kVidarElevatorSlaveSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
             elevatorDoubleSolenoid = new DoubleSolenoid(Constants.kVidarElevatorDoubleSolenoidForwardsID, Constants.kVidarElevatorDoubleSolenoidReverseID);
         }
     }
