@@ -334,7 +334,6 @@ public class Elevator extends Subsystem {
                     return true;
                 }
             } else return true;
-
         }
         return false;
     }
