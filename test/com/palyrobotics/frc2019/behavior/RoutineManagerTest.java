@@ -1,18 +1,9 @@
-<<<<<<< HEAD:test/com/palyrobotics/frc2019/behavior/RoutineManagerTest.java
 package com.palyrobotics.frc2019.behavior;
 
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.robot.MockRobot;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
-=======
-package com.palyrobotics.frc2018.behavior;
-
-import com.palyrobotics.frc2018.config.Commands;
-import com.palyrobotics.frc2018.robot.MockRobot;
-import com.palyrobotics.frc2018.subsystems.Drive;
-import com.palyrobotics.frc2018.subsystems.Subsystem;
->>>>>>> bf48357... Added Elevator:test/com/palyrobotics/frc2018/behavior/RoutineManagerTest.java
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -36,17 +27,10 @@ public class RoutineManagerTest {
 	@Test
 	public void testUpdate() {
 		Commands commands = MockRobot.getCommands();
-<<<<<<< HEAD:test/com/palyrobotics/frc2019/behavior/RoutineManagerTest.java
 
 		thrown.expect(NullPointerException.class);
 		mRoutineManager.addNewRoutine(null);
 
-=======
-
-		thrown.expect(NullPointerException.class);
-		mRoutineManager.addNewRoutine(null);
-
->>>>>>> bf48357... Added Elevator:test/com/palyrobotics/frc2018/behavior/RoutineManagerTest.java
 		MockRoutine mRoutine = new MockRoutine();
 		ArrayList<Routine> correct = new ArrayList<Routine>();
 		correct.add(mRoutine);
@@ -78,11 +62,8 @@ public class RoutineManagerTest {
 		Commands commands = MockRobot.getCommands();
 		mRoutineManager.reset(commands);
 		MockRoutine mRoutine = new MockRoutine();
-<<<<<<< HEAD:test/com/palyrobotics/frc2019/behavior/RoutineManagerTest.java
 //		DrivetrainRoutine mDriveRoutine = new DrivetrainRoutine();
-=======
-		DrivetrainRoutine mDriveRoutine = new DrivetrainRoutine();
->>>>>>> bf48357... Added Elevator:test/com/palyrobotics/frc2018/behavior/RoutineManagerTest.java
+
 		mRoutineManager.addNewRoutine(mRoutine);
 //		mRoutineManager.addNewRoutine(mDriveRoutine);
 
@@ -110,20 +91,12 @@ public class RoutineManagerTest {
 		correctConflicts.add(new DrivetrainRoutine());
 		@SuppressWarnings("unchecked")
 		ArrayList<Routine> routinesList2 = (ArrayList<Routine>) correctConflicts.clone();
-<<<<<<< HEAD:test/com/palyrobotics/frc2019/behavior/RoutineManagerTest.java
 		routinesList2.add(new MockRoutine());
-=======
-		routinesList2.add(new MockRoutine());
->>>>>>> bf48357... Added Elevator:test/com/palyrobotics/frc2018/behavior/RoutineManagerTest.java
 		conflicts = mRoutineManager.conflictingRoutines(routinesList2, new DrivetrainRoutine());
 		assertThat("Not all conflicts were detected with multiple conflicts", conflicts, equalTo(correctConflicts));
 
 		correctConflicts = new ArrayList<Routine>();
-<<<<<<< HEAD:test/com/palyrobotics/frc2019/behavior/RoutineManagerTest.java
 		correctConflicts.add(new MockRoutine());
-=======
-		correctConflicts.add(new MockRoutine());
->>>>>>> bf48357... Added Elevator:test/com/palyrobotics/frc2018/behavior/RoutineManagerTest.java
 		@SuppressWarnings("unchecked")
 		ArrayList<Routine> routinesList3 = (ArrayList<Routine>) correctConflicts.clone();
 		routinesList3.add(new DrivetrainRoutine());
@@ -139,7 +112,6 @@ public class RoutineManagerTest {
 		thrown.expect(NullPointerException.class);
 		mRoutineManager.conflictingRoutines(null, null);
 	}
-<<<<<<< HEAD:test/com/palyrobotics/frc2019/behavior/RoutineManagerTest.java
 
 	//ERROR: using MockRoutine gives NullPointerException
 	@Test
@@ -150,17 +122,6 @@ public class RoutineManagerTest {
 		//assertThat("Should not detect any subsystems", RoutineManager.subsystemSuperset(routinesList),
 		//equalTo(superset1));
 
-=======
-
-// 	ERROR: using MockRoutine gives NullPointerException
-	@Test
-	public void testSubsystemSuperset() {
-		ArrayList<Routine> routinesList = new ArrayList<Routine>();
-//		routinesList.add(new MockRoutine());
-//		Subsystem[] superset1 = {};
-//		assertThat("Should not detect any subsystems", RoutineManager.subsystemSuperset(routinesList), equalTo(superset1));
-
->>>>>>> bf48357... Added Elevator:test/com/palyrobotics/frc2018/behavior/RoutineManagerTest.java
 		routinesList.add(new DrivetrainRoutine());
 		Subsystem[] superset2 = { Drive.getInstance() };
 		assertThat("Not all subsystems detected with single subsystem", RoutineManager.subsystemSuperset(routinesList), equalTo(superset2));

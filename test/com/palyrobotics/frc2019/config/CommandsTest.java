@@ -1,14 +1,8 @@
 package com.palyrobotics.frc2019.config;
 
-<<<<<<< HEAD:test/com/palyrobotics/frc2019/config/CommandsTest.java
 import com.palyrobotics.frc2019.robot.MockRobot;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.util.DriveSignal;
-=======
-import com.palyrobotics.frc2018.robot.MockRobot;
-import com.palyrobotics.frc2018.subsystems.Drive;
-import com.palyrobotics.frc2018.util.DriveSignal;
->>>>>>> bf48357... Added Elevator:test/com/palyrobotics/frc2018/config/CommandsTest.java
 import org.junit.Test;
 
 import java.util.Optional;

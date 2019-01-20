@@ -71,14 +71,14 @@ public class Gains {
 	public static final double kVidarCascadingTurnIzone = 7.0;
 
 	//Elevator Gains
-    public static final double kForsetiElevatorHoldkP = 2.0;//0.1;
-    public static final double kForsetiElevatorHoldkI = 0;//0.002 / 2;
-    public static final double kForsetiElevatorHoldkD = 30.0;//85 / 2;
-    public static final double kForsetiElevatorHoldkF = 0;//2.624 / 2;
-    public static final int kForsetiElevatorHoldkIzone = 0;//800 / 2;
-    public static final double kForsetiElevatorHoldkRampRate = 0.0;
-    public static final Gains elevatorHold = new Gains(kForsetiElevatorHoldkP, kForsetiElevatorHoldkI, kForsetiElevatorHoldkD, kForsetiElevatorHoldkF,
-            kForsetiElevatorHoldkIzone, kForsetiElevatorHoldkRampRate);
+    public static final double kVidarElevatorHoldkP = 2.0;//0.1;
+    public static final double kVidarElevatorHoldkI = 0;//0.002 / 2;
+    public static final double kVidarElevatorHoldkD = 30.0;//85 / 2;
+    public static final double kVidarElevatorHoldkF = 0;//2.624 / 2;
+    public static final int kVidarElevatorHoldkIzone = 0;//800 / 2;
+    public static final double kVidarElevatorHoldkRampRate = 0.0;
+    public static final Gains elevatorHold = new Gains(kVidarElevatorHoldkP, kVidarElevatorHoldkI, kVidarElevatorHoldkD, kVidarElevatorHoldkF,
+            kVidarElevatorHoldkIzone, kVidarElevatorHoldkRampRate);
 
     public static final double kVidarClimberHoldkP = 0;
     public static final double kVidarClimberHoldkI = 0;
@@ -98,23 +98,23 @@ public class Gains {
     public static final Gains climberPosition = new Gains(kVidarClimberPositionkP, kVidarClimberPositionkI, kVidarClimberPositionkD,
             kVidarClimberPositionkF, kVidarClimberPositionkIzone, kVidarClimberPositionkRampRate);
 
-    public static final double kForsetiElevatorDownPositionkP = 0.3;
-    public static final double kForsetiElevatorDownPositionkI = 0.0;
-    public static final double kForsetiElevatorDownPositionkD = 50;
-    public static final double kForsetiElevatorDownPositionkF = 0.0;
-    public static final int kForsetiElevatorDownPositionkIzone = 0;
-    public static final double kForsetiElevatorDownPositionkRampRate = 0.0;
-    public static final Gains elevatorDownwardsPosition = new Gains(kForsetiElevatorDownPositionkP, kForsetiElevatorDownPositionkI, kForsetiElevatorDownPositionkD,
-            kForsetiElevatorDownPositionkF, kForsetiElevatorDownPositionkIzone, kForsetiElevatorDownPositionkRampRate);
+    public static final double kVidarElevatorDownPositionkP = 0.3;
+    public static final double kVidarElevatorDownPositionkI = 0.0;
+    public static final double kVidarElevatorDownPositionkD = 50;
+    public static final double kVidarElevatorDownPositionkF = 0.0;
+    public static final int kVidarElevatorDownPositionkIzone = 0;
+    public static final double kVidarElevatorDownPositionkRampRate = 0.0;
+    public static final Gains elevatorDownwardsPosition = new Gains(kVidarElevatorDownPositionkP, kVidarElevatorDownPositionkI, kVidarElevatorDownPositionkD,
+            kVidarElevatorDownPositionkF, kVidarElevatorDownPositionkIzone, kVidarElevatorDownPositionkRampRate);
 
-    public static final double kForsetiElevatorPositionkP = 2.0;
-    public static final double kForsetiElevatorPositionkI = 0.0;
-    public static final double kForsetiElevatorPositionkD = 70.0;
-    public static final double kForsetiElevatorPositionkF = 0.0;
-    public static final int kForsetiElevatorPositionkIzone = 0;
-    public static final double kForsetiElevatorPositionkRampRate = 0.0;
-    public static final Gains elevatorPosition = new Gains(kForsetiElevatorPositionkP, kForsetiElevatorPositionkI, kForsetiElevatorPositionkD,
-            kForsetiElevatorPositionkF, kForsetiElevatorPositionkIzone, kForsetiElevatorPositionkRampRate);
+    public static final double kVidarElevatorPositionkP = 2.0;
+    public static final double kVidarElevatorPositionkI = 0.0;
+    public static final double kVidarElevatorPositionkD = 70.0;
+    public static final double kVidarElevatorPositionkF = 0.0;
+    public static final int kVidarElevatorPositionkIzone = 0;
+    public static final double kVidarElevatorPositionkRampRate = 0.0;
+    public static final Gains elevatorPosition = new Gains(kVidarElevatorPositionkP, kVidarElevatorPositionkI, kVidarElevatorPositionkD,
+            kVidarElevatorPositionkF, kVidarElevatorPositionkIzone, kVidarElevatorPositionkRampRate);
 
 	//Arm Constants 
 	public static final double kVidarArmDownPositionkP = 0.3;
