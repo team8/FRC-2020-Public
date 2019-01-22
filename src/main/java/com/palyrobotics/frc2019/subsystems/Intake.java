@@ -6,6 +6,7 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.util.LEDColor;
+import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2019.util.logger.LeveledString;
@@ -14,7 +15,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import java.util.Optional;
 
 /**
- * @author Justin and Jason and Prashanti
+ * @author Justin and Jason
  */
 public class Intake extends Subsystem {
     public static Intake instance = new Intake();
@@ -25,7 +26,7 @@ public class Intake extends Subsystem {
 
     public static void resetInstance() { instance = new Intake(); }
 
-    private TalonSRXOutput mTalonOutput = new TalonSRXOutput();
+    private SparkMaxOutput mSparkOutput = new SparkMaxOutput();
     private double mVictorOutput;
 
     private boolean movingDown = false;
@@ -95,17 +96,20 @@ public class Intake extends Subsystem {
 
         switch(mUpDownState) {
             case HOLD:
-                mTalonOutput.setPosition(mIntakeWantedPosition.get(), Gains.intakeHold);
+                mSparkOutput.setGains(Gains.intakeHold);
+                mSparkOutput.setTargetPosition(mIntakeWantedPosition.get());
                 break;
             case UP:
-                mTalonOutput.setPosition(mIntakeWantedPosition.get(), Gains.intakeUp, -arb_ff);
+                mSparkOutput.setGains(Gains.intakeUp);
+                mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), -arb_ff);
                 break;
             case CLIMBING:
-                mTalonOutput.setPosition(mIntakeWantedPosition.get(), Gains.intakeClimbing, arb_ff);
+                mSparkOutput.setGains(Gains.intakeClimbing);
+                mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff);
                 //subtract component of gravity
                 break;
             case MANUAL_POSITIONING:
-                mTalonOutput.setPercentOutput(0); //TODO: Fix this based on what control method wanted
+                mSparkOutput.setPercentOutput(0); //TODO: Fix this based on what control method wanted
                 break;
             case CUSTOM_POSITIONING:
                 if(!mIntakeWantedPosition.equals(Optional.of(commands.robotSetpoints.intakePositionSetpoint.get() * Constants.kIntakeTicksPerInch))) {
@@ -118,16 +122,18 @@ public class Intake extends Subsystem {
                 }
 
                 if (movingDown) {
-                    mTalonOutput.setPosition(mIntakeWantedPosition.get(), Gains.intakeDownwards, arb_ff);
+                    mSparkOutput.setGains(Gains.intakeDownwards);
+                    mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff);
                 } else {
-                    mTalonOutput.setPosition(mIntakeWantedPosition.get(), Gains.intakePosition, -arb_ff);
+                    mSparkOutput.setGains(Gains.intakePosition);
+                    mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff);
                 }
                 break;
             case IDLE:
                 if(mIntakeWantedPosition.isPresent()) {
                     mIntakeWantedPosition = Optional.empty();
                 }
-                mTalonOutput.setPercentOutput(0.0);
+                mSparkOutput.setPercentOutput(0.0);
                 break;
         }
 
@@ -144,8 +150,8 @@ public class Intake extends Subsystem {
 
     public Optional<Double> getIntakeWantedPosition() { return mIntakeWantedPosition; }
 
-    public TalonSRXOutput getTalonOutput() {
-        return mTalonOutput;
+    public SparkMaxOutput getSparkOutput() {
+        return mSparkOutput;
     }
 
     public double getVictorOutput() { return mVictorOutput; }
@@ -153,7 +159,7 @@ public class Intake extends Subsystem {
 
     @Override
     public String getStatus() {
-        return "Intake State: " + mWheelState + "\nOutput Control Mode: " + mTalonOutput.getControlMode() + "\nTalon Output: "
-                + mTalonOutput.getSetpoint() + "\nUp Down Output: " + mUpDownState;
+        return "Intake State: " + mWheelState + "\nOutput Control Mode: " + mSparkOutput.getControlType() + "\nTalon Output: "
+                + mSparkOutput.getSetpoint() + "\nUp Down Output: " + mUpDownState;
     }
 }

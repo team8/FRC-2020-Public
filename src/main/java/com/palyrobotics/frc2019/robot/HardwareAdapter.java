@@ -108,22 +108,17 @@ public class HardwareAdapter {
 			return instance;
 		}
 
-		public final WPI_VictorSPX masterTalon;
-		public final WPI_VictorSPX slaveTalon;
-		public final DoubleSolenoid inOutSolenoid;
+		public final WPI_VictorSPX spinVictor;
+		public final CANSparkMax intakeMasterSpark;
+		public final CANSparkMax intakeSlaveSpark;
 		public final Ultrasonic ultrasonic1;
 		public final Ultrasonic ultrasonic2;
 		public final Spark LED;
 
 		protected IntakeHardware() {
-			masterTalon = new WPI_VictorSPX(Constants.kVidarIntakeMasterDeviceID);
-			slaveTalon = new WPI_VictorSPX(Constants.kVidarIntakeSlaveDeviceID);
-			if (Constants.kRobotName == Constants.RobotName.VIDAR) {
-				inOutSolenoid = new DoubleSolenoid(0,Constants.kInOutSolenoidA, Constants.kInOutSolenoidB);
-			}
-			else {
-				inOutSolenoid = null;
-			}
+			spinVictor = new WPI_VictorSPX(Constants.kIntakeVictorID);
+			intakeMasterSpark = new CANSparkMax(Constants.kIntakeMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
+			intakeSlaveSpark = new CANSparkMax(Constants.kIntakeSlaveDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			ultrasonic1 = new Ultrasonic(Constants.kLeftUltrasonicPing,Constants.kLeftUltrasonicEcho);
 			ultrasonic2 = new Ultrasonic(Constants.kRightUltrasonicPing,Constants.kRightUltrasonicEcho);
 
