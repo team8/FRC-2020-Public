@@ -70,6 +70,53 @@ public class Gains {
 	public static final double kVidarCascadingTurnkD = 5;
 	public static final double kVidarCascadingTurnIzone = 7.0;
 
+	//Intake Constants
+	//TODO: Find and tune gains
+	public static final double kIntakeUpkP = 0.0;
+	public static final double kIntakeUpkI = 0.0;
+	public static final double kIntakeUpkD = 0.0;
+	public static final double kIntakeUpkF = 0.0;
+	public static final int kIntakeUpkIzone = 0;
+	public static final double kIntakeUpkRampRate = 0.0;
+	public static final Gains intakeUp = new Gains(kIntakeUpkP, kIntakeUpkI, kIntakeUpkD, kIntakeUpkF,
+			kIntakeUpkIzone, kIntakeUpkRampRate);
+
+	public static final double kIntakeDownwardskP = 0.0;
+	public static final double kIntakeDownwardskI = 0.0;
+	public static final double kIntakeDownwardskD = 0.0;
+	public static final double kIntakeDownwardskF = 0.0;
+	public static final int kIntakeDownwardskIzone = 0;
+	public static final double kIntakeDownwardskRampRate = 0.0;
+	public static final Gains intakeDownwards = new Gains(kIntakeDownwardskP, kIntakeDownwardskI, kIntakeDownwardskD, kIntakeDownwardskF,
+			kIntakeDownwardskIzone, kIntakeDownwardskRampRate);
+
+	public static final double kIntakeClimbingkP = 0.0;
+	public static final double kIntakeClimbingkI = 0.0;
+	public static final double kIntakeClimbingkD = 0.0;
+	public static final double kIntakeClimbingkF = 0.0;
+	public static final int kIntakeClimbingkIzone = 0;
+	public static final double kIntakeClimbingkRampRate = 0.0;
+	public static final Gains intakeClimbing = new Gains(kIntakeClimbingkP, kIntakeClimbingkI, kIntakeClimbingkD, kIntakeClimbingkF,
+			kIntakeClimbingkIzone, kIntakeClimbingkRampRate);
+
+	public static final double kIntakeHoldkP = 0.0;
+	public static final double kIntakeHoldkI = 0.0;
+	public static final double kIntakeHoldkD = 0.0;
+	public static final double kIntakeHoldkF = 0.0;
+	public static final int kIntakeHoldkIzone = 0;
+	public static final double kIntakeHoldkRampRate = 0.0;
+	public static final Gains intakeHold = new Gains(kIntakeHoldkP, kIntakeHoldkI, kIntakeHoldkD, kIntakeHoldkF,
+			kIntakeHoldkIzone, kIntakeHoldkRampRate);
+
+	public static final double kIntakePositionkP = 0.0;
+	public static final double kIntakePositionkI = 0.0;
+	public static final double kIntakePositionkD = 0.0;
+	public static final double kIntakePositionkF = 0.0;
+	public static final int kIntakePositionkIzone = 0;
+	public static final double kIntakePositionkRampRate = 0.0;
+	public static final Gains intakePosition = new Gains(kIntakePositionkP, kIntakePositionkI, kIntakePositionkD, kIntakePositionkF,
+			kIntakePositionkIzone, kIntakePositionkRampRate);
+
 	//Elevator Gains
     public static final double kVidarElevatorHoldkP = 2.0;//0.1;
     public static final double kVidarElevatorHoldkI = 0;//0.002 / 2;

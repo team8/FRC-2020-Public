@@ -43,6 +43,9 @@ public class Commands {
 
 	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
 	public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
+	public Intake.WheelState wantedIntakingState = Intake.WheelState.IDLE;
+	public Intake.UpDownState wantedIntakeUpDownState = Intake.UpDownState.UP;
+	public boolean disableIntakeScaling = true;
 
 	public boolean disableArmScaling = true;
 	public boolean customShooterSpeed = false;
@@ -77,7 +80,7 @@ public class Commands {
 		public Optional<Double> armPositionSetpoint = Optional.empty();
 		public Optional<Double> elevatorPositionSetpoint = Optional.empty();
 		public Optional<Double> climberPositionSetpoint = Optional.empty();
-
+		public Optional<Double> intakePositionSetpoint = Optional.empty();
 		/**
 		 * Resets all the setpoints
 		 */
@@ -86,6 +89,7 @@ public class Commands {
 			armPositionSetpoint = Optional.empty();
 			elevatorPositionSetpoint = Optional.empty();
 			climberPositionSetpoint = Optional.empty();
+			intakePositionSetpoint = Optional.empty();
 		}
 	}
 
@@ -121,6 +125,8 @@ public class Commands {
 		copy.customIntakeSpeed = this.customIntakeSpeed;
 		copy.customShovelSpeed = this.customShovelSpeed;
 		copy.autoPlacerOutput = this.autoPlacerOutput;
+		copy.wantedIntakeUpDownState = this.wantedIntakeUpDownState;
+		copy.disableIntakeScaling = this.disableIntakeScaling;
 
 		for(Routine r : this.wantedRoutines) {
 			copy.wantedRoutines.add(r);
@@ -132,6 +138,8 @@ public class Commands {
 		robotSetpoints.drivePowerSetpoint.ifPresent((DriveSignal signal) -> copy.robotSetpoints.drivePowerSetpoint = Optional.of(signal));
 		robotSetpoints.elevatorPositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.elevatorPositionSetpoint = Optional.of(elevatorPositionSetpoint));
         robotSetpoints.climberPositionSetpoint.ifPresent((Double climberPositionSetpoint) -> copy.robotSetpoints.climberPositionSetpoint = Optional.of(climberPositionSetpoint));
+		robotSetpoints.intakePositionSetpoint
+				.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.intakePositionSetpoint = Optional.of(elevatorPositionSetpoint));
         return copy;
 	}
 

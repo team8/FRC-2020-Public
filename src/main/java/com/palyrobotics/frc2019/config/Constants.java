@@ -120,6 +120,7 @@ public class Constants {
 	public static final double kPusherTicksPerInch = 0;
     public static final double kElevatorTicksPerInch = 0;
     public static final double kClimberTicksPerInch = 0;
+	public static final double kIntakeTicksPerInch = 4096 / (6.25 * Math.PI); //TODO: CHANGE THIS
 	public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90;
 	public static final double kDriveSpeedUnitConversion = 4096 / (6.25 * Math.PI * 10);
 
@@ -156,6 +157,16 @@ public class Constants {
 
 	//Intake
 	public static final double kIntakingMotorVelocity = .4;
+	public static final double kIntakeSlowExpellingVelocity = 0;
+	public static final double kIntakeFastExpellingVelocity = 0;
+	public static final double kIntakeSlowIntakingVelocity = 0;
+	public static final double kIntakeFastIntakingVelocity = 0;
+	public static final int kIntakeVictorID = 0;
+	public static final int kIntakeMasterDeviceID = 0;
+	public static final int kIntakeSlaveDeviceID = 0;
+	public static final double kIntakeArbitraryFeedForward = 0;
+	public static final double kIntakeCargoInchTolerance = 0;
+
 	public static final double kAuto1MotorVelocity = 0.5;
 	public static final double kAuto2MotorVelocity = 0.9;
 	public static final double kExpellingMotorVelocity = -0.225;

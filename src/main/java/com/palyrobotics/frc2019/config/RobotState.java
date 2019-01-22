@@ -43,12 +43,14 @@ public class RobotState {
 	public double rightSetpoint = 0;
 
 	//Intake
-	public boolean hasCube = false;
-	public double cubeDistance = 0;
+	public boolean hasCargo = false;
+	public double cargoDistance = 0;
+	public double intakeAngle = 0; //ticks
+	public double intakePosition = 0;  // Angle in degrees
+	public double intakeVelocity = 0; //rpm
+	public boolean hasIntakeStickyFaults = false;
 	public ArrayList<Double> mLeftReadings = new ArrayList<>();
-	public ArrayList<Double> mLeftSorted = new ArrayList<>();
 	public ArrayList<Double> mRightReadings = new ArrayList<>();
-	public ArrayList<Double> mRightSorted = new ArrayList<>();
 
 	//Pusher
 	public boolean hasPusherCargo = false;

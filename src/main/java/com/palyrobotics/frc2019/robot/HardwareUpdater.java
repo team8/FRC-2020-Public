@@ -479,15 +479,6 @@ class HardwareUpdater {
 			}
 		}
 
-		if (leftTotal > Constants.kRequiredUltrasonicCount && rightTotal > Constants.kRequiredUltrasonicCount) {
-			robotState.hasCube = true;
-		}
-		else {
-			robotState.hasCube = false;
-		}
-
-        robotState.cubeDistance = (mUltrasonicRight.getRangeInches() + mUltrasonicLeft.getRangeInches())/2;
-
 //		System.out.println("Left: " + mUltrasonicLeft.getRangeInches());
 //		System.out.println("Right: " + mUltrasonicRight.getRangeInches());
 //		System.out.println(robotState.hasCube);
