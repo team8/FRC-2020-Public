@@ -183,7 +183,6 @@ public class RoutineManager {
 		HashMap<Subsystem, Integer> counter = new HashMap<Subsystem, Integer>();
 		counter.put(null, 0); //for SampleRoutine
 		counter.put(Drive.getInstance(), 0);
-		counter.put(Arm.getInstance(), 0);
 		counter.put(Elevator.getInstance(), 0);
 		counter.put(Shooter.getInstance(), 0);
 		// Count the number of times each subsystem appears

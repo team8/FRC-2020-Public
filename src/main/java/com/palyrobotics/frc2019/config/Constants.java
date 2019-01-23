@@ -72,24 +72,6 @@ public class Constants {
     public static double kElevatorConstantDownPower;
 
 	/**
-	 * Arm Constants
-	 */
-	public static final double kArmCubeInTransitPositionInches = 8.0;
-	public static final double kArmBottomPositionInches = 0;
-	public static final double kArmHoldVoltage = 0.11;
-	public static final double kArmFrontPosition = 0.0;
-	public static final double kArmBackPosition = 0.0;
-	public static final double kArmTopPosition = 0.0;
-
-	public static double kArmTopScalingConstant;
-	public static double kArmBottomScalingConstant;
-	public static double kArmCalibratedManualPower;
-	public static double kArmScaledManualPower;
-	public static double kArmUncalibratedManualPower = .62;
-	public static double kArmClosedLoopManualControlPositionSensitivity = 500;//250;
-	public static double kArmConstantDownPower;
-
-	/**
 	 * Ultrasonics
 	 */
 	public static final int kLeftUltrasonicPing = 0;
@@ -110,7 +92,6 @@ public class Constants {
 	public static final double kTurnInPlacePower = .5; //for bang bang
 	public static final double kCalibratePower = -0.28;
 	public static final double kDriveMaxClosedLoopOutput = 1.0;
-	public static final double kArmMaxClosedLoopOutput = 0.666;
 
 	/**
 	 * Unit conversions for Talons
@@ -139,6 +120,7 @@ public class Constants {
 	public static final double kAcceptableDriveVelocityError = 5;
 	public static final double kAcceptableShortDrivePositionError = 1;
 	public static final double kAcceptableShortDriveVelocityError = 3;
+    public static final double kAcceptablePusherPositionError = 0;
 	public static final double kAcceptableTurnAngleError = 5;
 	public static final double kAcceptableGyroZeroError = 3;
 	public static final double kAcceptableEncoderZeroError = 50;
@@ -148,12 +130,6 @@ public class Constants {
 
     public static final double kClimberAcceptablePositionError = 0;
     public static final double kClimberAcceptableVelocityError = 0;
-
-	public static final double kArmAcceptableVelocityError = 0;
-	public static final double kArmAcceptableEncoderError = 0;
-	public static final double kArmAcceptablePotentiometerError = 0;
-
-	public static final double kAcceptablePusherPositionError = 0;
 
 	//Intake
 	public static final double kIntakingMotorVelocity = .4;
@@ -261,11 +237,6 @@ public class Constants {
 
     public static final int kVidarElevatorDoubleSolenoidForwardsID = 0;
     public static final int kVidarElevatorDoubleSolenoidReverseID = 0;
-
-    //ARM
-	public static final int kForesetiArmMasterTalonID = 12;
-	public static final int kVidarArmSlaveVictorID = 11;
-	public static final int kVidarArmPotID = 0;
 
 	//INTAKE
 	public static final int kVidarIntakeMasterDeviceID = 3;

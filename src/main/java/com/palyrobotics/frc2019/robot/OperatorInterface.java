@@ -2,10 +2,12 @@ package com.palyrobotics.frc2019.robot;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeCargoRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeSensorStopRoutine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.subsystems.Drive;
-import com.palyrobotics.frc2019.subsystems.Arm;
+import com.palyrobotics.frc2019.subsystems.Intake;
 import com.palyrobotics.frc2019.util.ChezyMath;
 import com.palyrobotics.frc2019.util.JoystickInput;
 import com.palyrobotics.frc2019.util.XboxInput;
@@ -87,29 +89,64 @@ public class OperatorInterface {
 
 		if(Constants.operatorXBoxController) {
 			/**
-			 * Arm controls
+			 * Intake controls
 			 */
-			if(Math.abs(ChezyMath.handleDeadband(mOperatorXboxController.getRightY(), 0.05)) > 0.0) {
-				newCommands.wantedArmState = Arm.ArmState.MANUAL_POSITIONING;
+
+			//Operator intake control
+
+			//Intake wheel logic block
+			if(mOperatorXboxController.getRightTrigger() > 0.0) {
+				newCommands.wantedIntakingState = Intake.WheelState.FAST_EXPELLING;
+				newCommands.customIntakeSpeed = true;
+				newCommands.cancelCurrentRoutines = true;
+			} else if(mOperatorXboxController.getLeftBumper()) {
+				if (operatorButtonTwoPressable) {
+					ArrayList<Routine> intakeThenUp = new ArrayList<>();
+					intakeThenUp.add(new IntakeSensorStopRoutine(Intake.WheelState.INTAKING, 115.0));
+					newCommands.cancelCurrentRoutines = true;
+					newCommands.addWantedRoutine(new SequentialRoutine(intakeThenUp));
+				}
+				operatorButtonTwoPressable = false;
+			} else if(mOperatorXboxController.getButtonA()) {
+				newCommands.wantedIntakingState = Intake.WheelState.FAST_EXPELLING;
+				newCommands.cancelCurrentRoutines = true;
+			} else if(mOperatorXboxController.getLeftTrigger() > 0.0) {
+				newCommands.wantedIntakingState = Intake.WheelState.INTAKING;
+				newCommands.customIntakeSpeed = true;
+				newCommands.cancelCurrentRoutines = true;
 			} else {
-				newCommands.wantedArmState = Arm.ArmState.HOLD;
-			}
-			// Start button
-			if(mOperatorXboxController.getButtonPressed(8)) {
-				newCommands.disableArmScaling = true;
+				newCommands.customIntakeSpeed = false;
+				operatorButtonTwoPressable = true;
+				newCommands.wantedIntakingState = Intake.WheelState.IDLE;
 			}
 
 		} else {
 
-			if (Math.abs(ChezyMath.handleDeadband(mOperatorJoystick.getY(), 0.02)) > 0.0) {
-				newCommands.wantedArmState = Arm.ArmState.MANUAL_POSITIONING;
+			/**
+			 * Intake controls
+			 */
+			//Intake wheel logic block
+			if (mOperatorJoystick.getTriggerPressed()) {
+				newCommands.wantedIntakingState = Intake.WheelState.FAST_EXPELLING;
+				newCommands.cancelCurrentRoutines = true;
+			} else if (mOperatorJoystick.getButtonPressed(2)) {
+				if (operatorButtonTwoPressable) {
+					ArrayList<Routine> intakeThenUp = new ArrayList<>();
+					intakeThenUp.add(new IntakeCargoRoutine(3000));
+					newCommands.cancelCurrentRoutines = true;
+					newCommands.addWantedRoutine(new SequentialRoutine(intakeThenUp));
+				}
+				operatorButtonTwoPressable = false;
+			} else if (mOperatorJoystick.getButtonPressed(10)) {
+				newCommands.wantedIntakingState = Intake.WheelState.FAST_EXPELLING;
+				newCommands.cancelCurrentRoutines = true;
+			} else if (mOperatorJoystick.getButtonPressed(9)) {
+				newCommands.wantedIntakingState = Intake.WheelState.INTAKING;
+				newCommands.cancelCurrentRoutines = true;
 			} else {
-				newCommands.wantedArmState = Arm.ArmState.HOLD;
+				operatorButtonTwoPressable = true;
+				newCommands.wantedIntakingState = Intake.WheelState.IDLE;
 			}
-			if (mOperatorJoystick.getButtonPressed(11)) {
-				newCommands.disableArmScaling = true;
-			}
-
 		}
 
 		return newCommands;

@@ -41,14 +41,14 @@ public class Robot extends TimedRobot {
 	private Drive mDrive = Drive.getInstance();
 	private Elevator mElevator = Elevator.getInstance();
 	private Shovel mShovel = Shovel.getInstance();
-	private Arm mArm = Arm.getInstance();
 	private Shooter mShooter = Shooter.getInstance();
 	private Pusher mPusher = Pusher.getInstance();
 	private Fingers mFingers = Fingers.getInstance();
 	private AutoPlacer mAutoPlacer = AutoPlacer.getInstance();
+    private Intake mIntake = Intake.getInstance();
 
 	//Hardware Updater
-	private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mArm, mElevator, mShooter, mPusher, mShovel, mFingers, mAutoPlacer);
+	private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mElevator, mShooter, mPusher, mShovel, mFingers, mAutoPlacer, mIntake);
 
 	// Started boolean for if auto has been started.
 	private boolean mAutoStarted = false;
@@ -248,34 +248,34 @@ public class Robot extends TimedRobot {
 	private void startSubsystems() {
 		mDrive.start();
 		mElevator.start();
-		mArm.start();
 		mShooter.start();
 		mPusher.start();
 		mFingers.start();
 		mShovel.start();
 		mAutoPlacer.start();
+		mIntake.start();
 	}
 
 	private void updateSubsystems() {
 		mDrive.update(commands, robotState);
 		mElevator.update(commands, robotState);
-		mArm.update(commands, robotState);
 		mShooter.update(commands, robotState);
 		mPusher.update(commands, robotState);
 		mFingers.update(commands, robotState);
 		mShovel.update(commands, robotState);
 		mAutoPlacer.update(commands, robotState);
+		mIntake.update(commands, robotState);
 	}
 
 
 	private void stopSubsystems() {
 		mDrive.stop();
 		mElevator.stop();
-		mArm.stop();
 		mShooter.stop();
 		mPusher.stop();
 		mFingers.stop();
 		mShovel.stop();
 		mAutoPlacer.stop();
+		mIntake.stop();
 	}
 }

@@ -1,11 +1,11 @@
-package com.palyrobotics.frc2019.behavior.routines.hatchintake;
+package com.palyrobotics.frc2019.behavior.routines.shovel;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Shovel;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 
-public class ShovelDownRoutine extends Routine{
+public class ShovelUpRoutine extends Routine{
 
     private boolean alreadyRan;
 
@@ -15,7 +15,7 @@ public class ShovelDownRoutine extends Routine{
     }
     @Override
     public Commands update(Commands commands) {
-        commands.wantedShovelUpDownState = Shovel.UpDownState.DOWN;
+        commands.wantedShovelUpDownState = Shovel.UpDownState.UP;
         alreadyRan = true;
         return commands;
     }
@@ -37,6 +37,6 @@ public class ShovelDownRoutine extends Routine{
 
     @Override
     public String getName() {
-        return "ShovelDownRoutine";
+        return "ShovelUpRoutine";
     }
 }

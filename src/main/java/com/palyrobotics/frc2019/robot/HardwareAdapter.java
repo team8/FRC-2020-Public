@@ -79,27 +79,7 @@ public class HardwareAdapter {
     }
 
 	/**
-	 * Arm - 1 WPI_TalonSRX, 1 WPI_VictorSPX
-	 */
-	public static class ArmHardware {
-		private static ArmHardware instance = new ArmHardware(); 
-
-		private static ArmHardware getInstance() {
-			return instance; 
-		}
-
-		public final WPI_TalonSRX armMasterTalon; 
-		public final WPI_VictorSPX armSlaveVictor; 
-		public final AnalogPotentiometer armPot;
-
-		protected ArmHardware() {
-			armMasterTalon = new WPI_TalonSRX(Constants.kForesetiArmMasterTalonID); 
-			armSlaveVictor = new WPI_VictorSPX(Constants.kVidarArmSlaveVictorID);
-			armPot = new AnalogPotentiometer(Constants.kVidarArmPotID, 360, 0);
-		}
-	}
-	/**
-	 * Intake - 2 WPI_TalonSRX's, 2 DoubleSolenoids, 1 Distance Sensor (AnalogInput)
+	 * Intake - 2 WPI_TalonSRX's, 1 WPI_VictorSPX, 2 Ultrasonics
 	 */
 	public static class IntakeHardware {
 		private static IntakeHardware instance = new IntakeHardware();
@@ -108,7 +88,7 @@ public class HardwareAdapter {
 			return instance;
 		}
 
-		public final WPI_VictorSPX spinVictor;
+		public final WPI_VictorSPX intakeVictor;
 		public final CANSparkMax intakeMasterSpark;
 		public final CANSparkMax intakeSlaveSpark;
 		public final Ultrasonic ultrasonic1;
@@ -116,7 +96,7 @@ public class HardwareAdapter {
 		public final Spark LED;
 
 		protected IntakeHardware() {
-			spinVictor = new WPI_VictorSPX(Constants.kIntakeVictorID);
+			intakeVictor = new WPI_VictorSPX(Constants.kIntakeVictorID);
 			intakeMasterSpark = new CANSparkMax(Constants.kIntakeMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			intakeSlaveSpark = new CANSparkMax(Constants.kIntakeSlaveDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			ultrasonic1 = new Ultrasonic(Constants.kLeftUltrasonicPing,Constants.kLeftUltrasonicEcho);
@@ -265,10 +245,6 @@ public class HardwareAdapter {
 	public ElevatorHardware getElevator() {
 	    return ElevatorHardware.getInstance();
     }
-
-	public ArmHardware getArm(){
-		return ArmHardware.getInstance(); 
-	}
 
 	public IntakeHardware getIntake() {
 		return IntakeHardware.getInstance();

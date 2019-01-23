@@ -19,7 +19,6 @@ public abstract class Routine {
 	 */
 	protected final Drive drive = Drive.getInstance();
 	protected final Shovel shovel = Shovel.getInstance();
-	protected final Arm arm = Arm.getInstance();
 	protected final Shooter shooter = Shooter.getInstance();
 	protected final Pusher pusher = Pusher.getInstance();
 	protected final Elevator elevator = Elevator.getInstance();

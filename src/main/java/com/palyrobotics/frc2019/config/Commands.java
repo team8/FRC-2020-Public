@@ -32,7 +32,6 @@ public class Commands {
 
 	//Store WantedStates for each subsystem state machine
 	public Drive.DriveState wantedDriveState = Drive.DriveState.NEUTRAL;
-	public Arm.ArmState wantedArmState = Arm.ArmState.IDLE;
 
 	public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
 
@@ -47,7 +46,6 @@ public class Commands {
 	public Intake.UpDownState wantedIntakeUpDownState = Intake.UpDownState.UP;
 	public boolean disableIntakeScaling = true;
 
-	public boolean disableArmScaling = true;
 	public boolean customShooterSpeed = false;
 	public boolean customIntakeSpeed = false;
 	public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.CALIBRATING;
@@ -77,7 +75,6 @@ public class Commands {
 	 */
 	public static class Setpoints {
 		public Optional<DriveSignal> drivePowerSetpoint = Optional.empty();
-		public Optional<Double> armPositionSetpoint = Optional.empty();
 		public Optional<Double> elevatorPositionSetpoint = Optional.empty();
 		public Optional<Double> climberPositionSetpoint = Optional.empty();
 		public Optional<Double> intakePositionSetpoint = Optional.empty();
@@ -86,7 +83,6 @@ public class Commands {
 		 */
 		public void reset() {
 			drivePowerSetpoint = Optional.empty();
-			armPositionSetpoint = Optional.empty();
 			elevatorPositionSetpoint = Optional.empty();
 			climberPositionSetpoint = Optional.empty();
 			intakePositionSetpoint = Optional.empty();
@@ -105,7 +101,6 @@ public class Commands {
 	public Commands copy() {
 		Commands copy = new Commands();
 		copy.wantedDriveState = this.wantedDriveState;
-		copy.wantedArmState = this.wantedArmState;
 		copy.wantedShooterState = this.wantedShooterState;
 		copy.wantedElevatorState = this.wantedElevatorState;
 		copy.wantedClimberState = this.wantedClimberState;
@@ -119,7 +114,6 @@ public class Commands {
 		copy.wantedFingersExpelState = this.wantedFingersExpelState;
 		copy.wantedShovelWheelState = this.wantedShovelWheelState;
 		copy.wantedShovelUpDownState = this.wantedShovelUpDownState;
-		copy.disableArmScaling = this.disableArmScaling;
 		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
 		copy.customShooterSpeed = this.customShooterSpeed;
 		copy.customIntakeSpeed = this.customIntakeSpeed;

@@ -6,8 +6,6 @@ public class OperatorProfiles {
 	public static void configureConstants() {
 		switch(Constants.kOperatorName) {
 			case GRIFFIN:
-				Constants.kArmUncalibratedManualPower = 0.7;
-				Constants.kArmConstantDownPower = -0.2;
 				Constants.operatorXBoxController = true;
 				break;
 		}

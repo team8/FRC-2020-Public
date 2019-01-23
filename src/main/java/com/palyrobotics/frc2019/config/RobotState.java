@@ -70,15 +70,6 @@ public class RobotState {
 	//Pose stores drivetrain sensor data
 	public Pose drivePose = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
 
-	//Arm sensor data
-	public double armPotentiometer = 0; // ticks
-	public double armEncoder = 0; // ticks
-	public double armPosition = 0;  // Angle in degrees
-	public double armVelocity = 0;  // rad/s
-	public double armAccel = 0;  // rad/s^2
-	public double armAngle = 0; //
-	public boolean hasArmStickyFaults = false;
-
 	//Pusher sensor data
 	public double pusherCachePosition = 0;
 	public double pusherPosition = 0;
