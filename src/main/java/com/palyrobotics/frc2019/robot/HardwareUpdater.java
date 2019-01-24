@@ -318,13 +318,13 @@ class HardwareUpdater {
 		pusherVictor.configVoltageCompSaturation(14, 0);
 		pusherVictor.configForwardSoftLimitEnable(false, 0);
 
-		Ultrasonic ultrasonic1 = HardwareAdapter.getInstance().getPusher().pusherUltrasonic1;
-		Ultrasonic ultrasonic2 = HardwareAdapter.getInstance().getPusher().pusherUltrasonic2;
+		Ultrasonic pusherUltrasonicRight = HardwareAdapter.getInstance().getPusher().pusherUltrasonicRight;
+		Ultrasonic pusherUltrasonicLeft = HardwareAdapter.getInstance().getPusher().pusherUltrasonicLeft;
 
-		ultrasonic1.setAutomaticMode(true);
-		ultrasonic1.setEnabled(true);
-		ultrasonic2.setAutomaticMode(true);
-		ultrasonic2.setEnabled(true);
+		pusherUltrasonicRight.setAutomaticMode(true);
+		pusherUltrasonicRight.setEnabled(true);
+		pusherUltrasonicLeft.setAutomaticMode(true);
+		pusherUltrasonicLeft.setEnabled(true);
 	}
 	/**
 	 * Updates all the sensor data taken from the hardware
@@ -464,7 +464,7 @@ class HardwareUpdater {
 //		System.out.println(robotState.hasCube);
 
 		//Left Side Cargo Distance from Pusher
-		Ultrasonic mPusherUltrasonicLeft = HardwareAdapter.getInstance().getPusher().pusherUltrasonic1;
+		Ultrasonic mPusherUltrasonicLeft = HardwareAdapter.getInstance().getPusher().pusherUltrasonicLeft;
 		robotState.mLeftPusherReadings.add(mPusherUltrasonicLeft.getRangeInches());
 		if(robotState.mLeftPusherReadings.size() > 10) {
 			robotState.mLeftPusherReadings.remove(0);
@@ -478,7 +478,7 @@ class HardwareUpdater {
 		}
 
 		//Right Side Cargo Distance from Pusher
-		Ultrasonic mPusherUltrasonicRight = HardwareAdapter.getInstance().getPusher().pusherUltrasonic2;
+		Ultrasonic mPusherUltrasonicRight = HardwareAdapter.getInstance().getPusher().pusherUltrasonicRight;
 		robotState.mRightPusherReadings.add(mPusherUltrasonicRight.getRangeInches());
 		if(robotState.mRightPusherReadings.size() > 10) {
 			robotState.mRightPusherReadings.remove(0);

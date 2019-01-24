@@ -119,14 +119,14 @@ public class HardwareAdapter {
 		private static PusherHardware getInstance() { return instance; }
 
 		public final WPI_VictorSPX pusherVictor;
-		public final Ultrasonic pusherUltrasonic1;
-		public final Ultrasonic pusherUltrasonic2;
+		public final Ultrasonic pusherUltrasonicRight;
+		public final Ultrasonic pusherUltrasonicLeft;
 		public final AnalogPotentiometer pusherPotentiometer;
 
 		protected PusherHardware() {
 			pusherVictor = new WPI_VictorSPX(Constants.kVidarPusherVictorID);
-			pusherUltrasonic1 = new Ultrasonic(Constants.kVidarPusherRightUltrasonicPing, Constants.kVidarPusherRightUltrasonicEcho);
-			pusherUltrasonic2 = new Ultrasonic(Constants.kVidarPusherLeftUltrasonicPing, Constants.kVidarPusherLeftUltrasonicEcho);
+			pusherUltrasonicRight = new Ultrasonic(Constants.kVidarPusherRightUltrasonicPing, Constants.kVidarPusherRightUltrasonicEcho);
+			pusherUltrasonicLeft = new Ultrasonic(Constants.kVidarPusherLeftUltrasonicPing, Constants.kVidarPusherLeftUltrasonicEcho);
 			pusherPotentiometer = new AnalogPotentiometer(Constants.kVidarPusherPotID, 360, 0);
 		}
 	}
