@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.subsystems.AutoPlacer;
 import com.palyrobotics.frc2019.util.XboxController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -155,7 +156,9 @@ public class HardwareAdapter {
 	public static class ShooterHardware{
 		private static ShooterHardware instance = new ShooterHardware();
 
-		private static ShooterHardware getInstance() { return instance; }
+		private static ShooterHardware getInstance() {
+		    return instance;
+		}
 
 		public final WPI_VictorSPX shooterMasterVictor;
 		public final WPI_VictorSPX shooterSlaveVictor;
@@ -166,13 +169,32 @@ public class HardwareAdapter {
 		}
 	}
 
+    /**
+     * Auto Placer Hardware
+     */
+    public static class AutoPlacerHardware {
+        private static AutoPlacerHardware instance = new AutoPlacerHardware();
+
+        private static AutoPlacerHardware getInstance() {
+            return instance;
+        }
+
+        public final Solenoid solenoid;
+
+        protected AutoPlacerHardware() {
+            solenoid = new Solenoid(Constants.kAutoPlacerSolenoidID);
+        }
+    }
+
 	/**
 	 * Hatch Intake - 1 WPI_VictorSPX, 1 SingleSolenoid
 	 */
 	public static class ShovelHardware {
 		private static ShovelHardware instance = new ShovelHardware();
 
-		private static ShovelHardware getInstance() { return instance; }
+		private static ShovelHardware getInstance() {
+		    return instance;
+		}
 
 		public final WPI_VictorSPX ShovelVictor;
 		public final Solenoid upDownSolenoid;
@@ -258,8 +280,17 @@ public class HardwareAdapter {
 		return IntakeHardware.getInstance();
 	}
 
-	public ShooterHardware getShooter() { return ShooterHardware.getInstance(); }
-	public ShovelHardware getShovel() { return ShovelHardware.getInstance(); }
+	public ShooterHardware getShooter() {
+	    return ShooterHardware.getInstance();
+	}
+
+	public ShovelHardware getShovel() {
+	    return ShovelHardware.getInstance();
+	}
+
+	public AutoPlacerHardware getAutoPlacer() {
+	    return AutoPlacerHardware.getInstance();
+    }
 
 	public PusherHardware getPusher() { return PusherHardware.getInstance(); }
 

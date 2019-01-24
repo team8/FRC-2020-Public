@@ -38,6 +38,7 @@ class HardwareUpdater {
 	private Pusher mPusher;
 	private Shovel mShovel;
 	private Fingers mFingers;
+	private AutoPlacer mAutoPlacer;
 
 	private double lastVelocity = 0;
 	private double maxA = 0;
@@ -46,13 +47,14 @@ class HardwareUpdater {
 	/**
 	 * Hardware Updater for Vidar
 	 */
-	protected HardwareUpdater(Drive drive, Arm arm, Elevator elevator, Shooter shooter, Pusher pusher, Shovel shovel, Fingers fingers) {
+	protected HardwareUpdater(Drive drive, Arm arm, Elevator elevator, Shooter shooter, Pusher pusher, Shovel shovel, Fingers fingers, AutoPlacer autoplacer) {
 		this.mDrive = drive;
 		this.mElevator = elevator;
 		this.mShooter = shooter;
 		this.mPusher = pusher;
 		this.mShovel = shovel;
 		this.mFingers = fingers;
+		this.mAutoPlacer = autoplacer;
 	}
 
 	/**
@@ -587,6 +589,8 @@ class HardwareUpdater {
 		updatePusher();
 		updateShovel();
 		updateFingers();
+		updateAutoPlacer();
+
 		updateMiscellaneousHardware();
 	}
 
@@ -625,6 +629,13 @@ class HardwareUpdater {
      */
     private void updateShooter() {
         HardwareAdapter.getInstance().getShooter().shooterMasterVictor.set(mShooter.getOutput());
+    }
+
+    /**
+     * Updates the auto placer
+     */
+    private void updateAutoPlacer() {
+        HardwareAdapter.getInstance().getAutoPlacer().solenoid.set(mAutoPlacer.getOutput());
     }
 
 

@@ -1,12 +1,10 @@
 package com.palyrobotics.frc2019.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
-import com.palyrobotics.frc2019.util.TalonSRXOutput;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
