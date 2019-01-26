@@ -141,32 +141,8 @@ public class Constants {
 	public static final int kIntakeMasterDeviceID = 0;
 	public static final int kIntakeSlaveDeviceID = 0;
 	public static final double kIntakeArbitraryFeedForward = 0;
-	public static final double kIntakeCargoInchTolerance = 0;
-
-	public static final double kAuto1MotorVelocity = 0.5;
-	public static final double kAuto2MotorVelocity = 0.9;
 	public static final double kExpellingMotorVelocity = -0.225;
-	public static final double kVaultExpellingMotorVelocity = -.92;
-	public static final double kExpelToScoreTime = 0.5;
-	public static final double kIntakeCurrentThreshold = 1;
-	public static final double kIntakeMasterStallCurrent = 70;
-	public static final double kIntakeMasterIdleCurrent = 0.125;
-	public static final double kIntakeMasterExpelCurrent = 1.5;
-	public static final double kIntakeMasterVaultExpelCurrent = 6.0;
-	public static final double kIntakeMasterIntakingCurrent = 6;
-	public static final double kIntakeSlaveStallCurrent = 65;
-	public static final double kIntakeSlaveIdleCurrent = 0.125;
-	public static final double kIntakeSlaveExpelCurrent = 1.5;
-	public static final double kIntakeSlaveVaultExpelCurrent = 6.0;
-	public static final double kIntakeSlaveIntakingCurrent = 6;
-	public static final double kSwitchAutoWaitBeforeElevatorRaiseTimeSeconds = .25;
-	public static final double kScaleAutoWaitBeforeElevatorRaiseTimeSeconds = 1.0;
-	public static final double kScaleOffset = 18;
-	public static final int kIntakeStallCounterThreshold = 5;
-	public static final int kIntakeFreeCounterThreshold = 1;
-	public static final double kIntakeStallCoefficientA = 1.55;
-	public static final double kIntakeStallCoefficientB = 4.27;
-	public static final double kIntakeFreeSpinCurrent = 5;
+
 
 	/**
 	 * Shovel
@@ -206,20 +182,10 @@ public class Constants {
 	 * !!! End of editable Constants! !!!
 	 **********************************************************************************
 	 */
-	public static final int kEndEditableArea = 0;
 
 	/*
 	 * ************************************ Vidar ELECTRONIC CONSTANTS ************************************
 	 */
-	//PDP
-	public static final int kVidarPDPDeviceID = 0;
-
-	//Compressor
-    public static final int kVidarCompressorSensorDeviceID = 0;
-    public static final int kVidarCompressorDeviceID = 0;
-    public static final int kVidarCompressorVoltageToPSI = 0;
-    public static final int kVidarPressureCurrentProductThreshold = 0;
-    public static final int kVidarCompressorMaxPSI = 120;
 
 	//DRIVETRAIN
 	//PDP slots for drivetrain 0, 1, 2, 3, 12, 13
@@ -237,6 +203,8 @@ public class Constants {
 
     public static final int kVidarElevatorDoubleSolenoidForwardsID = 0;
     public static final int kVidarElevatorDoubleSolenoidReverseID = 0;
+
+    public static final int kElevatorHFXPort = 1;
 
 	//INTAKE
 	public static final int kVidarIntakeMasterDeviceID = 3;

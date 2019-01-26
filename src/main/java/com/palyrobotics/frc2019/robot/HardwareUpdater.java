@@ -38,10 +38,6 @@ class HardwareUpdater {
 	private Fingers mFingers;
 	private AutoPlacer mAutoPlacer;
 
-	private double lastVelocity = 0;
-	private double maxA = 0;
-	private double maxV = 0;
-
 	/**
 	 * Hardware Updater for Vidar
 	 */
@@ -99,6 +95,7 @@ class HardwareUpdater {
 		configureIntakeHardware();
 		configureShooterHardware();
 		configurePusherHardware();
+		configureShovelHardware();
 	}
 
 	void configureDriveHardware() {
@@ -366,11 +363,12 @@ class HardwareUpdater {
 			default:
 				break;
 		}
+
 		robotState.elevatorPosition = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition();
 		robotState.elevatorVelocity = HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark.getEncoder().getVelocity();
 
 		// Change HFX Talon location
-		robotState.elevatorHFX = HardwareAdapter.getInstance().getDrivetrain().rightMasterTalon.getSensorCollection().isRevLimitSwitchClosed();
+		robotState.elevatorHFX = HardwareAdapter.getInstance().getElevator().elevatorHFX.get();
 
 		PigeonIMU gyro = HardwareAdapter.getInstance().getDrivetrain().gyro;
 		if(gyro != null) {
@@ -408,7 +406,6 @@ class HardwareUpdater {
 		// left side
 		Ultrasonic mUltrasonicLeft = HardwareAdapter.getInstance().getIntake().ultrasonic1;
 		robotState.mLeftReadings.add(mUltrasonicLeft.getRangeInches());
-//		System.out.println(mUltrasonicLeft.getRangeInches());
 		if(robotState.mLeftReadings.size() > 10) {
 			robotState.mLeftReadings.remove(0);
 		}
@@ -423,7 +420,6 @@ class HardwareUpdater {
 		// right side
 		Ultrasonic mUltrasonicRight = HardwareAdapter.getInstance().getIntake().ultrasonic2;
 		robotState.mRightReadings.add(mUltrasonicRight.getRangeInches());
-//		System.out.println(mUltrasonicRight.getRangeInches());
 		if(robotState.mRightReadings.size() > 10) {
 			robotState.mRightReadings.remove(0);
 		}
@@ -434,10 +430,6 @@ class HardwareUpdater {
 				rightTotal += 1;
 			}
 		}
-
-//		System.out.println("Left: " + mUltrasonicLeft.getRangeInches());
-//		System.out.println("Right: " + mUltrasonicRight.getRangeInches());
-//		System.out.println(robotState.hasCube);
 
 		//Left Side Cargo Distance from Pusher
 		Ultrasonic mPusherUltrasonicLeft = HardwareAdapter.getInstance().getPusher().pusherUltrasonicLeft;
@@ -497,10 +489,6 @@ class HardwareUpdater {
 
 		double cv = (robotState.drivePose.leftEncVelocity + robotState.drivePose.rightEncVelocity)/2 * 1/Constants.kDriveSpeedUnitConversion;
 
-
-//        //Update compressor pressure
-//        robotState.compressorPressure = HardwareAdapter.getInstance().getMiscellaneousHardware().compressorSensor.getVoltage() * Constants.kVidarCompressorVoltageToPSI; //TODO: Implement the constant!
-
 		//Update pusher sensors
 		robotState.pusherPosition = HardwareAdapter.getInstance().getPusher().pusherPotentiometer.get() /
 				Constants.kPusherTicksPerInch;
@@ -558,9 +546,6 @@ class HardwareUpdater {
      * low enough
      */
     private boolean shouldCompress() {
-//        double currentDraw = RobotState.getInstance().totalCurrentDraw;
-//        double pressure = RobotState.getInstance().compressorPressure;
-//        return currentDraw * pressure < Constants.kVidarPressureCurrentProductThreshold; //TODO: Implement this!
     	return !(RobotState.getInstance().gamePeriod == RobotState.GamePeriod.AUTO);
     }
 

@@ -214,13 +214,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		HardwareAdapter.getInstance().getIntake().LED.set(LEDColor.getValue(LEDColor.Color.GREEN_DARK));
-//		if (DriverStation.getInstance().isDSAttached()) {
-//			HardwareAdapter.getInstance().getIntake().LED.set(LEDColor.getValue(LEDColor.Color.GREEN));
-//		} else {
-//			HardwareAdapter.getInstance().getIntake().LED.set(LEDColor.getValue(LEDColor.Color.BLACK));
-//		}
-//		HardwareAdapter.getInstance().getIntake().LED.set(LEDColor.getValue(LEDColor.Color.RAINBOW));
 	}
 
 	//Call during teleop and auto periodic

@@ -70,11 +70,13 @@ public class HardwareAdapter {
         public final CANSparkMax elevatorMasterSpark;
         public final CANSparkMax elevatorSlaveSpark;
         public final DoubleSolenoid elevatorDoubleSolenoid;
+        public final DigitalInput elevatorHFX;
 
         protected ElevatorHardware() {
             elevatorMasterSpark = new CANSparkMax(Constants.kVidarElevatorMasterSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
             elevatorSlaveSpark = new CANSparkMax(Constants.kVidarElevatorSlaveSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
             elevatorDoubleSolenoid = new DoubleSolenoid(Constants.kVidarElevatorDoubleSolenoidForwardsID, Constants.kVidarElevatorDoubleSolenoidReverseID);
+			elevatorHFX = new DigitalInput(Constants.kElevatorHFXPort);
         }
     }
 
@@ -93,7 +95,6 @@ public class HardwareAdapter {
 		public final CANSparkMax intakeSlaveSpark;
 		public final Ultrasonic ultrasonic1;
 		public final Ultrasonic ultrasonic2;
-		public final Spark LED;
 
 		protected IntakeHardware() {
 			intakeVictor = new WPI_VictorSPX(Constants.kIntakeVictorID);
@@ -101,8 +102,6 @@ public class HardwareAdapter {
 			intakeSlaveSpark = new CANSparkMax(Constants.kIntakeSlaveDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			ultrasonic1 = new Ultrasonic(Constants.kLeftUltrasonicPing,Constants.kLeftUltrasonicEcho);
 			ultrasonic2 = new Ultrasonic(Constants.kRightUltrasonicPing,Constants.kRightUltrasonicEcho);
-
-			LED = new Spark(0);
 		}
 	}
 

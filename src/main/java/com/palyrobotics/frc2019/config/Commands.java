@@ -42,8 +42,10 @@ public class Commands {
 
 	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
 	public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
+
 	public Intake.WheelState wantedIntakingState = Intake.WheelState.IDLE;
 	public Intake.UpDownState wantedIntakeUpDownState = Intake.UpDownState.UP;
+
 	public boolean disableIntakeScaling = true;
 
 	public boolean customShooterSpeed = false;
