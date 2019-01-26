@@ -74,6 +74,7 @@ public class Intake extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         mWheelState = commands.wantedIntakingState;
         mUpDownState = commands.wantedIntakeUpDownState;
+        commands.hasCargo = robotState.hasCargo;
         arb_ff = Constants.kIntakeArbitraryFeedForward * Math.cos(robotState.intakePosition);
 
         switch(mWheelState) {

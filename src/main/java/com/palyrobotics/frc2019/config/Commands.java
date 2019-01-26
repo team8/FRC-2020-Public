@@ -50,11 +50,16 @@ public class Commands {
 
 	public boolean customShooterSpeed = false;
 	public boolean customIntakeSpeed = false;
+
 	public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.CALIBRATING;
 	public Elevator.ClimberState wantedClimberState = Elevator.ClimberState.INACTIVE;
 	public Elevator.GearboxState wantedGearboxState = Elevator.GearboxState.ELEVATOR;
+
 	public boolean customShovelSpeed = false;
 	public boolean autoPlacerOutput = false;
+
+	public boolean intakeHFX = false;
+	public boolean hasCargo = false;
 
 	public void addWantedRoutine(Routine wantedRoutine) {
 		for(Routine routine : wantedRoutines) {

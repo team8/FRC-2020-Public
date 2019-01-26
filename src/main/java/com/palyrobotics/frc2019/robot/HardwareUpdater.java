@@ -322,6 +322,9 @@ class HardwareUpdater {
 			robotState.climberStickInput.update(HardwareAdapter.getInstance().getJoysticks().climberStick);
 			robotState.operatorJoystickInput.update(HardwareAdapter.getInstance().getJoysticks().operatorJoystick);
 		}
+
+		robotState.hatchIntakeUp = HardwareAdapter.getInstance().getShovel().upDownHFX.get();
+
 		switch(robotState.leftControlMode) {
 			//Fall through
 			case Position:
@@ -403,72 +406,6 @@ class HardwareUpdater {
 			robotState.drivePose.rightMotionMagicVel = Optional.empty();
 		}
 
-		// left side
-		Ultrasonic mUltrasonicLeft = HardwareAdapter.getInstance().getIntake().ultrasonic1;
-		robotState.mLeftReadings.add(mUltrasonicLeft.getRangeInches());
-		if(robotState.mLeftReadings.size() > 10) {
-			robotState.mLeftReadings.remove(0);
-		}
-
-		int leftTotal = 0;
-		for (int i = 0; i < robotState.mLeftReadings.size(); i++) {
-			if (robotState.mLeftReadings.get(i) < Constants.kIntakeCubeInchTolerance) {
-				leftTotal += 1;
-			}
-		}
-
-		// right side
-		Ultrasonic mUltrasonicRight = HardwareAdapter.getInstance().getIntake().ultrasonic2;
-		robotState.mRightReadings.add(mUltrasonicRight.getRangeInches());
-		if(robotState.mRightReadings.size() > 10) {
-			robotState.mRightReadings.remove(0);
-		}
-
-		int rightTotal = 0;
-		for (int i = 0; i < robotState.mRightReadings.size(); i++) {
-			if (robotState.mRightReadings.get(i) < Constants.kIntakeCubeInchTolerance) {
-				rightTotal += 1;
-			}
-		}
-
-		//Left Side Cargo Distance from Pusher
-		Ultrasonic mPusherUltrasonicLeft = HardwareAdapter.getInstance().getPusher().pusherUltrasonicLeft;
-		robotState.mLeftPusherReadings.add(mPusherUltrasonicLeft.getRangeInches());
-		if(robotState.mLeftPusherReadings.size() > 10) {
-			robotState.mLeftPusherReadings.remove(0);
-		}
-
-		int pusherLeftTotal = 0;
-		for (int i = 0; i < robotState.mLeftPusherReadings.size(); i++) {
-			if (robotState.mLeftPusherReadings.get(i) < Constants.kVidarPusherCargoTolerance) {
-				pusherLeftTotal += 1;
-			}
-		}
-
-		//Right Side Cargo Distance from Pusher
-		Ultrasonic mPusherUltrasonicRight = HardwareAdapter.getInstance().getPusher().pusherUltrasonicRight;
-		robotState.mRightPusherReadings.add(mPusherUltrasonicRight.getRangeInches());
-		if(robotState.mRightPusherReadings.size() > 10) {
-			robotState.mRightPusherReadings.remove(0);
-		}
-
-		int pusherRightTotal = 0;
-		for (int i = 0; i < robotState.mRightPusherReadings.size(); i++) {
-			if (robotState.mRightPusherReadings.get(i) < Constants.kVidarPusherCargoTolerance) {
-				pusherRightTotal += 1;
-			}
-		}
-
-		if (pusherLeftTotal > Constants.kVidarPusherRequiredUltrasonicCount && pusherRightTotal > Constants.kVidarPusherRequiredUltrasonicCount) {
-			robotState.hasPusherCargo = false;
-		}
-		else {
-			robotState.hasPusherCargo = true;
-		}
-
-		robotState.cargoPusherDistance = (mPusherUltrasonicLeft.getRangeInches() +
-				mPusherUltrasonicRight.getRangeInches())/2;
-
 		robotState.drivePose.leftError = Optional.of(leftMasterTalon.getClosedLoopError(0));
 		robotState.drivePose.rightError = Optional.of(rightMasterTalon.getClosedLoopError(0));
 
@@ -506,6 +443,52 @@ class HardwareUpdater {
 		CANSparkMax.FaultID intakeStickyFaults = CANSparkMax.FaultID.kSensorFault;
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.clearFaults();
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getStickyFault(intakeStickyFaults);
+
+		updateUltrasonicSensors(robotState);
+	}
+
+	void updateUltrasonicSensors(RobotState robotState) {
+		// HAS CARGO IN INTAKE
+
+		// left side
+		Ultrasonic mUltrasonicLeft = HardwareAdapter.getInstance().getIntake().ultrasonic1;
+		robotState.mLeftReadings.add(mUltrasonicLeft.getRangeInches());
+		if(robotState.mLeftReadings.size() > 10) {
+			robotState.mLeftReadings.remove(0);
+		}
+		// right side
+		Ultrasonic mUltrasonicRight = HardwareAdapter.getInstance().getIntake().ultrasonic2;
+		robotState.mRightReadings.add(mUltrasonicRight.getRangeInches());
+		if(robotState.mRightReadings.size() > 10) {
+			robotState.mRightReadings.remove(0);
+		}
+
+		int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> i < Constants.kIntakeCargoInchTolerance).count();
+		int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> i < Constants.kIntakeCargoInchTolerance).count();
+
+		robotState.hasCargo = (leftTotal > Constants.kRequiredUltrasonicCount && rightTotal > Constants.kRequiredUltrasonicCount);
+		robotState.cargoDistance = (mUltrasonicLeft.getRangeInches() + mUltrasonicRight.getRangeInches()) / 2;
+
+		// HAS CARGO IN CARRIAGE
+
+		//Left Side Cargo Distance from Pusher
+		Ultrasonic mPusherUltrasonicLeft = HardwareAdapter.getInstance().getPusher().pusherUltrasonicLeft;
+		robotState.mLeftPusherReadings.add(mPusherUltrasonicLeft.getRangeInches());
+		if(robotState.mLeftPusherReadings.size() > 10) {
+			robotState.mLeftPusherReadings.remove(0);
+		}
+
+		//Right Side Cargo Distance from Pusher
+		Ultrasonic mPusherUltrasonicRight = HardwareAdapter.getInstance().getPusher().pusherUltrasonicRight;
+		robotState.mRightPusherReadings.add(mPusherUltrasonicRight.getRangeInches());
+		if(robotState.mRightPusherReadings.size() > 10) {
+			robotState.mRightPusherReadings.remove(0);
+		}
+
+		int leftPusherTotal = (int) robotState.mLeftPusherReadings.stream().filter(i -> i < Constants.kVidarPusherCargoTolerance).count();
+		int rightPusherTotal = (int) robotState.mRightPusherReadings.stream().filter(i -> i < Constants.kVidarPusherCargoTolerance).count();
+		robotState.hasPusherCargo = (leftPusherTotal > Constants.kRequiredUltrasonicCount && rightPusherTotal > Constants.kRequiredUltrasonicCount);
+		robotState.cargoPusherDistance = (mPusherUltrasonicLeft.getRangeInches() + mPusherUltrasonicRight.getRangeInches())/2;
 	}
 
 	/**

@@ -78,7 +78,7 @@ public class Constants {
 	public static final int kLeftUltrasonicEcho = 1;
 	public static final int kRightUltrasonicPing = 2;
 	public static final int kRightUltrasonicEcho = 3;
-	public static final double kIntakeCubeInchTolerance = 3;
+	public static final double kIntakeCargoInchTolerance = 3;
     public static final double kIntakeCloseRoutineCloseNow = 5.8;
     public static final int kRequiredUltrasonicCount = 6;
     public static final int kVidarPusherRightUltrasonicPing = 0;
@@ -153,6 +153,7 @@ public class Constants {
 	public static final int kShovelExpellingMotorVelocity = 0;
 	public static final int kShovelSmallExpelMotorVelocity = 0;
 	public static final int kMaxShovelCurrentDraw = 0;
+	public static final int kShovelHFXPort = 1;
 
 	/**
 	 * Pusher

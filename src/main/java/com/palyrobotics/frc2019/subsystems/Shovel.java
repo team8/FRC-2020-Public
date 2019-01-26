@@ -46,6 +46,7 @@ public class Shovel extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         mWheelState = commands.wantedShovelWheelState;
         mUpDownOutput = commands.wantedShovelUpDownState;
+        commands.intakeHFX = robotState.hatchIntakeUp;
 
         switch(mWheelState) {
             case INTAKING:

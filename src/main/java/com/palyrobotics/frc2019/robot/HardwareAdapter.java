@@ -171,10 +171,12 @@ public class HardwareAdapter {
 
 		public final WPI_VictorSPX ShovelVictor;
 		public final Solenoid upDownSolenoid;
+		public final DigitalInput upDownHFX;
 
 		protected ShovelHardware() {
 			ShovelVictor = new WPI_VictorSPX(Constants.kShovelID);
 			upDownSolenoid = new Solenoid(0, Constants.kShovelUpDownSolenoid);
+			upDownHFX = new DigitalInput(Constants.kShovelHFXPort);
 		}
 	}
 

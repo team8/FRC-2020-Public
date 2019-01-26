@@ -60,6 +60,7 @@ public class RobotState {
 
 	//Hatch Intake
 	public boolean hasHatch = false;
+	public boolean hatchIntakeUp = true;
 
 	//Tracks total current from kPDP
 	public double shovelCurrentDraw = 0;
