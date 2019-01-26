@@ -39,7 +39,7 @@ public class Path {
 
 		public Waypoint(Translation2d position) {
 			this.position = position;
-			this.speed = 0;
+			this.speed = -1;
 			this.marker = Optional.empty();
 			this.isRelative = false;
 		}
@@ -209,12 +209,18 @@ public class Path {
 
 	public void setVelocities(List<Waypoint> waypoints) {
 		for (int i = 0; i < waypoints.size() - 1; i++) {
-			Translation2d previous = (i == 0) ? new Translation2d(0, 0) : waypoints.get(i - 1).position;
-			Translation2d current = waypoints.get(i).position;
-			Translation2d next = waypoints.get(i + 1).position;
-			double maxVel = Math.min(Constants.kPathFollowingMaxVel, Constants.kTurnVelocityReduction / getCurvature(previous, current, next));
-			waypoints.set(i, new Waypoint(current, maxVel));
+			// Check if velocity has not already been set
+			if (waypoints.get(i).speed == -1) {
+				Translation2d previous = (i == 0) ? new Translation2d(0, 0) : waypoints.get(i - 1).position;
+				Translation2d current = waypoints.get(i).position;
+				Translation2d next = waypoints.get(i + 1).position;
+				double maxVel = Math.min(Constants.kPathFollowingMaxVel, Constants.kTurnVelocityReduction / getCurvature(previous, current, next));
+				waypoints.set(i, new Waypoint(current, maxVel));
+			}
 		}
+		// Set last waypoint speed to 0
+		Translation2d endPt = waypoints.get(waypoints.size() - 1).position;
+		waypoints.set(waypoints.size() - 1, new Waypoint(endPt, 0));
 	}
 
 	/*
