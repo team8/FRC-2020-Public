@@ -437,8 +437,11 @@ class HardwareUpdater {
 		robotState.pusherCachePosition = robotState.pusherPosition;
 
 		//Update intake sensors
-		robotState.intakePosition = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition();
-		robotState.intakeVelocity = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getVelocity();
+		robotState.intakePosition = Constants.kIntakeMaxAngle -
+				1/Constants.kArmTicksPerDegree * (Constants.kIntakeMaxAngleTicks - HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+
+		robotState.intakeVelocity = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getVelocity() / Constants.kArmTicksPerDegree;
+
 		//TODO: No idea if this is the right sticky fault mode
 		CANSparkMax.FaultID intakeStickyFaults = CANSparkMax.FaultID.kSensorFault;
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.clearFaults();

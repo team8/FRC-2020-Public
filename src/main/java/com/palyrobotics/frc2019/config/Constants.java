@@ -97,7 +97,7 @@ public class Constants {
 	 * Unit conversions for Talons
 	 */
 	public static final double kDriveTicksPerInch = 4096 / (6.25 * Math.PI);
-	public static final double kArmTicksPerInch = 0;
+	public static final double kArmTicksPerDegree = 4096 / (360 * 10);
 	public static final double kPusherTicksPerInch = 0;
     public static final double kElevatorTicksPerInch = 0;
     public static final double kClimberTicksPerInch = 0;
@@ -137,11 +137,16 @@ public class Constants {
 	public static final double kIntakeFastExpellingVelocity = 0;
 	public static final double kIntakeSlowIntakingVelocity = 0;
 	public static final double kIntakeFastIntakingVelocity = 0;
+
+	public static final double kIntakeMaxAngle = 120;
+	public static final double kIntakeMaxAngleTicks = 2000;
+
 	public static final int kIntakeVictorID = 0;
 	public static final int kIntakeMasterDeviceID = 0;
 	public static final int kIntakeSlaveDeviceID = 0;
 	public static final double kIntakeArbitraryFeedForward = 0;
 	public static final double kExpellingMotorVelocity = -0.225;
+
 
 
 	/**
