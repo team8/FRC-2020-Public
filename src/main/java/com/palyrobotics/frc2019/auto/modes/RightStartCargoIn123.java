@@ -16,13 +16,13 @@ import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TripleKill extends AutoModeBase { //right start > cargo ship front > loading station > rocket ship far > depot > close rocket ship
+public class RightStartCargoIn123 extends AutoModeBase { //right start > cargo ship 1 > depot * 3
 
 //    TODO: tune the code - I haven't tested yet
 
     public static int SPEED = 150;
     public static double kOffsetX = -Constants.kLowerPlatformLength - Constants.kRobotLengthInches;
-    public static double kOffsetY = 0;
+    public static double kOffsetY = Constants.kLevel3Width * .5 + Constants.kLevel2Width * .5;
     public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + Constants.kLowerPlatformLength + Constants.kUpperPlatformLength;
     public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
     public static double kHabLineX = Constants.kUpperPlatformLength + Constants.kLowerPlatformLength;
@@ -44,7 +44,7 @@ public class TripleKill extends AutoModeBase { //right start > cargo ship front 
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new DriveSensorResetRoutine(0.2), placeCargoStart(), placeCargo(1), takeCargo(1), placeCargo(2));
+        return new SequentialRoutine(new Rezero().Rezero(false), placeCargoStart(), placeCargo(1), takeCargo(1), placeCargo(2));
     }
 
     public Routine placeCargoStart() { //start to cargo ship front
@@ -61,7 +61,7 @@ public class TripleKill extends AutoModeBase { //right start > cargo ship front 
 //        TODO: add ReleaseCargoRoutine (not made yet)
 //        routines.add(new TimeoutRoutine(1)); //placeholder
 
-        routines.add(new CascadingGyroEncoderTurnAngleRoutine(-70)); //turn back
+        routines.add(new CascadingGyroEncoderTurnAngleRoutine(-60)); //turn back
 
         List<Path.Waypoint> CargoShipToDepot = new ArrayList<>();
         CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + Constants.kRobotLengthInches * 1 + kOffsetX, kRightDepotY + Constants.kRobotLengthInches * .25 + kOffsetY), SPEED));
@@ -91,7 +91,7 @@ public class TripleKill extends AutoModeBase { //right start > cargo ship front 
     public Routine takeCargo(int DepotSlot) {
         ArrayList<Routine> routines = new ArrayList<>();
 
-        routines.add(new CascadingGyroEncoderTurnAngleRoutine(-70));
+        routines.add(new CascadingGyroEncoderTurnAngleRoutine(-60));
 
         List<Path.Waypoint> CargoShipToDepot = new ArrayList<>();
         CargoShipToDepot.add(new Waypoint(new Translation2d(kRightFirstCargoShipX * .5 + kOffsetX, kRightDepotY + kOffsetY), SPEED));

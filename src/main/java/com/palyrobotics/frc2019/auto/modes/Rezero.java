@@ -21,8 +21,6 @@ import java.util.List;
 
 public class Rezero extends AutoModeBase {
 
-//TODO adjust speed and other constants to optimize auto
-
     @Override
     public String toString() {
         return mAlliance + this.getClass().toString();
@@ -35,17 +33,25 @@ public class Rezero extends AutoModeBase {
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new DriveSensorResetRoutine(2), Rezero());
+        return new SequentialRoutine(new DriveSensorResetRoutine(0.2), Rezero(true));
     }
 
-    public Routine Rezero() {
+    public Routine Rezero(boolean inverted) {
+
+        //TODO adjust speed and other constants to optimize auto
+
+        //invert the cords if the robot starts backwards
+        int invertCord = 1;
+        if (inverted) {
+            invertCord = -1;
+        }
 
         ArrayList<Routine> routines = new ArrayList<>();
 
         // Drive off the level 2 platform
         ArrayList<Waypoint> waypoints = new ArrayList<>();
-        waypoints.add(new Waypoint(new Translation2d(-30, 0), 35));
-        waypoints.add(new Waypoint(new Translation2d(-40, 0), 0));
+        waypoints.add(new Waypoint(new Translation2d(30 * invertCord, 0), 35));
+        waypoints.add(new Waypoint(new Translation2d(40 * invertCord, 0), 0));
         routines.add(new DrivePathRoutine(new Path(waypoints), true));
 
         // Back up against the platform
@@ -57,7 +63,7 @@ public class Rezero extends AutoModeBase {
         routines.add(new DriveTimeRoutine(0.7, backUp));
 
         // Zero robot state
-        routines.add(new DriveSensorResetRoutine(0.2));
+        routines.add(new DriveSensorResetRoutine(0.5));
 
         return new SequentialRoutine(routines);
     }

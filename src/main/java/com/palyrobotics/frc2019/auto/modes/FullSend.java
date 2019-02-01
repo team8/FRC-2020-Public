@@ -56,7 +56,7 @@ public class FullSend extends AutoModeBase { //right start > cargo ship front > 
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new RightStartRightFrontCargo().getRoutine(), takeHatch(), placeHatch2(), takeCargo(), placeCargoClose());
+        return new SequentialRoutine(new RightStartRightFrontCargo().placeHatch(true), takeHatch(), placeHatch2(), takeCargo(), placeCargoClose());
     }
 
     public Routine takeHatch() { //cargo ship front to loading station
@@ -87,8 +87,6 @@ public class FullSend extends AutoModeBase { //right start > cargo ship front > 
         backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kRightRocketShipMidX + kOffsetX), -(findLineFar(kRightRocketShipMidX + Constants.kRobotLengthInches * 1.8) + kOffsetY)), SPEED)); //goes around the rocket ship
         backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kRightRocketShipFarX + Constants.kRobotLengthInches * 1.9 + kOffsetX), -(findLineFar(kRightRocketShipMidX + Constants.kRobotLengthInches * 1.9) - Constants.kRobotLengthInches * .2 + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(backLoadingStationToRocketShip), true)); //robot turns and then moves forward to the rocket ship
-
-//        routines.add(new TimeoutRoutine(20));
 
         List<Path.Waypoint> forwardLoadingStationToRocketShip = new ArrayList<>(); //robot turns and then moves forward
         forwardLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kRightRocketShipFarX + Constants.kRobotLengthInches * 1.6 + kOffsetX), -(findLineFar(kRightRocketShipMidX + Constants.kRobotLengthInches * 1.6) - Constants.kRobotLengthInches * .3 + kOffsetY)), SPEED)); //line up with rocket ship far

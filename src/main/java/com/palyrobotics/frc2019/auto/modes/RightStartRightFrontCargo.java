@@ -41,20 +41,31 @@ public class RightStartRightFrontCargo extends AutoModeBase {
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new DriveSensorResetRoutine(2), new Rezero().getRoutine(), placeHatch());
+        return new SequentialRoutine(new DriveSensorResetRoutine(0.2), placeHatch(true));
     }
 
-    public Routine placeHatch() {
+    public Routine placeHatch(boolean inverted) {
         ArrayList<Routine> routines = new ArrayList<>();
 
+//        TODO: make super accurate
+
+        //invert the cords if the robot starts backwards
+        int invertCord = 1;
+        if (inverted) {
+            invertCord = -1;
+        }
+
+        routines.add(new Rezero().Rezero(inverted)); //rezero
+
         List<Path.Waypoint> StartToCargoShip = new ArrayList<>();
-        StartToCargoShip.add(new Waypoint(new Translation2d(-(kHabLineX + Constants.kRobotLengthInches + kOffsetX), 0), SPEED)); //go straight so the robot doesn't get messed up going down a level
-        StartToCargoShip.add(new Waypoint(new Translation2d(-(kCargoShipRightFrontX * .6 + kOffsetX), -(kCargoShipRightFrontY + kOffsetY)), SPEED)); //lines up with cargo ship
-        StartToCargoShip.add(new Waypoint(new Translation2d(-(kCargoShipRightFrontX - Constants.kRobotLengthInches * .6 + kOffsetX), -(kCargoShipRightFrontY + kOffsetY)), 0));
+        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kHabLineX + Constants.kRobotLengthInches + kOffsetX), 0), SPEED)); //go straight so the robot doesn't get messed up going down a level
+        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kCargoShipRightFrontX * .6 + kOffsetX), invertCord * (kCargoShipRightFrontY + kOffsetY)), SPEED)); //lines up with cargo ship
+        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kCargoShipRightFrontX - Constants.kRobotLengthInches * .6 + kOffsetX), invertCord * (kCargoShipRightFrontY + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(StartToCargoShip), true));
 
 //        TODO: implement ReleaseHatchRoutine when created
 //        routines.add(new ReleaseHatchRoutine()); //routine not made yet
+
         routines.add(new TimeoutRoutine(1)); //placeholder
 
         return new SequentialRoutine(routines);

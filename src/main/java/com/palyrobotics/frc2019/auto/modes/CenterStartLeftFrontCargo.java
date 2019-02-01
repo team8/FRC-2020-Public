@@ -41,18 +41,26 @@ public class CenterStartLeftFrontCargo extends AutoModeBase {
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new DriveSensorResetRoutine(0.2), placeHatch());
+        return new SequentialRoutine(placeHatch(true));
     }
 
-    public Routine placeHatch() {
+    public Routine placeHatch(boolean inverted) {
         ArrayList<Routine> routines = new ArrayList<>();
 
 //        TODO: make super accurate
 
+        //invert the cords if the robot starts backwards
+        int invetCord = 1;
+        if (inverted) {
+            invetCord = -1;
+        }
+
+        routines.add(new Rezero().Rezero(inverted)); //rezero
+
         List<Path.Waypoint> StartToCargoShip = new ArrayList<>();
-        StartToCargoShip.add(new Waypoint(new Translation2d(-(kHabLineX + Constants.kRobotLengthInches + kOffsetX), 0), SPEED)); //go straight so the robot doesn't get messed up going down a level
-        StartToCargoShip.add(new Waypoint(new Translation2d(-(kCargoShipLeftFrontX * .6 + kOffsetX), -(kCargoShipLeftFrontY + kOffsetY)), SPEED)); //lines up with cargo ship
-        StartToCargoShip.add(new Waypoint(new Translation2d(-(kCargoShipLeftFrontX - Constants.kRobotLengthInches * .6 + kOffsetX), -(kCargoShipLeftFrontY + kOffsetY)), 0));
+        StartToCargoShip.add(new Waypoint(new Translation2d(invetCord * (kHabLineX + Constants.kRobotLengthInches + kOffsetX), 0), SPEED)); //go straight so the robot doesn't get messed up going down a level
+        StartToCargoShip.add(new Waypoint(new Translation2d(invetCord * (kCargoShipLeftFrontX * .6 + kOffsetX), invetCord * (kCargoShipLeftFrontY + kOffsetY)), SPEED)); //lines up with cargo ship
+        StartToCargoShip.add(new Waypoint(new Translation2d(invetCord * (kCargoShipLeftFrontX - Constants.kRobotLengthInches * .6 + kOffsetX), invetCord * (kCargoShipLeftFrontY + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(StartToCargoShip), true));
 
 //        TODO: implement ReleaseHatchRoutine when created

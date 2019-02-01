@@ -16,7 +16,7 @@ import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpedPoints extends AutoModeBase { //right start > cargo ship front > ball in first cargo > depot x2
+public class RightStartHatchInFrontCargoIn12 extends AutoModeBase { //right start > cargo ship front > ball in first cargo > depot x2
 
 //    TODO: finish tuning the code
 
@@ -44,17 +44,20 @@ public class SpedPoints extends AutoModeBase { //right start > cargo ship front 
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new RightStartRightFrontCargo().getRoutine(), ShipToDepot(), placeCargo(0), takeCargo(1), placeCargo(1));
+        return new SequentialRoutine(new RightStartRightFrontCargo().placeHatch(false), CargoShipToDepot(), placeCargo(0), takeCargo(1), placeCargo(1));
     }
 
-    public Routine ShipToDepot() { //cargo ship to depot
+    public Routine CargoShipToDepot() { //cargo ship to depot
         ArrayList<Routine> routines = new ArrayList<>();
 
         List<Path.Waypoint> CargoShipToDepot = new ArrayList<>();
         CargoShipToDepot.add(new Waypoint(new Translation2d(kCargoShipRightFrontX - Constants.kRobotLengthInches + kOffsetX, kCargoShipRightFrontY + kOffsetY), SPEED));
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + Constants.kRobotLengthInches * 1.05 + kOffsetX, kRightDepotY + Constants.kRobotLengthInches * .25 + kOffsetY), SPEED));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + Constants.kRobotLengthInches * 1.05 + kOffsetX, kRightDepotY + Constants.kRobotLengthInches * .25 + kOffsetY), SPEED)); //line up with depot
         CargoShipToDepot.add(new Waypoint(new Translation2d(kRightDepotX + Constants.kRobotLengthInches * 1.1 + kOffsetX, kRightDepotY + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(CargoShipToDepot), true));
+
+//        TODO: add IntakeCargoRoutine (not made yet)
+//        routines.add(new TimeoutRoutine(1)); //placeholder
 
         return new SequentialRoutine(routines);
     }
@@ -62,7 +65,7 @@ public class SpedPoints extends AutoModeBase { //right start > cargo ship front 
     public Routine placeCargo(int CargoSlot) { //depot to cargo ship bays
         ArrayList<Routine> routines = new ArrayList<>();
 
-        List<Path.Waypoint> DepotToCargoShip = new ArrayList<>(); //the CargoSlot variable makes the robot to a different bay
+        List<Path.Waypoint> DepotToCargoShip = new ArrayList<>(); //the CargoSlot variable makes the robot go farther so it goes to a different bay each time
         DepotToCargoShip.add(new Waypoint(new Translation2d(kRightDepotX + Constants.kRobotLengthInches * 2 + kOffsetX, kRightDepotY + kOffsetY), SPEED));
         DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + Constants.kRobotLengthInches * .55 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kRightDepotY + kOffsetY), SPEED));
         DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + Constants.kRobotLengthInches * .85 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kRightFirstCargoShipY - Constants.kRobotLengthInches + kOffsetY), SPEED)); //line up in front of cargo bay
@@ -75,12 +78,12 @@ public class SpedPoints extends AutoModeBase { //right start > cargo ship front 
         return new SequentialRoutine(routines);
     }
 
-    public Routine takeCargo(int DepotSlot) { //cargo ship bays to de[ot
+    public Routine takeCargo(int DepotSlot) { //cargo ship bays to depot
         ArrayList<Routine> routines = new ArrayList<>();
 
-        List<Path.Waypoint> CargoShipToDepot = new ArrayList<>(); //the DepotSlot variable makes the robot to a farther to collect the next ball
+        List<Path.Waypoint> CargoShipToDepot = new ArrayList<>(); //the DepotSlot variable makes the robot go farther each time to collect the next cargo
         CargoShipToDepot.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + DepotSlot * Constants.kCargoLineGap + Constants.kRobotLengthInches + kOffsetX, kRightFirstCargoShipY - Constants.kRobotLengthInches * .7 + kOffsetY), SPEED));
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + DepotSlot * Constants.kCargoLineGap + Constants.kRobotLengthInches + kOffsetX, kRightDepotY + kOffsetY), SPEED));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + DepotSlot * Constants.kCargoLineGap + Constants.kRobotLengthInches + kOffsetX, kRightDepotY + kOffsetY), SPEED)); //turn back and line up with the depot
         CargoShipToDepot.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + DepotSlot * Constants.kCargoLineGap - Constants.kRobotLengthInches * .5 + kOffsetX, kRightDepotY + kOffsetY), SPEED));
         CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + kOffsetX, kRightDepotY + kOffsetY), SPEED));
         CargoShipToDepot.add(new Waypoint(new Translation2d(kRightDepotX + Constants.kRobotLengthInches - (DepotSlot + 1) * kCargoDiameter + kOffsetX, kRightDepotY + kOffsetY), 0));

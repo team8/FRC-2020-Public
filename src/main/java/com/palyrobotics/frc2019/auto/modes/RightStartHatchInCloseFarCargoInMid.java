@@ -19,7 +19,7 @@ import com.palyrobotics.frc2019.behavior.routines.drive.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Level1Rocket extends AutoModeBase { //right start > rocket ship close > loading station > rocket ship far > depot > rocket ship mid
+public class RightStartHatchInCloseFarCargoInMid extends AutoModeBase { //right start > rocket ship close > loading station > rocket ship far > depot > rocket ship mid
 
     //TODO: tune the code - I haven't tested yet
 
@@ -58,7 +58,7 @@ public class Level1Rocket extends AutoModeBase { //right start > rocket ship clo
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new DriveSensorResetRoutine(0.2), new Rezero().getRoutine(), placeHatchClose(), takeHatch(), placeHatchFar(), takeCargo(), placeCargoMid());
+        return new SequentialRoutine(new Rezero().Rezero(true), placeHatchClose(), takeHatch(), placeHatchFar(), takeCargo(), placeCargoMid());
     }
 
     public Routine placeHatchClose() { //start to rocket ship close
@@ -68,7 +68,7 @@ public class Level1Rocket extends AutoModeBase { //right start > rocket ship clo
 
         List<Path.Waypoint> DepotToRocketShip = new ArrayList<>();
         DepotToRocketShip.add(new Waypoint(new Translation2d(-(kHabLineX + Constants.kRobotLengthInches + kOffsetX), 0), 100)); //goes straight at the start so the robot doesn't get messed up over the ramp
-        DepotToRocketShip.add(new Waypoint(new Translation2d(-(kRightRocketShipCloseX * .8 + kOffsetX), -(findLineClose(kRightRocketShipCloseX * .8) + kOffsetY)), 180));
+        DepotToRocketShip.add(new Waypoint(new Translation2d(-(kRightRocketShipCloseX * .8 + kOffsetX), -(findLineClose(kRightRocketShipCloseX * .8) + kOffsetY)), 180)); //line up with rocket ship
         DepotToRocketShip.add(new Waypoint(kRightRocketShipClose, 0));
         routines.add(new DrivePathRoutine(new Path(DepotToRocketShip), true));
 
@@ -105,8 +105,6 @@ public class Level1Rocket extends AutoModeBase { //right start > rocket ship clo
         backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kRightRocketShipFarX + Constants.kRobotLengthInches * 1.9 + kOffsetX), -(findLineFar(kRightRocketShipMidX + Constants.kRobotLengthInches * 1.9) - Constants.kRobotLengthInches * .2 + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(backLoadingStationToRocketShip), true)); //robot turns and then moves forward to the rocket ship
 
-//        routines.add(new TimeoutRoutine(20));
-
         List<Path.Waypoint> forwardLoadingStationToRocketShip = new ArrayList<>(); //robot turns and then moves forward
         forwardLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kRightRocketShipFarX + Constants.kRobotLengthInches * 1.6 + kOffsetX), -(findLineFar(kRightRocketShipMidX + Constants.kRobotLengthInches * 1.6) - Constants.kRobotLengthInches * .3 + kOffsetY)), SPEED)); //line up with rocket ship far
         forwardLoadingStationToRocketShip.add(new Waypoint(kRightRocketShipFar, 0)); //ends in front of the rocket ship far
@@ -127,7 +125,7 @@ public class Level1Rocket extends AutoModeBase { //right start > rocket ship clo
 
         List<Path.Waypoint> RocketShipToDepot = new ArrayList<>();
         RocketShipToDepot.add(new Waypoint(new Translation2d(-(kRightRocketShipFarX + Constants.kRobotLengthInches * 1.6 + kOffsetX), -(findLineFar(kRightRocketShipMidX + Constants.kRobotLengthInches * 1.6) + Constants.kRobotLengthInches * 0.5 + kOffsetY)), 70));
-        RocketShipToDepot.add(new Waypoint(new Translation2d(-(kCargoShipRightFrontX + Constants.kRobotLengthInches + kOffsetX), -(kRightDepotY + Constants.kRobotLengthInches * .2 + kOffsetY)), 180));
+        RocketShipToDepot.add(new Waypoint(new Translation2d(-(kCargoShipRightFrontX + Constants.kRobotLengthInches + kOffsetX), -(kRightDepotY + Constants.kRobotLengthInches * .2 + kOffsetY)), 180)); //turn around the rocket ship
         RocketShipToDepot.add(new Waypoint(kRightDepot, 0));
         routines.add(new DrivePathRoutine(new Path(RocketShipToDepot), true));
 
@@ -137,13 +135,13 @@ public class Level1Rocket extends AutoModeBase { //right start > rocket ship clo
         return new SequentialRoutine(routines);
     }
 
-    public Routine placeCargoMid() {
+    public Routine placeCargoMid() { //depot to rocket ship mid
         ArrayList<Routine> routines = new ArrayList<>();
 
         List<Path.Waypoint> DepotToRocketShipMid = new ArrayList<>();
-        DepotToRocketShipMid.add(new Waypoint(new Translation2d(-(kRightDepotX + Constants.kRobotLengthInches * 2 + kOffsetX), -(kRightDepotY + kOffsetY)), SPEED));
+        DepotToRocketShipMid.add(new Waypoint(new Translation2d(-(kRightDepotX + Constants.kRobotLengthInches * 2 + kOffsetX), -(kRightDepotY + kOffsetY)), SPEED)); //go straight until near rocket ship
         DepotToRocketShipMid.add(new Waypoint(new Translation2d(-(kRightRocketShipMidX - Constants.kRobotLengthInches * .3), -(kRightDepotY + kOffsetY)), SPEED));
-        DepotToRocketShipMid.add(new Waypoint(new Translation2d(-(kRightRocketShipMidX), -(kRightRocketShipMidY + Constants.kRobotLengthInches * .8)), SPEED));
+        DepotToRocketShipMid.add(new Waypoint(new Translation2d(-(kRightRocketShipMidX), -(kRightRocketShipMidY + Constants.kRobotLengthInches * .8)), SPEED)); //line up with rocket ship
         DepotToRocketShipMid.add(new Waypoint(new Translation2d(-(kRightRocketShipMidX), -(kRightRocketShipMidY)), 0));
         routines.add(new DrivePathRoutine(new Path(DepotToRocketShipMid), false));
 
