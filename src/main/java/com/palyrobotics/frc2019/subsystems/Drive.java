@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.dashboard.DashboardValue;
@@ -75,8 +75,8 @@ public class Drive extends Subsystem {
 		super("Drive");
 		kWheelbaseWidth = 0;
 		kTurnSlipFactor = 0;
-		kInchesPerTick = 1 / Constants.kDriveTicksPerInch;
-		kInchesToTicks = Constants.kDriveTicksPerInch;
+		kInchesPerTick = 1 / DrivetrainConstants.kDriveTicksPerInch;
+		kInchesToTicks = DrivetrainConstants.kDriveTicksPerInch;
 
 		motors = new DashboardValue("driveSpeedUpdate");
 
@@ -256,21 +256,22 @@ public class Drive extends Subsystem {
 	 * @param inverted Boolean to invert path
 	 */
 	public void setTrajectoryController(Path path, boolean inverted) {
-		mController = new AdaptivePurePursuitController(Constants.kPathFollowingLookahead, Constants.kPathFollowingMaxAccel, Constants.kNormalLoopsDt, path,
+		mController = new AdaptivePurePursuitController(DrivetrainConstants.kPathFollowingLookahead, DrivetrainConstants.kPathFollowingMaxAccel,
+				DrivetrainConstants.kNormalLoopsDt, path,
 				inverted, 0);
 		mController.update(mCachedRobotState);
 		newController = true;
 	}
 
 	public void setTrajectoryController(Path path, double lookahead, boolean inverted) {
-		mController = new AdaptivePurePursuitController(lookahead, Constants.kPathFollowingMaxAccel, Constants.kNormalLoopsDt, path,
+		mController = new AdaptivePurePursuitController(lookahead, DrivetrainConstants.kPathFollowingMaxAccel, DrivetrainConstants.kNormalLoopsDt, path,
 				inverted, 0);
 		mController.update(mCachedRobotState);
 		newController = true;
 	}
 
 	public void setTrajectoryController(Path path, double lookahead, boolean inverted, double tolerance) {
-		mController = new AdaptivePurePursuitController(lookahead, Constants.kPathFollowingMaxAccel, Constants.kNormalLoopsDt, path,
+		mController = new AdaptivePurePursuitController(lookahead, DrivetrainConstants.kPathFollowingMaxAccel, DrivetrainConstants.kNormalLoopsDt, path,
 				inverted, tolerance);
 		mController.update(mCachedRobotState);
 		newController = true;

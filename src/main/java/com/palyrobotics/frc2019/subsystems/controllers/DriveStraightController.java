@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.robot.Robot;
@@ -25,12 +25,12 @@ public class DriveStraightController implements DriveController {
 	private final double kTolerance;
 
 	public DriveStraightController(Pose priorSetpoint, double distance) {
-		target = (priorSetpoint.leftEnc + priorSetpoint.rightEnc) / 2 + (distance * Constants.kDriveTicksPerInch);
+		target = (priorSetpoint.leftEnc + priorSetpoint.rightEnc) / 2 + (distance * DrivetrainConstants.kDriveTicksPerInch);
 		Logger.getInstance().logSubsystemThread(Level.INFO, "Target", target);
 		cachedPose = priorSetpoint;
 
 		mGains = new Gains(.00035, 0.000004, 0.002, 0, 200, 0);
-		kTolerance = Constants.kAcceptableDrivePositionError;
+		kTolerance = DrivetrainConstants.kAcceptableDrivePositionError;
 		forwardPID = new SynchronousPID(mGains.P, mGains.I, mGains.D, mGains.izone);
 		headingPID = new SynchronousPID(Gains.kVidarDriveStraightTurnkP, 0, 0.005);
 		forwardPID.setOutputRange(-1, 1);

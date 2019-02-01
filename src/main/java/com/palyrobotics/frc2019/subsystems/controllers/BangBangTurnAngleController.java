@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.util.DriveSignal;
@@ -28,7 +28,7 @@ public class BangBangTurnAngleController implements Drive.DriveController {
 	 *            Degrees relative to current state to turn
 	 */
 	public BangBangTurnAngleController(Pose currentPose, double heading) {
-		this.mPower = Constants.kTurnInPlacePower;
+		this.mPower = DrivetrainConstants.kTurnInPlacePower;
 		this.mCachedPose = currentPose;
 		this.mTargetHeading = this.mCachedPose.heading + heading;
 		Logger.getInstance().logSubsystemThread(Level.INFO, "Starting Heading", this.mCachedPose.heading);
@@ -63,7 +63,7 @@ public class BangBangTurnAngleController implements Drive.DriveController {
 
 	@Override
 	public boolean onTarget() {
-		double tolerance = Constants.kAcceptableTurnAngleError;
+		double tolerance = DrivetrainConstants.kAcceptableTurnAngleError;
 		return Math.abs(mCachedPose.heading - mTargetHeading) < tolerance;
 	}
 

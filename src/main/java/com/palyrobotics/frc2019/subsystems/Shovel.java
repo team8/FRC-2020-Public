@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.ShovelConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 
 public class Shovel extends Subsystem {
@@ -53,18 +53,18 @@ public class Shovel extends Subsystem {
                 if(commands.customShovelSpeed) {
                     mVictorOutput = robotState.operatorXboxControllerInput.leftTrigger;
                 } else {
-                    mVictorOutput = Constants.kShovelMotorVelocity;
+                    mVictorOutput = ShovelConstants.kMotorVelocity;
                 }
                 break;
             case EXPELLING:
                 if(commands.customShovelSpeed) {
                     mVictorOutput = -robotState.operatorXboxControllerInput.leftTrigger;
                 } else {
-                    mVictorOutput = Constants.kShovelExpellingMotorVelocity;
+                    mVictorOutput = ShovelConstants.kExpellingMotorVelocity;
                 }
                 break;
             case SMALL_EXPEL:
-                mVictorOutput = Constants.kShovelSmallExpelMotorVelocity;
+                mVictorOutput = ShovelConstants.kSmallExpelMotorVelocity;
                 break;
             case IDLE:
                 mVictorOutput = 0;

@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2019.util.trajectory;
 
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.*;
@@ -95,7 +95,7 @@ public class Path {
 	}
 
 	/**
-	 * @param An
+	 * @param position
 	 *            initial position
 	 * @return Returns the distance from the position to the first point on the path
 	 */
@@ -156,7 +156,7 @@ public class Path {
 			Translation2d end = waypoints.get(i+1).position;
 			double length = Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2));
 			// Portion of the segment's length occupied by one interval; needed for the interpolate() function
-			double interpolateX = Constants.kInsertionSpacingInches / length;
+			double interpolateX = DrivetrainConstants.kInsertionSpacingInches / length;
 			// Insert points on the segment using interpolation
 			for (double j = interpolateX; j < 1; j += interpolateX) {
 				newPoints.add(index++, new Waypoint(start.interpolate(end, j), waypoints.get(i+1).speed));
@@ -172,10 +172,10 @@ public class Path {
 		ArrayList<Waypoint> oldPts = new ArrayList<>(waypoints);
 		ArrayList<Waypoint> newPts = new ArrayList<>(waypoints);
 		// Sum of the horizontal and vertical shifts of each point in one iteration of smoothing
-		double change = Constants.kSmoothingTolerance;
+		double change = DrivetrainConstants.kSmoothingTolerance;
 		int numIters = 0;
 		// Perform smoothing passes until convergence
-		while (change >= Constants.kSmoothingTolerance && numIters <= Constants.kSmoothingMaxIters) {
+		while (change >= DrivetrainConstants.kSmoothingTolerance && numIters <= DrivetrainConstants.kSmoothingMaxIters) {
 			change = 0.0;
 			// Smooth all points except for the final one
 			// We deleted the first waypoint at (0, 0) but for smoothing code to work we have to pretend it's still there
@@ -189,8 +189,8 @@ public class Path {
 				double x4 = oldPts.get(i).position.getX();
 				double y4 = oldPts.get(i).position.getY();
 
-				double changeX = Constants.kSmoothingWeightData * (x4 - x2) + Constants.kSmoothingWeight * (x1 + x3 - (2.0 * x2));
-				double changeY = Constants.kSmoothingWeightData * (y4 - y2) + Constants.kSmoothingWeight * (y1 + y3 - (2.0 * y2));
+				double changeX = DrivetrainConstants.kSmoothingWeightData * (x4 - x2) + DrivetrainConstants.kSmoothingWeight * (x1 + x3 - (2.0 * x2));
+				double changeY = DrivetrainConstants.kSmoothingWeightData * (y4 - y2) + DrivetrainConstants.kSmoothingWeight * (y1 + y3 - (2.0 * y2));
 				x2 += changeX;
 				y2 += changeY;
 				newPts.set(i, new Waypoint(new Translation2d(x2, y2), oldPts.get(i).speed));
@@ -214,7 +214,7 @@ public class Path {
 				Translation2d previous = (i == 0) ? new Translation2d(0, 0) : waypoints.get(i - 1).position;
 				Translation2d current = waypoints.get(i).position;
 				Translation2d next = waypoints.get(i + 1).position;
-				double maxVel = Math.min(Constants.kPathFollowingMaxVel, Constants.kTurnVelocityReduction / getCurvature(previous, current, next));
+				double maxVel = Math.min(DrivetrainConstants.kPathFollowingMaxVel, DrivetrainConstants.kTurnVelocityReduction / getCurvature(previous, current, next));
 				waypoints.set(i, new Waypoint(current, maxVel));
 			}
 		}
@@ -269,10 +269,8 @@ public class Path {
 	}
 
 	/**
-	 * @param The
-	 *            robot's current position
-	 * @param A
-	 *            specified distance to predict a future waypoint
+     * The robot's current position
+	 * @param lookahead_distance, A specified distance to predict a future waypoint
 	 * @return A segment of the robot's predicted motion with start/end points and speed.
 	 */
 	public PathSegment.Sample getLookaheadPoint(Translation2d position, double lookahead_distance) {

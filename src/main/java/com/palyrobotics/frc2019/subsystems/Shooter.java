@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.ShooterConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
 
@@ -47,7 +47,7 @@ public class Shooter extends Subsystem{
                 if (commands.customShooterSpeed) {
                     mOutput = robotState.operatorXboxControllerInput.leftTrigger; //TODO: change control?
                 } else {
-                    mOutput = Constants.kExpellingMotorVelocity;
+                    mOutput = ShooterConstants.kExpellingMotorVelocity;
                 }
         }
     }

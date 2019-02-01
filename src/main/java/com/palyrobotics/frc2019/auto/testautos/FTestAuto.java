@@ -10,14 +10,13 @@ import com.palyrobotics.frc2019.behavior.routines.drive.EncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.TalonSRXRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.TimedDriveRoutine;
 import com.palyrobotics.frc2019.config.AutoDistances;
-import com.palyrobotics.frc2019.config.Constants;
+
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.util.DriveSignal;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
 import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

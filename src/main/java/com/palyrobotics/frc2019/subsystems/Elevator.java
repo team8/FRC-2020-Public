@@ -2,7 +2,8 @@ package com.palyrobotics.frc2019.subsystems;
 
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
@@ -119,7 +120,7 @@ public class Elevator extends Subsystem {
             switch (mElevatorState) {
                 //Actual calibration logic is not done in the state machine
                 case CALIBRATING:
-                    mOutput.setPercentOutput(Constants.kCalibratePower);
+                    mOutput.setPercentOutput(ElevatorConstants.kCalibratePower);
                     break;
                 case HOLD:
                     //If at the bottom, supply no power
@@ -141,10 +142,10 @@ public class Elevator extends Subsystem {
                     //If calibrated, run limiting code for top & bottom
 
                     //if not calibrated, limit speed
-                    if (Constants.operatorXBoxController) {
-                        mOutput.setPercentOutput(Constants.kElevatorUncalibratedManualPower * mRobotState.operatorXboxControllerInput.getRightY());
+                    if (OtherConstants.operatorXBoxController) {
+                        mOutput.setPercentOutput(ElevatorConstants.kUncalibratedManualPower * mRobotState.operatorXboxControllerInput.getRightY());
                     } else {
-                        mOutput.setPercentOutput(Constants.kElevatorUncalibratedManualPower * mRobotState.operatorJoystickInput.getY());
+                        mOutput.setPercentOutput(ElevatorConstants.kUncalibratedManualPower * mRobotState.operatorJoystickInput.getY());
                     }
 
                     break;
@@ -264,18 +265,16 @@ public class Elevator extends Subsystem {
                 //Set the setpoint
                 //If the desired custom positioning setpoint is different than what currently
                 //exists, replace it
-                if(!mElevatorWantedPosition.equals(Optional.of(kElevatorBottomPosition.get() + commands.robotSetpoints.elevatorPositionSetpoint.get() * Constants.kElevatorTicksPerInch))) {
-                    mElevatorWantedPosition = Optional.of(kElevatorBottomPosition.get() + commands.robotSetpoints.elevatorPositionSetpoint.get() * Constants.kElevatorTicksPerInch);
-                    if(mElevatorWantedPosition.get() >= mRobotState.elevatorPosition) {
-                        movingDown = false;
-                    } else {
-                        movingDown = true;
-                    }
+                mElevatorWantedPosition = Optional.of(kElevatorBottomPosition.get() + commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kTicksPerInch);
+                if(mElevatorWantedPosition.get() >= mRobotState.elevatorPosition) {
+                    movingDown = false;
+                } else {
+                    movingDown = true;
                 }
             } else {
                 //Assume bottom position is the bottom
-                if(!mElevatorWantedPosition.equals(Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get() * Constants.kElevatorTicksPerInch))) {
-                    mElevatorWantedPosition = Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get() * Constants.kElevatorTicksPerInch);
+                if(!mElevatorWantedPosition.equals(Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kTicksPerInch))) {
+                    mElevatorWantedPosition = Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kTicksPerInch);
                     if(mElevatorWantedPosition.get() >= mRobotState.elevatorPosition) {
                         movingDown = false;
                     } else {
@@ -305,8 +304,8 @@ public class Elevator extends Subsystem {
             }
             mClimberState = commands.wantedClimberState;
         } else if(commands.wantedClimberState == ClimberState.CUSTOM_POSITIONING) {
-            if(!mClimberWantedPosition.equals(Optional.of(commands.robotSetpoints.climberPositionSetpoint.get() * Constants.kClimberTicksPerInch))) {
-                mClimberWantedPosition = Optional.of(commands.robotSetpoints.climberPositionSetpoint.get() * Constants.kClimberTicksPerInch);
+            if(!mClimberWantedPosition.equals(Optional.of(commands.robotSetpoints.climberPositionSetpoint.get() * ElevatorConstants.kClimberTicksPerInch))) {
+                mClimberWantedPosition = Optional.of(commands.robotSetpoints.climberPositionSetpoint.get() * ElevatorConstants.kClimberTicksPerInch);
             }
             mClimberState = ClimberState.CUSTOM_POSITIONING;
         } else {
@@ -323,7 +322,7 @@ public class Elevator extends Subsystem {
 
     public boolean movingUpwards() {
         //
-        if((mOutput.getControlType() == ControlType.kDutyCycle || mOutput.getControlType() == ControlType.kVelocity) && mOutput.getSetpoint() > Constants.kElevatorHoldVoltage) {
+        if((mOutput.getControlType() == ControlType.kDutyCycle || mOutput.getControlType() == ControlType.kVelocity) && mOutput.getSetpoint() > ElevatorConstants.kHoldVoltage) {
             return true;
         } else if(mOutput.getControlType() == ControlType.kPosition) {
 
@@ -365,12 +364,12 @@ public class Elevator extends Subsystem {
             if(mRobotState.elevatorHFX) {
                 kElevatorBottomPosition = Optional.of(mRobotState.elevatorPosition);
                 if(!kElevatorTopPosition.isPresent()) {
-                    kElevatorTopPosition = Optional.of(mRobotState.elevatorPosition + Constants.kElevatorTopBottomDifferenceInches * Constants.kElevatorTicksPerInch);
+                    kElevatorTopPosition = Optional.of(mRobotState.elevatorPosition + ElevatorConstants.kTopBottomDifferenceInches * ElevatorConstants.kTicksPerInch);
                 }
             }
         } else {
-            if((kElevatorBottomPosition.get() - mRobotState.elevatorPosition) > Constants.kElevatorHFXAcceptableError ||
-                    (mRobotState.elevatorPosition - kElevatorTopPosition.get()) > Constants.kElevatorHFXAcceptableError) {
+            if((kElevatorBottomPosition.get() - mRobotState.elevatorPosition) > ElevatorConstants.kHFXAcceptableError ||
+                    (mRobotState.elevatorPosition - kElevatorTopPosition.get()) > ElevatorConstants.kHFXAcceptableError) {
                 kElevatorTopPosition = Optional.empty();
                 kElevatorBottomPosition = Optional.empty();
             }
@@ -449,8 +448,8 @@ public class Elevator extends Subsystem {
             return false;
         }
 
-        return (Math.abs(mElevatorWantedPosition.get() - mRobotState.elevatorPosition) < Constants.kElevatorAcceptablePositionError)
-                && (Math.abs(mRobotState.elevatorVelocity) < Constants.kElevatorAcceptableVelocityError);
+        return (Math.abs(mElevatorWantedPosition.get() - mRobotState.elevatorPosition) < ElevatorConstants.kAcceptablePositionError)
+                && (Math.abs(mRobotState.elevatorVelocity) < ElevatorConstants.kAcceptableVelocityError);
     }
 
     /**
@@ -467,8 +466,8 @@ public class Elevator extends Subsystem {
             return false;
         }
 
-        return (Math.abs(mClimberWantedPosition.get() - mRobotState.elevatorPosition) < Constants.kClimberAcceptablePositionError)
-                && (Math.abs(mRobotState.elevatorVelocity) < Constants.kClimberAcceptableVelocityError);
+        return (Math.abs(mClimberWantedPosition.get() - mRobotState.elevatorPosition) < ElevatorConstants.kClimberAcceptablePositionError)
+                && (Math.abs(mRobotState.elevatorVelocity) < ElevatorConstants.kClimberAcceptableVelocityError);
     }
 
     public ElevatorState getElevatorState() {

@@ -2,7 +2,8 @@ package com.palyrobotics.frc2019.robot;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.util.ChezyMath;
 import com.palyrobotics.frc2019.util.JoystickInput;
@@ -31,7 +32,7 @@ public class OperatorInterface {
 	private XboxInput mOperatorXboxController = null;
 
 	protected OperatorInterface() {
-		if(Constants.operatorXBoxController) {
+		if(OtherConstants.operatorXBoxController) {
 			mOperatorXboxController = Robot.getRobotState().operatorXboxControllerInput;
 		} else {
 			mOperatorJoystick = Robot.getRobotState().operatorJoystickInput;
@@ -76,8 +77,8 @@ public class OperatorInterface {
 		}
 
 		//More safety
-		if(Math.abs(ChezyMath.handleDeadband(mDriveStick.getY(), Constants.kDeadband)) > 0.0
-				|| Math.abs(ChezyMath.handleDeadband(mTurnStick.getX(), Constants.kDeadband)) > 0.0) {
+		if(Math.abs(ChezyMath.handleDeadband(mDriveStick.getY(), DrivetrainConstants.kDeadband)) > 0.0
+				|| Math.abs(ChezyMath.handleDeadband(mTurnStick.getX(), DrivetrainConstants.kDeadband)) > 0.0) {
 			newCommands.wantedDriveState = Drive.DriveState.CHEZY;
 		}
 

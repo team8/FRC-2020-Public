@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.robot.Robot;
@@ -24,13 +25,13 @@ public class EncoderTurnAngleController implements DriveController {
 	private TalonSRXOutput rightOutput;
 
 	public EncoderTurnAngleController(Pose priorSetpoint, double angle) {
-		leftTarget = priorSetpoint.leftEnc + (angle * Constants.kDriveInchesPerDegree * Constants.kDriveTicksPerInch);
-		rightTarget = priorSetpoint.rightEnc - (angle * Constants.kDriveInchesPerDegree * Constants.kDriveTicksPerInch);
+		leftTarget = priorSetpoint.leftEnc + (angle * DrivetrainConstants.kDriveInchesPerDegree * DrivetrainConstants.kDriveTicksPerInch);
+		rightTarget = priorSetpoint.rightEnc - (angle * DrivetrainConstants.kDriveInchesPerDegree * DrivetrainConstants.kDriveTicksPerInch);
 		cachedPose = priorSetpoint;
-		this.maxAccel = 72 * Constants.kDriveSpeedUnitConversion;
-		this.maxVel = 36 * Constants.kDriveSpeedUnitConversion;
+		this.maxAccel = 72 * DrivetrainConstants.kDriveSpeedUnitConversion;
+		this.maxVel = 36 * DrivetrainConstants.kDriveSpeedUnitConversion;
 
-		if(Constants.kRobotName.equals(Constants.RobotName.VIDAR)) {
+		if(OtherConstants.kRobotName.equals(OtherConstants.RobotName.VIDAR)) {
 			mGains = new Gains(6.0, 0.01, 210, 2.0, 50, 0.0);
 		}
 
@@ -49,8 +50,9 @@ public class EncoderTurnAngleController implements DriveController {
 			return false;
 		}
 
-		double positionTolerance = Constants.kAcceptableTurnAngleError * Constants.kDriveInchesPerDegree * Constants.kDriveTicksPerInch;
-		double velocityTolerance = Constants.kAcceptableDriveVelocityError;
+		double positionTolerance = DrivetrainConstants.kAcceptableTurnAngleError * DrivetrainConstants.kDriveInchesPerDegree
+				* DrivetrainConstants.kDriveTicksPerInch;
+		double velocityTolerance = DrivetrainConstants.kAcceptableDriveVelocityError;
 
 		if(cachedPose == null) {
 			Logger.getInstance().logSubsystemThread(Level.FINER, "Cached pose is null");

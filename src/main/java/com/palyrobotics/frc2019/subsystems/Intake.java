@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.IntakeConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
@@ -108,8 +108,8 @@ public class Intake extends Subsystem {
 
         commands.hasCargo = robotState.hasCargo;
 
-        double arb_ff = Constants.kIntakeGravityFF * Math.cos(robotState.intakeAngle)
-                + Constants.kIntakeAccelComp * robotState.robotAccel * Math.sin(robotState.intakeAngle);
+        double arb_ff = IntakeConstants.kGravityFF * Math.cos(robotState.intakeAngle)
+                + IntakeConstants.kAccelComp * robotState.robotAccel * Math.sin(robotState.intakeAngle);
 
         switch (mMacroState) {
             case STOWED:
@@ -118,20 +118,20 @@ public class Intake extends Subsystem {
             case GROUND_INTAKING:
                 mWheelState = WheelState.INTAKING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                mIntakeWantedPosition = Optional.of(Constants.kIntakeIntakingPosition);
+                mIntakeWantedPosition = Optional.of(IntakeConstants.kIntakingPosition);
             case LIFTING:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                mIntakeWantedPosition = Optional.of(Constants.kIntakeHandoffPosition);
+                mIntakeWantedPosition = Optional.of(IntakeConstants.kHandoffPosition);
             case DROPPING:
                 mWheelState = WheelState.DROPPING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                mIntakeWantedPosition = Optional.of(Constants.kIntakeHandoffPosition);
+                mIntakeWantedPosition = Optional.of(IntakeConstants.kHandoffPosition);
                 // todo: add some sort of timeout so this doesn't finish immediately
             case HOLDING_MID:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                mIntakeWantedPosition = Optional.of(Constants.kIntakeHoldingPosition);
+                mIntakeWantedPosition = Optional.of(IntakeConstants.kHoldingPosition);
         }
 
 
@@ -140,13 +140,13 @@ public class Intake extends Subsystem {
                 if(commands.customIntakeSpeed) {
                     mVictorOutput = robotState.operatorXboxControllerInput.leftTrigger;
                 } else {
-                    mVictorOutput = Constants.kIntakingMotorVelocity;
+                    mVictorOutput = IntakeConstants.kMotorVelocity;
                 }
             case IDLE:
                 mVictorOutput = 0;
                 break;
             case DROPPING:
-                mVictorOutput = Constants.kIntakeDroppingVelocity;
+                mVictorOutput = IntakeConstants.kDroppingVelocity;
                 break;
         }
 
@@ -168,8 +168,9 @@ public class Intake extends Subsystem {
                 mSparkOutput.setPercentOutput(0); //TODO: Fix this based on what control method wanted
                 break;
             case CUSTOM_POSITIONING:
-                if(!mIntakeWantedPosition.equals(Optional.of(commands.robotSetpoints.intakePositionSetpoint.get() * Constants.kIntakeTicksPerInch))) {
-                    mIntakeWantedPosition = Optional.of(commands.robotSetpoints.intakePositionSetpoint.get() * Constants.kIntakeTicksPerInch);
+                if(!mIntakeWantedPosition.equals(Optional.of(commands.robotSetpoints.intakePositionSetpoint.get() *
+                        IntakeConstants.kIntakeTicksPerInch))) {
+                    mIntakeWantedPosition = Optional.of(commands.robotSetpoints.intakePositionSetpoint.get() * IntakeConstants.kIntakeTicksPerInch);
                     if(mIntakeWantedPosition.get() >= robotState.intakeAngle) {
                         movingDown = false;
                     } else {
@@ -216,8 +217,8 @@ public class Intake extends Subsystem {
             return false;
         }
 
-        return (Math.abs(mIntakeWantedPosition.get() - mRobotState.intakeAngle) < Constants.kIntakeAcceptableAngularError)
-                && (Math.abs(mRobotState.elevatorVelocity) < Constants.kIntakeAngularVelocityError);
+        return (Math.abs(mIntakeWantedPosition.get() - mRobotState.intakeAngle) < IntakeConstants.kAcceptableAngularError)
+                && (Math.abs(mRobotState.elevatorVelocity) < IntakeConstants.kAngularVelocityError);
     }
 
     @Override

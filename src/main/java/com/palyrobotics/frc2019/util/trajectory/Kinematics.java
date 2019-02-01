@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2019.util.trajectory;
 
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 
 /**
  * Provides forward and inverse kinematics equations for the robot modeling the wheelbase as a differential drive (with a corrective factor to account for the
@@ -16,7 +16,7 @@ public class Kinematics {
 	public static RigidTransform2d.Delta forwardKinematics(double left_wheel_delta, double right_wheel_delta) {
 		double linear_velocity = (left_wheel_delta + right_wheel_delta) / 2;
 		double delta_v = (right_wheel_delta - left_wheel_delta) / 2;
-		double delta_rotation = delta_v * 2 * Constants.kTrackScrubFactor / Constants.kTrackEffectiveDiameter;
+		double delta_rotation = delta_v * 2 * DrivetrainConstants.kTrackScrubFactor / DrivetrainConstants.kTrackEffectiveDiameter;
 		return new RigidTransform2d.Delta(linear_velocity, 0, delta_rotation);
 	}
 
@@ -49,7 +49,7 @@ public class Kinematics {
 		if(Math.abs(velocity.dtheta) < kEpsilon) {
 			return new DriveVelocity(velocity.dx, velocity.dx);
 		}
-		double delta_v = Constants.kTrackEffectiveDiameter * velocity.dtheta / (2 * Constants.kTrackScrubFactor);
+		double delta_v = DrivetrainConstants.kTrackEffectiveDiameter * velocity.dtheta / (2 * DrivetrainConstants.kTrackScrubFactor);
 		//System.out.println("Delta_v: " + delta_v);
 		return new DriveVelocity(velocity.dx - delta_v, velocity.dx + delta_v);
 	}

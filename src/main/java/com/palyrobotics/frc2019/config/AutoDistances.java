@@ -3,6 +3,7 @@ package com.palyrobotics.frc2019.config;
 import java.io.File;
 import java.util.logging.Level;
 
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.JSONFormatter;
 
@@ -22,7 +23,7 @@ public class AutoDistances {
 	private static File field;
 	
 	private static void loadField() { // Make sure to ant deploy constants to roboRIO
-		switch (Constants.kFieldName) {
+		switch (OtherConstants.kFieldName) {
 			case DMR:
 				field = JSONFormatter.loadFileDirectory("constants/fields", "DMRField.json");
 				break;

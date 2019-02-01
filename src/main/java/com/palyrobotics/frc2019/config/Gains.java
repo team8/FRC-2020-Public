@@ -1,5 +1,6 @@
 package com.palyrobotics.frc2019.config;
 
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
@@ -41,8 +42,8 @@ public class Gains {
 
 	//Drive Motion Magic offboard control loop
 	//Short distance max speed 45 in/s Max accel 95 in/s^2
-	public static final double kVidarShortDriveMotionMagicCruiseVelocity = 60 * Constants.kDriveSpeedUnitConversion;
-	public static final double kVidarShortDriveMotionMagicMaxAcceleration = 120 * Constants.kDriveSpeedUnitConversion;
+	public static final double kVidarShortDriveMotionMagicCruiseVelocity = 60 * DrivetrainConstants.kDriveSpeedUnitConversion;
+	public static final double kVidarShortDriveMotionMagicMaxAcceleration = 120 * DrivetrainConstants.kDriveSpeedUnitConversion;
 	public static final double kVidarShortDriveMotionMagickP = .5 ;
 	public static final double kVidarShortDriveMotionMagickI = 0; //0.00040 / 2;
 	public static final double kVidarShortDriveMotionMagickD = 0; //275 / 2;
@@ -53,8 +54,8 @@ public class Gains {
 			kVidarShortDriveMotionMagickD, kVidarShortDriveMotionMagickF, kVidarShortDriveMotionMagickIzone, kVidarShortDriveMotionMagickRampRate);
 
 	//Drive Motion Magic turn angle gains
-	public static final double kVidarTurnMotionMagicCruiseVelocity = 72 * Constants.kDriveSpeedUnitConversion;
-	public static final double kVidarTurnMotionMagicMaxAcceleration = 36 * Constants.kDriveSpeedUnitConversion;
+	public static final double kVidarTurnMotionMagicCruiseVelocity = 72 * DrivetrainConstants.kDriveSpeedUnitConversion;
+	public static final double kVidarTurnMotionMagicMaxAcceleration = 36 * DrivetrainConstants.kDriveSpeedUnitConversion;
 	public static final double kVidarTurnMotionMagickP = 6.0;
 	public static final double kVidarTurnMotionMagickI = 0.01;
 	public static final double kVidarTurnMotionMagickD = 210;

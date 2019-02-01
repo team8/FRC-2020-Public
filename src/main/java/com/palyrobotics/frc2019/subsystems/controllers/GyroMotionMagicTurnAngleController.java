@@ -1,6 +1,5 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
-import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.robot.Robot;
@@ -9,6 +8,7 @@ import com.palyrobotics.frc2019.util.DriveSignal;
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
 import com.palyrobotics.frc2019.util.logger.Logger;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 
 import java.util.logging.Level;
 
@@ -37,9 +37,9 @@ public class GyroMotionMagicTurnAngleController implements DriveController {
 		mGains = Gains.vidarTurnMotionMagicGains;
 		mCruiseVel = (int) Gains.kVidarTurnMotionMagicCruiseVelocity;
 		mMaxAccel = (int) Gains.kVidarTurnMotionMagicMaxAcceleration;
-		kInchesPerDegree = Constants.kDriveInchesPerDegree;
-		kTicksPerInch = Constants.kDriveTicksPerInch;
-		kTolerance = Constants.kAcceptableTurnAngleError;
+		kInchesPerDegree = DrivetrainConstants.kDriveInchesPerDegree;
+		kTicksPerInch = DrivetrainConstants.kDriveTicksPerInch;
+		kTolerance = DrivetrainConstants.kAcceptableTurnAngleError;
 
 		Logger.getInstance().logSubsystemThread(Level.FINE, "Current heading", mCachedPose.heading);
 		Logger.getInstance().logSubsystemThread(Level.FINE, "Target heading", mTargetHeading);
@@ -57,7 +57,7 @@ public class GyroMotionMagicTurnAngleController implements DriveController {
 		mCachedPose = state.drivePose;
 		double error = mTargetHeading - mCachedPose.heading;
 		//Compensate for current motion
-		//error -= mCachedPose.headingVelocity*Constants.kSubsystemLooperDt;
+		//error -= mCachedPose.headingVelocity*DrivetrainConstants.kSubsystemLooperDt;
 		mLeftTarget = mCachedPose.leftEnc - (error * kInchesPerDegree * kTicksPerInch);
 		mRightTarget = mCachedPose.rightEnc + (error * kInchesPerDegree * kTicksPerInch);
 		mLeftOutput.setMotionMagic(mLeftTarget, mGains, mCruiseVel, mMaxAccel);

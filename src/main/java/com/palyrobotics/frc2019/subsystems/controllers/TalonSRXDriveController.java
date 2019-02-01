@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
@@ -135,10 +135,10 @@ public class TalonSRXDriveController implements Drive.DriveController {
 		if(mCachedState == null) {
 			return false;
 		}
-		double positionTolerance = (mSignal.leftMotor.gains.equals(Gains.vidarShortDriveMotionMagicGains)) ? Constants.kAcceptableShortDrivePositionError
-				: Constants.kAcceptableDrivePositionError;
-		double velocityTolerance = (mSignal.leftMotor.gains.equals(Gains.vidarShortDriveMotionMagicGains)) ? Constants.kAcceptableShortDriveVelocityError
-				: Constants.kAcceptableDriveVelocityError;
+		double positionTolerance = (mSignal.leftMotor.gains.equals(Gains.vidarShortDriveMotionMagicGains)) ? DrivetrainConstants.kAcceptableShortDrivePositionError
+				: DrivetrainConstants.kAcceptableDrivePositionError;
+		double velocityTolerance = (mSignal.leftMotor.gains.equals(Gains.vidarShortDriveMotionMagicGains)) ? DrivetrainConstants.kAcceptableShortDriveVelocityError
+				: DrivetrainConstants.kAcceptableDriveVelocityError;
 
 		//Motion magic is not PID so ignore whether talon closed loop error is around
 		if(mSignal.leftMotor.getControlMode().equals(ControlMode.MotionMagic)) {

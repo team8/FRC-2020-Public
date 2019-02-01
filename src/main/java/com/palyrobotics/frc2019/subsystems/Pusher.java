@@ -1,13 +1,10 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants;
-import com.palyrobotics.frc2019.config.Gains;
+import com.palyrobotics.frc2019.config.Constants.PusherConstants;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.util.SynchronousPID;
-import com.palyrobotics.frc2019.util.logger.LeveledString;
 
 public class Pusher extends Subsystem {
 
@@ -21,7 +18,7 @@ public class Pusher extends Subsystem {
     private final double kTolerance;
     private SynchronousPID pusherPID;
 
-    private double mVictorOutput = pusherPID.calculate(Constants.kVidarPusherDistanceIn);
+    private double mVictorOutput = pusherPID.calculate(PusherConstants.kVidarDistanceIn);
 
     public enum PusherState {
         IN, MIDDLE, OUT
@@ -31,8 +28,8 @@ public class Pusher extends Subsystem {
 
     protected Pusher(){
         super("Pusher");
-        kTolerance = Constants.kAcceptablePusherPositionError;
-        pusherPID = new SynchronousPID(Constants.kVidarPusherPositionkP, Constants.kVidarPusherPositionkI, Constants.kVidarPusherPositionkD);
+        kTolerance = PusherConstants.kAcceptablePositionError;
+        pusherPID = new SynchronousPID(PusherConstants.kVidarPositionkP, PusherConstants.kVidarPositionkI, PusherConstants.kVidarPositionkD);
         pusherPID.setOutputRange(-1, 1);
     }
 
@@ -52,16 +49,16 @@ public class Pusher extends Subsystem {
         pusherPID.setSetpoint(robotState.pusherPosition);
         switch(mState) {
             case IN:
-                target = Constants.kVidarPusherDistanceIn;
-                mVictorOutput = pusherPID.calculate(Constants.kVidarPusherDistanceIn);
+                target = PusherConstants.kVidarDistanceIn;
+                mVictorOutput = pusherPID.calculate(PusherConstants.kVidarDistanceIn);
                 break;
             case MIDDLE:
-                target = Constants.kVidarPusherDistanceMiddle;
-                mVictorOutput = pusherPID.calculate(Constants.kVidarPusherDistanceMiddle);
+                target = PusherConstants.kVidarDistanceMiddle;
+                mVictorOutput = pusherPID.calculate(PusherConstants.kVidarDistanceMiddle);
                 break;
             case OUT:
-                target = Constants.kVidarPusherDistanceOut;
-                mVictorOutput = pusherPID.calculate(Constants.kVidarPusherDistanceOut);
+                target = PusherConstants.kVidarDistanceOut;
+                mVictorOutput = pusherPID.calculate(PusherConstants.kVidarDistanceOut);
                 break;
         }
     }

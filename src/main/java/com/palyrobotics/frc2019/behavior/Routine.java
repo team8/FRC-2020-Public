@@ -23,7 +23,6 @@ public abstract class Routine {
 	protected final Pusher pusher = Pusher.getInstance();
 	protected final Elevator elevator = Elevator.getInstance();
 	protected final Fingers fingers = Fingers.getInstance();
-	protected final AutoPlacer autoPlacer = AutoPlacer.getInstance();
 	protected final Intake intake = Intake.getInstance();
 	protected final RobotState robotState = RobotState.getInstance();
 
