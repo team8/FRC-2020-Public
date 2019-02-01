@@ -15,7 +15,6 @@ import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.util.trajectory.Rotation2d;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
@@ -324,6 +323,7 @@ class HardwareUpdater {
 		}
 
 		robotState.hatchIntakeUp = HardwareAdapter.getInstance().getShovel().upDownHFX.get();
+		robotState.shovelCurrentDraw = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp.getCurrent(Constants.kShovelPDPPort);
 
 		switch(robotState.leftControlMode) {
 			//Fall through
@@ -390,6 +390,10 @@ class HardwareUpdater {
 		robotState.drivePose.rightEnc = rightMasterTalon.getSelectedSensorPosition(0);
 		robotState.drivePose.rightEncVelocity = rightMasterTalon.getSelectedSensorVelocity(0);
 
+		double robotVelocity = (robotState.drivePose.leftEncVelocity + robotState.drivePose.rightEncVelocity) / (2 * Constants.kDriveSpeedUnitConversion);
+		robotState.robotAccel = (robotVelocity - robotState.robotVelocity) / Constants.deltaTime;
+		robotState.robotVelocity = robotVelocity;
+
 		if(leftMasterTalon.getControlMode().equals(ControlMode.MotionMagic)) {
 			robotState.drivePose.leftMotionMagicPos = Optional.of(leftMasterTalon.getActiveTrajectoryPosition());
 			robotState.drivePose.leftMotionMagicVel = Optional.of(leftMasterTalon.getActiveTrajectoryVelocity());
@@ -424,8 +428,6 @@ class HardwareUpdater {
 
 		robotState.addObservations(time, odometry, velocity);
 
-		double cv = (robotState.drivePose.leftEncVelocity + robotState.drivePose.rightEncVelocity)/2 * 1/Constants.kDriveSpeedUnitConversion;
-
 		//Update pusher sensors
 		robotState.pusherPosition = HardwareAdapter.getInstance().getPusher().pusherPotentiometer.get() /
 				Constants.kPusherTicksPerInch;
@@ -436,18 +438,26 @@ class HardwareUpdater {
 		robotState.hasPusherStickyFaults = false;
 		robotState.pusherCachePosition = robotState.pusherPosition;
 
-		//Update intake sensors
-		robotState.intakePosition = Constants.kIntakeMaxAngle -
-				1/Constants.kArmTicksPerDegree * (Constants.kIntakeMaxAngleTicks - HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
 
-		robotState.intakeVelocity = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getVelocity() / Constants.kArmTicksPerDegree;
-
-		//TODO: No idea if this is the right sticky fault mode
 		CANSparkMax.FaultID intakeStickyFaults = CANSparkMax.FaultID.kSensorFault;
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.clearFaults();
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getStickyFault(intakeStickyFaults);
 
+
 		updateUltrasonicSensors(robotState);
+		updateIntakeState(robotState);
+	}
+
+	void updateIntakeState(RobotState robotState) {
+		//Update intake sensors
+
+		robotState.intakeVelocity = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getVelocity() / Constants.kArmEncoderTicksPerDegree;
+	}
+
+	void startIntakeArm() {
+		Robot.getRobotState().intakeAngle = Constants.kIntakeMaxAngle -
+				1/Constants.kArmEncoderTicksPerDegree * (Constants.kIntakeMaxAngleTicks - HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+
 	}
 
 	void updateUltrasonicSensors(RobotState robotState) {
@@ -466,8 +476,8 @@ class HardwareUpdater {
 			robotState.mRightReadings.remove(0);
 		}
 
-		int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> i < Constants.kIntakeCargoInchTolerance).count();
-		int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> i < Constants.kIntakeCargoInchTolerance).count();
+		int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> (i < Constants.kIntakeCargoInchTolerance)).count();
+		int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < Constants.kIntakeCargoInchTolerance)).count();
 
 		robotState.hasCargo = (leftTotal > Constants.kRequiredUltrasonicCount && rightTotal > Constants.kRequiredUltrasonicCount);
 		robotState.cargoDistance = (mUltrasonicLeft.getRangeInches() + mUltrasonicRight.getRangeInches()) / 2;

@@ -43,8 +43,7 @@ public class Commands {
 	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
 	public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
 
-	public Intake.WheelState wantedIntakingState = Intake.WheelState.IDLE;
-	public Intake.UpDownState wantedIntakeUpDownState = Intake.UpDownState.UP;
+	public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.STOWED;
 
 	public boolean disableIntakeScaling = true;
 
@@ -126,7 +125,7 @@ public class Commands {
 		copy.customIntakeSpeed = this.customIntakeSpeed;
 		copy.customShovelSpeed = this.customShovelSpeed;
 		copy.autoPlacerOutput = this.autoPlacerOutput;
-		copy.wantedIntakeUpDownState = this.wantedIntakeUpDownState;
+		copy.wantedIntakeState = this.wantedIntakeState;
 		copy.disableIntakeScaling = this.disableIntakeScaling;
 
 		for(Routine r : this.wantedRoutines) {

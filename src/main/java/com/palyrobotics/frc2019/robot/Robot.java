@@ -11,7 +11,6 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
 import com.palyrobotics.frc2019.subsystems.*;
-import com.palyrobotics.frc2019.util.LEDColor;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
@@ -91,14 +90,6 @@ public class Robot extends TimedRobot {
 
 		robotState.matchStartTime = System.currentTimeMillis();
 
-		//Wait for talons to update
-//		try {
-//			Logger.getInstance().logRobotThread(Level.FINEST, "Sleeping thread for 200 ms");
-//			Thread.sleep(200);
-//		} catch(InterruptedException e) {
-//
-//		}
-
 		mHardwareUpdater.updateState(robotState);
 		mRoutineManager.reset(commands);
 		robotState.reset(0, new RigidTransform2d());
@@ -121,7 +112,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-		//if(!this.mAutoStarted) {
 		if(AutoFMS.isFMSDataAvailable() && !this.mAutoStarted) {
 			//Get the selected auto mode
 			AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
@@ -198,8 +188,6 @@ public class Robot extends TimedRobot {
 
 		//Stop controllers
 		mDrive.setNeutral();
-//		mHardwareUpdater.disableTalons();
-//		mHardwareUpdater.disableBrakeMode();
 		DashboardManager.getInstance().toggleCANTable(false);
 
 		stopSubsystems();

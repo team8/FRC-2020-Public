@@ -5,7 +5,7 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Intake;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 
-public class IntakeCycleRoutine extends Routine {
+public class IntakeBeginCycleRoutine extends Routine {
     private boolean alreadyRan;
 
     @Override
@@ -15,17 +15,8 @@ public class IntakeCycleRoutine extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-        if (!robotState.hasCargo) {
-            commands.wantedIntakeUpDownState = Intake.UpDownState.HOLD;
-            commands.wantedIntakingState = Intake.WheelState.INTAKING;
-        } else {
-            commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
-        }
-
-        if(intake.getUpDownState() == Intake.UpDownState.UP) {
-            commands.wantedIntakingState = Intake.WheelState.INTAKING;
-            alreadyRan = true;
-        }
+        commands.wantedIntakeState = Intake.IntakeMacroState.GROUND_INTAKING;
+        alreadyRan = true;
         return commands;
     }
 

@@ -15,7 +15,7 @@ public class IntakeUpRoutine extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-        commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
+        commands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_MID;
         alreadyRan = true;
         return commands;
     }

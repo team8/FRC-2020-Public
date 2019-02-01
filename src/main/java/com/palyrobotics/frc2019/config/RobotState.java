@@ -42,11 +42,13 @@ public class RobotState {
 	public double leftSetpoint = 0;
 	public double rightSetpoint = 0;
 
+	public double robotVelocity;
+	public double robotAccel;
+
 	//Intake
 	public boolean hasCargo = false;
 	public double cargoDistance = 0;
-	public double intakeAngle = 0; //ticks
-	public double intakePosition = 0;  // Angle in degrees
+	public double intakeAngle = 0;  // Angle in degrees
 	public double intakeVelocity = 0; //rpm
 	public boolean hasIntakeStickyFaults = false;
 	public ArrayList<Double> mLeftReadings = new ArrayList<>();

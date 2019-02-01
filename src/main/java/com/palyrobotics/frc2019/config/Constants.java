@@ -24,6 +24,11 @@ public class Constants {
 	public static final OperatorName kOperatorName = OperatorName.GRIFFIN;
 	public static final FieldName kFieldName = FieldName.TEAM_8;
 
+	// Time Constants (these might exist elsewhere but whatever)
+	public static final double updatesPerSecond = 50;
+	public static final double deltaTime = 1/ updatesPerSecond;
+
+
 	/**
 	 * Cheesy Drive Constants Set by DriverProfiles
 	 */
@@ -97,13 +102,22 @@ public class Constants {
 	 * Unit conversions for Talons
 	 */
 	public static final double kDriveTicksPerInch = 4096 / (6.25 * Math.PI);
-	public static final double kArmTicksPerDegree = 4096 / (360 * 10);
-	public static final double kPusherTicksPerInch = 0;
-    public static final double kElevatorTicksPerInch = 0;
+	public static final double kArmPotentiometerTicksPerDegree = 4096 / (360 * 10);
+
+	// Using the NEO built in Encoder, so we must account for reduction.  ~= 42 / 360 * 118
+	public static final double kArmEncoderTicksPerDegree = 42 / (360) * 68/14 * 38/18 * 36/14 * 54/12;
+
+	public static final double kPusherTicksPerInch = 42 / (1 * Math.PI); // todo: change the 1 to the actual sprocket size
+    public static final double kElevatorTicksPerInch = 42 / (2.00 * Math.PI) * (50/12)*(52/26)*(28/44);
     public static final double kClimberTicksPerInch = 0;
 	public static final double kIntakeTicksPerInch = 4096 / (6.25 * Math.PI); //TODO: CHANGE THIS
 	public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90;
 	public static final double kDriveSpeedUnitConversion = 4096 / (6.25 * Math.PI * 10);
+
+	public static final double kIntakeIntakingPosition = 10; // degrees relatively to the plane of the field.
+	public static final double kIntakeHoldingPosition = 65; // same relative angle as above
+	public static final double kIntakeHandoffPosition = 90; // place where the drop to the elevator occurs
+
 
 	/**
 	 * Physical robot Constants
@@ -128,15 +142,17 @@ public class Constants {
     public static final double kElevatorAcceptablePositionError = 40;
     public static final double kElevatorAcceptableVelocityError = 0.01;
 
-    public static final double kClimberAcceptablePositionError = 0;
+
+	public static final double kIntakeAcceptableAngularError = 3;
+	public static final double kIntakeAngularVelocityError = .05;
+
+	public static final double kClimberAcceptablePositionError = 0;
     public static final double kClimberAcceptableVelocityError = 0;
 
 	//Intake
 	public static final double kIntakingMotorVelocity = .4;
-	public static final double kIntakeSlowExpellingVelocity = 0;
-	public static final double kIntakeFastExpellingVelocity = 0;
-	public static final double kIntakeSlowIntakingVelocity = 0;
-	public static final double kIntakeFastIntakingVelocity = 0;
+	public static final double kIntakeFastIntakingVelocity = 0.8;
+	public static final double kIntakeDroppingVelocity = -0.225;
 
 	public static final double kIntakeMaxAngle = 120;
 	public static final double kIntakeMaxAngleTicks = 2000;
@@ -144,9 +160,13 @@ public class Constants {
 	public static final int kIntakeVictorID = 0;
 	public static final int kIntakeMasterDeviceID = 0;
 	public static final int kIntakeSlaveDeviceID = 0;
-	public static final double kIntakeArbitraryFeedForward = 0;
-	public static final double kExpellingMotorVelocity = -0.225;
 
+	public static final double kIntakeGravityFF = 0;
+	public static final double kIntakeAccelComp = 0;
+
+
+// shooter
+	public static final double kExpellingMotorVelocity = 0;
 
 
 	/**
@@ -157,6 +177,8 @@ public class Constants {
 	public static final int kShovelMotorVelocity = 0;
 	public static final int kShovelExpellingMotorVelocity = 0;
 	public static final int kShovelSmallExpelMotorVelocity = 0;
+	public static final int kShovelPDPPort = 0;
+
 	public static final int kMaxShovelCurrentDraw = 0;
 	public static final int kShovelHFXPort = 1;
 
@@ -180,9 +202,6 @@ public class Constants {
     public static final int kAutoPlacerSolenoidID = 0;
 
 	public static boolean operatorXBoxController = true;
-
-	//Weird units, it's in sum of joystick inputs. 50 updates/sec, add 1.0 at max power every cycle, so this is half a second of max power
-	public static final double kClimberUpPositionEstimateThreshold = 25;
 
 	/*
 	 * !!! End of editable Constants! !!!
