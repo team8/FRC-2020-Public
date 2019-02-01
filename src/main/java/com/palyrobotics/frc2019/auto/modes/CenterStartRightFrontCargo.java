@@ -26,7 +26,7 @@ public class CenterStartRightFrontCargo extends AutoModeBase {
     public static double kOffsetX = -Constants.kLowerPlatformLength;
     public static double kOffsetY = 0; //starts at center so the offset is 0
     public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + Constants.kLowerPlatformLength + Constants.kUpperPlatformLength;
-    public static double kCargoShipRightFrontY = mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY);
+    public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
     public static double kHabLineX = Constants.kUpperPlatformLength + Constants.kLowerPlatformLength;
 
     @Override
