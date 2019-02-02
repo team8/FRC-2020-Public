@@ -19,6 +19,8 @@ import com.palyrobotics.frc2019.behavior.routines.drive.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("Duplicates")
+
 public class RightStartHatchInCloseFarCargoInMid extends AutoModeBase { //right start > rocket ship close > loading station > rocket ship far > depot > rocket ship mid
 
     //TODO: tune the code - I haven't tested yet

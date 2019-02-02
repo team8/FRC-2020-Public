@@ -16,6 +16,8 @@ import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("Duplicates")
+
 public class RightStartHatchInFrontCargoIn12 extends AutoModeBase { //right start > cargo ship front > ball in first cargo > depot x2
 
 //    TODO: finish tuning the code

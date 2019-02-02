@@ -18,20 +18,20 @@ import java.util.List;
 
 @SuppressWarnings("Duplicates")
 
-public class RightStartCargoIn123 extends AutoModeBase { //right start > cargo ship 1 > depot * 3
+public class LeftStartCargoIn123 extends AutoModeBase { //Left start > cargo ship 1 > depot * 3
 
 //    TODO: tune the code - I haven't tested yet
 
     public static int SPEED = 150;
     public static double kOffsetX = -Constants.kLowerPlatformLength - Constants.kRobotLengthInches;
-    public static double kOffsetY = Constants.kLevel3Width * .5 + Constants.kLevel2Width * .5;
-    public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + Constants.kLowerPlatformLength + Constants.kUpperPlatformLength;
-    public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
+    public static double kOffsetY = -Constants.kLevel3Width * .5 - Constants.kLevel2Width * .5;
+    public static double kCargoShipLeftFrontX = mDistances.kLevel1CargoX + Constants.kLowerPlatformLength + Constants.kUpperPlatformLength;
+    public static double kCargoShipLeftFrontY = mDistances.kFieldWidth * .5 - (mDistances.kCargoLeftY + mDistances.kCargoOffsetY);
     public static double kHabLineX = Constants.kUpperPlatformLength + Constants.kLowerPlatformLength;
-    public static double kRightDepotX = Constants.kUpperPlatformLength;
-    public static double kRightDepotY = -(mDistances.kFieldWidth * .5 - mDistances.kDepotFromRightY);
-    public static double kRightFirstCargoShipX = kCargoShipRightFrontX + mDistances.kCargoOffsetY;
-    public static double kRightFirstCargoShipY = -(mDistances.kFieldWidth * .5 - mDistances.kCargoRightY);
+    public static double kLeftDepotX = Constants.kUpperPlatformLength;
+    public static double kLeftDepotY = mDistances.kFieldWidth * .5 - mDistances.kDepotFromLeftY;
+    public static double kLeftFirstCargoShipX = kCargoShipLeftFrontX + mDistances.kCargoOffsetY;
+    public static double kLeftFirstCargoShipY = mDistances.kFieldWidth * .5 - mDistances.kCargoLeftY;
     public static double kCargoDiameter = 13;
 
     @Override
@@ -54,8 +54,8 @@ public class RightStartCargoIn123 extends AutoModeBase { //right start > cargo s
 
         List<Path.Waypoint> StartToCargoShip = new ArrayList<>();
         StartToCargoShip.add(new Waypoint(new Translation2d(kHabLineX + Constants.kRobotLengthInches + kOffsetX, 0), SPEED * .5));
-        StartToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX - Constants.kRobotLengthInches * 2 + kOffsetX, kRightFirstCargoShipY - Constants.kRobotLengthInches + kOffsetY), SPEED));
-        StartToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + Constants.kRobotLengthInches * .5 + kOffsetX, kRightFirstCargoShipY - Constants.kRobotLengthInches + kOffsetY), 0));
+        StartToCargoShip.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX - Constants.kRobotLengthInches * 2 + kOffsetX, kLeftFirstCargoShipY + Constants.kRobotLengthInches + kOffsetY), SPEED));
+        StartToCargoShip.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + Constants.kRobotLengthInches * .5 + kOffsetX, kLeftFirstCargoShipY + Constants.kRobotLengthInches + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(StartToCargoShip), false));
 
         routines.add(new CascadingGyroEncoderTurnAngleRoutine(70)); //turn and then shoot ball into the cargo bays
@@ -66,8 +66,8 @@ public class RightStartCargoIn123 extends AutoModeBase { //right start > cargo s
         routines.add(new CascadingGyroEncoderTurnAngleRoutine(-60)); //turn back
 
         List<Path.Waypoint> CargoShipToDepot = new ArrayList<>();
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + Constants.kRobotLengthInches * 1 + kOffsetX, kRightDepotY + Constants.kRobotLengthInches * .25 + kOffsetY), SPEED));
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kRightDepotX + Constants.kRobotLengthInches * 1.1 + kOffsetX, kRightDepotY + kOffsetY), 0));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + Constants.kRobotLengthInches * 1 + kOffsetX, kLeftDepotY - Constants.kRobotLengthInches * .25 + kOffsetY), SPEED));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftDepotX + Constants.kRobotLengthInches * 1.1 + kOffsetX, kLeftDepotY + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(CargoShipToDepot), true));
 
         return new SequentialRoutine(routines);
@@ -77,9 +77,9 @@ public class RightStartCargoIn123 extends AutoModeBase { //right start > cargo s
         ArrayList<Routine> routines = new ArrayList<>();
 
         List<Path.Waypoint> DepotToCargoShip = new ArrayList<>();
-        DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX * .4 + kOffsetX, kRightDepotY + kOffsetY), SPEED));
-        DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX - Constants.kRobotLengthInches * 2 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kRightFirstCargoShipY - Constants.kRobotLengthInches + kOffsetY), SPEED));
-        DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + Constants.kRobotLengthInches * .5 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kRightFirstCargoShipY - Constants.kRobotLengthInches + kOffsetY), 0));
+        DepotToCargoShip.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX * .4 + kOffsetX, kLeftDepotY + kOffsetY), SPEED));
+        DepotToCargoShip.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX - Constants.kRobotLengthInches * 2 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kLeftFirstCargoShipY + Constants.kRobotLengthInches + kOffsetY), SPEED));
+        DepotToCargoShip.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + Constants.kRobotLengthInches * .5 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kLeftFirstCargoShipY + Constants.kRobotLengthInches + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(DepotToCargoShip), false));
 
         routines.add(new CascadingGyroEncoderTurnAngleRoutine(70));
@@ -96,9 +96,9 @@ public class RightStartCargoIn123 extends AutoModeBase { //right start > cargo s
         routines.add(new CascadingGyroEncoderTurnAngleRoutine(-60));
 
         List<Path.Waypoint> CargoShipToDepot = new ArrayList<>();
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kRightFirstCargoShipX * .5 + kOffsetX, kRightDepotY + kOffsetY), SPEED));
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + Constants.kRobotLengthInches + kOffsetX, kRightDepotY + kOffsetY), SPEED));
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kRightDepotX + Constants.kRobotLengthInches - DepotSlot * kCargoDiameter + kOffsetX, kRightDepotY + kOffsetY), 0));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX * .5 + kOffsetX, kLeftDepotY + kOffsetY), SPEED));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + Constants.kRobotLengthInches + kOffsetX, kLeftDepotY + kOffsetY), SPEED));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftDepotX + Constants.kRobotLengthInches - DepotSlot * kCargoDiameter + kOffsetX, kLeftDepotY + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(CargoShipToDepot), true));
 
 //        TODO: add IntakeCargoRoutine (not made yet)

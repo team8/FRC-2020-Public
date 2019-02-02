@@ -19,7 +19,9 @@ import com.palyrobotics.frc2019.behavior.routines.drive.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FullSend extends AutoModeBase { //right start > cargo ship front > loading station > rocket ship far > depot > close rocket ship
+@SuppressWarnings("Duplicates")
+
+public class RightStartHatchInFrontFarCargoInClose extends AutoModeBase { //right start > cargo ship front > loading station > rocket ship far > depot > close rocket ship
 
     public static int SPEED = 120;
     public static double kOffsetX = -Constants.kLowerPlatformLength - Constants.kRobotLengthInches;

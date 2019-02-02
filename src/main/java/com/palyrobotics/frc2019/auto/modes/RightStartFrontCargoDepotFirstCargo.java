@@ -16,9 +16,11 @@ import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("Duplicates")
+
 public class RightStartFrontCargoDepotFirstCargo extends AutoModeBase {
 
-    //TODO: replace with Triplekill because Triplekill is faster and does more
+    //TODO: delete because Triplekill makes it obsolete
 
     public static int SPEED = 70; //can be faster
     public static double kOffsetX = -Constants.kLowerPlatformLength - Constants.kRobotLengthInches;
