@@ -18,11 +18,10 @@ import java.util.List;
 
 @SuppressWarnings("Duplicates")
 
-public class LeftStartHatchInFrontCargoIn12 extends AutoModeBase { //Left start > cargo ship front > ball in first cargo > depot x2
+public class LeftStartCloseHatchTwoCargoSideAutoMode extends AutoModeBase {
+    //Left start > cargo ship front > ball in first cargo > depot x2
 
-//    TODO: finish tuning the code
-
-    public static int SPEED = 150;
+    public static int kRunSpeed = 150;
     public static double kOffsetX = -Constants.kLowerPlatformLength - Constants.kRobotLengthInches;
     public static double kOffsetY = Constants.kLevel3Width * .5 + Constants.kLevel2Width * .5;
     public static double kCargoShipLeftFrontX = mDistances.kLevel1CargoX + Constants.kLowerPlatformLength + Constants.kUpperPlatformLength;
@@ -53,8 +52,8 @@ public class LeftStartHatchInFrontCargoIn12 extends AutoModeBase { //Left start 
         ArrayList<Routine> routines = new ArrayList<>();
 
         List<Path.Waypoint> CargoShipToDepot = new ArrayList<>();
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kCargoShipLeftFrontX - Constants.kRobotLengthInches + kOffsetX, kCargoShipLeftFrontY + kOffsetY), SPEED));
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + Constants.kRobotLengthInches * 1.05 + kOffsetX, kLeftDepotY - Constants.kRobotLengthInches * .25 + kOffsetY), SPEED)); //line up with depot
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kCargoShipLeftFrontX - Constants.kRobotLengthInches + kOffsetX, kCargoShipLeftFrontY + kOffsetY), kRunSpeed));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + Constants.kRobotLengthInches * 1.05 + kOffsetX, kLeftDepotY - Constants.kRobotLengthInches * .25 + kOffsetY), kRunSpeed)); //line up with depot
         CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftDepotX + Constants.kRobotLengthInches * 1.1 + kOffsetX, kLeftDepotY + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(CargoShipToDepot), true));
 
@@ -68,9 +67,9 @@ public class LeftStartHatchInFrontCargoIn12 extends AutoModeBase { //Left start 
         ArrayList<Routine> routines = new ArrayList<>();
 
         List<Path.Waypoint> DepotToCargoShip = new ArrayList<>(); //the CargoSlot variable makes the robot go farther so it goes to a different bay each time
-        DepotToCargoShip.add(new Waypoint(new Translation2d(kLeftDepotX + Constants.kRobotLengthInches * 2 + kOffsetX, kLeftDepotY + kOffsetY), SPEED));
-        DepotToCargoShip.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + Constants.kRobotLengthInches * .55 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kLeftDepotY + kOffsetY), SPEED));
-        DepotToCargoShip.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + Constants.kRobotLengthInches * .85 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kLeftFirstCargoShipY + Constants.kRobotLengthInches + kOffsetY), SPEED)); //line up in front of cargo bay
+        DepotToCargoShip.add(new Waypoint(new Translation2d(kLeftDepotX + Constants.kRobotLengthInches * 2 + kOffsetX, kLeftDepotY + kOffsetY), kRunSpeed));
+        DepotToCargoShip.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + Constants.kRobotLengthInches * .55 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kLeftDepotY + kOffsetY), kRunSpeed));
+        DepotToCargoShip.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + Constants.kRobotLengthInches * .85 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kLeftFirstCargoShipY + Constants.kRobotLengthInches + kOffsetY), kRunSpeed)); //line up in front of cargo bay
         DepotToCargoShip.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + Constants.kRobotLengthInches * .85 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kLeftFirstCargoShipY + Constants.kRobotLengthInches * .2 + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(DepotToCargoShip), false));
 
@@ -84,10 +83,10 @@ public class LeftStartHatchInFrontCargoIn12 extends AutoModeBase { //Left start 
         ArrayList<Routine> routines = new ArrayList<>();
 
         List<Path.Waypoint> CargoShipToDepot = new ArrayList<>(); //the DepotSlot variable makes the robot go farther each time to collect the next cargo
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + DepotSlot * Constants.kCargoLineGap + Constants.kRobotLengthInches + kOffsetX, kLeftFirstCargoShipY + Constants.kRobotLengthInches * .7 + kOffsetY), SPEED));
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + DepotSlot * Constants.kCargoLineGap + Constants.kRobotLengthInches + kOffsetX, kLeftDepotY + kOffsetY), SPEED)); //turn back and line up with the depot
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + DepotSlot * Constants.kCargoLineGap - Constants.kRobotLengthInches * .5 + kOffsetX, kLeftDepotY + kOffsetY), SPEED));
-        CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + kOffsetX, kLeftDepotY + kOffsetY), SPEED));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + DepotSlot * Constants.kCargoLineGap + Constants.kRobotLengthInches + kOffsetX, kLeftFirstCargoShipY + Constants.kRobotLengthInches * .7 + kOffsetY), kRunSpeed));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + DepotSlot * Constants.kCargoLineGap + Constants.kRobotLengthInches + kOffsetX, kLeftDepotY + kOffsetY), kRunSpeed)); //turn back and line up with the depot
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftFirstCargoShipX + DepotSlot * Constants.kCargoLineGap - Constants.kRobotLengthInches * .5 + kOffsetX, kLeftDepotY + kOffsetY), kRunSpeed));
+        CargoShipToDepot.add(new Waypoint(new Translation2d(kHabLineX + kOffsetX, kLeftDepotY + kOffsetY), kRunSpeed));
         CargoShipToDepot.add(new Waypoint(new Translation2d(kLeftDepotX + Constants.kRobotLengthInches - (DepotSlot + 1) * kCargoDiameter + kOffsetX, kLeftDepotY + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(CargoShipToDepot), true));
 

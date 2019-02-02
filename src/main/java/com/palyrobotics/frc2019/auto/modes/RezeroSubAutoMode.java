@@ -19,7 +19,7 @@ import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rezero extends AutoModeBase {
+public class RezeroSubAutoMode extends AutoModeBase {
 
     @Override
     public String toString() {
@@ -33,12 +33,10 @@ public class Rezero extends AutoModeBase {
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new DriveSensorResetRoutine(0.2), Rezero(true));
+        return new SequentialRoutine(new DriveSensorResetRoutine(0.1), Rezero(true));
     }
 
     public Routine Rezero(boolean inverted) {
-
-        //TODO adjust speed and other constants to optimize auto
 
         //invert the cords if the robot starts backwards
         int invertCord = 1;
@@ -55,15 +53,14 @@ public class Rezero extends AutoModeBase {
         routines.add(new DrivePathRoutine(new Path(waypoints), true));
 
         // Back up against the platform
-        TalonSRXOutput left = new TalonSRXOutput();
-        TalonSRXOutput right = new TalonSRXOutput();
-        left.setPercentOutput(0.2);
-        right.setPercentOutput(0.2);
-        DriveSignal backUp = new DriveSignal(left, right);
+        TalonSRXOutput eachOutput = new TalonSRXOutput();
+        eachOutput.setPercentOutput(0.2);
+
+        DriveSignal backUp = new DriveSignal(eachOutput, eachOutput);
         routines.add(new DriveTimeRoutine(0.7, backUp));
 
         // Zero robot state
-        routines.add(new DriveSensorResetRoutine(0.5));
+        routines.add(new DriveSensorResetRoutine(0.3));
 
         return new SequentialRoutine(routines);
     }

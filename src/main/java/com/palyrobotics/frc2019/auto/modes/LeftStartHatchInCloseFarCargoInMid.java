@@ -1,20 +1,13 @@
 package com.palyrobotics.frc2019.auto.modes;
 
 import com.palyrobotics.frc2019.auto.AutoModeBase;
-import com.palyrobotics.frc2019.behavior.ParallelRoutine;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
-import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
-import com.palyrobotics.frc2019.util.DriveSignal;
-import com.palyrobotics.frc2019.util.TalonSRXOutput;
-import com.palyrobotics.frc2019.behavior.routines.drive.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +53,7 @@ public class LeftStartHatchInCloseFarCargoInMid extends AutoModeBase { //Left st
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new Rezero().Rezero(true), placeHatchClose(), takeHatch(), placeHatchFar(), takeCargo(), placeCargoMid());
+        return new SequentialRoutine(new RezeroSubAutoMode().Rezero(true), placeHatchClose(), takeHatch(), placeHatchFar(), takeCargo(), placeCargoMid());
     }
 
     public Routine placeHatchClose() { //start to rocket ship close

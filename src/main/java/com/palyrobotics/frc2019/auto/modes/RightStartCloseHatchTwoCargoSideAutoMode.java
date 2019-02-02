@@ -18,7 +18,7 @@ import java.util.List;
 
 @SuppressWarnings("Duplicates")
 
-public class RightStartHatchInFrontCargoIn12 extends AutoModeBase { //right start > cargo ship front > ball in first cargo > depot x2
+public class RightStartCloseHatchTwoCargoSideAutoMode extends AutoModeBase { //right start > cargo ship front > ball in first cargo > depot x2
 
 //    TODO: finish tuning the code
 

@@ -21,7 +21,7 @@ import java.util.List;
 
 @SuppressWarnings("Duplicates")
 
-public class RightStartHatchInFrontFarCargoInClose extends AutoModeBase { //right start > cargo ship front > loading station > rocket ship far > depot > close rocket ship
+public class RightStartHatchInFrontFarCargoInClose extends AutoModeBase { //right start > cargo ship front > loading station > rocket ship far > depot > mid rocket ship
 
     public static int SPEED = 120;
     public static double kOffsetX = -Constants.kLowerPlatformLength - Constants.kRobotLengthInches;

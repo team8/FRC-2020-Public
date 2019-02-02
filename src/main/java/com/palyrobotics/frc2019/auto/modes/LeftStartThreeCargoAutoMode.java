@@ -1,13 +1,10 @@
 package com.palyrobotics.frc2019.auto.modes;
 
 import com.palyrobotics.frc2019.auto.AutoModeBase;
-import com.palyrobotics.frc2019.behavior.ParallelRoutine;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
-import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
@@ -18,7 +15,7 @@ import java.util.List;
 
 @SuppressWarnings("Duplicates")
 
-public class LeftStartCargoIn123 extends AutoModeBase { //Left start > cargo ship 1 > depot * 3
+public class LeftStartThreeCargoAutoMode extends AutoModeBase { //Left start > cargo ship 1 > depot * 3
 
 //    TODO: tune the code - I haven't tested yet
 
@@ -46,7 +43,7 @@ public class LeftStartCargoIn123 extends AutoModeBase { //Left start > cargo shi
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new Rezero().Rezero(false), placeCargoStart(), placeCargo(1), takeCargo(1), placeCargo(2));
+        return new SequentialRoutine(new RezeroSubAutoMode().Rezero(false), placeCargoStart(), placeCargo(1), takeCargo(1), placeCargo(2));
     }
 
     public Routine placeCargoStart() { //start to cargo ship front

@@ -1,11 +1,9 @@
 package com.palyrobotics.frc2019.auto.modes;
 
 import com.palyrobotics.frc2019.auto.AutoModeBase;
-import com.palyrobotics.frc2019.behavior.ParallelRoutine;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
 import com.palyrobotics.frc2019.config.Constants;
@@ -20,9 +18,7 @@ import java.util.List;
 
 public class RightStartRightFrontCargo extends AutoModeBase {
 
-//        TODO: make super accurate (can only be at most 2 inches off) and tune to be faster
-
-    public static int SPEED = 50; //speed can be faster
+    public static int kRunSpeed = 50; //speed can be faster
     public static double kOffsetX = 0;
     public static double kOffsetY = Constants.kLevel3Width * .5 + Constants.kLevel2Width * .5;
     public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + Constants.kLowerPlatformLength + Constants.kUpperPlatformLength;
@@ -47,26 +43,21 @@ public class RightStartRightFrontCargo extends AutoModeBase {
     public Routine placeHatch(boolean inverted) {
         ArrayList<Routine> routines = new ArrayList<>();
 
-//        TODO: make super accurate
-
         //invert the cords if the robot starts backwards
         int invertCord = 1;
         if (inverted) {
             invertCord = -1;
         }
 
-        routines.add(new Rezero().Rezero(inverted)); //rezero
+        routines.add(new RezeroSubAutoMode().Rezero(inverted)); //rezero
 
         List<Path.Waypoint> StartToCargoShip = new ArrayList<>();
-        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kHabLineX + Constants.kRobotLengthInches + kOffsetX), 0), SPEED)); //go straight so the robot doesn't get messed up going down a level
-        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kCargoShipRightFrontX * .6 + kOffsetX), invertCord * (kCargoShipRightFrontY + kOffsetY)), SPEED)); //lines up with cargo ship
+        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kHabLineX + Constants.kRobotLengthInches + kOffsetX), 0), kRunSpeed)); //go straight so the robot doesn't get messed up going down a level
+        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kCargoShipRightFrontX * .6 + kOffsetX), invertCord * (kCargoShipRightFrontY + kOffsetY)), kRunSpeed)); //lines up with cargo ship
         StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kCargoShipRightFrontX - Constants.kRobotLengthInches * .6 + kOffsetX), invertCord * (kCargoShipRightFrontY + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(StartToCargoShip), true));
 
-//        TODO: implement ReleaseHatchRoutine when created
 //        routines.add(new ReleaseHatchRoutine()); //routine not made yet
-
-        routines.add(new TimeoutRoutine(1)); //placeholder
 
         return new SequentialRoutine(routines);
     }

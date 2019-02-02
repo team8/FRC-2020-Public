@@ -1,13 +1,10 @@
 package com.palyrobotics.frc2019.auto.modes;
 
 import com.palyrobotics.frc2019.auto.AutoModeBase;
-import com.palyrobotics.frc2019.behavior.ParallelRoutine;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
-import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
@@ -46,7 +43,7 @@ public class RightStartCargoIn123 extends AutoModeBase { //right start > cargo s
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new Rezero().Rezero(false), placeCargoStart(), placeCargo(1), takeCargo(1), placeCargo(2));
+        return new SequentialRoutine(new RezeroSubAutoMode().Rezero(false), placeCargoStart(), placeCargo(1), takeCargo(1), placeCargo(2));
     }
 
     public Routine placeCargoStart() { //start to cargo ship front

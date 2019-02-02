@@ -21,9 +21,10 @@ import java.util.List;
 
 @SuppressWarnings("Duplicates")
 
-public class LeftStartHatchInFrontFarCargoInClose extends AutoModeBase { //Left start > cargo ship front > loading station > rocket ship far > depot > close rocket ship
+public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBase {
+    //Left start > cargo ship front > loading station > rocket ship far > depot > close rocket ship
 
-    public static int SPEED = 120;
+    public static int kRunSpeed = 120;
     public static double kOffsetX = -Constants.kLowerPlatformLength - Constants.kRobotLengthInches;
     public static double kOffsetY = -Constants.kLevel3Width * .5 - Constants.kLevel2Width * .5;
     public static double kCargoShipLeftFrontX = mDistances.kLevel1CargoX + Constants.kLowerPlatformLength + Constants.kUpperPlatformLength;
@@ -65,9 +66,9 @@ public class LeftStartHatchInFrontFarCargoInClose extends AutoModeBase { //Left 
         ArrayList<Routine> routines = new ArrayList<>();
 
         List<Path.Waypoint> CargoShipToLoadingStation = new ArrayList<>();
-        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-(kCargoShipLeftFrontX - Constants.kRobotLengthInches + kOffsetX), -(kCargoShipLeftFrontY - kOffsetY)), SPEED)); //backs out of the cargo ship
-        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-((kCargoShipLeftFrontX + kOffsetX) * .5), -(kLeftLoadingStationY * .5 - kOffsetY)), SPEED));
-        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-(kHabLineX - Constants.kRobotLengthInches * .5 + kOffsetX), -(kLeftLoadingStationY - Constants.kRobotWidthInches * .4 + kOffsetY)), SPEED)); //lines up with loading station
+        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-(kCargoShipLeftFrontX - Constants.kRobotLengthInches + kOffsetX), -(kCargoShipLeftFrontY - kOffsetY)), kRunSpeed)); //backs out of the cargo ship
+        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-((kCargoShipLeftFrontX + kOffsetX) * .5), -(kLeftLoadingStationY * .5 - kOffsetY)), kRunSpeed));
+        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-(kHabLineX - Constants.kRobotLengthInches * .5 + kOffsetX), -(kLeftLoadingStationY - Constants.kRobotWidthInches * .4 + kOffsetY)), kRunSpeed)); //lines up with loading station
         CargoShipToLoadingStation.add(new Waypoint(kLeftLoadingStation, 0));
         routines.add(new DrivePathRoutine(new Path(CargoShipToLoadingStation), false));
 
@@ -86,12 +87,12 @@ public class LeftStartHatchInFrontFarCargoInClose extends AutoModeBase { //Left 
 
         List<Path.Waypoint> backLoadingStationToRocketShip = new ArrayList<>(); //robot starts going backwards
         backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftLoadingStationX + Constants.kRobotLengthInches + kOffsetX), -(kLeftLoadingStationY + kOffsetY)), 180)); //backs up a bit
-        backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipMidX + kOffsetX), -(findLineFar(kLeftRocketShipMidX + Constants.kRobotLengthInches * 1.8) + kOffsetY)), SPEED)); //goes around the rocket ship
+        backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipMidX + kOffsetX), -(findLineFar(kLeftRocketShipMidX + Constants.kRobotLengthInches * 1.8) + kOffsetY)), kRunSpeed)); //goes around the rocket ship
         backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipFarX + Constants.kRobotLengthInches * 1.9 + kOffsetX), -(findLineFar(kLeftRocketShipMidX + Constants.kRobotLengthInches * 1.9) + Constants.kRobotLengthInches * .2 + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(backLoadingStationToRocketShip), true)); //robot turns and then moves forward to the rocket ship
 
         List<Path.Waypoint> forwardLoadingStationToRocketShip = new ArrayList<>(); //robot turns and then moves forward
-        forwardLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipFarX + Constants.kRobotLengthInches * 1.6 + kOffsetX), -(findLineFar(kLeftRocketShipMidX + Constants.kRobotLengthInches * 1.6) + Constants.kRobotLengthInches * .3 + kOffsetY)), SPEED)); //line up with rocket ship far
+        forwardLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipFarX + Constants.kRobotLengthInches * 1.6 + kOffsetX), -(findLineFar(kLeftRocketShipMidX + Constants.kRobotLengthInches * 1.6) + Constants.kRobotLengthInches * .3 + kOffsetY)), kRunSpeed)); //line up with rocket ship far
         forwardLoadingStationToRocketShip.add(new Waypoint(kLeftRocketShipFar, 0)); //ends in front of the rocket ship far
         routines.add(new DrivePathRoutine(new Path(forwardLoadingStationToRocketShip), false));
 
