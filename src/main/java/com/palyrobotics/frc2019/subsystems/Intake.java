@@ -8,9 +8,6 @@ import com.palyrobotics.frc2019.util.SparkMaxOutput;
 
 import java.util.Optional;
 
-/**
- * @author Justin and Jason
- */
 public class Intake extends Subsystem {
     public static Intake instance = new Intake();
 
@@ -193,6 +190,12 @@ public class Intake extends Subsystem {
                 mSparkOutput.setPercentOutput(0.0);
                 break;
         }
+
+        mWriter.addData("intakeAngle", mRobotState.intakeAngle);
+        mWriter.addData("intakeVelocity", mRobotState.intakeVelocity);
+        mWriter.addData("intakeVelocityDegreePerSec", mRobotState.intakeVelocity * IntakeConstants.kArmEncoderSpeedUnitConversion);
+        mIntakeWantedPosition.ifPresent(intakeWantedPosition -> mWriter.addData("intakeWantedPosition", intakeWantedPosition));
+        mWriter.addData("intakeSparkSetpoint", mSparkOutput.getSetpoint());
 
     }
 

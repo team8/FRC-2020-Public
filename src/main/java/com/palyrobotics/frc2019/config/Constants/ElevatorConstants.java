@@ -27,6 +27,9 @@ public class ElevatorConstants {
     /**
      * Unit Conversions
      */
-    public static final double kTicksPerInch = 42 / (2.00 * Math.PI) * (50/12)*(52/26)*(28/44);
-    public static final double kClimberTicksPerInch = 0;
+    public static final double kElevatorRotationsPerInch = 1 / (2.00 * Math.PI) * (12/52)*(26/50)*(44/22);
+    public static final double kElevatorSpeedUnitConversion = (1 / kElevatorRotationsPerInch) / 60; // RPM -> in/s
+    //TODO: Calculate climber rotations per inch
+    public static final double kClimberRotationsPerInch = 1 / (2.00 * Math.PI) * (12/52)*(26/50)*(40/60)*(14/66);
+    public static final double kClimberSpeedUnitConversion = (1 / kClimberRotationsPerInch) / 60; // RPM -> in/s
 }

@@ -7,7 +7,6 @@ import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
-import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
@@ -71,9 +70,6 @@ public class Elevator extends Subsystem {
     //The subsystem output
     private SparkMaxOutput mOutput = new SparkMaxOutput();
     private DoubleSolenoid.Value mSolenoidOutput;
-
-    private CSVWriter mWriter = CSVWriter.getInstance();
-
 
     /**
      * Constructor for Elevator, defaults state to calibrating.
@@ -221,6 +217,20 @@ public class Elevator extends Subsystem {
                     break;
             }
         }
+
+        mWriter.addData("elevatorPosition", mRobotState.elevatorPosition);
+        mWriter.addData("elevatorPositionInches", mRobotState.elevatorPosition / ElevatorConstants.kElevatorRotationsPerInch);
+        mWriter.addData("elevatorVelocity", mRobotState.elevatorVelocity);
+        mWriter.addData("elevatorVelocityInchPerSec", mRobotState.elevatorVelocity * ElevatorConstants.kElevatorSpeedUnitConversion);
+        mElevatorWantedPosition.ifPresent(elevatorWantedPosition -> mWriter.addData("elevatorWantedPosition", elevatorWantedPosition));
+        mWriter.addData("elevatorSetpoint", mOutput.getSetpoint());
+
+        mWriter.addData("climberPosition", mRobotState.elevatorPosition);
+        mWriter.addData("climberPositionInches", mRobotState.elevatorPosition / ElevatorConstants.kClimberRotationsPerInch);
+        mWriter.addData("elevatorVelocity", mRobotState.elevatorVelocity);
+        mWriter.addData("elevatorVelocityInchPerSec", mRobotState.elevatorVelocity * ElevatorConstants.kClimberSpeedUnitConversion);
+        mClimberWantedPosition.ifPresent(climberWantedPosition -> mWriter.addData("climberWantedPosition", climberWantedPosition));
+        mWriter.addData("climberSetpoint", mOutput.getSetpoint());
     }
 
     /**
@@ -265,7 +275,7 @@ public class Elevator extends Subsystem {
                 //Set the setpoint
                 //If the desired custom positioning setpoint is different than what currently
                 //exists, replace it
-                mElevatorWantedPosition = Optional.of(kElevatorBottomPosition.get() + commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kTicksPerInch);
+                mElevatorWantedPosition = Optional.of(kElevatorBottomPosition.get() + commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kElevatorRotationsPerInch);
                 if(mElevatorWantedPosition.get() >= mRobotState.elevatorPosition) {
                     movingDown = false;
                 } else {
@@ -273,8 +283,8 @@ public class Elevator extends Subsystem {
                 }
             } else {
                 //Assume bottom position is the bottom
-                if(!mElevatorWantedPosition.equals(Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kTicksPerInch))) {
-                    mElevatorWantedPosition = Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kTicksPerInch);
+                if(!mElevatorWantedPosition.equals(Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kElevatorRotationsPerInch))) {
+                    mElevatorWantedPosition = Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kElevatorRotationsPerInch);
                     if(mElevatorWantedPosition.get() >= mRobotState.elevatorPosition) {
                         movingDown = false;
                     } else {
@@ -304,8 +314,8 @@ public class Elevator extends Subsystem {
             }
             mClimberState = commands.wantedClimberState;
         } else if(commands.wantedClimberState == ClimberState.CUSTOM_POSITIONING) {
-            if(!mClimberWantedPosition.equals(Optional.of(commands.robotSetpoints.climberPositionSetpoint.get() * ElevatorConstants.kClimberTicksPerInch))) {
-                mClimberWantedPosition = Optional.of(commands.robotSetpoints.climberPositionSetpoint.get() * ElevatorConstants.kClimberTicksPerInch);
+            if(!mClimberWantedPosition.equals(Optional.of(commands.robotSetpoints.climberPositionSetpoint.get() * ElevatorConstants.kClimberRotationsPerInch))) {
+                mClimberWantedPosition = Optional.of(commands.robotSetpoints.climberPositionSetpoint.get() * ElevatorConstants.kClimberRotationsPerInch);
             }
             mClimberState = ClimberState.CUSTOM_POSITIONING;
         } else {
@@ -364,7 +374,7 @@ public class Elevator extends Subsystem {
             if(mRobotState.elevatorHFX) {
                 kElevatorBottomPosition = Optional.of(mRobotState.elevatorPosition);
                 if(!kElevatorTopPosition.isPresent()) {
-                    kElevatorTopPosition = Optional.of(mRobotState.elevatorPosition + ElevatorConstants.kTopBottomDifferenceInches * ElevatorConstants.kTicksPerInch);
+                    kElevatorTopPosition = Optional.of(mRobotState.elevatorPosition + ElevatorConstants.kTopBottomDifferenceInches * ElevatorConstants.kElevatorRotationsPerInch);
                 }
             }
         } else {

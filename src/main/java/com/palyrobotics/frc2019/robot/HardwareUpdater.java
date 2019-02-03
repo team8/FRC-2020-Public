@@ -340,24 +340,18 @@ class HardwareUpdater {
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.clearFaults();
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getStickyFault(intakeStickyFaults);
 
+        robotState.intakeVelocity = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getVelocity();
+        robotState.intakeAngle = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition();
 
 		updateUltrasonicSensors(robotState);
-		updateIntakeState(robotState);
 	}
 
-	void updateIntakeState(RobotState robotState) {
-		//Update intake sensors
-
-		robotState.intakeVelocity = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getVelocity()
-                / IntakeConstants.kArmEncoderTicksPerDegree;
-	}
-
-	void startIntakeArm() {
-		Robot.getRobotState().intakeAngle = IntakeConstants.kMaxAngle -
-				1/IntakeConstants.kArmEncoderTicksPerDegree * (IntakeConstants.kMaxAngleTicks -
-                        HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
-
-	}
+//	void startIntakeArm() {
+//		Robot.getRobotState().intakeAngle = IntakeConstants.kMaxAngle -
+//				1/IntakeConstants.kArmEncoderTicksPerDegree * (IntakeConstants.kMaxAngleTicks -
+//                        HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+//
+//	}
 
 	void updateUltrasonicSensors(RobotState robotState) {
 		// HAS CARGO IN INTAKE
