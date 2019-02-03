@@ -3,6 +3,7 @@ package com.palyrobotics.frc2019.config;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.DriveSignal;
+import com.palyrobotics.frc2019.util.SparkSignal;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class Commands {
 	 * @author Nihar
 	 */
 	public static class Setpoints {
-		public Optional<DriveSignal> drivePowerSetpoint = Optional.empty();
+		public Optional<SparkSignal> drivePowerSetpoint = Optional.empty();
 		public Optional<Double> elevatorPositionSetpoint = Optional.empty();
 		public Optional<Double> climberPositionSetpoint = Optional.empty();
 		public Optional<Double> intakePositionSetpoint = Optional.empty();
@@ -135,7 +136,7 @@ public class Commands {
 		//Copy robot setpoints
 		copy.robotSetpoints = new Setpoints();
 		//Copy optionals that are present
-		robotSetpoints.drivePowerSetpoint.ifPresent((DriveSignal signal) -> copy.robotSetpoints.drivePowerSetpoint = Optional.of(signal));
+		robotSetpoints.drivePowerSetpoint.ifPresent((SparkSignal signal) -> copy.robotSetpoints.drivePowerSetpoint = Optional.of(signal));
 		robotSetpoints.elevatorPositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.elevatorPositionSetpoint = Optional.of(elevatorPositionSetpoint));
         robotSetpoints.climberPositionSetpoint.ifPresent((Double climberPositionSetpoint) -> copy.robotSetpoints.climberPositionSetpoint = Optional.of(climberPositionSetpoint));
 		robotSetpoints.intakePositionSetpoint

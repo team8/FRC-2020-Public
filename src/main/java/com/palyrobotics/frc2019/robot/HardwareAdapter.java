@@ -28,12 +28,12 @@ public class HardwareAdapter {
 			return instance;
 		}
 
-		public final WPI_TalonSRX leftMasterTalon;
-		public final WPI_VictorSPX leftSlave1Victor;
-		public final WPI_VictorSPX leftSlave2Victor;
-        public final WPI_TalonSRX rightMasterTalon;
-		public final WPI_VictorSPX rightSlave1Victor;
-		public final WPI_VictorSPX rightSlave2Victor;
+		public final CANSparkMax leftMasterSpark;
+		public final CANSparkMax leftSlave1Spark;
+		public final CANSparkMax leftSlave2Spark;
+        public final CANSparkMax rightMasterSpark;
+		public final CANSparkMax rightSlave1Spark;
+		public final CANSparkMax rightSlave2Spark;
 		
 		public final PigeonIMU gyro;
 
@@ -41,19 +41,17 @@ public class HardwareAdapter {
 			instance.gyro.setYaw(0, 0);
 			instance.gyro.setFusedHeading(0, 0);
 			instance.gyro.setAccumZAngle(0, 0);
-			instance.leftMasterTalon.setSelectedSensorPosition(0, 0, 0);
-			instance.rightMasterTalon.setSelectedSensorPosition(0, 0, 0);
 		}
 
 		protected DrivetrainHardware() {
-			leftMasterTalon = new WPI_TalonSRX(PortConstants.kVidarLeftDriveMasterDeviceID);
-			leftSlave1Victor = new WPI_VictorSPX(PortConstants.kVidarLeftDriveSlave1DeviceID);
-			leftSlave2Victor = new WPI_VictorSPX(PortConstants.kVidarLeftDriveSlave2DeviceID);
-            rightMasterTalon = new WPI_TalonSRX(PortConstants.kVidarRightDriveMasterDeviceID);
-			rightSlave1Victor = new WPI_VictorSPX(PortConstants.kVidarRightDriveSlave1DeviceID);
-			rightSlave2Victor = new WPI_VictorSPX(PortConstants.kVidarRightDriveSlave2DeviceID);
+			leftMasterSpark = new CANSparkMax(PortConstants.kVidarLeftDriveMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
+			leftSlave1Spark = new CANSparkMax(PortConstants.kVidarLeftDriveSlave1DeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
+			leftSlave2Spark = new CANSparkMax(PortConstants.kVidarLeftDriveSlave2DeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
+            rightMasterSpark = new CANSparkMax(PortConstants.kVidarRightDriveMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
+			rightSlave1Spark = new CANSparkMax(PortConstants.kVidarRightDriveSlave1DeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
+			rightSlave2Spark = new CANSparkMax(PortConstants.kVidarRightDriveSlave2DeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-			gyro = new PigeonIMU(0);
+			gyro = new PigeonIMU(PortConstants.kGyroPort);
 		}
 	}
 

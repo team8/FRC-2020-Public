@@ -7,9 +7,7 @@ import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.subsystems.Drive.DriveController;
-import com.palyrobotics.frc2019.util.DriveSignal;
-import com.palyrobotics.frc2019.util.Pose;
-import com.palyrobotics.frc2019.util.TalonSRXOutput;
+import com.palyrobotics.frc2019.util.*;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
 public class CascadingGyroEncoderTurnAngleController implements DriveController {
@@ -20,8 +18,8 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
     private double mTarget;
     private double mLastTarget;
 
-    private TalonSRXOutput mLeftOutput;
-    private TalonSRXOutput mRightOutput;
+    private SparkMaxOutput mLeftOutput;
+    private SparkMaxOutput mRightOutput;
     
     //Error measurements for angle-to-velocity PID
     private double mErrorIntegral;
@@ -34,8 +32,8 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
 
         mLastTarget = 0;
 
-        mLeftOutput = new TalonSRXOutput();
-        mRightOutput = new TalonSRXOutput();
+        mLeftOutput = new SparkMaxOutput();
+        mRightOutput = new SparkMaxOutput();
         
         mErrorIntegral = 0;
 
@@ -43,13 +41,13 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
     }
 
     @Override
-    public DriveSignal update(RobotState state) {
+    public SparkSignal update(RobotState state) {
 
         mCachedPose = state.drivePose;
         
         if (mCachedPose == null) {
         	Logger.getInstance().logSubsystemThread(Level.WARNING, "CascadingGyroEncoderTurnAngle", "Cached pose is null!");
-        	return DriveSignal.getNeutralSignal();
+        	return SparkSignal.getNeutralSignal();
         } else {
             double currentHeading = mCachedPose.heading;
             double error = mTargetHeading - currentHeading;
@@ -80,12 +78,12 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
 
             DashboardManager.getInstance().updateCANTable("angle", Double.toString(mTarget));
 
-            mLeftOutput.setVelocity(-mTarget, Gains.vidarVelocity);
-            mRightOutput.setVelocity(mTarget, Gains.vidarVelocity);
+            mLeftOutput.setTargetVelocity(-mTarget, Gains.vidarVelocity);
+            mRightOutput.setTargetVelocity(mTarget, Gains.vidarVelocity);
              
             mLastError = error;
 
-            return new DriveSignal(mLeftOutput, mRightOutput);
+            return new SparkSignal(mLeftOutput, mRightOutput);
         }
     }
 

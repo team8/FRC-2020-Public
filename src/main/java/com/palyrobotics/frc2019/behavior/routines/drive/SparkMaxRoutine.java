@@ -4,12 +4,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
-import com.palyrobotics.frc2019.subsystems.controllers.TalonSRXDriveController;
+import com.palyrobotics.frc2019.subsystems.controllers.SparkMaxDriveController;
 import com.palyrobotics.frc2019.util.DriveSignal;
+import com.palyrobotics.frc2019.util.SparkSignal;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.logging.Level;
@@ -19,21 +19,21 @@ import java.util.logging.Level;
  * 
  * @author Nihar Should be used to set the drivetrain to an offboard closed loop cantalon
  */
-public class TalonSRXRoutine extends Routine {
+public class SparkMaxRoutine extends Routine {
 	private boolean relativeSetpoint = false;
-	private final DriveSignal mSignal;
+	private final SparkSignal mSignal;
 
 	private double timeout;
 	private double startTime;
 	private static RobotState robotState;
 
-	public TalonSRXRoutine(DriveSignal controller, boolean relativeSetpoint) {
+	public SparkMaxRoutine(SparkSignal controller, boolean relativeSetpoint) {
 		this.mSignal = controller;
 		this.timeout = 1 << 30;
 		this.relativeSetpoint = relativeSetpoint;
 		this.robotState = Robot.getRobotState();
-        System.out.println("TalonSRXRoutine created, left setpoint: " + controller.leftMotor.getSetpoint());
-        System.out.println("TalonSRXRoutine created, right setpoint: " + controller.rightMotor.getSetpoint());
+        System.out.println("SparkMaxRoutine created, left setpoint: " + controller.leftMotor.getSetpoint());
+        System.out.println("SparkMaxRoutine created, right setpoint: " + controller.rightMotor.getSetpoint());
 	}
 
 	/*
@@ -41,7 +41,7 @@ public class TalonSRXRoutine extends Routine {
 	 * 
 	 * Timeout is in seconds
 	 */
-	public TalonSRXRoutine(DriveSignal controller, boolean relativeSetpoint, double timeout) {
+	public SparkMaxRoutine(SparkSignal controller, boolean relativeSetpoint, double timeout) {
 		this.mSignal = controller;
 		this.relativeSetpoint = relativeSetpoint;
 		this.timeout = timeout * 1000;
@@ -54,18 +54,13 @@ public class TalonSRXRoutine extends Routine {
 		startTime = System.currentTimeMillis();
 
 		if(relativeSetpoint) {
-			if(mSignal.leftMotor.getControlMode().equals(ControlMode.MotionMagic)) {
-				mSignal.leftMotor.setMotionMagic(mSignal.leftMotor.getSetpoint() + robotState.drivePose.leftEnc, mSignal.leftMotor.gains,
-						mSignal.leftMotor.cruiseVel, mSignal.leftMotor.accel);
-				mSignal.rightMotor.setMotionMagic(mSignal.rightMotor.getSetpoint() + robotState.drivePose.rightEnc, mSignal.rightMotor.gains,
-						mSignal.rightMotor.cruiseVel, mSignal.rightMotor.accel);
-			} else if(mSignal.leftMotor.getControlMode().equals(ControlMode.Position)) {
-				mSignal.leftMotor.setPosition(mSignal.leftMotor.getSetpoint() + robotState.drivePose.leftEnc, mSignal.leftMotor.gains);
-				mSignal.rightMotor.setPosition(mSignal.rightMotor.getSetpoint() + robotState.drivePose.rightEnc, mSignal.rightMotor.gains);
+			if(mSignal.leftMotor.getControlType().equals(ControlMode.Position)) {
+				mSignal.leftMotor.setTargetPosition(mSignal.leftMotor.getSetpoint() + robotState.drivePose.leftEnc, mSignal.leftMotor.getGains());
+				mSignal.rightMotor.setTargetPosition(mSignal.rightMotor.getSetpoint() + robotState.drivePose.rightEnc, mSignal.rightMotor.getGains());
 
 			}
 		}
-		drive.setTalonSRXController(mSignal);
+		drive.setSparkMaxController(mSignal);
 		Logger.getInstance().logRobotThread(Level.FINE, "Sent drivetrain signal", mSignal);
 	}
 
@@ -87,27 +82,27 @@ public class TalonSRXRoutine extends Routine {
 	public boolean finished() {
 		//Wait for controller to be added before finishing routine
 		if(Math.abs(mSignal.leftMotor.getSetpoint() - Robot.getRobotState().leftSetpoint) > 1) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired talon and actual talon setpoints! desired, actual");
+			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark setpoints! desired, actual");
 			Logger.getInstance().logRobotThread(Level.WARNING, "Left", mSignal.leftMotor.getSetpoint() + ", " + Robot.getRobotState().leftSetpoint);
 			return false;
 		} else if(Math.abs(mSignal.rightMotor.getSetpoint() - Robot.getRobotState().rightSetpoint) > 1) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired talon and actual talon setpoints! desired, actual");
+			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark setpoints! desired, actual");
 			Logger.getInstance().logRobotThread(Level.WARNING, "Right", mSignal.rightMotor.getSetpoint() + ", " + Robot.getRobotState().rightSetpoint);
 			return false;
-		} else if(mSignal.leftMotor.getControlMode() != Robot.getRobotState().leftControlMode) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired talon and actual talon states!");
-			Logger.getInstance().logRobotThread(Level.WARNING, mSignal.leftMotor.getControlMode() + ", " + Robot.getRobotState().leftControlMode);
+		} else if(mSignal.leftMotor.getControlType() != Robot.getRobotState().leftControlMode) {
+			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark states!");
+			Logger.getInstance().logRobotThread(Level.WARNING, mSignal.leftMotor.getControlType() + ", " + Robot.getRobotState().leftControlMode);
 			return false;
-		} else if(mSignal.rightMotor.getControlMode() != Robot.getRobotState().rightControlMode) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired talon and actual talon states!");
-			Logger.getInstance().logRobotThread(Level.WARNING, mSignal.rightMotor.getControlMode() + ", " + Robot.getRobotState().rightControlMode);
+		} else if(mSignal.rightMotor.getControlType() != Robot.getRobotState().rightControlMode) {
+			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark states!");
+			Logger.getInstance().logRobotThread(Level.WARNING, mSignal.rightMotor.getControlType() + ", " + Robot.getRobotState().rightControlMode);
 			return false;
 		}
-		if(!drive.hasController() || (drive.getController().getClass() == TalonSRXDriveController.class && drive.controllerOnTarget())) {
+		if(!drive.hasController() || (drive.getController().getClass() == SparkMaxDriveController.class && drive.controllerOnTarget())) {
 		}
 
 		return !drive.hasController() || System.currentTimeMillis() > this.timeout + startTime
-				|| (drive.getController().getClass() == TalonSRXDriveController.class && drive.controllerOnTarget());
+				|| (drive.getController().getClass() == SparkMaxDriveController.class && drive.controllerOnTarget());
 	}
 
 	@Override

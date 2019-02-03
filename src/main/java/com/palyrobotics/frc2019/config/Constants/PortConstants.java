@@ -2,7 +2,7 @@ package com.palyrobotics.frc2019.config.Constants;
 
 public class PortConstants {
     //DRIVETRAIN
-    //PDP slots for drivetrain 0, 1, 2, 3, 12, 13
+    //CAN BUS slots for drivetrain
     public static final int kVidarLeftDriveMasterDeviceID = 0;
     public static final int kVidarLeftDriveSlave1DeviceID = 1;
     public static final int kVidarLeftDriveSlave2DeviceID = 2;

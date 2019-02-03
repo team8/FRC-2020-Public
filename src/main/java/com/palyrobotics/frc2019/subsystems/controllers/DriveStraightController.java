@@ -5,10 +5,7 @@ import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.subsystems.Drive.DriveController;
-import com.palyrobotics.frc2019.util.DriveSignal;
-import com.palyrobotics.frc2019.util.Pose;
-import com.palyrobotics.frc2019.util.SynchronousPID;
-import com.palyrobotics.frc2019.util.TalonSRXOutput;
+import com.palyrobotics.frc2019.util.*;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.logging.Level;
@@ -53,9 +50,9 @@ public class DriveStraightController implements DriveController {
 	}
 
 	@Override
-	public DriveSignal update(RobotState state) {
-		TalonSRXOutput leftOutput = new TalonSRXOutput();
-		TalonSRXOutput rightOutput = new TalonSRXOutput();
+	public SparkSignal update(RobotState state) {
+		SparkMaxOutput leftOutput = new SparkMaxOutput();
+		SparkMaxOutput rightOutput = new SparkMaxOutput();
 		cachedPose = state.drivePose;
 		double distanceSoFar = state.drivePose.leftEnc + state.drivePose.rightEnc;
 		distanceSoFar /= 2;
@@ -66,7 +63,7 @@ public class DriveStraightController implements DriveController {
 		rightOutput.setPercentOutput(throttle - turn);
 
 		Logger.getInstance().logSubsystemThread(Level.FINEST, "Error", forwardPID.getError());
-		return new DriveSignal(leftOutput, rightOutput);
+		return new SparkSignal(leftOutput, rightOutput);
 	}
 
 	@Override

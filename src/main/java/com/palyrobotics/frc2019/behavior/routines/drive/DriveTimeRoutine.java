@@ -5,6 +5,7 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 import com.palyrobotics.frc2019.util.DriveSignal;
+import com.palyrobotics.frc2019.util.SparkSignal;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.Optional;
@@ -12,7 +13,7 @@ import java.util.logging.Level;
 
 public class DriveTimeRoutine extends Routine {
 	private long mEndTime;
-	private DriveSignal mDrivePower;
+	private SparkSignal mDrivePower;
 
 	/**
 	 * Constructs with a specified time setpoint and velocity
@@ -22,7 +23,7 @@ public class DriveTimeRoutine extends Routine {
 	 * @param drivePower
 	 *            LegacyDrive signal to output (left/right speeds -1 to 1)
 	 */
-	public DriveTimeRoutine(double time, DriveSignal drivePower) {
+	public DriveTimeRoutine(double time, SparkSignal drivePower) {
 		//Keeps the offset prepared, when routine starts, will add System.currentTime
 		mEndTime = (long) (1000 * time);
 		this.mDrivePower = drivePower;

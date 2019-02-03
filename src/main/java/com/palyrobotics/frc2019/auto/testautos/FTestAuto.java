@@ -3,22 +3,13 @@ package com.palyrobotics.frc2019.auto.testautos;
 import com.palyrobotics.frc2019.auto.AutoModeBase;
 import com.palyrobotics.frc2019.behavior.ParallelRoutine;
 import com.palyrobotics.frc2019.behavior.Routine;
-import com.palyrobotics.frc2019.behavior.SequentialRoutine;
-import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.EncoderTurnAngleRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.TalonSRXRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.TimedDriveRoutine;
-import com.palyrobotics.frc2019.config.AutoDistances;
+import com.palyrobotics.frc2019.behavior.routines.drive.SparkMaxRoutine;
 
-import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.util.DriveSignal;
-import com.palyrobotics.frc2019.util.TalonSRXOutput;
+import com.palyrobotics.frc2019.util.SparkSignal;
 import com.palyrobotics.frc2019.util.logger.Logger;
-import com.palyrobotics.frc2019.util.trajectory.Path;
-import com.palyrobotics.frc2019.util.trajectory.Translation2d;
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -42,7 +33,7 @@ public class FTestAuto extends AutoModeBase {
 //        DriveSignal test = DriveSignal.getNeutralSignal();
 //        test.leftMotor.setPercentOutput(0.2);
 //        test.rightMotor.setPercentOutput(0.2);
-//        return new TalonSRXRoutine(test, true);
+//        return new SparkMaxRoutine(test, true);
 //        return new TimedDriveRoutine(0.2, 6.5);
         return getDrive();
     }
@@ -65,13 +56,13 @@ public class FTestAuto extends AutoModeBase {
     private ParallelRoutine getDrive() {
 //        Gains mShortGains = Gains.vidarShortDriveMotionMagicGains;
 //
-        DriveSignal driveBackup = DriveSignal.getNeutralSignal();
+        SparkSignal driveBackup = SparkSignal.getNeutralSignal();
         driveBackup.leftMotor.setPercentOutput(.6);
         driveBackup.rightMotor.setPercentOutput(.6);
         ArrayList<Routine> sequence = new ArrayList<>();
 //
-        sequence.add(new TalonSRXRoutine(driveBackup, false));
-        System.out.println("getDrive() called in FTestAuto, TalonSRXRoutine created.");
+        sequence.add(new SparkMaxRoutine(driveBackup, false));
+        System.out.println("getDrive() called in FTestAuto, SparkMaxRoutine created.");
 //        sequence.add(new TimeoutRoutine(10));
 
 

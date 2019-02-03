@@ -6,13 +6,12 @@ import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.subsystems.Drive;
-import com.palyrobotics.frc2019.util.DriveSignal;
-import com.palyrobotics.frc2019.util.Pose;
-import com.palyrobotics.frc2019.util.TalonSRXOutput;
+import com.palyrobotics.frc2019.util.*;
 import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.*;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 
+import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.Timer;
 
 import java.util.ArrayList;
@@ -196,7 +195,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 	 * @return the left and right drive voltage outputs needed to move in the calculated Delta
 	 */
 	@Override
-	public DriveSignal update(RobotState state) {
+	public SparkSignal update(RobotState state) {
 		RigidTransform2d robot_pose = Robot.getRobotState().getLatestFieldToVehicle().getValue();
 		//Logger.getInstance().logSubsystemThread(Level.FINEST, robot_pose);
 		RigidTransform2d.Delta command = this.update(robot_pose, Timer.getFPGATimestamp());
@@ -215,10 +214,10 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 			setpoint = new Kinematics.DriveVelocity(setpoint.left * scaling, setpoint.right * scaling);
 		}
 
-		final TalonSRXOutput left = new TalonSRXOutput(ControlMode.Velocity, Gains.vidarVelocity, setpoint.left * DrivetrainConstants.kDriveSpeedUnitConversion),
-				right = new TalonSRXOutput(ControlMode.Velocity, Gains.vidarVelocity, setpoint.right * DrivetrainConstants.kDriveSpeedUnitConversion);
+		final SparkMaxOutput left = new SparkMaxOutput(Gains.vidarVelocity, ControlType.kVelocity, setpoint.left * DrivetrainConstants.kDriveSpeedUnitConversion);
+		final SparkMaxOutput right = new SparkMaxOutput(Gains.vidarVelocity, ControlType.kVelocity, setpoint.right * DrivetrainConstants.kDriveSpeedUnitConversion);
 //		System.out.println("Left output = " + left + " " + "Right output = " + right);
-		return new DriveSignal(left, right);
+		return new SparkSignal(left, right);
 	}
 
 

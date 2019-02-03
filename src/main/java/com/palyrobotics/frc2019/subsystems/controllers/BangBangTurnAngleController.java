@@ -5,6 +5,7 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.util.DriveSignal;
 import com.palyrobotics.frc2019.util.Pose;
+import com.palyrobotics.frc2019.util.SparkSignal;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.logging.Level;
@@ -37,13 +38,13 @@ public class BangBangTurnAngleController implements Drive.DriveController {
 	}
 
 	@Override
-	public DriveSignal update(RobotState state) {
+	public SparkSignal update(RobotState state) {
 		if(this.onTarget()) {
-			return DriveSignal.getNeutralSignal();
+			return SparkSignal.getNeutralSignal();
 		}
 		mCachedPose = state.drivePose;
 		//System.out.println("Current Pose: " + mCachedPose.heading);
-		DriveSignal output = DriveSignal.getNeutralSignal();
+		SparkSignal output = SparkSignal.getNeutralSignal();
 		if(mCachedPose.heading < mTargetHeading) {
 			output.leftMotor.setPercentOutput(this.mPower);
 			output.rightMotor.setPercentOutput(-(this.mPower));

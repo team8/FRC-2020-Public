@@ -2,9 +2,7 @@ package com.palyrobotics.frc2019.subsystems.controllers;
 
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Drive.DriveController;
-import com.palyrobotics.frc2019.util.DriveSignal;
-import com.palyrobotics.frc2019.util.Pose;
-import com.palyrobotics.frc2019.util.TalonSRXOutput;
+import com.palyrobotics.frc2019.util.*;
 
 public class TimedDriveController implements DriveController {
 
@@ -25,14 +23,14 @@ public class TimedDriveController implements DriveController {
 	}
 
 	@Override
-	public DriveSignal update(RobotState state) {
+	public SparkSignal update(RobotState state) {
 
-		TalonSRXOutput leftOutput = new TalonSRXOutput();
-		TalonSRXOutput rightOutput = new TalonSRXOutput();
+		SparkMaxOutput leftOutput = new SparkMaxOutput();
+		SparkMaxOutput rightOutput = new SparkMaxOutput();
 
 		leftOutput.setPercentOutput(voltage);
 		rightOutput.setPercentOutput(voltage);
-		return new DriveSignal(leftOutput, rightOutput);
+		return new SparkSignal(leftOutput, rightOutput);
 	}
 
 	@Override

@@ -22,6 +22,13 @@ public class SparkMaxOutput {
         mSparkMode = ControlType.kPosition;
     }
 
+    public SparkMaxOutput(SparkMaxOutput otherSpark) {
+        mGains = otherSpark.getGains();
+        arbitraryDemand = otherSpark.getArbitraryFF();
+        mSparkSetpoint = otherSpark.getSetpoint();
+        mSparkMode = otherSpark.getControlType();
+    }
+
     public SparkMaxOutput(Gains gains, ControlType controlMode, double setpoint) {
         mGains = gains;
         mSparkMode = controlMode;
@@ -33,10 +40,23 @@ public class SparkMaxOutput {
         this.mSparkMode = ControlType.kVelocity;
     }
 
+    public void setTargetVelocity(double velocitySetpoint, Gains gains) {
+        this.mSparkSetpoint = velocitySetpoint;
+        this.mSparkMode = ControlType.kVelocity;
+        this.mGains = gains;
+    }
+
     public void setTargetPosition(double posSetpoint) {
         this.mSparkSetpoint = posSetpoint;
         this.mSparkMode = ControlType.kPosition;
         this.arbitraryDemand = 0.0;
+    }
+
+    public void setTargetPosition(double posSetpoint, Gains gains) {
+        this.mSparkSetpoint = posSetpoint;
+        this.mSparkMode = ControlType.kPosition;
+        this.arbitraryDemand = 0.0;
+        this.mGains = gains;
     }
 
     public void setTargetPosition(double posSetpoint, double arbitraryDemand) {
