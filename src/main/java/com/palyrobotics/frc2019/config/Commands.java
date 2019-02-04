@@ -55,6 +55,8 @@ public class Commands {
 	public Elevator.ClimberState wantedClimberState = Elevator.ClimberState.INACTIVE;
 	public Elevator.GearboxState wantedGearboxState = Elevator.GearboxState.ELEVATOR;
 
+	public boolean holderOutput = false;
+
 	public boolean customShovelSpeed = false;
 	public boolean autoPlacerOutput = false;
 
@@ -130,6 +132,7 @@ public class Commands {
 		copy.wantedIntakeState = this.wantedIntakeState;
 		copy.disableIntakeScaling = this.disableIntakeScaling;
 		copy.hasPusherCargo = this.hasPusherCargo;
+		copy.holderOutput = this.holderOutput;
 
 		for(Routine r : this.wantedRoutines) {
 			copy.wantedRoutines.add(r);

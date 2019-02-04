@@ -2,6 +2,7 @@ package com.palyrobotics.frc2019.behavior.routines.shooter;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.subsystems.Elevator;
 import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 
@@ -34,8 +35,8 @@ public class ShooterExpelRoutine extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-
         commands.wantedShooterState = wantedShooterState;
+        commands.holderOutput = Elevator.getInstance().getHolderSolenoidOutput();
         commands.customShooterSpeed = false;
 
         return commands;

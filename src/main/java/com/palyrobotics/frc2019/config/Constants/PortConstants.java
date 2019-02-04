@@ -17,6 +17,7 @@ public class PortConstants {
 
     public static final int kVidarElevatorDoubleSolenoidForwardsID = 0;
     public static final int kVidarElevatorDoubleSolenoidReverseID = 0;
+    public static final int kVidarElevatorHolderSolenoidID = 0;
 
     public static final int kElevatorHFXPort = 1;
 

@@ -68,12 +68,14 @@ public class HardwareAdapter {
         public final CANSparkMax elevatorMasterSpark;
         public final CANSparkMax elevatorSlaveSpark;
         public final DoubleSolenoid elevatorDoubleSolenoid;
+        public final Solenoid elevatorHolderSolenoid;
         public final DigitalInput elevatorHFX;
 
         protected ElevatorHardware() {
             elevatorMasterSpark = new CANSparkMax(PortConstants.kVidarElevatorMasterSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
             elevatorSlaveSpark = new CANSparkMax(PortConstants.kVidarElevatorSlaveSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
             elevatorDoubleSolenoid = new DoubleSolenoid(PortConstants.kVidarElevatorDoubleSolenoidForwardsID, PortConstants.kVidarElevatorDoubleSolenoidReverseID);
+            elevatorHolderSolenoid = new Solenoid(PortConstants.kVidarElevatorHolderSolenoidID);
 			elevatorHFX = new DigitalInput(PortConstants.kElevatorHFXPort);
         }
     }

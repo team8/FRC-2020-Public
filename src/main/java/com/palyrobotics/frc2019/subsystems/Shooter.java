@@ -72,6 +72,7 @@ public class Shooter extends Subsystem{
         if(readyToExpel && robotState.hasCargo) { // Rumble until expelled
             mRumbleLength = 0.5;
         }
+
         if(cachedCargoState && !robotState.hasCargo) { // Stop rumbling once you go from cargo -> no cargo
             mRumbleLength = -1;
             mExpellingCycles = 0;

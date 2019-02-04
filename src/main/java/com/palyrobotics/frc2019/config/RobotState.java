@@ -62,6 +62,7 @@ public class RobotState {
 	public ArrayList<Double> mLeftPusherReadings = new ArrayList<>();
 	public ArrayList<Double> mRightPusherReadings = new ArrayList<>();
 
+
 	//Hatch Intake
 	public boolean hasHatch = false;
 	public boolean hatchIntakeUp = true;

@@ -9,6 +9,7 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 
 import java.util.Optional;
 
@@ -70,6 +71,7 @@ public class Elevator extends Subsystem {
     //The subsystem output
     private SparkMaxOutput mOutput = new SparkMaxOutput();
     private DoubleSolenoid.Value mSolenoidOutput;
+    private boolean mHolderSolenoidOutput = false;
 
     /**
      * Constructor for Elevator, defaults state to calibrating.
@@ -99,6 +101,8 @@ public class Elevator extends Subsystem {
         mRobotState = robotState;
 
         if(mGearboxState == GearboxState.ELEVATOR) {
+            mHolderSolenoidOutput = commands.holderOutput;
+
             mClimberState = ClimberState.INACTIVE;
             mSolenoidOutput = DoubleSolenoid.Value.kReverse;
             //Checks calibration if not calibrated and not in custom/hold state (checks in manual, idle, calibrating)
@@ -406,6 +410,10 @@ public class Elevator extends Subsystem {
 
     public DoubleSolenoid.Value getSolenoidOutput() {
         return mSolenoidOutput;
+    }
+
+    public boolean getHolderSolenoidOutput() {
+        return mHolderSolenoidOutput;
     }
 
     public Optional<Double> getElevatorBottomPosition() {
