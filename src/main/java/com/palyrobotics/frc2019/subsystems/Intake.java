@@ -223,7 +223,7 @@ public class Intake extends Subsystem {
 
     @Override
     public String getStatus() {
-        return "Intake State: " + mWheelState + "\nOutput Control Mode: " + mSparkOutput.getControlType() + "\nTalon Output: "
+        return "Intake State: " + mWheelState + "\nOutput Control Mode: " + mSparkOutput.getControlType() + "\nSpark Output: "
                 + mSparkOutput.getSetpoint() + "\nUp Down Output: " + mUpDownState;
     }
 }

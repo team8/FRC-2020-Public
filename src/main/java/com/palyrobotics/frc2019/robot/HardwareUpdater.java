@@ -58,10 +58,10 @@ class HardwareUpdater {
 		configureHardware();
 	}
 
-	void disableTalons() {
-		Logger.getInstance().logRobotThread(Level.INFO, "Disabling talons");
+	void disableSpeedControllers() {
+		Logger.getInstance().logRobotThread(Level.INFO, "Disabling sparks");
 
-		//Disable drivetrain talons
+		//Disable drivetrain sparks
 		HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark.disable();
 		HardwareAdapter.getInstance().getDrivetrain().leftSlave1Spark.disable();
 		HardwareAdapter.getInstance().getDrivetrain().leftSlave2Spark.disable();
@@ -70,19 +70,21 @@ class HardwareUpdater {
 		HardwareAdapter.getInstance().getDrivetrain().rightSlave1Spark.disable();
 		HardwareAdapter.getInstance().getDrivetrain().rightSlave2Spark.disable();
 
-		//Disable elevator talons
+		//Disable elevator sparks
         HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.disable();
         HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark.disable();
 
-		//Disable intake talons
+		//Disable intake sparks
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.disable();
 		HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.disable();
 		HardwareAdapter.getInstance().getIntake().intakeVictor.set(ControlMode.Disabled, 0);
 
-		//Disable pusher talons
+		//Disable pusher sparks
 		HardwareAdapter.getInstance().getPusher().pusherVictor.set(ControlMode.Disabled, 0);
 
-		// Disable shooter talons
+		Logger.getInstance().logRobotThread(Level.INFO, "Disabling victors");
+
+		// Disable shooter victors
 		HardwareAdapter.getInstance().getShooter().shooterMasterVictor.set(ControlMode.Disabled, 0);
 		HardwareAdapter.getInstance().getShooter().shooterSlaveVictor.set(ControlMode.Disabled, 0);
 	}
@@ -179,7 +181,7 @@ class HardwareUpdater {
 		intakeVictor.configPeakOutputForward(1, 0);
 		intakeVictor.configPeakOutputReverse(-1, 0);
 
-		//Set slave talons to follower mode
+		//Set slave sparks to follower mode
 		intakeSlaveSpark.follow(intakeMasterSpark);
 
         ultrasonic1.setAutomaticMode(true);
@@ -412,7 +414,7 @@ class HardwareUpdater {
 	}
 
 	/**
-	 * Updates the drivetrain Uses TalonSRXOutput and can run off-board control loops through SRX
+	 * Updates the drivetrain Uses SparkOutput and can run off-board control loops through SRX
 	 */
 	private void updateDrivetrain() {
 		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark, mDrive.getDriveSignal().leftMotor);
@@ -497,16 +499,16 @@ class HardwareUpdater {
 	void enableBrakeMode() {
 		CANSparkMax leftMasterSpark = HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark;
 		CANSparkMax leftSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().leftSlave1Spark;
-		CANSparkMax leftSlave2Victor = HardwareAdapter.getInstance().getDrivetrain().leftSlave2Spark;
+		CANSparkMax leftSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().leftSlave2Spark;
 
-		CANSparkMax rightMasterTalon = HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark;
+		CANSparkMax rightMasterSpark = HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark;
 		CANSparkMax rightSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave1Spark;
 		CANSparkMax rightSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave2Spark;
 
 		leftMasterSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		leftSlave1Spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
-		leftSlave2Victor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-		rightMasterTalon.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		leftSlave2Spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		rightMasterSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		rightSlave1Spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		rightSlave2Spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 	}
@@ -514,16 +516,16 @@ class HardwareUpdater {
 	void disableBrakeMode() {
 		CANSparkMax leftMasterSpark = HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark;
 		CANSparkMax leftSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().leftSlave1Spark;
-		CANSparkMax leftSlave2Victor = HardwareAdapter.getInstance().getDrivetrain().leftSlave2Spark;
+		CANSparkMax leftSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().leftSlave2Spark;
 
-		CANSparkMax rightMasterTalon = HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark;
+		CANSparkMax rightMasterSpark = HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark;
 		CANSparkMax rightSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave1Spark;
 		CANSparkMax rightSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave2Spark;
 
 		leftMasterSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
 		leftSlave1Spark.setIdleMode(CANSparkMax.IdleMode.kCoast);
-		leftSlave2Victor.setIdleMode(CANSparkMax.IdleMode.kCoast);
-		rightMasterTalon.setIdleMode(CANSparkMax.IdleMode.kCoast);
+		leftSlave2Spark.setIdleMode(CANSparkMax.IdleMode.kCoast);
+		rightMasterSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
 		rightSlave1Spark.setIdleMode(CANSparkMax.IdleMode.kCoast);
 		rightSlave2Spark.setIdleMode(CANSparkMax.IdleMode.kCoast);
 	}

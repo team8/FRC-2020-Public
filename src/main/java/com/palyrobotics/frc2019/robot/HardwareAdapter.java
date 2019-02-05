@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.*;
  */
 public class HardwareAdapter {
 	//Hardware components at the top for maintenance purposes, variables and getters at bottom
-	/*
-	 * DRIVETRAIN - 2 WPI_TalonSRX's and 4 WPI_VictorSPX's
+	/**
+	 * DRIVETRAIN - 6 CANSparkMax, 1 Gyro
 	 */
 	public static class DrivetrainHardware {
 		private static DrivetrainHardware instance = new DrivetrainHardware();
@@ -79,7 +79,7 @@ public class HardwareAdapter {
     }
 
 	/**
-	 * Intake - 2 WPI_TalonSRX's, 1 WPI_VictorSPX, 2 Ultrasonics
+	 * Intake - 2 CANSparkMax, 1 WPI_VictorSPX, 2 Ultrasonics
 	 */
 	public static class IntakeHardware {
 		private static IntakeHardware instance = new IntakeHardware();

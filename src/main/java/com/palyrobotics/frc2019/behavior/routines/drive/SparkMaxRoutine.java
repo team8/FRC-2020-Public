@@ -112,6 +112,6 @@ public class SparkMaxRoutine extends Routine {
 
 	@Override
 	public String getName() {
-		return "DriveCANTalonRoutine";
+		return "DriveCANSparkMaxRoutine";
 	}
 }
