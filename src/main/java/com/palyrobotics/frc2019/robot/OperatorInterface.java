@@ -106,17 +106,17 @@ public class OperatorInterface {
 		 * Elevator Control
 		 */
 		if(mOperatorXboxController.getButtonA()) {
-			Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorLevel1Height, 0);
+			Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight1Inches, 0);
 			newCommands.cancelCurrentRoutines = true;
 			newCommands.addWantedRoutine(elevatorLevel1);
 			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0));
 		} else if(mOperatorXboxController.getButtonB()) {
-			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorLevel2Height, 0);
+			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight2Inches, 0);
 			newCommands.cancelCurrentRoutines = true;
 			newCommands.addWantedRoutine(elevatorLevel2);
 			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0));
 		} else if(mOperatorXboxController.getButtonY()) {
-			Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorLevel3Height, 0);
+			Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight3Inches, 0);
 			newCommands.cancelCurrentRoutines = true;
 			newCommands.addWantedRoutine(elevatorLevel3);
 			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0));

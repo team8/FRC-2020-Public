@@ -16,11 +16,11 @@ public class ElevatorConstants {
 
     public static final double kCalibratePower = -0.28;
 
-    public static final double kElevatorLevel1Height = 0;
-    public static final double kElevatorLevel2Height = 0;
-    public static final double kElevatorLevel3Height = 0;
-
     public static final double kClimberSliderScale = 0;
+
+    public static final double kElevatorCargoHeight3Inches = 83.5 - OtherConstants.kCarriageToCargoCenterInches - OtherConstants.kGroundToCarriageInches;
+    public static final double kElevatorCargoHeight2Inches = 55.5 - OtherConstants.kCarriageToCargoCenterInches - OtherConstants.kGroundToCarriageInches;
+    public static final double kElevatorCargoHeight1Inches = 27.5 - OtherConstants.kCarriageToCargoCenterInches - OtherConstants.kGroundToCarriageInches;
 
     /**
      * Tolerances

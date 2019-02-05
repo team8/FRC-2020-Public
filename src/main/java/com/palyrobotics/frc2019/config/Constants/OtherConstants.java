@@ -48,7 +48,10 @@ public class OtherConstants {
     public static final double kRobotWidthInches = 34.0;
     public static final double kRobotLengthInches = 39.0;
     public static final double kCenterOfRotationOffsetFromFrontInches = 13.0;
-    public static final double kNullZoneAllowableBack = 5;
+
+    public static double kGroundToCarriageInches = 10.5625; // Distance from ground to the bottom of the carriage in the lowest position
+    public static double kCarriageToHatchCenterInches = 6.5625; // Distance from the bottom of the carriage to the center of the hatch expel
+    public static double kCarriageToCargoCenterInches = 17.1744; // Distance from the bottom of the carriage to the center of the cargo expel
 
     /**
      * Ultrasonics
