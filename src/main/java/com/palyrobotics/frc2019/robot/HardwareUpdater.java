@@ -300,7 +300,10 @@ class HardwareUpdater {
 
 		double robotVelocity = (robotState.drivePose.leftEncVelocity + robotState.drivePose.rightEncVelocity) /
                 (2 * DrivetrainConstants.kDriveSpeedUnitConversion);
-		robotState.robotAccel = (robotVelocity - robotState.robotVelocity) / OtherConstants.deltaTime;
+
+		double[] accelerometer_angle = new double[3];
+		HardwareAdapter.getInstance().getDrivetrain().gyro.getAccelerometerAngles(accelerometer_angle);
+		robotState.robotAccel = accelerometer_angle[0];
 		robotState.robotVelocity = robotVelocity;
 
 		double time = Timer.getFPGATimestamp();
