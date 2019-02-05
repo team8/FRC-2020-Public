@@ -540,6 +540,8 @@ class HardwareUpdater {
         } else {
             HardwareAdapter.getInstance().getMiscellaneousHardware().compressor.stop();
         }
+
+	    HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(shouldRumble());
     }
 
     /**
@@ -548,6 +550,31 @@ class HardwareUpdater {
      */
     private boolean shouldCompress() {
     	return !(RobotState.getInstance().gamePeriod == RobotState.GamePeriod.AUTO);
+    }
+
+    /**
+     * Determines when the rumble for the xbox controller should be on
+     */
+    private boolean shouldRumble() {
+        boolean rumble;
+        double intakeRumbleLength = mIntake.getRumbleLength();
+        double shovelRumbleLength = mShovel.getRumbleLength();
+        double shooterRumbleLength = mShooter.getRumbleLength();
+
+        if(intakeRumbleLength >= 0) {
+            rumble = true;
+            intakeRumbleLength -= OtherConstants.deltaTime;
+        } else if(shovelRumbleLength >= 0) {
+            rumble = true;
+            shovelRumbleLength -= OtherConstants.deltaTime;
+        } else if(shooterRumbleLength >= 0) {
+            rumble = true;
+            shooterRumbleLength -= OtherConstants.deltaTime;
+        } else {
+            rumble = false;
+        }
+
+        return rumble;
     }
 
     /**

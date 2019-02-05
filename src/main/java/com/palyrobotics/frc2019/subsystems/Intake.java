@@ -22,11 +22,14 @@ public class Intake extends Subsystem {
 
     private SparkMaxOutput mSparkOutput = new SparkMaxOutput();
     private double mVictorOutput;
+    private double mRumbleLength;
 
     private boolean movingDown = false;
 
     private Optional<Double> mIntakeWantedPosition = Optional.empty();
     private RobotState mRobotState;
+
+    private boolean cachedCargoState;
 
     private enum WheelState {
         INTAKING,
@@ -193,7 +196,18 @@ public class Intake extends Subsystem {
                 mSparkOutput.setPercentOutput(0.0);
                 break;
         }
+        if(!cachedCargoState && robotState.hasCargo) {
+            mRumbleLength = 0.25;
+        } else if(mRumbleLength <= 0) {
+            mRumbleLength = -1;
+        }
 
+        cachedCargoState = robotState.hasCargo;
+
+    }
+
+    public double getRumbleLength() {
+        return mRumbleLength;
     }
 
     public WheelState getWheelState() {
