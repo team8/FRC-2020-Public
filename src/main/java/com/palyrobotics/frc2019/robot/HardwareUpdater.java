@@ -56,6 +56,7 @@ class HardwareUpdater {
 	void initHardware() {
 		Logger.getInstance().logRobotThread(Level.INFO, "Init hardware");
 		configureHardware();
+		startIntakeArm(); // just sensor wise
 	}
 
 	void disableSpeedControllers() {
@@ -346,12 +347,18 @@ class HardwareUpdater {
 		updateUltrasonicSensors(robotState);
 	}
 
-//	void startIntakeArm() {
-//		Robot.getRobotState().intakeAngle = IntakeConstants.kMaxAngle -
-//				1/IntakeConstants.kArmEncoderTicksPerDegree * (IntakeConstants.kMaxAngleTicks -
-//                        HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
-//
-//	}
+
+	void startIntakeArm() {
+		Robot.getRobotState().intakeStartAngle = IntakeConstants.kMaxAngle -
+				1/IntakeConstants.kArmPotentiometerTicksPerDegree * (IntakeConstants.kMaxAngleTicks -
+                        HardwareAdapter.getInstance().getIntake().potentiometer.get());
+
+	}
+
+	void updateIntakeSensors() {
+		Robot.getRobotState().intakeAngle = Robot.getRobotState().intakeStartAngle -
+				HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition() * IntakeConstants.kArmEncoderRevolutionsPerDegree;
+	}
 
 	void updateUltrasonicSensors(RobotState robotState) {
 		// HAS CARGO IN INTAKE

@@ -115,20 +115,20 @@ public class Intake extends Subsystem {
             case GROUND_INTAKING:
                 mWheelState = WheelState.INTAKING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                mIntakeWantedPosition = Optional.of(IntakeConstants.kIntakingPosition);
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kIntakingPosition));
             case LIFTING:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                mIntakeWantedPosition = Optional.of(IntakeConstants.kHandoffPosition);
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kHandoffPosition));
             case DROPPING:
                 mWheelState = WheelState.DROPPING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                mIntakeWantedPosition = Optional.of(IntakeConstants.kHandoffPosition);
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kHandoffPosition));
                 // todo: add some sort of timeout so this doesn't finish immediately
             case HOLDING_MID:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                mIntakeWantedPosition = Optional.of(IntakeConstants.kHoldingPosition);
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kHoldingPosition));
         }
 
 
@@ -222,6 +222,10 @@ public class Intake extends Subsystem {
 
         return (Math.abs(mIntakeWantedPosition.get() - mRobotState.intakeAngle) < IntakeConstants.kAcceptableAngularError)
                 && (Math.abs(mRobotState.elevatorVelocity) < IntakeConstants.kAngularVelocityError);
+    }
+
+    public double convertIntakeSetpoint(double targetAngle) {
+        return (mRobotState.intakeStartAngle - targetAngle) * IntakeConstants.kArmEncoderRevolutionsPerDegree;
     }
 
     @Override

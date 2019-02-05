@@ -93,6 +93,7 @@ public class HardwareAdapter {
 		public final CANSparkMax intakeSlaveSpark;
 		public final Ultrasonic ultrasonic1;
 		public final Ultrasonic ultrasonic2;
+		public final AnalogPotentiometer potentiometer;
 
 		protected IntakeHardware() {
 			intakeVictor = new WPI_VictorSPX(PortConstants.kVidarIntakeVictorDeviceID);
@@ -100,6 +101,7 @@ public class HardwareAdapter {
 			intakeSlaveSpark = new CANSparkMax(PortConstants.kVidarIntakeSlaveDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			ultrasonic1 = new Ultrasonic(OtherConstants.kLeftUltrasonicPing, OtherConstants.kLeftUltrasonicEcho);
 			ultrasonic2 = new Ultrasonic(OtherConstants.kRightUltrasonicPing,OtherConstants.kRightUltrasonicEcho);
+			potentiometer = new AnalogPotentiometer(PortConstants.kVidarAnalogPot);
 		}
 	}
 

@@ -49,6 +49,7 @@ public class RobotState {
 	//Intake
 	public boolean hasCargo = false;
 	public double cargoDistance = 0;
+	public double intakeStartAngle = 0;  // Angle in degrees
 	public double intakeAngle = 0;  // Angle in degrees
 	public double intakeVelocity = 0; //rpm
 	public boolean hasIntakeStickyFaults = false;
