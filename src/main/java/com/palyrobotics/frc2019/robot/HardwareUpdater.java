@@ -357,7 +357,7 @@ class HardwareUpdater {
 
 	void updateIntakeSensors() {
 		Robot.getRobotState().intakeAngle = Robot.getRobotState().intakeStartAngle -
-				HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition() * IntakeConstants.kArmEncoderRevolutionsPerDegree;
+				HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition() / IntakeConstants.kArmEncoderRevolutionsPerDegree;
 	}
 
 	void updateUltrasonicSensors(RobotState robotState) {
