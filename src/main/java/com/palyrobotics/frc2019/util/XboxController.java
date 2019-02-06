@@ -231,4 +231,9 @@ public class XboxController extends Joystick {
 	public boolean getDpadRight() {
 		return super.getPOV() == 90;
 	}
+
+	public void setRumble(boolean on) {
+	    setRumble(RumbleType.kRightRumble, on ? 1.0 : 0.0);
+	    setRumble(RumbleType.kLeftRumble, on ? 1.0 : 0.0);
+    }
 }

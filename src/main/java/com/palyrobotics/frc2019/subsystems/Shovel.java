@@ -15,6 +15,10 @@ public class Shovel extends Subsystem {
 
     private double mVictorOutput;
 
+    private double mRumbleLength;
+
+    private boolean cachedHatchState;
+
     public enum WheelState {
         INTAKING, EXPELLING, IDLE, SMALL_EXPEL
     }
@@ -79,6 +83,18 @@ public class Shovel extends Subsystem {
                 mUpDownOutput = UpDownState.DOWN;
                 break;
         }
+
+        if(!cachedHatchState && cachedHatchState) {
+            mRumbleLength = 0.25;
+        } else if(mRumbleLength <= 0) {
+            mRumbleLength = -1;
+        }
+
+        cachedHatchState = robotState.hasHatch;
+    }
+
+    public double getRumbleLength() {
+        return mRumbleLength;
     }
 
     public WheelState getWheelState() {
