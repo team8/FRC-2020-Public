@@ -47,6 +47,7 @@ public class Pusher extends Subsystem {
     public void update(Commands commands, RobotState robotState){
         mState = commands.wantedPusherInOutState;
         pusherPID.setSetpoint(robotState.pusherPosition);
+        commands.hasPusherCargo = robotState.hasPusherCargo;
         switch(mState) {
             case IN:
                 target = PusherConstants.kVidarDistanceIn;

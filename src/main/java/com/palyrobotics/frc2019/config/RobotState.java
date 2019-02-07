@@ -98,7 +98,7 @@ public class RobotState {
 	//Joystick input
 	public JoystickInput leftStickInput = new JoystickInput();
 	public JoystickInput rightStickInput = new JoystickInput();
-	public JoystickInput climberStickInput = new JoystickInput();
+	public JoystickInput backupStickInput = new JoystickInput();
 	public XboxInput operatorXboxControllerInput = new XboxInput();
 	public JoystickInput operatorJoystickInput = new JoystickInput();
 

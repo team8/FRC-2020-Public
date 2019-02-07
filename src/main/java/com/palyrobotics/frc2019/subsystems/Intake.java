@@ -232,7 +232,6 @@ public class Intake extends Subsystem {
         if(mMacroState != IntakeMacroState.LIFTING) {
             return false;
         }
-
         return (Math.abs(mIntakeWantedPosition.get() - mRobotState.intakeAngle) < IntakeConstants.kAcceptableAngularError)
                 && (Math.abs(mRobotState.elevatorVelocity) < IntakeConstants.kAngularVelocityError);
     }

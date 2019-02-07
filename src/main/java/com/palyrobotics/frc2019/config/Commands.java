@@ -60,6 +60,7 @@ public class Commands {
 
 	public boolean intakeHFX = false;
 	public boolean hasCargo = false;
+	public boolean hasPusherCargo = false;
 
 	public void addWantedRoutine(Routine wantedRoutine) {
 		for(Routine routine : wantedRoutines) {
@@ -128,6 +129,7 @@ public class Commands {
 		copy.autoPlacerOutput = this.autoPlacerOutput;
 		copy.wantedIntakeState = this.wantedIntakeState;
 		copy.disableIntakeScaling = this.disableIntakeScaling;
+		copy.hasPusherCargo = this.hasPusherCargo;
 
 		for(Routine r : this.wantedRoutines) {
 			copy.wantedRoutines.add(r);

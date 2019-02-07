@@ -262,12 +262,9 @@ class HardwareUpdater {
 
 		robotState.leftStickInput.update(HardwareAdapter.getInstance().getJoysticks().driveStick);
 		robotState.rightStickInput.update(HardwareAdapter.getInstance().getJoysticks().turnStick);
-		if(OtherConstants.operatorXBoxController) {
-			robotState.operatorXboxControllerInput.update(HardwareAdapter.getInstance().getJoysticks().operatorXboxController);
-		} else {
-			robotState.climberStickInput.update(HardwareAdapter.getInstance().getJoysticks().climberStick);
-			robotState.operatorJoystickInput.update(HardwareAdapter.getInstance().getJoysticks().operatorJoystick);
-		}
+
+		robotState.operatorXboxControllerInput.update(HardwareAdapter.getInstance().getJoysticks().operatorXboxController);
+		robotState.backupStickInput.update(HardwareAdapter.getInstance().getJoysticks().backupStick);
 
 		robotState.hatchIntakeUp = HardwareAdapter.getInstance().getShovel().upDownHFX.get();
 		robotState.shovelCurrentDraw = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp.getCurrent(PortConstants.kVidarShovelPDPPort);
@@ -346,7 +343,6 @@ class HardwareUpdater {
 
 		updateUltrasonicSensors(robotState);
 	}
-
 
 	void startIntakeArm() {
 		Robot.getRobotState().intakeStartAngle = IntakeConstants.kMaxAngle -

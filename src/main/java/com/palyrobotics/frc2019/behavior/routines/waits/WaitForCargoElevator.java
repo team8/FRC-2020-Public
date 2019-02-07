@@ -4,10 +4,10 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 
-public class WaitForCargoGroundIntake extends Routine {
+public class WaitForCargoElevator extends Routine {
     private boolean done;
 
-    public WaitForCargoGroundIntake() {
+    public WaitForCargoElevator() {
     }
 
     @Override
@@ -17,7 +17,7 @@ public class WaitForCargoGroundIntake extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-        done = commands.hasCargo;
+        done = commands.hasPusherCargo;
         return commands;
     }
 
@@ -38,7 +38,7 @@ public class WaitForCargoGroundIntake extends Routine {
 
     @Override
     public String getName() {
-        return "WaitForCargoGroundIntakeRoutine";
+        return "WaitForCargoElevatorRoutine";
     }
 
 }

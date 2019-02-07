@@ -24,7 +24,7 @@ public class Shooter extends Subsystem{
     private boolean readyToExpel;
 
     public enum ShooterState {
-        EXPELLING,
+        SPIN_UP,
         IDLE
     }
 
@@ -53,7 +53,7 @@ public class Shooter extends Subsystem{
                 mOutput = 0;
                 mExpellingCycles = 0;
                 break;
-            case EXPELLING:
+            case SPIN_UP:
                 if (commands.customShooterSpeed) {
                     mOutput = robotState.operatorXboxControllerInput.leftTrigger; //TODO: change control?
                 } else {

@@ -16,6 +16,12 @@ public class ElevatorConstants {
 
     public static final double kCalibratePower = -0.28;
 
+    public static final double kElevatorLevel1Height = 0;
+    public static final double kElevatorLevel2Height = 0;
+    public static final double kElevatorLevel3Height = 0;
+
+    public static final double kClimberSliderScale = 0;
+
     /**
      * Tolerances
      */

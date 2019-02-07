@@ -1,13 +1,24 @@
 package com.palyrobotics.frc2019.robot;
 
 import com.palyrobotics.frc2019.behavior.Routine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
-import com.palyrobotics.frc2019.config.Constants.OtherConstants;
+import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
+import com.palyrobotics.frc2019.config.Constants.FingerConstants;
 import com.palyrobotics.frc2019.subsystems.Drive;
+import com.palyrobotics.frc2019.behavior.SequentialRoutine;
+import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeBeginCycleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeUpRoutine;
+import com.palyrobotics.frc2019.behavior.routines.shooter.ShooterExpelRoutine;
+import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.ChezyMath;
 import com.palyrobotics.frc2019.util.JoystickInput;
 import com.palyrobotics.frc2019.util.XboxInput;
+
+import java.util.Optional;
 
 /**
  * Used to produce Commands {@link Commands} from human input Singleton class. Should only be used in robot package.
@@ -22,21 +33,13 @@ public class OperatorInterface {
 		return instance;
 	}
 
-	private boolean operatorButtonFourPressable = true;
-	private boolean operatorButtonTwoPressable = true;
-
 	private JoystickInput mDriveStick = Robot.getRobotState().leftStickInput;
 	private JoystickInput mTurnStick = Robot.getRobotState().rightStickInput;
-	private JoystickInput mClimberStick = Robot.getRobotState().climberStickInput;
-	private JoystickInput mOperatorJoystick = null;
-	private XboxInput mOperatorXboxController = null;
+	private JoystickInput mBackupStick = Robot.getRobotState().backupStickInput;
+	private XboxInput mOperatorXboxController;
 
 	protected OperatorInterface() {
-		if(OtherConstants.operatorXBoxController) {
-			mOperatorXboxController = Robot.getRobotState().operatorXboxControllerInput;
-		} else {
-			mOperatorJoystick = Robot.getRobotState().operatorJoystickInput;
-		}
+		mOperatorXboxController = Robot.getRobotState().operatorXboxControllerInput;
 	}
 
 	/**
@@ -86,6 +89,88 @@ public class OperatorInterface {
 			newCommands.wantedDriveState = Drive.DriveState.VISION_ASSIST;
 		}
 
+		/**
+		 * Hatch Ground Intake/Shovel Control
+		 */
+		if(mOperatorXboxController.getButtonX()) {
+			if(prevCommands.wantedShovelUpDownState == Shovel.UpDownState.UP) {
+				newCommands.wantedShovelUpDownState = Shovel.UpDownState.DOWN;
+				newCommands.cancelCurrentRoutines = true;
+			} else if (prevCommands.wantedShovelUpDownState == Shovel.UpDownState.DOWN) {
+				newCommands.wantedShovelUpDownState = Shovel.UpDownState.UP;
+				newCommands.cancelCurrentRoutines = true;
+			}
+		}
+
+		/**
+		 * Elevator Control
+		 */
+		if(mOperatorXboxController.getButtonA()) {
+			Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorLevel1Height, 0);
+			newCommands.cancelCurrentRoutines = true;
+			newCommands.addWantedRoutine(elevatorLevel1);
+			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0));
+		} else if(mOperatorXboxController.getButtonB()) {
+			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorLevel2Height, 0);
+			newCommands.cancelCurrentRoutines = true;
+			newCommands.addWantedRoutine(elevatorLevel2);
+			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0));
+		} else if(mOperatorXboxController.getButtonY()) {
+			Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorLevel3Height, 0);
+			newCommands.cancelCurrentRoutines = true;
+			newCommands.addWantedRoutine(elevatorLevel3);
+			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0));
+		}
+
+		/**
+		 * Cargo Intake Control
+		 */
+		if(mOperatorXboxController.getdPadDown() && prevCommands.wantedIntakeState == Intake.IntakeMacroState.DROPPING) {
+			newCommands.cancelCurrentRoutines = true;
+			newCommands.addWantedRoutine(new IntakeBeginCycleRoutine());
+		} else if(mOperatorXboxController.getdPadUp() && prevCommands.wantedIntakeState == Intake.IntakeMacroState.GROUND_INTAKING) {
+			newCommands.cancelCurrentRoutines = true;
+			newCommands.addWantedRoutine(new IntakeUpRoutine());
+		}
+
+		/**
+		 * Climber Control
+		 */
+		if(mTurnStick.getSlider() != 0) {
+			newCommands.robotSetpoints.climberPositionSetpoint = Optional.of(mTurnStick.getSlider() * ElevatorConstants.kClimberSliderScale);
+		}
+
+		/**
+		 * Pusher Control
+		 */
+		if(mOperatorXboxController.getLeftBumper()) {
+			newCommands.wantedPusherInOutState = Pusher.PusherState.IN;
+		} else if(mOperatorXboxController.getRightBumper()) {
+			newCommands.wantedPusherInOutState = Pusher.PusherState.OUT;
+		}
+
+		/**
+		 * Pneumatic Hatch Pusher Control
+		 */
+		if(mOperatorXboxController.getRightTriggerPressed()) {
+			Routine hatchCycle = new FingersCycleRoutine(FingerConstants.kFingersCycleTime);
+			newCommands.cancelCurrentRoutines = true;
+			newCommands.addWantedRoutine(hatchCycle);
+		}
+
+		/**
+		 * Shooter Spin Up Control
+		 */
+		if(mOperatorXboxController.getLeftTriggerPressed()) {
+			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0));
+		}
+
+		/**
+		 * Cancel all Routines
+		 */
+		if(mDriveStick.getTriggerPressed()) {
+			newCommands.cancelCurrentRoutines = true;
+		}
 		return newCommands;
 	}
 }
