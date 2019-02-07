@@ -5,6 +5,9 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersExpelRoutine;
 import com.palyrobotics.frc2019.config.Constants;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
@@ -57,9 +60,8 @@ public class CenterStartLeftFrontCargoAutoMode extends AutoModeBase {
         StartToCargoShip.add(new Waypoint(new Translation2d(invetCord * (kCargoShipLeftFrontX - Constants.kRobotLengthInches * .6 + kOffsetX), invetCord * (kCargoShipLeftFrontY + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(StartToCargoShip), true));
 
-//        routines.add(new ReleaseHatchRoutine()); //routine not made yet
-        routines.add(new TimeoutRoutine(1)); //placeholder
-
+        routines.add(new FingersCloseRoutine());
+        routines.add(new FingersExpelRoutine(3));
         return new SequentialRoutine(routines);
     }
 

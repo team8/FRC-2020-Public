@@ -5,7 +5,15 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
+import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeCargoRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeCycleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
+import com.palyrobotics.frc2019.behavior.routines.shooter.ShooterExpelRoutine;
+import com.palyrobotics.frc2019.behavior.routines.waits.WaitForCargoGroundIntake;
 import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -57,8 +65,9 @@ public class RightStartCargoIn123 extends AutoModeBase { //right start > cargo s
 
         routines.add(new CascadingGyroEncoderTurnAngleRoutine(70)); //turn and then shoot ball into the cargo bays
 
-//        TODO: add ReleaseCargoRoutine (not made yet)
-//        routines.add(new TimeoutRoutine(1)); //placeholder
+//        TODO: add ElevatorCustomPositionRoutine() with new elevator constants
+        //routines.add(new ElevatorCustomPositioningRoutine(Constants.kElevatorTopBottomDifferenceInches)); //placeholder
+        routines.add(new ShooterExpelRoutine(Shooter.ShooterState.EXPELLING, 3));
 
         routines.add(new CascadingGyroEncoderTurnAngleRoutine(-60)); //turn back
 
@@ -81,8 +90,9 @@ public class RightStartCargoIn123 extends AutoModeBase { //right start > cargo s
 
         routines.add(new CascadingGyroEncoderTurnAngleRoutine(70));
 
-//        TODO: add ReleaseCargoRoutine (not made yet)
-//        routines.add(new TimeoutRoutine(1)); //placeholder
+//        TODO: add ElevatorCustomPositionRoutine() with new elevator constants
+        //routines.add(new ElevatorCustomPositioningRoutine(Constants.kElevatorTopBottomDifferenceInches)); //placeholder
+        routines.add(new ShooterExpelRoutine(Shooter.ShooterState.EXPELLING, 3));
 
         return new SequentialRoutine(routines);
     }
@@ -98,8 +108,9 @@ public class RightStartCargoIn123 extends AutoModeBase { //right start > cargo s
         CargoShipToDepot.add(new Waypoint(new Translation2d(kRightDepotX + Constants.kRobotLengthInches - DepotSlot * kCargoDiameter + kOffsetX, kRightDepotY + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(CargoShipToDepot), true));
 
-//        TODO: add IntakeCargoRoutine (not made yet)
-//        routines.add(new TimeoutRoutine(1)); //placeholder
+//        TODO: use edited WaitForCargoGroundIntake() (not made yet)
+        routines.add(new IntakeCycleRoutine());
+        routines.add(new WaitForCargoGroundIntake());
 
         return new SequentialRoutine(routines);
     }

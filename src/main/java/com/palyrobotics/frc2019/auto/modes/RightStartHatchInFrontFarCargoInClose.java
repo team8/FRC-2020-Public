@@ -8,7 +8,18 @@ import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersExpelRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeCargoRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeCycleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.pusher.PusherMiddleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.shooter.ShooterExpelRoutine;
+import com.palyrobotics.frc2019.behavior.routines.shovel.ShovelWheelRoutine;
+import com.palyrobotics.frc2019.behavior.routines.waits.WaitForCargoGroundIntake;
 import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.subsystems.Shooter;
+import com.palyrobotics.frc2019.subsystems.Shovel;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -69,10 +80,9 @@ public class RightStartHatchInFrontFarCargoInClose extends AutoModeBase { //righ
         CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-((kCargoShipRightFrontX + kOffsetX) * .5), -(kRightLoadingStationY * .5 + kOffsetY)), SPEED));
         CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-(kHabLineX - Constants.kRobotLengthInches * .5 + kOffsetX), -(kRightLoadingStationY + Constants.kRobotWidthInches * .4 + kOffsetY)), SPEED)); //lines up with loading station
         CargoShipToLoadingStation.add(new Waypoint(kRightLoadingStation, 0));
+        routines.add(new FingersCloseRoutine());
         routines.add(new DrivePathRoutine(new Path(CargoShipToLoadingStation), false));
-
-//        TODO: add IntakeHatchRoutine (not made yet)
-//        routines.add(new TimeoutRoutine(1)); //placeholder
+        routines.add(new FingersOpenRoutine()); //May need wait routine
 
         return new SequentialRoutine(routines);
     }
@@ -94,9 +104,8 @@ public class RightStartHatchInFrontFarCargoInClose extends AutoModeBase { //righ
         forwardLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kRightRocketShipFarX + Constants.kRobotLengthInches * 1.6 + kOffsetX), -(findLineFar(kRightRocketShipMidX + Constants.kRobotLengthInches * 1.6) - Constants.kRobotLengthInches * .3 + kOffsetY)), SPEED)); //line up with rocket ship far
         forwardLoadingStationToRocketShip.add(new Waypoint(kRightRocketShipFar, 0)); //ends in front of the rocket ship far
         routines.add(new DrivePathRoutine(new Path(forwardLoadingStationToRocketShip), false));
-
-//        TODO: add ReleaseHatchRoutine (not made yet)
-//        routines.add(new TimeoutRoutine(1)); //placeholder
+        routines.add(new FingersCloseRoutine());
+        routines.add(new FingersExpelRoutine(3));
 
         return new SequentialRoutine(routines);
     }
@@ -114,8 +123,9 @@ public class RightStartHatchInFrontFarCargoInClose extends AutoModeBase { //righ
         RocketShipToDepot.add(new Waypoint(kRightDepot, 0));
         routines.add(new DrivePathRoutine(new Path(RocketShipToDepot), true));
 
-//        TODO: add IntakeCargoRoutine (not made yet)
-//        routines.add(new TimeoutRoutine(1)); //placeholder
+//        TODO: use edited WaitForCargoGroundIntake() (not made yet)
+        routines.add(new IntakeCycleRoutine());
+        routines.add(new WaitForCargoGroundIntake());
 
         return new SequentialRoutine(routines);
     }
@@ -132,8 +142,9 @@ public class RightStartHatchInFrontFarCargoInClose extends AutoModeBase { //righ
         DepotToRocketShip.add(new Waypoint(kRightRocketShipClose, 0));
         routines.add(new DrivePathRoutine(new Path(DepotToRocketShip), false));
 
-//        TODO: add ReleaseCargoRoutine (not made yet)
-//        routines.add(new TimeoutRoutine(1)); //placeholder
+//        TODO: add ElevatorCustomPositionRoutine() with new elevator constants
+        //routines.add(new ElevatorCustomPositioningRoutine(Constants.kElevatorTopBottomDifferenceInches)); //placeholder
+        routines.add(new ShooterExpelRoutine(Shooter.ShooterState.EXPELLING, 3));
 
         return new SequentialRoutine(routines);
     }

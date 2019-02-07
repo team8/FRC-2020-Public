@@ -8,7 +8,13 @@ import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeCargoRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeCycleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
+import com.palyrobotics.frc2019.behavior.routines.shooter.ShooterExpelRoutine;
+import com.palyrobotics.frc2019.behavior.routines.waits.WaitForCargoGroundIntake;
 import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -74,8 +80,9 @@ public class RightStartCloseHatchTwoCargoSideAutoMode extends AutoModeBase { //r
         DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + Constants.kRobotLengthInches * .85 + CargoSlot * Constants.kCargoLineGap + kOffsetX, kRightFirstCargoShipY - Constants.kRobotLengthInches * .2 + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(DepotToCargoShip), false));
 
-//        TODO: add ReleaseCargoRoutine (not made yet)
-//        routines.add(new TimeoutRoutine(1)); //placeholder
+//        TODO: add ElevatorCustomPositionRoutine() with new elevator constants
+        //routines.add(new ElevatorCustomPositioningRoutine(Constants.kElevatorTopBottomDifferenceInches)); //placeholder
+        routines.add(new ShooterExpelRoutine(Shooter.ShooterState.EXPELLING, 3));
 
         return new SequentialRoutine(routines);
     }
@@ -91,8 +98,9 @@ public class RightStartCloseHatchTwoCargoSideAutoMode extends AutoModeBase { //r
         CargoShipToDepot.add(new Waypoint(new Translation2d(kRightDepotX + Constants.kRobotLengthInches - (DepotSlot + 1) * kCargoDiameter + kOffsetX, kRightDepotY + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(CargoShipToDepot), true));
 
-//        TODO: add IntakeCargoRoutine (not made yet)
-//        routines.add(new TimeoutRoutine(1)); //placeholder
+//        TODO: use edited WaitForCargoGroundIntake() (not made yet)
+        routines.add(new IntakeCycleRoutine());
+        routines.add(new WaitForCargoGroundIntake());
 
         return new SequentialRoutine(routines);
     }
