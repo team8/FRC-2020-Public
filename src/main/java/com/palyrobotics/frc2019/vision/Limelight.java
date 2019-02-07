@@ -1,22 +1,30 @@
 package com.palyrobotics.frc2019.vision;
 
+import com.palyrobotics.frc2019.util.trajectory.Translation2d;
+import com.palyrobotics.frc2019.vision.LimelightControlMode.*;
+import com.palyrobotics.frc2019.config.Constants.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Notifier;
-import com.palyrobotics.frc2019.vision.LimeLightControlMode.*;
 
 /**
- *   Lime Light Class was started by Corey Applegate of Team 3244
+ *   Limelight class was started by Corey Applegate of Team 3244
  *   Granite City Gearheads. We Hope you Enjoy the Lime Light
  *   Camera.
  */
-public class LimeLight {
+public class Limelight {
+
+    private static Limelight instance_ = new Limelight();
+
+    public static Limelight getInstance() {
+        return instance_;
+    }
 
     private NetworkTable m_table;
     private String m_tableName;
     private Boolean isConnected = false;
-    private double _hearBeatPeriod = 0.1;
+    private double _heartBeatPeriod = 0.1;
 
     class PeriodicRunnable implements java.lang.Runnable {
         public void run() {
@@ -27,39 +35,36 @@ public class LimeLight {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            if(getPipelineLatency()==0.0){
-                isConnected = false;
-            }else{
-                isConnected = true;
-            }
+            isConnected = (getPipelineLatency() == 0.0);
         }
     }
-    Notifier _hearBeat = new Notifier(new PeriodicRunnable());
+
+    private Notifier _heartBeat = new Notifier(new PeriodicRunnable());
 
     /**
      * Using the Default Lime Light NT table
      */
-    public LimeLight() {
+    public Limelight() {
         m_tableName = "limelight";
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
-        _hearBeat.startPeriodic(_hearBeatPeriod);
+        _heartBeat.startPeriodic(_heartBeatPeriod);
     }
 
     /**
      * If you changed the name of your Lime Light tell Me the New Name
      */
-    public LimeLight(String tableName) {
+    public Limelight(String tableName) {
         m_tableName = tableName;
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
-        _hearBeat.startPeriodic(_hearBeatPeriod);
+        _heartBeat.startPeriodic(_heartBeatPeriod);
     }
 
     /**
      * Send an instance of the NetworkTabe
      */
-    public LimeLight(NetworkTable table) {
+    public Limelight(NetworkTable table) {
         m_table = table;
-        _hearBeat.startPeriodic(_hearBeatPeriod);
+        _heartBeat.startPeriodic(_heartBeatPeriod);
 
     }
 
@@ -69,10 +74,9 @@ public class LimeLight {
     }
 
     /**
-     * tv   Whether the limelight has any valid targets (0 or 1)
-     * @return
+     * @return tv   Whether the limelight has any valid targets (0 or 1)
      */
-    public boolean getIsTargetFound() {
+    public boolean isTargetFound() {
         NetworkTableEntry tv = m_table.getEntry("tv");
         double v = tv.getDouble(0);
         if (v == 0.0f){
@@ -82,26 +86,45 @@ public class LimeLight {
         }
     }
     /**
-     * tx Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees)
-     * @return
+     * @return tx Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees)
      */
-    public double getdegRotationToTarget() {
+    public double getYawToTarget() {
         NetworkTableEntry tx = m_table.getEntry("tx");
         double x = tx.getDouble(0.0);
         return x;
     }
     /**
-     * ty Vertical Offset From Crosshair To Target (-20.5 degrees to 20.5 degrees)
-     * @return
+     * @return ty Vertical Offset From Crosshair To Target (-20.5 degrees to 20.5 degrees)
      */
-    public double getdegVerticalToTarget() {
+    public double getPitchToTarget() {
         NetworkTableEntry ty = m_table.getEntry("ty");
         double y = ty.getDouble(0.0);
         return y;
     }
     /**
-     * ta Target Area (0% of image to 100% of image)
-     * @return
+     * @return tshort Sidelength of shortest side of the fitted bounding box (pixels)
+     */
+    public double getTargetWidth(){
+        NetworkTableEntry tshort = m_table.getEntry("tshort");
+        double width = tshort.getDouble(0.0);
+        return width;
+    }
+    /**
+     * @return tshort Sidelength of longest side of the fitted bounding box (pixels)
+     */
+    public double getTargetLength(){
+        NetworkTableEntry tlong = m_table.getEntry("tlong");
+        double length = tlong.getDouble(0.0);
+        return length;
+    }
+    /**
+     * @return aspect Ratio of width to height of the fitted bounding box
+     */
+    public double getTargetAspectRatio(){
+        return getTargetWidth() / getTargetLength();
+    }
+    /**
+     * @return ta Target Area (0% of image to 100% of image)
      */
     public double getTargetArea() {
         NetworkTableEntry ta = m_table.getEntry("ta");
@@ -109,17 +132,15 @@ public class LimeLight {
         return a;
     }
     /**
-     * ts Skew or rotation (-90 degrees to 0 degrees)
-     * @return
+     * @return ts Skew or rotation (-90 degrees to 0 degrees)
      */
-    public double getSkew_Rotation() {
+    public double getSkew() {
         NetworkTableEntry ts = m_table.getEntry("ts");
         double s = ts.getDouble(0.0);
         return s;
     }
     /**
-     * tl The pipeline’s latency contribution (ms) Add at least 11ms for image capture latency.
-     * @return
+     * @return tl The pipeline’s latency contribution (ms) Add at least 11ms for image capture latency.
      */
     public double getPipelineLatency() {
         NetworkTableEntry tl = m_table.getEntry("tl");
@@ -134,10 +155,6 @@ public class LimeLight {
 
     /**
      * LedMode  Sets limelight’s LED state
-     *
-     *  kon
-     *  koff
-     *  kblink
      * @param ledMode
      */
     public void setLEDMode(LedMode ledMode) {
@@ -145,8 +162,7 @@ public class LimeLight {
     }
 
     /**
-     * Returns current LED mode of the Lime Light
-     * @return LedMode
+     * @return LedMode current LED mode of the Limelight
      */
     public LedMode getLEDMode() {
         NetworkTableEntry ledMode = m_table.getEntry("ledMode");
@@ -156,10 +172,10 @@ public class LimeLight {
     }
 
     /**
-     * camMode  Sets limelight’s operation mode
+     * camMode  Sets Limelight’s operation mode
      *
-     *  kvision
-     *  kdriver (Increases exposure, disables vision processing)
+     *  VISION
+     *  DRIVER (Increases exposure, disables vision processing)
      * @param camMode
      */
 
@@ -168,8 +184,7 @@ public class LimeLight {
     }
 
     /**
-     * Returns current Cam mode of the Lime Light
-     * @return CamMode
+     * @return CamMode current camera mode of the Limelight
      */
     public CamMode getCamMode() {
         NetworkTableEntry camMode = m_table.getEntry("camMode");
@@ -179,25 +194,7 @@ public class LimeLight {
     }
 
     /**
-     * pipeline Sets limelight’s current pipeline
-     *
-     * 0 . 9	Select pipeline 0.9
-     *
-     * @param pipeline
-     */
-    /* public void setPipeline(Double pipeline) {
-        if(pipeline<0){
-            pipeline = 0.0;
-            throw new IllegalArgumentException("Pipeline can not be less than zero");
-        }else if(pipeline>9){
-            pipeline = 9.0;
-            throw new IllegalArgumentException("Pipeline can not be greater than nine");
-        }
-        m_table.getEntry("pipeline").setValue(pipeline);
-    } */
-
-    /**
-     * pipeline Sets limelight’s current pipeline
+     * pipeline Sets Limelight’s current pipeline
      *
      * 0 . 9	Select pipeline 0.9
      *
@@ -215,18 +212,8 @@ public class LimeLight {
     }
 
     /**
-     * Returns current Pipeling of the Lime Light
-     * @return Pipelinge
-     */
-    public double getPipeline(){
-        NetworkTableEntry pipeline = m_table.getEntry("pipeline");
-        double pipe = pipeline.getDouble(0.0);
-        return pipe;
-    }
-
-    /**
-     * Returns current Pipeling of the Lime Light
-     * @return Pipelinge
+     * Returns
+     * @return pipeline current pipeline of the Lime Light
      */
     public Integer getPipelineInt(){
         NetworkTableEntry pipeline = m_table.getEntry("pipeline");
@@ -281,48 +268,111 @@ public class LimeLight {
      * in normalized screen space (-1 to 1) rather than degrees.	 *
      */
 
-    public double getAdvanced_RotationToTarget(Advanced_Target raw) {
+    public double getYawToTargetAdvanced(Advanced_Target raw) {
         NetworkTableEntry txRaw = m_table.getEntry("tx" + Integer.toString(raw.getValue()));
         double x = txRaw.getDouble(0.0);
         return x;
     }
 
-    public double getAdvanced_degVerticalToTarget(Advanced_Target raw) {
+    public double getPitchToTargetAdvanced(Advanced_Target raw) {
         NetworkTableEntry tyRaw = m_table.getEntry("ty" + Integer.toString(raw.getValue()));
         double y = tyRaw.getDouble(0.0);
         return y;
     }
 
-    public double getAdvanced_TargetArea(Advanced_Target raw) {
+    public double getTargetAreaAdvanced(Advanced_Target raw) {
         NetworkTableEntry taRaw = m_table.getEntry("ta" + Integer.toString(raw.getValue()));
         double a = taRaw.getDouble(0.0);
         return a;
     }
 
-    public double getAdvanced_Skew_Rotation(Advanced_Target raw) {
+    public double getSkewRotationAdvanced(Advanced_Target raw) {
         NetworkTableEntry tsRaw = m_table.getEntry("ts" + Integer.toString(raw.getValue()));
         double s = tsRaw.getDouble(0.0);
         return s;
     }
 
+    public double[] getCornerX(){
+        NetworkTableEntry cornerXRaw = m_table.getEntry("tcornx");
+        double[] cornerX = cornerXRaw.getDoubleArray(new double[0]);
+        return cornerX;
+    }
+
+    public double[] getCornerY(){
+        NetworkTableEntry cornerXRaw = m_table.getEntry("tcorny");
+        double[] cornerY = cornerXRaw.getDoubleArray(new double[0]);
+        return cornerY;
+    }
+
     //Raw Crosshairs:
     //If you are using raw targeting data, you can still utilize your calibrated crosshairs:
 
-    public double[] getAdvanced_RawCrosshair(Advanced_Crosshair raw){
+    public double[] getRawCrosshair(AdvancedCrosshair raw){
         double[] crosshars = new double[2];
-        crosshars[0] = getAdvanced_RawCrosshair_X(raw);
-        crosshars[1] = getAdvanced_RawCrosshair_Y(raw);
+        crosshars[0] = getRawCrosshairX(raw);
+        crosshars[1] = getRawCrosshairY(raw);
         return crosshars;
     }
-    public double getAdvanced_RawCrosshair_X(Advanced_Crosshair raw) {
+    public double getRawCrosshairX(AdvancedCrosshair raw) {
         NetworkTableEntry cxRaw = m_table.getEntry("cx" + Integer.toString(raw.getValue()));
         double x = cxRaw.getDouble(0.0);
         return x;
     }
 
-    public double getAdvanced_RawCrosshair_Y(Advanced_Crosshair raw) {
+    public double getRawCrosshairY(AdvancedCrosshair raw) {
         NetworkTableEntry cyRaw = m_table.getEntry("cy" + Integer.toString(raw.getValue()));
         double y = cyRaw.getDouble(0.0);
         return y;
+    }
+
+    /**
+     * Estimate z distance from camera to distance as seen at http://docs.limelightvision.io/en/latest/cs_estimating_distance.html
+     * @return dist - the estimated distance
+     */
+    public double getEstimatedDistanceZ() {
+        double a1 = OtherConstants.kLimelightElevationAngleDegrees;
+        double a2 = this.getPitchToTarget();
+        double h1 = OtherConstants.kLimelightHeightInches;
+        double h2 = OtherConstants.kRocketHatchTargetHeight;
+        double tx = this.getYawToTarget();
+        //Logger.getInstance().logRobotThread(Level.INFO, "a1: " + a1 + " a2: " + a2 + " h1: " + h1 + " h2: " + h2);
+        return ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))) - 10; // 10 = limelight's offset from front of robot
+    }
+
+    /**
+     * Estimate z distance from camera to distance as seen at http://docs.limelightvision.io/en/latest/cs_estimating_distance.html
+     * but with divide by cos(tx) to make up for difference in the distance prediction when the robot is rotated
+     * (Experimental)
+     * @return dist - the estimated distance
+     */
+    public double getCorrectedEstimatedDistanceZ() {
+        double a1 = OtherConstants.kLimelightElevationAngleDegrees;
+        double a2 = this.getPitchToTarget();
+        double h1 = OtherConstants.kLimelightHeightInches;
+        double h2 = OtherConstants.kRocketHatchTargetHeight;
+        double tx = this.getYawToTarget();
+        //Logger.getInstance().logRobotThread(Level.INFO, "a1: " + a1 + " a2: " + a2 + " h1: " + h1 + " h2: " + h2);
+        return ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))) / Math.cos(Math.toRadians(tx)) - 10; // 10 = limelight's offset from front of robot
+    }
+
+    /**
+     * Estimate z distance using a rational function determined with experimental data
+     * @return
+     */
+    public double getRegressionDistanceZ() {
+        return 24.6 * Math.pow(this.getTargetArea(), -0.64);
+    }
+
+    /**
+     * Describes a vision target (position and angle)
+     */
+    public static class VisionTarget{
+        public Translation2d position;
+        public double angle;
+
+        public VisionTarget(Translation2d position, double angle) {
+            this.position = position;
+            this.angle = angle;
+        }
     }
 }

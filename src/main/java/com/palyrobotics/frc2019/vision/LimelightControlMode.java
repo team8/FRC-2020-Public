@@ -7,19 +7,19 @@ import java.util.Map;
 /**
  *
  */
-public class LimeLightControlMode {
+public class LimelightControlMode {
 
     public enum LedMode {
-        kpipeLine(0),   //0	use the LED Mode set in the current pipeline
-        kforceOff(1),   //1	force off
-        kforceBlink(2), //2	force blink
-        kforceOn(3);    //3	force on
+        CURRENT_PIPELINE_MODE(0),   //0	use the LED Mode set in the current pipeline
+        FORCE_OFF(1),   //1	force off
+        FORCE_BLINK(2), //2	force blink
+        FORCE_ON(3);    //3	force on
 
         private static final Map<Double, LedMode> MY_MAP = new HashMap<Double, LedMode>();
 
         static {
-            for (LedMode LedMode : values()) {
-                MY_MAP.put(LedMode.getValue(), LedMode);
+            for (LedMode mode : values()) {
+                MY_MAP.put(mode.getValue(), mode);
             }
         }
 
@@ -45,14 +45,14 @@ public class LimeLightControlMode {
 
 
     public enum CamMode {
-        kvision(0),
-        kdriver(1);
+        VISION(0),
+        DRIVER(1);
 
         private static final Map<Double, CamMode> MY_MAP = new HashMap<Double, CamMode>();
 
         static {
-            for (CamMode CamMode : values()) {
-                MY_MAP.put(CamMode.getValue(), CamMode);
+            for (CamMode mode : values()) {
+                MY_MAP.put(mode.getValue(), mode);
             }
         }
 
@@ -110,7 +110,7 @@ public class LimeLightControlMode {
 
     public enum  Snapshot {
 
-        kon(1), koff(0);
+        ON(1), OFF(0);
 
         private static final Map<Double,  Snapshot> MY_MAP = new HashMap<Double,  Snapshot>();
 
@@ -122,7 +122,7 @@ public class LimeLightControlMode {
 
         private double value;
 
-        private  Snapshot(double value) {
+        private Snapshot(double value) {
             this.value = value;
         }
 
@@ -142,7 +142,7 @@ public class LimeLightControlMode {
 
     public enum  Advanced_Target {
 
-        kone(0), ktwo(1), kthree(2);
+        ONE_TARGET(0), TWO_TARGETS(1), THREE_TARGETS(2);
 
         private static final Map<Integer,  Advanced_Target> MY_MAP = new HashMap<Integer,  Advanced_Target>();
 
@@ -154,7 +154,7 @@ public class LimeLightControlMode {
 
         private Integer value;
 
-        private  Advanced_Target(Integer value) {
+        private Advanced_Target(Integer value) {
             this.value = value;
         }
 
@@ -172,21 +172,21 @@ public class LimeLightControlMode {
 
     }
 
-    public enum  Advanced_Crosshair {
+    public enum AdvancedCrosshair {
 
-        kone(0), ktwo(1);
+        ONE(0), TWO(1);
 
-        private static final Map<Integer,  Advanced_Crosshair> MY_MAP = new HashMap<Integer,  Advanced_Crosshair>();
+        private static final Map<Integer, AdvancedCrosshair> MY_MAP = new HashMap<Integer, AdvancedCrosshair>();
 
         static {
-            for ( Advanced_Crosshair  Advanced_Crosshair : values()) {
-                MY_MAP.put( Advanced_Crosshair.getValue(),  Advanced_Crosshair);
+            for ( AdvancedCrosshair crosshair : values()) {
+                MY_MAP.put( crosshair.getValue(),  crosshair);
             }
         }
 
         private Integer value;
 
-        private  Advanced_Crosshair(Integer value) {
+        private AdvancedCrosshair(Integer value) {
             this.value = value;
         }
 
@@ -194,7 +194,7 @@ public class LimeLightControlMode {
             return value;
         }
 
-        public static  Advanced_Crosshair getByValue(Integer value) {
+        public static AdvancedCrosshair getByValue(Integer value) {
             return MY_MAP.get(value);
         }
 

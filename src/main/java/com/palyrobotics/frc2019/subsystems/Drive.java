@@ -6,11 +6,8 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.dashboard.DashboardValue;
 import com.palyrobotics.frc2019.subsystems.controllers.*;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.*;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
-import com.palyrobotics.frc2019.util.CheesyDriveHelper;
-import com.palyrobotics.frc2019.util.DriveSignal;
-import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 
@@ -40,13 +37,15 @@ public class Drive extends Subsystem {
 	 * {@code NEUTRAL} does nothing.
 	 */
 	public enum DriveState {
-		CHEZY, OFF_BOARD_CONTROLLER, ON_BOARD_CONTROLLER, OPEN_LOOP, NEUTRAL
+		CHEZY, OFF_BOARD_CONTROLLER, ON_BOARD_CONTROLLER, OPEN_LOOP, NEUTRAL, VISION_ASSIST
 	}
 
 	private DriveState mState = DriveState.NEUTRAL;
 
 	//Helper class to calculate teleop output
 	private CheesyDriveHelper mCDH = new CheesyDriveHelper();
+
+	private VisionDriveHelper mVDH = new VisionDriveHelper();
 
 	private Drive.DriveController mController = null;
 	//Used for off board controllers to be called only once
@@ -153,6 +152,9 @@ public class Drive extends Subsystem {
 				setDriveOutputs(deletthis);*/
 				setDriveOutputs(mCDH.cheesyDrive(commands, mCachedRobotState));
 				break;
+			case VISION_ASSIST:
+				setDriveOutputs(mVDH.visionDrive(commands, mCachedRobotState));
+				break;
 			case OFF_BOARD_CONTROLLER:
 				//Falls through
                 setDriveOutputs(mController.update(mCachedRobotState));
@@ -233,7 +235,10 @@ public class Drive extends Subsystem {
 		mController = new SparkMaxDriveController(signal);
 		newController = true;
 	}
-
+	public void setVisionAngleSetpoint() {
+		mController = new VisionTurnAngleController(mCachedPose);
+		newController = true;
+	}
 	public void setTurnAngleSetpoint(double heading) {
 		mController = new BangBangTurnAngleController(mCachedPose, heading);
 		newController = true;
