@@ -11,8 +11,13 @@ public class IntakeConstants {
     public static final double kMaxAngle = 120;
     public static final double kMaxAngleTicks = 2000;
 
+    // FEED FORWARD CONSTANTS
+
     public static final double kGravityFF = 0;
     public static final double kAccelComp = 0;
+    public static final double kCentripetalCoeff = 0;
+
+    // INTAKING POSITIONS
 
     public static final double kIntakingPosition = 10; // degrees relatively to the plane of the field.
     public static final double kHoldingPosition = 65; // same relative angle as above
