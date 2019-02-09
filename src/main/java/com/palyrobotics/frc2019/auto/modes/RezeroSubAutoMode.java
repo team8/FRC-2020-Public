@@ -9,8 +9,10 @@ import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurn
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveTimeRoutine;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.*;
 import com.palyrobotics.frc2019.util.DriveSignal;
+import com.palyrobotics.frc2019.util.SparkMaxOutput;
+import com.palyrobotics.frc2019.util.SparkSignal;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
@@ -53,10 +55,10 @@ public class RezeroSubAutoMode extends AutoModeBase {
         routines.add(new DrivePathRoutine(new Path(waypoints), true));
 
         // Back up against the platform
-        TalonSRXOutput eachOutput = new TalonSRXOutput();
+        SparkMaxOutput eachOutput = new SparkMaxOutput();
         eachOutput.setPercentOutput(0.2);
 
-        DriveSignal backUp = new DriveSignal(eachOutput, eachOutput);
+        SparkSignal backUp = new SparkSignal(eachOutput, eachOutput);
         routines.add(new DriveTimeRoutine(0.7, backUp));
 
         // Zero robot state

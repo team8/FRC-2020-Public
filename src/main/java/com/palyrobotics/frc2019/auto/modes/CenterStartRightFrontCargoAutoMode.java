@@ -8,7 +8,7 @@ import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersExpelRoutine;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.*;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -21,11 +21,11 @@ import java.util.List;
 public class CenterStartRightFrontCargoAutoMode extends AutoModeBase {
 
     public static int kRunSpeed = 50; //speed can be faster
-    public static double kOffsetX = -Constants.kLowerPlatformLength;
+    public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength;
     public static double kOffsetY = 0; //starts at center so the offset is 0
-    public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + Constants.kLowerPlatformLength + Constants.kUpperPlatformLength;
+    public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
     public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
-    public static double kHabLineX = Constants.kUpperPlatformLength + Constants.kLowerPlatformLength;
+    public static double kHabLineX = PhysicalConstants.kUpperPlatformLength + PhysicalConstants.kLowerPlatformLength;
 
     @Override
     public String toString() {
@@ -54,9 +54,9 @@ public class CenterStartRightFrontCargoAutoMode extends AutoModeBase {
         routines.add(new RezeroSubAutoMode().Rezero(inverted)); //rezero
 
         List<Path.Waypoint> StartToCargoShip = new ArrayList<>();
-        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kHabLineX + Constants.kRobotLengthInches + kOffsetX), 0), kRunSpeed)); //go straight so the robot doesn't get messed up going down a level
+        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kHabLineX + PhysicalConstants.kRobotLengthInches + kOffsetX), 0), kRunSpeed)); //go straight so the robot doesn't get messed up going down a level
         StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kCargoShipRightFrontX * .6 + kOffsetX), invertCord * (kCargoShipRightFrontY + kOffsetY)), kRunSpeed)); //lines up with cargo ship
-        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kCargoShipRightFrontX - Constants.kRobotLengthInches * .6 + kOffsetX), invertCord * (kCargoShipRightFrontY + kOffsetY)), 0));
+        StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * .6 + kOffsetX), invertCord * (kCargoShipRightFrontY + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(StartToCargoShip), true));
         routines.add(new FingersCloseRoutine());
         routines.add(new FingersExpelRoutine(3));

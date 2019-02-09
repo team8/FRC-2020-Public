@@ -8,7 +8,7 @@ import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.*;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -25,14 +25,14 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
     //Left start > cargo ship front > loading station > rocket ship far > depot > close rocket ship
 
     public static int kRunSpeed = 120;
-    public static double kOffsetX = -Constants.kLowerPlatformLength - Constants.kRobotLengthInches;
-    public static double kOffsetY = -Constants.kLevel3Width * .5 - Constants.kLevel2Width * .5;
-    public static double kCargoShipLeftFrontX = mDistances.kLevel1CargoX + Constants.kLowerPlatformLength + Constants.kUpperPlatformLength;
+    public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches;
+    public static double kOffsetY = -PhysicalConstants.kLevel3Width * .5 - PhysicalConstants.kLevel2Width * .5;
+    public static double kCargoShipLeftFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
     public static double kCargoShipLeftFrontY = mDistances.kFieldWidth * .5 - (mDistances.kCargoLeftY + mDistances.kCargoOffsetY);
-    public static double kHabLineX = Constants.kUpperPlatformLength + Constants.kLowerPlatformLength;
+    public static double kHabLineX = PhysicalConstants.kUpperPlatformLength + PhysicalConstants.kLowerPlatformLength;
     public static double kLeftLoadingStationX = 0;
     public static double kLeftLoadingStationY = mDistances.kFieldWidth * .5 - mDistances.kLeftLoadingY;
-    public static double kLeftDepotX = Constants.kUpperPlatformLength;
+    public static double kLeftDepotX = PhysicalConstants.kUpperPlatformLength;
     public static double kLeftDepotY = mDistances.kFieldWidth * .5 - mDistances.kDepotFromLeftY;
     public static double kLeftRocketShipCloseX = mDistances.kHabLeftRocketCloseX + kHabLineX;
     public static double kLeftRocketShipCloseY = mDistances.kFieldWidth * .5 - mDistances.kLeftRocketCloseY;
@@ -41,11 +41,11 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
     public static double kLeftRocketShipFarX = mDistances.kFieldWidth - mDistances.kMidlineLeftRocketFarX;
     public static double kLeftRocketShipFarY = mDistances.kFieldWidth * .5 - mDistances.kLeftRocketFarY;
 
-    public Translation2d kCargoShipLeftFront = new Translation2d(-(kCargoShipLeftFrontX + Constants.kRobotWidthInches * .2 + kOffsetX), -(kCargoShipLeftFrontY - Constants.kRobotLengthInches * .05 + kOffsetY));
-    public Translation2d kLeftLoadingStation = new Translation2d(-(kLeftLoadingStationX + Constants.kRobotLengthInches + kOffsetX), -(kLeftLoadingStationY - Constants.kRobotLengthInches * .2 + kOffsetY));
-    public Translation2d kLeftRocketShipFar = new Translation2d(-(kLeftRocketShipFarX + Constants.kRobotLengthInches * 1 + kOffsetX), -(kLeftRocketShipFarY - Constants.kRobotLengthInches * .05 + kOffsetY));
-    public Translation2d kLeftDepot = new Translation2d(-(kLeftDepotX + Constants.kRobotLengthInches * 1.1 + kOffsetX), -(kLeftDepotY - Constants.kRobotLengthInches * .25 + kOffsetY));
-    public Translation2d kLeftRocketShipClose = new Translation2d(-(kLeftRocketShipCloseX + Constants.kRobotLengthInches * .3 + kOffsetX), -(kLeftRocketShipCloseY - Constants.kRobotLengthInches * .5 + kOffsetY));
+    public Translation2d kCargoShipLeftFront = new Translation2d(-(kCargoShipLeftFrontX + PhysicalConstants.kRobotWidthInches * .2 + kOffsetX), -(kCargoShipLeftFrontY - PhysicalConstants.kRobotLengthInches * .05 + kOffsetY));
+    public Translation2d kLeftLoadingStation = new Translation2d(-(kLeftLoadingStationX + PhysicalConstants.kRobotLengthInches + kOffsetX), -(kLeftLoadingStationY - PhysicalConstants.kRobotLengthInches * .2 + kOffsetY));
+    public Translation2d kLeftRocketShipFar = new Translation2d(-(kLeftRocketShipFarX + PhysicalConstants.kRobotLengthInches * 1 + kOffsetX), -(kLeftRocketShipFarY - PhysicalConstants.kRobotLengthInches * .05 + kOffsetY));
+    public Translation2d kLeftDepot = new Translation2d(-(kLeftDepotX + PhysicalConstants.kRobotLengthInches * 1.1 + kOffsetX), -(kLeftDepotY - PhysicalConstants.kRobotLengthInches * .25 + kOffsetY));
+    public Translation2d kLeftRocketShipClose = new Translation2d(-(kLeftRocketShipCloseX + PhysicalConstants.kRobotLengthInches * .3 + kOffsetX), -(kLeftRocketShipCloseY - PhysicalConstants.kRobotLengthInches * .5 + kOffsetY));
 
     @Override
     public String toString() {
@@ -66,9 +66,9 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
         ArrayList<Routine> routines = new ArrayList<>();
 
         List<Path.Waypoint> CargoShipToLoadingStation = new ArrayList<>();
-        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-(kCargoShipLeftFrontX - Constants.kRobotLengthInches + kOffsetX), -(kCargoShipLeftFrontY - kOffsetY)), kRunSpeed)); //backs out of the cargo ship
+        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-(kCargoShipLeftFrontX - PhysicalConstants.kRobotLengthInches + kOffsetX), -(kCargoShipLeftFrontY - kOffsetY)), kRunSpeed)); //backs out of the cargo ship
         CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-((kCargoShipLeftFrontX + kOffsetX) * .5), -(kLeftLoadingStationY * .5 - kOffsetY)), kRunSpeed));
-        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-(kHabLineX - Constants.kRobotLengthInches * .5 + kOffsetX), -(kLeftLoadingStationY - Constants.kRobotWidthInches * .4 + kOffsetY)), kRunSpeed)); //lines up with loading station
+        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(-(kHabLineX - PhysicalConstants.kRobotLengthInches * .5 + kOffsetX), -(kLeftLoadingStationY - PhysicalConstants.kRobotWidthInches * .4 + kOffsetY)), kRunSpeed)); //lines up with loading station
         CargoShipToLoadingStation.add(new Waypoint(kLeftLoadingStation, 0));
         routines.add(new DrivePathRoutine(new Path(CargoShipToLoadingStation), false));
 
@@ -86,13 +86,13 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
          */
 
         List<Path.Waypoint> backLoadingStationToRocketShip = new ArrayList<>(); //robot starts going backwards
-        backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftLoadingStationX + Constants.kRobotLengthInches + kOffsetX), -(kLeftLoadingStationY + kOffsetY)), 180)); //backs up a bit
-        backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipMidX + kOffsetX), -(findLineFar(kLeftRocketShipMidX + Constants.kRobotLengthInches * 1.8) + kOffsetY)), kRunSpeed)); //goes around the rocket ship
-        backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipFarX + Constants.kRobotLengthInches * 1.9 + kOffsetX), -(findLineFar(kLeftRocketShipMidX + Constants.kRobotLengthInches * 1.9) + Constants.kRobotLengthInches * .2 + kOffsetY)), 0));
+        backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftLoadingStationX + PhysicalConstants.kRobotLengthInches + kOffsetX), -(kLeftLoadingStationY + kOffsetY)), 180)); //backs up a bit
+        backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipMidX + kOffsetX), -(findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.8) + kOffsetY)), kRunSpeed)); //goes around the rocket ship
+        backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipFarX + PhysicalConstants.kRobotLengthInches * 1.9 + kOffsetX), -(findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.9) + PhysicalConstants.kRobotLengthInches * .2 + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(backLoadingStationToRocketShip), true)); //robot turns and then moves forward to the rocket ship
 
         List<Path.Waypoint> forwardLoadingStationToRocketShip = new ArrayList<>(); //robot turns and then moves forward
-        forwardLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipFarX + Constants.kRobotLengthInches * 1.6 + kOffsetX), -(findLineFar(kLeftRocketShipMidX + Constants.kRobotLengthInches * 1.6) + Constants.kRobotLengthInches * .3 + kOffsetY)), kRunSpeed)); //line up with rocket ship far
+        forwardLoadingStationToRocketShip.add(new Waypoint(new Translation2d(-(kLeftRocketShipFarX + PhysicalConstants.kRobotLengthInches * 1.6 + kOffsetX), -(findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.6) + PhysicalConstants.kRobotLengthInches * .3 + kOffsetY)), kRunSpeed)); //line up with rocket ship far
         forwardLoadingStationToRocketShip.add(new Waypoint(kLeftRocketShipFar, 0)); //ends in front of the rocket ship far
         routines.add(new DrivePathRoutine(new Path(forwardLoadingStationToRocketShip), false));
 
@@ -110,8 +110,8 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
          */
 
         List<Path.Waypoint> RocketShipToDepot = new ArrayList<>();
-        RocketShipToDepot.add(new Waypoint(new Translation2d(-(kLeftRocketShipFarX + Constants.kRobotLengthInches * 1.6 + kOffsetX), -(findLineFar(kLeftRocketShipMidX + Constants.kRobotLengthInches * 1.6) - Constants.kRobotLengthInches * 0.5 + kOffsetY)), 70));
-        RocketShipToDepot.add(new Waypoint(new Translation2d(-(kCargoShipLeftFrontX + Constants.kRobotLengthInches + kOffsetX), -(kLeftDepotY - Constants.kRobotLengthInches * .2 + kOffsetY)), 180));
+        RocketShipToDepot.add(new Waypoint(new Translation2d(-(kLeftRocketShipFarX + PhysicalConstants.kRobotLengthInches * 1.6 + kOffsetX), -(findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.6) - PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetY)), 70));
+        RocketShipToDepot.add(new Waypoint(new Translation2d(-(kCargoShipLeftFrontX + PhysicalConstants.kRobotLengthInches + kOffsetX), -(kLeftDepotY - PhysicalConstants.kRobotLengthInches * .2 + kOffsetY)), 180));
         RocketShipToDepot.add(new Waypoint(kLeftDepot, 0));
         routines.add(new DrivePathRoutine(new Path(RocketShipToDepot), true));
 

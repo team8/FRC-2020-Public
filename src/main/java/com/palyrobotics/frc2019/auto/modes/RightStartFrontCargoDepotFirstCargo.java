@@ -8,12 +8,11 @@ import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
-import com.palyrobotics.frc2019.behavior.routines.intake.IntakeCargoRoutine;
-import com.palyrobotics.frc2019.behavior.routines.intake.IntakeCycleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeBeginCycleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shooter.ShooterExpelRoutine;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForCargoGroundIntake;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2019.config.Constants.PhysicalConstants;
 import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
@@ -27,12 +26,12 @@ public class RightStartFrontCargoDepotFirstCargo extends AutoModeBase {
     //TODO: replace with Triplekill because Triplekill is faster and does more
 
     public static int SPEED = 70; //can be faster
-    public static double kOffsetX = -Constants.kLowerPlatformLength - Constants.kRobotLengthInches;
-    public static double kOffsetY = Constants.kLevel3Width * .5 + Constants.kLevel2Width * .5;
-    public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + Constants.kLowerPlatformLength + Constants.kUpperPlatformLength;
+    public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches;
+    public static double kOffsetY = PhysicalConstants.kLevel3Width * .5 + PhysicalConstants.kLevel2Width * .5;
+    public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
     public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
-    public static double kHabLineX = Constants.kUpperPlatformLength + Constants.kLowerPlatformLength;
-    public static double kRightDepotX = Constants.kUpperPlatformLength;
+    public static double kHabLineX = PhysicalConstants.kUpperPlatformLength + PhysicalConstants.kLowerPlatformLength;
+    public static double kRightDepotX = PhysicalConstants.kUpperPlatformLength;
     public static double kRightDepotY = -(mDistances.kFieldWidth * .5 - mDistances.kDepotFromRightY);
     public static double kRightFirstCargoShipX = kCargoShipRightFrontX + mDistances.kCargoOffsetY;
     public static double kRightFirstCargoShipY = -(mDistances.kFieldWidth * .5 - mDistances.kCargoRightY);
@@ -56,19 +55,19 @@ public class RightStartFrontCargoDepotFirstCargo extends AutoModeBase {
         ArrayList<Routine> routines = new ArrayList<>();
 
         List<Path.Waypoint> forwardRocketShipToDepot = new ArrayList<>();
-        forwardRocketShipToDepot.add(new Waypoint(new Translation2d(-(kCargoShipRightFrontX - Constants.kRobotWidthInches * .3 + kOffsetX), -(kCargoShipRightFrontY + kOffsetY)), SPEED));
-        forwardRocketShipToDepot.add(new Waypoint(new Translation2d(-(kHabLineX + Constants.kRobotLengthInches * .5 + kOffsetX), -(kRightDepotY + kOffsetY)), 0));
+        forwardRocketShipToDepot.add(new Waypoint(new Translation2d(-(kCargoShipRightFrontX - PhysicalConstants.kRobotWidthInches * .3 + kOffsetX), -(kCargoShipRightFrontY + kOffsetY)), SPEED));
+        forwardRocketShipToDepot.add(new Waypoint(new Translation2d(-(kHabLineX + PhysicalConstants.kRobotLengthInches * .5 + kOffsetX), -(kRightDepotY + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(forwardRocketShipToDepot), false));
 
         routines.add(new CascadingGyroEncoderTurnAngleRoutine(120));
 
         List<Path.Waypoint> backRocketShipToDepot = new ArrayList<>();
-        backRocketShipToDepot.add(new Waypoint(new Translation2d(-(kRightDepotX + Constants.kRobotLengthInches * 2 + kOffsetX), -(kRightDepotY + kOffsetY)), SPEED));
-        backRocketShipToDepot.add(new Waypoint(new Translation2d(-(kRightDepotX + Constants.kRobotLengthInches + kOffsetX), -(kRightDepotY + kOffsetY)), 0));
+        backRocketShipToDepot.add(new Waypoint(new Translation2d(-(kRightDepotX + PhysicalConstants.kRobotLengthInches * 2 + kOffsetX), -(kRightDepotY + kOffsetY)), SPEED));
+        backRocketShipToDepot.add(new Waypoint(new Translation2d(-(kRightDepotX + PhysicalConstants.kRobotLengthInches + kOffsetX), -(kRightDepotY + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(backRocketShipToDepot), true));
 
 //        TODO: use edited WaitForCargoGroundIntake() (not made yet)
-        routines.add(new IntakeCycleRoutine());
+        routines.add(new IntakeBeginCycleRoutine());
         routines.add(new WaitForCargoGroundIntake());
 
         return new SequentialRoutine(routines);
@@ -78,14 +77,14 @@ public class RightStartFrontCargoDepotFirstCargo extends AutoModeBase {
         ArrayList<Routine> routines = new ArrayList<>();
 
         List<Path.Waypoint> DepotToCargoShip = new ArrayList<>();
-        DepotToCargoShip.add(new Waypoint(new Translation2d(-(kRightFirstCargoShipX - Constants.kRobotLengthInches + kOffsetX), -(kRightDepotY + kOffsetY)), SPEED));
-        DepotToCargoShip.add(new Waypoint(new Translation2d(-(kRightFirstCargoShipX + Constants.kRobotLengthInches * .9 + kOffsetX), -(kRightDepotY - Constants.kRobotLengthInches * .4 + kOffsetY)), SPEED));
-        DepotToCargoShip.add(new Waypoint(new Translation2d(-(kRightFirstCargoShipX + Constants.kRobotLengthInches + kOffsetX), -(kRightFirstCargoShipY - Constants.kRobotLengthInches * .6 + kOffsetY)), 0));
+        DepotToCargoShip.add(new Waypoint(new Translation2d(-(kRightFirstCargoShipX - PhysicalConstants.kRobotLengthInches + kOffsetX), -(kRightDepotY + kOffsetY)), SPEED));
+        DepotToCargoShip.add(new Waypoint(new Translation2d(-(kRightFirstCargoShipX + PhysicalConstants.kRobotLengthInches * .9 + kOffsetX), -(kRightDepotY - PhysicalConstants.kRobotLengthInches * .4 + kOffsetY)), SPEED));
+        DepotToCargoShip.add(new Waypoint(new Translation2d(-(kRightFirstCargoShipX + PhysicalConstants.kRobotLengthInches + kOffsetX), -(kRightFirstCargoShipY - PhysicalConstants.kRobotLengthInches * .6 + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(DepotToCargoShip), false));
 
 //        TODO: add ElevatorCustomPositionRoutine() with new elevator constants
         //routines.add(new ElevatorCustomPositioningRoutine(Constants.kElevatorTopBottomDifferenceInches)); //placeholder
-        routines.add(new ShooterExpelRoutine(Shooter.ShooterState.EXPELLING, 3));
+        routines.add(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 3));
 
         return new SequentialRoutine(routines);
     }

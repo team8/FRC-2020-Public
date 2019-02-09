@@ -101,8 +101,8 @@ public class HardwareAdapter {
 			intakeVictor = new WPI_VictorSPX(PortConstants.kVidarIntakeVictorDeviceID);
 			intakeMasterSpark = new CANSparkMax(PortConstants.kVidarIntakeMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			intakeSlaveSpark = new CANSparkMax(PortConstants.kVidarIntakeSlaveDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
-			ultrasonic1 = new Ultrasonic(OtherConstants.kLeftUltrasonicPing, OtherConstants.kLeftUltrasonicEcho);
-			ultrasonic2 = new Ultrasonic(OtherConstants.kRightUltrasonicPing,OtherConstants.kRightUltrasonicEcho);
+			ultrasonic1 = new Ultrasonic(PortConstants.kLeftUltrasonicPing, PortConstants.kLeftUltrasonicEcho);
+			ultrasonic2 = new Ultrasonic(PortConstants.kRightUltrasonicPing,PortConstants.kRightUltrasonicEcho);
 			potentiometer = new AnalogPotentiometer(PortConstants.kVidarAnalogPot);
 		}
 	}

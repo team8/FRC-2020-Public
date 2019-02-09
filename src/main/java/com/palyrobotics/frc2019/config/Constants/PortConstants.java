@@ -56,4 +56,14 @@ public class PortConstants {
     public static final int kInOutSolenoidB = 1;
 
     public static final int kGyroPort = 7;
+
+
+    /**
+     * Ultrasonics
+     */
+
+    public static final int kLeftUltrasonicPing = 0;
+    public static final int kLeftUltrasonicEcho = 1;
+    public static final int kRightUltrasonicPing = 2;
+    public static final int kRightUltrasonicEcho = 3;
 }
