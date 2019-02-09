@@ -29,7 +29,7 @@ public class OtherConstants {
     public static final FieldName kFieldName = FieldName.TEAM_8;
 
     // Time Constants (these might exist elsewhere but whatever)
-    public static final double updatesPerSecond = 50;
+    public static final double updatesPerSecond = 50.0;
     public static final double deltaTime = 1/ updatesPerSecond;
 
 
@@ -53,10 +53,10 @@ public class OtherConstants {
     public static final double kLimelightHeightPixels = 240;
     public static final double kLimelightWidthPixels = 320;
     // Height of the centers of vision targets
-    public static final double kRocketHatchTargetHeight = 31.5 - (2.0 * Math.sin(Math.toRadians(14.5)) - 5.5 * Math.cos(Math.toRadians(14.5))) / 2;
+    public static final double kRocketHatchTargetHeight = 31.5 - (2.0 * Math.sin(Math.toRadians(14.5)) - 5.5 * Math.cos(Math.toRadians(14.5))) / 2.0;
     public static final double kCargoHatchTargetHeight = kRocketHatchTargetHeight;
     public static final double kLoadingHatchTargetHeight = kRocketHatchTargetHeight;
-    public static final double kRocketPortTargetHeight = 39.375 - (2.0 * Math.sin(Math.toRadians(14.5)) - 5.5 * Math.cos(Math.toRadians(14.5))) / 2;
+    public static final double kRocketPortTargetHeight = 39.375 - (2.0 * Math.sin(Math.toRadians(14.5)) - 5.5 * Math.cos(Math.toRadians(14.5))) / 2.0;
     // Dimensions of vision target
     public static final double kTargetHeight = 6.0;
     public static final double kTargetWidth = 14.5;

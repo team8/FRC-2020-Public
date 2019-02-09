@@ -23,5 +23,5 @@ public class PusherConstants {
     /**
      * Unit Conversions
      */
-    public static final double kTicksPerInch = 42 / (1 * Math.PI); // todo: change the 1 to the actual sprocket size
+    public static final double kTicksPerInch = 42.0 / (1.0 * Math.PI); // todo: change the 1 to the actual sprocket size
 }

@@ -4,9 +4,9 @@ public class ShovelConstants {
     /**
      * Shovel
      */
-    public static final int kMotorVelocity = 0;
-    public static final int kExpellingMotorVelocity = 0;
-    public static final int kSmallExpelMotorVelocity = 0;
+    public static final double kMotorVelocity = 0;
+    public static final double kExpellingMotorVelocity = 0;
+    public static final double kSmallExpelMotorVelocity = 0;
 
-    public static final int kMaxShovelCurrentDraw = 0;
+    public static final double kMaxShovelCurrentDraw = 0;
 }

@@ -70,9 +70,9 @@ public class DrivetrainConstants {
     /**
      * Unit Conversions
      */
-    public static final double kDriveTicksPerInch = 4096 / (6.25 * Math.PI);
-    public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90;
-    public static final double kDriveSpeedUnitConversion = 4096 / (6.25 * Math.PI * 10);
+    public static final double kDriveTicksPerInch = 4096.0 / (6.25 * Math.PI);
+    public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90.0;
+    public static final double kDriveSpeedUnitConversion = 4096.0 / (6.25 * Math.PI * 10.0);
 
 
     @Override
