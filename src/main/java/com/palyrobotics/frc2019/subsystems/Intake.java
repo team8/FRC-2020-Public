@@ -48,12 +48,13 @@ public class Intake extends Subsystem {
         GROUND_INTAKING, // Getting the cargo off the ground
         LIFTING, // lifting the cargo into the intake
         DROPPING, // dropping the cargo into the intkae
-        HOLDING_MID // moving the arm to the mid hold position and keeping it there
+        HOLDING_MID, // moving the arm to the mid hold position and keeping it there
+        IDLE
     }
 
     private WheelState mWheelState = WheelState.IDLE;
     private UpDownState mUpDownState = UpDownState.UP;
-    private IntakeMacroState mMacroState = IntakeMacroState.STOWED;
+    private IntakeMacroState mMacroState = IntakeMacroState.IDLE;
 
     private double lastIntakeQueueTime = 0;
     private final double requiredMSCancel = 200;
