@@ -2,6 +2,7 @@ package com.palyrobotics.frc2019.behavior.routines.elevator;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
 import com.palyrobotics.frc2019.subsystems.Elevator;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 import com.palyrobotics.frc2019.util.trajectory.Path;
@@ -62,11 +63,11 @@ public class ElevatorCustomPositioningRoutine extends Routine {
             }
         }
 
-        if(elevator.getElevatorBottomPosition().isPresent() && elevator.getElevatorWantedPosition().isPresent()) {
-            if(elevator.getElevatorWantedPosition().get() == elevator.getElevatorBottomPosition().get() && robotState.elevatorHFX) {
-                return true;
-            }
-        }
+//        if(elevator.getElevatorWantedPosition().isPresent()) {
+//            if(elevator.getElevatorWantedPosition().get() == ElevatorConstants.kBottomPositionInches) {
+//                return true;
+//            }
+//        }
 
         return elevator.elevatorOnTarget();
     }

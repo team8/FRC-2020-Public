@@ -1,10 +1,10 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2019.1.1"
+    id "edu.wpi.first.GradleRIO" version "2019.3.2"
 }
 
 // Note: No longer Robot, and now RobotStarter in accordance with the 2019 software interface
-def ROBOT_MAIN_CLASS = "frc2019.robot.RobotStarter"
+def ROBOT_MAIN_CLASS = "com.palyrobotics.frc2019.robot.RobotStarter"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
@@ -31,6 +31,20 @@ deploy {
             // Deploy to RoboRIO target, into /home/lvuser/deploy
             targets << "roborio"
             directory = '/home/lvuser/deploy'
+        }
+    }
+}
+
+task getAllArtifacts() {
+    doLast {
+        project.configurations.each { Configuration conf ->
+            if(!conf.canBeResolved) {
+                return
+            }
+            println("Resolving: " + conf.getName())
+            conf.resolvedConfiguration.resolvedArtifacts.each { ResolvedArtifact art ->
+                art.file    // Needed to trigger download
+            }
         }
     }
 }

@@ -50,10 +50,12 @@ public class Shooter extends Subsystem{
 
         switch(mState) {
             case IDLE:
+                commands.shooterSpinning = false;
                 mOutput = 0;
                 mExpellingCycles = 0;
                 break;
             case SPIN_UP:
+                commands.shooterSpinning = true;
                 if (commands.customShooterSpeed) {
                     mOutput = robotState.operatorXboxControllerInput.leftTrigger; //TODO: change control?
                 } else {

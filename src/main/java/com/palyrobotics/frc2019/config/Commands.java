@@ -2,7 +2,6 @@ package com.palyrobotics.frc2019.config;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.subsystems.*;
-import com.palyrobotics.frc2019.util.DriveSignal;
 import com.palyrobotics.frc2019.util.SparkSignal;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
@@ -51,7 +50,7 @@ public class Commands {
 	public boolean customShooterSpeed = false;
 	public boolean customIntakeSpeed = false;
 
-	public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.CALIBRATING;
+	public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.IDLE;
 	public Elevator.ClimberState wantedClimberState = Elevator.ClimberState.INACTIVE;
 	public Elevator.GearboxState wantedGearboxState = Elevator.GearboxState.ELEVATOR;
 
@@ -61,8 +60,12 @@ public class Commands {
 	public boolean autoPlacerOutput = false;
 
 	public boolean intakeHFX = false;
+	public boolean intakeHasHatch = false;
 	public boolean hasCargo = false;
 	public boolean hasPusherCargo = false;
+
+	public boolean elevatorMoving = false;
+	public boolean shooterSpinning = false;
 
 	public void addWantedRoutine(Routine wantedRoutine) {
 		for(Routine routine : wantedRoutines) {
@@ -87,6 +90,7 @@ public class Commands {
 		public Optional<SparkSignal> drivePowerSetpoint = Optional.empty();
 		public Optional<Double> elevatorPositionSetpoint = Optional.empty();
 		public Optional<Double> climberPositionSetpoint = Optional.empty();
+		public Optional<Double> pusherPositionSetpoint = Optional.empty();
 		public Optional<Double> intakePositionSetpoint = Optional.empty();
 		/**
 		 * Resets all the setpoints
@@ -95,6 +99,7 @@ public class Commands {
 			drivePowerSetpoint = Optional.empty();
 			elevatorPositionSetpoint = Optional.empty();
 			climberPositionSetpoint = Optional.empty();
+			pusherPositionSetpoint = Optional.empty();
 			intakePositionSetpoint = Optional.empty();
 		}
 	}
@@ -133,6 +138,9 @@ public class Commands {
 		copy.disableIntakeScaling = this.disableIntakeScaling;
 		copy.hasPusherCargo = this.hasPusherCargo;
 		copy.holderOutput = this.holderOutput;
+		copy.elevatorMoving = this.elevatorMoving;
+		copy.shooterSpinning = this.shooterSpinning;
+		copy.wantedPusherInOutState = this.wantedPusherInOutState;
 
 		for(Routine r : this.wantedRoutines) {
 			copy.wantedRoutines.add(r);
@@ -144,8 +152,8 @@ public class Commands {
 		robotSetpoints.drivePowerSetpoint.ifPresent((SparkSignal signal) -> copy.robotSetpoints.drivePowerSetpoint = Optional.of(signal));
 		robotSetpoints.elevatorPositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.elevatorPositionSetpoint = Optional.of(elevatorPositionSetpoint));
         robotSetpoints.climberPositionSetpoint.ifPresent((Double climberPositionSetpoint) -> copy.robotSetpoints.climberPositionSetpoint = Optional.of(climberPositionSetpoint));
-		robotSetpoints.intakePositionSetpoint
-				.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.intakePositionSetpoint = Optional.of(elevatorPositionSetpoint));
+		robotSetpoints.intakePositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.intakePositionSetpoint = Optional.of(elevatorPositionSetpoint));
+		robotSetpoints.pusherPositionSetpoint.ifPresent((Double pusherPositionSetpoint) -> copy.robotSetpoints.pusherPositionSetpoint = Optional.of(pusherPositionSetpoint));
         return copy;
 	}
 

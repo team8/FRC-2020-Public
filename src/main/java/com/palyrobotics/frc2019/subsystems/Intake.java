@@ -4,6 +4,7 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.IntakeConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.Gains;
+import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 
 import java.util.Optional;
@@ -36,7 +37,6 @@ public class Intake extends Subsystem {
 
     private enum UpDownState {
         HOLD, //Keeping arm position fixed
-        UP,
         CLIMBING,
         MANUAL_POSITIONING, //Moving elevator with joystick
         CUSTOM_POSITIONING, //Moving elevator with a control loop
@@ -53,7 +53,7 @@ public class Intake extends Subsystem {
     }
 
     private WheelState mWheelState = WheelState.IDLE;
-    private UpDownState mUpDownState = UpDownState.UP;
+    private UpDownState mUpDownState = UpDownState.IDLE;
     private IntakeMacroState mMacroState = IntakeMacroState.IDLE;
 
     private double lastIntakeQueueTime = 0;
@@ -65,19 +65,19 @@ public class Intake extends Subsystem {
     protected Intake() {
         super("Intake");
         mWheelState = WheelState.IDLE;
-        mUpDownState = UpDownState.UP;
+        mUpDownState = UpDownState.IDLE;
     }
 
     @Override
     public void start() {
         mWheelState = WheelState.IDLE;
-        mUpDownState = UpDownState.UP;
+        mUpDownState = UpDownState.IDLE;
     }
 
     @Override
     public void stop() {
         mWheelState = WheelState.IDLE;
-        mUpDownState = UpDownState.UP;
+        mUpDownState = UpDownState.IDLE;
     }
 
     @Override
@@ -163,10 +163,6 @@ public class Intake extends Subsystem {
                 mSparkOutput.setGains(Gains.intakeHold);
                 mSparkOutput.setTargetPosition(mIntakeWantedPosition.get());
                 break;
-            case UP:
-                mSparkOutput.setGains(Gains.intakeUp);
-                mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), -arb_ff);
-                break;
             case CLIMBING:
                 mSparkOutput.setGains(Gains.intakeClimbing);
                 mSparkOutput.setTargetPosition(mIntakeWantedPosition.get());
@@ -188,10 +184,10 @@ public class Intake extends Subsystem {
 
                 if (movingDown) {
                     mSparkOutput.setGains(Gains.intakeDownwards);
-                    mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff);
+                    mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff, Gains.intakeDownwards);
                 } else {
                     mSparkOutput.setGains(Gains.intakePosition);
-                    mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff);
+                    mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff, Gains.intakeDownwards);
                 }
                 break;
             case IDLE:
@@ -209,9 +205,10 @@ public class Intake extends Subsystem {
 
         cachedCargoState = robotState.hasCargo;
 
+//        System.out.println("Angle: " + mRobotState.intakeAngle);
+//        System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
+//        System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get() / IntakeConstants.kArmPotentiometerTicksPerDegree);
         mWriter.addData("intakeAngle", mRobotState.intakeAngle);
-        mWriter.addData("intakeVelocity", mRobotState.intakeVelocity);
-        mWriter.addData("intakeVelocityDegreePerSec", mRobotState.intakeVelocity * IntakeConstants.kArmEncoderSpeedUnitConversion);
         mIntakeWantedPosition.ifPresent(intakeWantedPosition -> mWriter.addData("intakeWantedPosition", intakeWantedPosition));
         mWriter.addData("intakeSparkSetpoint", mSparkOutput.getSetpoint());
     }
@@ -245,7 +242,7 @@ public class Intake extends Subsystem {
     }
 
     public double convertIntakeSetpoint(double targetAngle) {
-        return (mRobotState.intakeStartAngle - targetAngle) * IntakeConstants.kArmEncoderRevolutionsPerDegree;
+        return mRobotState.intakeStartAngle - targetAngle;
     }
 
     @Override

@@ -103,7 +103,7 @@ public class RoutineManager {
 			//combine running routines w/ new routine to check for shared subsystems
 			ArrayList<Routine> conflicts = conflictingRoutines(runningRoutines, newRoutine);
 			for(Routine routine : conflicts) {
-				Logger.getInstance().logRobotThread(Level.WARNING, "Canceling routine " + routine.getName() + " that conflicts with " + newRoutine.getName());
+				System.out.println("Canceling routine " + routine.getName() + " that conflicts with " + newRoutine.getName());
 				output = routine.cancel(output);
 				runningRoutines.remove(routine);
 			}
@@ -115,7 +115,7 @@ public class RoutineManager {
 		routinesToAdd.clear();
 
 		if(output.cancelCurrentRoutines) {
-			Logger.getInstance().logRobotThread(Level.FINE, "Cancel routine button");
+			System.out.println("Cancel routine button");
 			output = this.reset(output);
 		}
 
@@ -185,6 +185,10 @@ public class RoutineManager {
 		counter.put(Drive.getInstance(), 0);
 		counter.put(Elevator.getInstance(), 0);
 		counter.put(Shooter.getInstance(), 0);
+		counter.put(Shovel.getInstance(), 0);
+		counter.put(Fingers.getInstance(), 0);
+		counter.put(Intake.getInstance(),0);
+		counter.put(Pusher.getInstance(), 0);
 		// Count the number of times each subsystem appears
 		for (Routine routine : routines) {
 			for (Subsystem subsystem : routine.getRequiredSubsystems()) {
@@ -196,6 +200,7 @@ public class RoutineManager {
 		for(Subsystem subsystem : counter.keySet()) {
 			if(counter.get(subsystem) > 1 && subsystem != null) {
 				conflicts.add(subsystem);
+				System.out.println("Conflicts in " + subsystem.getName());
 			}
 		}
 		return conflicts.toArray(new Subsystem[conflicts.size()]);

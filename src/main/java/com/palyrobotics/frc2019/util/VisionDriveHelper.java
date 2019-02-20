@@ -53,27 +53,34 @@ public class VisionDriveHelper {
             mInitialBrake = true;
         }
 
-        if(Limelight.getInstance().isTargetFound() && Limelight.getInstance().getCornerX().length == 4) {
+        if(Limelight.getInstance().isTargetFound()) {
             // Is this the first time detecting the target?
             if (!found){
-                Gains turnGains = new Gains(0.5/Limelight.getInstance().getCorrectedEstimatedDistanceZ(), 0, 0, 0, 200, 0);
+                Gains turnGains = new Gains(.1, 0, 0, 0, 200, 0);
                 pidController = new SynchronousPID(turnGains.P, turnGains.I, turnGains.D, turnGains.izone);
-                pidController.setOutputRange(-0.2,0.2);
+                pidController.setOutputRange(-0.2, 0.2);
 
                 pidController.setSetpoint(0);
                 found = true;
             }
-            pidController.setPID( 0.5/Limelight.getInstance().getCorrectedEstimatedDistanceZ(), 0, 0);
             angularPower = pidController.calculate(Limelight.getInstance().getYawToTarget());
+            System.out.println(angularPower);
         } else {
+//            System.out.println(Limelight.getInstance().getCornerX().length);
             found = false;
             angularPower = 0;
         }
 
         rightPower = leftPower = mOldThrottle = linearPower;
+
+        System.out.println("Before - L: " + leftPower + " R: " + rightPower);
+
+        angularPower *= -1;
+        //angularPower *= mOldThrottle;
         leftPower += angularPower;
         rightPower -= angularPower;
-        System.out.println(angularPower);
+
+//        System.out.println(angularPower);
 
         if(leftPower > 1.0) {
             leftPower = 1.0;
@@ -86,6 +93,8 @@ public class VisionDriveHelper {
         }
 
         SparkSignal mSignal = SparkSignal.getNeutralSignal();
+
+        System.out.println("After - L: " + leftPower + " R: " + rightPower);
 
         mSignal.leftMotor.setPercentOutput(leftPower);
         mSignal.rightMotor.setPercentOutput(rightPower);

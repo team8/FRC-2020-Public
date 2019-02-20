@@ -214,8 +214,8 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 			setpoint = new Kinematics.DriveVelocity(setpoint.left * scaling, setpoint.right * scaling);
 		}
 
-		final SparkMaxOutput left = new SparkMaxOutput(Gains.vidarVelocity, ControlType.kVelocity, setpoint.left * DrivetrainConstants.kDriveSpeedUnitConversion);
-		final SparkMaxOutput right = new SparkMaxOutput(Gains.vidarVelocity, ControlType.kVelocity, setpoint.right * DrivetrainConstants.kDriveSpeedUnitConversion);
+		final SparkMaxOutput left = new SparkMaxOutput(Gains.vidarVelocity, ControlType.kVelocity, setpoint.left);
+		final SparkMaxOutput right = new SparkMaxOutput(Gains.vidarVelocity, ControlType.kVelocity, setpoint.right);
 //		System.out.println("Left output = " + left + " " + "Right output = " + right);
 		return new SparkSignal(left, right);
 	}

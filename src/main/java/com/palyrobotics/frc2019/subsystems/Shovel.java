@@ -51,6 +51,8 @@ public class Shovel extends Subsystem {
         mWheelState = commands.wantedShovelWheelState;
         mUpDownOutput = commands.wantedShovelUpDownState;
         commands.intakeHFX = robotState.hatchIntakeUp;
+        commands.intakeHasHatch = robotState.hasHatch;
+//        System.out.println("Stored robot state:" + robotState.hasHatch);
 
         switch(mWheelState) {
             case INTAKING:
@@ -78,6 +80,7 @@ public class Shovel extends Subsystem {
         switch(mUpDownOutput) {
             case UP:
                 mUpDownOutput = UpDownState.UP;
+                mVictorOutput = 0.0;
                 break;
             case DOWN:
                 mUpDownOutput = UpDownState.DOWN;
@@ -109,7 +112,7 @@ public class Shovel extends Subsystem {
         }
     }
 
-    public double getVictorOutput() {
+    public double getPercentOutput() {
         return mVictorOutput;
     }
 

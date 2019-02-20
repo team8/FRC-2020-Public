@@ -59,8 +59,9 @@ public class RobotState {
 	//Pusher
 	public boolean hasPusherCargo = false;
 	public double cargoPusherDistance = 0;
-	public ArrayList<Double> mLeftPusherReadings = new ArrayList<>();
-	public ArrayList<Double> mRightPusherReadings = new ArrayList<>();
+	public ArrayList<Double> mPusherReadings = new ArrayList<>();
+	public double pusherStartAngle = 0; // Angle in degrees
+	public double pusherAngle = 0;
 
 
 	//Hatch Intake
@@ -69,6 +70,7 @@ public class RobotState {
 
 	//Tracks total current from kPDP
 	public double shovelCurrentDraw = 0;
+	public boolean hasShovel = false;
 
 	//Tracks pressure in compressor
     public double compressorPressure = 0;
@@ -80,12 +82,11 @@ public class RobotState {
 	public double pusherCachePosition = 0;
 	public double pusherPosition = 0;
 	public double pusherVelocity = 0;
-	public boolean hasPusherStickyFaults = false;
+	public double pusherEncVelocity = 0;
 
 	//Elevator sensor data
     public double elevatorPosition = 0;
     public double elevatorVelocity = 0;
-    public boolean elevatorHFX = false;
 
 	//Robot position
 	public final int kObservationBufferSize = 100;

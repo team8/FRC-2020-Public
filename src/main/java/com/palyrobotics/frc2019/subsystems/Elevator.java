@@ -6,10 +6,10 @@ import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 
 import java.util.Optional;
 
@@ -25,7 +25,6 @@ public class Elevator extends Subsystem {
     }
 
     public enum ElevatorState {
-        CALIBRATING, //Moving to the bottom to trigger HFX
         HOLD, //Keeping the elevator position fixed
         MANUAL_POSITIONING, //Moving the elevator with the joystick
         CUSTOM_POSITIONING, //Moving the elevator with a control loop
@@ -35,7 +34,7 @@ public class Elevator extends Subsystem {
 
     public enum ClimberState {
         HOLD, //Keeping the climber position fixed
-        MANUAL_POSITIONING, //Moving the climber with the joystick
+        ON_MANUAL,
         CUSTOM_POSITIONING, //Moving the climber with a control loop
         INACTIVE, //Used when the elevator is being used
         IDLE //Not moving
@@ -51,9 +50,8 @@ public class Elevator extends Subsystem {
     private ClimberState mClimberState;
     private GearboxState mGearboxState;
 
-    //Values for the bottom/top positions to be calibrated
-    private Optional<Double> kElevatorBottomPosition = Optional.empty();
-    private Optional<Double> kElevatorTopPosition = Optional.empty();
+    private double kElevatorBottomPosition = ElevatorConstants.kBottomPositionInches;
+    private double kElevatorTopPosition = ElevatorConstants.kTopPositionInches;
 
     //Variables used to check if elevator is at the top or bottom position
     private boolean isAtTop = false;
@@ -70,7 +68,7 @@ public class Elevator extends Subsystem {
 
     //The subsystem output
     private SparkMaxOutput mOutput = new SparkMaxOutput();
-    private DoubleSolenoid.Value mSolenoidOutput;
+    private DoubleSolenoid.Value mSolenoidOutput = DoubleSolenoid.Value.kForward;
     private boolean mHolderSolenoidOutput = false;
 
     /**
@@ -81,7 +79,7 @@ public class Elevator extends Subsystem {
      */
     protected Elevator(String name) {
         super(name);
-        mElevatorState = ElevatorState.CALIBRATING;
+        mElevatorState = ElevatorState.IDLE;
         mClimberState = ClimberState.INACTIVE;
         mGearboxState = GearboxState.ELEVATOR;
     }
@@ -99,18 +97,11 @@ public class Elevator extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         //Update for use in handleElevatorState()
         mRobotState = robotState;
-
         if(mGearboxState == GearboxState.ELEVATOR) {
             mHolderSolenoidOutput = commands.holderOutput;
 
             mClimberState = ClimberState.INACTIVE;
             mSolenoidOutput = DoubleSolenoid.Value.kReverse;
-            //Checks calibration if not calibrated and not in custom/hold state (checks in manual, idle, calibrating)
-            //Exception: in hold but bottomed out, so applying 0 power anyway
-            if (mElevatorState != ElevatorState.CUSTOM_POSITIONING && (mElevatorState != ElevatorState.HOLD
-                    || (mElevatorState == ElevatorState.HOLD && mRobotState.elevatorHFX)) && !isCalibrated()) {
-                checkCalibration();
-            }
 
             handleElevatorState(commands);
             checkTopBottom(mRobotState);
@@ -118,30 +109,24 @@ public class Elevator extends Subsystem {
             //Execute update loop based on the current state
             //Does not switch between states, only performs actions
             switch (mElevatorState) {
-                //Actual calibration logic is not done in the state machine
-                case CALIBRATING:
-                    mOutput.setPercentOutput(ElevatorConstants.kCalibratePower);
-                    break;
                 case HOLD:
+                    commands.elevatorMoving = false;
                     //If at the bottom, supply no power
                     if (isAtBottom) {
                         mOutput.setPercentOutput(0.0);
                     } else {
                         //Control loop to hold position otherwise
-                        mOutput.setTargetPosition(mElevatorWantedPosition.get());
-                        mOutput.setGains(Gains.elevatorHold);
+                        mOutput.setTargetPosition(mElevatorWantedPosition.get(), ElevatorConstants.kHoldVoltage, Gains.elevatorPosition);
                     }
                     break;
                 case MANUAL_POSITIONING:
-
                     //Clear any existing wanted positions
                     if (mElevatorWantedPosition.isPresent()) {
                         mElevatorWantedPosition = Optional.empty();
                     }
 
-                    //If calibrated, run limiting code for top & bottom
+                    commands.elevatorMoving = false;
 
-                    //if not calibrated, limit speed
                     if (OtherConstants.operatorXBoxController) {
                         mOutput.setPercentOutput(ElevatorConstants.kUncalibratedManualPower * mRobotState.operatorXboxControllerInput.getRightY());
                     } else {
@@ -150,17 +135,14 @@ public class Elevator extends Subsystem {
 
                     break;
                 case CUSTOM_POSITIONING:
+                    commands.elevatorMoving = true;
                     //Control loop
-                    if (movingDown) {
-                        mOutput.setTargetPosition(mElevatorWantedPosition.get());
-                        mOutput.setGains(Gains.elevatorDownwardsPosition);
-                    } else {
-                        mOutput.setTargetPosition(mElevatorWantedPosition.get());
-                        mOutput.setGains(Gains.elevatorPosition);
-                    }
+
+                    mOutput.setTargetPosition(mElevatorWantedPosition.get(), ElevatorConstants.kHoldVoltage, Gains.elevatorPosition);
 
                     break;
                 case IDLE:
+                    commands.elevatorMoving = false;
                     //Clear any existing wanted positions
                     if (mElevatorWantedPosition.isPresent()) {
                         mElevatorWantedPosition = Optional.empty();
@@ -169,6 +151,7 @@ public class Elevator extends Subsystem {
                     mOutput.setPercentOutput(0.0);
                     break;
                 case INACTIVE:
+                    commands.elevatorMoving = false;
                     if(mElevatorWantedPosition.isPresent()) {
                         mElevatorWantedPosition = Optional.empty();
                     }
@@ -187,17 +170,16 @@ public class Elevator extends Subsystem {
                     mOutput.setTargetPosition(mClimberWantedPosition.get());
                     mOutput.setGains(Gains.climberHold);
                     break;
-                case MANUAL_POSITIONING:
+                case ON_MANUAL:
 
                     if(mClimberWantedPosition.isPresent()) {
                         mClimberWantedPosition = Optional.empty();
                     }
 
-                    mOutput.setPercentOutput(mRobotState.operatorXboxControllerInput.getRightY());
+                    mOutput.setPercentOutput(ElevatorConstants.kManualOutputPercentOutput);
 
                     break;
                 case CUSTOM_POSITIONING:
-
                     mOutput.setTargetPosition(mClimberWantedPosition.get());
                     mOutput.setGains(Gains.climberPosition);
 
@@ -221,6 +203,9 @@ public class Elevator extends Subsystem {
                     break;
             }
         }
+
+        System.out.println("Elevator: ");
+        System.out.println("applied output " + HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getAppliedOutput());
 
         mWriter.addData("elevatorPosition", mRobotState.elevatorPosition);
         mWriter.addData("elevatorPositionInches", mRobotState.elevatorPosition / ElevatorConstants.kElevatorRotationsPerInch);
@@ -247,7 +232,6 @@ public class Elevator extends Subsystem {
      *
      * Behavior for desired states:
      * <ul>
-     * <li>{@link ElevatorState#CALIBRATING}: Sets the state to calibrate. If already calibrated, ignores the request and holds instead.</li>
      * <li>{@link ElevatorState#HOLD}: Sets the desired holding position and state to hold.</li>
      * <li>{@link ElevatorState#MANUAL_POSITIONING}: Sets the state to manual.</li>
      * <li>{@link ElevatorState#CUSTOM_POSITIONING}: Sets the desired custom position and state to custom positioning. If not calibrated, set to calibrate instead.</li>
@@ -260,40 +244,21 @@ public class Elevator extends Subsystem {
      *            the commands used to get the wanted state
      */
     private void handleElevatorState(Commands commands) {
-        if(commands.wantedElevatorState == ElevatorState.CALIBRATING) {
-            if(!isCalibrated()) {
-                mElevatorState = ElevatorState.CALIBRATING;
-            }  else {
-                commands.wantedElevatorState = ElevatorState.HOLD;
-            }
-        } else if(commands.wantedElevatorState == ElevatorState.HOLD) {
+        if(commands.wantedElevatorState == ElevatorState.HOLD) {
             //Set the wanted elevator position if not already set, or if switching from a
             //different state
             if(!mElevatorWantedPosition.isPresent() || mElevatorState != commands.wantedElevatorState) {
-                mElevatorWantedPosition = Optional.of(mRobotState.elevatorPosition);
+                mElevatorWantedPosition = Optional.of(mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch);
             }
             mElevatorState = commands.wantedElevatorState;
         } else if(commands.wantedElevatorState == ElevatorState.CUSTOM_POSITIONING) {
-            //If calibrated
-            if(isCalibrated()) {
-                //Set the setpoint
-                //If the desired custom positioning setpoint is different than what currently
-                //exists, replace it
-                mElevatorWantedPosition = Optional.of(kElevatorBottomPosition.get() + commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kElevatorRotationsPerInch);
-                if(mElevatorWantedPosition.get() >= mRobotState.elevatorPosition) {
+            //Assume bottom position is the bottom
+            if(!mElevatorWantedPosition.equals(Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get()))) {
+                mElevatorWantedPosition = Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get());
+                if(mElevatorWantedPosition.get() >= mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch) {
                     movingDown = false;
                 } else {
                     movingDown = true;
-                }
-            } else {
-                //Assume bottom position is the bottom
-                if(!mElevatorWantedPosition.equals(Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kElevatorRotationsPerInch))) {
-                    mElevatorWantedPosition = Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get() * ElevatorConstants.kElevatorRotationsPerInch);
-                    if(mElevatorWantedPosition.get() >= mRobotState.elevatorPosition) {
-                        movingDown = false;
-                    } else {
-                        movingDown = true;
-                    }
                 }
             }
             mElevatorState = ElevatorState.CUSTOM_POSITIONING;
@@ -314,12 +279,12 @@ public class Elevator extends Subsystem {
             //Set the wanted climberposition if not already set, or if switching from a
             //different state
             if(!mClimberWantedPosition.isPresent() || mClimberState != commands.wantedClimberState) {
-                mClimberWantedPosition = Optional.of(mRobotState.elevatorPosition);
+                mClimberWantedPosition = Optional.of(mRobotState.elevatorPosition/ElevatorConstants.kClimberRotationsPerInch);
             }
             mClimberState = commands.wantedClimberState;
         } else if(commands.wantedClimberState == ClimberState.CUSTOM_POSITIONING) {
-            if(!mClimberWantedPosition.equals(Optional.of(commands.robotSetpoints.climberPositionSetpoint.get() * ElevatorConstants.kClimberRotationsPerInch))) {
-                mClimberWantedPosition = Optional.of(commands.robotSetpoints.climberPositionSetpoint.get() * ElevatorConstants.kClimberRotationsPerInch);
+            if(!mClimberWantedPosition.equals(Optional.of(commands.robotSetpoints.climberPositionSetpoint.get()))) {
+                mClimberWantedPosition = Optional.of(commands.robotSetpoints.climberPositionSetpoint.get());
             }
             mClimberState = ClimberState.CUSTOM_POSITIONING;
         } else {
@@ -337,61 +302,31 @@ public class Elevator extends Subsystem {
     public boolean movingUpwards() {
         //
         if((mOutput.getControlType() == ControlType.kDutyCycle || mOutput.getControlType() == ControlType.kVelocity) && mOutput.getSetpoint() > ElevatorConstants.kHoldVoltage) {
-            return true;
+            return false;
         } else if(mOutput.getControlType() == ControlType.kPosition) {
-
-            //Check calibration. If not calibrated, assume the worst and return true.
-            if(isCalibrated()) {
-                //If the desired setpoint is above the top position, assume it's moving up
-                if(mOutput.getSetpoint() > getElevatorTopPosition().get()) {
-                    return true;
-                }
-            } else return true;
+            if(mOutput.getSetpoint() > kElevatorTopPosition) {
+                return true;
+            }
         }
         return false;
     }
 
     /**
      * Checks whether or not the elevator has topped/bottomed out.
-     * Uses both HFX and encoders as redundant checks.
      *
      * @param state the robot state, used to obtain encoder values
      */
     private void checkTopBottom(RobotState state) {
-        if(isCalibrated() && state.elevatorPosition > kElevatorTopPosition.get()) {
+        if(state.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch > kElevatorTopPosition) {
             isAtTop = true;
         } else {
             isAtTop = false;
         }
-        if(state.elevatorHFX || (isCalibrated() && state.elevatorPosition < kElevatorBottomPosition.get())) {
+        if(state.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch < kElevatorBottomPosition) {
             isAtBottom = true;
         } else {
             isAtBottom = false;
         }
-    }
-    /**
-     * Calibrates the bottom or top position values depending on which HFX is triggered. If the other position is not already set, set that as well.
-     */
-    private void checkCalibration() {
-
-        if(!isCalibrated()) {
-            if(mRobotState.elevatorHFX) {
-                kElevatorBottomPosition = Optional.of(mRobotState.elevatorPosition);
-                if(!kElevatorTopPosition.isPresent()) {
-                    kElevatorTopPosition = Optional.of(mRobotState.elevatorPosition + ElevatorConstants.kTopBottomDifferenceInches * ElevatorConstants.kElevatorRotationsPerInch);
-                }
-            }
-        } else {
-            if((kElevatorBottomPosition.get() - mRobotState.elevatorPosition) > ElevatorConstants.kHFXAcceptableError ||
-                    (mRobotState.elevatorPosition - kElevatorTopPosition.get()) > ElevatorConstants.kHFXAcceptableError) {
-                kElevatorTopPosition = Optional.empty();
-                kElevatorBottomPosition = Optional.empty();
-            }
-        }
-    }
-
-    public boolean isCalibrated() {
-        return (kElevatorTopPosition.isPresent() && kElevatorBottomPosition.isPresent());
     }
 
     @Override
@@ -416,40 +351,12 @@ public class Elevator extends Subsystem {
         return mHolderSolenoidOutput;
     }
 
-    public Optional<Double> getElevatorBottomPosition() {
-        return kElevatorBottomPosition;
-    }
-
-    public Optional<Double> getElevatorTopPosition() {
-        return kElevatorTopPosition;
-    }
-
     public Optional<Double> getElevatorWantedPosition() {
         return mElevatorWantedPosition;
     }
 
-    public boolean tryingToBottom() {
-        if(mElevatorWantedPosition.isPresent()) {
-            if(isCalibrated()) {
-                return mElevatorWantedPosition.get().equals(kElevatorBottomPosition.get());
-            } else return mElevatorWantedPosition.get().equals(0);
-        } else return false;
-    }
-
-    public boolean nearBottom() {
-        if(isCalibrated()) {
-            if(Math.abs(mRobotState.elevatorPosition - getElevatorBottomPosition().get()) < 3000) {
-                return true;
-            } else return false;
-        } else return false;
-    }
-
     public boolean getIsAtTop() {
         return isAtTop;
-    }
-
-    public boolean getIsAtBottom() {
-        return isAtBottom;
     }
 
     /**
@@ -465,9 +372,12 @@ public class Elevator extends Subsystem {
         if(mElevatorState != ElevatorState.CUSTOM_POSITIONING) {
             return false;
         }
-
-        return (Math.abs(mElevatorWantedPosition.get() - mRobotState.elevatorPosition) < ElevatorConstants.kAcceptablePositionError)
-                && (Math.abs(mRobotState.elevatorVelocity) < ElevatorConstants.kAcceptableVelocityError);
+        System.out.println("Elevator wanted position: " + mElevatorWantedPosition.get());
+        System.out.println("Elevator position: " + mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch);
+        System.out.println("Elevator velocity: " + mRobotState.elevatorVelocity*ElevatorConstants.kElevatorSpeedUnitConversion);
+        System.out.println("");
+        return (Math.abs(mElevatorWantedPosition.get() - mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch) < ElevatorConstants.kAcceptablePositionError)
+                && (Math.abs(mRobotState.elevatorVelocity*ElevatorConstants.kElevatorSpeedUnitConversion) < ElevatorConstants.kAcceptableVelocityError);
     }
 
     /**
@@ -484,8 +394,8 @@ public class Elevator extends Subsystem {
             return false;
         }
 
-        return (Math.abs(mClimberWantedPosition.get() - mRobotState.elevatorPosition) < ElevatorConstants.kClimberAcceptablePositionError)
-                && (Math.abs(mRobotState.elevatorVelocity) < ElevatorConstants.kClimberAcceptableVelocityError);
+        return (Math.abs(mClimberWantedPosition.get() - mRobotState.elevatorPosition/ElevatorConstants.kClimberRotationsPerInch) < ElevatorConstants.kClimberAcceptablePositionError)
+                && (Math.abs(mRobotState.elevatorVelocity*ElevatorConstants.kClimberSpeedUnitConversion) < ElevatorConstants.kClimberAcceptableVelocityError);
     }
 
     public ElevatorState getElevatorState() {
@@ -498,13 +408,5 @@ public class Elevator extends Subsystem {
 
     public GearboxState getmGearboxState() {
         return mGearboxState;
-    }
-
-    public void setBottomPosition(Optional<Double> value) {
-        kElevatorBottomPosition = value;
-    }
-
-    public void setTopPosition(Optional<Double> value) {
-        kElevatorTopPosition = value;
     }
 }

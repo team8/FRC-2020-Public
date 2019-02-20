@@ -40,8 +40,8 @@ public class DrivetrainConstants {
     public static final double kSmoothingMaxIters = 10000;
     public static final double kTurnVelocityReduction = 2; // A constant for reducing following speed during turns; 1 for slowest turning, 5 for fastest
     public static final double kDriveWheelDiameterInches = 6.25;
-    public static final double kTrackLengthInches = 8.2;
-    public static final double kTrackWidthInches = 25.4;
+    public static final double kTrackLengthInches = 17.875;
+    public static final double kTrackWidthInches = 24.625;
     public static final double kTrackEffectiveDiameter = (kTrackWidthInches * kTrackWidthInches + kTrackLengthInches * kTrackLengthInches) / kTrackWidthInches;
     public static final double kTrackScrubFactor = .9;
     public static final double kPathFollowingLookahead = 35.0;
@@ -70,15 +70,15 @@ public class DrivetrainConstants {
     /**
      * Unit Conversions
      */
-    public static final double kDriveTicksPerInch = 4096.0 / (6.25 * Math.PI);
+    public static final double kDriveInchesPerRotation = 6.25 * Math.PI;
     public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90.0;
-    public static final double kDriveSpeedUnitConversion = 4096.0 / (6.25 * Math.PI * 10.0);
+    public static final double kDriveSpeedUnitConversion = 6.25 * Math.PI / 60.0;
 
 
     @Override
     public String toString() {
         return "kQuickStopAccumulatorDecreaseRate " + kQuickStopAccumulatorDecreaseRate + "kQuickStopAccumulatorDecreaseThreshold "
-                + kQuickStopAccumulatorDecreaseThreshold + "kNegativeInertiaScalar " + kNegativeInertiaScalar + "kAlpha " + kAlpha + "kDriveTicksPerInch "
-                + kDriveTicksPerInch + "kDriveInchesPerDegree" + kDriveInchesPerDegree + "kDriveSpeedUnitConversion " + kDriveSpeedUnitConversion;
+                + kQuickStopAccumulatorDecreaseThreshold + "kNegativeInertiaScalar " + kNegativeInertiaScalar + "kAlpha " + kAlpha + "kDriveInchesPerRotation "
+                + kDriveInchesPerRotation + "kDriveInchesPerDegree" + kDriveInchesPerDegree + "kDriveSpeedUnitConversion " + kDriveSpeedUnitConversion;
     }
 }

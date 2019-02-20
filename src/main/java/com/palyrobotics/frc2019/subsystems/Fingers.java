@@ -45,8 +45,13 @@ public class Fingers extends Subsystem {
 
     @Override
     public void update(Commands commands, RobotState robotState) {
-        mOpenCloseState = commands.wantedFingersOpenCloseState;
-        mExpelState = commands.wantedFingersExpelState;
+        if(commands.elevatorMoving || commands.shooterSpinning) {
+            mOpenCloseState = FingersState.OPEN;
+            mExpelState = PushingState.CLOSED;
+        } else {
+            mOpenCloseState = commands.wantedFingersOpenCloseState;
+            mExpelState = commands.wantedFingersExpelState;
+        }
 
         switch(mOpenCloseState) {
             case OPEN:

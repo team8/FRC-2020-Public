@@ -32,7 +32,7 @@ public class DriveSensorResetRoutine extends Routine {
 	public void start() {
 		System.out.println("Starting reset routine");
 		this.mStartTime = System.currentTimeMillis();
-		HardwareAdapter.DrivetrainHardware.resetSensors();
+		HardwareAdapter.getInstance().getDrivetrain().resetSensors();
 		robotState.reset(0, new RigidTransform2d());
 		robotState.drivePose.heading = 0.0;
         robotState.drivePose.leftEnc = 0.0;

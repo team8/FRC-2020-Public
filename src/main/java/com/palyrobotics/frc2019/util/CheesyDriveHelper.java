@@ -15,7 +15,7 @@ public class CheesyDriveHelper {
 
 	public SparkSignal cheesyDrive(Commands commands, RobotState robotState) {
 		double throttle = -robotState.leftStickInput.getY();
-		double wheel = -robotState.rightStickInput.getX();
+		double wheel = robotState.rightStickInput.getX();
 
 		//Quickturn if right trigger is pressed
 		boolean isQuickTurn = robotState.rightStickInput.getTriggerPressed();

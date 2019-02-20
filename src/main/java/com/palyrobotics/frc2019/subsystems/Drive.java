@@ -52,10 +52,8 @@ public class Drive extends Subsystem {
 	private boolean newController = false;
 
 	//Encoder DPP
-	private final double kInchesPerTick;
 	private final double kWheelbaseWidth; //Get from CAD
 	private final double kTurnSlipFactor; //Measure empirically
-	public final double kInchesToTicks;
 
 	//Cache poses to not be allocating at 200Hz
 	private Pose mCachedPose = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
@@ -75,8 +73,6 @@ public class Drive extends Subsystem {
 		super("Drive");
 		kWheelbaseWidth = 0;
 		kTurnSlipFactor = 0;
-		kInchesPerTick = 1 / DrivetrainConstants.kDriveTicksPerInch;
-		kInchesToTicks = DrivetrainConstants.kDriveTicksPerInch;
 
 		motors = new DashboardValue("driveSpeedUpdate");
 
@@ -205,8 +201,6 @@ public class Drive extends Subsystem {
 		mWriter.addData("driveRightEnc", state.drivePose.rightEnc);
 		mWriter.addData("driveRightEncVelocity", state.drivePose.rightEncVelocity);
 		mWriter.addData("driveHeading", state.drivePose.heading);
-        System.out.println("Heading: " + state.drivePose.heading);
-        System.out.println("Drive right encoder: " + state.drivePose.rightEnc);
 		mWriter.addData("driveHeadingVelocity", state.drivePose.headingVelocity);
 		state.drivePose.leftError.ifPresent(integer -> mWriter.addData("driveLeftError", (double) integer));
 		state.drivePose.rightError.ifPresent(integer -> mWriter.addData("driveRightError", (double) integer));

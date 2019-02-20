@@ -45,8 +45,8 @@ public class TestAutoMode extends AutoModeBase {
 	private Routine testF() {
 		double power = 0.1;
 		SparkSignal signal = SparkSignal.getNeutralSignal();
-		signal.leftMotor.setTargetVelocity(20 * DrivetrainConstants.kDriveSpeedUnitConversion, Gains.vidarVelocity);
-		signal.rightMotor.setTargetVelocity(20 * DrivetrainConstants.kDriveSpeedUnitConversion, Gains.vidarVelocity);
+		signal.leftMotor.setTargetVelocity(20, Gains.vidarVelocity);
+		signal.rightMotor.setTargetVelocity(20, Gains.vidarVelocity);
 
 //		signal.leftMotor.setPercentOutput(0.4);
 //		signal.rightMotor.setPercentOutput(0.4);

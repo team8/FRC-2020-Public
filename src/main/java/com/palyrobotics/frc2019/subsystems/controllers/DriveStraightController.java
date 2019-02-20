@@ -22,7 +22,7 @@ public class DriveStraightController implements DriveController {
 	private final double kTolerance;
 
 	public DriveStraightController(Pose priorSetpoint, double distance) {
-		target = (priorSetpoint.leftEnc + priorSetpoint.rightEnc) / 2 + (distance * DrivetrainConstants.kDriveTicksPerInch);
+		target = (priorSetpoint.leftEnc + priorSetpoint.rightEnc) / 2 + distance;
 		Logger.getInstance().logSubsystemThread(Level.INFO, "Target", target);
 		cachedPose = priorSetpoint;
 

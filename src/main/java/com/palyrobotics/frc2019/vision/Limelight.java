@@ -363,6 +363,32 @@ public class Limelight {
         return 24.6 * Math.pow(this.getTargetArea(), -0.64);
     }
 
+    // SolvePnP outputs
+
+    public double getPnPTranslationX() {
+        NetworkTableEntry transform = m_table.getEntry("camtran");
+        double x = transform.getDoubleArray(new double[]{0, 0, 0, 0, 0, 0})[0];
+        return x;
+    }
+
+    public double getPnPTranslationY() {
+        NetworkTableEntry transform = m_table.getEntry("camtran");
+        double y = transform.getDoubleArray(new double[]{0, 0, 0, 0, 0, 0})[1];
+        return y;
+    }
+
+    public double getPnPPitch() {
+        NetworkTableEntry transform = m_table.getEntry("camtran");
+        double pitch = transform.getDoubleArray(new double[]{0, 0, 0, 0, 0, 0})[3];
+        return pitch;
+    }
+
+    public double getPnPYaw() {
+        NetworkTableEntry transform = m_table.getEntry("camtran");
+        double yaw = transform.getDoubleArray(new double[]{0, 0, 0, 0, 0, 0})[4];
+        return yaw;
+    }
+
     /**
      * Describes a vision target (position and angle)
      */

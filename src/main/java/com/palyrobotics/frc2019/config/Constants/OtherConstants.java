@@ -37,12 +37,6 @@ public class OtherConstants {
     public static double kCarriageToHatchCenterInches = 6.5625; // Distance from the bottom of the carriage to the center of the hatch expel
     public static double kCarriageToCargoCenterInches = 17.1744; // Distance from the bottom of the carriage to the center of the cargo expel
 
-    public static final int kRequiredUltrasonicCount = 6;
-    public static final int kVidarPusherRightUltrasonicPing = 0;
-    public static final int kVidarPusherRightUltrasonicEcho = 0;
-    public static final int kVidarPusherLeftUltrasonicPing = 0;
-    public static final int kVidarPusherLeftUltrasonicEcho = 0;
-
     /**
      * Vision constants
      */
@@ -66,4 +60,7 @@ public class OtherConstants {
     public static final double kVisionDrivePathToleranceClose = 12.0;
     public static final double kVisionAlignDistanceTolerance = 1.0;
     public static final double kVisionAlignSpeedyTolerance = 1.0;
+
+    public static final int kRequiredUltrasonicCount = 6;
+
 }

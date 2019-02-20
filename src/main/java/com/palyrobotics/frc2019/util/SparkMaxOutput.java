@@ -59,10 +59,11 @@ public class SparkMaxOutput {
         this.mGains = gains;
     }
 
-    public void setTargetPosition(double posSetpoint, double arbitraryDemand) {
+    public void setTargetPosition(double posSetpoint, double arbitraryDemand, Gains gains) {
         this.mSparkSetpoint = posSetpoint;
         this.mSparkMode = ControlType.kPosition;
         this.arbitraryDemand = arbitraryDemand;
+        this.mGains = gains;
     }
 
     public void setPercentOutput(double output) {
@@ -92,6 +93,6 @@ public class SparkMaxOutput {
     }
 
     public ControlType getControlType() {
-        return this.getControlType();
+        return this.mSparkMode;
     }
 }

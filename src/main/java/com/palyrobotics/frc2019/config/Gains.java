@@ -42,8 +42,8 @@ public class Gains {
 
 	//Drive Motion Magic offboard control loop
 	//Short distance max speed 45 in/s Max accel 95 in/s^2
-	public static final double kVidarShortDriveMotionMagicCruiseVelocity = 60 * DrivetrainConstants.kDriveSpeedUnitConversion;
-	public static final double kVidarShortDriveMotionMagicMaxAcceleration = 120 * DrivetrainConstants.kDriveSpeedUnitConversion;
+	public static final double kVidarShortDriveMotionMagicCruiseVelocity = 60;
+	public static final double kVidarShortDriveMotionMagicMaxAcceleration = 120;
 	public static final double kVidarShortDriveMotionMagickP = .5 ;
 	public static final double kVidarShortDriveMotionMagickI = 0; //0.00040 / 2;
 	public static final double kVidarShortDriveMotionMagickD = 0; //275 / 2;
@@ -54,8 +54,8 @@ public class Gains {
 			kVidarShortDriveMotionMagickD, kVidarShortDriveMotionMagickF, kVidarShortDriveMotionMagickIzone, kVidarShortDriveMotionMagickRampRate);
 
 	//Drive Motion Magic turn angle gains
-	public static final double kVidarTurnMotionMagicCruiseVelocity = 72 * DrivetrainConstants.kDriveSpeedUnitConversion;
-	public static final double kVidarTurnMotionMagicMaxAcceleration = 36 * DrivetrainConstants.kDriveSpeedUnitConversion;
+	public static final double kVidarTurnMotionMagicCruiseVelocity = 72;
+	public static final double kVidarTurnMotionMagicMaxAcceleration = 36;
 	public static final double kVidarTurnMotionMagickP = 6.0;
 	public static final double kVidarTurnMotionMagickI = 0.01;
 	public static final double kVidarTurnMotionMagickD = 210;
@@ -70,6 +70,17 @@ public class Gains {
 	public static final double kVidarCascadingTurnkI = 0;
 	public static final double kVidarCascadingTurnkD = 5;
 	public static final double kVidarCascadingTurnIzone = 7.0;
+
+	//Pusher Constants
+    //TODO: Find and tune gains
+    public static final double kVidarPusherPositionkP = 0.8;
+    public static final double kVidarPusherPositionkI = 0.0;
+    public static final double kVidarPusherPositionkD = 50.0;
+    public static final double kVidarPusherPositionkF = 0.0;
+    public static final int kVidarPusherPositionkIzone = 0;
+    public static final double kVidarPusherPositionkRampRate = 1.0;
+    public static final Gains pusherPosition = new Gains(kVidarPusherPositionkP, kVidarPusherPositionkI, kVidarPusherPositionkD,
+            kVidarPusherPositionkF, kVidarPusherPositionkIzone, kVidarPusherPositionkRampRate);
 
 	//Intake Constants
 	//TODO: Find and tune gains
@@ -155,15 +166,17 @@ public class Gains {
     public static final Gains elevatorDownwardsPosition = new Gains(kVidarElevatorDownPositionkP, kVidarElevatorDownPositionkI, kVidarElevatorDownPositionkD,
             kVidarElevatorDownPositionkF, kVidarElevatorDownPositionkIzone, kVidarElevatorDownPositionkRampRate);
 
-    public static final double kVidarElevatorPositionkP = 2.0;
+    public static final double kVidarElevatorPositionkP = .7;
     public static final double kVidarElevatorPositionkI = 0.0;
-    public static final double kVidarElevatorPositionkD = 70.0;
+    public static final double kVidarElevatorPositionkD = 55.0;
     public static final double kVidarElevatorPositionkF = 0.0;
     public static final int kVidarElevatorPositionkIzone = 0;
-    public static final double kVidarElevatorPositionkRampRate = 0.0;
+    public static final double kVidarElevatorPositionkRampRate = 1.0;
     public static final Gains elevatorPosition = new Gains(kVidarElevatorPositionkP, kVidarElevatorPositionkI, kVidarElevatorPositionkD,
             kVidarElevatorPositionkF, kVidarElevatorPositionkIzone, kVidarElevatorPositionkRampRate);
 
+
+    public static final Gains emptyGains = new Gains(0,0,0,0,0,0);
 
 	public static class TrajectoryGains {
 		public final double P, D, V, A, turnP, turnD;
