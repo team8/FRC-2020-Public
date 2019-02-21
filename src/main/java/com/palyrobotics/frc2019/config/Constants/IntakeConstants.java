@@ -13,7 +13,7 @@ public class IntakeConstants {
 
     // FEED FORWARD CONSTANTS
 
-    public static final double kGravityFF = 0;
+    public static final double kGravityFF = 2;
     public static final double kAccelComp = 0;
     public static final double kCentripetalCoeff = 0;
 
@@ -22,6 +22,7 @@ public class IntakeConstants {
     public static final double kIntakingPosition = 10; // degrees relatively to the plane of the field.
     public static final double kHoldingPosition = 65; // same relative angle as above
     public static final double kHandoffPosition = 90; // place where the drop to the elevator occurs
+    public static final double kRocketExpelPosition = 70;
 
     /**
      * Tolerances

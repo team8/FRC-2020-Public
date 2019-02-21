@@ -32,6 +32,7 @@ public class Intake extends Subsystem {
     private enum WheelState {
         INTAKING,
         IDLE,
+        EXPELLING,
         DROPPING
     }
 
@@ -49,23 +50,24 @@ public class Intake extends Subsystem {
         LIFTING, // lifting the cargo into the intake
         DROPPING, // dropping the cargo into the intkae
         HOLDING_MID, // moving the arm to the mid hold position and keeping it there
+        EXPELLING_ROCKET,
+        EXPELLING_CARGO,
         IDLE
     }
 
-    private WheelState mWheelState = WheelState.IDLE;
-    private UpDownState mUpDownState = UpDownState.IDLE;
-    private IntakeMacroState mMacroState = IntakeMacroState.IDLE;
+    private WheelState mWheelState;
+    private UpDownState mUpDownState;
+    private IntakeMacroState mMacroState;
 
     private double lastIntakeQueueTime = 0;
     private final double requiredMSCancel = 200;
 
     private double lastDropQueueTme = 0;
-    private final double requiredMSDrop = 100;
+    private final double requiredMSDrop = 200;
 
     protected Intake() {
         super("Intake");
-        mWheelState = WheelState.IDLE;
-        mUpDownState = UpDownState.IDLE;
+        this.mMacroState = IntakeMacroState.IDLE;
     }
 
     @Override
@@ -84,27 +86,33 @@ public class Intake extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         mRobotState = robotState;
 
-        if (commands.wantedIntakeState == IntakeMacroState.GROUND_INTAKING && this.mMacroState == IntakeMacroState.GROUND_INTAKING
-        && this.lastIntakeQueueTime + this.requiredMSCancel < System.currentTimeMillis()) {
-            this.mMacroState = IntakeMacroState.HOLDING_MID;
-        }
+        // The intake macro state has eight possible states.  Any state can be transferred to automatically or manually,
+        // but some states need to set auxiliary variables, such as the queue times.
 
-        if (commands.wantedIntakeState == IntakeMacroState.GROUND_INTAKING && commands.wantedIntakeState == IntakeMacroState.HOLDING_MID) {
+        if (commands.wantedIntakeState == IntakeMacroState.HOLDING_MID && this.mMacroState == IntakeMacroState.GROUND_INTAKING) {
+            // note: this needs to be nested so that the if/else can be exited
+            if (this.lastIntakeQueueTime + this.requiredMSCancel < System.currentTimeMillis()) {
+                // move the intake back up from the ground
+                this.mMacroState = IntakeMacroState.HOLDING_MID;
+            }
+        }
+        else if (commands.wantedIntakeState == IntakeMacroState.GROUND_INTAKING) {
             this.mMacroState = IntakeMacroState.GROUND_INTAKING;
             this.lastIntakeQueueTime = System.currentTimeMillis();
         }
 
-        if (commands.wantedIntakeState == IntakeMacroState.GROUND_INTAKING && robotState.hasCargo) {
+        else if (this.mMacroState == IntakeMacroState.GROUND_INTAKING && robotState.hasCargo) {
             this.mMacroState = IntakeMacroState.LIFTING;
         }
-
-        if (commands.wantedIntakeState == IntakeMacroState.LIFTING && intakeOnTarget()) {
+        else if (commands.wantedIntakeState == IntakeMacroState.LIFTING && intakeOnTarget()) {
             this.mMacroState = IntakeMacroState.DROPPING;
             lastDropQueueTme = System.currentTimeMillis();
         }
-
-        if (commands.wantedIntakeState == IntakeMacroState.DROPPING && System.currentTimeMillis() > (this.lastDropQueueTme + this.requiredMSDrop)) {
+        else if (commands.wantedIntakeState == IntakeMacroState.DROPPING && System.currentTimeMillis() > (this.lastDropQueueTme + this.requiredMSDrop)) {
             this.mMacroState = IntakeMacroState.HOLDING_MID;
+        }
+        else {
+            this.mMacroState = commands.wantedIntakeState;
         }
 
         commands.hasCargo = robotState.hasCargo;
@@ -122,7 +130,8 @@ public class Intake extends Subsystem {
         switch (mMacroState) {
             case STOWED:
                 mWheelState = WheelState.IDLE;
-                mUpDownState = UpDownState.IDLE;
+                mUpDownState = UpDownState.CUSTOM_POSITIONING;
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kMaxAngle));
             case GROUND_INTAKING:
                 mWheelState = WheelState.INTAKING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
@@ -140,6 +149,10 @@ public class Intake extends Subsystem {
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kHoldingPosition));
+            case EXPELLING_ROCKET:
+                mWheelState = WheelState.EXPELLING;
+                mUpDownState = UpDownState.CUSTOM_POSITIONING;
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kRocketExpelPosition));
         }
 
 
@@ -172,23 +185,8 @@ public class Intake extends Subsystem {
                 mSparkOutput.setPercentOutput(0); //TODO: Fix this based on what control method wanted
                 break;
             case CUSTOM_POSITIONING:
-                if(!mIntakeWantedPosition.equals(Optional.of(commands.robotSetpoints.intakePositionSetpoint.get() *
-                        IntakeConstants.kIntakeTicksPerInch))) {
-                    mIntakeWantedPosition = Optional.of(commands.robotSetpoints.intakePositionSetpoint.get() * IntakeConstants.kIntakeTicksPerInch);
-                    if(mIntakeWantedPosition.get() >= robotState.intakeAngle) {
-                        movingDown = false;
-                    } else {
-                        movingDown = true;
-                    }
-                }
-
-                if (movingDown) {
-                    mSparkOutput.setGains(Gains.intakeDownwards);
-                    mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff, Gains.intakeDownwards);
-                } else {
-                    mSparkOutput.setGains(Gains.intakePosition);
-                    mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff, Gains.intakeDownwards);
-                }
+                mSparkOutput.setGains(Gains.intakePosition);
+                mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff, Gains.intakePosition);
                 break;
             case IDLE:
                 if(mIntakeWantedPosition.isPresent()) {
@@ -197,6 +195,7 @@ public class Intake extends Subsystem {
                 mSparkOutput.setPercentOutput(0.0);
                 break;
         }
+
         if(!cachedCargoState && robotState.hasCargo) {
             mRumbleLength = 0.25;
         } else if(mRumbleLength <= 0) {

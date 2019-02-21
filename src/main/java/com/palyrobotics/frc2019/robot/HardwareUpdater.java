@@ -213,8 +213,8 @@ class HardwareUpdater {
 
 		intakeVictor.setNeutralMode(NeutralMode.Brake);
 
-		intakeMasterSpark.setOpenLoopRampRate(0.4);
-		intakeSlaveSpark.setOpenLoopRampRate(0.4);
+		intakeMasterSpark.setOpenLoopRampRate(1.0);
+		intakeSlaveSpark.setOpenLoopRampRate(1.0);
 
 		intakeVictor.enableVoltageCompensation(true);
 		intakeVictor.configVoltageCompSaturation(14, 0);

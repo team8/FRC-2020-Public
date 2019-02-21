@@ -13,7 +13,6 @@ public class ElevatorConstants {
     public static double kUncalibratedManualPower = 10;
     public static double kClosedLoopManualControlPositionSensitivity = 500;//250;
 
-    public static final double kCalibratePower = -0.28;
 
     public static final double kClimberSliderScale = 0;
 
