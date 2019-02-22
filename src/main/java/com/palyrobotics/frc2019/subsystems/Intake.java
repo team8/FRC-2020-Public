@@ -86,6 +86,8 @@ public class Intake extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         mRobotState = robotState;
 
+        System.out.println(commands.wantedIntakeState);
+
         // The intake macro state has eight possible states.  Any state can be transferred to automatically or manually,
         // but some states need to set auxiliary variables, such as the queue times.
 
@@ -132,28 +134,37 @@ public class Intake extends Subsystem {
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kMaxAngle));
+                break;
             case GROUND_INTAKING:
                 mWheelState = WheelState.INTAKING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kIntakingPosition));
+                break;
             case LIFTING:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kHandoffPosition));
+                break;
             case DROPPING:
                 mWheelState = WheelState.DROPPING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kHandoffPosition));
                 // todo: add some sort of timeout so this doesn't finish immediately
+                break;
             case HOLDING_MID:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kHoldingPosition));
+                break;
             case EXPELLING_ROCKET:
                 mWheelState = WheelState.EXPELLING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kRocketExpelPosition));
+                break;
         }
+
+//        System.out.println(this.mMacroState);
+//        System.out.println(this.mIntakeWantedPosition.isPresent() ? this.mIntakeWantedPosition.get() : -100);
 
 
         switch(mWheelState) {
@@ -163,6 +174,7 @@ public class Intake extends Subsystem {
                 } else {
                     mVictorOutput = IntakeConstants.kMotorVelocity;
                 }
+                break;
             case IDLE:
                 mVictorOutput = 0;
                 break;
@@ -187,6 +199,7 @@ public class Intake extends Subsystem {
             case CUSTOM_POSITIONING:
                 mSparkOutput.setGains(Gains.intakePosition);
                 mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff, Gains.intakePosition);
+                System.out.println(mIntakeWantedPosition.get());
                 break;
             case IDLE:
                 if(mIntakeWantedPosition.isPresent()) {
@@ -195,6 +208,10 @@ public class Intake extends Subsystem {
                 mSparkOutput.setPercentOutput(0.0);
                 break;
         }
+
+        System.out.println("Intake: ");
+        System.out.println(mIntakeWantedPosition.get());
+        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
 
         if(!cachedCargoState && robotState.hasCargo) {
             mRumbleLength = 0.25;
@@ -233,15 +250,13 @@ public class Intake extends Subsystem {
     public double getVictorOutput() { return mVictorOutput; }
 
     public boolean intakeOnTarget() {
-        if(mMacroState != IntakeMacroState.LIFTING) {
-            return false;
-        }
         return (Math.abs(mIntakeWantedPosition.get() - mRobotState.intakeAngle) < IntakeConstants.kAcceptableAngularError)
                 && (Math.abs(mRobotState.elevatorVelocity) < IntakeConstants.kAngularVelocityError);
     }
 
     public double convertIntakeSetpoint(double targetAngle) {
-        return mRobotState.intakeStartAngle - targetAngle;
+        System.out.println("Called with " + targetAngle);
+        return -(mRobotState.intakeStartAngle - targetAngle);
     }
 
     @Override

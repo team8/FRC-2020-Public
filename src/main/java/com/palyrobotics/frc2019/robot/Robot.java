@@ -154,7 +154,7 @@ public class Robot extends TimedRobot {
 
 		//Update the hardware
 		mHardwareUpdater.updateHardware();
-        System.out.println(HardwareAdapter.getInstance().getPusher().pusherSpark.getAppliedOutput());
+//        System.out.println(HardwareAdapter.getInstance().getPusher().pusherSpark.getAppliedOutput());
 //        System.out.println(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition()/ ElevatorConstants.kElevatorRotationsPerInch);
 
         if(mWriter.getSize() > 10000) {

@@ -57,7 +57,6 @@ class HardwareUpdater {
 	void initHardware() {
 		Logger.getInstance().logRobotThread(Level.INFO, "Init hardware");
 		configureHardware();
-		startIntakeArm(); // just sensor wise
 		startUltrasonics();
 	}
 
@@ -99,6 +98,7 @@ class HardwareUpdater {
 		configureIntakeHardware();
 		configureShooterHardware();
 		configurePusherHardware();
+		startIntakeArm();
 	}
 
 	void configureDriveHardware() {
@@ -203,8 +203,8 @@ class HardwareUpdater {
 		intakeMasterSpark.getEncoder().setVelocityConversionFactor(IntakeConstants.kArmEncoderSpeedUnitConversion);
 		intakeSlaveSpark.getEncoder().setVelocityConversionFactor(IntakeConstants.kArmEncoderSpeedUnitConversion);
 
-		intakeMasterSpark.setInverted(true);
-		intakeSlaveSpark.setInverted(true);
+		intakeMasterSpark.setInverted(false);
+		intakeSlaveSpark.setInverted(false);
 		
 		intakeVictor.setInverted(true);
 
@@ -388,14 +388,18 @@ class HardwareUpdater {
 
 	void startIntakeArm() {
 		Robot.getRobotState().intakeStartAngle = IntakeConstants.kMaxAngle -
-				1/IntakeConstants.kArmPotentiometerTicksPerDegree * (IntakeConstants.kMaxAngleTicks -
-                        HardwareAdapter.getInstance().getIntake().potentiometer.get());
+				1/IntakeConstants.kArmPotentiometerTicksPerDegree * (HardwareAdapter.getInstance().getIntake().potentiometer.get() -
+						IntakeConstants.kMaxAngleTicks);
 
 	}
 
 	void updateIntakeSensors() {
+//		System.out.println("Pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get()/IntakeConstants.kArmPotentiometerTicksPerDegree);
+//		System.out.println("Pot Ticks: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
+//		System.out.println("Enc Pos: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
 		Robot.getRobotState().intakeAngle = Robot.getRobotState().intakeStartAngle -
 				HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition();
+		System.out.println(Robot.getRobotState().intakeAngle);
 	}
 
 	void updateUltrasonicSensors(RobotState robotState) {
@@ -557,9 +561,13 @@ class HardwareUpdater {
      * Updates intake
      */
     private void updateIntake() {
-//		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
-//		HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
-        HardwareAdapter.getInstance().getIntake().intakeVictor.set(HardwareAdapter.getInstance().getJoysticks().driveStick.getRawButton(7) ? 1 : 0);
+    	System.out.println("Type: " + mIntake.getSparkOutput().getControlType() + " Setpoint: " + mIntake.getSparkOutput().getSetpoint() +
+				" FF: " + mIntake.getSparkOutput().getArbitraryFF());
+		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
+		HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
+//        HardwareAdapter.getInstance().getIntake().intakeMasterSpark.set(HardwareAdapter.getInstance().getJoysticks().driveStick.getRawButton(7) ? .52 : 0);
+//		HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.set(HardwareAdapter.getInstance().getJoysticks().driveStick.getRawButton(7) ? .52 : 0);
+
     }
 
 	void enableBrakeMode() {

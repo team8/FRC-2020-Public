@@ -204,8 +204,8 @@ public class Elevator extends Subsystem {
             }
         }
 
-        System.out.println("Elevator: ");
-        System.out.println("applied output " + HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getAppliedOutput());
+//        System.out.println("Elevator: ");
+//        System.out.println("applied output " + HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getAppliedOutput());
 
         mWriter.addData("elevatorPosition", mRobotState.elevatorPosition);
         mWriter.addData("elevatorPositionInches", mRobotState.elevatorPosition / ElevatorConstants.kElevatorRotationsPerInch);
@@ -372,10 +372,10 @@ public class Elevator extends Subsystem {
         if(mElevatorState != ElevatorState.CUSTOM_POSITIONING) {
             return false;
         }
-        System.out.println("Elevator wanted position: " + mElevatorWantedPosition.get());
-        System.out.println("Elevator position: " + mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch);
-        System.out.println("Elevator velocity: " + mRobotState.elevatorVelocity*ElevatorConstants.kElevatorSpeedUnitConversion);
-        System.out.println("");
+//        System.out.println("Elevator wanted position: " + mElevatorWantedPosition.get());
+//        System.out.println("Elevator position: " + mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch);
+//        System.out.println("Elevator velocity: " + mRobotState.elevatorVelocity*ElevatorConstants.kElevatorSpeedUnitConversion);
+//        System.out.println("");
         return (Math.abs(mElevatorWantedPosition.get() - mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch) < ElevatorConstants.kAcceptablePositionError)
                 && (Math.abs(mRobotState.elevatorVelocity*ElevatorConstants.kElevatorSpeedUnitConversion) < ElevatorConstants.kAcceptableVelocityError);
     }

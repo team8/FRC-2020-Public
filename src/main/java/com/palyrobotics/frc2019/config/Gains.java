@@ -120,12 +120,12 @@ public class Gains {
 	public static final Gains intakeHold = new Gains(kVidarIntakeHoldkP, kVidarIntakeHoldkI, kVidarIntakeHoldkD, kVidarIntakeHoldkF,
 			kVidarIntakeHoldkIzone, kVidarIntakeHoldkRampRate);
 
-	public static final double kVidarIntakePositionkP = 0.0;
+	public static final double kVidarIntakePositionkP = 1.0;
 	public static final double kVidarIntakePositionkI = 0.0;
 	public static final double kVidarIntakePositionkD = 0.0;
 	public static final double kVidarIntakePositionkF = 0.0;
 	public static final int kVidarIntakePositionkIzone = 0;
-	public static final double kVidarIntakePositionkRampRate = 0.0;
+	public static final double kVidarIntakePositionkRampRate = 1.0;
 	public static final Gains intakePosition = new Gains(kVidarIntakePositionkP, kVidarIntakePositionkI, kVidarIntakePositionkD, kVidarIntakePositionkF,
 			kVidarIntakePositionkIzone, kVidarIntakePositionkRampRate);
 

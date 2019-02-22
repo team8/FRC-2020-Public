@@ -150,8 +150,9 @@ public class OperatorInterface {
 		if(mOperatorXboxController.getdPadDown() && prevCommands.wantedIntakeState == Intake.IntakeMacroState.DROPPING) {
 			newCommands.cancelCurrentRoutines = false;
 			newCommands.addWantedRoutine(new IntakeBeginCycleRoutine());
-		} else if(mOperatorXboxController.getdPadUp() && prevCommands.wantedIntakeState == Intake.IntakeMacroState.GROUND_INTAKING) {
+		} else if(mOperatorXboxController.getdPadUp()) {
 			newCommands.cancelCurrentRoutines = false;
+			System.out.println("Called" + mOperatorXboxController.getdPadUp());
 			newCommands.addWantedRoutine(new IntakeUpRoutine());
 		}
 
