@@ -180,7 +180,7 @@ public class Robot extends TimedRobot {
 		stopSubsystems();
 
         // Limelight LED off
-        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
 		HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
 
         mWriter.write();
