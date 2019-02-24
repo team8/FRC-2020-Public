@@ -208,8 +208,8 @@ class HardwareUpdater {
 		
 		intakeVictor.setInverted(true);
 
-		intakeMasterSpark.getPIDController().setOutputRange(-0.88,0.88);
-		intakeSlaveSpark.getPIDController().setOutputRange(-0.88,0.88);
+		intakeMasterSpark.getPIDController().setOutputRange(-0.75,0.75);
+		intakeSlaveSpark.getPIDController().setOutputRange(-0.75,0.75);
 
 		intakeVictor.setNeutralMode(NeutralMode.Brake);
 
@@ -425,7 +425,7 @@ class HardwareUpdater {
 		int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
 		System.out.println(leftTotal);
 		System.out.println(rightTotal);
-		robotState.hasCargo = (leftTotal > OtherConstants.kRequiredUltrasonicCount || rightTotal > OtherConstants.kRequiredUltrasonicCount);
+		robotState.hasCargo = (leftTotal >= OtherConstants.kRequiredUltrasonicCount || rightTotal >= OtherConstants.kRequiredUltrasonicCount);
 		robotState.cargoDistance = Math.min(mUltrasonicLeft.getRangeInches(), mUltrasonicRight.getRangeInches());
 
 		System.out.println("Left: "+ mUltrasonicLeft.getRangeInches());
@@ -513,7 +513,7 @@ class HardwareUpdater {
             rumble = false;
         }
 
-        return rumble;
+        return false;
     }
 
     /**
@@ -570,8 +570,8 @@ class HardwareUpdater {
      * Updates intake
      */
     private void updateIntake() {
-//    	System.out.println("Type: " + mIntake.getSparkOutput().getControlType() + " Setpoint: " + mIntake.getSparkOutput().getSetpoint() +
-//				" FF: " + mIntake.getSparkOutput().getArbitraryFF());
+    	System.out.println("Type: " + mIntake.getSparkOutput().getControlType() + " Setpoint: " + mIntake.getSparkOutput().getSetpoint() +
+				" FF: " + mIntake.getSparkOutput().getArbitraryFF());
 		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
 		HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
 //        HardwareAdapter.getInstance().getIntake().intakeMasterSpark.set(HardwareAdapter.getInstance().getJoysticks().driveStick.getRawButton(7) ? .52 : 0);

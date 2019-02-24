@@ -74,12 +74,14 @@ public class Intake extends Subsystem {
     public void start() {
         mWheelState = WheelState.IDLE;
         mUpDownState = UpDownState.IDLE;
+        mMacroState = IntakeMacroState.STOWED;
     }
 
     @Override
     public void stop() {
         mWheelState = WheelState.IDLE;
         mUpDownState = UpDownState.IDLE;
+        mMacroState = IntakeMacroState.IDLE;
     }
 
     @Override
@@ -100,19 +102,22 @@ public class Intake extends Subsystem {
         }
         else if (this.mMacroState == IntakeMacroState.GROUND_INTAKING && robotState.hasCargo) {
             this.mMacroState = IntakeMacroState.LIFTING;
+            commands.wantedIntakeState = IntakeMacroState.LIFTING;
         }
         else if (commands.wantedIntakeState == IntakeMacroState.GROUND_INTAKING && this.mMacroState != IntakeMacroState.LIFTING) {
             this.mMacroState = IntakeMacroState.GROUND_INTAKING;
             this.lastIntakeQueueTime = System.currentTimeMillis();
         }
-        else if (commands.wantedIntakeState == IntakeMacroState.LIFTING && intakeOnTarget()) {
+        else if (this.mMacroState == IntakeMacroState.LIFTING && intakeOnTarget()) {
             this.mMacroState = IntakeMacroState.DROPPING;
+            commands.wantedIntakeState = IntakeMacroState.DROPPING;
             lastDropQueueTme = System.currentTimeMillis();
         }
-        else if (commands.wantedIntakeState == IntakeMacroState.DROPPING && System.currentTimeMillis() > (this.lastDropQueueTme + this.requiredMSDrop)) {
+        else if (commands.wantedIntakeState == IntakeMacroState.DROPPING && robotState.hasPusherCargo) {
             this.mMacroState = IntakeMacroState.HOLDING_MID;
+            commands.wantedIntakeState = IntakeMacroState.HOLDING_MID; // reset it
         }
-        else if (this.mMacroState != IntakeMacroState.LIFTING){
+        else if (this.mMacroState != IntakeMacroState.LIFTING && this.mMacroState != IntakeMacroState.DROPPING){
             this.mMacroState = commands.wantedIntakeState;
         }
 
@@ -217,6 +222,11 @@ public class Intake extends Subsystem {
                 break;
         }
 
+        if (intakeOnTarget() && mIntakeWantedPosition.isPresent() &&
+                mIntakeWantedPosition.get() == IntakeConstants.kMaxAngle) {
+            mSparkOutput.setPercentOutput(0.0);
+        }
+
         System.out.println("Intake: ");
 //        System.out.println(mIntakeWantedPosition.get());
 //        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
@@ -270,7 +280,6 @@ public class Intake extends Subsystem {
     }
 
     public double convertIntakeSetpoint(double targetAngle) {
-        System.out.println("Called with " + targetAngle);
         return -(mRobotState.intakeStartAngle - targetAngle);
     }
 

@@ -172,15 +172,15 @@ public class OperatorInterface {
 			newCommands.wantedGearboxState = Elevator.GearboxState.ELEVATOR;
 		}
 
-		/**
-		 * Climber Control
-		 */
-		if(mClimbStick.getButtonPressed(6)) {
-			newCommands.wantedClimberState = Elevator.ClimberState.ON_MANUAL;
-		}
-		else {
-			newCommands.wantedClimberState = Elevator.ClimberState.IDLE;
-		}
+//		/**
+//		 * Climber Control
+//		 */
+//		if(mClimbStick.getButtonPressed(6)) {
+//			newCommands.wantedClimberState = Elevator.ClimberState.ON_MANUAL;
+//		}
+//		else {
+//			newCommands.wantedClimberState = Elevator.ClimberState.IDLE;
+//		}
 
 		/**
 		 * Pusher Control
@@ -204,7 +204,7 @@ public class OperatorInterface {
 		 * Shooter Spin Up Control
 		 */
 		if(mOperatorXboxController.getLeftTriggerPressed()) {
-			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 5));
+			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 3));
 		}
 
 		/**

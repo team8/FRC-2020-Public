@@ -13,6 +13,8 @@ public class FingersCycleRoutine extends Routine {
     private double timeout;
     private double startTime;
 
+    private final double timeToShoot = 50;
+
     public FingersCycleRoutine(double timeout) {
         this.timeout = timeout * 1000;
     }
@@ -27,7 +29,13 @@ public class FingersCycleRoutine extends Routine {
     public Commands update(Commands commands) {
 //        System.out.println("Updates");
         commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
-        commands.wantedFingersExpelState = Fingers.PushingState.EXPELLING;
+        commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
+
+        if (System.currentTimeMillis() > startTime + this.timeToShoot) {
+            commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
+            commands.wantedFingersExpelState = Fingers.PushingState.EXPELLING;
+        }
+
         if(System.currentTimeMillis() > this.timeout + startTime) {
             commands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
             commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
