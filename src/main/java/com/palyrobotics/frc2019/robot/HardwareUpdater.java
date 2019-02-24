@@ -208,8 +208,8 @@ class HardwareUpdater {
 		
 		intakeVictor.setInverted(true);
 
-		intakeMasterSpark.getPIDController().setOutputRange(-1.0,1.0);
-		intakeSlaveSpark.getPIDController().setOutputRange(-1.0,1.0);
+		intakeMasterSpark.getPIDController().setOutputRange(-0.88,0.88);
+		intakeSlaveSpark.getPIDController().setOutputRange(-0.88,0.88);
 
 		intakeVictor.setNeutralMode(NeutralMode.Brake);
 
@@ -358,6 +358,8 @@ class HardwareUpdater {
 		robotState.robotAccel = accelerometer_angle[0];
 		robotState.robotVelocity = robotVelocity;
 
+		robotState.intakeVelocity = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getVelocity();
+
 		double time = Timer.getFPGATimestamp();
 
 		//Rotation2d gyro_angle = Rotation2d.fromRadians((right_distance - left_distance) * Constants.kTrackScrubFactor
@@ -384,6 +386,7 @@ class HardwareUpdater {
 
         updateIntakeSensors();
 		updateUltrasonicSensors(robotState);
+
 	}
 
 	void startIntakeArm() {
@@ -420,9 +423,13 @@ class HardwareUpdater {
 
 		int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
 		int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
-
+		System.out.println(leftTotal);
+		System.out.println(rightTotal);
 		robotState.hasCargo = (leftTotal > OtherConstants.kRequiredUltrasonicCount || rightTotal > OtherConstants.kRequiredUltrasonicCount);
 		robotState.cargoDistance = Math.min(mUltrasonicLeft.getRangeInches(), mUltrasonicRight.getRangeInches());
+
+		System.out.println("Left: "+ mUltrasonicLeft.getRangeInches());
+		System.out.println("Right: " + mUltrasonicRight.getRangeInches());
 
 		// HAS CARGO IN CARRIAGE
 
@@ -433,9 +440,11 @@ class HardwareUpdater {
 			robotState.mPusherReadings.remove(0);
 		}
 
+
 		int pusherTotal = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoTolerance).count();
 		robotState.hasPusherCargo = (pusherTotal > OtherConstants.kRequiredUltrasonicCount);
 		robotState.cargoPusherDistance = (mPusherUltrasonic.getRangeInches());
+		System.out.println("Pusher " + robotState.cargoPusherDistance);
 
 	}
 
@@ -561,8 +570,8 @@ class HardwareUpdater {
      * Updates intake
      */
     private void updateIntake() {
-    	System.out.println("Type: " + mIntake.getSparkOutput().getControlType() + " Setpoint: " + mIntake.getSparkOutput().getSetpoint() +
-				" FF: " + mIntake.getSparkOutput().getArbitraryFF());
+//    	System.out.println("Type: " + mIntake.getSparkOutput().getControlType() + " Setpoint: " + mIntake.getSparkOutput().getSetpoint() +
+//				" FF: " + mIntake.getSparkOutput().getArbitraryFF());
 		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
 		HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
 //        HardwareAdapter.getInstance().getIntake().intakeMasterSpark.set(HardwareAdapter.getInstance().getJoysticks().driveStick.getRawButton(7) ? .52 : 0);

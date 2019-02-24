@@ -40,7 +40,7 @@ public class Commands {
 	public Shovel.WheelState wantedShovelWheelState = Shovel.WheelState.IDLE;
 	public Shovel.UpDownState wantedShovelUpDownState = Shovel.UpDownState.UP;
 
-	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
+	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
 	public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
 
 	public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.STOWED;

@@ -61,6 +61,6 @@ public class OtherConstants {
     public static final double kVisionAlignDistanceTolerance = 1.0;
     public static final double kVisionAlignSpeedyTolerance = 1.0;
 
-    public static final int kRequiredUltrasonicCount = 6;
+    public static final int kRequiredUltrasonicCount = 3;
 
 }

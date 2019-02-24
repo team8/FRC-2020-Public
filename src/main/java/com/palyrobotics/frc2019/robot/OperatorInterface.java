@@ -2,6 +2,7 @@ package com.palyrobotics.frc2019.robot;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeLevelOneRocketRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shovel.ShovelDownRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shovel.ShovelUpRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shovel.ShovelWheelRoutine;
@@ -114,10 +115,13 @@ public class OperatorInterface {
 
 		if (mOperatorXboxController.getButtonX() && newCommands.wantedShovelUpDownState == Shovel.UpDownState.UP  && (lastCancelTime + 200) < System.currentTimeMillis()) {
 			intakeStartTime = System.currentTimeMillis();
-			newCommands.addWantedRoutine(new SequentialRoutine(new ShovelDownRoutine(), new WaitForHatchIntakeCurrentSpike(Shovel.WheelState.INTAKING),
+			newCommands.addWantedRoutine(new SequentialRoutine(new ShovelDownRoutine(),
+					new WaitForHatchIntakeCurrentSpike(Shovel.WheelState.INTAKING),
+//					new ElevatorCustomPositioningRoutine(5,.5),
 					new ShovelUpRoutine()));
 		} else if (mOperatorXboxController.getButtonX() && (System.currentTimeMillis() - 350 > OperatorInterface.intakeStartTime) && newCommands.wantedShovelUpDownState == Shovel.UpDownState.DOWN) {
 		    intakeStartTime = System.currentTimeMillis();
+		    newCommands.cancelCurrentRoutines = true;
 		    newCommands.wantedShovelUpDownState = Shovel.UpDownState.UP;
 		    lastCancelTime = System.currentTimeMillis();
         }
@@ -147,13 +151,17 @@ public class OperatorInterface {
 		/**
 		 * Cargo Intake Control
 		 */
-		if(mOperatorXboxController.getdPadDown() && prevCommands.wantedIntakeState == Intake.IntakeMacroState.DROPPING) {
+		if(mOperatorXboxController.getdPadDown() && prevCommands.wantedIntakeState == Intake.IntakeMacroState.HOLDING_MID) {
 			newCommands.cancelCurrentRoutines = false;
 			newCommands.addWantedRoutine(new IntakeBeginCycleRoutine());
 		} else if(mOperatorXboxController.getdPadUp()) {
 			newCommands.cancelCurrentRoutines = false;
-			System.out.println("Called" + mOperatorXboxController.getdPadUp());
+//			System.out.println("Called" + mOperatorXboxController.getdPadUp());
 			newCommands.addWantedRoutine(new IntakeUpRoutine());
+		}
+		else if (mOperatorXboxController.getdPadRight()) {
+			newCommands.cancelCurrentRoutines = false;
+			newCommands.addWantedRoutine(new IntakeLevelOneRocketRoutine());
 		}
 
 		if (mClimbStick.getButtonPressed(4)) {

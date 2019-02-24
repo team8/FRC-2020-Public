@@ -60,10 +60,10 @@ public class Intake extends Subsystem {
     private IntakeMacroState mMacroState;
 
     private double lastIntakeQueueTime = 0;
-    private final double requiredMSCancel = 200;
+    private final double requiredMSCancel = 150;
 
     private double lastDropQueueTme = 0;
-    private final double requiredMSDrop = 200;
+    private final double requiredMSDrop = 150;
 
     protected Intake() {
         super("Intake");
@@ -98,13 +98,12 @@ public class Intake extends Subsystem {
                 this.mMacroState = IntakeMacroState.HOLDING_MID;
             }
         }
-        else if (commands.wantedIntakeState == IntakeMacroState.GROUND_INTAKING) {
-            this.mMacroState = IntakeMacroState.GROUND_INTAKING;
-            this.lastIntakeQueueTime = System.currentTimeMillis();
-        }
-
         else if (this.mMacroState == IntakeMacroState.GROUND_INTAKING && robotState.hasCargo) {
             this.mMacroState = IntakeMacroState.LIFTING;
+        }
+        else if (commands.wantedIntakeState == IntakeMacroState.GROUND_INTAKING && this.mMacroState != IntakeMacroState.LIFTING) {
+            this.mMacroState = IntakeMacroState.GROUND_INTAKING;
+            this.lastIntakeQueueTime = System.currentTimeMillis();
         }
         else if (commands.wantedIntakeState == IntakeMacroState.LIFTING && intakeOnTarget()) {
             this.mMacroState = IntakeMacroState.DROPPING;
@@ -113,8 +112,15 @@ public class Intake extends Subsystem {
         else if (commands.wantedIntakeState == IntakeMacroState.DROPPING && System.currentTimeMillis() > (this.lastDropQueueTme + this.requiredMSDrop)) {
             this.mMacroState = IntakeMacroState.HOLDING_MID;
         }
-        else {
+        else if (this.mMacroState != IntakeMacroState.LIFTING){
             this.mMacroState = commands.wantedIntakeState;
+        }
+
+        System.out.println(mMacroState);
+
+        if (intakeOnTarget()) {
+            System.out.println("On Target");
+            this.mUpDownState = UpDownState.HOLD;
         }
 
         commands.hasCargo = robotState.hasCargo;
@@ -181,6 +187,8 @@ public class Intake extends Subsystem {
             case DROPPING:
                 mVictorOutput = IntakeConstants.kDroppingVelocity;
                 break;
+            case EXPELLING:
+                mVictorOutput = IntakeConstants.kExpellingVelocity;
         }
 
         switch(mUpDownState) {
@@ -189,7 +197,7 @@ public class Intake extends Subsystem {
                 mSparkOutput.setTargetPosition(mIntakeWantedPosition.get());
                 break;
             case CLIMBING:
-                mSparkOutput.setGains(Gains.intakeClimbing);
+                mSparkOutput.setGains(Gains.intakePosition);
                 mSparkOutput.setTargetPosition(mIntakeWantedPosition.get());
                 //subtract component of gravity
                 break;
@@ -210,8 +218,8 @@ public class Intake extends Subsystem {
         }
 
         System.out.println("Intake: ");
-        System.out.println(mIntakeWantedPosition.get());
-        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+//        System.out.println(mIntakeWantedPosition.get());
+//        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
 
         if(!cachedCargoState && robotState.hasCargo) {
             mRumbleLength = 0.25;
@@ -250,8 +258,15 @@ public class Intake extends Subsystem {
     public double getVictorOutput() { return mVictorOutput; }
 
     public boolean intakeOnTarget() {
-        return (Math.abs(mIntakeWantedPosition.get() - mRobotState.intakeAngle) < IntakeConstants.kAcceptableAngularError)
-                && (Math.abs(mRobotState.elevatorVelocity) < IntakeConstants.kAngularVelocityError);
+        if (!mIntakeWantedPosition.isPresent()) {
+            return false;
+        }
+
+//        System.out.println("Angle Error: " + (mIntakeWantedPosition.get() - HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition()));
+//        System.out.println(mIntakeWantedPosition.get());
+//        System.out.println("Vel Error: " + Math.abs(mRobotState.elevatorVelocity));
+        return (Math.abs(mIntakeWantedPosition.get() - HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition()) < IntakeConstants.kAcceptableAngularError)
+                && (Math.abs(mRobotState.intakeVelocity) < IntakeConstants.kAngularVelocityError);
     }
 
     public double convertIntakeSetpoint(double targetAngle) {

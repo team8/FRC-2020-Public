@@ -73,9 +73,9 @@ public class Gains {
 
 	//Pusher Constants
     //TODO: Find and tune gains
-    public static final double kVidarPusherPositionkP = 0.8;
+    public static final double kVidarPusherPositionkP = 0.30;
     public static final double kVidarPusherPositionkI = 0.0;
-    public static final double kVidarPusherPositionkD = 50.0;
+    public static final double kVidarPusherPositionkD = 4;
     public static final double kVidarPusherPositionkF = 0.0;
     public static final int kVidarPusherPositionkIzone = 0;
     public static final double kVidarPusherPositionkRampRate = 1.0;
@@ -83,44 +83,17 @@ public class Gains {
             kVidarPusherPositionkF, kVidarPusherPositionkIzone, kVidarPusherPositionkRampRate);
 
 	//Intake Constants
-	//TODO: Find and tune gains
-	public static final double kVidarIntakeUpkP = 0.0;
-	public static final double kVidarIntakeUpkI = 0.0;
-	public static final double kVidarIntakeUpkD = 0.0;
-	public static final double kVidarIntakeUpkF = 0.0;
-	public static final int kVidarIntakeUpkIzone = 0;
-	public static final double kVidarIntakeUpkRampRate = 0.0;
-	public static final Gains intakeUp = new Gains(kVidarIntakeUpkP, kVidarIntakeUpkI, kVidarIntakeUpkD, kVidarIntakeUpkF,
-			kVidarIntakeUpkIzone, kVidarIntakeUpkRampRate);
 
-	public static final double kVidarIntakeDownwardskP = 0.0;
-	public static final double kVidarIntakeDownwardskI = 0.0;
-	public static final double kVidarIntakeDownwardskD = 0.0;
-	public static final double kVidarIntakeDownwardskF = 0.0;
-	public static final int kVidarIntakeDownwardskIzone = 0;
-	public static final double kVidarIntakeDownwardskRampRate = 0.0;
-	public static final Gains intakeDownwards = new Gains(kVidarIntakeDownwardskP, kVidarIntakeDownwardskI, kVidarIntakeDownwardskD,
-			kVidarIntakeDownwardskF, kVidarIntakeDownwardskIzone, kVidarIntakeDownwardskRampRate);
-
-	public static final double kVidarIntakeClimbingkP = 0.0;
-	public static final double kVidarIntakeClimbingkI = 0.0;
-	public static final double kVidarIntakeClimbingkD = 0.0;
-	public static final double kVidarIntakeClimbingkF = 0.0;
-	public static final int kVidarIntakeClimbingkIzone = 0;
-	public static final double kVidarIntakeClimbingkRampRate = 0.0;
-	public static final Gains intakeClimbing = new Gains(kVidarIntakeClimbingkP, kVidarIntakeClimbingkI, kVidarIntakeClimbingkD, kVidarIntakeClimbingkF,
-			kVidarIntakeClimbingkIzone, kVidarIntakeClimbingkRampRate);
-
-	public static final double kVidarIntakeHoldkP = 0.0;
+	public static final double kVidarIntakeHoldkP = 0.05;
 	public static final double kVidarIntakeHoldkI = 0.0;
 	public static final double kVidarIntakeHoldkD = 0.0;
 	public static final double kVidarIntakeHoldkF = 0.0;
 	public static final int kVidarIntakeHoldkIzone = 0;
-	public static final double kVidarIntakeHoldkRampRate = 0.0;
+	public static final double kVidarIntakeHoldkRampRate = 1.0;
 	public static final Gains intakeHold = new Gains(kVidarIntakeHoldkP, kVidarIntakeHoldkI, kVidarIntakeHoldkD, kVidarIntakeHoldkF,
 			kVidarIntakeHoldkIzone, kVidarIntakeHoldkRampRate);
 
-	public static final double kVidarIntakePositionkP = 1.0;
+	public static final double kVidarIntakePositionkP = 0.5;
 	public static final double kVidarIntakePositionkI = 0.0;
 	public static final double kVidarIntakePositionkD = 0.0;
 	public static final double kVidarIntakePositionkF = 0.0;

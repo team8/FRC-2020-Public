@@ -19,6 +19,7 @@ public class ElevatorConstants {
     public static final double kElevatorCargoHeight3Inches = 83.5 - OtherConstants.kCarriageToCargoCenterInches - OtherConstants.kGroundToCarriageInches;
     public static final double kElevatorCargoHeight2Inches = 55.5 - OtherConstants.kCarriageToCargoCenterInches - OtherConstants.kGroundToCarriageInches + 5;
     public static final double kElevatorCargoHeight1Inches = 27.5 - OtherConstants.kCarriageToCargoCenterInches - OtherConstants.kGroundToCarriageInches;
+    public static final double kHandOffHeight = 2;
 
     public static final double testHeight = 15;
 
@@ -39,7 +40,7 @@ public class ElevatorConstants {
     /**
      * Unit Conversions
      */
-    public static final double kSpoolEffectiveDiameter = 1.912 + .125/10;
+    public static final double kSpoolEffectiveDiameter = 2.1635 + .125/5;
     public static final double kElevatorRotationsPerInch = (1.0 / (kSpoolEffectiveDiameter * Math.PI)) * (52.0/12.0) * (50.0/26.0) * (22.0/44.0);
     public static final double kElevatorSpeedUnitConversion = (1.0 / kElevatorRotationsPerInch) / 60; // RPM -> in/s
 

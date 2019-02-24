@@ -7,12 +7,9 @@ public class PusherConstants {
     public static final int kVidarRequiredUltrasonicCount = 0;
     public static final double kVidarDistanceIn = 0.0;
     public static final double kVidarDistanceMiddle = 2.5;
-    public static final double kVidarDistanceOut = 4.0;
+    public static final double kVidarDistanceOut = 5.0;
     public static final double kVidarCargoTolerance = 3.500;
     public static final double kVidarDistanceCompress = 1;
-
-    public static final double kMaxAngle = 120; //TODO: not sure if this is right
-    public static final double kMaxAngleTicks = 0;
 
     /**
      * Tolerances

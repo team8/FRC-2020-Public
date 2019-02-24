@@ -4,16 +4,17 @@ public class IntakeConstants {
     /**
      * Intake Constants
      */
-    public static final double kMotorVelocity = .4;
+    public static final double kMotorVelocity = .8;
     public static final double kFastIntakingVelocity = 0.8;
     public static final double kDroppingVelocity = -0.225;
+    public static final double kExpellingVelocity = -.9;
 
     public static final double kMaxAngle = 118.3; // 90 - 61.7 + 90
     public static final double kMaxAngleTicks = .05386;
 
     // FEED FORWARD CONSTANTS
 
-    public static final double kGravityFF = 0;
+    public static final double kGravityFF = .64;
     public static final double kAccelComp = 0;
     public static final double kCentripetalCoeff = 0;
 
@@ -28,7 +29,7 @@ public class IntakeConstants {
      * Tolerances
      */
     public static final double kAcceptableAngularError = 3;
-    public static final double kAngularVelocityError = .05;
+    public static final double kAngularVelocityError = 5;
     public static final double kCargoInchTolerance = 9;
 
     /**
