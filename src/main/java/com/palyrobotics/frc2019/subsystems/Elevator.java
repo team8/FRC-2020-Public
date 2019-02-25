@@ -101,10 +101,12 @@ public class Elevator extends Subsystem {
             mHolderSolenoidOutput = commands.holderOutput;
 
             mClimberState = ClimberState.INACTIVE;
-            mSolenoidOutput = DoubleSolenoid.Value.kReverse;
+            mSolenoidOutput = DoubleSolenoid.Value.kForward;
 
             handleElevatorState(commands);
             checkTopBottom(mRobotState);
+
+            System.out.println(mElevatorState);
 
             //Execute update loop based on the current state
             //Does not switch between states, only performs actions
@@ -160,7 +162,7 @@ public class Elevator extends Subsystem {
             }
         } else { // Climber
             mElevatorState = ElevatorState.INACTIVE;
-            mSolenoidOutput = DoubleSolenoid.Value.kForward;
+            mSolenoidOutput = DoubleSolenoid.Value.kReverse;
 
             handleClimberState(commands);
 
@@ -268,10 +270,10 @@ public class Elevator extends Subsystem {
         }
 
         //If custom positioning is finished, hold it
-        if(elevatorOnTarget()) {
-            //Hold it next cycle
-            commands.wantedElevatorState = ElevatorState.HOLD;
-        }
+//        if(elevatorOnTarget()) {
+//            //Hold it next cycle
+//            commands.wantedElevatorState = ElevatorState.HOLD;
+//        }
     }
 
     private void handleClimberState(Commands commands) {
@@ -317,12 +319,12 @@ public class Elevator extends Subsystem {
      * @param state the robot state, used to obtain encoder values
      */
     private void checkTopBottom(RobotState state) {
-        if(state.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch > kElevatorTopPosition) {
+        if(state.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch < kElevatorTopPosition) {
             isAtTop = true;
         } else {
             isAtTop = false;
         }
-        if(state.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch < kElevatorBottomPosition) {
+        if(state.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch > kElevatorBottomPosition) {
             isAtBottom = true;
         } else {
             isAtBottom = false;

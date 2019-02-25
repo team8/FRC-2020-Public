@@ -15,7 +15,7 @@ public class IntakeLevelOneRocketRoutine extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-        commands.wantedIntakeState = Intake.IntakeMacroState.EXPELLING_ROCKET;
+        commands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_ROCKET;
         alreadyRan = true;
         return commands;
     }

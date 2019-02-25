@@ -17,6 +17,9 @@ public class SparkMaxOutput {
     // Arbitrary FeedForwards
     private double arbitraryDemand;
 
+    private double smartMotionCruiseVel;
+    private double smartMotionAccel;
+
     public SparkMaxOutput() {
         mGains = new Gains(0,0,0,0,0,0);
         mSparkMode = ControlType.kPosition;
@@ -74,6 +77,11 @@ public class SparkMaxOutput {
     public void setVoltage(double output) {
         this.mSparkSetpoint = output;
         this.mSparkMode = ControlType.kVoltage;
+    }
+
+    public void configureSmartMotion(double maxAccel, double maxVel) {
+        this.smartMotionAccel = maxAccel;
+        this.smartMotionCruiseVel = maxVel;
     }
 
     public void setGains(Gains gains) {

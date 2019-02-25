@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.Constants.ShovelConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 
@@ -99,6 +100,11 @@ public class Shovel extends Subsystem {
     public double getRumbleLength() {
         return mRumbleLength;
     }
+
+    public void decreaseRumbleLength() {
+        mRumbleLength -= OtherConstants.deltaTime;
+    }
+
 
     public WheelState getWheelState() {
         return mWheelState;

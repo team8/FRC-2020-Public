@@ -180,8 +180,8 @@ class HardwareUpdater {
 
 	    slaveSpark.follow(masterSpark);
 
-	    masterSpark.getPIDController().setOutputRange(-0.7,0.7);
-	    slaveSpark.getPIDController().setOutputRange(-0.7,0.7);
+	    masterSpark.getPIDController().setOutputRange(-0.92,0.92);
+	    slaveSpark.getPIDController().setOutputRange(-0.92,0.92);
 
 //        masterSpark.setOpenLoopRampRate(0.4);
 //        slaveSpark.setOpenLoopRampRate(0.4);
@@ -332,7 +332,7 @@ class HardwareUpdater {
 
 		robotState.elevatorPosition = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition();
 		robotState.elevatorVelocity = HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark.getEncoder().getVelocity();
-
+		System.out.println("Elevator " + robotState.elevatorPosition);
 		PigeonIMU gyro = HardwareAdapter.getInstance().getDrivetrain().gyro;
 		if(gyro != null) {
 			robotState.drivePose.heading = gyro.getFusedHeading();
@@ -387,6 +387,8 @@ class HardwareUpdater {
         updateIntakeSensors();
 		updateUltrasonicSensors(robotState);
 
+		System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
+
 	}
 
 	void startIntakeArm() {
@@ -402,7 +404,7 @@ class HardwareUpdater {
 //		System.out.println("Enc Pos: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
 		Robot.getRobotState().intakeAngle = Robot.getRobotState().intakeStartAngle -
 				HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition();
-		System.out.println(Robot.getRobotState().intakeAngle);
+//		System.out.println(Robot.getRobotState().intakeAngle);
 	}
 
 	void updateUltrasonicSensors(RobotState robotState) {
@@ -423,13 +425,13 @@ class HardwareUpdater {
 
 		int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
 		int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
-		System.out.println(leftTotal);
-		System.out.println(rightTotal);
+//		System.out.println(leftTotal);
+//		System.out.println(rightTotal);
 		robotState.hasCargo = (leftTotal >= OtherConstants.kRequiredUltrasonicCount || rightTotal >= OtherConstants.kRequiredUltrasonicCount);
 		robotState.cargoDistance = Math.min(mUltrasonicLeft.getRangeInches(), mUltrasonicRight.getRangeInches());
 
-		System.out.println("Left: "+ mUltrasonicLeft.getRangeInches());
-		System.out.println("Right: " + mUltrasonicRight.getRangeInches());
+//		System.out.println("Left: "+ mUltrasonicLeft.getRangeInches());
+//		System.out.println("Right: " + mUltrasonicRight.getRangeInches());
 
 		// HAS CARGO IN CARRIAGE
 
@@ -444,7 +446,7 @@ class HardwareUpdater {
 		int pusherTotal = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoTolerance).count();
 		robotState.hasPusherCargo = (pusherTotal > OtherConstants.kRequiredUltrasonicCount);
 		robotState.cargoPusherDistance = (mPusherUltrasonic.getRangeInches());
-		System.out.println("Pusher " + robotState.cargoPusherDistance);
+//		System.out.println("Pusher " + robotState.cargoPusherDistance);
 
 	}
 
@@ -502,18 +504,18 @@ class HardwareUpdater {
 
         if(intakeRumbleLength > 0) {
             rumble = true;
-            intakeRumbleLength -= OtherConstants.deltaTime;
-        } else if(shovelRumbleLength > 0) {
+			mIntake.decreaseRumbleLength();
+		} else if(shovelRumbleLength > 0) {
             rumble = true;
-            shovelRumbleLength -= OtherConstants.deltaTime;
-        } else if(shooterRumbleLength > 0) {
+			mShovel.decreaseRumbleLength();
+		} else if(shooterRumbleLength > 0) {
             rumble = true;
-            shooterRumbleLength -= OtherConstants.deltaTime;
-        } else {
+			mShooter.decreaseRumbleLength();
+		} else {
             rumble = false;
         }
 
-        return false;
+        return rumble;
     }
 
     /**
@@ -570,8 +572,8 @@ class HardwareUpdater {
      * Updates intake
      */
     private void updateIntake() {
-    	System.out.println("Type: " + mIntake.getSparkOutput().getControlType() + " Setpoint: " + mIntake.getSparkOutput().getSetpoint() +
-				" FF: " + mIntake.getSparkOutput().getArbitraryFF());
+//    	System.out.println("Type: " + mIntake.getSparkOutput().getControlType() + " Setpoint: " + mIntake.getSparkOutput().getSetpoint() +
+//				" FF: " + mIntake.getSparkOutput().getArbitraryFF());
 		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
 		HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
 //        HardwareAdapter.getInstance().getIntake().intakeMasterSpark.set(HardwareAdapter.getInstance().getJoysticks().driveStick.getRawButton(7) ? .52 : 0);

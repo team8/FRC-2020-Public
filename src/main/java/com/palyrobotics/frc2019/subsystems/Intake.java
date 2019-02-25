@@ -2,6 +2,7 @@ package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.IntakeConstants;
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.robot.HardwareAdapter;
@@ -50,8 +51,10 @@ public class Intake extends Subsystem {
         LIFTING, // lifting the cargo into the intake
         DROPPING, // dropping the cargo into the intkae
         HOLDING_MID, // moving the arm to the mid hold position and keeping it there
+        HOLDING_ROCKET,
         EXPELLING_ROCKET,
         EXPELLING_CARGO,
+        CLIMBING,
         IDLE
     }
 
@@ -88,7 +91,7 @@ public class Intake extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         mRobotState = robotState;
 
-        System.out.println(commands.wantedIntakeState);
+//        System.out.println(commands.wantedIntakeState);
 
         // The intake macro state has eight possible states.  Any state can be transferred to automatically or manually,
         // but some states need to set auxiliary variables, such as the queue times.
@@ -121,10 +124,10 @@ public class Intake extends Subsystem {
             this.mMacroState = commands.wantedIntakeState;
         }
 
-        System.out.println(mMacroState);
+//        System.out.println(mMacroState);
 
         if (intakeOnTarget()) {
-            System.out.println("On Target");
+//            System.out.println("On Target");
             this.mUpDownState = UpDownState.HOLD;
         }
 
@@ -167,11 +170,22 @@ public class Intake extends Subsystem {
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kHoldingPosition));
                 break;
+            case HOLDING_ROCKET:
+                mWheelState = WheelState.IDLE;
+                mUpDownState = UpDownState.CUSTOM_POSITIONING;
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kRocketExpelPosition));
+                break;
             case EXPELLING_ROCKET:
                 mWheelState = WheelState.EXPELLING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kRocketExpelPosition));
                 break;
+            case CLIMBING:
+                mWheelState = WheelState.IDLE;
+                mUpDownState = UpDownState.CUSTOM_POSITIONING;
+                HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getPIDController().setOutputRange(-1.0,1.0);
+                HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getPIDController().setOutputRange(-1.0,1.0);
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kClimbPosition));
         }
 
 //        System.out.println(this.mMacroState);
@@ -227,7 +241,7 @@ public class Intake extends Subsystem {
             mSparkOutput.setPercentOutput(0.0);
         }
 
-        System.out.println("Intake: ");
+//        System.out.println("Intake: ");
 //        System.out.println(mIntakeWantedPosition.get());
 //        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
 
@@ -249,6 +263,10 @@ public class Intake extends Subsystem {
 
     public double getRumbleLength() {
         return mRumbleLength;
+    }
+
+    public void decreaseRumbleLength() {
+        mRumbleLength -= OtherConstants.deltaTime;
     }
 
     public WheelState getWheelState() {

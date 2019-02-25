@@ -9,8 +9,8 @@ public class IntakeConstants {
     public static final double kDroppingVelocity = 1.0;
     public static final double kExpellingVelocity = -.9;
 
-    public static final double kMaxAngle = 118.3; // 90 - 61.7 + 90
-    public static final double kMaxAngleTicks = .05386;
+    public static final double kMaxAngle = 120.0; // 90 - 61.7 + 90
+    public static final double kMaxAngleTicks = 0.06012122075051144;
 
     // FEED FORWARD CONSTANTS
 
@@ -24,6 +24,7 @@ public class IntakeConstants {
     public static final double kHoldingPosition = 59; // same relative angle as above
     public static final double kHandoffPosition = 118; // place where the drop to the elevator occurs
     public static final double kRocketExpelPosition = 74;
+    public static final double kClimbPosition = -30;
 
     /**
      * Tolerances

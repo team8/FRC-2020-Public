@@ -51,7 +51,7 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     @Override
     public Commands cancel(Commands commands) {
         commands.wantedGearboxState = Elevator.GearboxState.ELEVATOR;
-        commands.wantedElevatorState = Elevator.ElevatorState.HOLD;
+        commands.wantedElevatorState = Elevator.ElevatorState.CUSTOM_POSITIONING;
         return commands;
     }
 

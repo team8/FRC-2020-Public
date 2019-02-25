@@ -163,14 +163,18 @@ public class OperatorInterface {
 			newCommands.cancelCurrentRoutines = false;
 			newCommands.addWantedRoutine(new IntakeLevelOneRocketRoutine());
 		}
-
-		if (mClimbStick.getButtonPressed(4)) {
-			newCommands.wantedGearboxState = Elevator.GearboxState.CLIMBER;
+		else if (mOperatorXboxController.getdPadLeft()) {
+			newCommands.cancelCurrentRoutines = false;
+			newCommands.wantedIntakeState = Intake.IntakeMacroState.STOWED;
 		}
 
-		if (mClimbStick.getButtonPressed(5)) {
-			newCommands.wantedGearboxState = Elevator.GearboxState.ELEVATOR;
+		if(mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState == Intake.IntakeMacroState.EXPELLING_ROCKET) {
+			newCommands.wantedIntakeState = Intake.IntakeMacroState.EXPELLING_ROCKET;
 		}
+		else if (!mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState == Intake.IntakeMacroState.EXPELLING_ROCKET) {
+			newCommands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_ROCKET;
+		}
+
 
 //		/**
 //		 * Climber Control

@@ -87,6 +87,11 @@ public class Shooter extends Subsystem{
         return mRumbleLength;
     }
 
+    public void decreaseRumbleLength() {
+        mRumbleLength -= OtherConstants.deltaTime;
+    }
+
+
     public double getOutput() {
         return mOutput;
     }
