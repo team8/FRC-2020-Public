@@ -19,6 +19,7 @@ public class CheesyDriveHelper {
 
 		//Quickturn if right trigger is pressed
 		boolean isQuickTurn = robotState.rightStickInput.getTriggerPressed();
+		robotState.isQuickturning = isQuickTurn;
 
 		//Braking if left trigger is pressed
 		boolean isBraking = robotState.leftStickInput.getTriggerPressed();

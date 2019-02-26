@@ -490,7 +490,7 @@ class HardwareUpdater {
      * low enough
      */
     private boolean shouldCompress() {
-    	return !(RobotState.getInstance().gamePeriod == RobotState.GamePeriod.AUTO);
+    	return !(RobotState.getInstance().gamePeriod == RobotState.GamePeriod.AUTO || RobotState.getInstance().isQuickturning);
     }
 
     /**

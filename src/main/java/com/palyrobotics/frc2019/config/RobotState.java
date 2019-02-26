@@ -46,6 +46,8 @@ public class RobotState {
 	public double robotVelocity;
 	public double robotAccel;
 
+	public boolean isQuickturning = false;
+
 	//Intake
 	public boolean hasCargo = false;
 	public double cargoDistance = 0;

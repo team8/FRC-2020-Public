@@ -105,7 +105,6 @@ public class Elevator extends Subsystem {
 
             handleElevatorState(commands);
             checkTopBottom(mRobotState);
-
             System.out.println(mElevatorState);
 
             //Execute update loop based on the current state

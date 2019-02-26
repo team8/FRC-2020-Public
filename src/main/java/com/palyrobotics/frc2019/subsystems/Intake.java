@@ -143,6 +143,15 @@ public class Intake extends Subsystem {
                 + IntakeConstants.kCentripetalCoeff * robotState.drivePose.headingVelocity * robotState.drivePose.headingVelocity *
                 Math.sin(Math.toRadians(robotState.intakeAngle));
 
+        if (mMacroState == IntakeMacroState.CLIMBING) {
+            HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getPIDController().setOutputRange(-1.0,1.0);
+            HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getPIDController().setOutputRange(-1.0,1.0);
+        }
+        else {
+            HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getPIDController().setOutputRange(-.75,.75);
+            HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getPIDController().setOutputRange(.75,.75);
+        }
+
         switch (mMacroState) {
             case STOWED:
                 mWheelState = WheelState.IDLE;
@@ -183,8 +192,6 @@ public class Intake extends Subsystem {
             case CLIMBING:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getPIDController().setOutputRange(-1.0,1.0);
-                HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getPIDController().setOutputRange(-1.0,1.0);
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kClimbPosition));
         }
 
@@ -240,10 +247,6 @@ public class Intake extends Subsystem {
                 mIntakeWantedPosition.get() == IntakeConstants.kMaxAngle) {
             mSparkOutput.setPercentOutput(0.0);
         }
-
-//        System.out.println("Intake: ");
-//        System.out.println(mIntakeWantedPosition.get());
-//        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
 
         if(!cachedCargoState && robotState.hasCargo) {
             mRumbleLength = 0.25;
