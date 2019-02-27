@@ -145,10 +145,6 @@ class HardwareUpdater {
         leftMasterSpark.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 5);
         rightMasterSpark.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 5);
 
-		leftMasterSpark.setOpenLoopRampRate(0.2);
-		rightMasterSpark.setOpenLoopRampRate(0.2);
-
-
 		//Reverse right side
 		leftMasterSpark.setInverted(false);
 		leftSlave1Spark.setInverted(false);
