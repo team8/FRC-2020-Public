@@ -6,6 +6,8 @@ import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.subsystems.Drive;
+import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.OnboardControlType;
+import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.Segment;
 import com.palyrobotics.frc2019.util.*;
 import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.*;
@@ -33,11 +35,14 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 	double mFixedLookahead;
 	Path mPath;
 	RigidTransform2d.Delta mLastCommand;
+	Kinematics.DriveVelocity mLastDriveVelocity;
 	double mLastTime;
 	double mMaxAccel;
 	double mDt;
 	boolean mReversed;
 	double mPathCompletionTolerance;
+
+	private OnboardDriveController onboardController;
 
 	public AdaptivePurePursuitController(double fixed_lookahead, double max_accel, double nominal_dt, Path path, boolean reversed,
 										 double path_completion_tolerance) {
@@ -48,6 +53,8 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		mLastCommand = null;
 		mReversed = reversed;
 		mPathCompletionTolerance = path_completion_tolerance;
+
+		this.onboardController = new OnboardDriveController(OnboardControlType.kVelocity, Gains.vidarTrajectory);
 	}
 
 	/**
@@ -213,11 +220,28 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 			double scaling = DrivetrainConstants.kPathFollowingMaxVel / max_vel;
 			setpoint = new Kinematics.DriveVelocity(setpoint.left * scaling, setpoint.right * scaling);
 		}
+		
+		//Calculate acceleration of each side based on last command
+		//If we are just starting the controller, use the robot's current velocity
+		if (mLastDriveVelocity == null) {
+			mLastDriveVelocity = new Kinematics.DriveVelocity(state.drivePose.leftEncVelocity * DrivetrainConstants.kDriveSpeedUnitConversion,
+				state.drivePose.rightEncVelocity * DrivetrainConstants.kDriveSpeedUnitConversion);
+		}
+		double leftAcc = (setpoint.left - mLastDriveVelocity.left) / mDt;
+		double rightAcc = (setpoint.right - mLastDriveVelocity.right) / mDt;
+		mLastDriveVelocity = setpoint;
 
-		final SparkMaxOutput left = new SparkMaxOutput(Gains.vidarVelocity, ControlType.kVelocity, setpoint.left);
-		final SparkMaxOutput right = new SparkMaxOutput(Gains.vidarVelocity, ControlType.kVelocity, setpoint.right);
-//		System.out.println("Left output = " + left + " " + "Right output = " + right);
-		return new SparkSignal(left, right);
+		//Pass velocity and acceleration setpoints into onboard controller
+		Segment left_segment = new Segment(setpoint.left, leftAcc, mDt);
+		Segment right_segment = new Segment(setpoint.right, rightAcc, mDt);
+		try {
+			onboardController.updateSetpoint(left_segment, right_segment, this);
+		}
+		catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return onboardController.update(state);
+
 	}
 
 

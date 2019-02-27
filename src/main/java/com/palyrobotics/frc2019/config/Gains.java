@@ -1,19 +1,23 @@
 package com.palyrobotics.frc2019.config;
 
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
+import java.util.logging.Level;
+
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
-import java.util.logging.Level;
-
 public class Gains {
-	//Onboard motion profile aka trajectory follower
-	public static double kVidarTrajectorykV = 0.077;
-	public static double kVidarLeftTrajectorykV = 0.0489;
-	public static double kVidarRightTrajectorykV = 0.0499;
-	public static double kVidarLeftTrajectorykV_0 = 0.0969;
-	public static double kVidarRightTrajectorykV_0 = 0.0946;
-	public static double kVidarTrajectorykA = 0.025;
+	//Onboard velocity-based follower
+	//kV = (gear ratio) / (pi * free speed * wheel diameter)
+	//kA = (wheel radius * robot mass) / (total number of motors * gear reduction * total stall torque)
+	//kV ~ 1.1 times theoretical, kA ~ 1.4 times theroretical, kS ~ 1.3V = .11
+	//presentation has a typo for kA, should be wheel radius because T = Fr
+	public static double kVidarTrajectorykV = 0.00423*1.1; // 1/(in/s)
+	public static double kVidarTrajectorykA = 0.00109*1.4; // 1/(in/s^2)
+	public static double kVidarTrajectorykS = 1.3/12.0;
+	public static double kVidarTrajectorykP = 0;
+	public static double kVidarTrajectorykD = 0;
+
+	public static final TrajectoryGains vidarTrajectory = new TrajectoryGains(kVidarTrajectorykV, kVidarTrajectorykA, kVidarTrajectorykS, kVidarTrajectorykP, kVidarTrajectorykD);
 
 //	public static final double kVidarDriveVelocitykP = 1.2;//6.0 / 2;
 //	public static final double kVidarDriveVelocitykI = 0.001;
@@ -152,15 +156,28 @@ public class Gains {
     public static final Gains emptyGains = new Gains(0,0,0,0,0,0);
 
 	public static class TrajectoryGains {
-		public final double P, D, V, A, turnP, turnD;
+		public final double v, a, s, p, i, d, turnP, turnD;
 
-		public TrajectoryGains(double p, double d, double v, double a, double turnP, double turnD) {
-			this.P = p;
-			this.D = d;
-			this.V = v;
-			this.A = a;
+		public TrajectoryGains(double v, double a, double s, double p, double i, double d, double turnP, double turnD) {
+			this.v = v;
+			this.a = a;
+			this.s = s;
+			this.p = p;
+			this.i = i;
+			this.d = d;
 			this.turnP = turnP;
 			this.turnD = turnD;
+		}
+
+		public TrajectoryGains(double v, double a, double s, double p, double d) {
+			this.v = v;
+			this.a = a;
+			this.s = s;
+			this.p = p;
+			this.i = 0;
+			this.d = d;
+			this.turnP = 0;
+			this.turnD = 0;
 		}
 	}
 
