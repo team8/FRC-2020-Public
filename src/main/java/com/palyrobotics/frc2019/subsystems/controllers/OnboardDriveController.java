@@ -27,6 +27,8 @@ public class OnboardDriveController implements Drive.DriveController {
 	private double left_last_error = 0;
 	private double right_last_error = 0;
 
+	private boolean reset = true;
+
 	public enum OnboardControlType {
 		kPosition,
 		kVelocity;
@@ -72,18 +74,18 @@ public class OnboardDriveController implements Drive.DriveController {
 
 	private SparkSignal getPositionSetpoint(Pose drivePose) {
 		double left_sp = leftSetpoint.pos;
-		double left_pv = drivePose.leftEnc * DrivetrainConstants.kDriveInchesPerRotation;
+		double left_pv = drivePose.leftEnc;
 		double right_sp = rightSetpoint.pos;
-		double right_pv = drivePose.rightEnc * DrivetrainConstants.kDriveSpeedUnitConversion;
+		double right_pv = drivePose.rightEnc;
 
 		return updatePID(left_sp, left_pv, right_sp, right_pv);
 	}
 
 	private SparkSignal getVelocitySetpoint(Pose drivePose) {
 		double left_sp = leftSetpoint.vel;
-		double left_pv = drivePose.leftEncVelocity * DrivetrainConstants.kDriveSpeedUnitConversion;
+		double left_pv = drivePose.leftEncVelocity;
 		double right_sp = rightSetpoint.vel;
-		double right_pv = drivePose.rightEncVelocity * DrivetrainConstants.kDriveSpeedUnitConversion;
+		double right_pv = drivePose.rightEncVelocity;
 
 		return updatePID(left_sp, left_pv, right_sp, right_pv);
 	}
@@ -102,6 +104,13 @@ public class OnboardDriveController implements Drive.DriveController {
 		double d_left_error = (left_error - left_last_error) / leftSetpoint.dt;
 		double d_right_error = (right_error - right_last_error) / rightSetpoint.dt;
 
+		//ignore d_error on the first cycle
+		if (reset) {
+			d_left_error = 0;
+			d_right_error = 0;
+			reset = false;
+		}
+
 		//calculate output
 		//output = kP * error + kD * d_error + kV * velocity + kA * accel + sign(velocity)*kS
 		double left_output = mGains.p * left_error + mGains.d * d_left_error + mGains.v * leftSetpoint.vel + mGains.a * leftSetpoint.acc + Math.signum(leftSetpoint.vel)*mGains.s;
@@ -111,14 +120,14 @@ public class OnboardDriveController implements Drive.DriveController {
 		left_output = Math.min(Math.max(left_output, -1), 1);
 		right_output = Math.min(Math.max(right_output, -1), 1);
 
-		//deadband output within (-0.03, 0.03) to avoid jitter with kS
-		left_output = Math.abs(left_output) < 0.03 ? 0 : left_output;
-		right_output = Math.abs(right_output) < 0.03 ? 0 : right_output;
+		//deadband output within (-kS-0.03, kS+0.03) to avoid jitter with kS
+		left_output = Math.abs(left_output) - mGains.s < 0.03 ? 0 : left_output;
+		right_output = Math.abs(right_output) - mGains.s < 0.03 ? 0 : right_output;
 
 		left_last_error = left_error;
 		right_last_error = right_error;
 
-		return new SparkSignal(new SparkMaxOutput(null, ControlType.kVoltage, left_output), new SparkMaxOutput(null, ControlType.kVoltage, right_output));
+		return new SparkSignal(new SparkMaxOutput(null, ControlType.kDutyCycle, left_output), new SparkMaxOutput(null, ControlType.kDutyCycle, right_output));
 	}
 
 	@Override

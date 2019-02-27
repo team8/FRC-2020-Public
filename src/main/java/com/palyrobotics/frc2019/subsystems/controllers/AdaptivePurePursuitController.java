@@ -224,8 +224,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		//Calculate acceleration of each side based on last command
 		//If we are just starting the controller, use the robot's current velocity
 		if (mLastDriveVelocity == null) {
-			mLastDriveVelocity = new Kinematics.DriveVelocity(state.drivePose.leftEncVelocity * DrivetrainConstants.kDriveSpeedUnitConversion,
-				state.drivePose.rightEncVelocity * DrivetrainConstants.kDriveSpeedUnitConversion);
+			mLastDriveVelocity = new Kinematics.DriveVelocity(state.drivePose.leftEncVelocity, state.drivePose.rightEncVelocity);
 		}
 		double leftAcc = (setpoint.left - mLastDriveVelocity.left) / mDt;
 		double rightAcc = (setpoint.right - mLastDriveVelocity.right) / mDt;
