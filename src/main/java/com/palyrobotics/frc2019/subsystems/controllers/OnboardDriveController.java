@@ -1,8 +1,8 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
+import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.Gains.TrajectoryGains;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
@@ -31,7 +31,8 @@ public class OnboardDriveController implements Drive.DriveController {
 
 	public enum OnboardControlType {
 		kPosition,
-		kVelocity;
+		kVelocity,
+		kVelArbFF;
 	}
 	
 	public OnboardDriveController(OnboardControlType controlType, TrajectoryGains gains) {
@@ -48,10 +49,13 @@ public class OnboardDriveController implements Drive.DriveController {
 		mCachedState = state;
 		switch (this.controlType) {
 			case kPosition:
-				this.mSignal = getPositionSetpoint(state.drivePose);
+				this.mSignal = getPositionOutput(state.drivePose);
 				break;
 			case kVelocity:
-				this.mSignal = getVelocitySetpoint(state.drivePose);
+				this.mSignal = getVelocityOutput(state.drivePose);
+				break;
+			case kVelArbFF:
+				this.mSignal = getArbFFOutput(state.drivePose);
 				break;
 			default:
 				this.mSignal = SparkSignal.getNeutralSignal();
@@ -72,7 +76,7 @@ public class OnboardDriveController implements Drive.DriveController {
 		this.rightSetpoint = rightSetpoint;
 	}
 
-	private SparkSignal getPositionSetpoint(Pose drivePose) {
+	private SparkSignal getPositionOutput(Pose drivePose) {
 		double left_sp = leftSetpoint.pos;
 		double left_pv = drivePose.leftEnc;
 		double right_sp = rightSetpoint.pos;
@@ -81,13 +85,21 @@ public class OnboardDriveController implements Drive.DriveController {
 		return updatePID(left_sp, left_pv, right_sp, right_pv);
 	}
 
-	private SparkSignal getVelocitySetpoint(Pose drivePose) {
+	private SparkSignal getVelocityOutput(Pose drivePose) {
 		double left_sp = leftSetpoint.vel;
 		double left_pv = drivePose.leftEncVelocity;
 		double right_sp = rightSetpoint.vel;
 		double right_pv = drivePose.rightEncVelocity;
 
 		return updatePID(left_sp, left_pv, right_sp, right_pv);
+	}
+
+	private SparkSignal getArbFFOutput(Pose drivePose) {
+		SparkSignal signal = updatePID(0, 0, 0, 0);
+		signal.leftMotor.setTargetVelocity(leftSetpoint.vel, signal.leftMotor.getSetpoint()*12.0, new Gains(mGains.p, 0, mGains.d, 0, 0, 0));
+		signal.rightMotor.setTargetVelocity(rightSetpoint.vel, signal.rightMotor.getSetpoint()*12.0, new Gains(mGains.p, 0, mGains.d, 0, 0, 0));
+		
+		return signal;
 	}
 
 	/**

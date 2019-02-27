@@ -49,6 +49,13 @@ public class SparkMaxOutput {
         this.mGains = gains;
     }
 
+    public void setTargetVelocity(double velocitySetpoint, double arbitraryDemand, Gains gains) {
+        this.mSparkSetpoint = velocitySetpoint;
+        this.mSparkMode = ControlType.kVelocity;
+        this.arbitraryDemand = arbitraryDemand;
+        this.mGains = gains;
+    }
+
     public void setTargetPosition(double posSetpoint) {
         this.mSparkSetpoint = posSetpoint;
         this.mSparkMode = ControlType.kPosition;

@@ -54,7 +54,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		mReversed = reversed;
 		mPathCompletionTolerance = path_completion_tolerance;
 
-		this.onboardController = new OnboardDriveController(OnboardControlType.kVelocity, Gains.vidarTrajectory);
+		this.onboardController = new OnboardDriveController(OnboardControlType.kVelArbFF, Gains.vidarTrajectory);
 	}
 
 	/**

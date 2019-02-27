@@ -663,7 +663,7 @@ class HardwareUpdater {
         if(output.getControlType().equals(ControlType.kPosition) || output.getControlType().equals(ControlType.kVelocity)) {
             updateSparkGains(spark, output);
         }
-        if(output.getArbitraryFF() != 0.0 && output.getControlType().equals(ControlType.kPosition)) {
+        if(output.getArbitraryFF() != 0.0 && (output.getControlType().equals(ControlType.kPosition) || output.getControlType().equals(ControlType.kVelocity))) {
             spark.getPIDController().setReference(output.getSetpoint(), output.getControlType(), 0, output.getArbitraryFF());
         } else {
         	updateSparkGains(spark, output);
