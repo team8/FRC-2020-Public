@@ -95,7 +95,7 @@ public class Gains {
 
 	public static final double kVidarIntakePositionkP = 0.5;
 	public static final double kVidarIntakePositionkI = 0.0;
-	public static final double kVidarIntakePositionkD = 0.0;
+	public static final double kVidarIntakePositionkD = 1.0;
 	public static final double kVidarIntakePositionkF = 0.0;
 	public static final int kVidarIntakePositionkIzone = 0;
 	public static final double kVidarIntakePositionkRampRate = 1.0;

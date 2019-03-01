@@ -3,6 +3,7 @@ package com.palyrobotics.frc2019.robot;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.IntakeLevelOneRocketRoutine;
+import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shovel.ShovelDownRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shovel.ShovelUpRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shovel.ShovelWheelRoutine;
@@ -135,23 +136,26 @@ public class OperatorInterface {
 			Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight1Inches, 2);
 			newCommands.cancelCurrentRoutines = false;
 			newCommands.addWantedRoutine(elevatorLevel1);
-			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0));
+			newCommands.addWantedRoutine(new PusherInRoutine());
+			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 5));
 		} else if(mOperatorXboxController.getButtonB()) {
 			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight2Inches, 2);
 			newCommands.cancelCurrentRoutines = false;
 			newCommands.addWantedRoutine(elevatorLevel2);
-			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0));
+			newCommands.addWantedRoutine(new PusherInRoutine());
+			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 5));
 		} else if(mOperatorXboxController.getButtonY()) {
 			Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight3Inches, 2);
 			newCommands.cancelCurrentRoutines = false;
 			newCommands.addWantedRoutine(elevatorLevel3);
-			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0));
+			newCommands.addWantedRoutine(new PusherInRoutine());
+			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 5));
 		}
 
 		/**
 		 * Cargo Intake Control
 		 */
-		if(mOperatorXboxController.getdPadDown() && prevCommands.wantedIntakeState == Intake.IntakeMacroState.HOLDING_MID) {
+		if(mOperatorXboxController.getdPadDown()) {
 			newCommands.cancelCurrentRoutines = false;
 			newCommands.addWantedRoutine(new IntakeBeginCycleRoutine());
 		} else if(mOperatorXboxController.getdPadUp()) {

@@ -142,9 +142,6 @@ class HardwareUpdater {
 		rightSlave1Spark.getPIDController().setOutputRange(-DrivetrainConstants.kDriveMaxClosedLoopOutput, DrivetrainConstants.kDriveMaxClosedLoopOutput);
         rightSlave2Spark.getPIDController().setOutputRange(-DrivetrainConstants.kDriveMaxClosedLoopOutput, DrivetrainConstants.kDriveMaxClosedLoopOutput);
 
-        leftMasterSpark.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 5);
-        rightMasterSpark.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 5);
-
 		//Reverse right side
 		leftMasterSpark.setInverted(false);
 		leftSlave1Spark.setInverted(false);
@@ -154,11 +151,11 @@ class HardwareUpdater {
 		rightSlave1Spark.setInverted(true);
 		rightSlave2Spark.setInverted(true);
 
-		//Set slave victors to follower mode
-		leftSlave1Spark.follow(leftMasterSpark);
-        leftSlave2Spark.follow(leftMasterSpark);
-        rightSlave1Spark.follow(rightMasterSpark);
-        rightSlave2Spark.follow(rightMasterSpark);
+//		//Set slave victors to follower mode
+//		leftSlave1Spark.follow(leftMasterSpark);
+//        leftSlave2Spark.follow(leftMasterSpark);
+//        rightSlave1Spark.follow(rightMasterSpark);
+//        rightSlave2Spark.follow(rightMasterSpark);
     }
 
     void configureElevatorHardware() {
@@ -465,7 +462,13 @@ class HardwareUpdater {
 	 */
 	private void updateDrivetrain() {
 		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark, mDrive.getDriveSignal().leftMotor);
+		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftSlave1Spark, mDrive.getDriveSignal().leftMotor);
+		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftSlave2Spark, mDrive.getDriveSignal().leftMotor);
+
 		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark, mDrive.getDriveSignal().rightMotor);
+		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightSlave1Spark, mDrive.getDriveSignal().rightMotor);
+		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightSlave2Spark, mDrive.getDriveSignal().rightMotor);
+
 	}
 
     /**

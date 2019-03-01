@@ -63,7 +63,7 @@ public class Intake extends Subsystem {
     private IntakeMacroState mMacroState;
 
     private double lastIntakeQueueTime = 0;
-    private final double requiredMSCancel = 150;
+    private final double requiredMSCancel = 100;
 
     private double lastDropQueueTme = 0;
     private final double requiredMSDrop = 150;
