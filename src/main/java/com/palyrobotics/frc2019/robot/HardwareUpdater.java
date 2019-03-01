@@ -151,6 +151,15 @@ class HardwareUpdater {
 		rightSlave1Spark.setInverted(true);
 		rightSlave2Spark.setInverted(true);
 
+		leftMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+		leftSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+		leftSlave2Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+
+		rightMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+		rightSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+		rightSlave2Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+
+
 //		//Set slave victors to follower mode
 //		leftSlave1Spark.follow(leftMasterSpark);
 //        leftSlave2Spark.follow(leftMasterSpark);
