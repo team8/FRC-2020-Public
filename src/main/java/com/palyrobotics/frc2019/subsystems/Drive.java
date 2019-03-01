@@ -90,6 +90,7 @@ public class Drive extends Subsystem {
 	@Override
 	public void start() {
 		setNeutral();
+		mCachedRobotState = RobotState.getInstance();
 	}
 
 	/**

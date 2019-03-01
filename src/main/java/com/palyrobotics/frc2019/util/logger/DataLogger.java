@@ -1,9 +1,5 @@
 package com.palyrobotics.frc2019.util.logger;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-import edu.wpi.first.wpilibj.DriverStation;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,7 +7,6 @@ import java.io.StringWriter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,6 +14,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Log is at /home/lvuser/logs/ directory Unit test safe, creates diff file directory for Mac/Windows/Linux fileName defaults to ex: "Mar13 13-29" using
@@ -29,10 +29,10 @@ import java.util.logging.Level;
  *
  * FYI, buffered writer closes the underlying filewriter and flushes the buffer
  */
-public class Logger {
-	private static Logger instance = new Logger();
+public class DataLogger {
+	private static DataLogger instance = new DataLogger();
 
-	public static Logger getInstance() {
+	public static DataLogger getInstance() {
 		return instance;
 	}
 
@@ -41,11 +41,9 @@ public class Logger {
 
 	private boolean isEnabled = false;
 
-	//Separates to prevent concurrent modification exception
-	private ArrayList<LeveledString> mSubsystemThreadLogs = new ArrayList<>();
-	private ArrayList<LeveledString> mRobotThreadLogs = new ArrayList<>();
-
-	//synchronized lock for writing out the latest data
+	private ArrayList<TimestampedString> mData = new ArrayList<>();
+	private ArrayList<LeveledString> mCycleLine = new ArrayList<>();
+	
 	private Thread mWritingThread = null;
 	//Stores the runnable for the thread to be restarted
 	private Runnable mRunnable;
@@ -116,15 +114,15 @@ public class Logger {
 			System.err.println("Error in determining OS name, reverting to RIO base");
 			filePath = "/home/lvuser/logs/" + filePath;
 		}
-		mainLog = new File(filePath + ".log");
+		mainLog = new File(filePath + ".datalog");
 		while(mainLog.exists()) {
 			duplicatePrevent++;
-			mainLog = new File(filePath + duplicatePrevent + ".log");
+			mainLog = new File(filePath + duplicatePrevent + ".datalog");
 		}
 		try {
 			//File header
 			Files.createParentDirs(mainLog);
-			Files.append("Robot log:" + "\n", mainLog, Charsets.UTF_8);
+			Files.append("Robot data log:" + "\n", mainLog, Charsets.UTF_8);
 			Files.append(filePath + "\n", mainLog, Charsets.UTF_8);
 			System.out.println("Created new log at " + filePath);
 		} catch(IOException e) {
@@ -138,59 +136,6 @@ public class Logger {
 		mWritingThread.start();
 	}
 
-	/**
-	 * Called on subsystem thread
-	 * 
-	 * @param l
-	 *            Sets level of log message; determines writing to console and file
-	 * @param value
-	 *            Object used for input; stores .toString() value
-	 */
-	public void logSubsystemThread(Level l, Object value) {
-		Optional<Object> v = Optional.ofNullable(value);
-		try {
-			mSubsystemThreadLogs.add(new LeveledString(l, checkStackTrace(l, v.orElse("NULL VALUE"))));
-		} catch(ConcurrentModificationException e) {
-			System.err.println("Attempted concurrent modification on subsystem logger");
-		}
-	}
-
-	/**
-	 * Called on subsystem thread
-	 * 
-	 * @param l
-	 *            Sets level of log message; determines writing to console and file
-	 * @param key
-	 *            String added to input object
-	 * @param value
-	 *            Object used for input; stores .toString() value
-	 */
-	public void logSubsystemThread(Level l, String key, Object value) {
-		Optional<Object> v = Optional.ofNullable(value);
-		Optional<String> k = Optional.ofNullable(key);
-		try {
-			mSubsystemThreadLogs.add(new LeveledString(l, k.orElse("NULL KEY"), checkStackTrace(l, v.orElse("NULL VALUE"))));
-		} catch(ConcurrentModificationException e) {
-			System.err.println("Attempted concurrent modification on subsystem logger");
-		}
-	}
-
-	/**
-	 * Called on robot thread
-	 * 
-	 * @param l
-	 *            Sets level of log message; determines writing to console and file
-	 * @param value
-	 *            Object used for input; stores .toString() value
-	 */
-	public void logRobotThread(Level l, Object value) {
-		Optional<Object> v = Optional.ofNullable(value);
-		try {
-			mRobotThreadLogs.add(new LeveledString(l, checkStackTrace(l, v.orElse("NULL VALUE"))));
-		} catch(ConcurrentModificationException e) {
-			System.err.println("Attempted concurrent modification on robot logger");
-		}
-	}
 
 	/**
 	 * Called on robot thread
@@ -202,14 +147,14 @@ public class Logger {
 	 * @param value
 	 *            Object used for input; stores .toString() value
 	 */
-	public void logRobotThread(Level l, String key, Object value) {
+	public synchronized void logData(Level l, String key, Object value) {
 		Optional<Object> v = Optional.ofNullable(value);
 		Optional<String> k = Optional.ofNullable(key);
 		try {
-			mRobotThreadLogs.add(new LeveledString(l, k.orElse("NULL KEY"), checkStackTrace(l, v.orElse("NULL VALUE"))));
+			mCycleLine.add(new LeveledString(l, k.orElse("NULL KEY"), checkStackTrace(l, v.orElse("NULL VALUE"))));
 		} catch(ConcurrentModificationException e) {
 			System.err.println("Attempted concurrent modification on robot logger");
-		}
+		}	
 	}
 	
 	/**
@@ -236,7 +181,8 @@ public class Logger {
 		}
 	}
 
-	private Logger() {
+	private DataLogger() {
+		mData = new ArrayList<>();
 		mRunnable = () -> {
 			while(true) {
 				writeLogs();
@@ -260,40 +206,76 @@ public class Logger {
 	 */
 	private void writeLogs() {
 		if(isEnabled) {
-			ArrayList<LeveledString> mData;
+			ArrayList<TimestampedString> mDataCopy;
 			final Lock w = lock.writeLock();
 		    w.lock();
 		    try {
-		    	mData = new ArrayList<>(mRobotThreadLogs);
-				mData.addAll(mSubsystemThreadLogs);
-				mSubsystemThreadLogs.clear();
-				mRobotThreadLogs.clear();
+		    	mDataCopy = new ArrayList<>(mData);
+		    	mData.clear();
 		    } finally {
 		        w.unlock();
 		    }
-		    
-		    writeLimit = 0;
+			
+			writeLimit = 0;
 			try {
-				mData.removeIf(Objects::isNull);
+				mDataCopy.removeIf(Objects::isNull);
 			}
 			catch(UnsupportedOperationException e) {
 				e.printStackTrace();
 			}
-			mData.sort(LeveledString::compareTo);
-			mData.forEach((LeveledString c) -> {
+			mDataCopy.sort(TimestampedString::compareTo);
+			mDataCopy.forEach(c -> {
 				try {
-					if(c.getLevel().intValue() >= LoggerConstants.writeLevel.intValue()) {
-						Files.append(((LeveledString) c).getLeveledString(), mainLog, Charsets.UTF_8);
-						if(((LeveledString) c).getLevel().intValue() >= LoggerConstants.displayLevel.intValue() && writeLimit <= LoggerConstants.writeLimit) {
-							System.out.println(c.getLeveledString());
-							writeLimit++;
-						}
-					}
+						Files.append(c.getTimestampedString(), mainLog, Charsets.UTF_8);
 				} catch(IOException e) {
 					e.printStackTrace();
 				}
 			});
+
 		}
+		
+	}
+	
+	public synchronized void cycle() {
+
+		System.out.println("cycle called");
+
+		try {
+			mCycleLine.removeIf(Objects::isNull);
+		}
+		catch(UnsupportedOperationException e) {
+			e.printStackTrace();
+		}
+		mCycleLine.sort(LeveledString::compareTo);
+		ArrayList<LeveledString> mTemp = new ArrayList<>();
+		for (int i = mCycleLine.size() - 1; i >= 0; i--) {
+			boolean add = true;
+			for (int j = 0; j < mTemp.size(); j++) {
+				if (mCycleLine.get(i).getKey() == mTemp.get(j).getKey()) add = false;;
+			}
+			if (add) mTemp.add(mCycleLine.get(i));
+		}
+		mCycleLine = mTemp;
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < mCycleLine.size(); i++) {
+			LeveledString c = mCycleLine.get(i);
+			if(c.getLevel().intValue() >= LoggerConstants.dataWriteLevel.intValue()) {
+				sb.append(c.getKey() + ": " + c.getString());
+				if (i != mCycleLine.size() - 1) {
+					sb.append(", ");
+				}
+			}
+		}
+		mCycleLine.clear();
+		final Lock w = lock.writeLock();
+	    w.lock();
+	    try {
+	    	mData.add(new TimestampedString(sb.toString()));
+	    } finally {
+	        w.unlock();
+	    }
+		
 	}
 
 	public String getLogPath() {
@@ -305,26 +287,24 @@ public class Logger {
 	}
 
 	//Used to cleanup internally, write out last words, etc
-	private synchronized void shutdown() {
+	private void shutdown() {
 		System.out.println("Shutting down");
-
 		writeLogs();
+		mCycleLine.clear();
 		final Lock w = lock.writeLock();
 		w.lock();
 	    try {
-	    	mRobotThreadLogs.clear();
-			mSubsystemThreadLogs.clear();
+			mData.clear();
 	    } finally {
 	        w.unlock();
 	    }
-		
-		try {
-			Files.append("Logger stopped \n", mainLog, Charsets.UTF_8);
-		} catch(IOException e) {
-			System.out.println("Unable to write, logger stopped");
-			e.printStackTrace();
-		}
+	    
+		// try {
+		// 	Files.append("Logger stopped \n", mainLog, Charsets.UTF_8);
+		// } catch(IOException e) {
+		// 	System.out.println("Unable to write, logger stopped");
+		// 	e.printStackTrace();
+		// }
 		isEnabled = false;
-		
 	}
 }

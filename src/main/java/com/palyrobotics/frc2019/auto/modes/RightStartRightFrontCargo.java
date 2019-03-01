@@ -41,7 +41,7 @@ public class RightStartRightFrontCargo extends AutoModeBase {
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new DriveSensorResetRoutine(0.2), placeHatch(true));
+        return new SequentialRoutine(new DriveSensorResetRoutine(0.2), placeHatch(false));
     }
 
     public Routine placeHatch(boolean inverted) {
@@ -53,15 +53,15 @@ public class RightStartRightFrontCargo extends AutoModeBase {
             invertCord = -1;
         }
 
-        routines.add(new RezeroSubAutoMode().Rezero(inverted)); //rezero
+        // routines.add(new RezeroSubAutoMode().Rezero(inverted)); //rezero
 
         List<Path.Waypoint> StartToCargoShip = new ArrayList<>();
         StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kHabLineX + PhysicalConstants.kRobotLengthInches + kOffsetX), 0), kRunSpeed)); //go straight so the robot doesn't get messed up going down a level
         StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kCargoShipRightFrontX * .6 + kOffsetX), invertCord * (kCargoShipRightFrontY + kOffsetY)), kRunSpeed)); //lines up with cargo ship
         StartToCargoShip.add(new Waypoint(new Translation2d(invertCord * (kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * .6 + kOffsetX), invertCord * (kCargoShipRightFrontY + kOffsetY)), 0));
         routines.add(new DrivePathRoutine(new Path(StartToCargoShip), true));
-        routines.add(new FingersCloseRoutine());
-        routines.add(new FingersExpelRoutine(3));
+        // routines.add(new FingersCloseRoutine());
+        // routines.add(new FingersExpelRoutine(3));
 
         return new SequentialRoutine(routines);
     }

@@ -1,18 +1,31 @@
 package com.palyrobotics.frc2019.robot;
 
+import java.util.logging.Level;
+
+import com.palyrobotics.frc2019.auto.AutoModeBase;
+import com.palyrobotics.frc2019.auto.AutoModeSelector;
 import com.palyrobotics.frc2019.behavior.RoutineManager;
+import com.palyrobotics.frc2019.config.AutoDistances;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
-import com.palyrobotics.frc2019.subsystems.*;
+import com.palyrobotics.frc2019.subsystems.Drive;
+import com.palyrobotics.frc2019.subsystems.Elevator;
+import com.palyrobotics.frc2019.subsystems.Fingers;
+import com.palyrobotics.frc2019.subsystems.Intake;
+import com.palyrobotics.frc2019.subsystems.Pusher;
+import com.palyrobotics.frc2019.subsystems.Shooter;
+import com.palyrobotics.frc2019.subsystems.Shovel;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2019.util.logger.DataLogger;
 import com.palyrobotics.frc2019.util.logger.Logger;
+import com.palyrobotics.frc2019.util.loops.Looper;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
+
 import edu.wpi.first.wpilibj.TimedRobot;
-import java.util.logging.Level;
 
 public class Robot extends TimedRobot {
 	//Instantiate singleton classes
@@ -51,8 +64,19 @@ public class Robot extends TimedRobot {
 
 	private int disabledCycles;
 
+	public Looper looper;
+
 	@Override
 	public void robotInit() {
+
+		Logger.getInstance().setFileName("3-2-Testing");
+		DataLogger.getInstance().setFileName("3-2-Testing");
+
+		Logger.getInstance().start();
+		DataLogger.getInstance().start();
+
+		Logger.getInstance().logRobotThread(Level.INFO, "Start robotInit()");
+		
 		DashboardManager.getInstance().robotInit();
 
 		mHardwareUpdater.initHardware();
@@ -63,41 +87,51 @@ public class Robot extends TimedRobot {
 
 		DriveTeam.configConstants();
 
+		Logger.getInstance().logRobotThread(Level.INFO, "End robotInit()");
 	}
 
 	@Override
 	public void autonomousInit() {
-//		DashboardManager.getInstance().toggleCANTable(true);
-//		robotState.gamePeriod = RobotState.GamePeriod.AUTO;
-//		mHardwareUpdater.configureHardware();
-//
-//		robotState.matchStartTime = System.currentTimeMillis();
-//
-//		mHardwareUpdater.updateState(robotState);
-//		mRoutineManager.reset(commands);
-//		robotState.reset(0, new RigidTransform2d());
-////		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
-//
-//        // Limelight LED on
-//        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
-//
-//        mWriter.cleanFile();
-//
-//		AutoDistances.updateAutoDistances();
-//
-//		mWriter.cleanFile();
-//
-//		startSubsystems();
-//		mHardwareUpdater.enableBrakeMode();
+		Logger.getInstance().start();
+		DataLogger.getInstance().start();
 
-		teleopInit();
+		Logger.getInstance().logRobotThread(Level.INFO, "Start autoInit()");
+
+		looper.start();
+
+		DashboardManager.getInstance().toggleCANTable(true);
+		robotState.gamePeriod = RobotState.GamePeriod.AUTO;
+		mHardwareUpdater.configureHardware();
+
+		robotState.matchStartTime = System.currentTimeMillis();
+
+		mHardwareUpdater.updateState(robotState);
+		mRoutineManager.reset(commands);
+		robotState.reset(0, new RigidTransform2d());
+//		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
+
+        // Limelight LED on
+        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+
+        mWriter.cleanFile();
+
+		AutoDistances.updateAutoDistances();
+
+		mWriter.cleanFile();
+
+		startSubsystems();
+		mHardwareUpdater.enableBrakeMode();
+
+		Logger.getInstance().logRobotThread(Level.INFO, "End autoInit()");
+
 	}
 
 
 	@Override
 	public void autonomousPeriodic() {
-		/**
-		if(AutoFMS.isFMSDataAvailable() && !this.mAutoStarted) {
+
+		long start = System.nanoTime();
+		if(!this.mAutoStarted) {
 			//Get the selected auto mode
 			AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
 
@@ -116,10 +150,9 @@ public class Robot extends TimedRobot {
 
         if(mWriter.getSize() > 10000) {
             mWriter.write();
-        }
-		 */
-
-		teleopPeriodic();
+		}
+		
+		DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
 
 //		System.out.println(mRoutineManager.getCurrentRoutines().contains(new DriveSensorResetRoutine(1.0)));
 //		System.out.println("Position: " + Robot.getRobotState().getLatestFieldToVehicle().getValue());
@@ -127,6 +160,13 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		Logger.getInstance().start();
+		DataLogger.getInstance().start();
+
+		Logger.getInstance().logRobotThread(Level.INFO, "Start teleopInit()");
+
+		looper.start();
+
 		robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
 		robotState.reset(0.0, new RigidTransform2d());
 		mHardwareUpdater.updateState(robotState);
@@ -150,6 +190,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopPeriodic() {
+
+		long start = System.nanoTime();
 		commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
 		mHardwareUpdater.updateState(robotState);
 		updateSubsystems();
@@ -161,13 +203,23 @@ public class Robot extends TimedRobot {
 
         if(mWriter.getSize() > 10000) {
             mWriter.write();
-        }
+		}
 
+		DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
 	}
 
 	@Override
 	public void disabledInit() {
+
+		Logger.getInstance().logRobotThread(Level.INFO, "Start disabledInit()");
+		Logger.getInstance().logRobotThread(Level.INFO, "Stopping logger...");
+
+		Logger.getInstance().cleanup();
+		DataLogger.getInstance().cleanup();
+
 		mAutoStarted = false;
+
+		looper.stop();
 
 		robotState.reset(0, new RigidTransform2d());
 		//Stops updating routines
@@ -185,8 +237,9 @@ public class Robot extends TimedRobot {
 		Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
 		HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
+		mHardwareUpdater.disableBrakeMode();
 
-        mWriter.write();
+		mWriter.write();
 
 		//Manually run garbage collector
 		System.gc();

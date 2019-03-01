@@ -1,26 +1,27 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
+import java.util.Optional;
+import java.util.Set;
+import java.util.logging.Level;
+
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.OnboardControlType;
 import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.Segment;
-import com.palyrobotics.frc2019.util.*;
-import com.palyrobotics.frc2019.util.logger.Logger;
-import com.palyrobotics.frc2019.util.trajectory.*;
-import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
+import com.palyrobotics.frc2019.util.Pose;
+import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.logger.DataLogger;
+import com.palyrobotics.frc2019.util.trajectory.Kinematics;
+import com.palyrobotics.frc2019.util.trajectory.Path;
+import com.palyrobotics.frc2019.util.trajectory.PathSegment;
+import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
+import com.palyrobotics.frc2019.util.trajectory.Rotation2d;
+import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 
-import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.Timer;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.logging.Level;
 
 /**
  * Implements an adaptive pure pursuit controller. See: https://www.ri.cmu.edu/pub_files/pub1/kelly_alonzo_1994_4/kelly_alonzo_1994_4 .pdf
@@ -78,6 +79,9 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 //		System.out.println("Current point = " + robot_pose.getTranslation() + " " + "Lookahead point = " + lookahead_point.translation);
 		//if (!mPath.getWaypoints().isEmpty()) System.out.println("First point = " + mPath.getWaypoints().get(0).position.toString());
 
+		// DataLogger.getInstance().logData(Level.FINE, "lookahead_x", lookahead_point.translation.getX());
+		// DataLogger.getInstance().logData(Level.FINE, "lookahead_y", lookahead_point.translation.getY());
+		
 		Optional<Circle> circle = joinPath(pose, lookahead_point.translation);
 
 		double speed = lookahead_point.speed;
@@ -229,6 +233,12 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		double leftAcc = (setpoint.left - mLastDriveVelocity.left) / mDt;
 		double rightAcc = (setpoint.right - mLastDriveVelocity.right) / mDt;
 		mLastDriveVelocity = setpoint;
+
+		System.out.println("logging PP data");
+		DataLogger.getInstance().logData(Level.FINE, "left_vel_setpoint", mLastDriveVelocity.left);
+		DataLogger.getInstance().logData(Level.FINE, "right_vel_setpoint", mLastDriveVelocity.right);
+		DataLogger.getInstance().logData(Level.FINE, "left_vel", state.drivePose.leftEncVelocity);
+		DataLogger.getInstance().logData(Level.FINE, "right_vel", state.drivePose.rightEncVelocity);
 
 		//Pass velocity and acceleration setpoints into onboard controller
 		Segment left_segment = new Segment(setpoint.left, leftAcc, mDt);

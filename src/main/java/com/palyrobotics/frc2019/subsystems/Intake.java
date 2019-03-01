@@ -161,7 +161,7 @@ public class Intake extends Subsystem {
             case STOWED:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kMaxAngle));
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kMaxAngle-50));
                 break;
             case GROUND_INTAKING:
                 mWheelState = WheelState.INTAKING;

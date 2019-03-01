@@ -33,7 +33,8 @@ public class LoggerConstants {
 	 * FINEST: Most detailed tracing information, highest volume (300) <p>
 	 * ALL: Not actually a level, used to display information from all levels (Integer.MIN_VALUE)
 	 */
-	public static Level writeLevel = Level.FINEST;
+	public static Level writeLevel = Level.FINE;
+	public static Level dataWriteLevel = Level.FINEST;
 
 	//Prevents the logger from printing too many messages to the console
 	public static int writeLimit = 10;
