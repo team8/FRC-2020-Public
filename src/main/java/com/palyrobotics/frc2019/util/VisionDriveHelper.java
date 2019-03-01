@@ -54,17 +54,18 @@ public class VisionDriveHelper {
         }
 
         if(Limelight.getInstance().isTargetFound()) {
-            // Is this the first time detecting the target?
-            if (!found){
-                Gains turnGains = new Gains(.1, 0, 0, 0, 200, 0);
-                pidController = new SynchronousPID(turnGains.P, turnGains.I, turnGains.D, turnGains.izone);
-                pidController.setOutputRange(-0.2, 0.2);
-
-                pidController.setSetpoint(0);
-                found = true;
-            }
-            angularPower = pidController.calculate(Limelight.getInstance().getYawToTarget());
-            System.out.println(angularPower);
+            double kP = .03;
+//            double kP = Limelight.getInstance().getTargetArea();
+//            double kP = 1.0/Limelight.getInstance().getCorrectedEstimatedDistanceZ();
+//            double kP = .010 * Math.sqrt(Limelight.getInstance().getCorrectedEstimatedDistanceZ());
+            //double kP = Limelight.getInstance().getCorrectedEstimatedDistanceZ();
+            angularPower = -Limelight.getInstance().getYawToTarget() * kP;
+            // |angularPower| should be at most 0.6
+            if (angularPower > 0.6) angularPower = 0.6;
+            if (angularPower < -0.6) angularPower = -0.6;
+//            System.out.println(angularPower);
+            System.out.println("zdist: " + Limelight.getInstance().getCorrectedEstimatedDistanceZ());
+            System.out.println("Target area: " + Limelight.getInstance().getTargetArea());
         } else {
 //            System.out.println(Limelight.getInstance().getCornerX().length);
             found = false;
@@ -76,9 +77,10 @@ public class VisionDriveHelper {
         System.out.println("Before - L: " + leftPower + " R: " + rightPower);
 
         angularPower *= -1;
+        System.out.println(angularPower);
         //angularPower *= mOldThrottle;
-        leftPower += angularPower;
-        rightPower -= angularPower;
+        leftPower *= (1 + angularPower);
+        rightPower *= (1 - angularPower);
 
 //        System.out.println(angularPower);
 

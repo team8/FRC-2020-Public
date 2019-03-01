@@ -146,8 +146,8 @@ public class Robot extends TimedRobot {
 		robotState.reset(0, new RigidTransform2d());
 		robotState.matchStartTime = System.currentTimeMillis();
 
-        // Limelight LED on
-        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+		// Set limelight to driver camera mode - redundancy for testing purposes
+		Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER);
 
         Logger.getInstance().logRobotThread(Level.INFO, "End teleopInit()");
 	}
@@ -185,7 +185,8 @@ public class Robot extends TimedRobot {
 		mDrive.setNeutral();
 		stopSubsystems();
 
-        // Limelight LED off
+        // Set Limelight to vision pipeline to enable pit testing
+		Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
 		HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
 

@@ -12,6 +12,7 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
 import com.palyrobotics.frc2019.config.Constants.FingerConstants;
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
@@ -24,8 +25,7 @@ import com.palyrobotics.frc2019.util.JoystickInput;
 import com.palyrobotics.frc2019.util.XboxInput;
 import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.vision.Limelight;
-
-import java.util.logging.Level;
+import com.palyrobotics.frc2019.vision.LimelightControlMode;
 
 /**
  * Used to produce Commands {@link Commands} from human input Singleton class. Should only be used in robot package.
@@ -50,6 +50,8 @@ public class OperatorInterface {
 	public static double intakeStartTime = 0; // force intake to come up
 	public static double lastCancelTime = 0;
 
+	// Timestamp when a vision routine was last activated; helps us know when to turn LEDs off
+	private static double visionStartTime = 0;
 
 	protected OperatorInterface() {
 		mOperatorXboxController = Robot.getRobotState().operatorXboxControllerInput;
@@ -98,7 +100,19 @@ public class OperatorInterface {
 		}
 
 		if(mTurnStick.getButtonPressed(3)) {
+			visionStartTime = System.currentTimeMillis();
+			// Limelight vision tracking on
+			if (Limelight.getInstance().getCamMode() != LimelightControlMode.CamMode.VISION) {
+				Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
+				Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
+			}
+
 			newCommands.wantedDriveState = Drive.DriveState.VISION_ASSIST;
+		} else {
+			if (System.currentTimeMillis() - visionStartTime > OtherConstants.kVisionLEDTimeoutMillis) {
+				Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
+				Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+			}
 		}
 
 		/**

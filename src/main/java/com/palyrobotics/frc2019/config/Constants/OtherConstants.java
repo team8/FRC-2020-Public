@@ -41,8 +41,8 @@ public class OtherConstants {
      * Vision constants
      */
     // Physical constants of the limelight mount
-    public static final double kLimelightElevationAngleDegrees = 30.00;
-    public static final double kLimelightHeightInches = 11.00;
+    public static final double kLimelightElevationAngleDegrees = 25.00;
+    public static final double kLimelightHeightInches = 8.125;
     // Limelight video feed dimensions
     public static final double kLimelightHeightPixels = 240;
     public static final double kLimelightWidthPixels = 320;
@@ -61,6 +61,11 @@ public class OtherConstants {
     public static final double kVisionAlignDistanceTolerance = 1.0;
     public static final double kVisionAlignSpeedyTolerance = 1.0;
 
+    public static final double kVisionLEDTimeoutMillis = 1500; // How long after the last vision command should we turn off LEDs
+
+
     public static final int kRequiredUltrasonicCount = 2;
+    public static final double kLimelightMinDistance = .001; // If Limelight.getCorrectedEstimatedDistanceZ() returns 0, we replace it with this value
+
 
 }

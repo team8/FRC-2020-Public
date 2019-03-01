@@ -334,7 +334,7 @@ class HardwareUpdater {
 
 		robotState.elevatorPosition = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition();
 		robotState.elevatorVelocity = HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark.getEncoder().getVelocity();
-		System.out.println("Elevator " + robotState.elevatorPosition);
+//		System.out.println("Elevator " + robotState.elevatorPosition);
 		PigeonIMU gyro = HardwareAdapter.getInstance().getDrivetrain().gyro;
 		if(gyro != null) {
 			robotState.drivePose.heading = gyro.getFusedHeading();
@@ -389,7 +389,7 @@ class HardwareUpdater {
         updateIntakeSensors();
 		updateUltrasonicSensors(robotState);
 
-		System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
+//		System.out.println("Intake pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
 
 	}
 
