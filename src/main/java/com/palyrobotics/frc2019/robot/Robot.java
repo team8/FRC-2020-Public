@@ -71,33 +71,36 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		DashboardManager.getInstance().toggleCANTable(true);
-		robotState.gamePeriod = RobotState.GamePeriod.AUTO;
-		mHardwareUpdater.configureHardware();
+//		DashboardManager.getInstance().toggleCANTable(true);
+//		robotState.gamePeriod = RobotState.GamePeriod.AUTO;
+//		mHardwareUpdater.configureHardware();
+//
+//		robotState.matchStartTime = System.currentTimeMillis();
+//
+//		mHardwareUpdater.updateState(robotState);
+//		mRoutineManager.reset(commands);
+//		robotState.reset(0, new RigidTransform2d());
+////		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
+//
+//        // Limelight LED on
+//        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+//
+//        mWriter.cleanFile();
+//
+//		AutoDistances.updateAutoDistances();
+//
+//		mWriter.cleanFile();
+//
+//		startSubsystems();
+//		mHardwareUpdater.enableBrakeMode();
 
-		robotState.matchStartTime = System.currentTimeMillis();
-
-		mHardwareUpdater.updateState(robotState);
-		mRoutineManager.reset(commands);
-		robotState.reset(0, new RigidTransform2d());
-//		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
-
-        // Limelight LED on
-        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
-
-        mWriter.cleanFile();
-
-		AutoDistances.updateAutoDistances();
-
-		mWriter.cleanFile();
-
-		startSubsystems();
-		mHardwareUpdater.enableBrakeMode();
+		teleopInit();
 	}
 
 
 	@Override
 	public void autonomousPeriodic() {
+		/**
 		if(AutoFMS.isFMSDataAvailable() && !this.mAutoStarted) {
 			//Get the selected auto mode
 			AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
@@ -118,6 +121,9 @@ public class Robot extends TimedRobot {
         if(mWriter.getSize() > 10000) {
             mWriter.write();
         }
+		 */
+
+		teleopPeriodic();
 
 //		System.out.println(mRoutineManager.getCurrentRoutines().contains(new DriveSensorResetRoutine(1.0)));
 //		System.out.println("Position: " + Robot.getRobotState().getLatestFieldToVehicle().getValue());
