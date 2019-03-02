@@ -75,7 +75,6 @@ public class HardwareAdapter {
         public final CANSparkMax elevatorMasterSpark;
         public final CANSparkMax elevatorSlaveSpark;
         public final DoubleSolenoid elevatorShifter;
-        public final Solenoid elevatorHolderSolenoid;
 
         public void resetSensors() {
             instance.elevatorMasterSpark.getEncoder().setPosition(0);
@@ -88,7 +87,7 @@ public class HardwareAdapter {
 			elevatorMasterSpark = new CANSparkMax(PortConstants.kVidarElevatorMasterSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
             elevatorSlaveSpark = new CANSparkMax(PortConstants.kVidarElevatorSlaveSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
             elevatorShifter = new DoubleSolenoid(0,PortConstants.kVidarElevatorDoubleSolenoidForwardsID, PortConstants.kVidarElevatorDoubleSolenoidReverseID);
-            elevatorHolderSolenoid = new Solenoid(1,PortConstants.kVidarElevatorHolderSolenoidID);
+//            elevatorHolderSolenoid = new Solenoid(1,PortConstants.kVidarElevatorHolderSolenoidID);
 			System.out.println("Starting elevator");
 		}
     }
@@ -204,12 +203,13 @@ public class HardwareAdapter {
 		public static FingersHardware getInstance() { return instance; }
 
 		public final DoubleSolenoid openCloseSolenoid;
-		public final DoubleSolenoid expelSolenoid;
+		public final DoubleSolenoid pusherSolenoid;
 
 		protected FingersHardware() {
 			openCloseSolenoid = new DoubleSolenoid(0, PortConstants.kVidarOpenCloseSolenoidForwardID, PortConstants.kVidarOpenCloseSolenoidReverseID);
-			expelSolenoid = new DoubleSolenoid(0, PortConstants.kVidarExpelSolenoidForwardID, PortConstants.kVidarExpelSolenoidReverseID);
+			pusherSolenoid = new DoubleSolenoid(0, PortConstants.kVidarExpelSolenoidForwardID, PortConstants.kVidarExpelSolenoidReverseID);
 		}
+
 	}
 
 	//Joysticks for operator interface

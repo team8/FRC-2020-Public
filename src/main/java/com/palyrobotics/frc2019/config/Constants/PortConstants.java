@@ -27,10 +27,10 @@ public class PortConstants {
 
     //SHOOTER
     public static final int kVidarShooterMasterVictorDeviceID = 10;
-    public static final int kVidarShooterSlaveVictorDeviceID = 7;
+    public static final int kVidarShooterSlaveVictorDeviceID = 9;
 
     //SHOVEL
-    public static final int kVidarShovelDeviceID = 9;
+    public static final int kVidarShovelDeviceID = 8;
     public static final int kVidarShovelSolenoidUpDownID = 0;
     public static final int kVidarShovelSolenoidUpDownID2 = 7;
 
@@ -38,7 +38,7 @@ public class PortConstants {
     public static final int kVidarShovelPDPPort = 9;
 
     //PUSHER
-    public static final int kVidarPusherSparkID = 8;
+    public static final int kVidarPusherSparkID = 11;
     public static final int kVidarPusherPotID = 0;
 
     //FINGERS

@@ -182,8 +182,8 @@ class HardwareUpdater {
 
 	    slaveSpark.follow(masterSpark);
 
-	    masterSpark.getPIDController().setOutputRange(-0.92,0.92);
-	    slaveSpark.getPIDController().setOutputRange(-0.92,0.92);
+	    masterSpark.getPIDController().setOutputRange(-0.72,0.72);
+	    slaveSpark.getPIDController().setOutputRange(-0.72,0.72);
 
 //        masterSpark.setOpenLoopRampRate(0.4);
 //        slaveSpark.setOpenLoopRampRate(0.4);
@@ -550,7 +550,7 @@ class HardwareUpdater {
             updateSparkMax(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark, mElevator.getOutput());
         }
         HardwareAdapter.getInstance().getElevator().elevatorShifter.set(mElevator.getSolenoidOutput());
-        HardwareAdapter.getInstance().getElevator().elevatorHolderSolenoid.set(mElevator.getHolderSolenoidOutput());
+//        HardwareAdapter.getInstance().getElevator().elevatorHolderSolenoid.set(mElevator.getHolderSolenoidOutput());
     }
 
 	/**
@@ -573,7 +573,7 @@ class HardwareUpdater {
 	 */
 	private void updateFingers() {
         HardwareAdapter.getInstance().getFingers().openCloseSolenoid.set(mFingers.getOpenCloseOutput());
-        HardwareAdapter.getInstance().getFingers().expelSolenoid.set(mFingers.getExpelOutput());
+        HardwareAdapter.getInstance().getFingers().pusherSolenoid.set(mFingers.getExpelOutput());
     }
 
     /**
