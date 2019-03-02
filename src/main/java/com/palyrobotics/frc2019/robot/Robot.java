@@ -198,41 +198,42 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		System.out.println("Left:" + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
-		System.out.println("Right:" + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
-		System.out.println("Pusher:" + HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
+//		System.out.println("Left:" + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+//		System.out.println("Right:" + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
+//		System.out.println("Pusher:" + HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
+//		System.out.println("Arm Pot" + HardwareAdapter.getInstance().getIntake().potentiometer.get());
 
 	}
 
 	private void startSubsystems() {
 		mShovel.start();
 		mDrive.start();
-		mElevator.start();
+//		mElevator.start();
 		mShooter.start();
 		mPusher.start();
 		mFingers.start();
-		mIntake.start();
+//		mIntake.start();
 	}
 
 	private void updateSubsystems() {
 		mDrive.update(commands, robotState);
-		mElevator.update(commands, robotState);
+//		mElevator.update(commands, robotState);
 		mShooter.update(commands, robotState);
 		mPusher.update(commands, robotState);
 		mFingers.update(commands, robotState);
 		mShovel.update(commands, robotState);
-		mIntake.update(commands, robotState);
+//		mIntake.update(commands, robotState);
 	}
 
 
 	private void stopSubsystems() {
 		mDrive.stop();
-		mElevator.stop();
+//		mElevator.stop();
 		mShooter.stop();
 		mPusher.stop();
 		mFingers.stop();
 		mShovel.stop();
-		mIntake.stop();
+//		mIntake.stop();
 	}
 
 	@Override

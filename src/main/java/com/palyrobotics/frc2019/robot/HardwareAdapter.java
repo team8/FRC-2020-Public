@@ -138,7 +138,7 @@ public class HardwareAdapter {
 
 		public final CANSparkMax pusherSpark;
 		public final Ultrasonic pusherUltrasonic;
-		public final AnalogPotentiometer pusherPotentiometer;
+//		public final AnalogPotentiometer pusherPotentiometer;
 
 		public void resetSensors() {
 		    instance.pusherSpark.getEncoder().setPosition(0);
@@ -149,7 +149,7 @@ public class HardwareAdapter {
 
 			pusherSpark = new CANSparkMax(PortConstants.kVidarPusherSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			pusherUltrasonic = new Ultrasonic(PortConstants.kVidarPusherUltrasonicPing, PortConstants.kVidarPusherUltrasonicEcho);
-			pusherPotentiometer = new AnalogPotentiometer(PortConstants.kVidarPusherPotID, 360, 0);
+//			pusherPotentiometer = new AnalogPotentiometer(PortConstants.kVidarPusherPotID, 360, 0);
 			System.out.println("Starting pusher");
 
 		}

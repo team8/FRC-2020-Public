@@ -31,8 +31,8 @@ public class PortConstants {
 
     //SHOVEL
     public static final int kVidarShovelDeviceID = 8;
-    public static final int kVidarShovelSolenoidUpDownID = 0;
-    public static final int kVidarShovelSolenoidUpDownID2 = 7;
+    public static final int kVidarShovelSolenoidUpDownID = 7;
+    public static final int kVidarShovelSolenoidUpDownID2 = 0;
 
     public static final int kVidarShovelHFXPort = 4;
     public static final int kVidarShovelPDPPort = 9;

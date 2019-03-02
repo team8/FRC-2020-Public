@@ -17,6 +17,7 @@ public class CheesyDriveHelper {
 		double throttle = -robotState.leftStickInput.getY();
 		double wheel = robotState.rightStickInput.getX();
 
+
 		//Quickturn if right trigger is pressed
 		boolean isQuickTurn = robotState.rightStickInput.getTriggerPressed();
 		robotState.isQuickturning = isQuickTurn;
@@ -45,53 +46,53 @@ public class CheesyDriveHelper {
 		double angularPower;
 
 		//linear power is what's actually sent to motor, throttle is input
-		double linearPower = remapThrottle(throttle);
-
-		//Negative inertia
-		double negInertiaAccumulator = 0.0;
-		double negInertiaScalar;
-
-		if(wheel * negInertia > 0) {
-			negInertiaScalar = 2.5;
-		} else {
-			if(Math.abs(wheel) > 0.65) {
-				negInertiaScalar = 5.0;
-			} else {
-				negInertiaScalar = 3.0;
-			}
-		}
-
-		sensitivity = DrivetrainConstants.kDriveSensitivity;
-
-		//neginertia is difference in wheel
-		double negInertiaPower = negInertia * negInertiaScalar;
-		negInertiaAccumulator += negInertiaPower;
-
-		//possible source of occasional overturn
-		wheel = wheel + negInertiaAccumulator;
-
-		//Handle braking
-		if(isBraking) {
-			//Set up braking rates for linear deceleration in a set amount of time
-			if(mInitialBrake) {
-				mInitialBrake = false;
-				//Old throttle initially set to throttle
-				mOldThrottle = linearPower;
-				//Braking rate set
-				mBrakeRate = mOldThrottle / DrivetrainConstants.kCyclesUntilStop;
-			}
-
-			//If braking is not complete, decrease by the brake rate
-			if(Math.abs(mOldThrottle) >= Math.abs(mBrakeRate)) {
-				//reduce throttle
-				mOldThrottle -= mBrakeRate;
-				linearPower = mOldThrottle;
-			} else {
-				linearPower = 0;
-			}
-		} else {
-			mInitialBrake = true;
-		}
+		double linearPower = throttle;
+//
+//		//Negative inertia
+//		double negInertiaAccumulator = 0.0;
+//		double negInertiaScalar;
+//
+//		if(wheel * negInertia > 0) {
+//			negInertiaScalar = 2.5;
+//		} else {
+//			if(Math.abs(wheel) > 0.65) {
+//				negInertiaScalar = 5.0;
+//			} else {
+//				negInertiaScalar = 3.0;
+//			}
+//		}
+//
+//		sensitivity = DrivetrainConstants.kDriveSensitivity;
+//
+//		//neginertia is difference in wheel
+//		double negInertiaPower = negInertia * negInertiaScalar;
+//		negInertiaAccumulator += negInertiaPower;
+//
+//		//possible source of occasional overturn
+//		wheel = wheel + negInertiaAccumulator;
+//
+//		//Handle braking
+//		if(isBraking) {
+//			//Set up braking rates for linear deceleration in a set amount of time
+//			if(mInitialBrake) {
+//				mInitialBrake = false;
+//				//Old throttle initially set to throttle
+//				mOldThrottle = linearPower;
+//				//Braking rate set
+//				mBrakeRate = mOldThrottle / DrivetrainConstants.kCyclesUntilStop;
+//			}
+//
+//			//If braking is not complete, decrease by the brake rate
+//			if(Math.abs(mOldThrottle) >= Math.abs(mBrakeRate)) {
+//				//reduce throttle
+//				mOldThrottle -= mBrakeRate;
+//				linearPower = mOldThrottle;
+//			} else {
+//				linearPower = 0;
+//			}
+//		} else {
+//			mInitialBrake = true;
+//		}
 
 		//Quickturn
 		if(isQuickTurn) {
@@ -112,7 +113,7 @@ public class CheesyDriveHelper {
 			overPower = 0.0;
 
 			//Sets turn amount
-			angularPower = Math.abs(throttle) * wheel * sensitivity - mQuickStopAccumulator;
+			angularPower = Math.abs(throttle) * wheel - mQuickStopAccumulator;
 
 			if(mQuickStopAccumulator > DrivetrainConstants.kQuickStopAccumulatorDecreaseThreshold) {
 				mQuickStopAccumulator -= DrivetrainConstants.kQuickStopAccumulatorDecreaseRate;

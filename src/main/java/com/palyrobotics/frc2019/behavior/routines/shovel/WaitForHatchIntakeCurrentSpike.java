@@ -40,7 +40,7 @@ public class WaitForHatchIntakeCurrentSpike extends Routine {
 
     @Override
     public boolean finished() {
-        return (done && (System.currentTimeMillis() - 350) > startTime) || shovel.getUpDownOutput();
+        return (done && (System.currentTimeMillis() - 500) > startTime) || shovel.getUpDownOutput();
     }
 
     @Override

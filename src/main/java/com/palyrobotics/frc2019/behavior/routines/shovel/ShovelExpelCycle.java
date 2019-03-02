@@ -1,11 +1,12 @@
-package com.palyrobotics.frc2019.behavior.routines.fingers;
+package com.palyrobotics.frc2019.behavior.routines.shovel;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Fingers;
+import com.palyrobotics.frc2019.subsystems.Shovel;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 
-public class FingersCycleRoutine extends Routine {
+public class ShovelExpelCycle extends Routine {
 
     private Fingers.FingersState wantedFingersOpenCloseState;
 
@@ -15,7 +16,7 @@ public class FingersCycleRoutine extends Routine {
 
     private final double timeToShoot = 50;
 
-    public FingersCycleRoutine(double timeout) {
+    public ShovelExpelCycle(double timeout) {
         this.timeout = timeout * 1000;
     }
 
@@ -28,17 +29,12 @@ public class FingersCycleRoutine extends Routine {
     @Override
     public Commands update(Commands commands) {
 //        System.out.println("Updates");
-        commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
-        commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
-
-        if (System.currentTimeMillis() > startTime + this.timeToShoot) {
-            commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
-            commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
-        }
+        commands.wantedShovelUpDownState = Shovel.UpDownState.DOWN;
+        commands.wantedShovelWheelState = Shovel.WheelState.EXPELLING;
 
         if(System.currentTimeMillis() > this.timeout + startTime) {
-            commands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
-            commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
+            commands.wantedShovelUpDownState = Shovel.UpDownState.UP;
+            commands.wantedShovelWheelState = Shovel.WheelState.IDLE;
             alreadyRan = true;
         }
         return commands;

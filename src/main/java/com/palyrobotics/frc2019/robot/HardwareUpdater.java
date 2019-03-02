@@ -477,7 +477,7 @@ class HardwareUpdater {
 		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark, mDrive.getDriveSignal().rightMotor);
 		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightSlave1Spark, mDrive.getDriveSignal().rightMotor);
 		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightSlave2Spark, mDrive.getDriveSignal().rightMotor);
-
+        System.out.println(HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark.getAppliedOutput());
 	}
 
     /**
@@ -583,7 +583,8 @@ class HardwareUpdater {
 //    	System.out.println("Type: " + mIntake.getSparkOutput().getControlType() + " Setpoint: " + mIntake.getSparkOutput().getSetpoint() +
 //				" FF: " + mIntake.getSparkOutput().getArbitraryFF());
 		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
-		HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
+        HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
+        HardwareAdapter.getInstance().getIntake().intakeVictor.set(RobotState.getInstance().operatorXboxControllerInput.getRightY());
 //        HardwareAdapter.getInstance().getIntake().intakeMasterSpark.set(HardwareAdapter.getInstance().getJoysticks().driveStick.getRawButton(7) ? .52 : 0);
 //		HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.set(HardwareAdapter.getInstance().getJoysticks().driveStick.getRawButton(7) ? .52 : 0);
 

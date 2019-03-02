@@ -91,7 +91,7 @@ public class Intake extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         mRobotState = robotState;
 
-        commands.wantedIntakeState = IntakeMacroState.IDLE;
+//        commands.wantedIntakeState = IntakeMacroState.IDLE;
 //        System.out.println(commands.wantedIntakeState);
 
         // The intake macro state has eight possible states.  Any state can be transferred to automatically or manually,
