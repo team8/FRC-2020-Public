@@ -198,6 +198,9 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		System.out.println("Left:" + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+		System.out.println("Right:" + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
+		System.out.println("Pusher:" + HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
 
 	}
 

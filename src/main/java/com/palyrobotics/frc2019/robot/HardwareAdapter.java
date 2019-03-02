@@ -187,13 +187,13 @@ public class HardwareAdapter {
 
 		public final WPI_TalonSRX shovelTalon;
 		public final DoubleSolenoid upDownSolenoid;
-		public final DigitalInput upDownHFX;
+//		public final DigitalInput upDownHFX;
 
 		protected ShovelHardware() {
 
 			shovelTalon = new WPI_TalonSRX(PortConstants.kVidarShovelDeviceID);
 			upDownSolenoid = new DoubleSolenoid(0, PortConstants.kVidarShovelSolenoidUpDownID, PortConstants.kVidarShovelSolenoidUpDownID2);
-			upDownHFX = new DigitalInput(PortConstants.kVidarShovelHFXPort);
+//			upDownHFX = new DigitalInput(PortConstants.kVidarShovelHFXPort);
 		}
 	}
 

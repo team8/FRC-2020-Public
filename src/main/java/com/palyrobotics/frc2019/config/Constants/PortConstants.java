@@ -23,7 +23,7 @@ public class PortConstants {
     public static final int kVidarIntakeMasterDeviceID = 4;
     public static final int kVidarIntakeSlaveDeviceID = 5;
     public static final int kVidarIntakeVictorDeviceID = 6;
-    public static final int kVidarAnalogPot = 3;
+    public static final int kVidarAnalogPot = 0;
 
     //SHOOTER
     public static final int kVidarShooterMasterVictorDeviceID = 10;
@@ -51,11 +51,12 @@ public class PortConstants {
      * Ultrasonics
      */
 
-    public static final int kVidarIntakeLeftUltrasonicPing = 1;
-    public static final int kVidarIntakeLeftUltrasonicEcho = 0;
-    public static final int kVidarIntakeRightUltrasonicPing = 3;
-    public static final int kVidarIntakeRightUltrasonicEcho = 2;
+    public static final int kVidarIntakeLeftUltrasonicPing = 2;
+    public static final int kVidarIntakeLeftUltrasonicEcho = 1;
 
-    public static final int kVidarPusherUltrasonicPing = 9;
+    public static final int kVidarIntakeRightUltrasonicPing = 4;
+    public static final int kVidarIntakeRightUltrasonicEcho = 3;
+
+    public static final int kVidarPusherUltrasonicPing = 7;
     public static final int kVidarPusherUltrasonicEcho = 8;
 }
