@@ -5,16 +5,16 @@ public class PusherConstants {
      * Pusher
      */
     public static final int kVidarRequiredUltrasonicCount = 0;
-    public static final double kVidarDistanceIn = 0.0;
+    public static final double kVidarDistanceIn = -0.1;
     public static final double kVidarDistanceMiddle = 2.5;
-    public static final double kVidarDistanceOut = 5.5;
+    public static final double kVidarDistanceOut = 5.8;
     public static final double kVidarCargoTolerance = 3.500;
     public static final double kVidarDistanceCompress = 1;
 
     /**
      * Tolerances
      */
-    public static final double kAcceptablePositionError = .5;
+    public static final double kAcceptablePositionError = .3;
 
     /**
      * Unit Conversions

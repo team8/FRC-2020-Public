@@ -102,27 +102,27 @@ public class HardwareAdapter {
 			return instance;
 		}
 
-		public final WPI_VictorSPX intakeVictor;
-		public final CANSparkMax intakeMasterSpark;
-		public final CANSparkMax intakeSlaveSpark;
-		public final Ultrasonic intakeUltrasonicLeft;
-		public final Ultrasonic intakeUltrasonicRight;
-		public final AnalogPotentiometer potentiometer;
+//		public final WPI_VictorSPX intakeVictor;
+//		public final CANSparkMax intakeMasterSpark;
+//		public final CANSparkMax intakeSlaveSpark;
+//		public final Ultrasonic intakeUltrasonicLeft;
+//		public final Ultrasonic intakeUltrasonicRight;
+//		public final AnalogPotentiometer potentiometer;
 
 		public void resetSensors() {
-		    instance.intakeMasterSpark.getEncoder().setPosition(0);
-		    instance.intakeSlaveSpark.getEncoder().setPosition(0);
+//		    instance.intakeMasterSpark.getEncoder().setPosition(0);
+//		    instance.intakeSlaveSpark.getEncoder().setPosition(0);
         }
 
 		protected IntakeHardware() {
 			System.out.println("Starting intake");
 
-			intakeVictor = new WPI_VictorSPX(PortConstants.kVidarIntakeVictorDeviceID);
-			intakeMasterSpark = new CANSparkMax(PortConstants.kVidarIntakeMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
-			intakeSlaveSpark = new CANSparkMax(PortConstants.kVidarIntakeSlaveDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
-			intakeUltrasonicLeft = new Ultrasonic(PortConstants.kVidarIntakeLeftUltrasonicPing, PortConstants.kVidarIntakeLeftUltrasonicEcho);
-			intakeUltrasonicRight = new Ultrasonic(PortConstants.kVidarIntakeRightUltrasonicPing,PortConstants.kVidarIntakeRightUltrasonicEcho);
-			potentiometer = new AnalogPotentiometer(PortConstants.kVidarAnalogPot);
+//			intakeVictor = new WPI_VictorSPX(PortConstants.kVidarIntakeVictorDeviceID);
+//			intakeMasterSpark = new CANSparkMax(PortConstants.kVidarIntakeMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
+//			intakeSlaveSpark = new CANSparkMax(PortConstants.kVidarIntakeSlaveDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
+//			intakeUltrasonicLeft = new Ultrasonic(PortConstants.kVidarIntakeLeftUltrasonicPing, PortConstants.kVidarIntakeLeftUltrasonicEcho);
+//			intakeUltrasonicRight = new Ultrasonic(PortConstants.kVidarIntakeRightUltrasonicPing,PortConstants.kVidarIntakeRightUltrasonicEcho);
+//			potentiometer = new AnalogPotentiometer(PortConstants.kVidarAnalogPot);
 			System.out.println("Starting intake");
 
 		}
