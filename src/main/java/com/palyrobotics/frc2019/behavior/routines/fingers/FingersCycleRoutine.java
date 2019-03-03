@@ -31,10 +31,6 @@ public class FingersCycleRoutine extends Routine {
         commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
         commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
 
-        if (System.currentTimeMillis() > startTime + this.timeToShoot) {
-            commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
-            commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
-        }
 
         if(System.currentTimeMillis() > this.timeout + startTime) {
             commands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
@@ -46,6 +42,7 @@ public class FingersCycleRoutine extends Routine {
 
     @Override
     public Commands cancel(Commands commands) {
+        System.out.println("Cancelling");
         return commands;
     }
 

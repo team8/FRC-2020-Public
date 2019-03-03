@@ -332,12 +332,12 @@ public class Elevator extends Subsystem {
 
     @Override
     public void start() {
-
+        clearrWantedPositions();
     }
 
     @Override
     public void stop() {
-        mElevatorWantedPosition = Optional.empty();
+        clearrWantedPositions();
     }
 
     public SparkMaxOutput getOutput() {
@@ -397,6 +397,11 @@ public class Elevator extends Subsystem {
 
         return (Math.abs(mClimberWantedPosition.get() - mRobotState.elevatorPosition/ElevatorConstants.kClimberRotationsPerInch) < ElevatorConstants.kClimberAcceptablePositionError)
                 && (Math.abs(mRobotState.elevatorVelocity*ElevatorConstants.kClimberSpeedUnitConversion) < ElevatorConstants.kClimberAcceptableVelocityError);
+    }
+
+    public void clearrWantedPositions() {
+        mElevatorWantedPosition = Optional.empty();
+        mClimberWantedPosition = Optional.empty();
     }
 
     public ElevatorState getElevatorState() {

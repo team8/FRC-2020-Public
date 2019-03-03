@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2019.robot;
 
 import com.palyrobotics.frc2019.behavior.Routine;
+import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.IntakeLevelOneRocketRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
@@ -138,43 +139,43 @@ public class OperatorInterface {
 		    lastCancelTime = System.currentTimeMillis();
         }
 
-        if(mOperatorXboxController.getButtonB()) {
-            Routine hatchCycle = new ShovelExpelCycle(FingerConstants.kFingersCycleTime);
-            newCommands.cancelCurrentRoutines = false;
-            newCommands.addWantedRoutine(hatchCycle);
-        }
+//        if(mOperatorXboxController.getButtonB()) {
+//            Routine hatchCycle = new ShovelExpelCycle(FingerConstants.kFingersCycleTime);
+//            newCommands.cancelCurrentRoutines = false;
+//            newCommands.addWantedRoutine(hatchCycle);
+//        }
 
 //		newCommands.wantedElevatorState = Elevator.ElevatorState.MANUAL_POSITIONING;
 
 		/**
 		 * Elevator Control
 		 */
-//		if(mOperatorXboxController.getButtonA()) {
-//			Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight1Inches, 2);
-//			newCommands.cancelCurrentRoutines = false;
-//			newCommands.addWantedRoutine(elevatorLevel1);
-//			newCommands.addWantedRoutine(new PusherInRoutine());
-//			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 5));
-//		} else if(mOperatorXboxController.getButtonB()) {
-//			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight2Inches, 2);
-//			newCommands.cancelCurrentRoutines = false;
-//			newCommands.addWantedRoutine(elevatorLevel2);
-//			newCommands.addWantedRoutine(new PusherInRoutine());
-//			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 5));
-//		} else if(mOperatorXboxController.getButtonY()) {
-//			Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight3Inches, 2);
-//			newCommands.cancelCurrentRoutines = false;
-//			newCommands.addWantedRoutine(elevatorLevel3);
-//			newCommands.addWantedRoutine(new PusherInRoutine());
-//			newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 5));
-//		}
+		if(mOperatorXboxController.getButtonA()) {
+			Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight1Inches, 2);
+			newCommands.cancelCurrentRoutines = false;
+			newCommands.addWantedRoutine(elevatorLevel1);
+			newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new TimeoutRoutine(.35), elevatorLevel1, new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0)));
+		} else if(mOperatorXboxController.getButtonB()) {
+			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight2Inches, 2);
+			newCommands.cancelCurrentRoutines = false;
+			newCommands.addWantedRoutine(elevatorLevel2);
+			newCommands.addWantedRoutine(new PusherInRoutine());
+            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new TimeoutRoutine(.35), elevatorLevel2, new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0)));
+		} else if(mOperatorXboxController.getButtonY()) {
+			Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight3Inches, 2);
+			newCommands.cancelCurrentRoutines = false;
+			newCommands.addWantedRoutine(elevatorLevel3);
+			newCommands.addWantedRoutine(new PusherInRoutine());
+            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new TimeoutRoutine(.35), elevatorLevel3, new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 0)));
+		}
 
-		/**
+		/**\
 		 * Cargo Intake Control
 		 */
 		if(mOperatorXboxController.getdPadDown()) {
 			newCommands.cancelCurrentRoutines = false;
-			newCommands.addWantedRoutine(new IntakeBeginCycleRoutine());
+			newCommands.wantedIntakeState = Intake.IntakeMacroState.DOWN;
+//			newCommands.addWantedRoutine(new IntakeBeginCycleRoutine());
 		} else if(mOperatorXboxController.getdPadUp()) {
 			newCommands.cancelCurrentRoutines = false;
 //			System.out.println("Called" + mOperatorXboxController.getdPadUp());
@@ -220,10 +221,16 @@ public class OperatorInterface {
 		 * Pneumatic Hatch Pusher Control
 		 */
 		if(mOperatorXboxController.getRightTriggerPressed()) {
-			Routine hatchCycle = new FingersCycleRoutine(FingerConstants.kFingersCycleTime);
-			newCommands.cancelCurrentRoutines = false;
-			newCommands.addWantedRoutine(hatchCycle);
+//			Routine hatchCycle = new FingersCycleRoutine(FingerConstants.kFingersCycleTime);
+//			newCommands.cancelCurrentRoutines = false;
+//			newCommands.addWantedRoutine(hatchCycle);
+            newCommands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
+            newCommands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
 		}
+		else {
+            newCommands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
+            newCommands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
+        }
 
 		/**
 		 * Shooter Spin Up Control

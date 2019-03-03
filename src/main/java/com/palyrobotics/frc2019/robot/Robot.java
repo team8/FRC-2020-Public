@@ -63,6 +63,8 @@ public class Robot extends TimedRobot {
 
 		mHardwareUpdater.initHardware();
 
+		mElevator.clearrWantedPositions();
+
 		mWriter.cleanFile();
 
 		DriveTeam.configConstants();
@@ -208,7 +210,7 @@ public class Robot extends TimedRobot {
 	private void startSubsystems() {
 		mShovel.start();
 		mDrive.start();
-//		mElevator.start();
+		mElevator.start();
 		mShooter.start();
 		mPusher.start();
 		mFingers.start();
@@ -216,8 +218,9 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateSubsystems() {
+//	    System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
 		mDrive.update(commands, robotState);
-//		mElevator.update(commands, robotState);
+		mElevator.update(commands, robotState);
 		mShooter.update(commands, robotState);
 		mPusher.update(commands, robotState);
 		mFingers.update(commands, robotState);
@@ -228,7 +231,7 @@ public class Robot extends TimedRobot {
 
 	private void stopSubsystems() {
 		mDrive.stop();
-//		mElevator.stop();
+		mElevator.stop();
 		mShooter.stop();
 		mPusher.stop();
 		mFingers.stop();

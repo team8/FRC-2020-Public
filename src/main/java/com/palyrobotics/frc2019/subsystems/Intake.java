@@ -49,8 +49,9 @@ public class Intake extends Subsystem {
         STOWED, // stowed at the start of the match
         GROUND_INTAKING, // Getting the cargo off the ground
         LIFTING, // lifting the cargo into the intake
-        DROPPING, // dropping the cargo into the intkae
+        DROPPING, // dropping the cargo into the intake
         HOLDING_MID, // moving the arm to the mid hold position and keeping it there
+        DOWN,
         HOLDING_ROCKET,
         EXPELLING_ROCKET,
         EXPELLING_CARGO,
@@ -125,6 +126,9 @@ public class Intake extends Subsystem {
             this.mMacroState = commands.wantedIntakeState;
         }
 
+//        System.out.println("Wanted: " + commands.wantedIntakeState);
+//        System.out.println("Actual: " + this.mMacroState);
+
 //        System.out.println(mMacroState);
 
         if (intakeOnTarget()) {
@@ -194,6 +198,12 @@ public class Intake extends Subsystem {
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kClimbPosition));
+                break;
+            case DOWN:
+                mWheelState = WheelState.IDLE;
+                mUpDownState = UpDownState.CUSTOM_POSITIONING;
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kIntakingPosition));
+                break;
         }
 
 //        System.out.println(this.mMacroState);
@@ -234,7 +244,7 @@ public class Intake extends Subsystem {
             case CUSTOM_POSITIONING:
                 mSparkOutput.setGains(Gains.intakePosition);
                 mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff, Gains.intakePosition);
-                System.out.println(mIntakeWantedPosition.get());
+//                System.out.println(mIntakeWantedPosition.get());
                 break;
             case IDLE:
                 if(mIntakeWantedPosition.isPresent()) {
