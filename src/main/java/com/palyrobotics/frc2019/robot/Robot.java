@@ -1,12 +1,7 @@
 package com.palyrobotics.frc2019.robot;
 
-import com.palyrobotics.frc2019.auto.AutoFMS;
-import com.palyrobotics.frc2019.auto.AutoModeBase;
-import com.palyrobotics.frc2019.auto.AutoModeSelector;
 import com.palyrobotics.frc2019.behavior.RoutineManager;
-import com.palyrobotics.frc2019.config.AutoDistances;
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
@@ -16,7 +11,6 @@ import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import java.util.logging.Level;
 
@@ -203,7 +197,7 @@ public class Robot extends TimedRobot {
 //		System.out.println("Left:" + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
 //		System.out.println("Right:" + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
 //		System.out.println("Pusher:" + HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
-//		System.out.println("Arm Pot" + HardwareAdapter.getInstance().getIntake().potentiometer.get());
+		System.out.println("Arm Pot" + HardwareAdapter.getInstance().getIntake().potentiometer.get());
 
 	}
 

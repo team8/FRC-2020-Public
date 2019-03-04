@@ -78,9 +78,9 @@ class HardwareUpdater {
         HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark.disable();
 
 		//Disable intake sparks
-//		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.disable();
-//		HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.disable();
-//		HardwareAdapter.getInstance().getIntake().intakeVictor.set(ControlMode.Disabled, 0);
+		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.disable();
+		HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.disable();
+		HardwareAdapter.getInstance().getIntake().intakeVictor.set(ControlMode.Disabled, 0);
 
 		//Disable pusher sparks
 		HardwareAdapter.getInstance().getPusher().pusherSpark.disable();
@@ -194,41 +194,41 @@ class HardwareUpdater {
 
 	    HardwareAdapter.getInstance().getIntake().resetSensors();
 
-//		CANSparkMax intakeMasterSpark = HardwareAdapter.getInstance().getIntake().intakeMasterSpark;
-//		CANSparkMax intakeSlaveSpark = HardwareAdapter.getInstance().getIntake().intakeSlaveSpark;
-//		WPI_VictorSPX intakeVictor = HardwareAdapter.getInstance().getIntake().intakeVictor;
+		CANSparkMax intakeMasterSpark = HardwareAdapter.getInstance().getIntake().intakeMasterSpark;
+		CANSparkMax intakeSlaveSpark = HardwareAdapter.getInstance().getIntake().intakeSlaveSpark;
+		WPI_VictorSPX intakeVictor = HardwareAdapter.getInstance().getIntake().intakeVictor;
 
-//		intakeMasterSpark.enableVoltageCompensation(12);
-//		intakeSlaveSpark.enableVoltageCompensation(12);
+		intakeMasterSpark.enableVoltageCompensation(12);
+		intakeSlaveSpark.enableVoltageCompensation(12);
 
-//		intakeMasterSpark.getEncoder().setPositionConversionFactor(IntakeConstants.kArmDegreesPerRevolution);
-//		intakeSlaveSpark.getEncoder().setPositionConversionFactor(IntakeConstants.kArmDegreesPerRevolution);
-//		intakeMasterSpark.getEncoder().setVelocityConversionFactor(IntakeConstants.kArmEncoderSpeedUnitConversion);
-//		intakeSlaveSpark.getEncoder().setVelocityConversionFactor(IntakeConstants.kArmEncoderSpeedUnitConversion);
+		intakeMasterSpark.getEncoder().setPositionConversionFactor(IntakeConstants.kArmDegreesPerRevolution);
+		intakeSlaveSpark.getEncoder().setPositionConversionFactor(IntakeConstants.kArmDegreesPerRevolution);
+		intakeMasterSpark.getEncoder().setVelocityConversionFactor(IntakeConstants.kArmEncoderSpeedUnitConversion);
+		intakeSlaveSpark.getEncoder().setVelocityConversionFactor(IntakeConstants.kArmEncoderSpeedUnitConversion);
 
-//		intakeMasterSpark.setInverted(false);
-//		intakeSlaveSpark.setInverted(false);
-		
-//		intakeVictor.setInverted(true);
+		intakeMasterSpark.setInverted(false);
+		intakeSlaveSpark.setInverted(false);
 
-//		intakeMasterSpark.getPIDController().setOutputRange(-0.75,0.75);
-//		intakeSlaveSpark.getPIDController().setOutputRange(-0.75,0.75);
+		intakeVictor.setInverted(true);
 
-//		intakeVictor.setNeutralMode(NeutralMode.Brake);
+		intakeMasterSpark.getPIDController().setOutputRange(-0.75,0.75);
+		intakeSlaveSpark.getPIDController().setOutputRange(-0.75,0.75);
 
-//		intakeMasterSpark.setOpenLoopRampRate(1.0);
-//		intakeSlaveSpark.setOpenLoopRampRate(1.0);
+		intakeVictor.setNeutralMode(NeutralMode.Brake);
 
-//		intakeVictor.enableVoltageCompensation(true);
-//		intakeVictor.configVoltageCompSaturation(14, 0);
-//		intakeVictor.configForwardSoftLimitEnable(false, 0);
-//		intakeVictor.configReverseSoftLimitEnable(false, 0);
+		intakeMasterSpark.setOpenLoopRampRate(1.0);
+		intakeSlaveSpark.setOpenLoopRampRate(1.0);
 
-//		intakeVictor.configPeakOutputForward(1, 0);
-//		intakeVictor.configPeakOutputReverse(-1, 0);
+		intakeVictor.enableVoltageCompensation(true);
+		intakeVictor.configVoltageCompSaturation(14, 0);
+		intakeVictor.configForwardSoftLimitEnable(false, 0);
+		intakeVictor.configReverseSoftLimitEnable(false, 0);
 
-		//Set slave sparks to follower mode
-//		intakeSlaveSpark.follow(intakeMasterSpark);
+		intakeVictor.configPeakOutputForward(1, 0);
+		intakeVictor.configPeakOutputReverse(-1, 0);
+
+//		Set slave sparks to follower mode
+		intakeSlaveSpark.follow(intakeMasterSpark);
 
 	}
 
@@ -276,16 +276,16 @@ class HardwareUpdater {
 	}
 
 		void startUltrasonics() {
-//        Ultrasonic intakeUltrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft;
-//        Ultrasonic intakeUltrasonicRight = HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight;
+        Ultrasonic intakeUltrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft;
+        Ultrasonic intakeUltrasonicRight = HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight;
         Ultrasonic pusherUltrasonic = HardwareAdapter.getInstance().getPusher().pusherUltrasonic;
 
-//        intakeUltrasonicLeft.setAutomaticMode(true);
-//        intakeUltrasonicRight.setAutomaticMode(true);
+        intakeUltrasonicLeft.setAutomaticMode(true);
+        intakeUltrasonicRight.setAutomaticMode(true);
         pusherUltrasonic.setAutomaticMode(true);
 
-//		intakeUltrasonicLeft.setEnabled(true);
-//        intakeUltrasonicRight.setEnabled(true);
+		intakeUltrasonicLeft.setEnabled(true);
+        intakeUltrasonicRight.setEnabled(true);
         pusherUltrasonic.setEnabled(true);
         }
 
@@ -361,7 +361,7 @@ class HardwareUpdater {
 		robotState.robotAccel = accelerometer_angle[0];
 		robotState.robotVelocity = robotVelocity;
 
-//		robotState.intakeVelocity = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getVelocity();
+		robotState.intakeVelocity = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getVelocity();
 
 		double time = Timer.getFPGATimestamp();
 
@@ -384,8 +384,8 @@ class HardwareUpdater {
 		robotState.pusherCachePosition = robotState.pusherPosition;
 
 		CANSparkMax.FaultID intakeStickyFaults = CANSparkMax.FaultID.kSensorFault;
-//		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.clearFaults();
-//		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getStickyFault(intakeStickyFaults);
+		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.clearFaults();
+		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getStickyFault(intakeStickyFaults);
 
         updateIntakeSensors();
 		updateUltrasonicSensors(robotState);
@@ -395,9 +395,9 @@ class HardwareUpdater {
 	}
 
 	void startIntakeArm() {
-//		Robot.getRobotState().intakeStartAngle = IntakeConstants.kMaxAngle -
-//				1/IntakeConstants.kArmPotentiometerTicksPerDegree * (HardwareAdapter.getInstance().getIntake().potentiometer.get() -
-//						IntakeConstants.kMaxAngleTicks);
+		Robot.getRobotState().intakeStartAngle = IntakeConstants.kMaxAngle -
+				1/IntakeConstants.kArmPotentiometerTicksPerDegree * (HardwareAdapter.getInstance().getIntake().potentiometer.get() -
+						IntakeConstants.kMaxAngleTicks);
 
 	}
 
@@ -405,8 +405,8 @@ class HardwareUpdater {
 //		System.out.println("Pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get()/IntakeConstants.kArmPotentiometerTicksPerDegree);
 //		System.out.println("Pot Ticks: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
 //		System.out.println("Enc Pos: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
-//		Robot.getRobotState().intakeAngle = Robot.getRobotState().intakeStartAngle -
-//				HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition();
+		Robot.getRobotState().intakeAngle = Robot.getRobotState().intakeStartAngle -
+				HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition();
 //		System.out.println(Robot.getRobotState().intakeAngle);
 	}
 
@@ -414,24 +414,24 @@ class HardwareUpdater {
 		// HAS CARGO IN INTAKE
 
 		// left side
-//		Ultrasonic mUltrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft;
-//		robotState.mLeftReadings.add(mUltrasonicLeft.getRangeInches());
-//		if(robotState.mLeftReadings.size() > 10) {
-//			robotState.mLeftReadings.remove(0);
-//		}
+		Ultrasonic mUltrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft;
+		robotState.mLeftReadings.add(mUltrasonicLeft.getRangeInches());
+		if(robotState.mLeftReadings.size() > 10) {
+			robotState.mLeftReadings.remove(0);
+		}
 		// right side
-//		Ultrasonic mUltrasonicRight = HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight;
-//		robotState.mRightReadings.add(mUltrasonicRight.getRangeInches());
-//		if(robotState.mRightReadings.size() > 10) {
-//			robotState.mRightReadings.remove(0);
-//		}
-//
-//		int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
-//		int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
+		Ultrasonic mUltrasonicRight = HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight;
+		robotState.mRightReadings.add(mUltrasonicRight.getRangeInches());
+		if(robotState.mRightReadings.size() > 10) {
+			robotState.mRightReadings.remove(0);
+		}
+
+		int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
+		int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
 //		System.out.println(leftTotal);
 //		System.out.println(rightTotal);
-//		robotState.hasCargo = (leftTotal >= OtherConstants.kRequiredUltrasonicCount || rightTotal >= OtherConstants.kRequiredUltrasonicCount);
-//		robotState.cargoDistance = Math.min(mUltrasonicLeft.getRangeInches(), mUltrasonicRight.getRangeInches());
+		robotState.hasCargo = (leftTotal >= OtherConstants.kRequiredUltrasonicCount || rightTotal >= OtherConstants.kRequiredUltrasonicCount);
+		robotState.cargoDistance = Math.min(mUltrasonicLeft.getRangeInches(), mUltrasonicRight.getRangeInches());
 
 //		System.out.println("Left: "+ mUltrasonicLeft.getRangeInches());
 //		System.out.println("Right: " + mUltrasonicRight.getRangeInches());
@@ -585,9 +585,9 @@ class HardwareUpdater {
     private void updateIntake() {
 //    	System.out.println("Type: " + mIntake.getSparkOutput().getControlType() + " Setpoint: " + mIntake.getSparkOutput().getSetpoint() +
 //				" FF: " + mIntake.getSparkOutput().getArbitraryFF());
-//		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
+		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
 //        HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
-//        HardwareAdapter.getInstance().getIntake().intakeVictor.set(RobotState.getInstance().operatorXboxControllerInput.getRightY());
+        HardwareAdapter.getInstance().getIntake().intakeVictor.set(RobotState.getInstance().operatorXboxControllerInput.getRightY());
 //        HardwareAdapter.getInstance().getIntake().intakeMasterSpark.set(HardwareAdapter.getInstance().getJoysticks().driveStick.getRawButton(7) ? .52 : 0);
 //		HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.set(HardwareAdapter.getInstance().getJoysticks().driveStick.getRawButton(7) ? .52 : 0);
 

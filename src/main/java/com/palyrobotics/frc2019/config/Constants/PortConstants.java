@@ -57,6 +57,6 @@ public class PortConstants {
     public static final int kVidarIntakeRightUltrasonicPing = 4;
     public static final int kVidarIntakeRightUltrasonicEcho = 3;
 
-    public static final int kVidarPusherUltrasonicPing = 7;
-    public static final int kVidarPusherUltrasonicEcho = 8;
+    public static final int kVidarPusherUltrasonicPing = 8;
+    public static final int kVidarPusherUltrasonicEcho = 9;
 }

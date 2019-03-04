@@ -149,12 +149,12 @@ public class Intake extends Subsystem {
                 Math.sin(Math.toRadians(robotState.intakeAngle));
 
         if (mMacroState == IntakeMacroState.CLIMBING) {
-//            HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getPIDController().setOutputRange(-1.0,1.0);
-//            HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getPIDController().setOutputRange(-1.0,1.0);
+            HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getPIDController().setOutputRange(-1.0,1.0);
+            HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getPIDController().setOutputRange(-1.0,1.0);
         }
         else {
-//            HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getPIDController().setOutputRange(-.75,.75);
-//            HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getPIDController().setOutputRange(.75,.75);
+            HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getPIDController().setOutputRange(-.75,.75);
+            HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getPIDController().setOutputRange(.75,.75);
         }
 
         switch (mMacroState) {
@@ -307,9 +307,8 @@ public class Intake extends Subsystem {
 //        System.out.println("Angle Error: " + (mIntakeWantedPosition.get() - HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition()));
 //        System.out.println(mIntakeWantedPosition.get());
 //        System.out.println("Vel Error: " + Math.abs(mRobotState.elevatorVelocity));
-//        return (Math.abs(mIntakeWantedPosition.get() - HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition()) < IntakeConstants.kAcceptableAngularError)
-//                && (Math.abs(mRobotState.intakeVelocity) < IntakeConstants.kAngularVelocityError);
-        return false;
+        return (Math.abs(mIntakeWantedPosition.get() - HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition()) < IntakeConstants.kAcceptableAngularError)
+                && (Math.abs(mRobotState.intakeVelocity) < IntakeConstants.kAngularVelocityError);
     }
 
     public double convertIntakeSetpoint(double targetAngle) {
