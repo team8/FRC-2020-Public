@@ -91,6 +91,7 @@ public class Intake extends Subsystem {
     @Override
     public void update(Commands commands, RobotState robotState) {
         mRobotState = robotState;
+        commands.wantedIntakeState = IntakeMacroState.IDLE;
 
 //        commands.wantedIntakeState = IntakeMacroState.IDLE;
 //        System.out.println(commands.wantedIntakeState);

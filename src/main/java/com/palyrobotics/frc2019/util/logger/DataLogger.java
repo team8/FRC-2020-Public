@@ -238,7 +238,7 @@ public class DataLogger {
 	
 	public synchronized void cycle() {
 
-		System.out.println("cycle called");
+		// System.out.println("cycle called");
 
 		try {
 			mCycleLine.removeIf(Objects::isNull);

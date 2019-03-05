@@ -1,5 +1,9 @@
 package com.palyrobotics.frc2019.robot;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import com.palyrobotics.frc2019.auto.AutoModeBase;
@@ -66,14 +70,61 @@ public class Robot extends TimedRobot {
 
 	public Looper looper;
 
+	private Runnable teleopLoop;
+
+	{
+		teleopLoop = () -> {
+		
+			long start = System.nanoTime();
+
+			long t1 = System.nanoTime();
+			commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
+			long t2 = System.nanoTime();
+			System.out.println("routine_manager_delta_t: " + (t2-t1)/1.0e6);
+			
+			t1 = System.nanoTime();
+			mHardwareUpdater.updateState(robotState);
+			t2 = System.nanoTime();
+			System.out.println("update_state_delta_t: " + (t2-t1)/1.0e6);
+			
+			t1 = System.nanoTime();
+			updateSubsystems();
+			t2 = System.nanoTime();
+			System.out.println("update_subsystems_delta_t: " + (t2-t1)/1.0e6);
+			
+			//Update the hardware
+			t1 = System.nanoTime();
+			mHardwareUpdater.updateHardware();
+			t2 = System.nanoTime();
+			System.out.println("update_hardware_delta_t: " + (t2-t1)/1.0e6);
+
+	//        System.out.println(HardwareAdapter.getInstance().getPusher().pusherSpark.getAppliedOutput());
+	//        System.out.println(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition()/ ElevatorConstants.kElevatorRotationsPerInch);
+
+			t1 = System.nanoTime();
+			if(mWriter.getSize() > 10000) {
+				mWriter.write();
+			}
+			t2 = System.nanoTime();
+			System.out.println("writer_delta_t: " + (t2-t1)/1.0e6);
+
+			System.out.println("loop_delta_t: " + (System.nanoTime()-start)/1.0e6);
+			
+			DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
+		
+		};
+	}
+
+	private ScheduledExecutorService scheduler = null;
+
 	@Override
 	public void robotInit() {
 
-		Logger.getInstance().setFileName("3-2-Testing");
-		DataLogger.getInstance().setFileName("3-2-Testing");
+		// Logger.getInstance().setFileName("3-2-Testing");
+		// DataLogger.getInstance().setFileName("3-2-Testing");
 
-		Logger.getInstance().start();
-		DataLogger.getInstance().start();
+		// Logger.getInstance().start();
+		// DataLogger.getInstance().start();
 
 		Logger.getInstance().logRobotThread(Level.INFO, "Start robotInit()");
 		
@@ -81,19 +132,24 @@ public class Robot extends TimedRobot {
 
 		mHardwareUpdater.initHardware();
 
-		mElevator.clearrWantedPositions();
+		mElevator.clearWantedPositions();
+		this.looper = new Looper();
+		looper.register(mHardwareUpdater.logLoop);
 
 		mWriter.cleanFile();
 
 		DriveTeam.configConstants();
 
 		Logger.getInstance().logRobotThread(Level.INFO, "End robotInit()");
+
 	}
+
+	
 
 	@Override
 	public void autonomousInit() {
-		Logger.getInstance().start();
-		DataLogger.getInstance().start();
+		// Logger.getInstance().start();
+		// DataLogger.getInstance().start();
 
 		Logger.getInstance().logRobotThread(Level.INFO, "Start autoInit()");
 
@@ -160,8 +216,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		Logger.getInstance().start();
-		DataLogger.getInstance().start();
+		// Logger.getInstance().start();
+		// DataLogger.getInstance().start();
 
 		Logger.getInstance().logRobotThread(Level.INFO, "Start teleopInit()");
 
@@ -186,36 +242,29 @@ public class Robot extends TimedRobot {
 		Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER);
 
         Logger.getInstance().logRobotThread(Level.INFO, "End teleopInit()");
+		
+		scheduler = Executors.newScheduledThreadPool(1);
+		ScheduledFuture scheduleFuture = scheduler.scheduleAtFixedRate(teleopLoop, 0, 20, TimeUnit.MILLISECONDS);
+
 	}
 
 	@Override
 	public void teleopPeriodic() {
-
-		long start = System.nanoTime();
-		commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
-		mHardwareUpdater.updateState(robotState);
-		updateSubsystems();
-
-		//Update the hardware
-		mHardwareUpdater.updateHardware();
-//        System.out.println(HardwareAdapter.getInstance().getPusher().pusherSpark.getAppliedOutput());
-//        System.out.println(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition()/ ElevatorConstants.kElevatorRotationsPerInch);
-
-        if(mWriter.getSize() > 10000) {
-            mWriter.write();
-		}
-
-		DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
+		//do nothing
 	}
 
 	@Override
 	public void disabledInit() {
 
+		if (scheduler != null) {
+			scheduler.shutdown();
+		}
+
 		Logger.getInstance().logRobotThread(Level.INFO, "Start disabledInit()");
 		Logger.getInstance().logRobotThread(Level.INFO, "Stopping logger...");
 
-		Logger.getInstance().cleanup();
-		DataLogger.getInstance().cleanup();
+		// Logger.getInstance().cleanup();
+		// DataLogger.getInstance().cleanup();
 
 		mAutoStarted = false;
 
