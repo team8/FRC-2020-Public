@@ -269,7 +269,7 @@ class HardwareUpdater {
 
 		pusherSpark.getEncoder().setPositionConversionFactor(PusherConstants.kPusherInchesPerRotation);
 		pusherSpark.getEncoder().setVelocityConversionFactor(PusherConstants.kPusherEncSpeedUnitConversion);
-		pusherSpark.getPIDController().setOutputRange(-1,1);
+		pusherSpark.getPIDController().setOutputRange(-0.6,0.6);
 
 		pusherSpark.setInverted(true);
 		pusherSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
