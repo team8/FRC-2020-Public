@@ -74,9 +74,6 @@ public class RobotState {
 	public double shovelCurrentDraw = 0;
 	public boolean hasShovel = false;
 
-	//Tracks pressure in compressor
-    public double compressorPressure = 0;
-
 	//Pose stores drivetrain sensor data
 	public Pose drivePose = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
 
