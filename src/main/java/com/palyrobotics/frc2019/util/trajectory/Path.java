@@ -296,7 +296,7 @@ public class Path {
 				if(intersection_point.isPresent()) {
 					return new PathSegment.Sample(intersection_point.get(), segment.getSpeed());
 				} else {
-					System.out.println("ERROR: No intersection point?");
+					// System.out.println("ERROR: No intersection point?");
 				}
 			}
 		}
@@ -307,7 +307,7 @@ public class Path {
 		if(intersection_point.isPresent()) {
 			return new PathSegment.Sample(intersection_point.get(), last_segment.getSpeed());
 		} else {
-			System.out.println("ERROR: No intersection point anywhere on line?");
+			// System.out.println("ERROR: No intersection point anywhere on line?");
 			return new PathSegment.Sample(last_segment.getEnd(), last_segment.getSpeed());
 		}
 	}

@@ -224,12 +224,12 @@ public class OperatorInterface {
 //			Routine hatchCycle = new FingersCycleRoutine(FingerConstants.kFingersCycleTime);
 //			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(hatchCycle);
-            System.out.println("Close");
+            // System.out.println("Close");
             newCommands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
             newCommands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
 		}
 		else {
-            System.out.println("Open");
+            // System.out.println("Open");
 
             newCommands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
             newCommands.wantedFingersExpelState = Fingers.PushingState.CLOSED;

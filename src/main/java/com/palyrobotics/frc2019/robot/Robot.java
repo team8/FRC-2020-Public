@@ -80,23 +80,23 @@ public class Robot extends TimedRobot {
 			long t1 = System.nanoTime();
 			commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
 			long t2 = System.nanoTime();
-			System.out.println("routine_manager_delta_t: " + (t2-t1)/1.0e6);
+			// System.out.println("routine_manager_delta_t: " + (t2-t1)/1.0e6);
 			
 			t1 = System.nanoTime();
 			mHardwareUpdater.updateState(robotState);
 			t2 = System.nanoTime();
-			System.out.println("update_state_delta_t: " + (t2-t1)/1.0e6);
+			// System.out.println("update_state_delta_t: " + (t2-t1)/1.0e6);
 			
 			t1 = System.nanoTime();
 			updateSubsystems();
 			t2 = System.nanoTime();
-			System.out.println("update_subsystems_delta_t: " + (t2-t1)/1.0e6);
+			// System.out.println("update_subsystems_delta_t: " + (t2-t1)/1.0e6);
 			
 			//Update the hardware
 			t1 = System.nanoTime();
 			mHardwareUpdater.updateHardware();
 			t2 = System.nanoTime();
-			System.out.println("update_hardware_delta_t: " + (t2-t1)/1.0e6);
+			// System.out.println("update_hardware_delta_t: " + (t2-t1)/1.0e6);
 
 	//        System.out.println(HardwareAdapter.getInstance().getPusher().pusherSpark.getAppliedOutput());
 	//        System.out.println(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition()/ ElevatorConstants.kElevatorRotationsPerInch);
@@ -106,9 +106,9 @@ public class Robot extends TimedRobot {
 				mWriter.write();
 			}
 			t2 = System.nanoTime();
-			System.out.println("writer_delta_t: " + (t2-t1)/1.0e6);
+			// System.out.println("writer_delta_t: " + (t2-t1)/1.0e6);
 
-			System.out.println("loop_delta_t: " + (System.nanoTime()-start)/1.0e6);
+			// System.out.println("loop_delta_t: " + (System.nanoTime()-start)/1.0e6);
 			
 			DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
 		

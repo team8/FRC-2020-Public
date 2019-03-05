@@ -30,7 +30,7 @@ public class DriveSensorResetRoutine extends Routine {
 
 	@Override
 	public void start() {
-		System.out.println("Starting reset routine");
+		// System.out.println("Starting reset routine");
 		this.mStartTime = System.currentTimeMillis();
 		HardwareAdapter.getInstance().getDrivetrain().resetSensors();
 		robotState.reset(0, new RigidTransform2d());
@@ -50,7 +50,7 @@ public class DriveSensorResetRoutine extends Routine {
 
 	@Override
 	public Commands cancel(Commands commands) {
-		System.out.println("finished reset routine");
+		// System.out.println("finished reset routine");
 		Commands output = commands.copy();
 		return output;
 	}

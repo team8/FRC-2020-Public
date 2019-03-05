@@ -96,7 +96,7 @@ public class DataLogger {
 		try {
 			fmsConnected = DriverStation.getInstance().isFMSAttached();
 		} catch(UnsatisfiedLinkError|NoClassDefFoundError e) {
-			System.out.println("FMS is not attached");
+			// System.out.println("FMS is not attached");
 		}
 		if(LoggerConstants.compStatus || fmsConnected) {
 			filePath = "COMPETITIONS" + File.separatorChar + filePath;
@@ -124,7 +124,7 @@ public class DataLogger {
 			Files.createParentDirs(mainLog);
 			Files.append("Robot data log:" + "\n", mainLog, Charsets.UTF_8);
 			Files.append(filePath + "\n", mainLog, Charsets.UTF_8);
-			System.out.println("Created new log at " + filePath);
+			// System.out.println("Created new log at " + filePath);
 		} catch(IOException e) {
 			System.err.println("Failed to create log at " + filePath);
 			e.printStackTrace();
@@ -288,7 +288,7 @@ public class DataLogger {
 
 	//Used to cleanup internally, write out last words, etc
 	private void shutdown() {
-		System.out.println("Shutting down");
+		// System.out.println("Shutting down");
 		writeLogs();
 		mCycleLine.clear();
 		final Lock w = lock.writeLock();

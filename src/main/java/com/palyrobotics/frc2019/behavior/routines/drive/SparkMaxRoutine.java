@@ -32,8 +32,8 @@ public class SparkMaxRoutine extends Routine {
 		this.timeout = 1 << 30;
 		this.relativeSetpoint = relativeSetpoint;
 		this.robotState = Robot.getRobotState();
-        System.out.println("SparkMaxRoutine created, left setpoint: " + controller.leftMotor.getSetpoint());
-        System.out.println("SparkMaxRoutine created, right setpoint: " + controller.rightMotor.getSetpoint());
+        // System.out.println("SparkMaxRoutine created, left setpoint: " + controller.leftMotor.getSetpoint());
+        // System.out.println("SparkMaxRoutine created, right setpoint: " + controller.rightMotor.getSetpoint());
 	}
 
 	/*

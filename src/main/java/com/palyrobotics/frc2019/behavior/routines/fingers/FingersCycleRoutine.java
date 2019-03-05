@@ -42,7 +42,7 @@ public class FingersCycleRoutine extends Routine {
 
     @Override
     public Commands cancel(Commands commands) {
-        System.out.println("Cancelling");
+        // System.out.println("Cancelling");
         return commands;
     }
 

@@ -399,7 +399,7 @@ class HardwareUpdater {
 		robotState.leftControlMode = ControlType.values()[lcm];
 		robotState.rightControlMode = ControlType.values()[rcm];
 		long t2 = System.nanoTime();
-		System.out.println("stuff_at_beginning_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("stuff_at_beginning_delta_t: " + (t2-t1)/1.0e6);
 
 		t1 = System.nanoTime();
 		robotState.leftStickInput.update(HardwareAdapter.getInstance().getJoysticks().driveStick);
@@ -409,26 +409,26 @@ class HardwareUpdater {
 		robotState.backupStickInput.update(HardwareAdapter.getInstance().getJoysticks().backupStick);
 		t2 = System.nanoTime();
 
-		System.out.println("joysticks_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("joysticks_delta_t: " + (t2-t1)/1.0e6);
 
 		robotState.hatchIntakeUp = HardwareAdapter.getInstance().getShovel().upDownHFX.get();
 		t1 = System.nanoTime();
 		robotState.shovelCurrentDraw = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp.getCurrent(PortConstants.kVidarShovelPDPPort);
 		robotState.hasHatch = (robotState.shovelCurrentDraw > ShovelConstants.kMaxShovelCurrentDraw);
 		t2 = System.nanoTime();
-		System.out.println("current_related_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("current_related_delta_t: " + (t2-t1)/1.0e6);
 
 		t1 = System.nanoTime();
 		robotState.leftSetpoint = leftMasterSpark.getAppliedOutput();
 		robotState.rightSetpoint = rightMasterSpark.getAppliedOutput();
 		t2 = System.nanoTime();
-		System.out.println("applied_output_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("applied_output_delta_t: " + (t2-t1)/1.0e6);
 
 		t1 = System.nanoTime();
 		robotState.elevatorPosition = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition();
 		robotState.elevatorVelocity = HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark.getEncoder().getVelocity();
 		t2 = System.nanoTime();
-		System.out.println("elevator_pose_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("elevator_pose_delta_t: " + (t2-t1)/1.0e6);
 //		System.out.println("Elevator " + robotState.elevatorPosition);
 
 		t1 = System.nanoTime();
@@ -443,7 +443,7 @@ class HardwareUpdater {
 			robotState.drivePose.headingVelocity = -0;
 		}
 		t2 = System.nanoTime();
-		System.out.println("gyro_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("gyro_delta_t: " + (t2-t1)/1.0e6);
 		
 		t1 = System.nanoTime();
 		robotState.drivePose.lastLeftEnc = robotState.drivePose.leftEnc;
@@ -455,7 +455,7 @@ class HardwareUpdater {
 		
 		double robotVelocity = (robotState.drivePose.leftEncVelocity + robotState.drivePose.rightEncVelocity) / 2;
 		t2 = System.nanoTime();
-		System.out.println("drive_enc_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("drive_enc_delta_t: " + (t2-t1)/1.0e6);
 
 		t1 = System.nanoTime();
 		double[] accelerometer_angle = new double[3];
@@ -463,7 +463,7 @@ class HardwareUpdater {
 		robotState.robotAccel = accelerometer_angle[0];
 		robotState.robotVelocity = robotVelocity;
 		t2 = System.nanoTime();
-		System.out.println("accelerometer_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("accelerometer_delta_t: " + (t2-t1)/1.0e6);
 
 		robotState.intakeVelocity = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getVelocity();
 
@@ -483,7 +483,7 @@ class HardwareUpdater {
 
 		robotState.addObservations(time, odometry, velocity);
 		t2 = System.nanoTime();
-		System.out.println("observer_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("observer_delta_t: " + (t2-t1)/1.0e6);
 
 		t1 = System.nanoTime();
 		//Update pusher sensors
@@ -491,20 +491,20 @@ class HardwareUpdater {
 		robotState.pusherVelocity = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder().getVelocity();
 		robotState.pusherCachePosition = robotState.pusherPosition;
 		t2 = System.nanoTime();
-		System.out.println("pusher_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("pusher_delta_t: " + (t2-t1)/1.0e6);
 
 		t1 = System.nanoTime();
 		CANSparkMax.FaultID intakeStickyFaults = CANSparkMax.FaultID.kSensorFault;
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.clearFaults();
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getStickyFault(intakeStickyFaults);
 		t2 = System.nanoTime();
-		System.out.println("intake_faults_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("intake_faults_delta_t: " + (t2-t1)/1.0e6);
 		
 		t1 = System.nanoTime();
 		updateIntakeSensors();
 		updateUltrasonicSensors(robotState);
 		t2 = System.nanoTime();
-		System.out.println("ultrasonic_delta_t: " + (t2-t1)/1.0e6);
+		// System.out.println("ultrasonic_delta_t: " + (t2-t1)/1.0e6);
 
 //		System.out.println("Intake pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
 

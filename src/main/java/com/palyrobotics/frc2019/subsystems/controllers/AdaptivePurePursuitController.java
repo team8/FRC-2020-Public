@@ -234,7 +234,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		double rightAcc = (setpoint.right - mLastDriveVelocity.right) / mDt;
 		mLastDriveVelocity = setpoint;
 
-		System.out.println("logging PP data");
+		// System.out.println("logging PP data");
 		DataLogger.getInstance().logData(Level.FINE, "left_vel_setpoint", mLastDriveVelocity.left);
 		DataLogger.getInstance().logData(Level.FINE, "right_vel_setpoint", mLastDriveVelocity.right);
 		DataLogger.getInstance().logData(Level.FINE, "left_vel", state.drivePose.leftEncVelocity);

@@ -50,14 +50,14 @@ public class HardwareAdapter {
 		}
 
 		protected DrivetrainHardware() {
-			System.out.println("Starting dt");
+			// System.out.println("Starting dt");
 			leftMasterSpark = new CANSparkMax(PortConstants.kVidarLeftDriveMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			leftSlave1Spark = new CANSparkMax(PortConstants.kVidarLeftDriveSlave1DeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			leftSlave2Spark = new CANSparkMax(PortConstants.kVidarLeftDriveSlave2DeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
             rightMasterSpark = new CANSparkMax(PortConstants.kVidarRightDriveMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			rightSlave1Spark = new CANSparkMax(PortConstants.kVidarRightDriveSlave1DeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			rightSlave2Spark = new CANSparkMax(PortConstants.kVidarRightDriveSlave2DeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
-			System.out.println("Starting dt");
+			// System.out.println("Starting dt");
 			gyro = new PigeonIMU(ShovelHardware.getInstance().shovelTalon);
 		}
 	}
@@ -82,13 +82,13 @@ public class HardwareAdapter {
         }
 
         protected ElevatorHardware() {
-			System.out.println("Starting elevator");
+			// System.out.println("Starting elevator");
 
 			elevatorMasterSpark = new CANSparkMax(PortConstants.kVidarElevatorMasterSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
             elevatorSlaveSpark = new CANSparkMax(PortConstants.kVidarElevatorSlaveSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
             elevatorShifter = new DoubleSolenoid(0,PortConstants.kVidarElevatorDoubleSolenoidForwardsID, PortConstants.kVidarElevatorDoubleSolenoidReverseID);
 //            elevatorHolderSolenoid = new Solenoid(1,PortConstants.kVidarElevatorHolderSolenoidID);
-			System.out.println("Starting elevator");
+			// System.out.println("Starting elevator");
 		}
     }
 
@@ -115,7 +115,7 @@ public class HardwareAdapter {
         }
 
 		protected IntakeHardware() {
-			System.out.println("Starting intake");
+			// System.out.println("Starting intake");
 
 			intakeVictor = new WPI_VictorSPX(PortConstants.kVidarIntakeVictorDeviceID);
 			intakeMasterSpark = new CANSparkMax(PortConstants.kVidarIntakeMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -123,7 +123,7 @@ public class HardwareAdapter {
 			intakeUltrasonicLeft = new Ultrasonic(PortConstants.kVidarIntakeLeftUltrasonicPing, PortConstants.kVidarIntakeLeftUltrasonicEcho);
 			intakeUltrasonicRight = new Ultrasonic(PortConstants.kVidarIntakeRightUltrasonicPing,PortConstants.kVidarIntakeRightUltrasonicEcho);
 			potentiometer = new AnalogPotentiometer(PortConstants.kVidarAnalogPot);
-			System.out.println("Starting intake");
+			// System.out.println("Starting intake");
 
 		}
 	}
@@ -145,12 +145,12 @@ public class HardwareAdapter {
         }
 
 		protected PusherHardware() {
-			System.out.println("Starting pusher");
+			// System.out.println("Starting pusher");
 
 			pusherSpark = new CANSparkMax(PortConstants.kVidarPusherSparkID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			pusherUltrasonic = new Ultrasonic(PortConstants.kVidarPusherUltrasonicPing, PortConstants.kVidarPusherUltrasonicEcho);
 //			pusherPotentiometer = new AnalogPotentiometer(PortConstants.kVidarPusherPotID, 360, 0);
-			System.out.println("Starting pusher");
+			// System.out.println("Starting pusher");
 
 		}
 	}
@@ -166,11 +166,11 @@ public class HardwareAdapter {
 		public final WPI_VictorSPX shooterSlaveVictor;
 
 		protected ShooterHardware() {
-			System.out.println("Starting shooter");
+			// System.out.println("Starting shooter");
 
 			shooterMasterVictor = new WPI_VictorSPX(PortConstants.kVidarShooterMasterVictorDeviceID);
 			shooterSlaveVictor = new WPI_VictorSPX(PortConstants.kVidarShooterSlaveVictorDeviceID);
-			System.out.println("Starting shooter");
+			// System.out.println("Starting shooter");
 
 		}
 	}
