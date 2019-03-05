@@ -26,6 +26,8 @@ public class IntakeConstants {
     public static final double kRocketExpelPosition = 74;
     public static final double kClimbPosition = -30;
 
+    public static final double kHoldTolerance = 5; // number of deg of tolerance on arm hold to move elevator
+
     /**
      * Tolerances
      */
