@@ -43,7 +43,6 @@ public class BangBangTurnAngleController implements Drive.DriveController {
 			return SparkSignal.getNeutralSignal();
 		}
 		mCachedPose = state.drivePose;
-		//System.out.println("Current Pose: " + mCachedPose.heading);
 		SparkSignal output = SparkSignal.getNeutralSignal();
 		if(mCachedPose.heading < mTargetHeading) {
 			output.leftMotor.setPercentOutput(this.mPower);

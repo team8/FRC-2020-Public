@@ -36,14 +36,11 @@ public abstract class JSONFormatter {
 		}
 		
 		if (fileExists(new File(directory+fileName))) { // should work idk
-			// System.out.println("Loaded directory of " + fileName);
 			return new File(directory + fileName);
 		} else {
 			if (Files.exists(defaultFile.toPath())) {
-				// System.out.println("File doesn't exist, defaulting to Team8Field.json");
 				return defaultFile;
 			} else { // shouldn't happen unless the default file isn't deployed, either
-				// System.out.println("File doesn't exist, no default file");
 				return null;
 			}
 		}
@@ -88,7 +85,6 @@ public abstract class JSONFormatter {
 		if (fileExists(fileName)) {
 			setProperties(newJSON(fileName));
 		} else {
-			// System.out.println(fileName.toString() + " not found, defaulting to " + defaultFile.toString());
 			setProperties(newJSON(defaultFile));
 		}
 		return properties;
@@ -106,7 +102,6 @@ public abstract class JSONFormatter {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (ParseException e) { // sketchy
-			// System.out.println(fileName.toString() + " cannot be read, deafulting to " + defaultFile.toString());
 			try {
 				JSONObject json = (JSONObject) parser.parse(new FileReader(fileName));
 				return json;

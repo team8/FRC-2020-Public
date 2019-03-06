@@ -63,26 +63,19 @@ public class VisionDriveHelper {
             // |angularPower| should be at most 0.6
             if (angularPower > 0.6) angularPower = 0.6;
             if (angularPower < -0.6) angularPower = -0.6;
-//            System.out.println(angularPower);
-            // System.out.println("zdist: " + Limelight.getInstance().getCorrectedEstimatedDistanceZ());
-            // System.out.println("Target area: " + Limelight.getInstance().getTargetArea());
         } else {
-//            System.out.println(Limelight.getInstance().getCornerX().length);
             found = false;
             angularPower = 0;
         }
 
         rightPower = leftPower = mOldThrottle = linearPower;
 
-        // System.out.println("Before - L: " + leftPower + " R: " + rightPower);
 
         angularPower *= -1;
-        // System.out.println(angularPower);
         //angularPower *= mOldThrottle;
         leftPower *= (1 + angularPower);
         rightPower *= (1 - angularPower);
 
-//        System.out.println(angularPower);
 
         if(leftPower > 1.0) {
             leftPower = 1.0;
@@ -96,7 +89,6 @@ public class VisionDriveHelper {
 
         SparkSignal mSignal = SparkSignal.getNeutralSignal();
 
-        // System.out.println("After - L: " + leftPower + " R: " + rightPower);
 
         mSignal.leftMotor.setPercentOutput(leftPower);
         mSignal.rightMotor.setPercentOutput(rightPower);

@@ -80,35 +80,27 @@ public class Robot extends TimedRobot {
 			long t1 = System.nanoTime();
 			commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
 			long t2 = System.nanoTime();
-			// System.out.println("routine_manager_delta_t: " + (t2-t1)/1.0e6);
 			
 			t1 = System.nanoTime();
 			mHardwareUpdater.updateState(robotState);
 			t2 = System.nanoTime();
-			// System.out.println("update_state_delta_t: " + (t2-t1)/1.0e6);
 			
 			t1 = System.nanoTime();
 			updateSubsystems();
 			t2 = System.nanoTime();
-			// System.out.println("update_subsystems_delta_t: " + (t2-t1)/1.0e6);
 			
 			//Update the hardware
 			t1 = System.nanoTime();
 			mHardwareUpdater.updateHardware();
 			t2 = System.nanoTime();
-			// System.out.println("update_hardware_delta_t: " + (t2-t1)/1.0e6);
 
-	//        System.out.println(HardwareAdapter.getInstance().getPusher().pusherSpark.getAppliedOutput());
-	//        System.out.println(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition()/ ElevatorConstants.kElevatorRotationsPerInch);
 
 			t1 = System.nanoTime();
 			if(mWriter.getSize() > 10000) {
 				mWriter.write();
 			}
 			t2 = System.nanoTime();
-			// System.out.println("writer_delta_t: " + (t2-t1)/1.0e6);
 
-			// System.out.println("loop_delta_t: " + (System.nanoTime()-start)/1.0e6);
 			
 			DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
 		
@@ -210,8 +202,6 @@ public class Robot extends TimedRobot {
 		
 		DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
 
-//		System.out.println(mRoutineManager.getCurrentRoutines().contains(new DriveSensorResetRoutine(1.0)));
-//		System.out.println("Position: " + Robot.getRobotState().getLatestFieldToVehicle().getValue());
 	}
 
 	@Override
@@ -296,10 +286,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
-//		System.out.println("Left:" + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
-//		System.out.println("Right:" + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
-//		System.out.println("Pusher:" + HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
-		System.out.println("Arm Pot" + HardwareAdapter.getInstance().getIntake().potentiometer.get());
 
 	}
 
@@ -314,7 +300,6 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateSubsystems() {
-//	    System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
 		mDrive.update(commands, robotState);
 		mElevator.update(commands, robotState);
 		mShooter.update(commands, robotState);

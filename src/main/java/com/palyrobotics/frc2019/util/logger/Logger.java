@@ -98,7 +98,6 @@ public class Logger {
 		try {
 			fmsConnected = DriverStation.getInstance().isFMSAttached();
 		} catch(UnsatisfiedLinkError|NoClassDefFoundError e) {
-			// System.out.println("FMS is not attached");
 		}
 		if(LoggerConstants.compStatus || fmsConnected) {
 			filePath = "COMPETITIONS" + File.separatorChar + filePath;
@@ -126,7 +125,6 @@ public class Logger {
 			Files.createParentDirs(mainLog);
 			Files.append("Robot log:" + "\n", mainLog, Charsets.UTF_8);
 			Files.append(filePath + "\n", mainLog, Charsets.UTF_8);
-			// System.out.println("Created new log at " + filePath);
 		} catch(IOException e) {
 			System.err.println("Failed to create log at " + filePath);
 			e.printStackTrace();
@@ -285,7 +283,6 @@ public class Logger {
 					if(c.getLevel().intValue() >= LoggerConstants.writeLevel.intValue()) {
 						Files.append(((LeveledString) c).getLeveledString(), mainLog, Charsets.UTF_8);
 						if(((LeveledString) c).getLevel().intValue() >= LoggerConstants.displayLevel.intValue() && writeLimit <= LoggerConstants.writeLimit) {
-							// System.out.println(c.getLeveledString());
 							writeLimit++;
 						}
 					}
@@ -306,7 +303,6 @@ public class Logger {
 
 	//Used to cleanup internally, write out last words, etc
 	private synchronized void shutdown() {
-		// System.out.println("Shutting down");
 
 		writeLogs();
 		final Lock w = lock.writeLock();
@@ -321,7 +317,6 @@ public class Logger {
 		try {
 			Files.append("Logger stopped \n", mainLog, Charsets.UTF_8);
 		} catch(IOException e) {
-			// System.out.println("Unable to write, logger stopped");
 			e.printStackTrace();
 		}
 		isEnabled = false;

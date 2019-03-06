@@ -28,7 +28,6 @@ public class ShovelExpelCycle extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-//        System.out.println("Updates");
         commands.wantedShovelUpDownState = Shovel.UpDownState.DOWN;
         commands.wantedShovelWheelState = Shovel.WheelState.EXPELLING;
 

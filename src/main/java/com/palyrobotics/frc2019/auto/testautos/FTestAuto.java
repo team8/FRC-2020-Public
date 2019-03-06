@@ -62,7 +62,6 @@ public class FTestAuto extends AutoModeBase {
         ArrayList<Routine> sequence = new ArrayList<>();
 //
         sequence.add(new SparkMaxRoutine(driveBackup, false));
-        // System.out.println("getDrive() called in FTestAuto, SparkMaxRoutine created.");
 //        sequence.add(new TimeoutRoutine(10));
 
 

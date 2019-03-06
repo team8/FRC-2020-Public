@@ -94,7 +94,6 @@ public class Intake extends Subsystem {
         commands.wantedIntakeState = IntakeMacroState.IDLE;
 
 //        commands.wantedIntakeState = IntakeMacroState.IDLE;
-//        System.out.println(commands.wantedIntakeState);
 
         // The intake macro state has eight possible states.  Any state can be transferred to automatically or manually,
         // but some states need to set auxiliary variables, such as the queue times.
@@ -127,13 +126,9 @@ public class Intake extends Subsystem {
             this.mMacroState = commands.wantedIntakeState;
         }
 
-//        System.out.println("Wanted: " + commands.wantedIntakeState);
-//        System.out.println("Actual: " + this.mMacroState);
 
-//        System.out.println(mMacroState);
 
         if (intakeOnTarget()) {
-//            System.out.println("On Target");
             this.mUpDownState = UpDownState.HOLD;
         }
 
@@ -207,8 +202,6 @@ public class Intake extends Subsystem {
                 break;
         }
 
-//        System.out.println(this.mMacroState);
-//        System.out.println(this.mIntakeWantedPosition.isPresent() ? this.mIntakeWantedPosition.get() : -100);
 
 
         switch(mWheelState) {
@@ -245,7 +238,6 @@ public class Intake extends Subsystem {
             case CUSTOM_POSITIONING:
                 mSparkOutput.setGains(Gains.intakePosition);
                 mSparkOutput.setTargetPosition(mIntakeWantedPosition.get(), arb_ff, Gains.intakePosition);
-//                System.out.println(mIntakeWantedPosition.get());
                 break;
             case IDLE:
                 if(mIntakeWantedPosition.isPresent()) {
@@ -268,9 +260,6 @@ public class Intake extends Subsystem {
 
         cachedCargoState = robotState.hasCargo;
 
-//        System.out.println("Angle: " + mRobotState.intakeAngle);
-//        System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
-//        System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get() / IntakeConstants.kArmPotentiometerTicksPerDegree);
         mWriter.addData("intakeAngle", mRobotState.intakeAngle);
         mIntakeWantedPosition.ifPresent(intakeWantedPosition -> mWriter.addData("intakeWantedPosition", intakeWantedPosition));
         mWriter.addData("intakeSparkSetpoint", mSparkOutput.getSetpoint());
@@ -305,9 +294,6 @@ public class Intake extends Subsystem {
             return false;
         }
 
-//        System.out.println("Angle Error: " + (mIntakeWantedPosition.get() - HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition()));
-//        System.out.println(mIntakeWantedPosition.get());
-//        System.out.println("Vel Error: " + Math.abs(mRobotState.elevatorVelocity));
         return (Math.abs(mIntakeWantedPosition.get() - HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition()) < IntakeConstants.kAcceptableAngularError)
                 && (Math.abs(mRobotState.intakeVelocity) < IntakeConstants.kAngularVelocityError);
     }

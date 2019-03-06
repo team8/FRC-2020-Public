@@ -38,7 +38,6 @@ public class SequentialRoutine extends Routine {
 		//Keep moving to next routine if the current routine is finished
 		while(mRoutines.get(mRunningRoutineIndex).finished()) {
 			output = mRoutines.get(mRunningRoutineIndex).cancel(output);
-//			System.out.println(mRoutines.get(mRunningRoutineIndex).getName() + " has finished & canceled");
 			if(mRunningRoutineIndex <= mRoutines.size() - 1) {
 				mRunningRoutineIndex++;
 			}

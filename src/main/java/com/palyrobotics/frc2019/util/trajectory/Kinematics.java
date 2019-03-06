@@ -50,7 +50,6 @@ public class Kinematics {
 			return new DriveVelocity(velocity.dx, velocity.dx);
 		}
 		double delta_v = DrivetrainConstants.kTrackEffectiveDiameter * velocity.dtheta / (2 * DrivetrainConstants.kTrackScrubFactor);
-		//System.out.println("Delta_v: " + delta_v);
 		return new DriveVelocity(velocity.dx - delta_v, velocity.dx + delta_v);
 	}
 }

@@ -66,7 +66,6 @@ public class Elevator extends Subsystem {
     //Used to store the robot state for use in methods other than update()
     private RobotState mRobotState;
 
-    //The subsystem output
     private SparkMaxOutput mOutput = new SparkMaxOutput();
     private DoubleSolenoid.Value mSolenoidOutput = DoubleSolenoid.Value.kForward;
     private boolean mHolderSolenoidOutput = false;
@@ -105,7 +104,6 @@ public class Elevator extends Subsystem {
 
             handleElevatorState(commands);
             checkTopBottom(mRobotState);
-            //System.out.println(mElevatorState);
 
             //Execute update loop based on the current state
             //Does not switch between states, only performs actions
@@ -205,8 +203,6 @@ public class Elevator extends Subsystem {
             }
         }
 
-//        System.out.println("Elevator: ");
-//        System.out.println("applied output " + HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getAppliedOutput());
 
         mWriter.addData("elevatorPosition", mRobotState.elevatorPosition);
         mWriter.addData("elevatorPositionInches", mRobotState.elevatorPosition / ElevatorConstants.kElevatorRotationsPerInch);
@@ -373,10 +369,6 @@ public class Elevator extends Subsystem {
         if(mElevatorState != ElevatorState.CUSTOM_POSITIONING) {
             return false;
         }
-//        System.out.println("Elevator wanted position: " + mElevatorWantedPosition.get());
-//        System.out.println("Elevator position: " + mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch);
-//        System.out.println("Elevator velocity: " + mRobotState.elevatorVelocity*ElevatorConstants.kElevatorSpeedUnitConversion);
-//        System.out.println("");
         return (Math.abs(mElevatorWantedPosition.get() - mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch) < ElevatorConstants.kAcceptablePositionError)
                 && (Math.abs(mRobotState.elevatorVelocity*ElevatorConstants.kElevatorSpeedUnitConversion) < ElevatorConstants.kAcceptableVelocityError);
     }

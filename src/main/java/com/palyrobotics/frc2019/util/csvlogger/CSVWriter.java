@@ -29,7 +29,6 @@ public class CSVWriter {
         File file = new File(FILENAME);
         if(file.exists()) {
             file.delete();
-            // System.out.println("Removed old log file");
         }
     }
 

@@ -107,7 +107,6 @@ public class DrivePathRoutine extends Routine {
 	@Override
 	public void start() {
 		if(mRelative) {
-			// System.out.println("start size: " + pathList.size());
 			ArrayList<Path.Waypoint> absoluteList = new ArrayList<>();
 			for (Path.Waypoint point : pathList) {
 				if (point.isRelative) {
@@ -124,14 +123,12 @@ public class DrivePathRoutine extends Routine {
 			int counter = 0;
 
 			for (Path.Waypoint point : absoluteList) {
-				// System.out.println("Desired pos " + counter + " " + point.position);
 				counter++;
 			}
 
 			mPath = new Path(absoluteList);
 		}
 		Logger.getInstance().logSubsystemThread(Level.INFO, "Starting Drive Path Routine");
-		// System.out.println("Path size = " + mPath.getWaypoints().size());
 		
 		drive.setTrajectoryController(mPath, mLookAhead, mInverted, mTolerance);
 	}

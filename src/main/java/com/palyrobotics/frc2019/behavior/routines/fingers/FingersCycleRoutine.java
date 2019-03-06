@@ -27,7 +27,6 @@ public class FingersCycleRoutine extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-//        System.out.println("Updates");
         commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
         commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
 
@@ -42,7 +41,6 @@ public class FingersCycleRoutine extends Routine {
 
     @Override
     public Commands cancel(Commands commands) {
-        // System.out.println("Cancelling");
         return commands;
     }
 
