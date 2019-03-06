@@ -79,23 +79,26 @@ public class SparkMaxRoutine extends Routine {
 	@Override
 	public boolean finished() {
 		//Wait for controller to be added before finishing routine
-		if(Math.abs(mSignal.leftMotor.getSetpoint() - Robot.getRobotState().leftSetpoint) > 1) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark setpoints! desired, actual");
-			Logger.getInstance().logRobotThread(Level.WARNING, "Left", mSignal.leftMotor.getSetpoint() + ", " + Robot.getRobotState().leftSetpoint);
-			return false;
-		} else if(Math.abs(mSignal.rightMotor.getSetpoint() - Robot.getRobotState().rightSetpoint) > 1) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark setpoints! desired, actual");
-			Logger.getInstance().logRobotThread(Level.WARNING, "Right", mSignal.rightMotor.getSetpoint() + ", " + Robot.getRobotState().rightSetpoint);
-			return false;
-		} else if(mSignal.leftMotor.getControlType() != Robot.getRobotState().leftControlMode) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark states!");
-			Logger.getInstance().logRobotThread(Level.WARNING, mSignal.leftMotor.getControlType() + ", " + Robot.getRobotState().leftControlMode);
-			return false;
-		} else if(mSignal.rightMotor.getControlType() != Robot.getRobotState().rightControlMode) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark states!");
-			Logger.getInstance().logRobotThread(Level.WARNING, mSignal.rightMotor.getControlType() + ", " + Robot.getRobotState().rightControlMode);
-			return false;
-		}
+		// if(Math.abs(mSignal.leftMotor.getSetpoint() - Robot.getRobotState().leftSetpoint) > 1) {
+		// 	Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark setpoints! desired, actual");
+		// 	Logger.getInstance().logRobotThread(Level.WARNING, "Left", mSignal.leftMotor.getSetpoint() + ", " + Robot.getRobotState().leftSetpoint);
+		// 	return false;
+		// } else if(Math.abs(mSignal.rightMotor.getSetpoint() - Robot.getRobotState().rightSetpoint) > 1) {
+		// 	Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark setpoints! desired, actual");
+		// 	Logger.getInstance().logRobotThread(Level.WARNING, "Right", mSignal.rightMotor.getSetpoint() + ", " + Robot.getRobotState().rightSetpoint);
+		// 	return false;
+		// } else if(mSignal.leftMotor.getControlType() != Robot.getRobotState().leftControlMode) {
+		// 	Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark states!");
+		// 	Logger.getInstance().logRobotThread(Level.WARNING, mSignal.leftMotor.getControlType() + ", " + Robot.getRobotState().leftControlMode);
+		// 	return false;
+		// } else if(mSignal.rightMotor.getControlType() != Robot.getRobotState().rightControlMode) {
+		// 	Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark states!");
+		// 	Logger.getInstance().logRobotThread(Level.WARNING, mSignal.rightMotor.getControlType() + ", " + Robot.getRobotState().rightControlMode);
+		// 	return false;
+		// }
+
+		// Might be broken, lines removed to eliminate control mode read
+		
 		if(!drive.hasController() || (drive.getController().getClass() == SparkMaxDriveController.class && drive.controllerOnTarget())) {
 		}
 

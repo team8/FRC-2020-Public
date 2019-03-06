@@ -11,6 +11,8 @@ public class Gains {
 	//kA = (wheel radius * robot mass) / (total number of motors * gear reduction * total stall torque)
 	//kV ~ 1.1 times theoretical, kA ~ 1.4 times theroretical, kS ~ 1.3V = .11
 	//presentation has a typo for kA, should be wheel radius because T = Fr
+
+	//Use these for onboard following
 	public static double kVidarTrajectorykV = 0.00423*1.1; // 1/(in/s)
 	public static double kVidarTrajectorykA = 0.00109*1.4; // 1/(in/s^2)
 	public static double kVidarTrajectorykS = 1.3/12.0;
@@ -19,17 +21,12 @@ public class Gains {
 
 	public static final TrajectoryGains vidarTrajectory = new TrajectoryGains(kVidarTrajectorykV, kVidarTrajectorykA, kVidarTrajectorykS, kVidarTrajectorykP, kVidarTrajectorykD);
 
-//	public static final double kVidarDriveVelocitykP = 1.2;//6.0 / 2;
-//	public static final double kVidarDriveVelocitykI = 0.001;
-//	public static final double kVidarDriveVelocitykD = 12.4;//85 / 2;
-//	public static final double kVidarDriveVelocitykF = 0.246537885;//2.624 / 2;
-//	public static final int kVidarDriveVelocitykIzone = 0;//800 / 2;
-//	public static final double kVidarDriveVelocitykRampRate = 0.0;
-	public static final double kVidarDriveVelocitykP = 0.242*1.2;//6.0 / 2;
-	public static final double kVidarDriveVelocitykI = 0.0;//0.001;
-    public static final double kVidarDriveVelocitykD = 11.5*1.2;//12.4;//85 / 2;
-    public static final double kVidarDriveVelocitykF = 0.152807;//0.258987;//0.010516;//2.624 / 2;
-	public static final int kVidarDriveVelocitykIzone = 0;//800 / 2;
+	//Use these for offboard following
+	public static final double kVidarDriveVelocitykP = 0;
+	public static final double kVidarDriveVelocitykI = 0;
+    public static final double kVidarDriveVelocitykD = 0;
+    public static final double kVidarDriveVelocitykF = 0;
+	public static final int kVidarDriveVelocitykIzone = 0;
 	public static final double kVidarDriveVelocitykRampRate = 0.0;
 	public static final Gains vidarVelocity = new Gains(kVidarDriveVelocitykP, kVidarDriveVelocitykI, kVidarDriveVelocitykD, kVidarDriveVelocitykF,
 			kVidarDriveVelocitykIzone, kVidarDriveVelocitykRampRate);

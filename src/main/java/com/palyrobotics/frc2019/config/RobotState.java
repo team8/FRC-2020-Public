@@ -35,10 +35,6 @@ public class RobotState {
 
 	//Updated by autoInit, teleopInit, disabledInit
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;
-	
-	//Drivetrain
-	public ControlType leftControlMode = ControlType.kDutyCycle;
-	public ControlType rightControlMode = ControlType.kDutyCycle;
 
 	public double leftSetpoint = 0;
 	public double rightSetpoint = 0;
@@ -78,7 +74,6 @@ public class RobotState {
 	public Pose drivePose = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
 
 	//Pusher sensor data
-	public double pusherCachePosition = 0;
 	public double pusherPosition = 0;
 	public double pusherVelocity = 0;
 	public double pusherEncVelocity = 0;
