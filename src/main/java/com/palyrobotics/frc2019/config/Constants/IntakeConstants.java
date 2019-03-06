@@ -9,8 +9,8 @@ public class IntakeConstants {
     public static final double kDroppingVelocity = 1.0;
     public static final double kExpellingVelocity = -.9;
 
-    public static final double kMaxAngle = 116.0; // 90 - 61.7 + 90
-    public static final double kMaxAngleTicks = .0978;
+    public static final double kMaxAngle = 120.0; // 90 - 61.7 + 90
+    public static final double kMaxAngleTicks = .0582;
 
     // FEED FORWARD CONSTANTS
 

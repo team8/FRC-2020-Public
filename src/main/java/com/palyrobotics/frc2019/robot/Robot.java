@@ -69,11 +69,11 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 
-		// Logger.getInstance().setFileName("3-2-Testing");
-		// DataLogger.getInstance().setFileName("3-2-Testing");
+		Logger.getInstance().setFileName("3-2-Testing");
+		DataLogger.getInstance().setFileName("3-2-Testing");
 
-		// Logger.getInstance().start();
-		// DataLogger.getInstance().start();
+		Logger.getInstance().start();
+		DataLogger.getInstance().start();
 
 		Logger.getInstance().logRobotThread(Level.INFO, "Start robotInit()");
 		
@@ -97,8 +97,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		// Logger.getInstance().start();
-		// DataLogger.getInstance().start();
+		Logger.getInstance().start();
+		DataLogger.getInstance().start();
 
 		Logger.getInstance().logRobotThread(Level.INFO, "Start autoInit()");
 
@@ -106,7 +106,6 @@ public class Robot extends TimedRobot {
 
 		DashboardManager.getInstance().toggleCANTable(true);
 		robotState.gamePeriod = RobotState.GamePeriod.AUTO;
-		mHardwareUpdater.configureHardware();
 
 		robotState.matchStartTime = System.currentTimeMillis();
 
@@ -163,8 +162,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		// Logger.getInstance().start();
-		// DataLogger.getInstance().start();
+		Logger.getInstance().start();
+		DataLogger.getInstance().start();
 
 		Logger.getInstance().logRobotThread(Level.INFO, "Start teleopInit()");
 
@@ -217,8 +216,8 @@ public class Robot extends TimedRobot {
 		Logger.getInstance().logRobotThread(Level.INFO, "Start disabledInit()");
 		Logger.getInstance().logRobotThread(Level.INFO, "Stopping logger...");
 
-		// Logger.getInstance().cleanup();
-		// DataLogger.getInstance().cleanup();
+		Logger.getInstance().cleanup();
+		DataLogger.getInstance().cleanup();
 
 		mAutoStarted = false;
 
@@ -260,7 +259,7 @@ public class Robot extends TimedRobot {
 		mShooter.start();
 		mPusher.start();
 		mFingers.start();
-//		mIntake.start();
+		mIntake.start();
 	}
 
 	private void updateSubsystems() {
@@ -270,7 +269,7 @@ public class Robot extends TimedRobot {
 		mPusher.update(commands, robotState);
 		mFingers.update(commands, robotState);
 		mShovel.update(commands, robotState);
-//		mIntake.update(commands, robotState);
+		mIntake.update(commands, robotState);
 	}
 
 
@@ -281,7 +280,7 @@ public class Robot extends TimedRobot {
 		mPusher.stop();
 		mFingers.stop();
 		mShovel.stop();
-//		mIntake.stop();
+		mIntake.stop();
 	}
 
 	@Override

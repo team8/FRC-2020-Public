@@ -91,9 +91,8 @@ public class Intake extends Subsystem {
     @Override
     public void update(Commands commands, RobotState robotState) {
         mRobotState = robotState;
-        commands.wantedIntakeState = IntakeMacroState.IDLE;
 
-//        commands.wantedIntakeState = IntakeMacroState.IDLE;
+        System.out.println("Wanted Intake Macro State: "  + commands.wantedIntakeState);
 
         // The intake macro state has eight possible states.  Any state can be transferred to automatically or manually,
         // but some states need to set auxiliary variables, such as the queue times.
@@ -126,8 +125,6 @@ public class Intake extends Subsystem {
             this.mMacroState = commands.wantedIntakeState;
         }
 
-
-
         if (intakeOnTarget()) {
             this.mUpDownState = UpDownState.HOLD;
         }
@@ -157,7 +154,7 @@ public class Intake extends Subsystem {
             case STOWED:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
-                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kMaxAngle-50));
+                mIntakeWantedPosition = Optional.of(convertIntakeSetpoint(IntakeConstants.kMaxAngle));
                 break;
             case GROUND_INTAKING:
                 mWheelState = WheelState.INTAKING;
@@ -202,8 +199,6 @@ public class Intake extends Subsystem {
                 break;
         }
 
-
-
         switch(mWheelState) {
             case INTAKING:
                 if(commands.customIntakeSpeed) {
@@ -221,7 +216,7 @@ public class Intake extends Subsystem {
             case EXPELLING:
                 mVictorOutput = IntakeConstants.kExpellingVelocity;
         }
-
+        
         switch(mUpDownState) {
             case HOLD:
                 mSparkOutput.setGains(Gains.intakeHold);
@@ -263,6 +258,8 @@ public class Intake extends Subsystem {
         mWriter.addData("intakeAngle", mRobotState.intakeAngle);
         mIntakeWantedPosition.ifPresent(intakeWantedPosition -> mWriter.addData("intakeWantedPosition", intakeWantedPosition));
         mWriter.addData("intakeSparkSetpoint", mSparkOutput.getSetpoint());
+
+        System.out.println("Intake Macro State :" + mMacroState + "\nIntake Wheel State: " + mWheelState + "\nIntake Up Down State: " + mUpDownState);
     }
 
     public double getRumbleLength() {

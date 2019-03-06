@@ -73,38 +73,38 @@ class HardwareUpdater {
 				DataLogger.getInstance().logData(Level.FINE, "robot_y", pose.getTranslation().getY());
 				DataLogger.getInstance().logData(Level.FINE, "robot_heading", pose.getRotation().getDegrees());
 
-				PowerDistributionPanel pdp = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp;
+				// PowerDistributionPanel pdp = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp;
 
-				DataLogger.getInstance().logData(Level.FINE, "l_1_pdp_current", pdp.getCurrent(0));
-				DataLogger.getInstance().logData(Level.FINE, "l_2_pdp_current", pdp.getCurrent(1));
-				DataLogger.getInstance().logData(Level.FINE, "l_3_pdp_current", pdp.getCurrent(2));
-				DataLogger.getInstance().logData(Level.FINE, "r_1_pdp_current", pdp.getCurrent(15));
-				DataLogger.getInstance().logData(Level.FINE, "r_2_pdp_current", pdp.getCurrent(14));
-				DataLogger.getInstance().logData(Level.FINE, "r_3_pdp_current", pdp.getCurrent(13));
+				// DataLogger.getInstance().logData(Level.FINE, "l_1_pdp_current", pdp.getCurrent(0));
+				// DataLogger.getInstance().logData(Level.FINE, "l_2_pdp_current", pdp.getCurrent(1));
+				// DataLogger.getInstance().logData(Level.FINE, "l_3_pdp_current", pdp.getCurrent(2));
+				// DataLogger.getInstance().logData(Level.FINE, "r_1_pdp_current", pdp.getCurrent(15));
+				// DataLogger.getInstance().logData(Level.FINE, "r_2_pdp_current", pdp.getCurrent(14));
+				// DataLogger.getInstance().logData(Level.FINE, "r_3_pdp_current", pdp.getCurrent(13));
 
-				CANSparkMax leftMasterSpark = HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark;
-				CANSparkMax leftSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().leftSlave1Spark;
-				CANSparkMax leftSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().leftSlave2Spark;
+				// CANSparkMax leftMasterSpark = HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark;
+				// CANSparkMax leftSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().leftSlave1Spark;
+				// CANSparkMax leftSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().leftSlave2Spark;
 		
-				CANSparkMax rightMasterSpark = HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark;
-				CANSparkMax rightSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave1Spark;
-				CANSparkMax rightSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave2Spark;
+				// CANSparkMax rightMasterSpark = HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark;
+				// CANSparkMax rightSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave1Spark;
+				// CANSparkMax rightSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave2Spark;
 				
-				DataLogger.getInstance().logData(Level.FINE, "l_1_current", leftMasterSpark.getOutputCurrent());
-				DataLogger.getInstance().logData(Level.FINE, "l_2_current", leftSlave1Spark.getOutputCurrent());
-				DataLogger.getInstance().logData(Level.FINE, "l_3_current", leftSlave2Spark.getOutputCurrent());
-				DataLogger.getInstance().logData(Level.FINE, "r_1_current", rightMasterSpark.getOutputCurrent());
-				DataLogger.getInstance().logData(Level.FINE, "r_2_current", rightSlave1Spark.getOutputCurrent());
-				DataLogger.getInstance().logData(Level.FINE, "r_3_current", rightSlave2Spark.getOutputCurrent());
+				// DataLogger.getInstance().logData(Level.FINE, "l_1_current", leftMasterSpark.getOutputCurrent());
+				// DataLogger.getInstance().logData(Level.FINE, "l_2_current", leftSlave1Spark.getOutputCurrent());
+				// DataLogger.getInstance().logData(Level.FINE, "l_3_current", leftSlave2Spark.getOutputCurrent());
+				// DataLogger.getInstance().logData(Level.FINE, "r_1_current", rightMasterSpark.getOutputCurrent());
+				// DataLogger.getInstance().logData(Level.FINE, "r_2_current", rightSlave1Spark.getOutputCurrent());
+				// DataLogger.getInstance().logData(Level.FINE, "r_3_current", rightSlave2Spark.getOutputCurrent());
 
-				DataLogger.getInstance().logData(Level.FINE, "total_current", pdp.getTotalCurrent());
+				// DataLogger.getInstance().logData(Level.FINE, "total_current", pdp.getTotalCurrent());
 
-				DataLogger.getInstance().logData(Level.FINE, "l_1_voltage", leftMasterSpark.getAppliedOutput());
-				DataLogger.getInstance().logData(Level.FINE, "l_2_voltage", leftSlave1Spark.getAppliedOutput());
-				DataLogger.getInstance().logData(Level.FINE, "l_3_voltage", leftSlave2Spark.getAppliedOutput());
-				DataLogger.getInstance().logData(Level.FINE, "r_1_voltage", rightMasterSpark.getAppliedOutput());
-				DataLogger.getInstance().logData(Level.FINE, "r_2_voltage", rightSlave1Spark.getAppliedOutput());
-				DataLogger.getInstance().logData(Level.FINE, "r_3_voltage", rightSlave2Spark.getAppliedOutput());
+				// DataLogger.getInstance().logData(Level.FINE, "l_1_voltage", leftMasterSpark.getAppliedOutput());
+				// DataLogger.getInstance().logData(Level.FINE, "l_2_voltage", leftSlave1Spark.getAppliedOutput());
+				// DataLogger.getInstance().logData(Level.FINE, "l_3_voltage", leftSlave2Spark.getAppliedOutput());
+				// DataLogger.getInstance().logData(Level.FINE, "r_1_voltage", rightMasterSpark.getAppliedOutput());
+				// DataLogger.getInstance().logData(Level.FINE, "r_2_voltage", rightSlave1Spark.getAppliedOutput());
+				// DataLogger.getInstance().logData(Level.FINE, "r_3_voltage", rightSlave2Spark.getAppliedOutput());
 
 				DataLogger.getInstance().cycle();
 			}
@@ -472,6 +472,8 @@ class HardwareUpdater {
 	void updateIntakeSensors() {
 		Robot.getRobotState().intakeAngle = Robot.getRobotState().intakeStartAngle -
 				HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition();
+
+		System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
 	}
 
 	void updateUltrasonicSensors(RobotState robotState) {
@@ -538,7 +540,7 @@ class HardwareUpdater {
      * Checks if the compressor should compress and updates it accordingly
      */
 	private void updateMiscellaneousHardware() {
-	    if(false && shouldCompress()) {
+	    if(shouldCompress()) {
 	        HardwareAdapter.getInstance().getMiscellaneousHardware().compressor.start();
         } else {
             HardwareAdapter.getInstance().getMiscellaneousHardware().compressor.stop();
