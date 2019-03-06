@@ -1,9 +1,5 @@
 package com.palyrobotics.frc2019.robot;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import com.palyrobotics.frc2019.auto.AutoModeBase;
@@ -69,46 +65,7 @@ public class Robot extends TimedRobot {
 	private int disabledCycles;
 
 	public Looper looper;
-
-	private Runnable teleopLoop;
-
-	{
-		teleopLoop = () -> {
-		
-			long start = System.nanoTime();
-
-			long t1 = System.nanoTime();
-			commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
-			long t2 = System.nanoTime();
-			
-			t1 = System.nanoTime();
-			mHardwareUpdater.updateState(robotState);
-			t2 = System.nanoTime();
-			
-			t1 = System.nanoTime();
-			updateSubsystems();
-			t2 = System.nanoTime();
-			
-			//Update the hardware
-			t1 = System.nanoTime();
-			mHardwareUpdater.updateHardware();
-			t2 = System.nanoTime();
-
-
-			t1 = System.nanoTime();
-			if(mWriter.getSize() > 10000) {
-				mWriter.write();
-			}
-			t2 = System.nanoTime();
-
-			
-			DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
-		
-		};
-	}
-
-	private ScheduledExecutorService scheduler = null;
-
+	
 	@Override
 	public void robotInit() {
 
@@ -233,22 +190,29 @@ public class Robot extends TimedRobot {
 
         Logger.getInstance().logRobotThread(Level.INFO, "End teleopInit()");
 		
-		scheduler = Executors.newScheduledThreadPool(1);
-		ScheduledFuture scheduleFuture = scheduler.scheduleAtFixedRate(teleopLoop, 0, 20, TimeUnit.MILLISECONDS);
-
 	}
 
 	@Override
 	public void teleopPeriodic() {
-		//do nothing
+		long start = System.nanoTime();
+		commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
+		
+		mHardwareUpdater.updateState(robotState);
+		
+		updateSubsystems();
+		
+		//Update the hardware
+		mHardwareUpdater.updateHardware();
+
+		if(mWriter.getSize() > 10000) {
+			mWriter.write();
+		}
+		
+		DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
 	}
 
 	@Override
 	public void disabledInit() {
-
-		if (scheduler != null) {
-			scheduler.shutdown();
-		}
 
 		Logger.getInstance().logRobotThread(Level.INFO, "Start disabledInit()");
 		Logger.getInstance().logRobotThread(Level.INFO, "Stopping logger...");
