@@ -609,7 +609,6 @@ class HardwareUpdater {
             updateSparkMax(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark, mElevator.getOutput());
         }
         HardwareAdapter.getInstance().getElevator().elevatorShifter.set(mElevator.getSolenoidOutput());
-//        HardwareAdapter.getInstance().getElevator().elevatorHolderSolenoid.set(mElevator.getHolderSolenoidOutput());
     }
 
 	/**
@@ -632,7 +631,6 @@ class HardwareUpdater {
 	 */
 	private void updateFingers() {
         HardwareAdapter.getInstance().getFingers().openCloseSolenoid.set(mFingers.getOpenCloseOutput());
-//        HardwareAdapter.getInstance().getFingers().openCloseSolenoid.set((HardwareAdapter.getInstance().getJoysticks().operatorXboxController.getRightTrigger() > 0.0) : DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kForward);
         HardwareAdapter.getInstance().getFingers().pusherSolenoid.set(mFingers.getExpelOutput());
     }
 
