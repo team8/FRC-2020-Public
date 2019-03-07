@@ -17,7 +17,7 @@ public class DriverProfiles {
 
 				DrivetrainConstants.kDriveSensitivity = 0.85;
 
-				DrivetrainConstants.kQuickTurnSensitivity = .7;//0.8;
+				DrivetrainConstants.kQuickTurnSensitivity = .6;//0.8;
 				DrivetrainConstants.kPreciseQuickTurnSensitivity = 0.35;//0.35;
 
 				DrivetrainConstants.kQuickTurnSensitivityThreshold = 1.01;
@@ -25,7 +25,7 @@ public class DriverProfiles {
 				DrivetrainConstants.kQuickStopAccumulatorDecreaseRate = 0.8;//0.8;
 
 				DrivetrainConstants.kQuickStopAccumulatorDecreaseThreshold = 1.2;//1.2;
-				DrivetrainConstants.kNegativeInertiaScalar = 5.0;
+				DrivetrainConstants.kNegativeInertiaScalar = 6.0;
 
 				DrivetrainConstants.kAlpha = 0.45;//0.55;//0.45;
 

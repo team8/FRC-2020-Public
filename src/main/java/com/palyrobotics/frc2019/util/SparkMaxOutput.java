@@ -76,6 +76,29 @@ public class SparkMaxOutput {
         this.mGains = gains;
     }
 
+    public void setTargetPositionSmartMotion(double posSetpoint, double maxVel, double maxAccel) {
+        configureSmartMotion(maxVel, maxAccel);
+        this.mSparkSetpoint = posSetpoint;
+        this.mSparkMode = ControlType.kSmartMotion;
+        this.arbitraryDemand = 0.0;
+    }
+
+    public void setTargetPositionSmartMotion(double posSetpoint, double maxVel, double maxAccel, Gains gains) {
+        configureSmartMotion(maxVel, maxAccel);
+        this.mSparkSetpoint = posSetpoint;
+        this.mSparkMode = ControlType.kSmartMotion;
+        this.arbitraryDemand = 0.0;
+        this.mGains = gains;
+    }
+
+    public void setTargetPositionSmartMotion(double posSetpoint, double maxVel, double maxAccel, double arbitraryDemand, Gains gains) {
+        configureSmartMotion(maxVel, maxAccel);
+        this.mSparkSetpoint = posSetpoint;
+        this.mSparkMode = ControlType.kSmartMotion;
+        this.arbitraryDemand = arbitraryDemand;
+        this.mGains = gains;
+    }
+
     public void setPercentOutput(double output) {
         this.mSparkSetpoint = output;
         this.mSparkMode = ControlType.kDutyCycle;
@@ -86,7 +109,7 @@ public class SparkMaxOutput {
         this.mSparkMode = ControlType.kVoltage;
     }
 
-    public void configureSmartMotion(double maxAccel, double maxVel) {
+    public void configureSmartMotion(double maxVel, double maxAccel) {
         this.smartMotionAccel = maxAccel;
         this.smartMotionCruiseVel = maxVel;
     }

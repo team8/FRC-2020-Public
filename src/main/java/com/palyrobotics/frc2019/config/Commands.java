@@ -43,7 +43,7 @@ public class Commands {
 	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
 	public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
 
-	public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.IDLE;
+	public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.HOLDING;
 
 	public boolean disableIntakeScaling = true;
 

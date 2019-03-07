@@ -10,7 +10,7 @@ public class IntakeConstants {
     public static final double kExpellingVelocity = -.9;
 
     public static final double kMaxAngle = 120.0; // 90 - 61.7 + 90
-    public static final double kMaxAngleTicks = .0582;
+    public static final double kMaxAngleTicks = .988; //FIX
 
     // FEED FORWARD CONSTANTS
 
@@ -22,7 +22,7 @@ public class IntakeConstants {
 
     public static final double kIntakingPosition = 25.96; // degrees relatively to the plane of the field.
     public static final double kHoldingPosition = 59; // same relative angle as above
-    public static final double kHandoffPosition = 118; // place where the drop to the elevator occurs
+    public static final double kHandoffPosition = 116; // place where the drop to the elevator occurs
     public static final double kRocketExpelPosition = 74;
     public static final double kClimbPosition = -30;
 
@@ -38,7 +38,7 @@ public class IntakeConstants {
     /**
      * Unit Conversions
      */
-    public static final double kArmPotentiometerTicksPerDegree = (4.5/1.0)*(0.2/360.0); // .2 comes from 1/5
+    public static final double kArmPotentiometerTicksPerDegree = (4.5/1.0)*(0.1/360.0); // .2 comes from 1/5
     // Using the NEO built in Encoder, so we must account for reduction.  ~= 42 / 360 * 118
     public static final double kArmDegreesPerRevolution = (360.0) / ((68.0/14.0) * (38.0/18.0) * (36.0/14.0) * (54.0/12.0));
     public static final double kArmEncoderSpeedUnitConversion = kArmDegreesPerRevolution / 60.0; // RPM -> Degrees per Second

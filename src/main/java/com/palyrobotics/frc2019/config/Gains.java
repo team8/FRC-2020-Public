@@ -83,25 +83,26 @@ public class Gains {
     public static final Gains pusherPosition = new Gains(kVidarPusherPositionkP, kVidarPusherPositionkI, kVidarPusherPositionkD,
             kVidarPusherPositionkF, kVidarPusherPositionkIzone, kVidarPusherPositionkRampRate);
 
-	//Intake Constants
-
-	public static final double kVidarIntakeHoldkP = 0.05;
-	public static final double kVidarIntakeHoldkI = 0.0;
-	public static final double kVidarIntakeHoldkD = 0.0;
-	public static final double kVidarIntakeHoldkF = 0.0;
-	public static final int kVidarIntakeHoldkIzone = 0;
-	public static final double kVidarIntakeHoldkRampRate = 1.0;
-	public static final Gains intakeHold = new Gains(kVidarIntakeHoldkP, kVidarIntakeHoldkI, kVidarIntakeHoldkD, kVidarIntakeHoldkF,
-			kVidarIntakeHoldkIzone, kVidarIntakeHoldkRampRate);
-
-	public static final double kVidarIntakePositionkP = 0.5;
+	public static final double kVidarIntakePositionkP = .2;
 	public static final double kVidarIntakePositionkI = 0.0;
-	public static final double kVidarIntakePositionkD = 1.0;
+	public static final double kVidarIntakePositionkD = 0.0;
 	public static final double kVidarIntakePositionkF = 0.0;
 	public static final int kVidarIntakePositionkIzone = 0;
 	public static final double kVidarIntakePositionkRampRate = 1.0;
 	public static final Gains intakePosition = new Gains(kVidarIntakePositionkP, kVidarIntakePositionkI, kVidarIntakePositionkD, kVidarIntakePositionkF,
 			kVidarIntakePositionkIzone, kVidarIntakePositionkRampRate);
+
+	//kF = (gear ratio) / (free speed)
+	public static final double kVidarIntakeSmartMotionMaxVel = 100; // deg/s
+	public static final double kVidarIntakeSmartMotionMaxAccel = 200; // deg/s^2
+	public static final double kVidarIntakeSmartMotionkP = 0;
+	public static final double kVidarIntakeSmartMotionkI = 0;
+	public static final double kVidarIntakeSmartMotionkD = 0;
+	public static final double kVidarIntakeSmartMotionkF = 0.00346; // 1/(deg/s)
+	public static final int kVidarIntakeSmartMotionkIzone = 0;
+	public static final double kVidarIntakeSmartMotionkRampRate = 0;
+	public static final Gains intakeSmartMotion = new Gains(kVidarIntakeSmartMotionkP, kVidarIntakeSmartMotionkI, kVidarIntakeSmartMotionkD, kVidarIntakeSmartMotionkF,
+	kVidarIntakeSmartMotionkIzone, kVidarIntakeSmartMotionkRampRate);
 
 	//Elevator Gains
     public static final double kVidarElevatorHoldkP = 2.0;//0.1;

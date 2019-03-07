@@ -224,7 +224,7 @@ public class OperatorInterface {
 //			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(hatchCycle);
             newCommands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
-            newCommands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
+            newCommands.wantedFingersExpelState = Fingers.PushingState.EXPELLING;
 		}
 		else {
 
