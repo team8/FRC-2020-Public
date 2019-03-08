@@ -13,6 +13,7 @@ import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.On
 import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.Segment;
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2019.util.logger.DataLogger;
 import com.palyrobotics.frc2019.util.trajectory.Kinematics;
 import com.palyrobotics.frc2019.util.trajectory.Path;
@@ -42,6 +43,10 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 	double mDt;
 	boolean mReversed;
 	double mPathCompletionTolerance;
+
+	CSVWriter mWriter = CSVWriter.getInstance();
+
+	double mOldTime;
 
 	private OnboardDriveController onboardController;
 
@@ -201,7 +206,10 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 	 */
 	@Override
 	public SparkSignal update(RobotState state) {
-		RigidTransform2d robot_pose = Robot.getRobotState().getLatestFieldToVehicle().getValue();
+
+	    double dt = (System.currentTimeMillis() - mOldTime) / 1000;
+
+        RigidTransform2d robot_pose = Robot.getRobotState().getLatestFieldToVehicle().getValue();
 		//Logger.getInstance().logSubsystemThread(Level.FINEST, robot_pose);
 		RigidTransform2d.Delta command = this.update(robot_pose, Timer.getFPGATimestamp());
 		Kinematics.DriveVelocity setpoint = Kinematics.inverseKinematics(command);
@@ -221,25 +229,30 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		if (mLastDriveVelocity == null) {
 			mLastDriveVelocity = new Kinematics.DriveVelocity(state.drivePose.leftEncVelocity, state.drivePose.rightEncVelocity);
 		}
-		double leftAcc = (setpoint.left - mLastDriveVelocity.left) / mDt;
-		double rightAcc = (setpoint.right - mLastDriveVelocity.right) / mDt;
+		double leftAcc = (setpoint.left - mLastDriveVelocity.left) / dt;
+		double rightAcc = (setpoint.right - mLastDriveVelocity.right) / dt;
 		mLastDriveVelocity = setpoint;
 
-		DataLogger.getInstance().logData(Level.FINE, "left_vel_setpoint", mLastDriveVelocity.left);
-		DataLogger.getInstance().logData(Level.FINE, "right_vel_setpoint", mLastDriveVelocity.right);
-		DataLogger.getInstance().logData(Level.FINE, "left_vel", state.drivePose.leftEncVelocity);
-		DataLogger.getInstance().logData(Level.FINE, "right_vel", state.drivePose.rightEncVelocity);
+		mWriter.addData("lastDriveVelocityLeft", mLastDriveVelocity.left);
+		mWriter.addData("lastDriveVelocityRight", mLastDriveVelocity.right);
+//		DataLogger.getInstance().logData(Level.FINE, "left_vel_setpoint", mLastDriveVelocity.left);
+//		DataLogger.getInstance().logData(Level.FINE, "right_vel_setpoint", mLastDriveVelocity.right);
+//		DataLogger.getInstance().logData(Level.FINE, "left_vel", state.drivePose.leftEncVelocity);
+//		DataLogger.getInstance().logData(Level.FINE, "right_vel", state.drivePose.rightEncVelocity);
 
 		//Pass velocity and acceleration setpoints into onboard controller
-		Segment left_segment = new Segment(setpoint.left, leftAcc, mDt);
-		Segment right_segment = new Segment(setpoint.right, rightAcc, mDt);
+		Segment left_segment = new Segment(setpoint.left, leftAcc, dt);
+		Segment right_segment = new Segment(setpoint.right, rightAcc, dt);
 		try {
 			onboardController.updateSetpoint(left_segment, right_segment, this);
 		}
 		catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		return onboardController.update(state);
+
+        mOldTime = System.currentTimeMillis();
+
+        return onboardController.update(state);
 
 	}
 

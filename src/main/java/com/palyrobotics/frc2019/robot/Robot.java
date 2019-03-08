@@ -100,36 +100,36 @@ public class Robot extends TimedRobot {
 
 		teleopInit();
 
-// 		Logger.getInstance().start();
-// 		DataLogger.getInstance().start();
+ 		Logger.getInstance().start();
+ 		DataLogger.getInstance().start();
 
-// 		Logger.getInstance().logRobotThread(Level.INFO, "Start autoInit()");
+ 		Logger.getInstance().logRobotThread(Level.INFO, "Start autoInit()");
 
-// 		looper.start();
+ 		looper.start();
 
-// 		DashboardManager.getInstance().toggleCANTable(true);
-// 		robotState.gamePeriod = RobotState.GamePeriod.AUTO;
+ 		DashboardManager.getInstance().toggleCANTable(true);
+ 		robotState.gamePeriod = RobotState.GamePeriod.AUTO;
 
-// 		robotState.matchStartTime = System.currentTimeMillis();
+ 		robotState.matchStartTime = System.currentTimeMillis();
 
-// 		mHardwareUpdater.updateState(robotState);
-// 		mRoutineManager.reset(commands);
-// 		robotState.reset(0, new RigidTransform2d());
-// //		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
+ 		mHardwareUpdater.updateState(robotState);
+ 		mRoutineManager.reset(commands);
+ 		robotState.reset(0, new RigidTransform2d());
+ //		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
 
-//         // Limelight LED on
-//         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+         // Limelight LED on
+         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
 
-//         mWriter.cleanFile();
+         mWriter.cleanFile();
 
-// 		AutoDistances.updateAutoDistances();
+ 		AutoDistances.updateAutoDistances();
 
-// 		mWriter.cleanFile();
+ 		mWriter.cleanFile();
 
-// 		startSubsystems();
-// 		mHardwareUpdater.enableBrakeMode();
+ 		startSubsystems();
+ 		mHardwareUpdater.enableBrakeMode();
 
-// 		Logger.getInstance().logRobotThread(Level.INFO, "End autoInit()");
+ 		Logger.getInstance().logRobotThread(Level.INFO, "End autoInit()");
 
 	}
 
@@ -137,31 +137,31 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 
-		teleopPeriodic();
+//		teleopPeriodic();
 
-		// long start = System.nanoTime();
-		// if(!this.mAutoStarted) {
-		// 	//Get the selected auto mode
-		// 	AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
+		 long start = System.nanoTime();
+		 if(!this.mAutoStarted) {
+		 	//Get the selected auto mode
+		 	AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
 
-		// 	//Prestart and run the auto mode
-		// 	mode.prestart();
-		// 	mRoutineManager.addNewRoutine(mode.getRoutine());
+		 	//Prestart and run the auto mode
+		 	mode.prestart();
+		 	mRoutineManager.addNewRoutine(mode.getRoutine());
 
-		// 	this.mAutoStarted = true;
-		// }
-		// if(this.mAutoStarted) {
-		// 	commands = mRoutineManager.update(commands);
-		// 	mHardwareUpdater.updateState(robotState);
-		// 	updateSubsystems();
-		// 	mHardwareUpdater.updateHardware();
-		// }
+		 	this.mAutoStarted = true;
+		 }
+		 if(this.mAutoStarted) {
+		 	commands = mRoutineManager.update(commands);
+		 	mHardwareUpdater.updateState(robotState);
+		 	updateSubsystems();
+		 	mHardwareUpdater.updateHardware();
+		 }
 
-        // if(mWriter.getSize() > 10000) {
-        //     mWriter.write();
-		// }
+         if(mWriter.getSize() > 10000) {
+             mWriter.write();
+		 }
 		
-		// DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
+		 DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
 
 	}
 
@@ -266,7 +266,7 @@ public class Robot extends TimedRobot {
 		mShooter.start();
 		mPusher.start();
 		mFingers.start();
-		mIntake.start();
+//		mIntake.start();
 	}
 
 	private void updateSubsystems() {
@@ -276,7 +276,7 @@ public class Robot extends TimedRobot {
 		mPusher.update(commands, robotState);
 		mFingers.update(commands, robotState);
 		mShovel.update(commands, robotState);
-		mIntake.update(commands, robotState);
+//		mIntake.update(commands, robotState);
 	}
 
 
@@ -287,7 +287,7 @@ public class Robot extends TimedRobot {
 		mPusher.stop();
 		mFingers.stop();
 		mShovel.stop();
-		mIntake.stop();
+//		mIntake.stop();
 	}
 
 	@Override

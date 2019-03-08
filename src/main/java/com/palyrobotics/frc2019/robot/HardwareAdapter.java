@@ -212,7 +212,7 @@ public class HardwareAdapter {
 
 		public final Joystick driveStick = new Joystick(0);
 		public final Joystick turnStick = new Joystick(1);
-		public final Joystick backupStick = new Joystick(3);
+//		public final Joystick backupStick = new Joystick(3);
 		public XboxController operatorXboxController = null;
 
 		protected Joysticks() {

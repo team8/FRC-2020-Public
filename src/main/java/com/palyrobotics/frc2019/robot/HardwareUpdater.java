@@ -402,7 +402,7 @@ class HardwareUpdater {
 		robotState.rightStickInput.update(HardwareAdapter.getInstance().getJoysticks().turnStick);
 
 		robotState.operatorXboxControllerInput.update(HardwareAdapter.getInstance().getJoysticks().operatorXboxController);
-		robotState.backupStickInput.update(HardwareAdapter.getInstance().getJoysticks().backupStick);
+//		robotState.backupStickInput.update(HardwareAdapter.getInstance().getJoysticks().backupStick);
 
 		robotState.hatchIntakeUp = HardwareAdapter.getInstance().getShovel().upDownHFX.get();
 		robotState.shovelCurrentDraw = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp.getCurrent(PortConstants.kVidarShovelPDPPort);
@@ -528,7 +528,7 @@ class HardwareUpdater {
 		updatePusher();
 		updateShovel();
 		updateFingers();
-		updateIntake();
+//		updateIntake();
 		updateMiscellaneousHardware();
 	}
 
