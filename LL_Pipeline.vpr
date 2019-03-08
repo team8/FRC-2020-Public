@@ -11,8 +11,8 @@ convexity_max:97.5
 convexity_min:70
 corner_approx:3.2
 cross_a_a:0.049974
-cross_a_x:-0.453125
-cross_a_y:0.887500
+cross_a_x:0
+cross_a_y:0
 cross_b_a:1
 cross_b_x:0
 cross_b_y:0
@@ -31,7 +31,7 @@ intersection_filter:1
 pipeline_led_enabled:0
 pipeline_res:0
 pipeline_type:0
-red_balance:1700
+red_balance:1100
 sat_max:255
 sat_min:70
 send_corners:1
