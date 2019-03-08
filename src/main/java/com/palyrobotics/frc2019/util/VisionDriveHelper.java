@@ -10,10 +10,14 @@ import com.palyrobotics.frc2019.vision.Limelight;
  * CheesyDriveHelper implements the calculations used in CheesyDrive for teleop control. Returns a DriveSignal for the motor output
  */
 public class VisionDriveHelper {
+
     private boolean mInitialBrake;
     private double mOldThrottle = 0.0, mBrakeRate;
     private boolean found = false;
     private SynchronousPID pidController;
+
+    private double oldYawToTarget;
+    private long oldTime;
 
     public SparkSignal visionDrive(Commands commands, RobotState robotState) {
         double throttle = -robotState.leftStickInput.getY();
@@ -55,16 +59,21 @@ public class VisionDriveHelper {
 
         if(Limelight.getInstance().isTargetFound()) {
             double kP = .03;
+            double kD = .005;
 //            double kP = Limelight.getInstance().getTargetArea();
 //            double kP = 1.0/Limelight.getInstance().getCorrectedEstimatedDistanceZ();
 //            double kP = .010 * Math.sqrt(Limelight.getInstance().getCorrectedEstimatedDistanceZ());
             //double kP = Limelight.getInstance().getCorrectedEstimatedDistanceZ();
-            angularPower = -Limelight.getInstance().getYawToTarget() * kP;
+            angularPower = -Limelight.getInstance().getYawToTarget() * kP
+                    - ((Limelight.getInstance().getYawToTarget() - oldYawToTarget) / (System.currentTimeMillis() - oldTime) * 1000) * kD;
+            oldYawToTarget = Limelight.getInstance().getYawToTarget();
+            oldTime = System.currentTimeMillis();
             // |angularPower| should be at most 0.6
             if (angularPower > 0.6) angularPower = 0.6;
             if (angularPower < -0.6) angularPower = -0.6;
         } else {
             found = false;
+            oldTime = System.currentTimeMillis();
             angularPower = 0;
         }
 
