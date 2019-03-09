@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 
-		teleopInit();
+		// teleopInit();
 
  		Logger.getInstance().start();
  		DataLogger.getInstance().start();
@@ -162,7 +162,7 @@ public class Robot extends TimedRobot {
 		 }
 		
 		 DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
-
+		 DataLogger.getInstance().cycle();
 	}
 
 	@Override
@@ -294,5 +294,7 @@ public class Robot extends TimedRobot {
 	public void robotPeriodic() {
 		// System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
 		// System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
+		// System.out.println("left ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+		// System.out.println("right ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
 	}
 }

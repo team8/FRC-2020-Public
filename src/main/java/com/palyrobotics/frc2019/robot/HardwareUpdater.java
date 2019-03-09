@@ -297,8 +297,8 @@ class HardwareUpdater {
 
 		intakeVictor.setInverted(true);
 
-		intakeMasterSpark.getPIDController().setOutputRange(-0.3,0.3);
-		intakeSlaveSpark.getPIDController().setOutputRange(-0.3,0.3);
+		intakeMasterSpark.getPIDController().setOutputRange(-0.4,0.4);
+		intakeSlaveSpark.getPIDController().setOutputRange(-0.4,0.4);
 
 		intakeVictor.setNeutralMode(NeutralMode.Brake);
 
@@ -421,6 +421,8 @@ class HardwareUpdater {
 			robotState.drivePose.heading = -0;
 			robotState.drivePose.headingVelocity = -0;
 		}
+
+		// System.out.println("robot heading: " + robotState.drivePose.heading);
 		
 		robotState.drivePose.lastLeftEnc = robotState.drivePose.leftEnc;
 		robotState.drivePose.leftEnc = leftMasterSpark.getEncoder().getPosition();

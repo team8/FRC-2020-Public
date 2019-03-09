@@ -83,7 +83,7 @@ public class Gains {
     public static final Gains pusherPosition = new Gains(kVidarPusherPositionkP, kVidarPusherPositionkI, kVidarPusherPositionkD,
             kVidarPusherPositionkF, kVidarPusherPositionkIzone, kVidarPusherPositionkRampRate);
 
-	public static final double kVidarIntakePositionkP = .2;
+	public static final double kVidarIntakePositionkP = .3;
 	public static final double kVidarIntakePositionkI = 0.0;
 	public static final double kVidarIntakePositionkD = 0.0;
 	public static final double kVidarIntakePositionkF = 0.0;

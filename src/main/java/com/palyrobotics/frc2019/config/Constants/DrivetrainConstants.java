@@ -70,9 +70,9 @@ public class DrivetrainConstants {
     /**
      * Unit Conversions
      */
-    public static final double kDriveInchesPerRotation = 6.0 * Math.PI * (12/46) * (22/44);
+    public static final double kDriveInchesPerRotation = 6.0 * Math.PI * (12.0/46.0) * (22.0/44.0);
     public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90.0;
-    public static final double kDriveSpeedUnitConversion = kDriveInchesPerRotation / 60;
+    public static final double kDriveSpeedUnitConversion = kDriveInchesPerRotation / 60.0;
 
     public static final int kCurrentLimit = 35; // amps
 

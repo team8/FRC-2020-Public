@@ -12,6 +12,7 @@ import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
 import com.palyrobotics.frc2019.config.Constants.FingerConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.subsystems.Drive;
+import com.palyrobotics.frc2019.subsystems.Intake.IntakeMacroState;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.IntakeBeginCycleRoutine;
@@ -189,7 +190,7 @@ public class OperatorInterface {
 			newCommands.wantedIntakeState = Intake.IntakeMacroState.STOWED;
 		}
 
-		if(mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState == Intake.IntakeMacroState.EXPELLING_ROCKET) {
+		if(mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState == Intake.IntakeMacroState.HOLDING_ROCKET) {
 			newCommands.wantedIntakeState = Intake.IntakeMacroState.EXPELLING_ROCKET;
 		}
 		else if (!mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState == Intake.IntakeMacroState.EXPELLING_ROCKET) {
@@ -219,7 +220,7 @@ public class OperatorInterface {
 		/**
 		 * Pneumatic Hatch Pusher Control
 		 */
-		if(mOperatorXboxController.getRightTriggerPressed()) {
+		if(mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState != IntakeMacroState.EXPELLING_ROCKET) {
 //			Routine hatchCycle = new FingersCycleRoutine(FingerConstants.kFingersCycleTime);
 //			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(hatchCycle);
@@ -227,7 +228,6 @@ public class OperatorInterface {
             newCommands.wantedFingersExpelState = Fingers.PushingState.EXPELLING;
 		}
 		else {
-
             newCommands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
             newCommands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
         }

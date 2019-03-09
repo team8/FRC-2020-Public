@@ -49,31 +49,25 @@ public class Pusher extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         commands.hasPusherCargo = robotState.hasPusherCargo;
 
-        if (!onTarget() || commands.wantedPusherInOutState != mState) {
-            mState = commands.wantedPusherInOutState;
-            switch (mState) {
-                case IN:
-                    target = PusherConstants.kVidarDistanceIn;
-                    mOutput.setTargetPosition(target, Gains.pusherPosition);
-                    break;
-                case COMPRESSION:
-                    target = PusherConstants.kVidarDistanceCompress;
-                    mOutput.setTargetPosition(target, Gains.pusherPosition);
-                case MIDDLE:
-                    target = PusherConstants.kVidarDistanceMiddle;
-                    mOutput.setTargetPosition(target, Gains.pusherPosition);
-                    break;
-                case OUT:
-                    target = PusherConstants.kVidarDistanceOut;
-                    mOutput.setTargetPosition(target, Gains.pusherPosition);
-                    break;
-            }
+        mState = commands.wantedPusherInOutState;
+        switch (mState) {
+            case IN:
+                target = PusherConstants.kVidarDistanceIn;
+                mOutput.setTargetPosition(target, Gains.pusherPosition);
+                break;
+            case COMPRESSION:
+                target = PusherConstants.kVidarDistanceCompress;
+                mOutput.setTargetPosition(target, Gains.pusherPosition);
+            case MIDDLE:
+                target = PusherConstants.kVidarDistanceMiddle;
+                mOutput.setTargetPosition(target, Gains.pusherPosition);
+                break;
+            case OUT:
+                target = PusherConstants.kVidarDistanceOut;
+                mOutput.setTargetPosition(target, Gains.pusherPosition);
+                break;
         }
-        else {
-            mOutput.setGains(Gains.emptyGains);
-            mOutput.setPercentOutput(0.0);
-        }
-
+        
         mWriter.addData("pusherPos", robotState.pusherPosition);
         mWriter.addData("pusherSetpoint", this.target);
         mWriter.addData("pusherEncVelocity", robotState.pusherEncVelocity);

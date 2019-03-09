@@ -140,7 +140,7 @@ public class Intake extends Subsystem {
             mIntakeWantedPosition = Optional.of(robotState.intakeAngle); // setpoint is current position
             Logger.getInstance().logRobotThread(Level.INFO, "setting wanted intake pos to " + robotState.intakeAngle);
         }
-        else if (this.mMacroState != IntakeMacroState.LIFTING && this.mMacroState != IntakeMacroState.DROPPING){
+        else if (this.mMacroState != IntakeMacroState.DROPPING){
             this.mMacroState = commands.wantedIntakeState;
         }
 
@@ -258,13 +258,13 @@ public class Intake extends Subsystem {
                 break;
         }
 
-        if (intakeOnTarget() && mIntakeWantedPosition.isPresent() &&
-                mIntakeWantedPosition.get() >= IntakeConstants.kMaxAngle - 0.5) {
-            mSparkOutput.setPercentOutput(0.0);
-        }
+        // if (intakeOnTarget() && mIntakeWantedPosition.isPresent() &&
+        //         mIntakeWantedPosition.get() >= IntakeConstants.kMaxAngle - 0.5) {
+        //     mSparkOutput.setPercentOutput(0.0);
+        // }
 
         if(!cachedCargoState && robotState.hasCargo) {
-            mRumbleLength = 0.25;
+            mRumbleLength = 0.75;
         } else if(mRumbleLength <= 0) {
             mRumbleLength = -1;
         }
