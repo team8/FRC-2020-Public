@@ -207,8 +207,8 @@ public class Drive extends Subsystem {
 		state.drivePose.rightError.ifPresent(integer -> mWriter.addData("driveRightError", (double) integer));
 		mWriter.addData("driveLeftSetpoint", mSignal.leftMotor.getSetpoint());
 		mWriter.addData("driveRightSetpoint", mSignal.rightMotor.getSetpoint());
-        System.out.println("Left arbitrary demand: " + mSignal.leftMotor.getArbitraryFF());
-        System.out.println("Right arbitrary demand: " + mSignal.rightMotor.getArbitraryFF());
+        // System.out.println("Left arbitrary demand: " + mSignal.leftMotor.getArbitraryFF());
+        // System.out.println("Right arbitrary demand: " + mSignal.rightMotor.getArbitraryFF());
 	}
 
 	@Override

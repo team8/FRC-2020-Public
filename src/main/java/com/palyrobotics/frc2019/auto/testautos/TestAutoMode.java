@@ -59,8 +59,8 @@ public class TestAutoMode extends AutoModeBase {
 
 		ArrayList<Routine> sequence = new ArrayList<>();
 		ArrayList<Path.Waypoint> path = new ArrayList<>();
-        path.add(new Path.Waypoint(new Translation2d(0, 0), 20));
-        path.add(new Path.Waypoint(new Translation2d(20, 0), 20));
+        path.add(new Path.Waypoint(new Translation2d(0, 0), 40));
+        path.add(new Path.Waypoint(new Translation2d(240, 0), 40));
 //		sequence.add(new IntakeDownRoutine());
 		sequence.add(new DriveSensorResetRoutine(.25));
 		sequence.add(new DrivePathRoutine(new Path(path), false));

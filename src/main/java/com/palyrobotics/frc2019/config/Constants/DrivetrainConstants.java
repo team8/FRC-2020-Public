@@ -70,7 +70,7 @@ public class DrivetrainConstants {
     /**
      * Unit Conversions
      */
-    public static final double kDriveInchesPerRotation = 6.25 * Math.PI * (12/46) * (22/44);
+    public static final double kDriveInchesPerRotation = 6.0 * Math.PI * (12/46) * (22/44);
     public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90.0;
     public static final double kDriveSpeedUnitConversion = kDriveInchesPerRotation / 60;
 

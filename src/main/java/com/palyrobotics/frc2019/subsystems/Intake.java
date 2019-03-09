@@ -81,7 +81,7 @@ public class Intake extends Subsystem {
     public void start() {
         mWheelState = WheelState.IDLE;
         mUpDownState = UpDownState.IDLE;
-        mMacroState = IntakeMacroState.HOLDING;
+        mMacroState = IntakeMacroState.IDLE;
     }
 
     @Override
@@ -96,6 +96,8 @@ public class Intake extends Subsystem {
         mRobotState = robotState;
 
         // Logger.getInstance().logRobotThread(Level.INFO, "Wanted Intake Macro State: "  + commands.wantedIntakeState);
+        // Logger.getInstance().logRobotThread(Level.INFO, "Actual Intake Macro State: "  + mMacroState);
+
 
         // The intake macro state has eight possible states.  Any state can be transferred to automatically or manually,
         // but some states need to set auxiliary variables, such as the queue times.
@@ -136,6 +138,7 @@ public class Intake extends Subsystem {
         else if (commands.wantedIntakeState == IntakeMacroState.HOLDING && (this.mMacroState != IntakeMacroState.HOLDING || mIntakeWantedPosition.isEmpty())) {
             this.mMacroState = commands.wantedIntakeState;
             mIntakeWantedPosition = Optional.of(robotState.intakeAngle); // setpoint is current position
+            Logger.getInstance().logRobotThread(Level.INFO, "setting wanted intake pos to " + robotState.intakeAngle);
         }
         else if (this.mMacroState != IntakeMacroState.LIFTING && this.mMacroState != IntakeMacroState.DROPPING){
             this.mMacroState = commands.wantedIntakeState;

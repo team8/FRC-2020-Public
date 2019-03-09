@@ -21,8 +21,8 @@ public class OnboardDriveController implements Drive.DriveController {
 	private OnboardControlType controlType; 
 	private TrajectoryGains mGains;
 
-	private Segment leftSetpoint;
-	private Segment rightSetpoint;
+	private TrajectorySegment leftSetpoint;
+	private TrajectorySegment rightSetpoint;
 
 	private double left_last_error = 0;
 	private double right_last_error = 0;
@@ -38,8 +38,8 @@ public class OnboardDriveController implements Drive.DriveController {
 	public OnboardDriveController(OnboardControlType controlType, TrajectoryGains gains) {
 		//Use copy constructors and prevent the signal passed in from being modified externally
 		this.mSignal = SparkSignal.getNeutralSignal();
-		this.leftSetpoint = new Segment();
-		this.rightSetpoint = new Segment();
+		this.leftSetpoint = new TrajectorySegment();
+		this.rightSetpoint = new TrajectorySegment();
 		this.mGains = gains;
 		this.controlType = controlType;
 	}
@@ -68,7 +68,7 @@ public class OnboardDriveController implements Drive.DriveController {
 	/**
 	 * Should only be called by a parent controller
 	 */
-	public void updateSetpoint(Segment leftSetpoint, Segment rightSetpoint, Object handle) throws IllegalAccessException {
+	public void updateSetpoint(TrajectorySegment leftSetpoint, TrajectorySegment rightSetpoint, Object handle) throws IllegalAccessException {
 		if (!(handle instanceof Drive.DriveController)) {
 			throw new IllegalAccessException();
 		}
@@ -132,9 +132,9 @@ public class OnboardDriveController implements Drive.DriveController {
 		left_output = Math.min(Math.max(left_output, -1), 1);
 		right_output = Math.min(Math.max(right_output, -1), 1);
 
-		//deadband output within (-kS-0.03, kS+0.03) to avoid jitter with kS
-		left_output = Math.abs(left_output) - mGains.s < 0.03 ? 0 : left_output;
-		right_output = Math.abs(right_output) - mGains.s < 0.03 ? 0 : right_output;
+		//deadband output within (-kS-0.02, kS+0.02) to avoid jitter with kS
+		left_output = Math.abs(left_output) - mGains.s < 0.02 ? 0 : left_output;
+		right_output = Math.abs(right_output) - mGains.s < 0.02 ? 0 : right_output;
 
 		left_last_error = left_error;
 		right_last_error = right_error;
@@ -159,47 +159,33 @@ public class OnboardDriveController implements Drive.DriveController {
 	/** 
 	 * Helper class to represent a setpoint
 	 */
-	public static class Segment {
+	public static class TrajectorySegment {
 
-		public double pos, vel, acc, jerk, heading, dt, x, y;
+		public double pos, vel, acc, dt;
 	
-		public Segment() {
+		public TrajectorySegment() {
 		}
 
-		public Segment(double vel, double acc, double dt) {
-			this(0, vel, acc, 0, 0, dt, 0, 0);
+		public TrajectorySegment(double vel, double acc, double dt) {
+			this(0, vel, acc, dt);
 		  }
 
-		public Segment(double pos, double vel, double acc, double dt) {
-			this(pos, vel, acc, 0, 0, dt, 0, 0);
+		public TrajectorySegment(double pos, double vel, double acc, double dt) {
+			this.pos = pos;
+			this.vel = vel;
+			this.acc = acc;
+			this.dt = dt;
 		}
 	
-		public Segment(double pos, double vel, double acc, double jerk,
-				double heading, double dt, double x, double y) {
-		  this.pos = pos;
-		  this.vel = vel;
-		  this.acc = acc;
-		  this.jerk = jerk;
-		  this.heading = heading;
-		  this.dt = dt;
-		  this.x = x;
-		  this.y = y;
-		}
-	
-		public Segment(Segment to_copy) {
+		public TrajectorySegment(TrajectorySegment to_copy) {
 		  pos = to_copy.pos;
 		  vel = to_copy.vel;
 		  acc = to_copy.acc;
-		  jerk = to_copy.jerk;
-		  heading = to_copy.heading;
 		  dt = to_copy.dt;
-		  x = to_copy.x;
-		  y = to_copy.y;
 		}
 	
 		public String toString() {
-		  return "pos: " + pos + "; vel: " + vel + "; acc: " + acc + "; jerk: "
-				  + jerk + "; heading: " + heading;
+		  return "pos: " + pos + "; vel: " + vel + "; acc: " + acc + "; dt: " + dt;
 		}
 	}
 

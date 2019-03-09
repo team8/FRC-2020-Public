@@ -266,7 +266,7 @@ public class Robot extends TimedRobot {
 		mShooter.start();
 		mPusher.start();
 		mFingers.start();
-//		mIntake.start();
+		mIntake.start();
 	}
 
 	private void updateSubsystems() {
@@ -276,7 +276,7 @@ public class Robot extends TimedRobot {
 		mPusher.update(commands, robotState);
 		mFingers.update(commands, robotState);
 		mShovel.update(commands, robotState);
-//		mIntake.update(commands, robotState);
+		mIntake.update(commands, robotState);
 	}
 
 
@@ -287,11 +287,12 @@ public class Robot extends TimedRobot {
 		mPusher.stop();
 		mFingers.stop();
 		mShovel.stop();
-//		mIntake.stop();
+		mIntake.stop();
 	}
 
 	@Override
 	public void robotPeriodic() {
 		// System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+		// System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
 	}
 }

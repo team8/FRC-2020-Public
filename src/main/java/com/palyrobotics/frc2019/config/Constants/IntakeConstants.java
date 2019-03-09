@@ -10,7 +10,7 @@ public class IntakeConstants {
     public static final double kExpellingVelocity = -.9;
 
     public static final double kMaxAngle = 120.0; // 90 - 61.7 + 90
-    public static final double kMaxAngleTicks = .988; //FIX
+    public static final double kMaxAngleTicks = .0645; //FIX
 
     // FEED FORWARD CONSTANTS
 

@@ -8,7 +8,7 @@ import com.palyrobotics.frc2019.util.logger.Logger;
 public class Gains {
 	//Onboard velocity-based follower
 	//kV = (gear ratio) / (pi * free speed * wheel diameter)
-	//kA = (wheel radius * robot mass) / (total number of motors * gear reduction * total stall torque)
+	//kA = (wheel radius * robot mass) / (total number of motors * gear reduction * motor stall torque)
 	//kV ~ 1.1 times theoretical, kA ~ 1.4 times theroretical, kS ~ 1.3V = .11
 	//presentation has a typo for kA, should be wheel radius because T = Fr
 

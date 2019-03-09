@@ -174,8 +174,8 @@ public class OperatorInterface {
 		 */
 		if(mOperatorXboxController.getdPadDown()) {
 			newCommands.cancelCurrentRoutines = false;
-			newCommands.wantedIntakeState = Intake.IntakeMacroState.DOWN;
-//			newCommands.addWantedRoutine(new IntakeBeginCycleRoutine());
+			// newCommands.wantedIntakeState = Intake.IntakeMacroState.DOWN;
+			newCommands.addWantedRoutine(new IntakeBeginCycleRoutine());
 		} else if(mOperatorXboxController.getdPadUp()) {
 			newCommands.cancelCurrentRoutines = false;
 			newCommands.addWantedRoutine(new IntakeUpRoutine());
