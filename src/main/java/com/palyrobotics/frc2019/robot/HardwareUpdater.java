@@ -1,6 +1,5 @@
 package com.palyrobotics.frc2019.robot;
 
-import java.util.Optional;
 import java.util.logging.Level;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -27,18 +26,14 @@ import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.subsystems.Shovel;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
-import com.palyrobotics.frc2019.util.logger.DataLogger;
 import com.palyrobotics.frc2019.util.logger.Logger;
-import com.palyrobotics.frc2019.util.loops.Loop;
 import com.palyrobotics.frc2019.util.trajectory.Kinematics;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.util.trajectory.Rotation2d;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
@@ -56,63 +51,6 @@ class HardwareUpdater {
 	private Pusher mPusher;
 	private Shovel mShovel;
 	private Fingers mFingers;
-
-	public Loop logLoop = new Loop() {
-		@Override
-			public void onStart(double timestamp) {
-
-			}
-			@Override
-			public void onLoop(double timestamp) {
-				//Log data here at 200Hz (change write speed in Looper)
-
-				RigidTransform2d pose = RobotState.getInstance().getLatestFieldToVehicle().getValue();
-				if (pose == null) pose = new RigidTransform2d();
-
-				// DataLogger.getInstance().logData(Level.FINE, "robot_x", pose.getTranslation().getX());
-				// DataLogger.getInstance().logData(Level.FINE, "robot_y", pose.getTranslation().getY());
-				// DataLogger.getInstance().logData(Level.FINE, "robot_heading", pose.getRotation().getDegrees());
-
-				// PowerDistributionPanel pdp = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp;
-
-				// DataLogger.getInstance().logData(Level.FINE, "l_1_pdp_current", pdp.getCurrent(0));
-				// DataLogger.getInstance().logData(Level.FINE, "l_2_pdp_current", pdp.getCurrent(1));
-				// DataLogger.getInstance().logData(Level.FINE, "l_3_pdp_current", pdp.getCurrent(2));
-				// DataLogger.getInstance().logData(Level.FINE, "r_1_pdp_current", pdp.getCurrent(15));
-				// DataLogger.getInstance().logData(Level.FINE, "r_2_pdp_current", pdp.getCurrent(14));
-				// DataLogger.getInstance().logData(Level.FINE, "r_3_pdp_current", pdp.getCurrent(13));
-
-				// CANSparkMax leftMasterSpark = HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark;
-				// CANSparkMax leftSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().leftSlave1Spark;
-				// CANSparkMax leftSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().leftSlave2Spark;
-		
-				// CANSparkMax rightMasterSpark = HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark;
-				// CANSparkMax rightSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave1Spark;
-				// CANSparkMax rightSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave2Spark;
-				
-				// DataLogger.getInstance().logData(Level.FINE, "l_1_current", leftMasterSpark.getOutputCurrent());
-				// DataLogger.getInstance().logData(Level.FINE, "l_2_current", leftSlave1Spark.getOutputCurrent());
-				// DataLogger.getInstance().logData(Level.FINE, "l_3_current", leftSlave2Spark.getOutputCurrent());
-				// DataLogger.getInstance().logData(Level.FINE, "r_1_current", rightMasterSpark.getOutputCurrent());
-				// DataLogger.getInstance().logData(Level.FINE, "r_2_current", rightSlave1Spark.getOutputCurrent());
-				// DataLogger.getInstance().logData(Level.FINE, "r_3_current", rightSlave2Spark.getOutputCurrent());
-
-				// DataLogger.getInstance().logData(Level.FINE, "total_current", pdp.getTotalCurrent());
-
-				// DataLogger.getInstance().logData(Level.FINE, "l_1_voltage", leftMasterSpark.getAppliedOutput());
-				// DataLogger.getInstance().logData(Level.FINE, "l_2_voltage", leftSlave1Spark.getAppliedOutput());
-				// DataLogger.getInstance().logData(Level.FINE, "l_3_voltage", leftSlave2Spark.getAppliedOutput());
-				// DataLogger.getInstance().logData(Level.FINE, "r_1_voltage", rightMasterSpark.getAppliedOutput());
-				// DataLogger.getInstance().logData(Level.FINE, "r_2_voltage", rightSlave1Spark.getAppliedOutput());
-				// DataLogger.getInstance().logData(Level.FINE, "r_3_voltage", rightSlave2Spark.getAppliedOutput());
-
-				// DataLogger.getInstance().cycle();
-			}
-			@Override
-			public void onStop(double timestamp) {
-
-			}
-	};
 
 	/**
 	 * Hardware Updater for Vidar
@@ -422,8 +360,6 @@ class HardwareUpdater {
 			robotState.drivePose.headingVelocity = -0;
 		}
 
-		// System.out.println("robot heading: " + robotState.drivePose.heading);
-		
 		robotState.drivePose.lastLeftEnc = robotState.drivePose.leftEnc;
 		robotState.drivePose.leftEnc = leftMasterSpark.getEncoder().getPosition();
 		robotState.drivePose.leftEncVelocity = leftMasterSpark.getEncoder().getVelocity();
@@ -454,7 +390,7 @@ class HardwareUpdater {
 		        robotState.drivePose.leftEncVelocity, robotState.drivePose.rightEncVelocity, gyro_velocity.getRadians());
 
 		robotState.addObservations(time, odometry, velocity);
-
+		
 		//Update pusher sensors
 		robotState.pusherPosition = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder().getPosition();
 		robotState.pusherVelocity = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder().getVelocity();
@@ -475,11 +411,6 @@ class HardwareUpdater {
 
 	void updateIntakeSensors() {
 		Robot.getRobotState().intakeAngle = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition();
-		DataLogger.getInstance().logData(Level.FINE, "intake_pot",  HardwareAdapter.getInstance().getIntake().potentiometer.get());
-		DataLogger.getInstance().logData(Level.FINE, "intake_enc", Robot.getRobotState().intakeAngle);
-		DataLogger.getInstance().logData(Level.FINE, "intake_master_output", HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getAppliedOutput());
-		DataLogger.getInstance().logData(Level.FINE, "intake_slave_output", HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getAppliedOutput());
-		// DataLogger.getInstance().logData(Level.FINE, "intake_faults", HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getFaults() + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getStickyFaults() + HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getFaults() + HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.getStickyFaults());
 	}
 
 	void updateUltrasonicSensors(RobotState robotState) {
@@ -641,8 +572,6 @@ class HardwareUpdater {
      */
     private void updateIntake() {
 		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
-		DataLogger.getInstance().logData(Level.FINE, "intake_target", mIntake.getSparkOutput().getSetpoint());
-		DataLogger.getInstance().logData(Level.FINE, "intake_arbff", mIntake.getSparkOutput().getArbitraryFF());
        	HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
 
     }

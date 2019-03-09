@@ -39,8 +39,8 @@ public class DrivetrainConstants {
     public static final double kSmoothingTolerance = 0.001; // When the change in path falls below the threshold it is basically converged
     public static final double kSmoothingMaxIters = 10000;
     public static final double kTurnVelocityReduction = 2; // A constant for reducing following speed during turns; 1 for slowest turning, 5 for fastest
-    public static final double kDriveWheelDiameterInches = 6.25;
-    public static final double kTrackLengthInches = 17.875;
+    public static final double kDriveWheelDiameterInches = 6;
+    public static final double kTrackLengthInches = 9.00;
     public static final double kTrackWidthInches = 24.625;
     public static final double kTrackEffectiveDiameter = (kTrackWidthInches * kTrackWidthInches + kTrackLengthInches * kTrackLengthInches) / kTrackWidthInches;
     public static final double kTrackScrubFactor = .9;
@@ -70,7 +70,7 @@ public class DrivetrainConstants {
     /**
      * Unit Conversions
      */
-    public static final double kDriveInchesPerRotation = 6.0 * Math.PI * (12.0/46.0) * (22.0/44.0);
+    public static final double kDriveInchesPerRotation = kDriveWheelDiameterInches * Math.PI * (12.0/46.0) * (22.0/44.0);
     public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90.0;
     public static final double kDriveSpeedUnitConversion = kDriveInchesPerRotation / 60.0;
 

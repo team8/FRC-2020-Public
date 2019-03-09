@@ -95,10 +95,6 @@ public class Intake extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         mRobotState = robotState;
 
-        // Logger.getInstance().logRobotThread(Level.INFO, "Wanted Intake Macro State: "  + commands.wantedIntakeState);
-        // Logger.getInstance().logRobotThread(Level.INFO, "Actual Intake Macro State: "  + mMacroState);
-
-
         // The intake macro state has eight possible states.  Any state can be transferred to automatically or manually,
         // but some states need to set auxiliary variables, such as the queue times.
 
@@ -275,7 +271,6 @@ public class Intake extends Subsystem {
         mIntakeWantedPosition.ifPresent(intakeWantedPosition -> mWriter.addData("intakeWantedPosition", intakeWantedPosition));
         mWriter.addData("intakeSparkSetpoint", mSparkOutput.getSetpoint());
 
-        // Logger.getInstance().logRobotThread(Level.INFO, "Intake Macro State :" + mMacroState + "\nIntake Wheel State: " + mWheelState + "\nIntake Up Down State: " + mUpDownState);
     }
 
     public double getRumbleLength() {

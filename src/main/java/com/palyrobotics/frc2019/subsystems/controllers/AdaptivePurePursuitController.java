@@ -2,7 +2,6 @@ package com.palyrobotics.frc2019.subsystems.controllers;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Level;
 
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
@@ -13,7 +12,6 @@ import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.Tr
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.SparkSignal;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
-import com.palyrobotics.frc2019.util.logger.DataLogger;
 import com.palyrobotics.frc2019.util.trajectory.Kinematics;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.PathSegment;
@@ -135,10 +133,6 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		
 		mWriter.addData("lastDriveVelocityLeft", mLastDriveVelocity.left);
 		mWriter.addData("lastDriveVelocityRight", mLastDriveVelocity.right);
-		DataLogger.getInstance().logData(Level.FINE, "left_vel_setpoint", mLastDriveVelocity.left);
-		DataLogger.getInstance().logData(Level.FINE, "right_vel_setpoint", mLastDriveVelocity.right);
-		DataLogger.getInstance().logData(Level.FINE, "left_vel", state.drivePose.leftEncVelocity);
-		DataLogger.getInstance().logData(Level.FINE, "right_vel", state.drivePose.rightEncVelocity);
 
 		//Pass velocity and acceleration setpoints into onboard controller which
 		//Returns a SparkSignal with velocity setpoint and arbitrary feedforward
@@ -155,7 +149,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		mLastCommand = command;
 		mLastDriveVelocity = setpoint;
 
-        return onboardController.update(state);
+    return onboardController.update(state);
 
 	}
 

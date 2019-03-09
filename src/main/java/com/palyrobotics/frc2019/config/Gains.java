@@ -13,18 +13,18 @@ public class Gains {
 	//presentation has a typo for kA, should be wheel radius because T = Fr
 
 	//Use these for onboard following
-	public static double kVidarTrajectorykV = 0.00423*1.1; // 1/(in/s)
-	public static double kVidarTrajectorykA = 0.00109*1.4; // 1/(in/s^2)
-	public static double kVidarTrajectorykS = 1.3/12.0;
+	public static double kVidarTrajectorykV = 0.00344; // 1/(in/s)
+	public static double kVidarTrajectorykA = 0.00117; // 1/(in/s^2)
+	public static double kVidarTrajectorykS = 0.0179;
 	public static double kVidarTrajectorykP = 0;
 	public static double kVidarTrajectorykD = 0;
 
 	public static final TrajectoryGains vidarTrajectory = new TrajectoryGains(kVidarTrajectorykV, kVidarTrajectorykA, kVidarTrajectorykS, kVidarTrajectorykP, kVidarTrajectorykD);
 
 	//Use these for offboard following
-	public static final double kVidarDriveVelocitykP = 0;
+	public static final double kVidarDriveVelocitykP = .01;
 	public static final double kVidarDriveVelocitykI = 0;
-    public static final double kVidarDriveVelocitykD = 0;
+    public static final double kVidarDriveVelocitykD = .005;
     public static final double kVidarDriveVelocitykF = 0;
 	public static final int kVidarDriveVelocitykIzone = 0;
 	public static final double kVidarDriveVelocitykRampRate = 0.0;
