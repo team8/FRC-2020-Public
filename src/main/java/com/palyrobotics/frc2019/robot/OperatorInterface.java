@@ -2,10 +2,13 @@ package com.palyrobotics.frc2019.robot;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.IntakeLevelOneRocketRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shovel.*;
+import com.palyrobotics.frc2019.behavior.routines.waits.WaitForHatchIntakeUp;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
@@ -130,9 +133,12 @@ public class OperatorInterface {
 		if (mOperatorXboxController.getButtonX() && newCommands.wantedShovelUpDownState == Shovel.UpDownState.UP  && (lastCancelTime + 200) < System.currentTimeMillis()) {
 			intakeStartTime = System.currentTimeMillis();
 			newCommands.addWantedRoutine(new SequentialRoutine(new ShovelDownRoutine(),
+					new FingersCloseRoutine(),
+					new PusherInRoutine(),
 					new WaitForHatchIntakeCurrentSpike(Shovel.WheelState.INTAKING),
-//					new ElevatorCustomPositioningRoutine(5,.5),
-					new ShovelUpRoutine()));
+					new ShovelUpRoutine(),
+					new WaitForHatchIntakeUp(),
+					new FingersOpenRoutine()));
 		} else if (mOperatorXboxController.getButtonX() && (System.currentTimeMillis() - 450 > OperatorInterface.intakeStartTime) && newCommands.wantedShovelUpDownState == Shovel.UpDownState.DOWN) {
 		    intakeStartTime = System.currentTimeMillis();
 		    newCommands.cancelCurrentRoutines = true;
@@ -227,7 +233,7 @@ public class OperatorInterface {
             newCommands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
             newCommands.wantedFingersExpelState = Fingers.PushingState.EXPELLING;
 		}
-		else {
+		else if (newCommands.wantedShovelUpDownState != Shovel.UpDownState.DOWN){
             newCommands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
             newCommands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
         }

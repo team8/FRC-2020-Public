@@ -254,11 +254,6 @@ public class Intake extends Subsystem {
                 break;
         }
 
-        // if (intakeOnTarget() && mIntakeWantedPosition.isPresent() &&
-        //         mIntakeWantedPosition.get() >= IntakeConstants.kMaxAngle - 0.5) {
-        //     mSparkOutput.setPercentOutput(0.0);
-        // }
-
         if(!cachedCargoState && robotState.hasCargo) {
             mRumbleLength = 0.75;
         } else if(mRumbleLength <= 0) {
