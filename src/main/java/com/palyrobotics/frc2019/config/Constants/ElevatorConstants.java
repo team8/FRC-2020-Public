@@ -4,8 +4,6 @@ public class ElevatorConstants {
     /**
      * Elevator Constants
      */
-    public static final double kNominalUpwardsOutput = 0.1;
-    public static final double kTopBottomDifferenceInches = 84.0;
     public static final double kTopPositionInches = 84.0;
     public static final double kBottomPositionInches = 0.0;
     public static final double kHoldVoltage = -.495;
@@ -16,8 +14,8 @@ public class ElevatorConstants {
 
     public static final double kClimberSliderScale = 0;
 
-    public static final double kElevatorCargoHeight3Inches = -68;
-    public static final double kElevatorCargoHeight2Inches = -44.5;
+    public static final double kElevatorCargoHeight3Inches = -72.5;
+    public static final double kElevatorCargoHeight2Inches = -42.5;
     public static final double kElevatorCargoHeight1Inches = 0;
     public static final double kHandOffHeight = 2;
 

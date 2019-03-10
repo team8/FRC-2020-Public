@@ -161,19 +161,19 @@ public class OperatorInterface {
 			Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight1Inches, .1);
 			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel1);
-			newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new TimeoutRoutine(.35), elevatorLevel1, new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 2.5)));
+			newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.15), elevatorLevel1));
 		} else if(mOperatorXboxController.getButtonB()) {
 			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight2Inches, .1);
 			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel2);
 //			newCommands.addWantedRoutine(new PusherInRoutine());
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new TimeoutRoutine(.35), elevatorLevel2, new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 2.5)));
+            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.15), elevatorLevel2));
 		} else if(mOperatorXboxController.getButtonY()) {
 			Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight3Inches, .1);
 			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel3);
 //			newCommands.addWantedRoutine(new PusherInRoutine());
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new TimeoutRoutine(.35), elevatorLevel3, new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 2.5)));
+            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.15), elevatorLevel3));
 		}
 
 		/**\
@@ -226,7 +226,7 @@ public class OperatorInterface {
 		/**
 		 * Pneumatic Hatch Pusher Control
 		 */
-		if(mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState != IntakeMacroState.EXPELLING_ROCKET) {
+		if(mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState != IntakeMacroState.EXPELLING_ROCKET && !newCommands.blockFingers) {
 //			Routine hatchCycle = new FingersCycleRoutine(FingerConstants.kFingersCycleTime);
 //			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(hatchCycle);

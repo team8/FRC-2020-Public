@@ -23,7 +23,7 @@ public class PortConstants {
     public static final int kVidarIntakeMasterDeviceID = 4;
     public static final int kVidarIntakeSlaveDeviceID = 5;
     public static final int kVidarIntakeVictorDeviceID = 6;
-    public static final int kVidarAnalogPot = 2;
+    public static final int kVidarAnalogPot = 3;
 
     //SHOOTER
     public static final int kVidarShooterMasterVictorDeviceID = 10;

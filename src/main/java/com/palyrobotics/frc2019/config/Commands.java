@@ -42,6 +42,7 @@ public class Commands {
 
 	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
 	public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
+	public boolean blockFingers = false;
 
 	public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.HOLDING;
 

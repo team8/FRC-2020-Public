@@ -137,9 +137,13 @@ public class Intake extends Subsystem {
             mIntakeWantedPosition = Optional.of(robotState.intakeAngle); // setpoint is current position
             Logger.getInstance().logRobotThread(Level.INFO, "setting wanted intake pos to " + robotState.intakeAngle);
         }
-        else if (this.mMacroState != IntakeMacroState.DROPPING){
+        else if (this.mMacroState != IntakeMacroState.DROPPING && !(this.mMacroState == IntakeMacroState.GROUND_INTAKING && commands.wantedIntakeState == IntakeMacroState.HOLDING_ROCKET)){
             this.mMacroState = commands.wantedIntakeState;
         }
+
+        System.out.println(this.mMacroState);
+//        System.out.println(commands.wantedIntakeState);
+//        System.out.println(robotState.intakeAngle);
 
         commands.hasCargo = robotState.hasCargo;
 
@@ -229,14 +233,10 @@ public class Intake extends Subsystem {
                 break;
             case SLOW:
                 mVictorOutput = IntakeConstants.kVerySlowly;
+                break;
         }
 
         switch(mUpDownState) {
-            case CLIMBING:
-                mSparkOutput.setGains(Gains.intakePosition);
-                mSparkOutput.setTargetPosition(mIntakeWantedPosition.get());
-                //subtract component of gravity
-                break;
             case MANUAL_POSITIONING:
                 mSparkOutput.setPercentOutput(0); //TODO: Fix this based on what control method wanted
                 break;

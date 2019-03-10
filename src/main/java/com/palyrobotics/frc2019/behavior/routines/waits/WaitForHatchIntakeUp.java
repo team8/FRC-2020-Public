@@ -5,21 +5,37 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Pusher;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 
-public class WaitForHatchIntakeUp extends WaitRoutine {
-
+public class WaitForHatchIntakeUp extends Routine {
 
     @Override
-    public boolean isCompleted() {
+    public void start() {
+
+    }
+
+    @Override
+    public Commands update(Commands commands) {
+        commands.blockFingers = true;
+        return commands;
+    }
+
+    @Override
+    public Commands cancel(Commands commands) {
+        commands.blockFingers = false;
+        return commands;
+    }
+
+    @Override
+    public boolean finished() {
         return robotState.hatchIntakeUp;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[]{shovel};
+        return new Subsystem[]{shovel, fingers};
     }
 
     @Override
     public String getName() {
-        return null;
+        return "HatchIntake";
     }
 }

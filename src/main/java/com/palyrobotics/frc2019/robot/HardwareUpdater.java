@@ -235,8 +235,8 @@ class HardwareUpdater {
 
 		intakeVictor.setInverted(true);
 
-		intakeMasterSpark.getPIDController().setOutputRange(-0.4,0.5);
-		intakeSlaveSpark.getPIDController().setOutputRange(-0.4,0.5);
+			intakeMasterSpark.getPIDController().setOutputRange(-0.4,0.5);
+			intakeSlaveSpark.getPIDController().setOutputRange(-0.4,0.5);
 
 		intakeVictor.setNeutralMode(NeutralMode.Brake);
 
@@ -342,7 +342,7 @@ class HardwareUpdater {
 		robotState.operatorXboxControllerInput.update(HardwareAdapter.getInstance().getJoysticks().operatorXboxController);
 //		robotState.backupStickInput.update(HardwareAdapter.getInstance().getJoysticks().backupStick);
 
-		robotState.hatchIntakeUp = HardwareAdapter.getInstance().getShovel().upDownHFX.get();
+		robotState.hatchIntakeUp = !HardwareAdapter.getInstance().getShovel().upDownHFX.get();
 		robotState.shovelCurrentDraw = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp.getCurrent(PortConstants.kVidarShovelPDPPort);
 		robotState.hasHatch = (robotState.shovelCurrentDraw > ShovelConstants.kMaxShovelCurrentDraw);
 
@@ -394,7 +394,10 @@ class HardwareUpdater {
 		//Update pusher sensors
 		robotState.pusherPosition = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder().getPosition();
 		robotState.pusherVelocity = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder().getVelocity();
-		
+		System.out.println(robotState.pusherPosition);
+
+//		System.out.println(robotState.hatchIntakeUp);
+
 		updateIntakeSensors();
 		updateUltrasonicSensors(robotState);
 
@@ -531,13 +534,7 @@ class HardwareUpdater {
      */
     private void updateElevator() {
         if(mElevator.getmGearboxState() == Elevator.GearboxState.ELEVATOR) {
-            if (mElevator.getIsAtTop() && mElevator.movingUpwards()) {
-                SparkMaxOutput elevatorHoldOutput = new SparkMaxOutput();
-                elevatorHoldOutput.setPercentOutput(ElevatorConstants.kHoldVoltage);
-                updateSparkMax(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark, elevatorHoldOutput);
-            } else {
-                updateSparkMax(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark, mElevator.getOutput());
-            }
+			updateSparkMax(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark, mElevator.getOutput());
         } else {
             updateSparkMax(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark, mElevator.getOutput());
         }

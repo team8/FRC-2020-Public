@@ -96,111 +96,65 @@ public class Elevator extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         //Update for use in handleElevatorState()
         mRobotState = robotState;
-        if(mGearboxState == GearboxState.ELEVATOR) {
-            mHolderSolenoidOutput = commands.holderOutput;
+        mHolderSolenoidOutput = commands.holderOutput;
 
-            mClimberState = ClimberState.INACTIVE;
-            mSolenoidOutput = DoubleSolenoid.Value.kForward;
+        mClimberState = ClimberState.INACTIVE;
+        mSolenoidOutput = DoubleSolenoid.Value.kForward;
 
-            handleElevatorState(commands);
-            checkTopBottom(mRobotState);
+        handleElevatorState(commands);
 
-            //Execute update loop based on the current state
-            //Does not switch between states, only performs actions
-            switch (mElevatorState) {
-                case HOLD:
-                    commands.elevatorMoving = false;
-                    //If at the bottom, supply no power
-                    if (isAtBottom) {
-                        mOutput.setPercentOutput(0.0);
-                    } else {
-                        //Control loop to hold position otherwise
-                        mOutput.setTargetPosition(mElevatorWantedPosition.get(), ElevatorConstants.kHoldVoltage, Gains.elevatorPosition);
-                    }
-                    break;
-                case MANUAL_POSITIONING:
-                    //Clear any existing wanted positions
-                    if (mElevatorWantedPosition.isPresent()) {
-                        mElevatorWantedPosition = Optional.empty();
-                    }
-
-                    commands.elevatorMoving = false;
-
-                    if (OtherConstants.operatorXBoxController) {
-                        mOutput.setPercentOutput(ElevatorConstants.kUncalibratedManualPower * mRobotState.operatorXboxControllerInput.getRightY());
-                    } else {
-                        mOutput.setPercentOutput(ElevatorConstants.kUncalibratedManualPower * mRobotState.operatorJoystickInput.getY());
-                    }
-
-                    break;
-                case CUSTOM_POSITIONING:
-                    commands.elevatorMoving = true;
-                    //Control loop
-
-                    mOutput.setTargetPosition(mElevatorWantedPosition.get(), ElevatorConstants.kHoldVoltage, Gains.elevatorPosition);
-
-                    break;
-                case IDLE:
-                    commands.elevatorMoving = false;
-                    //Clear any existing wanted positions
-                    if (mElevatorWantedPosition.isPresent()) {
-                        mElevatorWantedPosition = Optional.empty();
-                    }
-
+        //Execute update loop based on the current state
+        //Does not switch between states, only performs actions
+        switch (mElevatorState) {
+            case HOLD:
+                commands.elevatorMoving = false;
+                //If at the bottom, supply no power
+                if (isAtBottom) {
                     mOutput.setPercentOutput(0.0);
-                    break;
-                case INACTIVE:
-                    commands.elevatorMoving = false;
-                    if(mElevatorWantedPosition.isPresent()) {
-                        mElevatorWantedPosition = Optional.empty();
-                    }
-                default:
-                    break;
-            }
-        } else { // Climber
-            mElevatorState = ElevatorState.INACTIVE;
-            mSolenoidOutput = DoubleSolenoid.Value.kReverse;
+                } else {
+                    //Control loop to hold position otherwise
+                    mOutput.setTargetPosition(mElevatorWantedPosition.get(), ElevatorConstants.kHoldVoltage, Gains.elevatorPosition);
+                }
+                break;
+            case MANUAL_POSITIONING:
+                //Clear any existing wanted positions
+                if (mElevatorWantedPosition.isPresent()) {
+                    mElevatorWantedPosition = Optional.empty();
+                }
 
-            handleClimberState(commands);
+                commands.elevatorMoving = false;
 
-            switch(mClimberState) {
-                case HOLD:
+                if (OtherConstants.operatorXBoxController) {
+                    mOutput.setPercentOutput(ElevatorConstants.kUncalibratedManualPower * mRobotState.operatorXboxControllerInput.getRightY());
+                } else {
+                    mOutput.setPercentOutput(ElevatorConstants.kUncalibratedManualPower * mRobotState.operatorJoystickInput.getY());
+                }
 
-                    mOutput.setTargetPosition(mClimberWantedPosition.get());
-                    mOutput.setGains(Gains.climberHold);
-                    break;
-                case ON_MANUAL:
+                break;
+            case CUSTOM_POSITIONING:
+                commands.elevatorMoving = true;
+                //Control loop
+                System.out.println("Elevator custom pos to " + mElevatorWantedPosition.get());
 
-                    if(mClimberWantedPosition.isPresent()) {
-                        mClimberWantedPosition = Optional.empty();
-                    }
+                mOutput.setTargetPosition(mElevatorWantedPosition.get(), ElevatorConstants.kHoldVoltage, Gains.elevatorPosition);
 
-                    mOutput.setPercentOutput(ElevatorConstants.kManualOutputPercentOutput);
+                break;
+            case IDLE:
+                commands.elevatorMoving = false;
+                //Clear any existing wanted positions
+                if (mElevatorWantedPosition.isPresent()) {
+                    mElevatorWantedPosition = Optional.empty();
+                }
 
-                    break;
-                case CUSTOM_POSITIONING:
-                    mOutput.setTargetPosition(mClimberWantedPosition.get());
-                    mOutput.setGains(Gains.climberPosition);
-
-                    break;
-                case IDLE:
-
-                    if(mClimberWantedPosition.isPresent()) {
-                        mClimberWantedPosition = Optional.empty();
-                    }
-                    mOutput.setPercentOutput(0);
-
-                    break;
-                case INACTIVE:
-
-                    if(mClimberWantedPosition.isPresent()) {
-                        mClimberWantedPosition = Optional.empty();
-                    }
-
-                    break;
-                default:
-                    break;
-            }
+                mOutput.setPercentOutput(0.0);
+                break;
+            case INACTIVE:
+                commands.elevatorMoving = false;
+                if(mElevatorWantedPosition.isPresent()) {
+                    mElevatorWantedPosition = Optional.empty();
+                }
+            default:
+                break;
         }
 
 
@@ -293,36 +247,6 @@ public class Elevator extends Subsystem {
         if(climberOnTarget()) {
             //Hold it next cycle
             commands.wantedClimberState = ClimberState.HOLD;
-        }
-    }
-
-    public boolean movingUpwards() {
-        //
-        if((mOutput.getControlType() == ControlType.kDutyCycle || mOutput.getControlType() == ControlType.kVelocity) && mOutput.getSetpoint() > ElevatorConstants.kHoldVoltage) {
-            return false;
-        } else if(mOutput.getControlType() == ControlType.kPosition) {
-            if(mOutput.getSetpoint() > kElevatorTopPosition) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks whether or not the elevator has topped/bottomed out.
-     *
-     * @param state the robot state, used to obtain encoder values
-     */
-    private void checkTopBottom(RobotState state) {
-        if(state.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch < kElevatorTopPosition) {
-            isAtTop = true;
-        } else {
-            isAtTop = false;
-        }
-        if(state.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch > kElevatorBottomPosition) {
-            isAtBottom = true;
-        } else {
-            isAtBottom = false;
         }
     }
 
