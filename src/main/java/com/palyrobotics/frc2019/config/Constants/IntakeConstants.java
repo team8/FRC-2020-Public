@@ -8,6 +8,7 @@ public class IntakeConstants {
     public static final double kFastIntakingVelocity = 0.8;
     public static final double kDroppingVelocity = 1.0;
     public static final double kExpellingVelocity = -1.0;
+    public static final double kVerySlowly = .07;
 
     public static final double kMaxAngle = 120.0; // 90 - 61.7 + 90
     public static final double kMaxAngleTicks = .0645; //FIX
@@ -34,6 +35,7 @@ public class IntakeConstants {
     public static final double kAcceptableAngularError = 3;
     public static final double kAngularVelocityError = 10;
     public static final double kCargoInchTolerance = 6.75;
+    public static final double kCargoCountRequired = 3;
 
     /**
      * Unit Conversions

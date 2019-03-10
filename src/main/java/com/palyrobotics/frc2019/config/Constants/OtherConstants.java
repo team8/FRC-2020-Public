@@ -64,7 +64,7 @@ public class OtherConstants {
     public static final double kVisionLEDTimeoutMillis = 300; // How long after the last vision command should we turn off LEDs
 
 
-    public static final int kRequiredUltrasonicCount = 3;
+    public static final int kRequiredUltrasonicCount = 4;
     public static final double kLimelightMinDistance = .001; // If Limelight.getCorrectedEstimatedDistanceZ() returns 0, we replace it with this value
 
 

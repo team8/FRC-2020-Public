@@ -37,6 +37,7 @@ public class Intake extends Subsystem {
         INTAKING,
         IDLE,
         EXPELLING,
+        SLOW,
         DROPPING
     }
 
@@ -164,7 +165,7 @@ public class Intake extends Subsystem {
                 mIntakeWantedPosition = Optional.of(IntakeConstants.kIntakingPosition);
                 break;
             case LIFTING:
-                mWheelState = WheelState.IDLE;
+                mWheelState = WheelState.SLOW;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(IntakeConstants.kHandoffPosition);
                 break;
@@ -180,7 +181,7 @@ public class Intake extends Subsystem {
                 mIntakeWantedPosition = Optional.of(IntakeConstants.kHoldingPosition);
                 break;
             case HOLDING_ROCKET:
-                mWheelState = WheelState.IDLE;
+                mWheelState = WheelState.SLOW;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(IntakeConstants.kRocketExpelPosition);
                 break;
@@ -225,6 +226,9 @@ public class Intake extends Subsystem {
                 break;
             case EXPELLING:
                 mVictorOutput = IntakeConstants.kExpellingVelocity;
+                break;
+            case SLOW:
+                mVictorOutput = IntakeConstants.kVerySlowly;
         }
 
         switch(mUpDownState) {

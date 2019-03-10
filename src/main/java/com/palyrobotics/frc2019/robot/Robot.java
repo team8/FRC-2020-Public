@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
 
 		mElevator.clearWantedPositions();
 		this.looper = new Looper();
-		looper.register(mHardwareUpdater.logLoop);
+//		looper.register(mHardwareUpdater.logLoop);
 
 		mWriter.cleanFile();
 
