@@ -76,7 +76,7 @@ public class Gains {
     //TODO: Find and tune gains
     public static final double kVidarPusherPositionkP = 0.15;
     public static final double kVidarPusherPositionkI = 0.0;
-    public static final double kVidarPusherPositionkD = 4;
+    public static final double kVidarPusherPositionkD = 1;
     public static final double kVidarPusherPositionkF = 0.0;
     public static final int kVidarPusherPositionkIzone = 0;
     public static final double kVidarPusherPositionkRampRate = 1.0;

@@ -434,7 +434,7 @@ class HardwareUpdater {
 
 		int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
 		int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
-		robotState.hasCargo = (leftTotal >= OtherConstants.kRequiredUltrasonicCount || rightTotal >= OtherConstants.kRequiredUltrasonicCount);
+		robotState.hasCargo = (leftTotal >= IntakeConstants.kCargoCountRequired || rightTotal >= IntakeConstants.kCargoCountRequired);
 		robotState.cargoDistance = Math.min(mUltrasonicLeft.getRangeInches(), mUltrasonicRight.getRangeInches());
 
 
@@ -451,7 +451,7 @@ class HardwareUpdater {
 		int pusherTotal = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoTolerance).count();
 		robotState.hasPusherCargo = (pusherTotal > OtherConstants.kRequiredUltrasonicCount);
 		robotState.cargoPusherDistance = (mPusherUltrasonic.getRangeInches());
-
+		System.out.println(robotState.cargoPusherDistance);
 	}
 
 	/**

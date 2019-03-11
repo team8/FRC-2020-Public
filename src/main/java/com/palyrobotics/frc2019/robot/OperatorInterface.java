@@ -163,8 +163,14 @@ public class OperatorInterface {
 //			newCommands.addWantedRoutine(elevatorLevel1);
 			newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.15), elevatorLevel1));
 		} else if(mOperatorXboxController.getButtonB()) {
-			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight2Inches, .1);
-			newCommands.cancelCurrentRoutines = false;
+			double levelHeight;
+			if (Robot.getRobotState().hasPusherCargo) {
+				levelHeight = ElevatorConstants.kElevatorCargoHeight2Inches + 5;
+			}
+			else {
+				levelHeight = ElevatorConstants.kElevatorCargoHeight2Inches;
+			}
+			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(levelHeight, .1);			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel2);
 //			newCommands.addWantedRoutine(new PusherInRoutine());
             newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.15), elevatorLevel2));

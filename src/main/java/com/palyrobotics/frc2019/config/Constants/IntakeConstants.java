@@ -4,7 +4,7 @@ public class IntakeConstants {
     /**
      * Intake Constants
      */
-    public static final double kMotorVelocity = .8;
+    public static final double kMotorVelocity = .7;
     public static final double kFastIntakingVelocity = 0.8;
     public static final double kDroppingVelocity = 1.0;
     public static final double kExpellingVelocity = -1.0;
