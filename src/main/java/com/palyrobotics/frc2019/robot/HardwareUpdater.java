@@ -448,7 +448,7 @@ class HardwareUpdater {
 		}
 
 
-		int pusherTotal = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoTolerance).count();
+		int pusherTotal = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoTolerance2).count();
 		robotState.hasPusherCargo = (pusherTotal > OtherConstants.kRequiredUltrasonicCount);
 		robotState.cargoPusherDistance = (mPusherUltrasonic.getRangeInches());
 		System.out.println(robotState.cargoPusherDistance);

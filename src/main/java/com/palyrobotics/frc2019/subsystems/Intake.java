@@ -38,6 +38,7 @@ public class Intake extends Subsystem {
         IDLE,
         EXPELLING,
         SLOW,
+        MEDIUM,
         DROPPING
     }
 
@@ -56,6 +57,7 @@ public class Intake extends Subsystem {
         HOLDING_MID, // moving the arm to the mid hold position and keeping it there
         DOWN,
         HOLDING_ROCKET,
+        INTAKING_ROCKET,
         EXPELLING_ROCKET,
         EXPELLING_CARGO,
         CLIMBING,
@@ -132,6 +134,10 @@ public class Intake extends Subsystem {
             this.mMacroState = IntakeMacroState.HOLDING_MID;
             commands.wantedIntakeState = IntakeMacroState.HOLDING_MID; // reset it
         }
+        else if(commands.wantedIntakeState == IntakeMacroState.HOLDING_ROCKET && robotState.operatorXboxControllerInput.getLeftTriggerPressed()) {
+            this.mMacroState = IntakeMacroState.INTAKING_ROCKET;
+            commands.wantedIntakeState = IntakeMacroState.INTAKING_ROCKET;
+        }
         else if (commands.wantedIntakeState == IntakeMacroState.HOLDING && (this.mMacroState != IntakeMacroState.HOLDING || mIntakeWantedPosition.isEmpty())) {
             this.mMacroState = commands.wantedIntakeState;
             mIntakeWantedPosition = Optional.of(robotState.intakeAngle); // setpoint is current position
@@ -189,6 +195,10 @@ public class Intake extends Subsystem {
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(IntakeConstants.kRocketExpelPosition);
                 break;
+            case INTAKING_ROCKET:
+                mWheelState = WheelState.MEDIUM;
+                mUpDownState = UpDownState.CUSTOM_POSITIONING;
+                mIntakeWantedPosition = Optional.of(IntakeConstants.kRocketExpelPosition);
             case EXPELLING_ROCKET:
                 mWheelState = WheelState.EXPELLING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
@@ -233,6 +243,9 @@ public class Intake extends Subsystem {
                 break;
             case SLOW:
                 mVictorOutput = IntakeConstants.kVerySlowly;
+                break;
+            case MEDIUM:
+                mVictorOutput = IntakeConstants.kMedium;
                 break;
         }
 
