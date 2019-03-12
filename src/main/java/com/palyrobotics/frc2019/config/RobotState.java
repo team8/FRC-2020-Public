@@ -56,6 +56,8 @@ public class RobotState {
 
 	//Pusher
 	public boolean hasPusherCargo = false;
+	public boolean hasPusherCargoFar = false;
+
 	public double cargoPusherDistance = 0;
 	public ArrayList<Double> mPusherReadings = new ArrayList<>();
 	public double pusherStartAngle = 0; // Angle in degrees

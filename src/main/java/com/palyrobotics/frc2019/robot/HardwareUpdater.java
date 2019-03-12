@@ -292,6 +292,8 @@ class HardwareUpdater {
 
 		CANSparkMax pusherSpark = HardwareAdapter.getInstance().getPusher().pusherSpark;
 
+		pusherSpark.restoreFactoryDefaults();
+
 		pusherSpark.enableVoltageCompensation(12);
 
 		pusherSpark.getEncoder().setPositionConversionFactor(PusherConstants.kPusherInchesPerRotation);
@@ -394,7 +396,7 @@ class HardwareUpdater {
 		//Update pusher sensors
 		robotState.pusherPosition = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder().getPosition();
 		robotState.pusherVelocity = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder().getVelocity();
-		System.out.println(robotState.pusherPosition);
+//		System.out.println(robotState.pusherPosition);
 
 //		System.out.println(robotState.hatchIntakeUp);
 
@@ -448,8 +450,13 @@ class HardwareUpdater {
 		}
 
 
-		int pusherTotal = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoTolerance2).count();
-		robotState.hasPusherCargo = (pusherTotal > OtherConstants.kRequiredUltrasonicCount);
+		int pusherTotalClose = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoTolerance).count();
+
+		int pusherTotalFar = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoToleranceFar).count();
+
+		robotState.hasPusherCargo = (pusherTotalClose > OtherConstants.kRequiredUltrasonicCount);
+		robotState.hasPusherCargoFar = (pusherTotalFar > OtherConstants.kRequiredUltrasonicCount);
+
 		robotState.cargoPusherDistance = (mPusherUltrasonic.getRangeInches());
 		System.out.println(robotState.cargoPusherDistance);
 	}

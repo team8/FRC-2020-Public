@@ -134,7 +134,7 @@ public class Gains {
 
     public static final double kVidarElevatorDownPositionkP = 0.3;
     public static final double kVidarElevatorDownPositionkI = 0.0;
-    public static final double kVidarElevatorDownPositionkD = 50;
+    public static final double kVidarElevatorDownPositionkD = 58;
     public static final double kVidarElevatorDownPositionkF = 0.0;
     public static final int kVidarElevatorDownPositionkIzone = 0;
     public static final double kVidarElevatorDownPositionkRampRate = 0.0;

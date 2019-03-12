@@ -9,13 +9,13 @@ public class PusherConstants {
     public static final double kVidarDistanceMiddle = 2.5;
     public static final double kVidarDistanceOut = 7.1;
     public static final double kVidarCargoTolerance = 4.900;
-    public static final double kVidarCargoTolerance2 = 7.000;
+    public static final double kVidarCargoToleranceFar = 7.000;
     public static final double kVidarDistanceCompress = 1;
 
     /**
      * Tolerances
      */
-    public static final double kAcceptablePositionError = .3;
+    public static final double kAcceptablePositionError = .2;
 
     /**
      * Unit Conversions

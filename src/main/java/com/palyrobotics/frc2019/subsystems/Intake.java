@@ -134,10 +134,6 @@ public class Intake extends Subsystem {
             this.mMacroState = IntakeMacroState.HOLDING_MID;
             commands.wantedIntakeState = IntakeMacroState.HOLDING_MID; // reset it
         }
-        else if(commands.wantedIntakeState == IntakeMacroState.HOLDING_ROCKET && robotState.operatorXboxControllerInput.getLeftTriggerPressed()) {
-            this.mMacroState = IntakeMacroState.INTAKING_ROCKET;
-            commands.wantedIntakeState = IntakeMacroState.INTAKING_ROCKET;
-        }
         else if (commands.wantedIntakeState == IntakeMacroState.HOLDING && (this.mMacroState != IntakeMacroState.HOLDING || mIntakeWantedPosition.isEmpty())) {
             this.mMacroState = commands.wantedIntakeState;
             mIntakeWantedPosition = Optional.of(robotState.intakeAngle); // setpoint is current position
@@ -199,6 +195,7 @@ public class Intake extends Subsystem {
                 mWheelState = WheelState.MEDIUM;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(IntakeConstants.kRocketExpelPosition);
+                break;
             case EXPELLING_ROCKET:
                 mWheelState = WheelState.EXPELLING;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
@@ -248,6 +245,8 @@ public class Intake extends Subsystem {
                 mVictorOutput = IntakeConstants.kMedium;
                 break;
         }
+
+        System.out.println(mMacroState);
 
         switch(mUpDownState) {
             case MANUAL_POSITIONING:

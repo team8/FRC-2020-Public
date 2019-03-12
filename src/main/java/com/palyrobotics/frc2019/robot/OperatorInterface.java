@@ -164,8 +164,8 @@ public class OperatorInterface {
 			newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.15), elevatorLevel1));
 		} else if(mOperatorXboxController.getButtonB()) {
 			double levelHeight;
-			if (Robot.getRobotState().hasPusherCargo) {
-				levelHeight = ElevatorConstants.kElevatorCargoHeight2Inches + 5;
+			if (Robot.getRobotState().hasPusherCargoFar) {
+				levelHeight = ElevatorConstants.kElevatorCargoBallHeight;
 			}
 			else {
 				levelHeight = ElevatorConstants.kElevatorCargoHeight2Inches;
@@ -209,6 +209,13 @@ public class OperatorInterface {
 			newCommands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_ROCKET;
 		}
 
+
+		if(mOperatorXboxController.getLeftTriggerPressed() && newCommands.wantedIntakeState == Intake.IntakeMacroState.HOLDING_ROCKET) {
+			newCommands.wantedIntakeState = Intake.IntakeMacroState.INTAKING_ROCKET;
+		}
+		else if (!mOperatorXboxController.getLeftTriggerPressed() && newCommands.wantedIntakeState == IntakeMacroState.INTAKING_ROCKET) {
+			newCommands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_ROCKET;
+		}
 
 //		/**
 //		 * Climber Control

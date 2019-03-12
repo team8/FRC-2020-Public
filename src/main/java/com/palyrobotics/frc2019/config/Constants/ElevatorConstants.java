@@ -14,8 +14,10 @@ public class ElevatorConstants {
 
     public static final double kClimberSliderScale = 0;
 
-    public static final double kElevatorCargoHeight3Inches = -72.5;
+    public static final double kElevatorCargoHeight3Inches = -71.5;
     public static final double kElevatorCargoHeight2Inches = -42.5;
+    public static final double kElevatorCargoBallHeight = -36.5;
+
     public static final double kElevatorCargoHeight1Inches = 0;
     public static final double kHandOffHeight = 2;
 
@@ -30,7 +32,7 @@ public class ElevatorConstants {
     /**
      * Tolerances
      */
-    public static final double kAcceptablePositionError = 0.5;
+    public static final double kAcceptablePositionError = 0.3;
     public static final double kAcceptableVelocityError = 1.0;
     public static final double kClimberAcceptablePositionError = 0;
     public static final double kClimberAcceptableVelocityError = 0;
