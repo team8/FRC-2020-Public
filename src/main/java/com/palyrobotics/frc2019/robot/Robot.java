@@ -256,7 +256,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
-//		System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
+		System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
 	}
 
 	private void startSubsystems() {

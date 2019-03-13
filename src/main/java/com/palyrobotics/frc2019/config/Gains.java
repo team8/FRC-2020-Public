@@ -79,7 +79,7 @@ public class Gains {
     public static final double kVidarPusherPositionkD = 1;
     public static final double kVidarPusherPositionkF = 0.0;
     public static final int kVidarPusherPositionkIzone = 0;
-    public static final double kVidarPusherPositionkRampRate = 1.0;
+    public static final double kVidarPusherPositionkRampRate = 0.0;
     public static final Gains pusherPosition = new Gains(kVidarPusherPositionkP, kVidarPusherPositionkI, kVidarPusherPositionkD,
             kVidarPusherPositionkF, kVidarPusherPositionkIzone, kVidarPusherPositionkRampRate);
 
