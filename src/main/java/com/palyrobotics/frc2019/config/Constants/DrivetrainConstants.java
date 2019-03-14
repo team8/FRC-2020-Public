@@ -74,7 +74,7 @@ public class DrivetrainConstants {
     public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90.0;
     public static final double kDriveSpeedUnitConversion = kDriveInchesPerRotation / 60.0;
 
-    public static final int kCurrentLimit = 45; // amps
+    public static final int kCurrentLimit = 39; // amps
 
     @Override
     public String toString() {
