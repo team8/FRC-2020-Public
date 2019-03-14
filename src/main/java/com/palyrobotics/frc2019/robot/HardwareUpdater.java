@@ -300,7 +300,7 @@ class HardwareUpdater {
 		pusherSpark.getEncoder().setVelocityConversionFactor(PusherConstants.kPusherEncSpeedUnitConversion);
 		pusherSpark.getPIDController().setOutputRange(-0.6,0.6);
 
-		pusherSpark.setSmartCurrentLimit(36);
+		pusherSpark.setSmartCurrentLimit(58);
 		pusherSpark.setInverted(true);
 		pusherSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
@@ -456,7 +456,7 @@ class HardwareUpdater {
 
 		int pusherTotalFar = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoToleranceFar).count();
 
-		robotState.hasPusherCargo = (pusherTotalClose > OtherConstants.kRequiredUltrasonicCount);
+		robotState.hasPusherCargo = (pusherTotalClose > OtherConstants.kRequiredUltrasonicCount+1);
 		robotState.hasPusherCargoFar = (pusherTotalFar > OtherConstants.kRequiredUltrasonicCount);
 
 		robotState.cargoPusherDistance = (mPusherUltrasonic.getRangeInches());

@@ -34,7 +34,7 @@ public class PortConstants {
     public static final int kVidarShovelSolenoidUpDownID = 7;
     public static final int kVidarShovelSolenoidUpDownID2 = 0;
 
-    public static final int kVidarShovelHFXPort = 4;
+    public static final int kVidarShovelHFXPort = 6;
     public static final int kVidarShovelPDPPort = 9;
 
     //PUSHER
@@ -51,10 +51,10 @@ public class PortConstants {
      * Ultrasonics
      */
 
-    public static final int kVidarIntakeLeftUltrasonicPing = 2;
+    public static final int kVidarIntakeLeftUltrasonicPing = 0;
     public static final int kVidarIntakeLeftUltrasonicEcho = 1;
 
-    public static final int kVidarIntakeRightUltrasonicPing = 4;
+    public static final int kVidarIntakeRightUltrasonicPing = 2;
     public static final int kVidarIntakeRightUltrasonicEcho = 3;
 
     public static final int kVidarPusherUltrasonicPing = 8;

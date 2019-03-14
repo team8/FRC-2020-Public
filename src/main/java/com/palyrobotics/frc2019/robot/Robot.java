@@ -98,38 +98,38 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 
-		// teleopInit();
+		 teleopInit();
 
- 		Logger.getInstance().start();
- 		DataLogger.getInstance().start();
-
- 		Logger.getInstance().logRobotThread(Level.INFO, "Start autoInit()");
-
- 		looper.start();
-
- 		DashboardManager.getInstance().toggleCANTable(true);
- 		robotState.gamePeriod = RobotState.GamePeriod.AUTO;
-
- 		robotState.matchStartTime = System.currentTimeMillis();
-
- 		mHardwareUpdater.updateState(robotState);
- 		mRoutineManager.reset(commands);
- 		robotState.reset(0, new RigidTransform2d());
- //		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
-
-         // Limelight LED on
-         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
-
-         mWriter.cleanFile();
-
- 		AutoDistances.updateAutoDistances();
-
- 		mWriter.cleanFile();
-
- 		startSubsystems();
- 		mHardwareUpdater.enableBrakeMode();
-
- 		Logger.getInstance().logRobotThread(Level.INFO, "End autoInit()");
+// 		Logger.getInstance().start();
+// 		DataLogger.getInstance().start();
+//
+// 		Logger.getInstance().logRobotThread(Level.INFO, "Start autoInit()");
+//
+// 		looper.start();
+//
+// 		DashboardManager.getInstance().toggleCANTable(true);
+// 		robotState.gamePeriod = RobotState.GamePeriod.AUTO;
+//
+// 		robotState.matchStartTime = System.currentTimeMillis();
+//
+// 		mHardwareUpdater.updateState(robotState);
+// 		mRoutineManager.reset(commands);
+// 		robotState.reset(0, new RigidTransform2d());
+// //		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
+//
+//         // Limelight LED on
+//         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+//
+//         mWriter.cleanFile();
+//
+// 		AutoDistances.updateAutoDistances();
+//
+// 		mWriter.cleanFile();
+//
+// 		startSubsystems();
+// 		mHardwareUpdater.enableBrakeMode();
+//
+// 		Logger.getInstance().logRobotThread(Level.INFO, "End autoInit()");
 
 	}
 
@@ -137,32 +137,32 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 
-//		teleopPeriodic();
+		teleopPeriodic();
 
-		 long start = System.nanoTime();
-		 if(!this.mAutoStarted) {
-		 	//Get the selected auto mode
-		 	AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
-
-		 	//Prestart and run the auto mode
-		 	mode.prestart();
-		 	mRoutineManager.addNewRoutine(mode.getRoutine());
-
-		 	this.mAutoStarted = true;
-		 }
-		 if(this.mAutoStarted) {
-			 commands = mRoutineManager.update(commands);
-			 mHardwareUpdater.updateState(robotState);
-			 updateSubsystems();
-			 mHardwareUpdater.updateHardware();
-		 }
-
-         if(mWriter.getSize() > 10000) {
-             mWriter.write();
-		 }
-		
-		 DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
-		 DataLogger.getInstance().cycle();
+//		 long start = System.nanoTime();
+//		 if(!this.mAutoStarted) {
+//		 	//Get the selected auto mode
+//		 	AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
+//
+//		 	//Prestart and run the auto mode
+//		 	mode.prestart();
+//		 	mRoutineManager.addNewRoutine(mode.getRoutine());
+//
+//		 	this.mAutoStarted = true;
+//		 }
+//		 if(this.mAutoStarted) {
+//			 commands = mRoutineManager.update(commands);
+//			 mHardwareUpdater.updateState(robotState);
+//			 updateSubsystems();
+//			 mHardwareUpdater.updateHardware();
+//		 }
+//
+//         if(mWriter.getSize() > 10000) {
+//             mWriter.write();
+//		 }
+//
+//		 DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
+//		 DataLogger.getInstance().cycle();
 	}
 
 	@Override
@@ -257,6 +257,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
+        System.out.println("Pusher Ultrasonic: " + HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
+        System.out.println("Left Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+        System.out.println("Right Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
 	}
 
 	private void startSubsystems() {

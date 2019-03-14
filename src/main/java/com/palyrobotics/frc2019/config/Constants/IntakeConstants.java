@@ -4,15 +4,15 @@ public class IntakeConstants {
     /**
      * Intake Constants
      */
-    public static final double kMotorVelocity = .7;
+    public static final double kMotorVelocity = .63;
     public static final double kFastIntakingVelocity = 0.8;
     public static final double kDroppingVelocity = 1.0;
     public static final double kExpellingVelocity = -1.0;
     public static final double kVerySlowly = .03;
     public static final double kMedium = 0.2;
 
-    public static final double kMaxAngle = 120.0; // 90 - 61.7 + 90
-    public static final double kMaxAngleTicks = .1003; //FIX
+    public static final double kMaxAngle = 117.0; // 90 - 61.7 + 90
+    public static final double kMaxAngleTicks = .4611; //FIX
 
     // FEED FORWARD CONSTANTS
 
@@ -22,7 +22,7 @@ public class IntakeConstants {
 
     // INTAKING POSITIONS
 
-    public static final double kIntakingPosition = 24.5; // degrees relatively to the plane of the field.
+    public static final double kIntakingPosition = 23.5; // degrees relatively to the plane of the field.
     public static final double kHoldingPosition = 59; // same relative angle as above
     public static final double kHandoffPosition = 116; // place where the drop to the elevator occurs
     public static final double kRocketExpelPosition = 84;
