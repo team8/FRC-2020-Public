@@ -127,12 +127,21 @@ class HardwareUpdater {
 		CANSparkMax rightSlave1Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave1Spark;
 		CANSparkMax rightSlave2Spark = HardwareAdapter.getInstance().getDrivetrain().rightSlave2Spark;
 
-		leftMasterSpark.enableVoltageCompensation(12);
-		leftSlave1Spark.enableVoltageCompensation(12);
-		leftSlave2Spark.enableVoltageCompensation(12);
-		rightMasterSpark.enableVoltageCompensation(12);
-		rightSlave1Spark.enableVoltageCompensation(12);
-		rightSlave2Spark.enableVoltageCompensation(12);
+//		leftMasterSpark.restoreFactoryDefaults();
+//		leftSlave1Spark.restoreFactoryDefaults();
+//		leftSlave2Spark.restoreFactoryDefaults();
+//		rightMasterSpark.restoreFactoryDefaults();
+//		rightSlave1Spark.restoreFactoryDefaults();
+//		rightSlave2Spark.restoreFactoryDefaults();
+
+
+
+//		leftMasterSpark.enableVoltageCompensation(12);
+//		leftSlave1Spark.enableVoltageCompensation(12);
+//		leftSlave2Spark.enableVoltageCompensation(12);
+//		rightMasterSpark.enableVoltageCompensation(12);
+//		rightSlave1Spark.enableVoltageCompensation(12);
+//		rightSlave2Spark.enableVoltageCompensation(12);
 
 		leftMasterSpark.getEncoder().setPositionConversionFactor(DrivetrainConstants.kDriveInchesPerRotation);
 		leftSlave1Spark.getEncoder().setPositionConversionFactor(DrivetrainConstants.kDriveInchesPerRotation);
@@ -168,13 +177,22 @@ class HardwareUpdater {
 		rightSlave1Spark.setInverted(true);
 		rightSlave2Spark.setInverted(true);
 
-		leftMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
-		leftSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
-		leftSlave2Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
 
-		rightMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
-		rightSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
-		rightSlave2Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+//		leftMasterSpark.setOpenLoopRampRate(.6);
+//		leftSlave1Spark.setOpenLoopRampRate(.6);
+//		leftSlave2Spark.setOpenLoopRampRate(.6);
+//
+//		rightMasterSpark.setOpenLoopRampRate(.6);
+//		rightSlave1Spark.setOpenLoopRampRate(.6);
+//		rightSlave2Spark.setOpenLoopRampRate(.6);
+
+//		leftMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+//		leftSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+//		leftSlave2Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+//
+//		rightMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+//		rightSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+//		rightSlave2Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
 
 		// Set slave sparks to follower mode
 		leftSlave1Spark.follow(leftMasterSpark);
@@ -182,8 +200,8 @@ class HardwareUpdater {
        	rightSlave1Spark.follow(rightMasterSpark);
 		rightSlave2Spark.follow(rightMasterSpark);
 		
-		updateSparkGains(leftMasterSpark, Gains.vidarVelocity);
-		updateSparkGains(rightMasterSpark, Gains.vidarVelocity);
+//		updateSparkGains(leftMasterSpark, Gains.vidarVelocity);
+//		updateSparkGains(rightMasterSpark, Gains.vidarVelocity);
 
     }
 
@@ -483,6 +501,17 @@ class HardwareUpdater {
 	private void updateDrivetrain() {
 		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark, mDrive.getDriveSignal().leftMotor);
 		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark, mDrive.getDriveSignal().rightMotor);
+
+//		SparkMaxOutput c = new SparkMaxOutput();
+//		c.setPercentOutput(HardwareAdapter.getInstance().getJoysticks().driveStick.getY());
+//
+////		c.setPercentOutput(throttle);
+//
+//		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark, c);
+//		updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark, c);
+
+//		mSignal.leftMotor.setPercentOutput(throttle);
+//		mSignal.rightMotor.setPercentOutput(throttle);
 	}
 
     /**
