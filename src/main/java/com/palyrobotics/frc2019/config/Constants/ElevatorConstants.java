@@ -16,7 +16,7 @@ public class ElevatorConstants {
 
     public static final double kElevatorCargoHeight3Inches = -71.5;
     public static final double kElevatorCargoHeight2Inches = -42.5;
-    public static final double kElevatorCargoBallHeight = -36.5;
+    public static final double kElevatorCargoBallHeight = -33.25;
 
     public static final double kElevatorCargoHeight1Inches = 0;
     public static final double kHandOffHeight = 2;

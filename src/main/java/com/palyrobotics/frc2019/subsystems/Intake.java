@@ -143,7 +143,7 @@ public class Intake extends Subsystem {
             this.mMacroState = commands.wantedIntakeState;
         }
 
-        System.out.println(this.mMacroState);
+//        System.out.println(this.mMacroState);
 //        System.out.println(commands.wantedIntakeState);
 //        System.out.println(robotState.intakeAngle);
 
@@ -246,7 +246,7 @@ public class Intake extends Subsystem {
                 break;
         }
 
-        System.out.println(mMacroState);
+//        System.out.println(mMacroState);
 
         switch(mUpDownState) {
             case MANUAL_POSITIONING:

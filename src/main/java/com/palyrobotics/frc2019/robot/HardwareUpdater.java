@@ -202,8 +202,8 @@ class HardwareUpdater {
 
 	    slaveSpark.follow(masterSpark);
 
-	    masterSpark.getPIDController().setOutputRange(-0.65,0.65);
-		slaveSpark.getPIDController().setOutputRange(-0.65,0.65);
+	    masterSpark.getPIDController().setOutputRange(-0.72,0.72);
+		slaveSpark.getPIDController().setOutputRange(-0.72,0.72);
 		
 		updateSparkGains(masterSpark, Gains.elevatorPosition);
 
@@ -298,9 +298,9 @@ class HardwareUpdater {
 
 		pusherSpark.getEncoder().setPositionConversionFactor(PusherConstants.kPusherInchesPerRotation);
 		pusherSpark.getEncoder().setVelocityConversionFactor(PusherConstants.kPusherEncSpeedUnitConversion);
-		pusherSpark.getPIDController().setOutputRange(-0.6,0.6);
+		pusherSpark.getPIDController().setOutputRange(-0.7,0.7);
 
-		pusherSpark.setSmartCurrentLimit(58);
+		pusherSpark.setSmartCurrentLimit(50);
 		pusherSpark.setInverted(true);
 		pusherSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
@@ -460,7 +460,7 @@ class HardwareUpdater {
 		robotState.hasPusherCargoFar = (pusherTotalFar > OtherConstants.kRequiredUltrasonicCount);
 
 		robotState.cargoPusherDistance = (mPusherUltrasonic.getRangeInches());
-		System.out.println(robotState.cargoPusherDistance);
+//		System.out.println(robotState.cargoPusherDistance);
 	}
 
 	/**
