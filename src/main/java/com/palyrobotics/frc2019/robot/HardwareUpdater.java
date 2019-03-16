@@ -178,13 +178,13 @@ class HardwareUpdater {
 		rightSlave2Spark.setInverted(true);
 
 
-//		leftMasterSpark.setOpenLoopRampRate(.6);
-//		leftSlave1Spark.setOpenLoopRampRate(.6);
-//		leftSlave2Spark.setOpenLoopRampRate(.6);
+//		leftMasterSpark.setOpenLoopRampRate(.2);
+//		leftSlave1Spark.setOpenLoopRampRate(.2);
+//		leftSlave2Spark.setOpenLoopRampRate(.2);
 //
-//		rightMasterSpark.setOpenLoopRampRate(.6);
-//		rightSlave1Spark.setOpenLoopRampRate(.6);
-//		rightSlave2Spark.setOpenLoopRampRate(.6);
+//		rightMasterSpark.setOpenLoopRampRate(.2);
+//		rightSlave1Spark.setOpenLoopRampRate(.2);
+//		rightSlave2Spark.setOpenLoopRampRate(.2);
 
 //		leftMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
 //		leftSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
@@ -240,8 +240,8 @@ class HardwareUpdater {
 		intakeMasterSpark.restoreFactoryDefaults();
 		intakeSlaveSpark.restoreFactoryDefaults();
 
-		intakeMasterSpark.enableVoltageCompensation(12);
-		intakeSlaveSpark.enableVoltageCompensation(12);
+//		intakeMasterSpark.enableVoltageCompensation(12);
+//		intakeSlaveSpark.enableVoltageCompensation(12);
 
 		intakeMasterSpark.getEncoder().setPositionConversionFactor(IntakeConstants.kArmDegreesPerRevolution);
 		intakeSlaveSpark.getEncoder().setPositionConversionFactor(IntakeConstants.kArmDegreesPerRevolution);
@@ -253,8 +253,8 @@ class HardwareUpdater {
 
 		intakeVictor.setInverted(true);
 
-			intakeMasterSpark.getPIDController().setOutputRange(-0.4,0.5);
-			intakeSlaveSpark.getPIDController().setOutputRange(-0.4,0.5);
+        intakeMasterSpark.getPIDController().setOutputRange(-0.4,0.5);
+        intakeSlaveSpark.getPIDController().setOutputRange(-0.4,0.5);
 
 		intakeVictor.setNeutralMode(NeutralMode.Brake);
 
