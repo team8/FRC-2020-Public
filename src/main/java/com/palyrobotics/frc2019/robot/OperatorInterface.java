@@ -161,7 +161,7 @@ public class OperatorInterface {
 			Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight1Inches, .1);
 			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel1);
-			newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.15), elevatorLevel1));
+			newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.23), elevatorLevel1));
 		} else if(mOperatorXboxController.getButtonB()) {
 			double levelHeight;
 			if (Robot.getRobotState().hasPusherCargoFar) {
@@ -173,13 +173,13 @@ public class OperatorInterface {
 			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(levelHeight, .1);			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel2);
 //			newCommands.addWantedRoutine(new PusherInRoutine());
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.15), elevatorLevel2));
+            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.23), elevatorLevel2));
 		} else if(mOperatorXboxController.getButtonY()) {
 			Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight3Inches, .1);
 			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel3);
 //			newCommands.addWantedRoutine(new PusherInRoutine());
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.15), elevatorLevel3));
+            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.23), elevatorLevel3));
 		}
 
 		/**\
