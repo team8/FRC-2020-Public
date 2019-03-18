@@ -330,14 +330,18 @@ class HardwareUpdater {
         Ultrasonic intakeUltrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft;
         Ultrasonic intakeUltrasonicRight = HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight;
         Ultrasonic pusherUltrasonic = HardwareAdapter.getInstance().getPusher().pusherUltrasonic;
+		Ultrasonic pusherSecondaryUltrasonic = HardwareAdapter.getInstance().getPusher().pusherSecondaryUltrasonic;
+
 
         intakeUltrasonicLeft.setAutomaticMode(true);
         intakeUltrasonicRight.setAutomaticMode(true);
         pusherUltrasonic.setAutomaticMode(true);
+		pusherSecondaryUltrasonic.setAutomaticMode(true);
 
 		intakeUltrasonicLeft.setEnabled(true);
         intakeUltrasonicRight.setEnabled(true);
         pusherUltrasonic.setEnabled(true);
+		pusherSecondaryUltrasonic.setEnabled(true);
     }
 
 	void configureShovelHardware() {
