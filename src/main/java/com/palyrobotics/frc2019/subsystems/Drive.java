@@ -152,6 +152,9 @@ public class Drive extends Subsystem {
 			case VISION_ASSIST:
 				setDriveOutputs(mVDH.visionDrive(commands, mCachedRobotState));
 				break;
+			case CLOSED_VISION_ASSIST:
+				setDriveOutputs(mController.update(mCachedRobotState));
+				break;
 			case OFF_BOARD_CONTROLLER:
 				//Falls through
                 setDriveOutputs(mController.update(mCachedRobotState));
@@ -281,6 +284,11 @@ public class Drive extends Subsystem {
 
 	public void setTimedDrive(double voltage, double time) {
 		mController = new TimedDriveController(voltage, time);
+		newController = true;
+	}
+
+	public void setVisionClosedDriveController() {
+		mController = new VisionClosedController();
 		newController = true;
 	}
 

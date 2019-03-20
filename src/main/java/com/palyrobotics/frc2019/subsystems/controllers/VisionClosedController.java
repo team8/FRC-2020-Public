@@ -19,20 +19,16 @@ import com.palyrobotics.frc2019.vision.Limelight;
  */
 public class VisionClosedController implements Drive.DriveController {
 
-    private Pose mCachedPose;
-
     private double oldYawToTarget;
     private long oldTime;
 
     private final double distancePowConst = Gains.kVidarTrajectorykV;
 
     /**
-     * @param currentPose
      *            Pass in the latest robot state
      * @param
      */
-    public VisionClosedController(Pose currentPose) {
-        this.mCachedPose = currentPose;
+    public VisionClosedController() {
     }
 
     public double getAdjustedDistancePower() {
@@ -90,9 +86,8 @@ public class VisionClosedController implements Drive.DriveController {
 
     @Override
     public Pose getSetpoint() {
-        mCachedPose.heading = 0;
         Pose setpoint = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
-        return mCachedPose;
+        return setpoint;
     }
 
     @Override
