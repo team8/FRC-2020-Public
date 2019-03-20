@@ -32,7 +32,7 @@ public class VisionDriveHelper {
         double angularPower;
 
         //linear power is what's actually sent to motor, throttle is input
-        double linearPower = remapThrottle(throttle);
+        double linearPower = throttle;
 
         //Handle braking
         if(isBraking) {

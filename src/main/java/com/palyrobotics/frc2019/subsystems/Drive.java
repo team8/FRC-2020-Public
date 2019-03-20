@@ -37,7 +37,7 @@ public class Drive extends Subsystem {
 	 * {@code NEUTRAL} does nothing.
 	 */
 	public enum DriveState {
-		CHEZY, OFF_BOARD_CONTROLLER, ON_BOARD_CONTROLLER, OPEN_LOOP, NEUTRAL, VISION_ASSIST
+		CHEZY, OFF_BOARD_CONTROLLER, ON_BOARD_CONTROLLER, OPEN_LOOP, NEUTRAL, VISION_ASSIST, CLOSED_VISION_ASSIST
 	}
 
 	private DriveState mState = DriveState.NEUTRAL;
