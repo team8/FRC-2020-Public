@@ -33,7 +33,7 @@ public class VisionClosedController implements Drive.DriveController {
 
     public double getAdjustedDistancePower() {
         if (Limelight.getInstance().isTargetFound()) {
-            return Limelight.getInstance().getRegressionDistanceZ() * this.distancePowConst;
+            return Limelight.getInstance().getCorrectedEstimatedDistanceZ() * this.distancePowConst;
         }
         else {
             return 0.0;

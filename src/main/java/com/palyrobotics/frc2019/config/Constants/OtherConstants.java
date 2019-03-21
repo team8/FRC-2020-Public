@@ -41,8 +41,8 @@ public class OtherConstants {
      * Vision constants
      */
     // Physical constants of the limelight mount
-    public static final double kLimelightElevationAngleDegrees = 25.00;
-    public static final double kLimelightHeightInches = 8.125;
+    public static final double kLimelightElevationAngleDegrees = -8.11;
+    public static final double kLimelightHeightInches = 39.44;
     // Limelight video feed dimensions
     public static final double kLimelightHeightPixels = 240;
     public static final double kLimelightWidthPixels = 320;

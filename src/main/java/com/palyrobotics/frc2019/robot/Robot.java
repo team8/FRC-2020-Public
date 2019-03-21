@@ -215,6 +215,8 @@ public class Robot extends TimedRobot {
 		DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
 		DataLogger.getInstance().cycle();
 
+		System.out.println("Limelight zdist: " + Limelight.getInstance().getCorrectedEstimatedDistanceZ());
+
 	}
 
 	@Override
