@@ -69,8 +69,8 @@ public class VisionDriveHelper {
             oldYawToTarget = Limelight.getInstance().getYawToTarget();
             oldTime = System.currentTimeMillis();
             // |angularPower| should be at most 0.6
-            if (angularPower > 0.6) angularPower = 0.6;
-            if (angularPower < -0.6) angularPower = -0.6;
+            if (angularPower > 0.6) angularPower = 0.75;
+            if (angularPower < -0.6) angularPower = -0.75;
         } else {
             found = false;
             oldTime = System.currentTimeMillis();

@@ -52,7 +52,7 @@ public class Pusher extends Subsystem {
         mState = commands.wantedPusherInOutState;
         switch (mState) {
             case SLAM:
-                target = -.23;
+                target = -.32;
                 mOutput.setPercentOutput(target);
                 HardwareAdapter.getInstance().getPusher().resetSensors();
                 break;

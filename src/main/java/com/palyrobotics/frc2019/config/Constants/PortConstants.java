@@ -23,22 +23,22 @@ public class PortConstants {
     public static final int kVidarIntakeMasterDeviceID = 4;
     public static final int kVidarIntakeSlaveDeviceID = 5;
     public static final int kVidarIntakeVictorDeviceID = 6;
-    public static final int kVidarAnalogPot = 0;
+    public static final int kVidarAnalogPot = 3;
 
     //SHOOTER
     public static final int kVidarShooterMasterVictorDeviceID = 10;
-    public static final int kVidarShooterSlaveVictorDeviceID = 9;
+    public static final int kVidarShooterSlaveVictorDeviceID = 7;
 
     //SHOVEL
-    public static final int kVidarShovelDeviceID = 8;
-    public static final int kVidarShovelSolenoidUpDownID = 7;
-    public static final int kVidarShovelSolenoidUpDownID2 = 0;
+    public static final int kVidarShovelDeviceID = 9;
+    public static final int kVidarShovelSolenoidUpDownID = 0;
+    public static final int kVidarShovelSolenoidUpDownID2 = 7;
 
-    public static final int kVidarShovelHFXPort = 5;
+    public static final int kVidarShovelHFXPort = 4;
     public static final int kVidarShovelPDPPort = 9;
 
     //PUSHER
-    public static final int kVidarPusherSparkID = 11;
+    public static final int kVidarPusherSparkID = 8;
     public static final int kVidarPusherPotID = 0;
 
     //FINGERS
@@ -51,15 +51,11 @@ public class PortConstants {
      * Ultrasonics
      */
 
-    public static final int kVidarIntakeLeftUltrasonicPing = 0;
-    public static final int kVidarIntakeLeftUltrasonicEcho = 1;
+    public static final int kVidarIntakeLeftUltrasonicPing = 1;
+    public static final int kVidarIntakeLeftUltrasonicEcho = 0;
+    public static final int kVidarIntakeRightUltrasonicPing = 3;
+    public static final int kVidarIntakeRightUltrasonicEcho = 2;
 
-    public static final int kVidarIntakeRightUltrasonicPing = 2;
-    public static final int kVidarIntakeRightUltrasonicEcho = 3;
-
-    public static final int kVidarPusherUltrasonicPing = 8;
-    public static final int kVidarPusherUltrasonicEcho = 9;
-
-    public static final int kVidarBackupUltrasonicPing = 6;
-    public static final int kVidarBackupUltrasonicEcho = 7;
+    public static final int kVidarPusherUltrasonicPing = 9;
+    public static final int kVidarPusherUltrasonicEcho = 8;
 }
