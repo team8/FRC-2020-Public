@@ -11,10 +11,11 @@ import com.palyrobotics.frc2019.behavior.routines.intake.*;
 import com.palyrobotics.frc2019.behavior.routines.pusher.*;
 import com.palyrobotics.frc2019.behavior.routines.shooter.*;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForCargoElevator;
-import com.palyrobotics.frc2019.subsystems.Shooter;
-import com.palyrobotics.frc2019.config.Constants.*;
-import com.palyrobotics.frc2019.util.trajectory.Path;
+import com.palyrobotics.frc2019.config.Constants.PhysicalConstants;
+import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
+import com.palyrobotics.frc2019.util.trajectory.Path;
+import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 
 import java.util.ArrayList;
@@ -22,13 +23,13 @@ import java.util.List;
 
 @SuppressWarnings("Duplicates")
 
-public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBase {
-    //Left start > cargo ship front > loading station > rocket ship far > depot > close rocket ship (fullsend)
+public class LeftFullLevelAutoMode extends AutoModeBase {
+    //Left start > rocket ship close > loading station > rocket ship far > depot > rocket ship mid
     //TODO: copy the right side one
 
-    public static int kRunSpeed = 50;
-    public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches * 0.6;
-    public static double kOffsetY = -PhysicalConstants.kLevel3Width * .5 - PhysicalConstants.kLevel2Width * .5;
+    public static int kRunSpeed = 70;
+    public static double kOffsetX = PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches;
+    public static double kOffsetY = PhysicalConstants.kLevel3Width * .5 - PhysicalConstants.kLevel2Width * .5;
     public static double kCargoShipLeftFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
     public static double kCargoShipLeftFrontY = mDistances.kFieldWidth * .5 - (mDistances.kCargoLeftY + mDistances.kCargoOffsetY);
     public static double kHabLineX = PhysicalConstants.kUpperPlatformLength + PhysicalConstants.kLowerPlatformLength;
@@ -66,49 +67,55 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new LeftStartLeftFrontCargoAutoMode().placeHatch(), takeHatch(), placeHatch2(), takeCargo(), placeCargoClose());
+        return new SequentialRoutine(new RezeroSubAutoMode().Rezero(true), placeHatchClose(), takeHatch(), placeHatchFar(), takeCargo(), placeCargoMid());
     }
 
-    //TODO: make legit
-    public Routine takeHatch() { //cargo ship front to loading station
+    public Routine placeHatchClose() { //start to rocket ship close
         ArrayList<Routine> routines = new ArrayList<>();
 
-        List<Waypoint> BackCargoShipToLoadingStation = new ArrayList<>();
-        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kCargoShipLeftFront.translateBy(
-                new Translation2d(0, PhysicalConstants.kRobotLengthInches))), kRunSpeed)); //backs out of the cargo ship
-        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d((kCargoShipLeftFrontX * .5 + kOffsetX),
-                kLeftLoadingStationY * .5 + kOffsetY), kRunSpeed));
-        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kHabLineX + PhysicalConstants.kRobotLengthInches * 2 + kOffsetX,
-                kLeftLoadingStationY + kOffsetY), 0));
-        routines.add(new DrivePathRoutine(new Path(BackCargoShipToLoadingStation), true));
+        List<Waypoint> DepotToRocketShip = new ArrayList<>();
+        DepotToRocketShip.add(new Waypoint(new Translation2d(kHabLineX + PhysicalConstants.kRobotLengthInches + kOffsetX,
+                0), 100)); //goes straight at the start so the robot doesn't get messed up over the ramp
+        DepotToRocketShip.add(new Waypoint(new Translation2d(kLeftRocketShipCloseX * .8 + kOffsetX,
+                findLineClose(kLeftRocketShipCloseX * .8) + kOffsetY), kRunSpeed)); //line up with rocket ship
+        DepotToRocketShip.add(new Waypoint(kLeftRocketShipClose, 0));
+        //move elevator up while driving
+        //routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(DepotToRocketShip), true),
+        //        new ElevatorCustomPositioningRoutine(, 1)));
 
-        List<Waypoint> ForwardCargoShipToLoadingStation = new ArrayList<>();
-        ForwardCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kHabLineX + kOffsetX,
-                kLeftLoadingStationY + kOffsetY), kRunSpeed));
-        ForwardCargoShipToLoadingStation.add(new Waypoint(kLeftLoadingStation, 0));
+        //place hatch with auto placer
 
+        return new SequentialRoutine(routines);
+    }
+
+    public Routine takeHatch() { //rocket ship close to loading station
+        ArrayList<Routine> routines = new ArrayList<>();
+
+        List<Waypoint> CargoShipToLoadingStation = new ArrayList<>();
+        CargoShipToLoadingStation.add(new Waypoint(new Translation2d(kHabLineX - PhysicalConstants.kRobotLengthInches * .5 + kOffsetX,
+                kLeftLoadingStationY - PhysicalConstants.kRobotWidthInches * .4 + kOffsetY), kRunSpeed)); //lines up with loading station
+        CargoShipToLoadingStation.add(new Waypoint(kLeftLoadingStation, 0));
 
         //get fingers ready for hatch intake
         ArrayList<Routine> getIntakeReady = new ArrayList<>();
         getIntakeReady.add(new PusherOutRoutine());
         getIntakeReady.add(new FingersCloseRoutine());
 
-        //drive and ready fingers at the same time
-        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(ForwardCargoShipToLoadingStation), false),
+        //move elevators while driving
+        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(CargoShipToLoadingStation), false),
                 new SequentialRoutine(getIntakeReady)));
 
         //intake hatch
         routines.add(new PusherInRoutine());
         routines.add(new FingersOpenRoutine());
-
         return new SequentialRoutine(routines);
     }
 
-    public Routine placeHatch2() { //loading station to rocket ship close
+    public Routine placeHatchFar() { //loading station to rocket ship close
         ArrayList<Routine> routines = new ArrayList<>();
 
         /*
-        The robot starts backwards at the loading station after loading a hatch. It then goes around the rocket ship over and shoots it a bit. Then, it lines up with the rocket ship far and places the hatch.
+        The robot starts backwards at the loading station after loading a hatch. It then goes around the rocket ship and over shoots it a bit. Then, it lines up with the rocket ship far and places the hatch.
          */
 
         List<Waypoint> backLoadingStationToRocketShip = new ArrayList<>(); //robot starts going backwards
@@ -117,16 +124,16 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
         backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(kLeftRocketShipMidX + kOffsetX,
                 findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.8) + kOffsetY), kRunSpeed)); //goes around the rocket ship
         backLoadingStationToRocketShip.add(new Waypoint(new Translation2d(kLeftRocketShipFarX + PhysicalConstants.kRobotLengthInches * 1.9 + kOffsetX,
-                findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.9) + PhysicalConstants.kRobotLengthInches * .2 + kOffsetY), 0));
+                findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.9) - PhysicalConstants.kRobotLengthInches * .2 + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(backLoadingStationToRocketShip), true)); //robot turns and then moves forward to the rocket ship
 
         List<Waypoint> forwardLoadingStationToRocketShip = new ArrayList<>(); //robot turns and then moves forward
         forwardLoadingStationToRocketShip.add(new Waypoint(new Translation2d(kLeftRocketShipFarX + PhysicalConstants.kRobotLengthInches * 1.6 + kOffsetX,
-                findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.6) + PhysicalConstants.kRobotLengthInches * .3 + kOffsetY), kRunSpeed)); //line up with rocket ship far
+                findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.6) - PhysicalConstants.kRobotLengthInches * .3 + kOffsetY), kRunSpeed)); //line up with rocket ship far
         forwardLoadingStationToRocketShip.add(new Waypoint(kLeftRocketShipFar, 0)); //ends in front of the rocket ship far
-
-        //moves elevator up while driving
-        routines.add(new DrivePathRoutine(new Path(forwardLoadingStationToRocketShip), false));
+        //move elevator up while driving
+        //routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(forwardLoadingStationToRocketShip), false),
+        //       new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorRocketHatchHeight1Inches, 1)));
 
         //place hatch
         routines.add(new FingersCycleRoutine(1));
@@ -143,14 +150,13 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
 
         List<Waypoint> RocketShipToDepot = new ArrayList<>();
         RocketShipToDepot.add(new Waypoint(new Translation2d(kLeftRocketShipFarX + PhysicalConstants.kRobotLengthInches * 1.6 + kOffsetX,
-                findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.6) - PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetY), kRunSpeed));
+                findLineFar(kLeftRocketShipMidX + PhysicalConstants.kRobotLengthInches * 1.6) + PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetY), kRunSpeed));
         RocketShipToDepot.add(new Waypoint(new Translation2d(kCargoShipLeftFrontX + PhysicalConstants.kRobotLengthInches + kOffsetX,
-                kLeftDepotY - PhysicalConstants.kRobotLengthInches * .2 + kOffsetY), kRunSpeed));
+                kLeftDepotY + PhysicalConstants.kRobotLengthInches * .2 + kOffsetY), kRunSpeed)); //turn around the rocket ship
         RocketShipToDepot.add(new Waypoint(kLeftDepot, 0));
-
-        //moves elevator down while driving
-        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(RocketShipToDepot), true),
-                new ElevatorCustomPositioningRoutine(0, 1)));
+        //move elevator down while driving
+        //routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(RocketShipToDepot), true),
+        ///        new ElevatorCustomPositioningRoutine(ElevatorConstants.kBotomPositionInches, 1)));
 
         //intake cargo
         routines.add(new IntakeBeginCycleRoutine());
@@ -159,20 +165,21 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
         return new SequentialRoutine(routines);
     }
 
-    public Routine placeCargoClose() { //depot to close rocket ship - shoot cargo into the far rocket ship
+    public Routine placeCargoMid() { //depot to rocket ship mid
         ArrayList<Routine> routines = new ArrayList<>();
 
-        /*
-        The robot starts at the depot after loading a cargo. It then goes to rocket ship close and shoots a cargo into rocket ship far.
-         */
-
-        List<Waypoint> DepotToRocketShip = new ArrayList<>();
-        DepotToRocketShip.add(new Waypoint(new Translation2d(kLeftRocketShipCloseX * .8 + kOffsetX,
-                findLineClose(kLeftRocketShipCloseX * .8) + kOffsetY), kRunSpeed));
-        DepotToRocketShip.add(new Waypoint(kLeftRocketShipClose, 0));
+        List<Waypoint> DepotToRocketShipMid = new ArrayList<>();
+        DepotToRocketShipMid.add(new Waypoint(new Translation2d(kLeftDepotX + PhysicalConstants.kRobotLengthInches * 2 + kOffsetX,
+                kLeftDepotY + kOffsetY), kRunSpeed)); //go straight until near rocket ship
+        DepotToRocketShipMid.add(new Waypoint(new Translation2d(kLeftRocketShipMidX - PhysicalConstants.kRobotLengthInches * .3,
+                kLeftDepotY + kOffsetY), kRunSpeed));
+        DepotToRocketShipMid.add(new Waypoint(new Translation2d(kLeftRocketShipMidX,
+                kLeftRocketShipMidY - PhysicalConstants.kRobotLengthInches * .8), kRunSpeed)); //line up with rocket ship
+        DepotToRocketShipMid.add(new Waypoint(new Translation2d(kLeftRocketShipMidX,
+                kLeftRocketShipMidY), 0));
         //move elevator up while driving
-        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(DepotToRocketShip), false),
-                new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight1Inches, 1)));
+        //routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(DepotToRocketShipMid), false),
+        //        new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorRocketCargoHeight1Inches, 1)));
 
         //shoot cargo
         routines.add(new PusherOutRoutine());

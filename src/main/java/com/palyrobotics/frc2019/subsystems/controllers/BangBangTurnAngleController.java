@@ -31,7 +31,7 @@ public class BangBangTurnAngleController implements Drive.DriveController {
 	public BangBangTurnAngleController(Pose currentPose, double heading) {
 		this.mPower = DrivetrainConstants.kTurnInPlacePower;
 		this.mCachedPose = currentPose;
-		this.mTargetHeading = this.mCachedPose.heading + heading;
+		this.mTargetHeading = this.mCachedPose.heading - heading;
 		Logger.getInstance().logSubsystemThread(Level.INFO, "Starting Heading", this.mCachedPose.heading);
 		Logger.getInstance().logSubsystemThread(Level.INFO, "Target Heading", this.mTargetHeading);
 

@@ -52,11 +52,11 @@ public class RezeroSubAutoMode extends AutoModeBase {
         ArrayList<Waypoint> waypoints = new ArrayList<>();
         waypoints.add(new Waypoint(new Translation2d(30 * invertCord, 0), 35));
         waypoints.add(new Waypoint(new Translation2d(40 * invertCord, 0), 0));
-        routines.add(new DrivePathRoutine(new Path(waypoints), true));
+        routines.add(new DrivePathRoutine(new Path(waypoints), inverted));
 
         // Back up against the platform
         SparkMaxOutput eachOutput = new SparkMaxOutput();
-        eachOutput.setPercentOutput(0.2);
+        eachOutput.setPercentOutput(invertCord * -0.2);
 
         SparkSignal backUp = new SparkSignal(eachOutput, eachOutput);
         routines.add(new DriveTimeRoutine(0.7, backUp));

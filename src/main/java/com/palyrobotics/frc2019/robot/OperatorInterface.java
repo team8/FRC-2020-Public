@@ -117,6 +117,22 @@ public class OperatorInterface {
 			}
 		}
 
+		if(mTurnStick.getButtonPressed(7)) {
+			visionStartTime = System.currentTimeMillis();
+			// Limelight vision tracking on
+			if (Limelight.getInstance().getCamMode() != LimelightControlMode.CamMode.VISION) {
+				Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
+				Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
+			}
+			Drive.getInstance().setVisionClosedDriveController();
+			newCommands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
+		} else {
+			if (System.currentTimeMillis() - visionStartTime > OtherConstants.kVisionLEDTimeoutMillis) {
+				Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
+				Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+			}
+		}
+
 		/**
 		 * Hatch Ground Intake/Shovel Control
 		 */

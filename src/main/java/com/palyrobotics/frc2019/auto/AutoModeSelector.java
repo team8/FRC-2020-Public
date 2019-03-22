@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2019.auto;
 
 import com.palyrobotics.frc2019.auto.AutoModeBase.*;
+import com.palyrobotics.frc2019.auto.modes.Hecker;
 import com.palyrobotics.frc2019.auto.testautos.FTestAuto;
 import com.palyrobotics.frc2019.auto.testautos.TestAutoMode;
 import com.palyrobotics.frc2019.util.logger.Logger;
@@ -48,7 +49,7 @@ public class AutoModeSelector {
 	 * @return AutoMode currently selected
 	 */
 	public AutoModeBase getAutoMode() {
-		return new TestAutoMode();
+		return new Hecker();
 	}
 
 	/**
