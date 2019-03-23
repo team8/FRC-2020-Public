@@ -22,7 +22,7 @@ public class VisionClosedController implements Drive.DriveController {
     private double oldYawToTarget;
     private long oldTime;
 
-    private final double distancePowConst = Gains.kVidarTrajectorykV;
+    private final double distancePowConst = 2.5 * Gains.kVidarTrajectorykV;
 
     /**
      *            Pass in the latest robot state

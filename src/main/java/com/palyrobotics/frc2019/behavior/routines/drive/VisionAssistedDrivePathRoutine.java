@@ -8,6 +8,8 @@ import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.Path;
+import com.palyrobotics.frc2019.vision.Limelight;
+import com.palyrobotics.frc2019.vision.LimelightControlMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ public class VisionAssistedDrivePathRoutine extends Routine {
     private boolean startedRoutine;
 
     public VisionAssistedDrivePathRoutine(ArrayList<Path.Waypoint> pathList, boolean inverted, boolean relative, String enableVisionMarker) {
-        this.mPath = new Path(new ArrayList<>());
+        this.mPath = new Path(pathList);
         this.pathList = pathList;
         this.mInverted = inverted;
         this.mLookAhead = DrivetrainConstants.kPathFollowingLookahead;
@@ -70,10 +72,14 @@ public class VisionAssistedDrivePathRoutine extends Routine {
     public Commands update(Commands commands) {
         commands.wantedDriveState = Drive.DriveState.ON_BOARD_CONTROLLER;
         this.mPath = this.getPath();
+        System.out.println(mPath.getMarkersCrossed().toString());
         if(mPath.getMarkersCrossed().contains(enableVisionMarker) && !startedRoutine) {
             startedRoutine = true;
         }
         if(startedRoutine) {
+            Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
+            Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
+            System.out.println("Vision Assist Mode");
             commands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
         }
 
