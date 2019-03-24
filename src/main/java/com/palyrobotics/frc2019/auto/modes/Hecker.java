@@ -49,7 +49,7 @@ public class Hecker extends AutoModeBase {
 
     public Translation2d kCargoShipRightFront = new Translation2d(kCargoShipRightFrontX + PhysicalConstants.kRobotWidthInches * .2 + kOffsetX,
             kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * .05 + kOffsetY);
-    public Translation2d kRightLoadingStation = new Translation2d(kRightLoadingStationX + PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetX,
+    public Translation2d kRightLoadingStation = new Translation2d(kRightLoadingStationX - PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetX,
             kRightLoadingStationY + PhysicalConstants.kRobotLengthInches * .2 + kOffsetY);
     public Translation2d kRightRocketShipFar = new Translation2d(kRightRocketShipFarX + PhysicalConstants.kRobotLengthInches * 1 + kOffsetX,
             kRightRocketShipFarY + PhysicalConstants.kRobotLengthInches * .05 + kOffsetY);
@@ -79,15 +79,14 @@ public class Hecker extends AutoModeBase {
         ArrayList<Routine> routines = new ArrayList<>();
 
         ArrayList<Waypoint> StartToRocketShip = new ArrayList<>();
-        StartToRocketShip.add(new Waypoint(new Translation2d(0, 0), kRunSpeed));
+        StartToRocketShip.add(new Waypoint(new Translation2d(0, 0), 40));
         StartToRocketShip.add(new Waypoint(new Translation2d(kHabLineX + PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetX,
                 0), kRunSpeed)); //goes straight at the start so the robot doesn't get messed up over the ramp
         StartToRocketShip.add(new Waypoint(new Translation2d(kRightRocketShipCloseX * .6 + kOffsetX,
-                findLineClose(kRightRocketShipCloseX * .8) + PhysicalConstants.kRobotLengthInches * .35 + kOffsetY), kRunSpeed, "visionStart")); //line up with rocket ship
+                findLineClose(kRightRocketShipCloseX * .8) + PhysicalConstants.kRobotLengthInches * .2 + kOffsetY), kRunSpeed, "visionStart")); //line up with rocket ship
         StartToRocketShip.add(new Waypoint(kRightRocketShipClose, 0));
 
         routines.add(new VisionAssistedDrivePathRoutine(StartToRocketShip, false, false, "visionStart"));
-
 //        ArrayList<Waypoint> goForward = new ArrayList<>();
 //        goForward.add(new Waypoint(new Translation2d(0, 0), 20, true));
 //        //TODO: change translation cords
@@ -104,6 +103,8 @@ public class Hecker extends AutoModeBase {
         routines.add(new FingersExpelRoutine(.05));
 
         routines.add(new TimeoutRoutine(.4));
+        routines.add(new DriveSensorResetRoutine(1));
+
         //pusher back in
         routines.add(new PusherInRoutine());
 
@@ -114,18 +115,19 @@ public class Hecker extends AutoModeBase {
         ArrayList<Routine> routines = new ArrayList<>();
 
         ArrayList<Waypoint> BackCargoShipToLoadingStation = new ArrayList<>();
-        BackCargoShipToLoadingStation.add(new Waypoint(kRightRocketShipClose, kRunSpeed));
-        BackCargoShipToLoadingStation.add(new Waypoint(kRightLoadingStation.translateBy
-                (new Translation2d(PhysicalConstants.kRobotLengthInches * 2, PhysicalConstants.kRobotLengthInches * 0.5)), 0));
+        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(0, 0), kRunSpeed));
+        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(-20, 0), 0));
         routines.add(new DrivePathRoutine(new Path(BackCargoShipToLoadingStation), true));
 
         //turn to face the loading station
-        routines.add(new BBTurnAngleRoutine(160));
+        routines.add(new BBTurnAngleRoutine(-100));
 
         ArrayList<Waypoint> ForwardCargoShipToLoadingStation = new ArrayList<>();
-        ForwardCargoShipToLoadingStation.add(new Waypoint(kRightLoadingStation.translateBy
-                (new Translation2d(PhysicalConstants.kRobotLengthInches * 1.5, 0)), kRunSpeed, "visionStart"));
-        ForwardCargoShipToLoadingStation.add(new Waypoint(kRightLoadingStation, 0));
+        ForwardCargoShipToLoadingStation.add(new Waypoint(new Translation2d(-70, -40), kRunSpeed));
+        ForwardCargoShipToLoadingStation.add(new Waypoint(new Translation2d(-kRightRocketShipCloseX * 0.6,
+                -70), kRunSpeed, "visionStart"));
+        ForwardCargoShipToLoadingStation.add(new Waypoint(new Translation2d(-kRightRocketShipCloseX,
+                0), 0));
 
 //        //get pusher ready for hatch intake
 //        ArrayList<Routine> getIntakeReady = new ArrayList<>();
@@ -136,7 +138,8 @@ public class Hecker extends AutoModeBase {
 //                new SequentialRoutine(getIntakeReady)));
 
         routines.add(new VisionAssistedDrivePathRoutine(ForwardCargoShipToLoadingStation,
-                true, false, "visionStart"));
+                false, false, "visionStart"));
+
         routines.add(new PusherOutRoutine());
         routines.add(new FingersOpenRoutine());
         routines.add(new TimeoutRoutine(.5));
@@ -155,6 +158,8 @@ public class Hecker extends AutoModeBase {
     public Routine placeHatchClose2() { //loading station to rocket ship close
         ArrayList<Routine> routines = new ArrayList<>();
 
+        routines.add(new DriveSensorResetRoutine(1));
+
         /*
         The robot starts backwards at the loading station after loading a hatch. It then goes around the rocket ship and over shoots it a bit. Then, it lines up with the rocket ship far and places the hatch.
          */
@@ -171,10 +176,10 @@ public class Hecker extends AutoModeBase {
 
         ArrayList<Waypoint> ForwardLoadingStationToRocketShip = new ArrayList<>();
         ForwardLoadingStationToRocketShip.add(new Waypoint(new Translation2d(kRightRocketShipCloseX * 0.65,
-                findLineClose(kRightRocketShipCloseX * 0.65) + PhysicalConstants.kRobotLengthInches * .7), kRunSpeed));
+                findLineClose(kRightRocketShipCloseX * 0.65) + PhysicalConstants.kRobotLengthInches * .7), kRunSpeed, "startVision"));
         ForwardLoadingStationToRocketShip.add(new Waypoint(kRightRocketShipClose, 0));
 
-        routines.add(new DrivePathRoutine(new Path(ForwardLoadingStationToRocketShip), false));
+        routines.add(new VisionAssistedDrivePathRoutine(ForwardLoadingStationToRocketShip, false, false, "startVision"));
 
         //release hatch
 //        routines.add(new FingersOpenRoutine());
