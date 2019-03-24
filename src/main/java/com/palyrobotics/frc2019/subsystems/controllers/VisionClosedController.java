@@ -22,6 +22,8 @@ public class VisionClosedController implements Drive.DriveController {
     private double oldYawToTarget;
     private long oldTime;
 
+    private int updateCyclesForward = 0;
+
     private final double distancePowConst = 2.5 * Gains.kVidarTrajectorykV;
 
     /**
@@ -45,7 +47,7 @@ public class VisionClosedController implements Drive.DriveController {
         double angularPower;
         if(Limelight.getInstance().isTargetFound()) {
             double kP = .03;
-            double kD = .005;
+            double kD = .009;
 
             angularPower = -Limelight.getInstance().getYawToTarget() * kP
                     - ((Limelight.getInstance().getYawToTarget() - oldYawToTarget) / (System.currentTimeMillis() - oldTime) * 1000) * kD;
@@ -55,7 +57,11 @@ public class VisionClosedController implements Drive.DriveController {
             if (angularPower > 0.6) angularPower = 0.6;
             if (angularPower < -0.6) angularPower = -0.6;
         } else {
-            return SparkSignal.getNeutralSignal();
+            SparkSignal mSignal = SparkSignal.getNeutralSignal();
+            mSignal.leftMotor.setPercentOutput(.15);
+            mSignal.rightMotor.setPercentOutput(.15);
+
+            return mSignal;
         }
 
         double leftPower =  getAdjustedDistancePower();
@@ -93,7 +99,14 @@ public class VisionClosedController implements Drive.DriveController {
     @Override
     public boolean onTarget() {
         // once the target is out of sight, we are on target
-        return !Limelight.getInstance().isTargetFound();
+//        System.out.println(!Limelight.getInstance().isTargetFound());
+        if (!Limelight.getInstance().isTargetFound()) {
+            System.out.println("Up by 1");
+            updateCyclesForward += 1;
+        }
+        System.out.println(updateCyclesForward);
+        System.out.println(!Limelight.getInstance().isTargetFound() && (updateCyclesForward > 5));
+        return !Limelight.getInstance().isTargetFound() && (updateCyclesForward > 5);
     }
 
 }

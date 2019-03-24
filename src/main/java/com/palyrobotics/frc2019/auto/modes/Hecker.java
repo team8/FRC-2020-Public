@@ -99,7 +99,7 @@ public class Hecker extends AutoModeBase {
         routines.add(new PusherOutRoutine());
 
         //release hatch
-        routines.add(new FingersOpenRoutine());
+        routines.add(new FingersCloseRoutine());
 
         routines.add(new TimeoutRoutine(1));
         //pusher back in
@@ -134,7 +134,10 @@ public class Hecker extends AutoModeBase {
 //                new SequentialRoutine(getIntakeReady)));
 
         routines.add(new VisionAssistedDrivePathRoutine(ForwardCargoShipToLoadingStation,
-                false, false, "visionStart"));
+                true, false, "visionStart"));
+        routines.add(new PusherOutRoutine());
+        routines.add(new FingersOpenRoutine());
+        routines.add(new TimeoutRoutine(.5));
 
 //        ArrayList<Waypoint> goForwardABit = new ArrayList<>();
 //        goForwardABit.add(new Waypoint(new Translation2d(0, 0), 20, true));

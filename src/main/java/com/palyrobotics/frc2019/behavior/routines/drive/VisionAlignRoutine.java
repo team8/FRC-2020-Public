@@ -44,8 +44,8 @@ public class VisionAlignRoutine extends Routine {
         switch(mState) {
             case START:
                 Logger.getInstance().logRobotThread(Level.FINE, "Set setpoint", mAngle);
-                drive.setVisionAngleSetpoint();
-                commands.wantedDriveState = Drive.DriveState.ON_BOARD_CONTROLLER;
+                drive.setVisionClosedDriveController();
+                commands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
                 mState = VisionAlignRoutine.GyroBBState.TURNING;
                 break;
             case TURNING:

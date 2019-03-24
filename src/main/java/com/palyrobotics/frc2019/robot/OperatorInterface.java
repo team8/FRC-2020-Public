@@ -2,12 +2,14 @@ package com.palyrobotics.frc2019.robot;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.BBTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.IntakeLevelOneRocketRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shovel.*;
+import com.palyrobotics.frc2019.behavior.routines.*;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForHatchIntakeUp;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
@@ -117,7 +119,7 @@ public class OperatorInterface {
 			}
 		}
 
-		if(mTurnStick.getButtonPressed(7)) {
+		if(mTurnStick.getButtonPressed(4)) {
 			visionStartTime = System.currentTimeMillis();
 			// Limelight vision tracking on
 			if (Limelight.getInstance().getCamMode() != LimelightControlMode.CamMode.VISION) {
