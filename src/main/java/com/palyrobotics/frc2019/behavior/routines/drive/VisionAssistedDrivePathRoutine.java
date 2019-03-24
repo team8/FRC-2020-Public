@@ -41,6 +41,9 @@ public class VisionAssistedDrivePathRoutine extends Routine {
 
     @Override
     public void start() {
+        Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
+        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
+
         if(mRelative) {
             ArrayList<Path.Waypoint> absoluteList = new ArrayList<>();
             for (Path.Waypoint point : pathList) {
@@ -75,11 +78,10 @@ public class VisionAssistedDrivePathRoutine extends Routine {
         System.out.println(mPath.getMarkersCrossed().toString());
         if(mPath.getMarkersCrossed().contains(enableVisionMarker) && !startedRoutine) {
             startedRoutine = true;
+            Drive.getInstance().setVisionClosedDriveController();
         }
         if(startedRoutine) {
-            Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
-            Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
-            System.out.println("Vision Assist Mode");
+//            System.out.println("Vision Assist Mode");
             commands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
         }
 

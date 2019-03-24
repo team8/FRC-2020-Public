@@ -53,7 +53,8 @@ public class DrivetrainConstants {
     /*
      * Control loop constants for both robots
      */
-    public static final double kTurnInPlacePower = .5; //for bang bang
+    public static final double kTurnInPlacePower = .65; //for bang bang
+    public static final double kVisionLookingForTargetCreepPower = .25;
     public static final double kDriveMaxClosedLoopOutput = 1.0;
 
     /**
@@ -63,7 +64,7 @@ public class DrivetrainConstants {
     public static final double kAcceptableDriveVelocityError = 5;
     public static final double kAcceptableShortDrivePositionError = 1;
     public static final double kAcceptableShortDriveVelocityError = 3;
-    public static final double kAcceptableTurnAngleError = 5;
+    public static final double kAcceptableTurnAngleError = 8;
     public static final double kAcceptableGyroZeroError = 3;
     public static final double kAcceptableEncoderZeroError = 50;
 

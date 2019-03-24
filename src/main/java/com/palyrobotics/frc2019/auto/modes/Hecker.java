@@ -9,6 +9,7 @@ import com.palyrobotics.frc2019.behavior.routines.drive.*;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersExpelRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.*;
 import com.palyrobotics.frc2019.behavior.routines.pusher.*;
@@ -29,7 +30,7 @@ import java.util.List;
 public class Hecker extends AutoModeBase {
     //right start > rocket ship close > loading station > rocket ship far > depot > rocket ship mid
 
-    public static int kRunSpeed = 80;
+    public static int kRunSpeed = 90;
     public static double kOffsetX = -20;
     public static double kOffsetY = PhysicalConstants.kLevel3Width * .5 + PhysicalConstants.kLevel2Width * .5;
     public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
@@ -99,9 +100,10 @@ public class Hecker extends AutoModeBase {
         routines.add(new PusherOutRoutine());
 
         //release hatch
-        routines.add(new FingersOpenRoutine());
+        routines.add(new FingersCloseRoutine());
+        routines.add(new FingersExpelRoutine(.05));
 
-        routines.add(new TimeoutRoutine(1));
+        routines.add(new TimeoutRoutine(.4));
         //pusher back in
         routines.add(new PusherInRoutine());
 
@@ -134,7 +136,10 @@ public class Hecker extends AutoModeBase {
 //                new SequentialRoutine(getIntakeReady)));
 
         routines.add(new VisionAssistedDrivePathRoutine(ForwardCargoShipToLoadingStation,
-                false, false, "visionStart"));
+                true, false, "visionStart"));
+        routines.add(new PusherOutRoutine());
+        routines.add(new FingersOpenRoutine());
+        routines.add(new TimeoutRoutine(.5));
 
 //        ArrayList<Waypoint> goForwardABit = new ArrayList<>();
 //        goForwardABit.add(new Waypoint(new Translation2d(0, 0), 20, true));

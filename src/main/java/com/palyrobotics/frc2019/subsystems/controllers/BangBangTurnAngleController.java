@@ -29,9 +29,9 @@ public class BangBangTurnAngleController implements Drive.DriveController {
 	 *            Degrees relative to current state to turn
 	 */
 	public BangBangTurnAngleController(Pose currentPose, double heading) {
-		this.mPower = DrivetrainConstants.kTurnInPlacePower;
+		this.mPower = -DrivetrainConstants.kTurnInPlacePower;
 		this.mCachedPose = currentPose;
-		this.mTargetHeading = this.mCachedPose.heading - heading;
+		this.mTargetHeading = this.mCachedPose.heading + heading;
 		Logger.getInstance().logSubsystemThread(Level.INFO, "Starting Heading", this.mCachedPose.heading);
 		Logger.getInstance().logSubsystemThread(Level.INFO, "Target Heading", this.mTargetHeading);
 
@@ -64,6 +64,7 @@ public class BangBangTurnAngleController implements Drive.DriveController {
 	@Override
 	public boolean onTarget() {
 		double tolerance = DrivetrainConstants.kAcceptableTurnAngleError;
+		System.out.println(mCachedPose.heading - mTargetHeading);
 		return Math.abs(mCachedPose.heading - mTargetHeading) < tolerance;
 	}
 
