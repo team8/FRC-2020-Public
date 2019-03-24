@@ -6,6 +6,7 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.VisionAssistedDrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
@@ -20,12 +21,13 @@ import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("Duplicates")
 
-public class fanlin extends AutoModeBase {
+public class Fanlin extends AutoModeBase {
     //right start > rocket ship close > loading station > rocket ship far > depot > rocket ship mid
 
     public static int kRunSpeed = 60;
@@ -121,17 +123,17 @@ public class fanlin extends AutoModeBase {
     public Routine placeHatch() {
         ArrayList<Routine> routines = new ArrayList<>();
 
-        List<Path.Waypoint> DepotToCargoShip = new ArrayList<>(); //the CargoSlot variable makes the robot go farther so it goes to a different bay each time
+        ArrayList<Waypoint> DepotToCargoShip = new ArrayList<>();
         DepotToCargoShip.add(new Waypoint(new Translation2d(kRightDepotX + PhysicalConstants.kRobotLengthInches * 2 + kOffsetX,
                 kRightDepotY + kOffsetY), kRunSpeed));
         DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + PhysicalConstants.kRobotLengthInches * .55 + kOffsetX,
                 kRightDepotY + kOffsetY), kRunSpeed));
         DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + PhysicalConstants.kRobotLengthInches * .85 + kOffsetX,
-                kRightFirstCargoShipY + PhysicalConstants.kRobotLengthInches + kOffsetY), kRunSpeed)); //line up in front of cargo bay
+                kRightFirstCargoShipY + PhysicalConstants.kRobotLengthInches + kOffsetY), kRunSpeed, "visionStart")); //line up in front of cargo bay
         DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + PhysicalConstants.kRobotLengthInches * .85 + kOffsetX,
                 kRightFirstCargoShipY + PhysicalConstants.kRobotLengthInches * .2 + kOffsetY), 0));
 
-        //TODO: change path so the robot doesn't go all the way into the cargo bay but instead shoots the cargo in
+        routines.add(new VisionAssistedDrivePathRoutine(DepotToCargoShip, false, false, "visionStart"));
 
         //move elevator up while driving
 //        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(DepotToCargoShip), false),
