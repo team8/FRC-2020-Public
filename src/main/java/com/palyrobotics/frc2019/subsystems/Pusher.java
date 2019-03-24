@@ -23,6 +23,8 @@ public class Pusher extends Subsystem {
 
     private double target;
 
+    private double slamTime;
+
     private SparkMaxOutput mOutput = new SparkMaxOutput();
 
     public enum PusherState {
@@ -53,15 +55,20 @@ public class Pusher extends Subsystem {
         switch (mState) {
             case SLAM:
                 target = -.18;
-                mOutput.setPercentOutput(target);
+                if (slamTime == -1) {
+                    slamTime = System.currentTimeMillis();
+                }
+                mOutput.setPercentOutput((System.currentTimeMillis() - slamTime > 700) ? target/2 : target);
                 HardwareAdapter.getInstance().getPusher().resetSensors();
                 break;
             case IN:
                 target = PusherConstants.kVidarDistanceIn;
+                slamTime = -1;
                 mOutput.setTargetPosition(target, Gains.pusherPosition);
                 break;
             case OUT:
                 target = PusherConstants.kVidarDistanceOut;
+                slamTime = -1;
                 mOutput.setTargetPosition(target, Gains.pusherPosition);
                 break;
         }
