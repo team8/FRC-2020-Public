@@ -58,8 +58,8 @@ public class VisionClosedController implements Drive.DriveController {
             if (angularPower < -0.6) angularPower = -0.6;
         } else {
             SparkSignal mSignal = SparkSignal.getNeutralSignal();
-            mSignal.leftMotor.setPercentOutput(.15);
-            mSignal.rightMotor.setPercentOutput(.15);
+            mSignal.leftMotor.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
+            mSignal.rightMotor.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
 
             return mSignal;
         }
@@ -98,15 +98,11 @@ public class VisionClosedController implements Drive.DriveController {
 
     @Override
     public boolean onTarget() {
-        // once the target is out of sight, we are on target
-//        System.out.println(!Limelight.getInstance().isTargetFound());
+        // once the target is out of sight, we are on target (after 3 update cycles of just creeping forward
         if (!Limelight.getInstance().isTargetFound()) {
-            System.out.println("Up by 1");
             updateCyclesForward += 1;
         }
-        System.out.println(updateCyclesForward);
-        System.out.println(!Limelight.getInstance().isTargetFound() && (updateCyclesForward > 5));
-        return !Limelight.getInstance().isTargetFound() && (updateCyclesForward > 5);
+        return !Limelight.getInstance().isTargetFound() && (updateCyclesForward > 3);
     }
 
 }
