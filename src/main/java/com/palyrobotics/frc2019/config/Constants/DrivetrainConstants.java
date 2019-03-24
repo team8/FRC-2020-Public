@@ -53,7 +53,7 @@ public class DrivetrainConstants {
     /*
      * Control loop constants for both robots
      */
-    public static final double kTurnInPlacePower = .55; //for bang bang
+    public static final double kTurnInPlacePower = .35; //for bang bang
     public static final double kVisionLookingForTargetCreepPower = .25;
     public static final double kDriveMaxClosedLoopOutput = 1.0;
 

@@ -116,18 +116,13 @@ public class Hecker extends AutoModeBase {
 
         ArrayList<Waypoint> BackCargoShipToLoadingStation = new ArrayList<>();
         BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(0, 0), kRunSpeed));
-        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(-20, 0), 0));
+        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(-80, -15), 0));
         routines.add(new DrivePathRoutine(new Path(BackCargoShipToLoadingStation), true));
 
         //turn to face the loading station
-        routines.add(new BBTurnAngleRoutine(-100));
+        routines.add(new BBTurnAngleRoutineRequireVision(-110));
 
-        ArrayList<Waypoint> ForwardCargoShipToLoadingStation = new ArrayList<>();
-        ForwardCargoShipToLoadingStation.add(new Waypoint(new Translation2d(-70, -40), kRunSpeed));
-        ForwardCargoShipToLoadingStation.add(new Waypoint(new Translation2d(-kRightRocketShipCloseX * 0.6,
-                -70), kRunSpeed, "visionStart"));
-        ForwardCargoShipToLoadingStation.add(new Waypoint(new Translation2d(-kRightRocketShipCloseX,
-                0), 0));
+        routines.add(new DriveSensorResetRoutine(.1));
 
 //        //get pusher ready for hatch intake
 //        ArrayList<Routine> getIntakeReady = new ArrayList<>();
@@ -137,8 +132,7 @@ public class Hecker extends AutoModeBase {
 //        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(ForwardCargoShipToLoadingStation), false),
 //                new SequentialRoutine(getIntakeReady)));
 
-        routines.add(new VisionAssistedDrivePathRoutine(ForwardCargoShipToLoadingStation,
-                false, false, "visionStart"));
+        routines.add(new VisionClosedDriveRoutine());
 
         routines.add(new PusherOutRoutine());
         routines.add(new FingersOpenRoutine());

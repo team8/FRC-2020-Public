@@ -220,8 +220,8 @@ class HardwareUpdater {
 
 	    slaveSpark.follow(masterSpark);
 
-	    masterSpark.getPIDController().setOutputRange(-0.72,0.72);
-		slaveSpark.getPIDController().setOutputRange(-0.72,0.72);
+	    masterSpark.getPIDController().setOutputRange(-0.95,0.95);
+		slaveSpark.getPIDController().setOutputRange(-0.95,0.95);
 		
 		updateSparkGains(masterSpark, Gains.elevatorPosition);
 
@@ -253,8 +253,8 @@ class HardwareUpdater {
 
 		intakeVictor.setInverted(true);
 
-        intakeMasterSpark.getPIDController().setOutputRange(-0.4,0.5);
-        intakeSlaveSpark.getPIDController().setOutputRange(-0.4,0.5);
+        intakeMasterSpark.getPIDController().setOutputRange(-0.6,0.6);
+        intakeSlaveSpark.getPIDController().setOutputRange(-0.6,0.6);
 
 		intakeVictor.setNeutralMode(NeutralMode.Brake);
 

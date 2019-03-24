@@ -10,6 +10,7 @@ import com.palyrobotics.frc2019.behavior.routines.intake.IntakeLevelOneRocketRou
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shovel.*;
 import com.palyrobotics.frc2019.behavior.routines.*;
+import com.palyrobotics.frc2019.behavior.routines.waits.WaitForElevatorCanMove;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForHatchIntakeUp;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
@@ -179,7 +180,7 @@ public class OperatorInterface {
 			Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight1Inches, .1);
 			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel1);
-			newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.23), elevatorLevel1));
+			newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel1));
 		} else if(mOperatorXboxController.getButtonB()) {
 			double levelHeight;
 			if (Robot.getRobotState().hasPusherCargoFar) {
@@ -191,13 +192,13 @@ public class OperatorInterface {
 			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(levelHeight, .1);			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel2);
 //			newCommands.addWantedRoutine(new PusherInRoutine());
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.23), elevatorLevel2));
+            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel2));
 		} else if(mOperatorXboxController.getButtonY()) {
 			Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight3Inches, .1);
 			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel3);
 //			newCommands.addWantedRoutine(new PusherInRoutine());
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new TimeoutRoutine(.23), elevatorLevel3));
+            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel3));
 		}
 
 		/**\

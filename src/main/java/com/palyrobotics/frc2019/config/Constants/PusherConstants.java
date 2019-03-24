@@ -8,7 +8,7 @@ public class PusherConstants {
     public static final double kVidarDistanceIn = -0.1;
     public static final double kVidarDistanceMiddle = 2.5;
     public static final double kVidarDistanceOut = 6.1;
-    public static final double kVidarCargoTolerance = 4.900;
+    public static final double kVidarCargoTolerance = 5.900;
     public static final double kVidarCargoToleranceFar = 7.000;
     public static final double kVidarDistanceCompress = 1;
 

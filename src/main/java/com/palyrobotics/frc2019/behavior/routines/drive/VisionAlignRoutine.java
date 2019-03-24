@@ -37,7 +37,7 @@ public class VisionAlignRoutine extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-        if(mState != VisionAlignRoutine.GyroBBState.TIMED_OUT && (System.currentTimeMillis() - startTime > 5000)) {
+        if(mState != VisionAlignRoutine.GyroBBState.TIMED_OUT && (System.currentTimeMillis() - startTime > 6000)) {
             Logger.getInstance().logRobotThread(Level.WARNING, "Timed Out!");
             mState = VisionAlignRoutine.GyroBBState.TIMED_OUT;
         }
