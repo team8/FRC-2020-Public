@@ -85,7 +85,7 @@ public class Gains {
 
 	public static final double kVidarIntakePositionkP = .3;
 	public static final double kVidarIntakePositionkI = 0.0;
-	public static final double kVidarIntakePositionkD = .95;
+	public static final double kVidarIntakePositionkD = 2.2;
 	public static final double kVidarIntakePositionkF = 0.0;
 	public static final int kVidarIntakePositionkIzone = 0;
 	public static final double kVidarIntakePositionkRampRate = 1.0;
@@ -143,7 +143,7 @@ public class Gains {
 
     public static final double kVidarElevatorPositionkP = .5; // .7;
     public static final double kVidarElevatorPositionkI = 0.0;
-    public static final double kVidarElevatorPositionkD = 2.8; // 2.0;
+    public static final double kVidarElevatorPositionkD = 3.4; // 2.0;
     public static final double kVidarElevatorPositionkF = 0.0;
     public static final int kVidarElevatorPositionkIzone = 0;
     public static final double kVidarElevatorPositionkRampRate = 0.0;

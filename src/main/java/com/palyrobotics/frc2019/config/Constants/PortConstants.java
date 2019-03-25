@@ -51,9 +51,9 @@ public class PortConstants {
      * Ultrasonics
      */
 
-    public static final int kVidarIntakeLeftUltrasonicPing = 1;
+    public static final int kVidarIntakeLeftUltrasonicPing = 1; // red
     public static final int kVidarIntakeLeftUltrasonicEcho = 0;
-    public static final int kVidarIntakeRightUltrasonicPing = 3;
+    public static final int kVidarIntakeRightUltrasonicPing = 3; // brown
     public static final int kVidarIntakeRightUltrasonicEcho = 2;
 
     public static final int kVidarPusherUltrasonicPing = 9;

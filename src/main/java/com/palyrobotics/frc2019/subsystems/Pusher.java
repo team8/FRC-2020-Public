@@ -23,7 +23,7 @@ public class Pusher extends Subsystem {
 
     private double target;
 
-    private double slamTime;
+    private double slamTime = -1;
 
     private SparkMaxOutput mOutput = new SparkMaxOutput();
 
@@ -54,11 +54,11 @@ public class Pusher extends Subsystem {
         mState = commands.wantedPusherInOutState;
         switch (mState) {
             case SLAM:
-                target = -.18;
+                target = -.28;
                 if (slamTime == -1) {
                     slamTime = System.currentTimeMillis();
                 }
-                mOutput.setPercentOutput((System.currentTimeMillis() - slamTime > 700) ? target/2 : target);
+                mOutput.setPercentOutput((System.currentTimeMillis() - slamTime > 700) ? target/4 : target);
                 HardwareAdapter.getInstance().getPusher().resetSensors();
                 break;
             case IN:
