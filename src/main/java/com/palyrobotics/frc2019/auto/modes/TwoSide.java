@@ -4,10 +4,7 @@ import com.palyrobotics.frc2019.auto.AutoModeBase;
 import com.palyrobotics.frc2019.behavior.ParallelRoutine;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.VisionAssistedDrivePathRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.*;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
@@ -121,16 +118,11 @@ public class TwoSide extends AutoModeBase {
         ForwardCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kHabLineX - PhysicalConstants.kRobotLengthInches * .5 + kOffsetX,
                 kRightLoadingStationY + PhysicalConstants.kRobotWidthInches * .4 + kOffsetY), kRunSpeed));
         ForwardCargoShipToLoadingStation.add(new Waypoint(kRightLoadingStation.translateBy
-                (new Translation2d(PhysicalConstants.kRobotLengthInches, 0)), 0));
+                (new Translation2d(PhysicalConstants.kRobotLengthInches, 0)), kRunSpeed, "visionStart"));
+        ForwardCargoShipToLoadingStation.add(new Waypoint(kRightLoadingStation, 0));
 
-        //get fingers ready for hatch intake
-        ArrayList<Routine> getIntakeReady = new ArrayList<>();
-        getIntakeReady.add(new PusherOutRoutine());
-        getIntakeReady.add(new FingersCloseRoutine());
-
-        //drive and ready fingers at the same time
-        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(ForwardCargoShipToLoadingStation), false),
-                new SequentialRoutine(getIntakeReady)));
+        routines.add(new VisionAssistedDrivePathRoutine(ForwardCargoShipToLoadingStation,
+                false, false, "visionStart"));
 
         return new SequentialRoutine(routines);
     }
@@ -138,23 +130,31 @@ public class TwoSide extends AutoModeBase {
     public Routine placeHatch2() {
         ArrayList<Routine> routines = new ArrayList<>();
 
-        //TODO: fix
+        routines.add(new DriveSensorResetRoutine(1));
 
-        ArrayList<Waypoint> DepotToCargoShip = new ArrayList<>();
-        DepotToCargoShip.add(new Waypoint(new Translation2d(kRightLoadingStationY + PhysicalConstants.kRobotLengthInches * 2 + kOffsetX,
-                kRightLoadingStationY + kOffsetY), kRunSpeed));
-        DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + PhysicalConstants.kRobotLengthInches * .55 + kOffsetX,
-                kRightLoadingStationY + kOffsetY), kRunSpeed));
-        DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + PhysicalConstants.kRobotLengthInches * .85 + kOffsetX,
-                kRightFirstCargoShipY - PhysicalConstants.kRobotLengthInches * 1.5 + kOffsetY), kRunSpeed, "visionStart")); //line up in front of cargo bay
-        DepotToCargoShip.add(new Waypoint(new Translation2d(kRightFirstCargoShipX + PhysicalConstants.kRobotLengthInches * .85 + kOffsetX,
-                kRightFirstCargoShipY - PhysicalConstants.kRobotLengthInches * .2 + kOffsetY), 0));
+        ArrayList<Waypoint> BackLoadingStationToCargoShip = new ArrayList<>();
+        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(0, 0), kRunSpeed));
+        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kHabLineX,
+                0), kRunSpeed));
+        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kHabLineX,
+                0), kRunSpeed));
+        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kRightFirstCargoShipX * 0.8,
+                -40), kRunSpeed));
+        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kRightFirstCargoShipX - PhysicalConstants.kRobotLengthInches * 0.5,
+                -40)));
 
-        routines.add(new VisionAssistedDrivePathRoutine(DepotToCargoShip, false, false, "visionStart"));
+        routines.add(new DrivePathRoutine(new Path(BackLoadingStationToCargoShip), true));
 
-        //move elevator up while driving
-//        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(DepotToCargoShip), false),
-//                new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoBaysHeightInches, 1)));
+        routines.add(new BBTurnAngleRoutine(-90));
+
+        routines.add(new DriveSensorResetRoutine(1));
+
+        ArrayList<Waypoint> ForwardLoadingStationToCargoShip = new ArrayList<>();
+        ForwardLoadingStationToCargoShip.add(new Waypoint(new Translation2d(0,
+                0), kRunSpeed, "visionStart")); //line up in front of cargo bay
+        ForwardLoadingStationToCargoShip.add(new Waypoint(new Translation2d(0, 50), 0));
+
+        routines.add(new VisionAssistedDrivePathRoutine(ForwardLoadingStationToCargoShip, false, false, "visionStart"));
 
         return new SequentialRoutine(routines);
     }

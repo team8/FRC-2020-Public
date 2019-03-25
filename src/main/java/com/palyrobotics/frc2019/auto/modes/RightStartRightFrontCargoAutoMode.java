@@ -6,6 +6,7 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.VisionAssistedDrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
@@ -25,8 +26,8 @@ import java.util.List;
 
 public class RightStartRightFrontCargoAutoMode extends AutoModeBase {
 
-    public static int kRunSpeed = 70; //speed can be faster
-    public static double kOffsetX = -PhysicalConstants.kUpperPlatformLength - PhysicalConstants.kRobotLengthInches * 0.6;
+    public static int kRunSpeed = 90; //speed can be faster
+    public static double kOffsetX = -20;
     public static double kOffsetY = PhysicalConstants.kLevel3Width * .5 + PhysicalConstants.kLevel2Width * .5;
     public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
     public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
@@ -50,29 +51,22 @@ public class RightStartRightFrontCargoAutoMode extends AutoModeBase {
     public Routine placeHatch() {
         ArrayList<Routine> routines = new ArrayList<>();
 
-        //rezero
-        //routines.add(new RezeroSubAutoMode().Rezero(false));
 
         ArrayList<Waypoint> StartToCargoShip = new ArrayList<>();
-//        StartToCargoShip.add(new Waypoint(new Translation2d(kHabLineX + PhysicalConstants.kRobotLengthInches + kOffsetX,
-//                0), kRunSpeed)); //go straight so the robot doesn't get messed up going down a level
+        //go straight so the robot doesn't get messed up going down a level
+        StartToCargoShip.add(new Waypoint(new Translation2d(0, 0), 40));
+        StartToCargoShip.add(new Waypoint(new Translation2d(kHabLineX + PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetX,
+                0), kRunSpeed));
+
+        StartToCargoShip.add(new Waypoint(new Translation2d((kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7) * .65 + kOffsetX,
+                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.15 + kOffsetY), kRunSpeed)); //lines up with cargo ship
         StartToCargoShip.add(new Waypoint(new Translation2d((kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7) * .8 + kOffsetX,
-                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.2 + kOffsetY), kRunSpeed)); //lines up with cargo ship
+                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.15 + kOffsetY), kRunSpeed, "visionStart")); //lines up with cargo ship
         StartToCargoShip.add(new Waypoint(new Translation2d(kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7 + kOffsetX,
-                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.2 + kOffsetY), 0));
+                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.15 + kOffsetY), 0));
 
         //move elevator up while driving
-        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(StartToCargoShip), false),
-                new ElevatorCustomPositioningRoutine(OtherConstants.kCargoHatchTargetHeight, 1)));
-
-        ArrayList<Waypoint> goForward = new ArrayList<>();
-        goForward.add(new Waypoint(new Translation2d(kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7 + kOffsetX,
-                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.2 + kOffsetY), 20));
-        goForward.add(new Waypoint(new Translation2d(kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.4 + kOffsetX,
-                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.2 + kOffsetY), 0));
-
-        //pusher out while driving forward slowly
-        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(goForward), false), new PusherOutRoutine()));
+        routines.add(new VisionAssistedDrivePathRoutine(StartToCargoShip, false, false, "visionStart"));
 
         //release hatch
 //        routines.add(new FingersOpenRoutine());
