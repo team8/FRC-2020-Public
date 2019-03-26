@@ -35,7 +35,7 @@ public class RezeroSubAutoMode extends AutoModeBase {
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new DriveSensorResetRoutine(0.1), Rezero(true));
+        return new SequentialRoutine(new DriveSensorResetRoutine(0.1), Rezero(false));
     }
 
     public Routine Rezero(boolean inverted) {

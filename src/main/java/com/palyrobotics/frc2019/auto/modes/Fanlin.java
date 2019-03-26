@@ -4,10 +4,12 @@ import com.palyrobotics.frc2019.auto.AutoModeBase;
 import com.palyrobotics.frc2019.behavior.ParallelRoutine;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
+import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.*;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersExpelRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.*;
 import com.palyrobotics.frc2019.behavior.routines.pusher.*;
@@ -29,7 +31,7 @@ public class Fanlin extends AutoModeBase {
     //right start > rocket ship close > loading station > rocket ship far > depot > rocket ship mid
 
     public static int kRunSpeed = 60;
-    public static double kOffsetX = 10;
+    public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches;
     public static double kOffsetY = PhysicalConstants.kLevel3Width * .5 + PhysicalConstants.kLevel2Width * .5;
     public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
     public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
@@ -73,15 +75,17 @@ public class Fanlin extends AutoModeBase {
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new CenterStartRightFrontCargoAutoMode().getRoutine(), takeHatch(), placeHatch());
+        return new SequentialRoutine(new RightStartRightFrontCargoAutoMode().getRoutine(), takeHatch(), placeHatch());
     }
 
     public Routine takeHatch() { //cargo ship front to loading station
         ArrayList<Routine> routines = new ArrayList<>();
 
         ArrayList<Waypoint> BackCargoShipToLoadingStation = new ArrayList<>();
+        //backs out of the cargo ship
         BackCargoShipToLoadingStation.add(new Waypoint(kCargoShipRightFront.translateBy
-                (new Translation2d(-PhysicalConstants.kRobotLengthInches, 0)), kRunSpeed)); //backs out of the cargo ship
+                (new Translation2d(-PhysicalConstants.kRobotLengthInches, 0)), kRunSpeed));
+
         BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kCargoShipRightFrontX * .5 + kOffsetX,
                 kRightLoadingStationY * .5 + kOffsetY), kRunSpeed));
         BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kCargoShipRightFrontX * .5 - PhysicalConstants.kRobotLengthInches * 0.7 + kOffsetX,
@@ -91,21 +95,17 @@ public class Fanlin extends AutoModeBase {
         //turn toward the loading station
         routines.add(new CascadingGyroEncoderTurnAngleRoutine(90));
 
-        ArrayList<Waypoint> ForwardCargoShipToLoadingStation = new ArrayList<>();
-        ForwardCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kHabLineX - PhysicalConstants.kRobotLengthInches * .5 + kOffsetX,
-                kRightLoadingStationY + PhysicalConstants.kRobotWidthInches * .4 + kOffsetY), kRunSpeed));
-        ForwardCargoShipToLoadingStation.add(new Waypoint(kRightLoadingStation.translateBy
-                (new Translation2d(PhysicalConstants.kRobotLengthInches, 0)), 0));
+        //drive toward the loading station and align with vision
+        routines.add(new VisionClosedDriveRoutine());
 
-        //get fingers ready for hatch intake
-        ArrayList<Routine> getIntakeReady = new ArrayList<>();
-        getIntakeReady.add(new PusherOutRoutine());
-        getIntakeReady.add(new FingersCloseRoutine());
-
-        //drive and ready fingers at the same time
-        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(ForwardCargoShipToLoadingStation), false),
-                new SequentialRoutine(getIntakeReady)));
-
+        //pusher out
+        routines.add(new PusherOutRoutine());
+        //latch on to hatch
+        routines.add(new FingersOpenRoutine());
+        //wait
+        routines.add(new TimeoutRoutine(.5));
+        //pusher back in
+        routines.add(new PusherInRoutine());
 
         return new SequentialRoutine(routines);
     }
@@ -116,32 +116,34 @@ public class Fanlin extends AutoModeBase {
         routines.add(new DriveSensorResetRoutine(1));
 
         ArrayList<Waypoint> BackLoadingStationToCargoShip = new ArrayList<>();
-        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(0, 0), kRunSpeed));
-        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kHabLineX,
-                0), kRunSpeed));
         BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kHabLineX,
                 0), kRunSpeed));
         BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kRightFirstCargoShipX * 0.8,
                 -40), kRunSpeed));
         BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kRightFirstCargoShipX - PhysicalConstants.kRobotLengthInches * 0.5,
-                -40)));
+                -40), 0));
 
         routines.add(new DrivePathRoutine(new Path(BackLoadingStationToCargoShip), true));
 
         routines.add(new BBTurnAngleRoutine(-90));
 
-        routines.add(new DriveSensorResetRoutine(1));
+        routines.add(new DriveSensorResetRoutine(0.5));
 
-        ArrayList<Waypoint> ForwardLoadingStationToCargoShip = new ArrayList<>();
-        ForwardLoadingStationToCargoShip.add(new Waypoint(new Translation2d(0,
-                0), kRunSpeed, "visionStart")); //line up in front of cargo bay
-        ForwardLoadingStationToCargoShip.add(new Waypoint(new Translation2d(0, 50), 0));
+        //go to cargoship bay while using vision to align
+        routines.add(new VisionClosedDriveRoutine());
 
-        routines.add(new VisionAssistedDrivePathRoutine(ForwardLoadingStationToCargoShip, false, false, "visionStart"));
+        //pusher out
+        routines.add(new PusherOutRoutine());
 
-        //move elevator up while driving
-//        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(DepotToCargoShip), false),
-//                new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoBaysHeightInches, 1)));
+        //release hatch
+        routines.add(new FingersCloseRoutine());
+        routines.add(new FingersExpelRoutine(.05));
+
+        //wait
+        routines.add(new TimeoutRoutine(.4));
+
+        //pusher back in
+        routines.add(new PusherInRoutine());
 
         return new SequentialRoutine(routines);
 
