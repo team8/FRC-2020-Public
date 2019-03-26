@@ -106,11 +106,17 @@ public class Hecker extends AutoModeBase {
         ArrayList<Routine> routines = new ArrayList<>();
 
         ArrayList<Waypoint> BackRocketShipToLoadingStation = new ArrayList<>();
-        BackRocketShipToLoadingStation.add(new Waypoint(kRightRocketShipClose.translateBy(new Translation2d(-10,
-                6)), kRunSpeed));
-        BackRocketShipToLoadingStation.add(new Waypoint(kRightRocketShipClose.translateBy(new Translation2d(-40,
-                22)), 0));
-        routines.add(new DrivePathRoutine(new Path(BackRocketShipToLoadingStation), true));
+        BackRocketShipToLoadingStation.add(new Waypoint(new Translation2d(-10,
+                6), kRunSpeed, true));
+        BackRocketShipToLoadingStation.add(new Waypoint(new Translation2d(-40,
+                22), 0, true));
+
+//        BackRocketShipToLoadingStation.add(new Waypoint(kRightRocketShipClose.translateBy(new Translation2d(-10,
+//                6)), kRunSpeed));
+//        BackRocketShipToLoadingStation.add(new Waypoint(kRightRocketShipClose.translateBy(new Translation2d(-40,
+//                22)), 0));
+
+        routines.add(new DrivePathRoutine(BackRocketShipToLoadingStation, true, true));
 
         //turn to face the loading station
         routines.add(new BBTurnAngleRoutineRequireVision(-120));
@@ -151,7 +157,7 @@ public class Hecker extends AutoModeBase {
         routines.add(new DrivePathRoutine(new Path(BackLoadingStationToCargoShip), true));
 
         //turn to face the loading station
-        routines.add(new CascadingGyroEncoderTurnAngleRoutine(110));
+        routines.add(new BBTurnAngleRoutine(110));
 
         ArrayList<Waypoint> ForwardLoadingStationToRocketShip = new ArrayList<>();
         ForwardLoadingStationToRocketShip.add(new Waypoint(new Translation2d(kRightRocketShipCloseX * 0.65,

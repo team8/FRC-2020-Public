@@ -5,9 +5,7 @@ import com.palyrobotics.frc2019.behavior.ParallelRoutine;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.VisionAssistedDrivePathRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.*;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
@@ -54,24 +52,27 @@ public class RightStartRightFrontCargoAutoMode extends AutoModeBase {
     public Routine placeHatch() {
         ArrayList<Routine> routines = new ArrayList<>();
 
+        //pusher out
+        routines.add(new PusherOutRoutine());
+
         ArrayList<Waypoint> StartToCargoShip = new ArrayList<>();
         StartToCargoShip.add(new Waypoint(new Translation2d(kHabLineX + PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetX,
                 0), kRunSpeed));
 
         //lines up with cargo ship
-        StartToCargoShip.add(new Waypoint(new Translation2d((kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7) * .65 + kOffsetX,
-                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.15 + kOffsetY), kRunSpeed));
+        StartToCargoShip.add(new Waypoint(new Translation2d((kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7) * .7 + kOffsetX,
+                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.1 + kOffsetY), kRunSpeed));
         //turn on vision
-        StartToCargoShip.add(new Waypoint(new Translation2d((kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7) * .8 + kOffsetX,
-                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.15 + kOffsetY), kRunSpeed, "visionStart"));
-        StartToCargoShip.add(new Waypoint(new Translation2d(kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7 + kOffsetX,
-                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.15 + kOffsetY), 0));
+        StartToCargoShip.add(new Waypoint(new Translation2d((kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7) * 1 + kOffsetX,
+                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.1 + kOffsetY), 0));
+//        StartToCargoShip.add(new Waypoint(new Translation2d(kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7 + kOffsetX,
+//                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.2 + kOffsetY), 0));
 
+        routines.add(new DrivePathRoutine(new Path(StartToCargoShip), false));
         //drivepath + vision
-        routines.add(new VisionAssistedDrivePathRoutine(StartToCargoShip, false, false, "visionStart"));
+//        routines.add(new VisionAssistedDrivePathRoutine(StartToCargoShip, false, false, "visionStart"));
 
-        //pusher out
-        routines.add(new PusherOutRoutine());
+        routines.add(new VisionClosedDriveRoutine());
 
         //release hatch
         routines.add(new FingersCloseRoutine());
