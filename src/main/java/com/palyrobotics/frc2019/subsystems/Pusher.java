@@ -54,11 +54,11 @@ public class Pusher extends Subsystem {
         mState = commands.wantedPusherInOutState;
         switch (mState) {
             case SLAM:
-                target = -.28;
+                target = -.38;
                 if (slamTime == -1) {
                     slamTime = System.currentTimeMillis();
                 }
-                mOutput.setPercentOutput((System.currentTimeMillis() - slamTime > 700) ? target/4 : target);
+                mOutput.setPercentOutput((System.currentTimeMillis() - slamTime > 400) ? target/5.3 : target);
                 HardwareAdapter.getInstance().getPusher().resetSensors();
                 break;
             case IN:

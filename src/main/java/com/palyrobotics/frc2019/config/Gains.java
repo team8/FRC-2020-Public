@@ -74,7 +74,7 @@ public class Gains {
 
 	//Pusher Constants
     //TODO: Find and tune gains
-    public static final double kVidarPusherPositionkP = 0.15;
+    public static final double kVidarPusherPositionkP = 0.18;
     public static final double kVidarPusherPositionkI = 0.0;
     public static final double kVidarPusherPositionkD = 1;
     public static final double kVidarPusherPositionkF = 0.0;
@@ -83,9 +83,9 @@ public class Gains {
     public static final Gains pusherPosition = new Gains(kVidarPusherPositionkP, kVidarPusherPositionkI, kVidarPusherPositionkD,
             kVidarPusherPositionkF, kVidarPusherPositionkIzone, kVidarPusherPositionkRampRate);
 
-	public static final double kVidarIntakePositionkP = .3;
+	public static final double kVidarIntakePositionkP = .27; // .3;
 	public static final double kVidarIntakePositionkI = 0.0;
-	public static final double kVidarIntakePositionkD = 2.2;
+	public static final double kVidarIntakePositionkD = 0.0; // 2.2;
 	public static final double kVidarIntakePositionkF = 0.0;
 	public static final int kVidarIntakePositionkIzone = 0;
 	public static final double kVidarIntakePositionkRampRate = 1.0;

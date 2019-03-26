@@ -253,8 +253,8 @@ class HardwareUpdater {
 
 		intakeVictor.setInverted(true);
 
-        intakeMasterSpark.getPIDController().setOutputRange(-0.55,0.55);
-        intakeSlaveSpark.getPIDController().setOutputRange(-0.55,0.55);
+        intakeMasterSpark.getPIDController().setOutputRange(-0.50,0.50);
+        intakeSlaveSpark.getPIDController().setOutputRange(-0.50,0.50);
 
 		intakeVictor.setNeutralMode(NeutralMode.Brake);
 
@@ -612,7 +612,7 @@ class HardwareUpdater {
     private void updateIntake() {
 		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
        	HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
-
+		System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getAppliedOutput());
     }
 
 	void enableBrakeMode() {
