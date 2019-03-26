@@ -12,13 +12,14 @@ public class IntakeConstants {
     public static final double kMedium = 0.2;
 
     public static final double kMaxAngle = 117.0; // 90 - 61.7 + 90
-    public static final double kMaxAngleTicks = .1072; //FIX
+    public static final double kMaxAngleTicks = 0.09852723419594997; //FIX
 
     // FEED FORWARD CONSTANTS
 
-    public static final double kGravityFF = .64;
+    public static final double kGravityFF = .315;
     public static final double kAccelComp = 0;
     public static final double kCentripetalCoeff = 0;
+    public static final double kAngleOffset = 11.89; // offset for center of mass
 
     // INTAKING POSITIONS
 

@@ -4,6 +4,7 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.subsystems.Drive;
 
 /**
  * CheesyDriveHelper implements the calculations used in CheesyDrive for teleop control. Returns a DriveSignal for the motor output
@@ -16,6 +17,10 @@ public class CheesyDriveHelper {
 	public SparkSignal cheesyDrive(Commands commands, RobotState robotState) {
 		double throttle = -robotState.leftStickInput.getY();
 		double wheel = robotState.rightStickInput.getX();
+
+		if (commands.wantedDriveState == Drive.DriveState.CHEZY) {
+			wheel = wheel * .75;
+		}
 //
 //		SparkMaxOutput c = new SparkMaxOutput();
 //		c.setPercentOutput(throttle);

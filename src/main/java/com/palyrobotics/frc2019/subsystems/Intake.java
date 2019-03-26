@@ -154,10 +154,10 @@ public class Intake extends Subsystem {
         // 2. Compensate for robot acceleration.  Derivation is similar to that for an inverted pendulum,
         // and can be found on slack.
         // 3. Compensate for centripetal acceleration on the arm.
-        double arb_ff = IntakeConstants.kGravityFF * Math.cos(Math.toRadians(robotState.intakeAngle))
-                + IntakeConstants.kAccelComp * robotState.robotAccel * Math.sin(Math.toRadians(robotState.intakeAngle))
+        double arb_ff = IntakeConstants.kGravityFF * Math.cos(Math.toRadians(robotState.intakeAngle - IntakeConstants.kAngleOffset))
+                + IntakeConstants.kAccelComp * robotState.robotAccel * Math.sin(Math.toRadians(robotState.intakeAngle - IntakeConstants.kAngleOffset))
                 + IntakeConstants.kCentripetalCoeff * robotState.drivePose.headingVelocity * robotState.drivePose.headingVelocity *
-                Math.sin(Math.toRadians(robotState.intakeAngle));
+                Math.sin(Math.toRadians(robotState.intakeAngle - IntakeConstants.kAngleOffset));
 
         switch (mMacroState) {
             case STOWED:
