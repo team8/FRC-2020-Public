@@ -44,16 +44,16 @@ public class DrivetrainConstants {
     public static final double kTrackWidthInches = 24.625;
     public static final double kTrackEffectiveDiameter = (kTrackWidthInches * kTrackWidthInches + kTrackLengthInches * kTrackLengthInches) / kTrackWidthInches;
     public static final double kTrackScrubFactor = .9;
-    public static final double kPathFollowingLookahead = 35.0;
+    public static final double kPathFollowingLookahead = 39.0;
     public static final double kPathFollowingMaxAccel = 120;
-    public static final double kPathFollowingMaxVel = 100.0;
+    public static final double kPathFollowingMaxVel = 140.0;
     //public static final double kPathFollowingMaxVel = 5 * kPathFollowingMaxAccel;
-    public static final double kPathFollowingTolerance = 0.20;
+    public static final double kPathFollowingTolerance = 0.35;
 
     /*
      * Control loop constants for both robots
      */
-    public static final double kTurnInPlacePower = .35; //for bang bang
+    public static final double kTurnInPlacePower = .45; //for bang bang
     public static final double kVisionLookingForTargetCreepPower = .25;
     public static final double kDriveMaxClosedLoopOutput = 1.0;
 
@@ -64,7 +64,7 @@ public class DrivetrainConstants {
     public static final double kAcceptableDriveVelocityError = 5;
     public static final double kAcceptableShortDrivePositionError = 1;
     public static final double kAcceptableShortDriveVelocityError = 3;
-    public static final double kAcceptableTurnAngleError = 8;
+    public static final double kAcceptableTurnAngleError = 4;
     public static final double kAcceptableGyroZeroError = 3;
     public static final double kAcceptableEncoderZeroError = 50;
 

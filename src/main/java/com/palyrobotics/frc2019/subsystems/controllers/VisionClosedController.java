@@ -49,6 +49,11 @@ public class VisionClosedController implements Drive.DriveController {
             double kP = .03;
             double kD = .009;
 
+            if (robotState.gamePeriod == RobotState.GamePeriod.AUTO) {
+                kD = 0;
+                kP = .013;
+            }
+
             angularPower = -Limelight.getInstance().getYawToTarget() * kP
                     - ((Limelight.getInstance().getYawToTarget() - oldYawToTarget) / (System.currentTimeMillis() - oldTime) * 1000) * kD;
             oldYawToTarget = Limelight.getInstance().getYawToTarget();

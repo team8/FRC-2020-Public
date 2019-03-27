@@ -31,7 +31,8 @@ public class Fanlin extends AutoModeBase {
     //right start > rocket ship close > loading station > rocket ship far > depot > rocket ship mid
 
     public static int kRunSpeed = 100;
-    public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches;
+    //    public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches;
+    public static double kOffsetX = -20 - 25;
     public static double kOffsetY = PhysicalConstants.kLevel3Width * .5 + PhysicalConstants.kLevel2Width * .5;
     public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
     public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
@@ -86,14 +87,14 @@ public class Fanlin extends AutoModeBase {
         BackCargoShipToLoadingStation.add(new Waypoint(kCargoShipRightFront.translateBy
                 (new Translation2d(-PhysicalConstants.kRobotLengthInches, 0)), kRunSpeed));
 
-        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kCargoShipRightFrontX * .5 + PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetX,
+        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kCargoShipRightFrontX * .45 + PhysicalConstants.kRobotLengthInches * 0.2 + kOffsetX,
                 kRightLoadingStationY * .5 + kOffsetY), kRunSpeed));
-        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kCargoShipRightFrontX * .5 - PhysicalConstants.kRobotLengthInches * 0.2 + kOffsetX,
+        BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kCargoShipRightFrontX * .45 - PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetX,
                 kRightLoadingStationY - PhysicalConstants.kRobotLengthInches * 0.1 + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(BackCargoShipToLoadingStation), true));
 
         //turn toward the loading station
-        routines.add(new BBTurnAngleRoutine(100));
+        routines.add(new BBTurnAngleRoutineRequireVision(90));
 
         //drive toward the loading station and align with vision and pusher out
         routines.add(new ParallelRoutine(new VisionClosedDriveRoutine(), new PusherOutRoutine()));
@@ -101,7 +102,7 @@ public class Fanlin extends AutoModeBase {
         //latch on to hatch
         routines.add(new FingersOpenRoutine());
         //wait
-        routines.add(new TimeoutRoutine(.5));
+        routines.add(new TimeoutRoutine(.2));
         //pusher back in
         routines.add(new PusherInRoutine());
 
@@ -111,25 +112,27 @@ public class Fanlin extends AutoModeBase {
     public Routine placeHatch() {
         ArrayList<Routine> routines = new ArrayList<>();
 
-        routines.add(new DriveSensorResetRoutine(1));
+        routines.add(new DriveSensorResetRoutine(0.1));
 
         ArrayList<Waypoint> BackLoadingStationToCargoShip = new ArrayList<>();
         BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kHabLineX,
-                0), kRunSpeed));
-        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kRightFirstCargoShipX * 0.7,
-                -40), kRunSpeed));
-        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kRightFirstCargoShipX + PhysicalConstants.kRobotLengthInches * 0,
-                -40), 0));
+                0), kRunSpeed * 1.25));
+        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kRightFirstCargoShipX * 0.6,
+                -30), kRunSpeed));
+        BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kRightFirstCargoShipX - PhysicalConstants.kRobotLengthInches * 0.1,
+                -30), 0));
 
         routines.add(new DrivePathRoutine(new Path(BackLoadingStationToCargoShip), true));
 
-        routines.add(new BBTurnAngleRoutine(-90));
+        routines.add(new TimeoutRoutine(.3));
+
+        routines.add(new BBTurnAngleRoutine(-85));
+
+        routines.add(new TimeoutRoutine(.15));
 
         //go to cargoship bay while using vision to align
-        routines.add(new VisionClosedDriveRoutine());
+        routines.add(new ParallelRoutine(new VisionClosedDriveRoutine(), new PusherOutRoutine()));
 
-        //pusher out
-        routines.add(new PusherOutRoutine());
 
         //release hatch
         routines.add(new FingersCloseRoutine());
