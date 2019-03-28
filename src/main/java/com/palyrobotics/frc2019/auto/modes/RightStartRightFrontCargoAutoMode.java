@@ -63,10 +63,10 @@ public class RightStartRightFrontCargoAutoMode extends AutoModeBase {
 
         //lines up with cargo ship
         StartToCargoShip.add(new Waypoint(new Translation2d(kCargoShipRightFrontX * .6 + kOffsetX,
-                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.1 + kOffsetY), kRunSpeed));
+                kCargoShipRightFrontY - PhysicalConstants.kRobotLengthInches * 0.2 + kOffsetY), kRunSpeed));
         //turn on vision
-        StartToCargoShip.add(new Waypoint(new Translation2d((kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7) * 0.85 + kOffsetX,
-                kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.2 + kOffsetY), kRunSpeed, "visionStart"));
+        StartToCargoShip.add(new Waypoint(new Translation2d((kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7) * 0.75 + kOffsetX,
+                kCargoShipRightFrontY - PhysicalConstants.kRobotLengthInches * 0.1 + kOffsetY), kRunSpeed, "visionStart"));
         StartToCargoShip.add(new Waypoint(new Translation2d(kCargoShipRightFrontX - PhysicalConstants.kRobotLengthInches * 0.7 + kOffsetX,
                 kCargoShipRightFrontY + PhysicalConstants.kRobotLengthInches * 0.35 + kOffsetY), 0));
 

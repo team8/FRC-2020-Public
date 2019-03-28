@@ -56,6 +56,7 @@ public class Intake extends Subsystem {
         DROPPING, // dropping the cargo into the intake
         HOLDING_MID, // moving the arm to the mid hold position and keeping it there
         DOWN,
+        TUCK,
         HOLDING_ROCKET,
         INTAKING_ROCKET,
         EXPELLING_ROCKET,
@@ -187,6 +188,11 @@ public class Intake extends Subsystem {
                 mIntakeWantedPosition = Optional.of(IntakeConstants.kHoldingPosition);
                 break;
             case HOLDING_ROCKET:
+                mWheelState = WheelState.SLOW;
+                mUpDownState = UpDownState.CUSTOM_POSITIONING;
+                mIntakeWantedPosition = Optional.of(IntakeConstants.kRocketExpelPosition);
+                break;
+            case TUCK:
                 mWheelState = WheelState.SLOW;
                 mUpDownState = UpDownState.CUSTOM_POSITIONING;
                 mIntakeWantedPosition = Optional.of(IntakeConstants.kRocketExpelPosition);

@@ -7,9 +7,12 @@ import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.IntakeLevelOneRocketRoutine;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeSetRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shovel.*;
 import com.palyrobotics.frc2019.behavior.routines.*;
+import com.palyrobotics.frc2019.behavior.routines.waits.WaitForArmCanTuck;
+import com.palyrobotics.frc2019.behavior.routines.waits.WaitForArmCanReTuck;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForElevatorCanMove;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForHatchIntakeUp;
 import com.palyrobotics.frc2019.config.Commands;
@@ -192,13 +195,13 @@ public class OperatorInterface {
 			Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(levelHeight, .1);			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel2);
 //			newCommands.addWantedRoutine(new PusherInRoutine());
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel2));
+            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel2, new WaitForArmCanTuck(), new IntakeSetRoutine()));
 		} else if(mOperatorXboxController.getButtonY()) {
 			Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight3Inches, .1);
 			newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel3);
 //			newCommands.addWantedRoutine(new PusherInRoutine());
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel3));
+            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel3, new WaitForArmCanTuck(), new IntakeSetRoutine()));
 		}
 
 		/**\

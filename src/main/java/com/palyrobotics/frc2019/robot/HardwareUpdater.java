@@ -186,13 +186,13 @@ class HardwareUpdater {
 //		rightSlave1Spark.setOpenLoopRampRate(.2);
 //		rightSlave2Spark.setOpenLoopRampRate(.2);
 
-//		leftMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
-//		leftSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
-//		leftSlave2Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
-//
-//		rightMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
-//		rightSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
-//		rightSlave2Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+		leftMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+		leftSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+		leftSlave2Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+
+		rightMasterSpark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+		rightSlave1Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
+		rightSlave2Spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
 
 		// Set slave sparks to follower mode
 		leftSlave1Spark.follow(leftMasterSpark);
