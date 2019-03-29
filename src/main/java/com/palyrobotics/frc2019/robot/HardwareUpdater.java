@@ -93,7 +93,7 @@ class HardwareUpdater {
 		//Disable intake sparks
 		HardwareAdapter.getInstance().getIntake().intakeMasterSpark.disable();
 		HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.disable();
-		HardwareAdapter.getInstance().getIntake().intakeVictor.set(ControlMode.Disabled, 0);
+		HardwareAdapter.getInstance().getIntake().intakeTalon.set(ControlMode.Disabled, 0);
 
 		//Disable pusher sparks
 		HardwareAdapter.getInstance().getPusher().pusherSpark.disable();
@@ -235,7 +235,7 @@ class HardwareUpdater {
 
 		CANSparkMax intakeMasterSpark = HardwareAdapter.getInstance().getIntake().intakeMasterSpark;
 		CANSparkMax intakeSlaveSpark = HardwareAdapter.getInstance().getIntake().intakeSlaveSpark;
-		WPI_VictorSPX intakeVictor = HardwareAdapter.getInstance().getIntake().intakeVictor;
+		WPI_TalonSRX intakeTalon = HardwareAdapter.getInstance().getIntake().intakeTalon;
 
 		intakeMasterSpark.restoreFactoryDefaults();
 		intakeSlaveSpark.restoreFactoryDefaults();
@@ -251,23 +251,23 @@ class HardwareUpdater {
 		intakeMasterSpark.setInverted(false);
 		intakeSlaveSpark.setInverted(false);
 
-		intakeVictor.setInverted(true);
+		intakeTalon.setInverted(true);
 
         intakeMasterSpark.getPIDController().setOutputRange(-0.50,0.50);
         intakeSlaveSpark.getPIDController().setOutputRange(-0.50,0.50);
 
-		intakeVictor.setNeutralMode(NeutralMode.Brake);
+		intakeTalon.setNeutralMode(NeutralMode.Brake);
 
 		intakeMasterSpark.setOpenLoopRampRate(1.0);
 		intakeSlaveSpark.setOpenLoopRampRate(1.0);
 
-		intakeVictor.enableVoltageCompensation(true);
-		intakeVictor.configVoltageCompSaturation(14, 0);
-		intakeVictor.configForwardSoftLimitEnable(false, 0);
-		intakeVictor.configReverseSoftLimitEnable(false, 0);
+		intakeTalon.enableVoltageCompensation(true);
+		intakeTalon.configVoltageCompSaturation(14, 0);
+		intakeTalon.configForwardSoftLimitEnable(false, 0);
+		intakeTalon.configReverseSoftLimitEnable(false, 0);
 
-		intakeVictor.configPeakOutputForward(1, 0);
-		intakeVictor.configPeakOutputReverse(-1, 0);
+		intakeTalon.configPeakOutputForward(1, 0);
+		intakeTalon.configPeakOutputReverse(-1, 0);
 
 //		Set slave sparks to follower mode
 		intakeSlaveSpark.follow(intakeMasterSpark);
@@ -611,7 +611,7 @@ class HardwareUpdater {
      */
     private void updateIntake() {
 		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
-       	HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getVictorOutput());
+       	HardwareAdapter.getInstance().getIntake().intakeTalon.set(mIntake.getTalonOutput());
 		System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getAppliedOutput());
     }
 

@@ -23,7 +23,7 @@ public class Intake extends Subsystem {
     public static void resetInstance() { instance = new Intake(); }
 
     private SparkMaxOutput mSparkOutput = new SparkMaxOutput();
-    private double mVictorOutput;
+    private double mTalonOutput;
     private double mRumbleLength;
 
     private boolean movingDown = false;
@@ -230,25 +230,25 @@ public class Intake extends Subsystem {
         switch(mWheelState) {
             case INTAKING:
                 if(commands.customIntakeSpeed) {
-                    mVictorOutput = robotState.operatorXboxControllerInput.leftTrigger;
+                    mTalonOutput = robotState.operatorXboxControllerInput.leftTrigger;
                 } else {
-                    mVictorOutput = IntakeConstants.kMotorVelocity;
+                    mTalonOutput = IntakeConstants.kMotorVelocity;
                 }
                 break;
             case IDLE:
-                mVictorOutput = 0;
+                mTalonOutput = 0;
                 break;
             case DROPPING:
-                mVictorOutput = IntakeConstants.kDroppingVelocity;
+                mTalonOutput = IntakeConstants.kDroppingVelocity;
                 break;
             case EXPELLING:
-                mVictorOutput = IntakeConstants.kExpellingVelocity;
+                mTalonOutput = IntakeConstants.kExpellingVelocity;
                 break;
             case SLOW:
-                mVictorOutput = IntakeConstants.kVerySlowly;
+                mTalonOutput = IntakeConstants.kVerySlowly;
                 break;
             case MEDIUM:
-                mVictorOutput = IntakeConstants.kMedium;
+                mTalonOutput = IntakeConstants.kMedium;
                 break;
         }
 
@@ -312,7 +312,7 @@ public class Intake extends Subsystem {
         return mSparkOutput;
     }
 
-    public double getVictorOutput() { return mVictorOutput; }
+    public double getTalonOutput() { return mTalonOutput; }
 
     public boolean intakeOnTarget() {
         if (!mIntakeWantedPosition.isPresent()) {

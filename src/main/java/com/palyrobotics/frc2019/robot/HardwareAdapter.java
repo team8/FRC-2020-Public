@@ -89,7 +89,7 @@ public class HardwareAdapter {
     }
 
 	/**
-	 * Intake - 2 CANSparkMax, 1 WPI_VictorSPX, 2 Ultrasonics
+	 * Intake - 2 CANSparkMax, 1 WPI_TalonSRX, 2 Ultrasonics
 	 */
 	public static class IntakeHardware {
 		private static IntakeHardware instance = new IntakeHardware();
@@ -98,7 +98,7 @@ public class HardwareAdapter {
 			return instance;
 		}
 
-		public final WPI_VictorSPX intakeVictor;
+		public final WPI_TalonSRX intakeTalon;
 		public final CANSparkMax intakeMasterSpark;
 		public final CANSparkMax intakeSlaveSpark;
 		public final Ultrasonic intakeUltrasonicLeft;
@@ -112,7 +112,8 @@ public class HardwareAdapter {
 
 		protected IntakeHardware() {
 
-			intakeVictor = new WPI_VictorSPX(PortConstants.kVidarIntakeVictorDeviceID);
+
+			intakeTalon = new WPI_TalonSRX(PortConstants.kVidarIntakeTalonDeviceID);
 			intakeMasterSpark = new CANSparkMax(PortConstants.kVidarIntakeMasterDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			intakeSlaveSpark = new CANSparkMax(PortConstants.kVidarIntakeSlaveDeviceID, CANSparkMaxLowLevel.MotorType.kBrushless);
 			intakeUltrasonicLeft = new Ultrasonic(PortConstants.kVidarIntakeLeftUltrasonicPing, PortConstants.kVidarIntakeLeftUltrasonicEcho);
