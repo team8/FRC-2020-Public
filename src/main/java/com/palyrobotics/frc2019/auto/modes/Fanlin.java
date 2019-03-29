@@ -90,7 +90,7 @@ public class Fanlin extends AutoModeBase {
         BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kCargoShipRightFrontX * .45 + PhysicalConstants.kRobotLengthInches * 0.2 + kOffsetX,
                 kRightLoadingStationY * .5 + kOffsetY), kRunSpeed));
         BackCargoShipToLoadingStation.add(new Waypoint(new Translation2d(kCargoShipRightFrontX * .45 - PhysicalConstants.kRobotLengthInches * 0.5 + kOffsetX,
-                kRightLoadingStationY - PhysicalConstants.kRobotLengthInches * 0.1 + kOffsetY), 0));
+                kRightLoadingStationY + PhysicalConstants.kRobotLengthInches * 0.1 + kOffsetY), 0));
         routines.add(new DrivePathRoutine(new Path(BackCargoShipToLoadingStation), true));
 
         //turn toward the loading station
@@ -112,15 +112,15 @@ public class Fanlin extends AutoModeBase {
     public Routine placeHatch() {
         ArrayList<Routine> routines = new ArrayList<>();
 
-        routines.add(new DriveSensorResetRoutine(0.1));
+        routines.add(new DriveSensorResetRoutine(1));
 
         ArrayList<Waypoint> BackLoadingStationToCargoShip = new ArrayList<>();
         BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kHabLineX,
                 0), kRunSpeed * 1.25));
         BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kRightFirstCargoShipX * 0.6,
-                -30), kRunSpeed));
+                -40), kRunSpeed));
         BackLoadingStationToCargoShip.add(new Waypoint(new Translation2d(-kRightFirstCargoShipX - PhysicalConstants.kRobotLengthInches * 0.1,
-                -30), 0));
+                -50), 0));
 
         routines.add(new DrivePathRoutine(new Path(BackLoadingStationToCargoShip), true));
 
