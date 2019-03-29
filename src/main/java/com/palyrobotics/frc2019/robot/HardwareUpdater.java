@@ -404,6 +404,10 @@ class HardwareUpdater {
 
 		double time = Timer.getFPGATimestamp();
 
+		if(!robotState.cancelAuto && robotState.rightStickInput.getButtonPressed(7)) {
+            robotState.cancelAuto = true;
+        }
+
 		//Rotation2d gyro_angle = Rotation2d.fromRadians((right_distance - left_distance) * Constants.kTrackScrubFactor
 		///Constants.kTrackEffectiveDiameter);
 		Rotation2d gyro_angle = Rotation2d.fromDegrees(robotState.drivePose.heading);
