@@ -141,7 +141,7 @@ public class Drive extends Subsystem {
 		boolean mIsNewState = !(mState == commands.wantedDriveState);
 		mState = commands.wantedDriveState;
 
-		System.out.println(mState);
+//		System.out.println(mState);
 		switch(mState) {
 			case CHEZY:
 				/*DriveSignal deletthis = DriveSignal.getNeutralSignal();

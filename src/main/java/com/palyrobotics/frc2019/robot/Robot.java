@@ -26,6 +26,7 @@ import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import jdk.swing.interop.SwingInterOpUtils;
 
 public class Robot extends TimedRobot {
 	//Instantiate singleton classes
@@ -64,6 +65,8 @@ public class Robot extends TimedRobot {
 
 	private int disabledCycles;
 
+	private boolean breakoutTeleopInitCalled = false;
+
 	public Looper looper;
 	
 	@Override
@@ -98,44 +101,45 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 
-//		 teleopInit();
+		 teleopInit();
 
-        if(robotState.cancelAuto) {
-            robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
-            teleopInit();
-        } else {
-
-            Logger.getInstance().start();
-            DataLogger.getInstance().start();
-
-            Logger.getInstance().logRobotThread(Level.INFO, "Start autoInit()");
-
-            looper.start();
-
-            DashboardManager.getInstance().toggleCANTable(true);
-            robotState.gamePeriod = RobotState.GamePeriod.AUTO;
-
-            robotState.matchStartTime = System.currentTimeMillis();
-
-            mHardwareUpdater.updateState(robotState);
-            mRoutineManager.reset(commands);
-            robotState.reset(0, new RigidTransform2d());
-            //		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
-
-            // Limelight LED on
-//         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
-
-            mWriter.cleanFile();
-
-            AutoDistances.updateAutoDistances();
-
-            mWriter.cleanFile();
-
-            startSubsystems();
-            mHardwareUpdater.enableBrakeMode();
-
-            Logger.getInstance().logRobotThread(Level.INFO, "End autoInit()");
-        }
+//        if(robotState.cancelAuto) {
+//            robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
+//            teleopInit();
+//            breakoutTeleopInitCalled = true;
+//        } else {
+//
+//            Logger.getInstance().start();
+//            DataLogger.getInstance().start();
+//
+//            Logger.getInstance().logRobotThread(Level.INFO, "Start autoInit()");
+//
+//            looper.start();
+//
+//            DashboardManager.getInstance().toggleCANTable(true);
+//            robotState.gamePeriod = RobotState.GamePeriod.AUTO;
+//
+//            robotState.matchStartTime = System.currentTimeMillis();
+//
+//            mHardwareUpdater.updateState(robotState);
+//            mRoutineManager.reset(commands);
+//            robotState.reset(0, new RigidTransform2d());
+//            //		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
+//
+//            // Limelight LED on
+////         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+//
+//            mWriter.cleanFile();
+//
+//            AutoDistances.updateAutoDistances();
+//
+//            mWriter.cleanFile();
+//
+//            startSubsystems();
+//            mHardwareUpdater.enableBrakeMode();
+//
+//            Logger.getInstance().logRobotThread(Level.INFO, "End autoInit()");
+//        }
 
 	}
 
@@ -143,40 +147,48 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 
-//		teleopPeriodic();
+		teleopPeriodic();
 
-         if(robotState.cancelAuto) {
-             teleopPeriodic();
-         } else {
-             long start = System.nanoTime();
-             if (!this.mAutoStarted) {
-                 //Get the selected auto mode
-                 AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
-
-                 //Prestart and run the auto mode
-                 mode.prestart();
-                 mRoutineManager.addNewRoutine(mode.getRoutine());
-
-                 this.mAutoStarted = true;
-             }
-             if (this.mAutoStarted) {
-                 commands = mRoutineManager.update(commands);
-                 mHardwareUpdater.updateState(robotState);
-                 updateSubsystems();
-                 mHardwareUpdater.updateHardware();
-             }
-
-             if (mWriter.getSize() > 10000) {
-                 mWriter.write();
-             }
-
-             DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime() - start) / 1.0e6);
-             DataLogger.getInstance().cycle();
-         }
+//         if(robotState.cancelAuto) {
+//			 robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
+//			 if(breakoutTeleopInitCalled) {
+//			 	teleopInit();
+//			 	breakoutTeleopInitCalled = true;
+//			 }
+//			 teleopPeriodic();
+//			 mRoutineManager.reset(commands);
+//			 System.out.println("CANCELING AUTO, MOVING TO TELE");
+//         } else {
+//             long start = System.nanoTime();
+//             if (!this.mAutoStarted) {
+//                 //Get the selected auto mode
+//                 AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
+//
+//                 //Prestart and run the auto mode
+//                 mode.prestart();
+//                 mRoutineManager.addNewRoutine(mode.getRoutine());
+//
+//                 this.mAutoStarted = true;
+//             }
+//             if (this.mAutoStarted) {
+//                 commands = mRoutineManager.update(commands);
+//                 mHardwareUpdater.updateState(robotState);
+//                 updateSubsystems();
+//                 mHardwareUpdater.updateHardware();
+//             }
+//
+//             if (mWriter.getSize() > 10000) {
+//                 mWriter.write();
+//             }
+//
+//             DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime() - start) / 1.0e6);
+//             DataLogger.getInstance().cycle();
+//         }
 	}
 
 	@Override
 	public void teleopInit() {
+		System.out.println("TELE STARTED");
 		Logger.getInstance().start();
 		DataLogger.getInstance().start();
 
@@ -225,7 +237,7 @@ public class Robot extends TimedRobot {
 		DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
 		DataLogger.getInstance().cycle();
 
-		System.out.println("Limelight zdist: " + Limelight.getInstance().getCorrectedEstimatedDistanceZ());
+//		System.out.println("Limelight zdist: " + Limelight.getInstance().getCorrectedEstimatedDistanceZ());
 
 	}
 
@@ -274,7 +286,7 @@ public class Robot extends TimedRobot {
         System.out.println("Right Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
 //		System.out.println("PusherBackup Ultrasonic: " + HardwareAdapter.getInstance().getPusher().pusherSecondaryUltrasonic.getRangeInches());
 
-		System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+//		System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
 
 //        System.out.println();
 //        System.out.println();
