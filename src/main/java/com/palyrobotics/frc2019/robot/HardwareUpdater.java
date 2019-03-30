@@ -616,7 +616,7 @@ class HardwareUpdater {
     private void updateIntake() {
 		updateSparkMax(HardwareAdapter.getInstance().getIntake().intakeMasterSpark, mIntake.getSparkOutput());
        	HardwareAdapter.getInstance().getIntake().intakeTalon.set(mIntake.getTalonOutput());
-		System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getAppliedOutput());
+//		System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getAppliedOutput());
     }
 
 	void enableBrakeMode() {

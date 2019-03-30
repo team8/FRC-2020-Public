@@ -188,7 +188,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		System.out.println("TELE STARTED");
+//		System.out.println("TELE STARTED");
 		Logger.getInstance().start();
 		DataLogger.getInstance().start();
 

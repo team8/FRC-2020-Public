@@ -21,7 +21,7 @@ public abstract class WaitRoutine extends Routine {
 
     @Override
     public final Commands cancel(Commands commands) {
-        System.out.println("Done");
+//        System.out.println("Done");
         return commands;
     }
 

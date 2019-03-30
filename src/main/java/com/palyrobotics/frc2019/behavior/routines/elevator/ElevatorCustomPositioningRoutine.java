@@ -54,7 +54,7 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     public Commands cancel(Commands commands) {
         commands.wantedGearboxState = Elevator.GearboxState.ELEVATOR;
         commands.wantedElevatorState = Elevator.ElevatorState.CUSTOM_POSITIONING;
-        System.out.println("cancelling all fucktacklind");
+//        System.out.println("cancelling all fucktacklind");
         return commands;
     }
 
@@ -62,7 +62,7 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     public boolean finished() {
         if(mStartTime != -1) {
             if (System.currentTimeMillis() - mStartTime > mTimeout * 1000) {
-                System.out.println("ECPR timing out");
+//                System.out.println("ECPR timing out");
                 return true;
             }
         }

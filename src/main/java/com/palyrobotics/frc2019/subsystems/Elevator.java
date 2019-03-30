@@ -134,7 +134,7 @@ public class Elevator extends Subsystem {
             case CUSTOM_POSITIONING:
                 commands.elevatorMoving = true;
                 //Control loop
-                System.out.println("Elevator custom pos to " + mElevatorWantedPosition.get());
+//                System.out.println("Elevator custom pos to " + mElevatorWantedPosition.get());
 
                 mOutput.setTargetPosition(mElevatorWantedPosition.get(), ElevatorConstants.kHoldVoltage, Gains.elevatorPosition);
 
@@ -204,6 +204,10 @@ public class Elevator extends Subsystem {
             mElevatorState = commands.wantedElevatorState;
         } else if(commands.wantedElevatorState == ElevatorState.CUSTOM_POSITIONING) {
             //Assume bottom position is the bottom
+
+            if (!mElevatorWantedPosition.isPresent()) {
+                mElevatorWantedPosition = Optional.of(mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch);
+            }
             if(!mElevatorWantedPosition.equals(Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get()))) {
                 mElevatorWantedPosition = Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get());
                 if(mElevatorWantedPosition.get() >= mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch) {
