@@ -7,12 +7,12 @@ public class IntakeConstants {
     public static final double kMotorVelocity = .58;
     public static final double kFastIntakingVelocity = 0.8;
     public static final double kDroppingVelocity = 1.0;
-    public static final double kExpellingVelocity = -1.0;
+    public static final double kExpellingVelocity = -0.9;
     public static final double kVerySlowly = .03;
     public static final double kMedium = 0.2;
 
     public static final double kMaxAngle = 118.0; // 90 - 61.7 + 90
-    public static final double kMaxAngleTicks = .544; //FIX
+    public static final double kMaxAngleTicks = .687; //FIX
 
     // FEED FORWARD CONSTANTS
 
