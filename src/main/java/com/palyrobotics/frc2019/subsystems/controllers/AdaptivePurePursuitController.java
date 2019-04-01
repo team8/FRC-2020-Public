@@ -1,24 +1,25 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
-import com.palyrobotics.frc2019.config.Gains;
-import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.robot.Robot;
-import com.palyrobotics.frc2019.subsystems.Drive;
-import com.palyrobotics.frc2019.util.*;
-import com.palyrobotics.frc2019.util.logger.Logger;
-import com.palyrobotics.frc2019.util.trajectory.*;
-import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
-
-import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.Timer;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Level;
+
+import com.palyrobotics.frc2019.config.Gains;
+import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.subsystems.Drive;
+import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.OnboardControlType;
+import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.TrajectorySegment;
+import com.palyrobotics.frc2019.util.Pose;
+import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2019.util.trajectory.Kinematics;
+import com.palyrobotics.frc2019.util.trajectory.Path;
+import com.palyrobotics.frc2019.util.trajectory.PathSegment;
+import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
+import com.palyrobotics.frc2019.util.trajectory.Rotation2d;
+import com.palyrobotics.frc2019.util.trajectory.Translation2d;
+
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Implements an adaptive pure pursuit controller. See: https://www.ri.cmu.edu/pub_files/pub1/kelly_alonzo_1994_4/kelly_alonzo_1994_4 .pdf
@@ -33,11 +34,16 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 	double mFixedLookahead;
 	Path mPath;
 	RigidTransform2d.Delta mLastCommand;
+	Kinematics.DriveVelocity mLastDriveVelocity;
 	double mLastTime;
 	double mMaxAccel;
 	double mDt;
 	boolean mReversed;
 	double mPathCompletionTolerance;
+
+	CSVWriter mWriter = CSVWriter.getInstance();
+
+	private OnboardDriveController onboardController;
 
 	public AdaptivePurePursuitController(double fixed_lookahead, double max_accel, double nominal_dt, Path path, boolean reversed,
 										 double path_completion_tolerance) {
@@ -48,82 +54,103 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 		mLastCommand = null;
 		mReversed = reversed;
 		mPathCompletionTolerance = path_completion_tolerance;
+
+		this.onboardController = new OnboardDriveController(OnboardControlType.kVelArbFF, Gains.vidarTrajectory);
 	}
 
 	/**
-	 * Calculate the robot's required Delta (movement along an arc) based on the current robot pose and lookahead point.
+	 * Calculate the next Delta and convert it to a drive signal
 	 *
-	 * @param robot_pose
-	 *            - the current position of the robot denoted by its translation and rotation from the original position
-	 * @param now
-	 *            - the current timestamp
-	 * @return the target x translation dx, y translation dy, and rotation dtheta
+	 * @param state
+	 *            - the current robot state, currently unused
+	 * @return the left and right drive voltage outputs needed to move in the calculated Delta
 	 */
-	public RigidTransform2d.Delta update(RigidTransform2d robot_pose, double now) {
-		RigidTransform2d pose = robot_pose;
-		if(mReversed) {
-			pose = new RigidTransform2d(robot_pose.getTranslation(), robot_pose.getRotation().rotateBy(Rotation2d.fromRadians(Math.PI)));
+	@Override
+	public SparkSignal update(RobotState state) {
+
+		//Get estimated robot position
+		RigidTransform2d robot_pose = state.getLatestFieldToVehicle().getValue();
+
+		//Reverse the rotation if the path is reversed
+	    if(mReversed) {
+			robot_pose = new RigidTransform2d(robot_pose.getTranslation(), robot_pose.getRotation().rotateBy(Rotation2d.fromRadians(Math.PI)));
 		}
 
 		double distance_from_path = mPath.update(robot_pose.getTranslation());
-
 		PathSegment.Sample lookahead_point = mPath.getLookaheadPoint(robot_pose.getTranslation(), distance_from_path + mFixedLookahead);
-//		System.out.println("Current point = " + robot_pose.getTranslation() + " " + "Lookahead point = " + lookahead_point.translation);
-		//if (!mPath.getWaypoints().isEmpty()) System.out.println("First point = " + mPath.getWaypoints().get(0).position.toString());
-
-		Optional<Circle> circle = joinPath(pose, lookahead_point.translation);
+		Optional<Circle> circle = joinPath(robot_pose, lookahead_point.translation);
 
 		double speed = lookahead_point.speed;
-		//Logger.getInstance().logSubsystemThread(Level.INFO, "APP", "speed before scaling = " + speed);
 		if(mReversed) {
 			speed *= -1;
 		}
-		//Ensure we don't accelerate too fast from the previous command
+
+		//If we are just starting the controller, use the robot's current velocity and the default dt
+		double now = Timer.getFPGATimestamp();
 		double dt = now - mLastTime;
-		//Logger.getInstance().logSubsystemThread(Level.INFO, "APP", "dt = " + dt);
-		if(mLastCommand == null) {
-			mLastCommand = new RigidTransform2d.Delta(0, 0, 0);
+		if(mLastDriveVelocity == null || mLastCommand == null) {
+			mLastDriveVelocity = new Kinematics.DriveVelocity(state.drivePose.leftEncVelocity, state.drivePose.rightEncVelocity);
+			mLastCommand = Kinematics.forwardKinematics(mLastDriveVelocity);
 			dt = mDt;
 		}
-		//System.out.println("Last command = " + mLastCommand.dx);
+
+		//Ensure we don't accelerate too fast from the previous command
 		double accel = (speed - mLastCommand.dx) / dt;
-		//System.out.println("Spood = " + speed);
-		//System.out.println("Accel = " + accel);
 		if(accel < -mMaxAccel) {
 			speed = mLastCommand.dx - mMaxAccel * dt;
 		} else if(accel > mMaxAccel) {
 			speed = mLastCommand.dx + mMaxAccel * dt;
 		}
-		//System.out.println("Scaled spood = " + speed);
 
 		//Ensure we slow down in time to stop
 		//vf^2 = v^2 + 2*a*d
 		//0 = v^2 + 2*a*d
 		double remaining_distance = mPath.getRemainingLength();
-		//Logger.getInstance().logSubsystemThread(Level.INFO, "APP", "remaining distance = " + remaining_distance);
 		double max_allowed_speed = Math.sqrt(2 * mMaxAccel * remaining_distance);
-		//Logger.getInstance().logSubsystemThread(Level.INFO, "APP", "max allowed speed = " + max_allowed_speed);
+
+		//Ensure we don't go faster than the maximum path following speed
+		max_allowed_speed = Math.min(max_allowed_speed, DrivetrainConstants.kPathFollowingMaxVel);
+
+		//Bound speed by constraints
 		if(Math.abs(speed) > max_allowed_speed) {
 			speed = max_allowed_speed * Math.signum(speed);
 		}
 
-		/*final double kMinSpeed = 4.0;
-		if(Math.abs(speed) < kMinSpeed) {
-			//Hack for dealing with problems tracking very low speeds with
-			//Talons
-			speed = kMinSpeed * Math.signum(speed);
-		}*/
-
-		RigidTransform2d.Delta rv;
+		//Obtain command (linear / angular velocity)
+		RigidTransform2d.Delta command;
 		if(circle.isPresent()) {
-			rv = new RigidTransform2d.Delta(speed, 0, (circle.get().turn_right ? -1 : 1) * Math.abs(speed) / circle.get().radius);
+			command = new RigidTransform2d.Delta(speed, 0, (circle.get().turn_right ? -1 : 1) * Math.abs(speed) / circle.get().radius);
 		} else {
-			rv = new RigidTransform2d.Delta(speed, 0, 0);
+			command = new RigidTransform2d.Delta(speed, 0, 0);
 		}
+
+		//Convert command to setpoint (left / right velocity)
+		Kinematics.DriveVelocity setpoint = Kinematics.inverseKinematics(command);
+
+		//Calculate acceleration of each side based on last setpoint
+		double leftAcc = (setpoint.left - mLastDriveVelocity.left) / dt;
+		double rightAcc = (setpoint.right - mLastDriveVelocity.right) / dt;
+		
+		mWriter.addData("lastDriveVelocityLeft", mLastDriveVelocity.left);
+		mWriter.addData("lastDriveVelocityRight", mLastDriveVelocity.right);
+
+		//Pass velocity and acceleration setpoints into onboard controller which
+		//Returns a SparkSignal with velocity setpoint and arbitrary feedforward
+		TrajectorySegment left_segment = new TrajectorySegment(setpoint.left, leftAcc, dt);
+		TrajectorySegment right_segment = new TrajectorySegment(setpoint.right, rightAcc, dt);
+		try {
+			onboardController.updateSetpoint(left_segment, right_segment, this);
+		}
+		catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+
 		mLastTime = now;
-		mLastCommand = rv;
-		//Logger.getInstance().logSubsystemThread(Level.INFO, "AdaptivePurePursuit", "Speed output: " + speed);
-		return rv;
+		mLastCommand = command;
+		mLastDriveVelocity = setpoint;
+
+    return onboardController.update(state);
+
 	}
 
 	/**
@@ -187,40 +214,6 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 				.5 * Math.abs((dx * dx + dy * dy) / cross_term), cross_product > 0));
 	}
 
-	/**
-	 * Calculate the next Delta and convert it to a drive signal
-	 *
-	 * @param state
-	 *            - the current robot state, currently unused
-	 * @return the left and right drive voltage outputs needed to move in the calculated Delta
-	 */
-	@Override
-	public SparkSignal update(RobotState state) {
-		RigidTransform2d robot_pose = Robot.getRobotState().getLatestFieldToVehicle().getValue();
-		//Logger.getInstance().logSubsystemThread(Level.FINEST, robot_pose);
-		RigidTransform2d.Delta command = this.update(robot_pose, Timer.getFPGATimestamp());
-		Kinematics.DriveVelocity setpoint = Kinematics.inverseKinematics(command);
-		setpoint = new Kinematics.DriveVelocity(setpoint.left, setpoint.right);
-		//System.out.println("Left setpoint = " + setpoint.left);
-		//System.out.println("Right setpoint = " + setpoint.right);
-		//Scale the command to respect the max velocity limits
-		double max_vel = 0.0;
-		max_vel = Math.max(max_vel, Math.abs(setpoint.left));
-		max_vel = Math.max(max_vel, Math.abs(setpoint.right));
-		//Logger.getInstance().logSubsystemThread(Level.INFO, "APP", "max_vel = " + max_vel);
-		if(max_vel > DrivetrainConstants.kPathFollowingMaxVel) {
-			//System.out.println("This thing is too damn fast");
-			double scaling = DrivetrainConstants.kPathFollowingMaxVel / max_vel;
-			setpoint = new Kinematics.DriveVelocity(setpoint.left * scaling, setpoint.right * scaling);
-		}
-
-		final SparkMaxOutput left = new SparkMaxOutput(Gains.vidarVelocity, ControlType.kVelocity, setpoint.left);
-		final SparkMaxOutput right = new SparkMaxOutput(Gains.vidarVelocity, ControlType.kVelocity, setpoint.right);
-//		System.out.println("Left output = " + left + " " + "Right output = " + right);
-		return new SparkSignal(left, right);
-	}
-
-
 	//HOPING THIS METHOD NEVER GETS CALLED
 	@Override
 	public Pose getSetpoint() {
@@ -235,12 +228,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 
 	@Override
 	public boolean onTarget() {
-		/*
-		 * RigidTransform2d pose = RobotPosition.getInstance().getLatestFieldToVehicle().getValue(); if (pose.getTranslation().getX() > 40) return true;
-		 */
-		double remainingLength = mPath.getRemainingLength();
-		//System.out.println("remaining length = " + remainingLength);
-		return remainingLength <= mPathCompletionTolerance;
+		return mPath.getRemainingLength() <= mPathCompletionTolerance;
 	}
 
 }

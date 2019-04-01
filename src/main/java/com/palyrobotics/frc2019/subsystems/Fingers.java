@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
+import com.palyrobotics.frc2019.config.Constants.FingerConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
@@ -44,13 +45,15 @@ public class Fingers extends Subsystem {
     }
 
     @Override
-    public void update(Commands commands, RobotState robotState) {
-        if(commands.elevatorMoving || commands.shooterSpinning) {
-            mOpenCloseState = FingersState.OPEN;
-            mExpelState = PushingState.CLOSED;
-        } else {
-            mOpenCloseState = commands.wantedFingersOpenCloseState;
-            mExpelState = commands.wantedFingersExpelState;
+public void update(Commands commands, RobotState robotState) {
+        mOpenCloseState = commands.wantedFingersOpenCloseState;
+        mExpelState = commands.wantedFingersExpelState;
+//        System.out.println(robotState.drivePose.heading);
+        if (Math.abs(Math.abs(robotState.drivePose.heading % 360) - 180) < FingerConstants.kAngleLoadingStationTolerance) {
+            // We are at the loading station
+            if (mExpelState == PushingState.EXPELLING) {
+                mExpelState = PushingState.CLOSED;
+            }
         }
 
         switch(mOpenCloseState) {

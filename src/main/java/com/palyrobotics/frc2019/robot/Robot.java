@@ -1,24 +1,32 @@
 package com.palyrobotics.frc2019.robot;
 
-import com.palyrobotics.frc2019.auto.AutoFMS;
+import java.util.logging.Level;
+
 import com.palyrobotics.frc2019.auto.AutoModeBase;
 import com.palyrobotics.frc2019.auto.AutoModeSelector;
 import com.palyrobotics.frc2019.behavior.RoutineManager;
 import com.palyrobotics.frc2019.config.AutoDistances;
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
-import com.palyrobotics.frc2019.subsystems.*;
+import com.palyrobotics.frc2019.subsystems.Drive;
+import com.palyrobotics.frc2019.subsystems.Elevator;
+import com.palyrobotics.frc2019.subsystems.Fingers;
+import com.palyrobotics.frc2019.subsystems.Intake;
+import com.palyrobotics.frc2019.subsystems.Pusher;
+import com.palyrobotics.frc2019.subsystems.Shooter;
+import com.palyrobotics.frc2019.subsystems.Shovel;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2019.util.logger.DataLogger;
 import com.palyrobotics.frc2019.util.logger.Logger;
+import com.palyrobotics.frc2019.util.loops.Looper;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
+
 import edu.wpi.first.wpilibj.TimedRobot;
-import java.util.logging.Level;
+import jdk.swing.interop.SwingInterOpUtils;
 
 public class Robot extends TimedRobot {
 	//Instantiate singleton classes
@@ -57,74 +65,141 @@ public class Robot extends TimedRobot {
 
 	private int disabledCycles;
 
+	private boolean breakoutTeleopInitCalled = false;
+
+	public Looper looper;
+	
 	@Override
 	public void robotInit() {
+
+		Logger.getInstance().setFileName("3-2-Testing");
+		DataLogger.getInstance().setFileName("3-2-Testing");
+
+		Logger.getInstance().start();
+		DataLogger.getInstance().start();
+
+		Logger.getInstance().logRobotThread(Level.INFO, "Start robotInit()");
+		
 		DashboardManager.getInstance().robotInit();
 
 		mHardwareUpdater.initHardware();
+
+		mElevator.clearWantedPositions();
+		this.looper = new Looper();
+//		looper.register(mHardwareUpdater.logLoop);
 
 		mWriter.cleanFile();
 
 		DriveTeam.configConstants();
 
+		Logger.getInstance().logRobotThread(Level.INFO, "End robotInit()");
+
 	}
+
+	
 
 	@Override
 	public void autonomousInit() {
-		DashboardManager.getInstance().toggleCANTable(true);
-		robotState.gamePeriod = RobotState.GamePeriod.AUTO;
-		mHardwareUpdater.configureHardware();
 
-		robotState.matchStartTime = System.currentTimeMillis();
+		 teleopInit();
 
-		mHardwareUpdater.updateState(robotState);
-		mRoutineManager.reset(commands);
-		robotState.reset(0, new RigidTransform2d());
-//		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
+//        if(robotState.cancelAuto) {
+//            robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
+//            teleopInit();
+//            breakoutTeleopInitCalled = true;
+//        } else {
+//
+//            Logger.getInstance().start();
+//            DataLogger.getInstance().start();
+//
+//            Logger.getInstance().logRobotThread(Level.INFO, "Start autoInit()");
+//
+//            looper.start();
+//
+//            DashboardManager.getInstance().toggleCANTable(true);
+//            robotState.gamePeriod = RobotState.GamePeriod.AUTO;
+//
+//            robotState.matchStartTime = System.currentTimeMillis();
+//
+//            mHardwareUpdater.updateState(robotState);
+//            mRoutineManager.reset(commands);
+//            robotState.reset(0, new RigidTransform2d());
+//            //		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
+//
+//            // Limelight LED on
+////         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+//
+//            mWriter.cleanFile();
+//
+//            AutoDistances.updateAutoDistances();
+//
+//            mWriter.cleanFile();
+//
+//            startSubsystems();
+//            mHardwareUpdater.enableBrakeMode();
+//
+//            Logger.getInstance().logRobotThread(Level.INFO, "End autoInit()");
+//        }
 
-        // Limelight LED on
-        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
-
-        mWriter.cleanFile();
-
-		AutoDistances.updateAutoDistances();
-
-		mWriter.cleanFile();
-
-		startSubsystems();
-		mHardwareUpdater.enableBrakeMode();
 	}
 
 
 	@Override
 	public void autonomousPeriodic() {
-		if(AutoFMS.isFMSDataAvailable() && !this.mAutoStarted) {
-			//Get the selected auto mode
-			AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
 
-			//Prestart and run the auto mode
-			mode.prestart();
-			mRoutineManager.addNewRoutine(mode.getRoutine());
+//        System.out.println("Left Encoder: " + robotState.drivePose.leftEnc);
+//        System.out.println("Right Encoder: " + robotState.drivePose.rightEnc);
+//        System.out.println("Gyro Heading: " + robotState.drivePose.heading);
 
-			this.mAutoStarted = true;
-		}
-		if(this.mAutoStarted) {
-			commands = mRoutineManager.update(commands);
-			mHardwareUpdater.updateState(robotState);
-			updateSubsystems();
-			mHardwareUpdater.updateHardware();
-		}
+		teleopPeriodic();
 
-        if(mWriter.getSize() > 10000) {
-            mWriter.write();
-        }
-
-//		System.out.println(mRoutineManager.getCurrentRoutines().contains(new DriveSensorResetRoutine(1.0)));
-//		System.out.println("Position: " + Robot.getRobotState().getLatestFieldToVehicle().getValue());
+//         if(robotState.cancelAuto) {
+//			 robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
+//			 if(breakoutTeleopInitCalled) {
+//			 	teleopInit();
+//			 	breakoutTeleopInitCalled = true;
+//			 }
+//			 teleopPeriodic();
+//			 mRoutineManager.reset(commands);
+//			 System.out.println("CANCELING AUTO, MOVING TO TELE");
+//         } else {
+//             long start = System.nanoTime();
+//             if (!this.mAutoStarted) {
+//                 //Get the selected auto mode
+//                 AutoModeBase mode = AutoModeSelector.getInstance().getAutoMode();
+//
+//                 //Prestart and run the auto mode
+//                 mode.prestart();
+//                 mRoutineManager.addNewRoutine(mode.getRoutine());
+//
+//                 this.mAutoStarted = true;
+//             }
+//             if (this.mAutoStarted) {
+//                 commands = mRoutineManager.update(commands);
+//                 mHardwareUpdater.updateState(robotState);
+//                 updateSubsystems();
+//                 mHardwareUpdater.updateHardware();
+//             }
+//
+//             if (mWriter.getSize() > 10000) {
+//                 mWriter.write();
+//             }
+//
+//             DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime() - start) / 1.0e6);
+//             DataLogger.getInstance().cycle();
+//         }
 	}
 
 	@Override
 	public void teleopInit() {
+//		System.out.println("TELE STARTED");
+		Logger.getInstance().start();
+		DataLogger.getInstance().start();
+
+		Logger.getInstance().logRobotThread(Level.INFO, "Start teleopInit()");
+
+		looper.start();
+
 		robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
 		robotState.reset(0.0, new RigidTransform2d());
 		mHardwareUpdater.updateState(robotState);
@@ -140,32 +215,48 @@ public class Robot extends TimedRobot {
 		robotState.reset(0, new RigidTransform2d());
 		robotState.matchStartTime = System.currentTimeMillis();
 
-        // Limelight LED on
-        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+		// Set limelight to driver camera mode - redundancy for testing purposes
+		Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER);
 
         Logger.getInstance().logRobotThread(Level.INFO, "End teleopInit()");
+		
 	}
 
 	@Override
 	public void teleopPeriodic() {
+		long start = System.nanoTime();
 		commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
+		
 		mHardwareUpdater.updateState(robotState);
+		
 		updateSubsystems();
-
+		
 		//Update the hardware
 		mHardwareUpdater.updateHardware();
-        System.out.println(HardwareAdapter.getInstance().getPusher().pusherSpark.getAppliedOutput());
-//        System.out.println(HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder().getPosition()/ ElevatorConstants.kElevatorRotationsPerInch);
 
-        if(mWriter.getSize() > 10000) {
-            mWriter.write();
-        }
+		if(mWriter.getSize() > 10000) {
+			mWriter.write();
+		}
+		
+		DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
+		DataLogger.getInstance().cycle();
+
+//		System.out.println("Limelight zdist: " + Limelight.getInstance().getCorrectedEstimatedDistanceZ());
 
 	}
 
 	@Override
 	public void disabledInit() {
+
+		Logger.getInstance().logRobotThread(Level.INFO, "Start disabledInit()");
+		Logger.getInstance().logRobotThread(Level.INFO, "Stopping logger...");
+
+		Logger.getInstance().cleanup();
+		DataLogger.getInstance().cleanup();
+
 		mAutoStarted = false;
+
+		looper.stop();
 
 		robotState.reset(0, new RigidTransform2d());
 		//Stops updating routines
@@ -179,11 +270,13 @@ public class Robot extends TimedRobot {
 		mDrive.setNeutral();
 		stopSubsystems();
 
-        // Limelight LED off
-        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+        // Set Limelight to vision pipeline to enable pit testing
+		Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
+        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
 		HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
+		mHardwareUpdater.disableBrakeMode();
 
-        mWriter.write();
+		mWriter.write();
 
 		//Manually run garbage collector
 		System.gc();
@@ -191,7 +284,16 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		System.out.println("Pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
+        System.out.println("Pusher Ultrasonic: " + HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
+        System.out.println("Left Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+        System.out.println("Right Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
+//		System.out.println("PusherBackup Ultrasonic: " + HardwareAdapter.getInstance().getPusher().pusherSecondaryUltrasonic.getRangeInches());
 
+//		System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+
+//        System.out.println();
+//        System.out.println();
 	}
 
 	private void startSubsystems() {
@@ -227,6 +329,9 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
-
+		// System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+		// System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
+		// System.out.println("left ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+		// System.out.println("right ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
 	}
 }

@@ -14,6 +14,7 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     private double mPosition;
     private double mTimeout;
     private long mStartTime = -1;
+    private boolean hasSetAllVars = false;
 
     private Optional<Path> mPath = Optional.empty();
     private Optional<String> mRoutineStartWayPoint = Optional.empty();
@@ -41,6 +42,7 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     public Commands update(Commands commands) {
         if(!mPath.isPresent() || (mRoutineStartWayPoint.isPresent() && mPath.get().getMarkersCrossed().contains(mRoutineStartWayPoint.get()))) {
             if(mStartTime == -1) mStartTime = System.currentTimeMillis();
+            hasSetAllVars = true;
             commands.wantedGearboxState = Elevator.GearboxState.ELEVATOR;
             commands.wantedElevatorState = Elevator.ElevatorState.CUSTOM_POSITIONING;
             commands.robotSetpoints.elevatorPositionSetpoint = Optional.of(mPosition);
@@ -51,7 +53,8 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     @Override
     public Commands cancel(Commands commands) {
         commands.wantedGearboxState = Elevator.GearboxState.ELEVATOR;
-        commands.wantedElevatorState = Elevator.ElevatorState.HOLD;
+        commands.wantedElevatorState = Elevator.ElevatorState.CUSTOM_POSITIONING;
+//        System.out.println("cancelling all fucktacklind");
         return commands;
     }
 
@@ -59,6 +62,7 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     public boolean finished() {
         if(mStartTime != -1) {
             if (System.currentTimeMillis() - mStartTime > mTimeout * 1000) {
+//                System.out.println("ECPR timing out");
                 return true;
             }
         }
@@ -69,7 +73,9 @@ public class ElevatorCustomPositioningRoutine extends Routine {
 //            }
 //        }
 
-        return elevator.elevatorOnTarget();
+        System.out.println("Cancelling");
+
+        return hasSetAllVars && elevator.elevatorOnTarget();
     }
 
     @Override

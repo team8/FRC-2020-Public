@@ -4,31 +4,40 @@ public class IntakeConstants {
     /**
      * Intake Constants
      */
-    public static final double kMotorVelocity = .4;
+    public static final double kMotorVelocity = .58;
     public static final double kFastIntakingVelocity = 0.8;
-    public static final double kDroppingVelocity = -0.225;
+    public static final double kDroppingVelocity = 1.0;
+    public static final double kExpellingVelocity = -0.9;
+    public static final double kVerySlowly = .03;
+    public static final double kMedium = 0.2;
 
-    public static final double kMaxAngle = 118.3; // 90 - 61.7 + 90
-    public static final double kMaxAngleTicks = .04903;
+    public static final double kMaxAngle = 118.0; // 90 - 61.7 + 90
+    public static final double kMaxAngleTicks = .689; //FIX
 
     // FEED FORWARD CONSTANTS
 
-    public static final double kGravityFF = 0;
+    public static final double kGravityFF = .315;
     public static final double kAccelComp = 0;
     public static final double kCentripetalCoeff = 0;
+    public static final double kAngleOffset = 11.89; // offset for center of mass
 
     // INTAKING POSITIONS
 
-    public static final double kIntakingPosition = 10; // degrees relatively to the plane of the field.
-    public static final double kHoldingPosition = 65; // same relative angle as above
-    public static final double kHandoffPosition = 90; // place where the drop to the elevator occurs
+    public static final double kIntakingPosition = 23.5; // degrees relatively to the plane of the field.
+    public static final double kHoldingPosition = 59; // same relative angle as above
+    public static final double kHandoffPosition = 116; // place where the drop to the elevator occurs
+    public static final double kRocketExpelPosition = 84;
+    public static final double kClimbPosition = -30;
+
+    public static final double kHoldTolerance = 14.5; // number of deg of tolerance on arm hold to move elevator
 
     /**
      * Tolerances
      */
     public static final double kAcceptableAngularError = 3;
-    public static final double kAngularVelocityError = .05;
-    public static final double kCargoInchTolerance = 9;
+    public static final double kAngularVelocityError = 10;
+    public static final double kCargoInchTolerance = 6.75;
+    public static final double kCargoCountRequired = 6;
 
     /**
      * Unit Conversions

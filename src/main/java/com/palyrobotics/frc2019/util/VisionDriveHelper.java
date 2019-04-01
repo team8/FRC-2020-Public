@@ -10,10 +10,14 @@ import com.palyrobotics.frc2019.vision.Limelight;
  * CheesyDriveHelper implements the calculations used in CheesyDrive for teleop control. Returns a DriveSignal for the motor output
  */
 public class VisionDriveHelper {
+
     private boolean mInitialBrake;
     private double mOldThrottle = 0.0, mBrakeRate;
     private boolean found = false;
     private SynchronousPID pidController;
+
+    private double oldYawToTarget;
+    private long oldTime;
 
     public SparkSignal visionDrive(Commands commands, RobotState robotState) {
         double throttle = -robotState.leftStickInput.getY();
@@ -28,7 +32,7 @@ public class VisionDriveHelper {
         double angularPower;
 
         //linear power is what's actually sent to motor, throttle is input
-        double linearPower = remapThrottle(throttle);
+        double linearPower = throttle;
 
         //Handle braking
         if(isBraking) {
@@ -54,33 +58,33 @@ public class VisionDriveHelper {
         }
 
         if(Limelight.getInstance().isTargetFound()) {
-            // Is this the first time detecting the target?
-            if (!found){
-                Gains turnGains = new Gains(.1, 0, 0, 0, 200, 0);
-                pidController = new SynchronousPID(turnGains.P, turnGains.I, turnGains.D, turnGains.izone);
-                pidController.setOutputRange(-0.2, 0.2);
-
-                pidController.setSetpoint(0);
-                found = true;
-            }
-            angularPower = pidController.calculate(Limelight.getInstance().getYawToTarget());
-            System.out.println(angularPower);
+            double kP = .03;
+            double kD = .005;
+//            double kP = Limelight.getInstance().getTargetArea();
+//            double kP = 1.0/Limelight.getInstance().getCorrectedEstimatedDistanceZ();
+//            double kP = .010 * Math.sqrt(Limelight.getInstance().getCorrectedEstimatedDistanceZ());
+            //double kP = Limelight.getInstance().getCorrectedEstimatedDistanceZ();
+            angularPower = -Limelight.getInstance().getYawToTarget() * kP
+                    - ((Limelight.getInstance().getYawToTarget() - oldYawToTarget) / (System.currentTimeMillis() - oldTime) * 1000) * kD;
+            oldYawToTarget = Limelight.getInstance().getYawToTarget();
+            oldTime = System.currentTimeMillis();
+            // |angularPower| should be at most 0.6
+            if (angularPower > 0.6) angularPower = 0.75;
+            if (angularPower < -0.6) angularPower = -0.75;
         } else {
-//            System.out.println(Limelight.getInstance().getCornerX().length);
             found = false;
+            oldTime = System.currentTimeMillis();
             angularPower = 0;
         }
 
         rightPower = leftPower = mOldThrottle = linearPower;
 
-        System.out.println("Before - L: " + leftPower + " R: " + rightPower);
 
         angularPower *= -1;
         //angularPower *= mOldThrottle;
-        leftPower += angularPower;
-        rightPower -= angularPower;
+        leftPower *= (1 + angularPower);
+        rightPower *= (1 - angularPower);
 
-//        System.out.println(angularPower);
 
         if(leftPower > 1.0) {
             leftPower = 1.0;
@@ -94,7 +98,6 @@ public class VisionDriveHelper {
 
         SparkSignal mSignal = SparkSignal.getNeutralSignal();
 
-        System.out.println("After - L: " + leftPower + " R: " + rightPower);
 
         mSignal.leftMotor.setPercentOutput(leftPower);
         mSignal.rightMotor.setPercentOutput(rightPower);

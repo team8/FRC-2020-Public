@@ -26,7 +26,7 @@ public class OtherConstants {
     public static final RobotName kRobotName = RobotName.VIDAR;
     public static final DriverName kDriverName = DriverName.BRYAN;
     public static final OperatorName kOperatorName = OperatorName.GRIFFIN;
-    public static final FieldName kFieldName = FieldName.TEAM_8;
+    public static final FieldName kFieldName = FieldName.SVR;
 
     // Time Constants (these might exist elsewhere but whatever)
     public static final double updatesPerSecond = 50.0;
@@ -41,16 +41,16 @@ public class OtherConstants {
      * Vision constants
      */
     // Physical constants of the limelight mount
-    public static final double kLimelightElevationAngleDegrees = 30.00;
-    public static final double kLimelightHeightInches = 11.00;
+    public static final double kLimelightElevationAngleDegrees = -8.11;
+    public static final double kLimelightHeightInches = 39.44;
     // Limelight video feed dimensions
     public static final double kLimelightHeightPixels = 240;
     public static final double kLimelightWidthPixels = 320;
     // Height of the centers of vision targets
-    public static final double kRocketHatchTargetHeight = 31.5 - (2.0 * Math.sin(Math.toRadians(14.5)) - 5.5 * Math.cos(Math.toRadians(14.5))) / 2.0;
+    public static final double kRocketHatchTargetHeight = 31.5 - (2.0 * Math.sin(Math.toRadians(14.5)) + 5.5 * Math.cos(Math.toRadians(14.5))) / 2.0;
     public static final double kCargoHatchTargetHeight = kRocketHatchTargetHeight;
     public static final double kLoadingHatchTargetHeight = kRocketHatchTargetHeight;
-    public static final double kRocketPortTargetHeight = 39.375 - (2.0 * Math.sin(Math.toRadians(14.5)) - 5.5 * Math.cos(Math.toRadians(14.5))) / 2.0;
+    public static final double kRocketPortTargetHeight = 39.375 - (2.0 * Math.sin(Math.toRadians(14.5)) + 5.5 * Math.cos(Math.toRadians(14.5))) / 2.0;
     // Dimensions of vision target
     public static final double kTargetHeight = 6.0;
     public static final double kTargetWidth = 14.5;
@@ -61,6 +61,11 @@ public class OtherConstants {
     public static final double kVisionAlignDistanceTolerance = 1.0;
     public static final double kVisionAlignSpeedyTolerance = 1.0;
 
-    public static final int kRequiredUltrasonicCount = 6;
+    public static final double kVisionLEDTimeoutMillis = 10; // How long after the last vision command should we turn off LEDs
+
+
+    public static final int kRequiredUltrasonicCount = 4;
+    public static final double kLimelightMinDistance = .001; // If Limelight.getCorrectedEstimatedDistanceZ() returns 0, we replace it with this value
+
 
 }

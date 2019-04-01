@@ -35,16 +35,16 @@ public class RobotState {
 
 	//Updated by autoInit, teleopInit, disabledInit
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;
-	
-	//Drivetrain
-	public ControlType leftControlMode = ControlType.kDutyCycle;
-	public ControlType rightControlMode = ControlType.kDutyCycle;
 
 	public double leftSetpoint = 0;
 	public double rightSetpoint = 0;
 
 	public double robotVelocity;
 	public double robotAccel;
+
+	public boolean isQuickturning = false;
+
+	public boolean cancelAuto = false;
 
 	//Intake
 	public boolean hasCargo = false;
@@ -58,6 +58,8 @@ public class RobotState {
 
 	//Pusher
 	public boolean hasPusherCargo = false;
+	public boolean hasPusherCargoFar = false;
+
 	public double cargoPusherDistance = 0;
 	public ArrayList<Double> mPusherReadings = new ArrayList<>();
 	public double pusherStartAngle = 0; // Angle in degrees
@@ -72,14 +74,10 @@ public class RobotState {
 	public double shovelCurrentDraw = 0;
 	public boolean hasShovel = false;
 
-	//Tracks pressure in compressor
-    public double compressorPressure = 0;
-
 	//Pose stores drivetrain sensor data
 	public Pose drivePose = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
 
 	//Pusher sensor data
-	public double pusherCachePosition = 0;
 	public double pusherPosition = 0;
 	public double pusherVelocity = 0;
 	public double pusherEncVelocity = 0;

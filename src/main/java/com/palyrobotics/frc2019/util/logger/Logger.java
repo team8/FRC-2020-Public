@@ -15,6 +15,9 @@ import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 
 /**
@@ -38,16 +41,16 @@ public class Logger {
 
 	private boolean isEnabled = false;
 
-	private ArrayList<LeveledString> mData;
 	//Separates to prevent concurrent modification exception
 	private ArrayList<LeveledString> mSubsystemThreadLogs = new ArrayList<>();
 	private ArrayList<LeveledString> mRobotThreadLogs = new ArrayList<>();
 
 	//synchronized lock for writing out the latest data
-	private final Object writingLock = new Object();
 	private Thread mWritingThread = null;
 	//Stores the runnable for the thread to be restarted
 	private Runnable mRunnable;
+	
+	private final ReadWriteLock lock =  new ReentrantReadWriteLock();
 
 	private StringWriter sw = new StringWriter();
 	private PrintWriter pw = new PrintWriter(sw);
@@ -94,8 +97,7 @@ public class Logger {
 		//Changes directory based on competition status
 		try {
 			fmsConnected = DriverStation.getInstance().isFMSAttached();
-		} catch(UnsatisfiedLinkError e) {
-			System.out.println("FMS is not attached");
+		} catch(UnsatisfiedLinkError|NoClassDefFoundError e) {
 		}
 		if(LoggerConstants.compStatus || fmsConnected) {
 			filePath = "COMPETITIONS" + File.separatorChar + filePath;
@@ -123,7 +125,6 @@ public class Logger {
 			Files.createParentDirs(mainLog);
 			Files.append("Robot log:" + "\n", mainLog, Charsets.UTF_8);
 			Files.append(filePath + "\n", mainLog, Charsets.UTF_8);
-			System.out.println("Created new log at " + filePath);
 		} catch(IOException e) {
 			System.err.println("Failed to create log at " + filePath);
 			e.printStackTrace();
@@ -150,7 +151,6 @@ public class Logger {
 		} catch(ConcurrentModificationException e) {
 			System.err.println("Attempted concurrent modification on subsystem logger");
 		}
-		pw.flush();
 	}
 
 	/**
@@ -167,11 +167,10 @@ public class Logger {
 		Optional<Object> v = Optional.ofNullable(value);
 		Optional<String> k = Optional.ofNullable(key);
 		try {
-			mSubsystemThreadLogs.add(new LeveledString(l, k.orElse("NULL KEY") + ": " + checkStackTrace(l, v.orElse("NULL VALUE"))));
+			mSubsystemThreadLogs.add(new LeveledString(l, k.orElse("NULL KEY"), checkStackTrace(l, v.orElse("NULL VALUE"))));
 		} catch(ConcurrentModificationException e) {
 			System.err.println("Attempted concurrent modification on subsystem logger");
 		}
-		pw.flush();
 	}
 
 	/**
@@ -189,7 +188,6 @@ public class Logger {
 		} catch(ConcurrentModificationException e) {
 			System.err.println("Attempted concurrent modification on robot logger");
 		}
-		pw.flush();
 	}
 
 	/**
@@ -206,11 +204,10 @@ public class Logger {
 		Optional<Object> v = Optional.ofNullable(value);
 		Optional<String> k = Optional.ofNullable(key);
 		try {
-			mRobotThreadLogs.add(new LeveledString(l, k.orElse("NULL KEY") + ": " + checkStackTrace(l, v.orElse("NULL VALUE"))));
+			mRobotThreadLogs.add(new LeveledString(l, k.orElse("NULL KEY"), checkStackTrace(l, v.orElse("NULL VALUE"))));
 		} catch(ConcurrentModificationException e) {
 			System.err.println("Attempted concurrent modification on robot logger");
 		}
-		pw.flush();
 	}
 	
 	/**
@@ -222,7 +219,9 @@ public class Logger {
 	private String checkStackTrace(Level l, Object value) {
 		if(LoggerConstants.writeStackTrace && value instanceof Throwable && l.intValue() <= LoggerConstants.traceLevel.intValue()) {
 			((Throwable) value).printStackTrace(pw);
-			return pw.toString();
+			String s = pw.toString();
+			pw.flush();
+			return s;
 		}
 		else {
 			return value.toString();
@@ -230,11 +229,12 @@ public class Logger {
 	}
 
 	public synchronized void cleanup() {
-		mWritingThread.interrupt();
+		if (isEnabled) {
+			mWritingThread.interrupt();
+		}
 	}
 
 	private Logger() {
-		mData = new ArrayList<>();
 		mRunnable = () -> {
 			while(true) {
 				writeLogs();
@@ -257,35 +257,39 @@ public class Logger {
 	 * Writes current log messages to file and console according to level Still supports deprecated log messages, will log all of them
 	 */
 	private void writeLogs() {
-		synchronized(writingLock) {
-			if(isEnabled) {
-				writeLimit = 0;
-				mData = new ArrayList<>(mRobotThreadLogs);
+		if(isEnabled) {
+			ArrayList<LeveledString> mData;
+			final Lock w = lock.writeLock();
+		    w.lock();
+		    try {
+		    	mData = new ArrayList<>(mRobotThreadLogs);
 				mData.addAll(mSubsystemThreadLogs);
-				try {
-					mData.removeIf(Objects::isNull);
-				}
-				catch(UnsupportedOperationException e) {
-					e.printStackTrace();
-				}
-				mData.sort(LeveledString::compareTo);
-				mData.forEach((LeveledString c) -> {
-					try {
-						if(c.getLevel().intValue() >= LoggerConstants.writeLevel.intValue()) {
-							Files.append(((LeveledString) c).getLeveledString(), mainLog, Charsets.UTF_8);
-							if(((LeveledString) c).getLevel().intValue() >= LoggerConstants.displayLevel.intValue() && writeLimit <= LoggerConstants.writeLimit) {
-								System.out.println(c.getLeveledString());
-								writeLimit++;
-							}
-						}
-					} catch(IOException e) {
-						e.printStackTrace();
-					}
-				});
-				mData.clear();
 				mSubsystemThreadLogs.clear();
 				mRobotThreadLogs.clear();
+		    } finally {
+		        w.unlock();
+		    }
+		    
+		    writeLimit = 0;
+			try {
+				mData.removeIf(Objects::isNull);
 			}
+			catch(UnsupportedOperationException e) {
+				e.printStackTrace();
+			}
+			mData.sort(LeveledString::compareTo);
+			mData.forEach((LeveledString c) -> {
+				try {
+					if(c.getLevel().intValue() >= LoggerConstants.writeLevel.intValue()) {
+						Files.append(((LeveledString) c).getLeveledString(), mainLog, Charsets.UTF_8);
+						if(((LeveledString) c).getLevel().intValue() >= LoggerConstants.displayLevel.intValue() && writeLimit <= LoggerConstants.writeLimit) {
+							writeLimit++;
+						}
+					}
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+			});
 		}
 	}
 
@@ -299,18 +303,23 @@ public class Logger {
 
 	//Used to cleanup internally, write out last words, etc
 	private synchronized void shutdown() {
-		System.out.println("Shutting down");
-		synchronized(writingLock) {
-			writeLogs();
-			mRobotThreadLogs.clear();
+
+		writeLogs();
+		final Lock w = lock.writeLock();
+		w.lock();
+	    try {
+	    	mRobotThreadLogs.clear();
 			mSubsystemThreadLogs.clear();
-			try {
-				Files.append("Logger stopped \n", mainLog, Charsets.UTF_8);
-			} catch(IOException e) {
-				System.out.println("Unable to write, logger stopped");
-				e.printStackTrace();
-			}
-			isEnabled = false;
+	    } finally {
+	        w.unlock();
+	    }
+		
+		try {
+			Files.append("Logger stopped \n", mainLog, Charsets.UTF_8);
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
+		isEnabled = false;
+		
 	}
 }

@@ -7,11 +7,6 @@ import com.palyrobotics.frc2019.subsystems.Subsystem;
 
 public class WaitForHatchIntakeUp extends Routine {
 
-    private boolean done;
-
-    public WaitForHatchIntakeUp() {
-    }
-
     @Override
     public void start() {
 
@@ -19,27 +14,28 @@ public class WaitForHatchIntakeUp extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-        done = commands.intakeHFX;
+        commands.blockFingers = true;
         return commands;
     }
 
     @Override
     public Commands cancel(Commands commands) {
+        commands.blockFingers = false;
         return commands;
     }
 
     @Override
     public boolean finished() {
-        return done;
+        return robotState.hatchIntakeUp;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[] { pusher };
+        return new Subsystem[]{shovel, fingers};
     }
 
     @Override
     public String getName() {
-        return "PusherInRoutine";
+        return "HatchIntake";
     }
 }

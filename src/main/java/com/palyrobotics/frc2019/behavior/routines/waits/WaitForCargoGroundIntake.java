@@ -4,41 +4,20 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 
-public class WaitForCargoGroundIntake extends Routine {
-    private boolean done;
-
-    public WaitForCargoGroundIntake() {
-    }
+public class WaitForCargoGroundIntake extends WaitRoutine {
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public Commands update(Commands commands) {
-        done = commands.hasCargo;
-        return commands;
-    }
-
-    @Override
-    public Commands cancel(Commands commands) {
-        return commands;
-    }
-
-    @Override
-    public boolean finished() {
-        return done;
+    public boolean isCompleted() {
+        return robotState.hasCargo;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[] { pusher };
+        return new Subsystem[]{intake};
     }
 
     @Override
     public String getName() {
-        return "WaitForCargoGroundIntakeRoutine";
+        return null;
     }
-
 }

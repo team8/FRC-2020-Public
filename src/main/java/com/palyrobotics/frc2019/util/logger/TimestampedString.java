@@ -12,15 +12,29 @@ import java.time.format.DateTimeFormatter;
  */
 public class TimestampedString implements Comparable<TimestampedString> {
 	private String mString;
+	private String mKey;
 	private ZonedDateTime mTime;
 
 	public TimestampedString(String string) {
 		mString = string;
 		mTime = ZonedDateTime.now(ZoneId.of("Z"));
 	}
+	
+	public TimestampedString(String key, String string) {
+		this(string);
+		mKey = key;
+	}
 
 	public ZonedDateTime getTimestamp() {
 		return mTime;
+	}
+	
+	public String getString() {
+		return mString;
+	}
+	
+	public String getKey() {
+		return mKey;
 	}
 
 	/**
@@ -29,7 +43,7 @@ public class TimestampedString implements Comparable<TimestampedString> {
 	 * @return Time in requisite format
 	 */
 	public String getTimestampedString() {
-		return (mTime.withZoneSameInstant(LoggerConstants.tZone).format(DateTimeFormatter.ISO_LOCAL_TIME)) + ": " + mString + "\n";
+		return (mTime.withZoneSameInstant(LoggerConstants.tZone).format(DateTimeFormatter.ISO_LOCAL_TIME)) + (mKey==null ? "" : ": " + mKey )+ ": " + mString + "\n";
 	}
 
 	@Override

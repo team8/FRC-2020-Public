@@ -35,7 +35,7 @@ public class RezeroSubAutoMode extends AutoModeBase {
 
     @Override
     public Routine getRoutine() {
-        return new SequentialRoutine(new DriveSensorResetRoutine(0.1), Rezero(true));
+        return new SequentialRoutine(new DriveSensorResetRoutine(0.1), Rezero(false));
     }
 
     public Routine Rezero(boolean inverted) {
@@ -49,17 +49,19 @@ public class RezeroSubAutoMode extends AutoModeBase {
         ArrayList<Routine> routines = new ArrayList<>();
 
         // Drive off the level 2 platform
-        ArrayList<Waypoint> waypoints = new ArrayList<>();
-        waypoints.add(new Waypoint(new Translation2d(30 * invertCord, 0), 35));
-        waypoints.add(new Waypoint(new Translation2d(40 * invertCord, 0), 0));
-        routines.add(new DrivePathRoutine(new Path(waypoints), true));
+        SparkMaxOutput backOffOutput = new SparkMaxOutput();
+        backOffOutput.setPercentOutput(invertCord * 0.25);
+
+        //drive off platform
+        SparkSignal driveOff = new SparkSignal(backOffOutput, backOffOutput);
+        routines.add(new DriveTimeRoutine(0.8, driveOff));
 
         // Back up against the platform
         SparkMaxOutput eachOutput = new SparkMaxOutput();
-        eachOutput.setPercentOutput(0.2);
+        eachOutput.setPercentOutput(invertCord * -0.3);
 
         SparkSignal backUp = new SparkSignal(eachOutput, eachOutput);
-        routines.add(new DriveTimeRoutine(0.7, backUp));
+        routines.add(new DriveTimeRoutine(1.5, backUp));
 
         // Zero robot state
         routines.add(new DriveSensorResetRoutine(0.3));

@@ -4,6 +4,7 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.subsystems.Drive;
 
 /**
  * CheesyDriveHelper implements the calculations used in CheesyDrive for teleop control. Returns a DriveSignal for the motor output
@@ -17,8 +18,21 @@ public class CheesyDriveHelper {
 		double throttle = -robotState.leftStickInput.getY();
 		double wheel = robotState.rightStickInput.getX();
 
+		if (commands.wantedDriveState == Drive.DriveState.CHEZY) {
+			wheel = wheel * .75;
+		}
+//
+//		SparkMaxOutput c = new SparkMaxOutput();
+//		c.setPercentOutput(throttle);
+//
+////		mSignal.leftMotor.setPercentOutput(throttle);
+////		mSignal.rightMotor.setPercentOutput(throttle);
+//
+//		return new SparkSignal(c,c);
+
 		//Quickturn if right trigger is pressed
 		boolean isQuickTurn = robotState.rightStickInput.getTriggerPressed();
+		robotState.isQuickturning = isQuickTurn;
 
 		//Braking if left trigger is pressed
 		boolean isBraking = robotState.leftStickInput.getTriggerPressed();
@@ -44,7 +58,7 @@ public class CheesyDriveHelper {
 		double angularPower;
 
 		//linear power is what's actually sent to motor, throttle is input
-		double linearPower = remapThrottle(throttle);
+		double linearPower = throttle;
 
 		//Negative inertia
 		double negInertiaAccumulator = 0.0;
@@ -69,28 +83,28 @@ public class CheesyDriveHelper {
 		//possible source of occasional overturn
 		wheel = wheel + negInertiaAccumulator;
 
-		//Handle braking
-		if(isBraking) {
-			//Set up braking rates for linear deceleration in a set amount of time
-			if(mInitialBrake) {
-				mInitialBrake = false;
-				//Old throttle initially set to throttle
-				mOldThrottle = linearPower;
-				//Braking rate set
-				mBrakeRate = mOldThrottle / DrivetrainConstants.kCyclesUntilStop;
-			}
+		// //Handle braking
+		// if(isBraking) {
+		// 	//Set up braking rates for linear deceleration in a set amount of time
+		// 	if(mInitialBrake) {
+		// 		mInitialBrake = false;
+		// 		//Old throttle initially set to throttle
+		// 		mOldThrottle = linearPower;
+		// 		//Braking rate set
+		// 		mBrakeRate = mOldThrottle / DrivetrainConstants.kCyclesUntilStop;
+		// 	}
 
-			//If braking is not complete, decrease by the brake rate
-			if(Math.abs(mOldThrottle) >= Math.abs(mBrakeRate)) {
-				//reduce throttle
-				mOldThrottle -= mBrakeRate;
-				linearPower = mOldThrottle;
-			} else {
-				linearPower = 0;
-			}
-		} else {
-			mInitialBrake = true;
-		}
+		// 	//If braking is not complete, decrease by the brake rate
+		// 	if(Math.abs(mOldThrottle) >= Math.abs(mBrakeRate)) {
+		// 		//reduce throttle
+		// 		mOldThrottle -= mBrakeRate;
+		// 		linearPower = mOldThrottle;
+		// 	} else {
+		// 		linearPower = 0;
+		// 	}
+		// } else {
+		// 	mInitialBrake = true;
+		// }
 
 		//Quickturn
 		if(isQuickTurn) {
@@ -111,7 +125,7 @@ public class CheesyDriveHelper {
 			overPower = 0.0;
 
 			//Sets turn amount
-			angularPower = Math.abs(throttle) * wheel * sensitivity - mQuickStopAccumulator;
+			angularPower = Math.abs(throttle) * wheel - mQuickStopAccumulator;
 
 			if(mQuickStopAccumulator > DrivetrainConstants.kQuickStopAccumulatorDecreaseThreshold) {
 				mQuickStopAccumulator -= DrivetrainConstants.kQuickStopAccumulatorDecreaseRate;

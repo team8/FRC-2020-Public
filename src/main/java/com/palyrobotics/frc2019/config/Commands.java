@@ -40,10 +40,11 @@ public class Commands {
 	public Shovel.WheelState wantedShovelWheelState = Shovel.WheelState.IDLE;
 	public Shovel.UpDownState wantedShovelUpDownState = Shovel.UpDownState.UP;
 
-	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
+	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
 	public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
+	public boolean blockFingers = false;
 
-	public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.STOWED;
+	public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.HOLDING;
 
 	public boolean disableIntakeScaling = true;
 
@@ -92,6 +93,8 @@ public class Commands {
 		public Optional<Double> climberPositionSetpoint = Optional.empty();
 		public Optional<Double> pusherPositionSetpoint = Optional.empty();
 		public Optional<Double> intakePositionSetpoint = Optional.empty();
+		public Optional<Double> climbRateSetpoint = Optional.empty();
+
 		/**
 		 * Resets all the setpoints
 		 */
@@ -101,6 +104,7 @@ public class Commands {
 			climberPositionSetpoint = Optional.empty();
 			pusherPositionSetpoint = Optional.empty();
 			intakePositionSetpoint = Optional.empty();
+			climbRateSetpoint = Optional.empty();
 		}
 	}
 
@@ -154,7 +158,8 @@ public class Commands {
         robotSetpoints.climberPositionSetpoint.ifPresent((Double climberPositionSetpoint) -> copy.robotSetpoints.climberPositionSetpoint = Optional.of(climberPositionSetpoint));
 		robotSetpoints.intakePositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.intakePositionSetpoint = Optional.of(elevatorPositionSetpoint));
 		robotSetpoints.pusherPositionSetpoint.ifPresent((Double pusherPositionSetpoint) -> copy.robotSetpoints.pusherPositionSetpoint = Optional.of(pusherPositionSetpoint));
-        return copy;
+		robotSetpoints.climbRateSetpoint.ifPresent((Double climbRateSetpoint) -> copy.robotSetpoints.climbRateSetpoint = Optional.of(climbRateSetpoint));
+		return copy;
 	}
 
 	@Override

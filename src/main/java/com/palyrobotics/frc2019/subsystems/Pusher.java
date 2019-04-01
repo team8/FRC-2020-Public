@@ -23,10 +23,12 @@ public class Pusher extends Subsystem {
 
     private double target;
 
+    private double slamTime = -1;
+
     private SparkMaxOutput mOutput = new SparkMaxOutput();
 
     public enum PusherState {
-        IN, MIDDLE, OUT, COMPRESSION
+        IN, MIDDLE, OUT, COMPRESSION, SLAM
     }
 
     private PusherState mState = PusherState.IN;
@@ -49,32 +51,30 @@ public class Pusher extends Subsystem {
     public void update(Commands commands, RobotState robotState) {
         commands.hasPusherCargo = robotState.hasPusherCargo;
 
-        if (!onTarget() || commands.wantedPusherInOutState != mState) {
-            mState = commands.wantedPusherInOutState;
-            switch (mState) {
-                case IN:
-                    target = PusherConstants.kVidarDistanceIn;
-                    mOutput.setTargetPosition(target, Gains.pusherPosition);
-                    break;
-                case COMPRESSION:
-                    target = PusherConstants.kVidarDistanceCompress;
-                    mOutput.setTargetPosition(target, Gains.pusherPosition);
-                case MIDDLE:
-                    target = PusherConstants.kVidarDistanceMiddle;
-                    mOutput.setTargetPosition(target, Gains.pusherPosition);
-                    break;
-                case OUT:
-                    target = PusherConstants.kVidarDistanceOut;
-                    mOutput.setTargetPosition(target, Gains.pusherPosition);
-                    break;
-            }
+        mState = commands.wantedPusherInOutState;
+        switch (mState) {
+            case SLAM:
+                target = -.33;
+                if (slamTime == -1) {
+                    slamTime = System.currentTimeMillis();
+                }
+                mOutput.setPercentOutput((System.currentTimeMillis() - slamTime > 400) ? target/5.3 : target);
+                HardwareAdapter.getInstance().getPusher().resetSensors();
+                break;
+            case IN:
+                target = PusherConstants.kVidarDistanceIn;
+                slamTime = -1;
+                mOutput.setTargetPosition(target, Gains.pusherPosition);
+                break;
+            case OUT:
+                target = PusherConstants.kVidarDistanceOut;
+                slamTime = -1;
+                mOutput.setTargetPosition(target, Gains.pusherPosition);
+                break;
         }
-        else {
-            mOutput.setGains(Gains.emptyGains);
-            mOutput.setPercentOutput(0.0);
-        }
-
+        
         mWriter.addData("pusherPos", robotState.pusherPosition);
+        mWriter.addData("pusherSetpoint", this.target);
         mWriter.addData("pusherEncVelocity", robotState.pusherEncVelocity);
         mWriter.addData("pusherPotPosition", robotState.pusherPosition);
         mWriter.addData("pusherPotPositionInches", robotState.pusherPosition / PusherConstants.kTicksPerInch);

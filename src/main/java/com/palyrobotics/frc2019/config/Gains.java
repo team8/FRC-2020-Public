@@ -1,31 +1,32 @@
 package com.palyrobotics.frc2019.config;
 
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
+import java.util.logging.Level;
+
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.util.logger.Logger;
 
-import java.util.logging.Level;
-
 public class Gains {
-	//Onboard motion profile aka trajectory follower
-	public static double kVidarTrajectorykV = 0.077;
-	public static double kVidarLeftTrajectorykV = 0.0489;
-	public static double kVidarRightTrajectorykV = 0.0499;
-	public static double kVidarLeftTrajectorykV_0 = 0.0969;
-	public static double kVidarRightTrajectorykV_0 = 0.0946;
-	public static double kVidarTrajectorykA = 0.025;
+	//Onboard velocity-based follower
+	//kV = (gear ratio) / (pi * free speed * wheel diameter)
+	//kA = (wheel radius * robot mass) / (total number of motors * gear reduction * motor stall torque)
+	//kV ~ 1.1 times theoretical, kA ~ 1.4 times theroretical, kS ~ 1.3V = .11
+	//presentation has a typo for kA, should be wheel radius because T = Fr
 
-//	public static final double kVidarDriveVelocitykP = 1.2;//6.0 / 2;
-//	public static final double kVidarDriveVelocitykI = 0.001;
-//	public static final double kVidarDriveVelocitykD = 12.4;//85 / 2;
-//	public static final double kVidarDriveVelocitykF = 0.246537885;//2.624 / 2;
-//	public static final int kVidarDriveVelocitykIzone = 0;//800 / 2;
-//	public static final double kVidarDriveVelocitykRampRate = 0.0;
-	public static final double kVidarDriveVelocitykP = 0.242*1.2;//6.0 / 2;
-	public static final double kVidarDriveVelocitykI = 0.0;//0.001;
-    public static final double kVidarDriveVelocitykD = 11.5*1.2;//12.4;//85 / 2;
-    public static final double kVidarDriveVelocitykF = 0.152807;//0.258987;//0.010516;//2.624 / 2;
-	public static final int kVidarDriveVelocitykIzone = 0;//800 / 2;
+	//Use these for onboard following
+	public static double kVidarTrajectorykV = 0.00344; // 1/(in/s)
+	public static double kVidarTrajectorykA = 0.00117; // 1/(in/s^2)
+	public static double kVidarTrajectorykS = 0.0179;
+	public static double kVidarTrajectorykP = 0;
+	public static double kVidarTrajectorykD = 0;
+
+	public static final TrajectoryGains vidarTrajectory = new TrajectoryGains(kVidarTrajectorykV, kVidarTrajectorykA, kVidarTrajectorykS, kVidarTrajectorykP, kVidarTrajectorykD);
+
+	//Use these for offboard following
+	public static final double kVidarDriveVelocitykP = .01;
+	public static final double kVidarDriveVelocitykI = 0;
+    public static final double kVidarDriveVelocitykD = .005;
+    public static final double kVidarDriveVelocitykF = 0;
+	public static final int kVidarDriveVelocitykIzone = 0;
 	public static final double kVidarDriveVelocitykRampRate = 0.0;
 	public static final Gains vidarVelocity = new Gains(kVidarDriveVelocitykP, kVidarDriveVelocitykI, kVidarDriveVelocitykD, kVidarDriveVelocitykF,
 			kVidarDriveVelocitykIzone, kVidarDriveVelocitykRampRate);
@@ -73,66 +74,40 @@ public class Gains {
 
 	//Pusher Constants
     //TODO: Find and tune gains
-    public static final double kVidarPusherPositionkP = 0.8;
+    public static final double kVidarPusherPositionkP = 0.18;
     public static final double kVidarPusherPositionkI = 0.0;
-    public static final double kVidarPusherPositionkD = 50.0;
+    public static final double kVidarPusherPositionkD = 1;
     public static final double kVidarPusherPositionkF = 0.0;
     public static final int kVidarPusherPositionkIzone = 0;
-    public static final double kVidarPusherPositionkRampRate = 1.0;
+    public static final double kVidarPusherPositionkRampRate = 0.0;
     public static final Gains pusherPosition = new Gains(kVidarPusherPositionkP, kVidarPusherPositionkI, kVidarPusherPositionkD,
             kVidarPusherPositionkF, kVidarPusherPositionkIzone, kVidarPusherPositionkRampRate);
 
-	//Intake Constants
-	//TODO: Find and tune gains
-	public static final double kVidarIntakeUpkP = 0.0;
-	public static final double kVidarIntakeUpkI = 0.0;
-	public static final double kVidarIntakeUpkD = 0.0;
-	public static final double kVidarIntakeUpkF = 0.0;
-	public static final int kVidarIntakeUpkIzone = 0;
-	public static final double kVidarIntakeUpkRampRate = 0.0;
-	public static final Gains intakeUp = new Gains(kVidarIntakeUpkP, kVidarIntakeUpkI, kVidarIntakeUpkD, kVidarIntakeUpkF,
-			kVidarIntakeUpkIzone, kVidarIntakeUpkRampRate);
-
-	public static final double kVidarIntakeDownwardskP = 0.0;
-	public static final double kVidarIntakeDownwardskI = 0.0;
-	public static final double kVidarIntakeDownwardskD = 0.0;
-	public static final double kVidarIntakeDownwardskF = 0.0;
-	public static final int kVidarIntakeDownwardskIzone = 0;
-	public static final double kVidarIntakeDownwardskRampRate = 0.0;
-	public static final Gains intakeDownwards = new Gains(kVidarIntakeDownwardskP, kVidarIntakeDownwardskI, kVidarIntakeDownwardskD,
-			kVidarIntakeDownwardskF, kVidarIntakeDownwardskIzone, kVidarIntakeDownwardskRampRate);
-
-	public static final double kVidarIntakeClimbingkP = 0.0;
-	public static final double kVidarIntakeClimbingkI = 0.0;
-	public static final double kVidarIntakeClimbingkD = 0.0;
-	public static final double kVidarIntakeClimbingkF = 0.0;
-	public static final int kVidarIntakeClimbingkIzone = 0;
-	public static final double kVidarIntakeClimbingkRampRate = 0.0;
-	public static final Gains intakeClimbing = new Gains(kVidarIntakeClimbingkP, kVidarIntakeClimbingkI, kVidarIntakeClimbingkD, kVidarIntakeClimbingkF,
-			kVidarIntakeClimbingkIzone, kVidarIntakeClimbingkRampRate);
-
-	public static final double kVidarIntakeHoldkP = 0.0;
-	public static final double kVidarIntakeHoldkI = 0.0;
-	public static final double kVidarIntakeHoldkD = 0.0;
-	public static final double kVidarIntakeHoldkF = 0.0;
-	public static final int kVidarIntakeHoldkIzone = 0;
-	public static final double kVidarIntakeHoldkRampRate = 0.0;
-	public static final Gains intakeHold = new Gains(kVidarIntakeHoldkP, kVidarIntakeHoldkI, kVidarIntakeHoldkD, kVidarIntakeHoldkF,
-			kVidarIntakeHoldkIzone, kVidarIntakeHoldkRampRate);
-
-	public static final double kVidarIntakePositionkP = 0.0;
+	public static final double kVidarIntakePositionkP = .27; // .3;
 	public static final double kVidarIntakePositionkI = 0.0;
-	public static final double kVidarIntakePositionkD = 0.0;
+	public static final double kVidarIntakePositionkD = 0.0; // 2.2;
 	public static final double kVidarIntakePositionkF = 0.0;
 	public static final int kVidarIntakePositionkIzone = 0;
-	public static final double kVidarIntakePositionkRampRate = 0.0;
+	public static final double kVidarIntakePositionkRampRate = 1.0;
 	public static final Gains intakePosition = new Gains(kVidarIntakePositionkP, kVidarIntakePositionkI, kVidarIntakePositionkD, kVidarIntakePositionkF,
 			kVidarIntakePositionkIzone, kVidarIntakePositionkRampRate);
+
+	//kF = (gear ratio) / (free speed)
+	public static final double kVidarIntakeSmartMotionMaxVel = 100; // deg/s
+	public static final double kVidarIntakeSmartMotionMaxAccel = 200; // deg/s^2
+	public static final double kVidarIntakeSmartMotionkP = 0;
+	public static final double kVidarIntakeSmartMotionkI = 0;
+	public static final double kVidarIntakeSmartMotionkD = 0;
+	public static final double kVidarIntakeSmartMotionkF = 0.00346; // 1/(deg/s)
+	public static final int kVidarIntakeSmartMotionkIzone = 0;
+	public static final double kVidarIntakeSmartMotionkRampRate = 0;
+	public static final Gains intakeSmartMotion = new Gains(kVidarIntakeSmartMotionkP, kVidarIntakeSmartMotionkI, kVidarIntakeSmartMotionkD, kVidarIntakeSmartMotionkF,
+	kVidarIntakeSmartMotionkIzone, kVidarIntakeSmartMotionkRampRate);
 
 	//Elevator Gains
     public static final double kVidarElevatorHoldkP = 2.0;//0.1;
     public static final double kVidarElevatorHoldkI = 0;//0.002 / 2;
-    public static final double kVidarElevatorHoldkD = 30.0;//85 / 2;
+    public static final double kVidarElevatorHoldkD = 35.0;//85 / 2;
     public static final double kVidarElevatorHoldkF = 0;//2.624 / 2;
     public static final int kVidarElevatorHoldkIzone = 0;//800 / 2;
     public static final double kVidarElevatorHoldkRampRate = 0.0;
@@ -159,19 +134,19 @@ public class Gains {
 
     public static final double kVidarElevatorDownPositionkP = 0.3;
     public static final double kVidarElevatorDownPositionkI = 0.0;
-    public static final double kVidarElevatorDownPositionkD = 50;
+    public static final double kVidarElevatorDownPositionkD = 58;
     public static final double kVidarElevatorDownPositionkF = 0.0;
     public static final int kVidarElevatorDownPositionkIzone = 0;
     public static final double kVidarElevatorDownPositionkRampRate = 0.0;
     public static final Gains elevatorDownwardsPosition = new Gains(kVidarElevatorDownPositionkP, kVidarElevatorDownPositionkI, kVidarElevatorDownPositionkD,
             kVidarElevatorDownPositionkF, kVidarElevatorDownPositionkIzone, kVidarElevatorDownPositionkRampRate);
 
-    public static final double kVidarElevatorPositionkP = .7;
+    public static final double kVidarElevatorPositionkP = .5; // .7;
     public static final double kVidarElevatorPositionkI = 0.0;
-    public static final double kVidarElevatorPositionkD = 55.0;
+    public static final double kVidarElevatorPositionkD = 3.4; // 2.0;
     public static final double kVidarElevatorPositionkF = 0.0;
     public static final int kVidarElevatorPositionkIzone = 0;
-    public static final double kVidarElevatorPositionkRampRate = 1.0;
+    public static final double kVidarElevatorPositionkRampRate = 0.0;
     public static final Gains elevatorPosition = new Gains(kVidarElevatorPositionkP, kVidarElevatorPositionkI, kVidarElevatorPositionkD,
             kVidarElevatorPositionkF, kVidarElevatorPositionkIzone, kVidarElevatorPositionkRampRate);
 
@@ -179,15 +154,28 @@ public class Gains {
     public static final Gains emptyGains = new Gains(0,0,0,0,0,0);
 
 	public static class TrajectoryGains {
-		public final double P, D, V, A, turnP, turnD;
+		public final double v, a, s, p, i, d, turnP, turnD;
 
-		public TrajectoryGains(double p, double d, double v, double a, double turnP, double turnD) {
-			this.P = p;
-			this.D = d;
-			this.V = v;
-			this.A = a;
+		public TrajectoryGains(double v, double a, double s, double p, double i, double d, double turnP, double turnD) {
+			this.v = v;
+			this.a = a;
+			this.s = s;
+			this.p = p;
+			this.i = i;
+			this.d = d;
 			this.turnP = turnP;
 			this.turnD = turnD;
+		}
+
+		public TrajectoryGains(double v, double a, double s, double p, double d) {
+			this.v = v;
+			this.a = a;
+			this.s = s;
+			this.p = p;
+			this.i = 0;
+			this.d = d;
+			this.turnP = 0;
+			this.turnD = 0;
 		}
 	}
 

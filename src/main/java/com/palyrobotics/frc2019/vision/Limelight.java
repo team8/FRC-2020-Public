@@ -352,7 +352,8 @@ public class Limelight {
         double h2 = OtherConstants.kRocketHatchTargetHeight;
         double tx = this.getYawToTarget();
         //Logger.getInstance().logRobotThread(Level.INFO, "a1: " + a1 + " a2: " + a2 + " h1: " + h1 + " h2: " + h2);
-        return ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))) / Math.cos(Math.toRadians(tx)) - 10; // 10 = limelight's offset from front of robot
+        // Avoid divide by zero
+        return Math.max(OtherConstants.kLimelightMinDistance, ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))));
     }
 
     /**

@@ -89,6 +89,7 @@ public class RoutineManager {
 				output = routine.cancel(output);
 				routinesToRemove.add(routine);
 			} else {
+//				System.out.println(routine.getName());
 				output = routine.update(output);
 			}
 		}
@@ -103,7 +104,6 @@ public class RoutineManager {
 			//combine running routines w/ new routine to check for shared subsystems
 			ArrayList<Routine> conflicts = conflictingRoutines(runningRoutines, newRoutine);
 			for(Routine routine : conflicts) {
-				System.out.println("Canceling routine " + routine.getName() + " that conflicts with " + newRoutine.getName());
 				output = routine.cancel(output);
 				runningRoutines.remove(routine);
 			}
@@ -115,7 +115,6 @@ public class RoutineManager {
 		routinesToAdd.clear();
 
 		if(output.cancelCurrentRoutines) {
-			System.out.println("Cancel routine button");
 			output = this.reset(output);
 		}
 
@@ -200,7 +199,6 @@ public class RoutineManager {
 		for(Subsystem subsystem : counter.keySet()) {
 			if(counter.get(subsystem) > 1 && subsystem != null) {
 				conflicts.add(subsystem);
-				System.out.println("Conflicts in " + subsystem.getName());
 			}
 		}
 		return conflicts.toArray(new Subsystem[conflicts.size()]);

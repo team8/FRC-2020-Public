@@ -10,6 +10,8 @@ import com.palyrobotics.frc2019.util.DriveSignal;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.SparkSignal;
 import com.palyrobotics.frc2019.util.logger.Logger;
+import com.palyrobotics.frc2019.util.trajectory.Path;
+import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -56,9 +58,14 @@ public class TestAutoMode extends AutoModeBase {
 	private SequentialRoutine getDrive() {
 
 		ArrayList<Routine> sequence = new ArrayList<>();
+		ArrayList<Path.Waypoint> path = new ArrayList<>();
+        path.add(new Path.Waypoint(new Translation2d(0, 0), 40));
+		path.add(new Path.Waypoint(new Translation2d(60, 30), 40));
+		path.add(new Path.Waypoint(new Translation2d(120, 30), 40));
+
 //		sequence.add(new IntakeDownRoutine());
-		sequence.add(new DriveSensorResetRoutine(.1));
-		sequence.add(new CascadingGyroEncoderTurnAngleRoutine(180));
+		sequence.add(new DriveSensorResetRoutine(.25));
+		sequence.add(new DrivePathRoutine(new Path(path), false));
 //		sequence.add(new SparkMaxRoutine(driveBackup, false));
 
 		return new SequentialRoutine(sequence);

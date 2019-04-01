@@ -39,21 +39,22 @@ public class DrivetrainConstants {
     public static final double kSmoothingTolerance = 0.001; // When the change in path falls below the threshold it is basically converged
     public static final double kSmoothingMaxIters = 10000;
     public static final double kTurnVelocityReduction = 2; // A constant for reducing following speed during turns; 1 for slowest turning, 5 for fastest
-    public static final double kDriveWheelDiameterInches = 6.25;
-    public static final double kTrackLengthInches = 17.875;
+    public static final double kDriveWheelDiameterInches = 6;
+    public static final double kTrackLengthInches = 9.00;
     public static final double kTrackWidthInches = 24.625;
     public static final double kTrackEffectiveDiameter = (kTrackWidthInches * kTrackWidthInches + kTrackLengthInches * kTrackLengthInches) / kTrackWidthInches;
     public static final double kTrackScrubFactor = .9;
-    public static final double kPathFollowingLookahead = 35.0;
+    public static final double kPathFollowingLookahead = 39.0;
     public static final double kPathFollowingMaxAccel = 120;
-    public static final double kPathFollowingMaxVel = 100.0;
+    public static final double kPathFollowingMaxVel = 140.0;
     //public static final double kPathFollowingMaxVel = 5 * kPathFollowingMaxAccel;
-    public static final double kPathFollowingTolerance = 0.20;
+    public static final double kPathFollowingTolerance = 0.35;
 
     /*
      * Control loop constants for both robots
      */
-    public static final double kTurnInPlacePower = .5; //for bang bang
+    public static final double kTurnInPlacePower = .45; //for bang bang
+    public static final double kVisionLookingForTargetCreepPower = .25;
     public static final double kDriveMaxClosedLoopOutput = 1.0;
 
     /**
@@ -63,17 +64,18 @@ public class DrivetrainConstants {
     public static final double kAcceptableDriveVelocityError = 5;
     public static final double kAcceptableShortDrivePositionError = 1;
     public static final double kAcceptableShortDriveVelocityError = 3;
-    public static final double kAcceptableTurnAngleError = 5;
+    public static final double kAcceptableTurnAngleError = 4;
     public static final double kAcceptableGyroZeroError = 3;
     public static final double kAcceptableEncoderZeroError = 50;
 
     /**
      * Unit Conversions
      */
-    public static final double kDriveInchesPerRotation = 6.25 * Math.PI;
+    public static final double kDriveInchesPerRotation = kDriveWheelDiameterInches * Math.PI * (12.0/46.0) * (22.0/44.0);
     public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90.0;
-    public static final double kDriveSpeedUnitConversion = 6.25 * Math.PI / 60.0;
+    public static final double kDriveSpeedUnitConversion = kDriveInchesPerRotation / 60.0;
 
+    public static final int kCurrentLimit = 48; // amps
 
     @Override
     public String toString() {

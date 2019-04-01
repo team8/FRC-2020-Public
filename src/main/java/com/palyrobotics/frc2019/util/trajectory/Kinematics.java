@@ -10,6 +10,16 @@ import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 public class Kinematics {
 	private static final double kEpsilon = 1E-9;
 
+	public static class DriveVelocity {
+		public final double left;
+		public final double right;
+
+		public DriveVelocity(double left, double right) {
+			this.left = left;
+			this.right = right;
+		}
+	}
+
 	/**
 	 * Forward kinematics using only encoders, rotation is implicit (less accurate than below, but useful for predicting motion)
 	 */
@@ -27,6 +37,13 @@ public class Kinematics {
 		return new RigidTransform2d.Delta((left_wheel_delta + right_wheel_delta) / 2, 0, delta_rotation_rads);
 	}
 
+	/**
+	 * Forward kinematics from existing DriveVelocity
+	 */
+	public static RigidTransform2d.Delta forwardKinematics(DriveVelocity velocity) {
+		return forwardKinematics(velocity.left, velocity.right);
+	}
+
 	/** Append the result of forward kinematics to a previous pose. */
 	public static RigidTransform2d integrateForwardKinematics(RigidTransform2d current_pose, double left_wheel_delta, double right_wheel_delta,
 			Rotation2d current_heading) {
@@ -35,22 +52,11 @@ public class Kinematics {
 		return current_pose.transformBy(RigidTransform2d.fromVelocity(with_gyro));
 	}
 
-	public static class DriveVelocity {
-		public final double left;
-		public final double right;
-
-		public DriveVelocity(double left, double right) {
-			this.left = left;
-			this.right = right;
-		}
-	}
-
 	public static DriveVelocity inverseKinematics(RigidTransform2d.Delta velocity) {
 		if(Math.abs(velocity.dtheta) < kEpsilon) {
 			return new DriveVelocity(velocity.dx, velocity.dx);
 		}
 		double delta_v = DrivetrainConstants.kTrackEffectiveDiameter * velocity.dtheta / (2 * DrivetrainConstants.kTrackScrubFactor);
-		//System.out.println("Delta_v: " + delta_v);
 		return new DriveVelocity(velocity.dx - delta_v, velocity.dx + delta_v);
 	}
 }

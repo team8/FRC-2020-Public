@@ -37,7 +37,7 @@ public class Drive extends Subsystem {
 	 * {@code NEUTRAL} does nothing.
 	 */
 	public enum DriveState {
-		CHEZY, OFF_BOARD_CONTROLLER, ON_BOARD_CONTROLLER, OPEN_LOOP, NEUTRAL, VISION_ASSIST
+		CHEZY, OFF_BOARD_CONTROLLER, ON_BOARD_CONTROLLER, OPEN_LOOP, NEUTRAL, VISION_ASSIST, CLOSED_VISION_ASSIST
 	}
 
 	private DriveState mState = DriveState.NEUTRAL;
@@ -90,6 +90,7 @@ public class Drive extends Subsystem {
 	@Override
 	public void start() {
 		setNeutral();
+		mCachedRobotState = RobotState.getInstance();
 	}
 
 	/**
@@ -140,6 +141,7 @@ public class Drive extends Subsystem {
 		boolean mIsNewState = !(mState == commands.wantedDriveState);
 		mState = commands.wantedDriveState;
 
+//		System.out.println(mState);
 		switch(mState) {
 			case CHEZY:
 				/*DriveSignal deletthis = DriveSignal.getNeutralSignal();
@@ -150,6 +152,9 @@ public class Drive extends Subsystem {
 				break;
 			case VISION_ASSIST:
 				setDriveOutputs(mVDH.visionDrive(commands, mCachedRobotState));
+				break;
+			case CLOSED_VISION_ASSIST:
+				setDriveOutputs(mController.update(mCachedRobotState));
 				break;
 			case OFF_BOARD_CONTROLLER:
 				//Falls through
@@ -206,6 +211,8 @@ public class Drive extends Subsystem {
 		state.drivePose.rightError.ifPresent(integer -> mWriter.addData("driveRightError", (double) integer));
 		mWriter.addData("driveLeftSetpoint", mSignal.leftMotor.getSetpoint());
 		mWriter.addData("driveRightSetpoint", mSignal.rightMotor.getSetpoint());
+        // System.out.println("Left arbitrary demand: " + mSignal.leftMotor.getArbitraryFF());
+        // System.out.println("Right arbitrary demand: " + mSignal.rightMotor.getArbitraryFF());
 	}
 
 	@Override
@@ -278,6 +285,11 @@ public class Drive extends Subsystem {
 
 	public void setTimedDrive(double voltage, double time) {
 		mController = new TimedDriveController(voltage, time);
+		newController = true;
+	}
+
+	public void setVisionClosedDriveController() {
+		mController = new VisionClosedController();
 		newController = true;
 	}
 

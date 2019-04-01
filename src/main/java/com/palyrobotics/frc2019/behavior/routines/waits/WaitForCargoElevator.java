@@ -4,41 +4,20 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 
-public class WaitForCargoElevator extends Routine {
-    private boolean done;
-
-    public WaitForCargoElevator() {
-    }
+public class WaitForCargoElevator extends WaitRoutine {
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public Commands update(Commands commands) {
-        done = commands.hasPusherCargo;
-        return commands;
-    }
-
-    @Override
-    public Commands cancel(Commands commands) {
-        return commands;
-    }
-
-    @Override
-    public boolean finished() {
-        return done;
+    public boolean isCompleted() {
+        return robotState.hasPusherCargo;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[] { pusher };
+        return new Subsystem[]{elevator};
     }
 
     @Override
     public String getName() {
-        return "WaitForCargoElevatorRoutine";
+        return null;
     }
-
 }

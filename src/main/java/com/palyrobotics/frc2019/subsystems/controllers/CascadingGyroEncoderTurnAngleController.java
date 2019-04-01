@@ -64,17 +64,11 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
             mTarget = (Gains.kVidarCascadingTurnkP * error + Gains.kVidarCascadingTurnkI * mErrorIntegral + Gains.kVidarCascadingTurnkD * mErrorDerivative);
 
             if((Math.abs(mTarget) - Math.abs(mLastTarget))/DrivetrainConstants.kNormalLoopsDt > (DrivetrainConstants.kPathFollowingMaxAccel+25)) {
-                System.out.println((Math.abs(mTarget) - Math.abs(mLastTarget))/DrivetrainConstants.kNormalLoopsDt);
-                System.out.println(DrivetrainConstants.kPathFollowingMaxAccel);
                 mTarget = mLastTarget + Math.signum(mTarget) * ((DrivetrainConstants.kPathFollowingMaxAccel+25) * DrivetrainConstants.kNormalLoopsDt);
             }
 
             mLastTarget = mTarget;
 
-//            System.out.println("error: " + error);
-//            System.out.println("P: " + (Gains.kVidarCascadingTurnkP * error));
-//            System.out.println("I: " + (Gains.kVidarCascadingTurnkI * mErrorIntegral));
-//            System.out.println("D: " + (Gains.kVidarCascadingTurnkD * mErrorDerivative));
 
             DashboardManager.getInstance().updateCANTable("angle", Double.toString(mTarget));
 

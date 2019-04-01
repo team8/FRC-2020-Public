@@ -15,6 +15,11 @@ public class LeveledString extends TimestampedString {
 		super(string);
 		mLevel = l;
 	}
+	
+	public LeveledString(Level l, String key, String string) {
+		super(key, string);
+		mLevel = l;
+	}
 
 	public Level getLevel() {
 		return mLevel;
