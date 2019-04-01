@@ -147,6 +147,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 
+//        System.out.println("Left Encoder: " + robotState.drivePose.leftEnc);
+//        System.out.println("Right Encoder: " + robotState.drivePose.rightEnc);
+//        System.out.println("Gyro Heading: " + robotState.drivePose.heading);
+
 		teleopPeriodic();
 
 //         if(robotState.cancelAuto) {

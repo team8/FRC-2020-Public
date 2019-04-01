@@ -318,7 +318,7 @@ class HardwareUpdater {
 		pusherSpark.getEncoder().setVelocityConversionFactor(PusherConstants.kPusherEncSpeedUnitConversion);
 		pusherSpark.getPIDController().setOutputRange(-0.7,0.7);
 
-		pusherSpark.setSmartCurrentLimit(54);
+		pusherSpark.setSmartCurrentLimit(56);
 		pusherSpark.setInverted(true);
 		pusherSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 

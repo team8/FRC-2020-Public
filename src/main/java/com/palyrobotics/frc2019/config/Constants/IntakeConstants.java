@@ -12,7 +12,7 @@ public class IntakeConstants {
     public static final double kMedium = 0.2;
 
     public static final double kMaxAngle = 118.0; // 90 - 61.7 + 90
-    public static final double kMaxAngleTicks = .695; //FIX
+    public static final double kMaxAngleTicks = .689; //FIX
 
     // FEED FORWARD CONSTANTS
 

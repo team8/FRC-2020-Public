@@ -54,7 +54,7 @@ public class Pusher extends Subsystem {
         mState = commands.wantedPusherInOutState;
         switch (mState) {
             case SLAM:
-                target = -.38;
+                target = -.33;
                 if (slamTime == -1) {
                     slamTime = System.currentTimeMillis();
                 }

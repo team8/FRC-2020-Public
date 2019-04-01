@@ -26,7 +26,7 @@ public class OtherConstants {
     public static final RobotName kRobotName = RobotName.VIDAR;
     public static final DriverName kDriverName = DriverName.BRYAN;
     public static final OperatorName kOperatorName = OperatorName.GRIFFIN;
-    public static final FieldName kFieldName = FieldName.GNR;
+    public static final FieldName kFieldName = FieldName.SVR;
 
     // Time Constants (these might exist elsewhere but whatever)
     public static final double updatesPerSecond = 50.0;
