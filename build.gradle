@@ -1,6 +1,8 @@
+import edu.wpi.first.gradlerio.GradleRIOPlugin
+
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2019.3.2"
+    id "edu.wpi.first.GradleRIO" version "2019.4.1"
 }
 
 // Note: No longer Robot, and now RobotStarter in accordance with the 2019 software interface
@@ -15,7 +17,7 @@ deploy {
             // or from command line. If not found an exception will be thrown.
             // You can use getTeamOrDefault(team) instead of getTeamNumber if you
             // want to store a team number in this file.
-            team = 8
+            team = frc.getTeamOrDefault(8)
         }
     }
     artifacts {
@@ -35,20 +37,6 @@ deploy {
     }
 }
 
-task getAllArtifacts() {
-    doLast {
-        project.configurations.each { Configuration conf ->
-            if(!conf.canBeResolved) {
-                return
-            }
-            println("Resolving: " + conf.getName())
-            conf.resolvedConfiguration.resolvedArtifacts.each { ResolvedArtifact art ->
-                art.file    // Needed to trigger download
-            }
-        }
-    }
-}
-
 // Set this to true to enable desktop support.
 def includeDesktopSupport = false
 
@@ -64,14 +52,24 @@ dependencies {
     compile wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+
+    compile 'com.google.guava:guava:11.0.2'
+    compile 'com.googlecode.json-simple:json-simple:1.1'
     testCompile 'junit:junit:4.12'
-    compile fileTree(dir: 'lib', include: ['*.jar'])
+    testCompile 'org.hamcrest:hamcrest:2.1'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
+
+wrapper {
+    gradleVersion = '5.4.1'
+}
+
+sourceCompatibility = 11
+targetCompatibility = 11
