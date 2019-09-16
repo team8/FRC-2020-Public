@@ -37,6 +37,7 @@ public class Intake extends Subsystem {
         CLIMBING,
         MANUAL, // Moving elevator with joystick
         CUSTOM_ANGLE, // Moving elevator with a control loop
+        ZERO_VELOCITY,
         IDLE
     }
 
@@ -197,7 +198,7 @@ public class Intake extends Subsystem {
                 break;
             case HOLDING:
                 mWheelState = WheelState.IDLE;
-                mUpDownState = UpDownState.CUSTOM_ANGLE;
+                mUpDownState = UpDownState.ZERO_VELOCITY;
                 break;
             case IDLE:
                 mWheelState = WheelState.IDLE;
@@ -246,6 +247,8 @@ public class Intake extends Subsystem {
                     mSparkOutput.setIdle();
                 }
                 break;
+            case ZERO_VELOCITY:
+                mSparkOutput.setTargetVelocity(0.0);
             case IDLE:
                 mIntakeWantedAngle = null;
                 mSparkOutput.setIdle();
