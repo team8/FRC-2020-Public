@@ -87,6 +87,10 @@ public class SparkMaxOutput {
         mArbitraryDemand = arbitraryDemand;
     }
 
+    public void setIdle() {
+        setPercentOutput(0.0);
+    }
+
     public void setPercentOutput(double output) {
         mSparkReference = output;
         mSparkMode = ControlType.kDutyCycle;

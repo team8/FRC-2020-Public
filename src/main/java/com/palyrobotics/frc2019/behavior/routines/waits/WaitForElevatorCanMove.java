@@ -7,8 +7,7 @@ public class WaitForElevatorCanMove extends WaitRoutine {
 
     @Override
     public boolean isCompleted() {
-
-        return robotState.intakeAngle <= (IntakeConstants.kHoldingPosition + IntakeConstants.kHoldTolerance);
+        return robotState.intakeAngle <= (IntakeConstants.kHoldAngle + IntakeConstants.kHoldTolerance);
     }
 
     @Override

@@ -73,16 +73,16 @@ public class Elevator extends Subsystem {
                 break;
             case CUSTOM_POSITIONING:
                 //Control loop
-                boolean belowClosedLoopZone = mRobotState.elevatorPosition < mConfig.closedLoopZoneHeight,
-                        wantedPositionHigherThanCurrent = mElevatorWantedPosition > mRobotState.elevatorPosition;
-                if (!belowClosedLoopZone || wantedPositionHigherThanCurrent) {
+                boolean inClosedLoopZone = mRobotState.elevatorPosition >= mConfig.closedLoopZoneHeight,
+                        wantedPositionInClosedLoopZone = mElevatorWantedPosition >= mConfig.closedLoopZoneHeight;
+                if (inClosedLoopZone || wantedPositionInClosedLoopZone) {
                     mOutput.setTargetPositionSmartMotion(mElevatorWantedPosition, ElevatorConfig.kElevatorInchPerRevolution, mConfig.ff);
                 } else {
-                    mOutput.setPercentOutput(0.0);
+                    mOutput.setIdle();
                 }
                 break;
             case IDLE:
-                mOutput.setPercentOutput(0.0);
+                mOutput.setIdle();
                 break;
             case PERCENT_OUTPUT:
                 mOutput.setPercentOutput(commands.customElevatorPercentOutput);

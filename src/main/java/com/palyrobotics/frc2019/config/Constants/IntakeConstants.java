@@ -4,40 +4,47 @@ public class IntakeConstants {
     /**
      * Intake Constants
      */
-    public static final double kMotorVelocity = .58;
-    public static final double kFastIntakingVelocity = 0.8;
-    public static final double kDroppingVelocity = 1.0;
-    public static final double kExpellingVelocity = -0.9;
-    public static final double kVerySlowly = .03;
-    public static final double kMedium = 0.2;
+    public static final double
+            kMotorVelocity = 0.58,
+            kFastIntakingVelocity = 0.8,
+            kDroppingVelocity = 1.0,
+            kExpellingVelocity = -0.9,
+            kVerySlowly = 0.03,
+            kMedium = 0.2;
 
-    public static final double kMaxAngle = 118.0; // 90 - 61.7 + 90
-    public static final double kMaxAngleTicks = 0.6095; //FIX
+    public static final double
+            kMaxAngle = 118.0, // 90 - 61.7 + 90
+            kMaxAngleTicks = 0.6095; // TODO fix somehow (make command)
 
     // FEED FORWARD CONSTANTS
 
-    public static final double kGravityFF = 0.03;
-    public static final double kAccelComp = 0;
-    public static final double kCentripetalCoeff = 0;
-    public static final double kAngleOffset = 11.89; // offset for center of mass
+    public static final double
+            kGravityFF = 0.03,
+            kAccelerationCompensation = 0.0,
+            kCentripetalCoefficient = 0.0,
+            kAngleOffset = 11.89; // Offset for center of mass
 
     // INTAKING POSITIONS
 
-    public static final double kIntakingPosition = 23.5; // degrees relatively to the plane of the field.
-    public static final double kHoldingPosition = 59; // same relative angle as above
-    public static final double kHandoffPosition = 116; // place where the drop to the elevator occurs
-    public static final double kRocketExpelPosition = 84;
-    public static final double kClimbPosition = -30;
+    public static final double
+            kIntakeAngle = 23.5, // Degrees relatively to the plane of the field.
+            kHoldAngle = 59.0, // Same relative angle as above
+            kHandOffAngle = 116.0, // Place where the drop to the elevator occurs
+            kRocketExpelAngle = 84.0,
+            kClimbAngle = -30.0,
+            kLowestAngle = kIntakeAngle,
+            kHighestAngle = kHandOffAngle;
 
-    public static final double kHoldTolerance = 14.5; // number of deg of tolerance on arm hold to move elevator
+    public static final double kHoldTolerance = 14.5; // Number of deg of tolerance on arm hold to move elevator
 
     /**
      * Tolerances
      */
-    public static final double kAcceptableAngularError = 3;
-    public static final double kAngularVelocityError = 10;
-    public static final double kCargoInchTolerance = 7.65;
-    public static final double kCargoCountRequired = 6;
+    public static final double
+            kAcceptableAngularError = 3,
+            kAngularVelocityError = 10,
+            kCargoInchTolerance = 7.65,
+            kCargoCountRequired = 6;
 
     /**
      * Unit Conversions
@@ -47,6 +54,4 @@ public class IntakeConstants {
     public static final double
             kArmDegreesPerRevolution = (360.0) / ((68.0 / 14.0) * (38.0 / 18.0) * (36.0 / 14.0) * (54.0 / 12.0)), // R → Degree
             kArmDegreePerSecPerRpm = kArmDegreesPerRevolution / 60.0; // RPM → Degrees per Second
-    //TODO: Fix below
-    public static final double kIntakeTicksPerInch = 0;
 }
