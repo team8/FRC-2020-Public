@@ -1,71 +1,70 @@
 package com.palyrobotics.frc2019.util.csvlogger;
 
 import com.palyrobotics.frc2019.config.RobotState;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Paths;
+import java.util.function.UnaryOperator;
 
 /**
  * @author Jason Liu
  */
 public class CSVWriter {
-    private ArrayList<HashMap> mData = new ArrayList<>();
+    private static final String COMMA_DELIMITER = ",", NEW_LINE_SEPARATOR = "\n";
+    private static final int ALLOCATE_SIZE = 100000;
+    private static final String FILE_NAME = "canlog.csv";
 
-    private static final String FILENAME = "/home/lvuser/canlog.csv";
-    private static final String COMMA_DELIMITER = ",";
-    private static final String NEW_LINE_SEPARATOR = "\n";
+    private static final File sCsvFile = RobotBase.isReal()
+            ? Paths.get("/home/lvuser", FILE_NAME).toFile()
+            : Paths.get(Filesystem.getOperatingDirectory().toString(), FILE_NAME).toFile();
+    private static final StringBuilder sBuilder = new StringBuilder(ALLOCATE_SIZE);
 
-    private static CSVWriter instance = new CSVWriter();
-
-    public static CSVWriter getInstance() {
-        return instance;
-    }
-
-    public void cleanFile() {
-        File file = new File(FILENAME);
-        if(file.exists()) {
-            file.delete();
+    public static void cleanFile() {
+        if (!sCsvFile.delete()) {
+            System.err.println("Failed to delete existing CSV file!");
         }
     }
 
-    public void addData(String key, double value) {
-        HashMap<String, double[]> mCycleData = new HashMap<>();
-        double[] values = new double[] {(System.currentTimeMillis() - RobotState.getInstance().matchStartTime)/1000, value};
-        mCycleData.put(key, values);
-        mData.add(mCycleData);
+    private static double getTime() {
+        return (System.currentTimeMillis() - RobotState.getInstance().matchStartTimeMs) / 1e3;
     }
 
-    public int getSize() {
-        return mData.size();
+    private static void addData(String key, Object secondValue, UnaryOperator<StringBuilder> valueCellWriter) {
+        sBuilder.append(key).append(COMMA_DELIMITER).append(secondValue).append(COMMA_DELIMITER);
+        valueCellWriter.apply(sBuilder).append(NEW_LINE_SEPARATOR);
+        if (sBuilder.length() > ALLOCATE_SIZE) write();
     }
 
-    public void write(){
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(FILENAME, true);
-            for(HashMap<String, double[]> map: mData) {
-                for(Map.Entry<String, double[]> entry: map.entrySet()) {
-                    fileWriter.append(entry.getKey());
-                    fileWriter.append(COMMA_DELIMITER);
-                    fileWriter.append(Double.toString(entry.getValue()[0]));
-                    fileWriter.append(COMMA_DELIMITER);
-                    fileWriter.append(Double.toString(entry.getValue()[1]));
-                    fileWriter.append(NEW_LINE_SEPARATOR);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static void addData(String key, Object customSecond, Object value) {
+        addData(key, customSecond, builder -> builder.append(value));
+    }
+
+    public static void addData(String key, Object value) {
+        addData(key, getTime(), builder -> builder.append(value));
+    }
+
+    public static void addData(String key, double value) {
+        addData(key, getTime(), builder -> builder.append(value));
+    }
+
+    public static int getSize() {
+        return sBuilder.length();
+    }
+
+    public static void write() {
+        System.out.println("Writing CSV...");
+        try (FileWriter fileWriter = new FileWriter(sCsvFile, true)) {
+            fileWriter.append(sBuilder.toString());
+        } catch (IOException writeException) {
+            System.err.println("Failed to write CSV:");
+            writeException.printStackTrace();
         } finally {
-            try {
-                mData = new ArrayList<>();
-                fileWriter.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            sBuilder.setLength(0);
         }
+        System.gc();
     }
 }

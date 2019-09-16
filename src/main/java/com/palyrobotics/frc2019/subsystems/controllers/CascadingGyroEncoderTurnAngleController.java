@@ -1,14 +1,13 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
-import java.util.logging.Level;
-
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.subsystems.Drive.DriveController;
-import com.palyrobotics.frc2019.util.*;
-import com.palyrobotics.frc2019.util.logger.Logger;
+import com.palyrobotics.frc2019.util.Pose;
+import com.palyrobotics.frc2019.util.SparkMaxOutput;
+import com.palyrobotics.frc2019.util.SparkSignal;
 
 public class CascadingGyroEncoderTurnAngleController implements DriveController {
 
@@ -46,7 +45,7 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
         mCachedPose = state.drivePose;
         
         if (mCachedPose == null) {
-        	Logger.getInstance().logSubsystemThread(Level.WARNING, "CascadingGyroEncoderTurnAngle", "Cached pose is null!");
+//        	Logger.getInstance().logSubsystemThread(Level.WARNING, "CascadingGyroEncoderTurnAngle", "Cached pose is null!");
         	return SparkSignal.getNeutralSignal();
         } else {
             double currentHeading = mCachedPose.heading;
@@ -89,7 +88,7 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
     @Override
     public boolean onTarget() {
         if (mCachedPose == null) {
-        	Logger.getInstance().logSubsystemThread(Level.WARNING, "CascadingGyroEncoderTurnAngle", "Cached pose is null!");
+//        	Logger.getInstance().logSubsystemThread(Level.WARNING, "CascadingGyroEncoderTurnAngle", "Cached pose is null!");
         	return false;
         } else {
         	return Math.abs(mLastError) < DrivetrainConstants.kAcceptableTurnAngleError &&

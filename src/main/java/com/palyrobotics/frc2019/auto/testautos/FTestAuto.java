@@ -4,13 +4,9 @@ import com.palyrobotics.frc2019.auto.AutoModeBase;
 import com.palyrobotics.frc2019.behavior.ParallelRoutine;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.routines.drive.SparkMaxRoutine;
-
-import com.palyrobotics.frc2019.util.DriveSignal;
 import com.palyrobotics.frc2019.util.SparkSignal;
-import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 /**
  * Created by Nihar on 1/11/17. An AutoMode for running test autonomous
@@ -50,7 +46,7 @@ public class FTestAuto extends AutoModeBase {
 
     @Override
     public void prestart() {
-        Logger.getInstance().logRobotThread(Level.FINE, "Starting TestAutoMode");
+//        Logger.getInstance().logRobotThread(Level.FINE, "Starting TestAutoMode");
     }
 
     private ParallelRoutine getDrive() {

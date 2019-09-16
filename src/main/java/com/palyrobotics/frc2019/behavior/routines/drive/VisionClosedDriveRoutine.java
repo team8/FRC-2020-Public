@@ -4,11 +4,8 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
-import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
-
-import java.util.logging.Level;
 
 public class VisionClosedDriveRoutine extends Routine {
 
@@ -40,7 +37,7 @@ public class VisionClosedDriveRoutine extends Routine {
 	@Override
 	public Commands update(Commands commands) {
 		if(mState != State.TIMED_OUT && (System.currentTimeMillis() - startTime > 5000)) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Timed Out!");
+//			Logger.getInstance().logRobotThread(Level.WARNING, "Timed Out!");
 			mState = State.TIMED_OUT;
 		}
 		switch(mState) {

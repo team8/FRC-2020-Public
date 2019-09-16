@@ -3,174 +3,154 @@ package com.palyrobotics.frc2019.config;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.SparkSignal;
-import com.palyrobotics.frc2019.util.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.logging.Level;
 
 /**
  * Commands represent the desired setpoints and subsystem states for the robot. <br />
  * Store Requests (enum) for each subsystem and setpoints {@link Setpoints} <br />
  * Variables are public and have default values to prevent NullPointerExceptions
- * 
- * @author Nihar
  *
+ * @author Nihar
  */
 public class Commands {
 
-	private static Commands instance = new Commands();
+    private static Commands instance = new Commands();
 
-	public static Commands getInstance() {
-		return instance;
-	}
+    public static Commands getInstance() {
+        return instance;
+    }
 
-	protected Commands() {
-	}
+    protected Commands() {
+    }
 
-	public ArrayList<Routine> wantedRoutines = new ArrayList<Routine>();
+    public ArrayList<Routine> wantedRoutines = new ArrayList<>();
 
-	//Store WantedStates for each subsystem state machine
-	public Drive.DriveState wantedDriveState = Drive.DriveState.NEUTRAL;
+    //Store WantedStates for each subsystem state machine
+    public Drive.DriveState wantedDriveState = Drive.DriveState.NEUTRAL;
 
-	public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
+    public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
 
-	public Pusher.PusherState wantedPusherInOutState = Pusher.PusherState.IN;
+    public Pusher.PusherState wantedPusherInOutState = Pusher.PusherState.IN;
 
-	public Shovel.WheelState wantedShovelWheelState = Shovel.WheelState.IDLE;
-	public Shovel.UpDownState wantedShovelUpDownState = Shovel.UpDownState.UP;
+    public Shovel.WheelState wantedShovelWheelState = Shovel.WheelState.IDLE;
+    public Shovel.UpDownState wantedShovelUpDownState = Shovel.UpDownState.UP;
 
-	public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
-	public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
-	public boolean blockFingers = false;
+    public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
+    public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
+    public boolean blockFingers = false;
 
-	public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.HOLDING;
+    public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.HOLDING;
 
-	public boolean disableIntakeScaling = true;
+    public boolean disableIntakeScaling = true;
 
-	public boolean customShooterSpeed = false;
-	public boolean customIntakeSpeed = false;
+    public boolean customShooterSpeed = false, customIntakeSpeed = false;
 
-	public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.IDLE;
-	public Elevator.ClimberState wantedClimberState = Elevator.ClimberState.INACTIVE;
-	public Elevator.GearboxState wantedGearboxState = Elevator.GearboxState.ELEVATOR;
+    public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.IDLE;
+    public double customElevatorPercentOutput;
 
-	public boolean holderOutput = false;
+    public boolean holderOutput = false;
 
-	public boolean customShovelSpeed = false;
-	public boolean autoPlacerOutput = false;
+    public boolean customShovelSpeed = false;
+    public boolean autoPlacerOutput = false;
 
-	public boolean intakeHFX = false;
-	public boolean intakeHasHatch = false;
-	public boolean hasCargo = false;
-	public boolean hasPusherCargo = false;
+    public boolean intakeHFX = false, intakeHasHatch = false;
+    public boolean hasCargo = false, hasPusherCargo = false;
 
-	public boolean elevatorMoving = false;
-	public boolean shooterSpinning = false;
+    public boolean shooterSpinning = false;
 
-	public void addWantedRoutine(Routine wantedRoutine) {
-		for(Routine routine : wantedRoutines) {
-			if(routine.getClass().equals(wantedRoutine.getClass())) {
-				Logger.getInstance().logRobotThread(Level.WARNING, "tried to add duplicate routine", routine.getName());
-				return;
-			}
-		}
-		wantedRoutines.add(wantedRoutine);
-	}
+    public void addWantedRoutine(Routine wantedRoutine) {
+        for (Routine routine : wantedRoutines) {
+            if (routine.getClass().equals(wantedRoutine.getClass())) {
+//                Logger.getInstance().logRobotThread(Level.WARNING, "tried to add duplicate routine", routine.getName());
+                return;
+            }
+        }
+        wantedRoutines.add(wantedRoutine);
+    }
 
-	public static void reset() {
-		instance = new Commands();
-	}
+    public static void reset() {
+        instance = new Commands();
+    }
 
-	/**
-	 * Stores numeric setpoints
-	 * 
-	 * @author Nihar
-	 */
-	public static class Setpoints {
-		public Optional<SparkSignal> drivePowerSetpoint = Optional.empty();
-		public Optional<Double> elevatorPositionSetpoint = Optional.empty();
-		public Optional<Double> climberPositionSetpoint = Optional.empty();
-		public Optional<Double> pusherPositionSetpoint = Optional.empty();
-		public Optional<Double> intakePositionSetpoint = Optional.empty();
-		public Optional<Double> climbRateSetpoint = Optional.empty();
+    /**
+     * Stores numeric setpoints
+     *
+     * @author Nihar
+     */
+    public static class Setpoints {
+        public Optional<SparkSignal> drivePowerSetpoint = Optional.empty();
+        public Optional<Double> elevatorPositionSetpoint = Optional.empty();
+        public Optional<Double> climberPositionSetpoint = Optional.empty();
+        public Optional<Double> pusherPositionSetpoint = Optional.empty();
+        public Optional<Double> intakePositionSetpoint = Optional.empty();
+        public Optional<Double> climbRateSetpoint = Optional.empty();
 
-		/**
-		 * Resets all the setpoints
-		 */
-		public void reset() {
-			drivePowerSetpoint = Optional.empty();
-			elevatorPositionSetpoint = Optional.empty();
-			climberPositionSetpoint = Optional.empty();
-			pusherPositionSetpoint = Optional.empty();
-			intakePositionSetpoint = Optional.empty();
-			climbRateSetpoint = Optional.empty();
-		}
-	}
+        /**
+         * Resets all the setpoints
+         */
+        public void reset() {
+            drivePowerSetpoint = Optional.empty();
+            elevatorPositionSetpoint = Optional.empty();
+            climberPositionSetpoint = Optional.empty();
+            pusherPositionSetpoint = Optional.empty();
+            intakePositionSetpoint = Optional.empty();
+            climbRateSetpoint = Optional.empty();
+        }
+    }
 
-	//All robot setpoints
-	public Setpoints robotSetpoints = new Setpoints();
+    //All robot setpoints
+    public Setpoints robotSetpoints = new Setpoints();
 
-	//Allows you to cancel all running routines
-	public boolean cancelCurrentRoutines = false;
+    //Allows you to cancel all running routines
+    public boolean cancelCurrentRoutines = false;
 
-	/**
-	 * @return a copy of these commands
-	 */
-	public Commands copy() {
-		Commands copy = new Commands();
-		copy.wantedDriveState = this.wantedDriveState;
-		copy.wantedShooterState = this.wantedShooterState;
-		copy.wantedElevatorState = this.wantedElevatorState;
-		copy.wantedClimberState = this.wantedClimberState;
-		copy.wantedGearboxState = this.wantedGearboxState;
-		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
-		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
-		copy.wantedPusherInOutState = this.wantedPusherInOutState;
-		copy.wantedShovelWheelState = this.wantedShovelWheelState;
-		copy.wantedShovelUpDownState = this.wantedShovelUpDownState;
-		copy.wantedFingersOpenCloseState = this.wantedFingersOpenCloseState;
-		copy.wantedFingersExpelState = this.wantedFingersExpelState;
-		copy.wantedShovelWheelState = this.wantedShovelWheelState;
-		copy.wantedShovelUpDownState = this.wantedShovelUpDownState;
-		copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
-		copy.customShooterSpeed = this.customShooterSpeed;
-		copy.customIntakeSpeed = this.customIntakeSpeed;
-		copy.customShovelSpeed = this.customShovelSpeed;
-		copy.autoPlacerOutput = this.autoPlacerOutput;
-		copy.wantedIntakeState = this.wantedIntakeState;
-		copy.disableIntakeScaling = this.disableIntakeScaling;
-		copy.hasPusherCargo = this.hasPusherCargo;
-		copy.holderOutput = this.holderOutput;
-		copy.elevatorMoving = this.elevatorMoving;
-		copy.shooterSpinning = this.shooterSpinning;
-		copy.wantedPusherInOutState = this.wantedPusherInOutState;
+    /**
+     * @return a copy of these commands
+     */
+    public Commands copy() {
+        Commands copy = new Commands();
+        copy.wantedDriveState = this.wantedDriveState;
+        copy.wantedShooterState = this.wantedShooterState;
+        copy.wantedElevatorState = this.wantedElevatorState;
+        copy.cancelCurrentRoutines = this.cancelCurrentRoutines;
+        copy.wantedPusherInOutState = this.wantedPusherInOutState;
+        copy.wantedShovelWheelState = this.wantedShovelWheelState;
+        copy.wantedShovelUpDownState = this.wantedShovelUpDownState;
+        copy.wantedFingersOpenCloseState = this.wantedFingersOpenCloseState;
+        copy.wantedFingersExpelState = this.wantedFingersExpelState;
+        copy.customShooterSpeed = this.customShooterSpeed;
+        copy.customIntakeSpeed = this.customIntakeSpeed;
+        copy.customShovelSpeed = this.customShovelSpeed;
+        copy.autoPlacerOutput = this.autoPlacerOutput;
+        copy.wantedIntakeState = this.wantedIntakeState;
+        copy.disableIntakeScaling = this.disableIntakeScaling;
+        copy.hasPusherCargo = this.hasPusherCargo;
+        copy.holderOutput = this.holderOutput;
+        copy.shooterSpinning = this.shooterSpinning;
 
-		for(Routine r : this.wantedRoutines) {
-			copy.wantedRoutines.add(r);
-		}
+        copy.wantedRoutines.addAll(this.wantedRoutines);
 
-		//Copy robot setpoints
-		copy.robotSetpoints = new Setpoints();
-		//Copy optionals that are present
-		robotSetpoints.drivePowerSetpoint.ifPresent((SparkSignal signal) -> copy.robotSetpoints.drivePowerSetpoint = Optional.of(signal));
-		robotSetpoints.elevatorPositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.elevatorPositionSetpoint = Optional.of(elevatorPositionSetpoint));
+        //Copy robot setpoints
+        copy.robotSetpoints = new Setpoints();
+        //Copy optionals that are present
+        robotSetpoints.drivePowerSetpoint.ifPresent((SparkSignal signal) -> copy.robotSetpoints.drivePowerSetpoint = Optional.of(signal));
+        robotSetpoints.elevatorPositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.elevatorPositionSetpoint = Optional.of(elevatorPositionSetpoint));
         robotSetpoints.climberPositionSetpoint.ifPresent((Double climberPositionSetpoint) -> copy.robotSetpoints.climberPositionSetpoint = Optional.of(climberPositionSetpoint));
-		robotSetpoints.intakePositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.intakePositionSetpoint = Optional.of(elevatorPositionSetpoint));
-		robotSetpoints.pusherPositionSetpoint.ifPresent((Double pusherPositionSetpoint) -> copy.robotSetpoints.pusherPositionSetpoint = Optional.of(pusherPositionSetpoint));
-		robotSetpoints.climbRateSetpoint.ifPresent((Double climbRateSetpoint) -> copy.robotSetpoints.climbRateSetpoint = Optional.of(climbRateSetpoint));
-		return copy;
-	}
+        robotSetpoints.intakePositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.intakePositionSetpoint = Optional.of(elevatorPositionSetpoint));
+        robotSetpoints.pusherPositionSetpoint.ifPresent((Double pusherPositionSetpoint) -> copy.robotSetpoints.pusherPositionSetpoint = Optional.of(pusherPositionSetpoint));
+        robotSetpoints.climbRateSetpoint.ifPresent((Double climbRateSetpoint) -> copy.robotSetpoints.climbRateSetpoint = Optional.of(climbRateSetpoint));
+        return copy;
+    }
 
-	@Override
-	public String toString() {
-		String log = "";
-		String wantedRoutineName = "";
-		for(Routine r : this.wantedRoutines) {
-			wantedRoutineName += r.getName() + " ";
-		}
-		log += "Wanted Routines: " + wantedRoutineName + "\n";
-
-		return log;
-	}
+    @Override
+    public String toString() {
+        StringBuilder log = new StringBuilder();
+        log.append("Wanted routines: ");
+        for (Routine r : this.wantedRoutines) {
+            log.append(r.getName()).append(" ");
+        }
+        return log.append("\n").toString();
+    }
 }

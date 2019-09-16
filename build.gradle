@@ -5,6 +5,9 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2019.4.1"
 }
 
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
 // Note: No longer Robot, and now RobotStarter in accordance with the 2019 software interface
 def ROBOT_MAIN_CLASS = "com.palyrobotics.frc2019.robot.RobotStarter"
 
@@ -43,6 +46,7 @@ def includeDesktopSupport = false
 // Maven central needed for JUnit
 repositories {
     mavenCentral()
+    maven { url "https://clojars.org/repo" }
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
@@ -53,8 +57,12 @@ dependencies {
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 
+    compile 'com.fasterxml:jackson-module-json-org:0.9.1'
+    compile 'net.sourceforge.argparse4j:argparse4j:0.8.1'
     compile 'com.google.guava:guava:11.0.2'
     compile 'com.googlecode.json-simple:json-simple:1.1'
+    compile 'kryonet:kryonet:2.21'
+    compile 'com.esotericsoftware:kryo:4.0.2'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest:2.1'
 }
@@ -66,10 +74,3 @@ jar {
     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
-
-wrapper {
-    gradleVersion = '5.4.1'
-}
-
-sourceCompatibility = 11
-targetCompatibility = 11

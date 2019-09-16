@@ -7,7 +7,7 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
-import com.palyrobotics.frc2019.util.SynchronousPID;
+import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 
 public class Pusher extends Subsystem {
 
@@ -73,12 +73,12 @@ public class Pusher extends Subsystem {
                 break;
         }
         
-        mWriter.addData("pusherPos", robotState.pusherPosition);
-        mWriter.addData("pusherSetpoint", this.target);
-        mWriter.addData("pusherEncVelocity", robotState.pusherEncVelocity);
-        mWriter.addData("pusherPotPosition", robotState.pusherPosition);
-        mWriter.addData("pusherPotPositionInches", robotState.pusherPosition / PusherConstants.kTicksPerInch);
-        mWriter.addData("pusherPotVelocity", robotState.pusherVelocity * PusherConstants.kPusherPotSpeedUnitConversion);
+        CSVWriter.addData("pusherPos", robotState.pusherPosition);
+        CSVWriter.addData("pusherSetpoint", this.target);
+        CSVWriter.addData("pusherEncVelocity", robotState.pusherEncVelocity);
+        CSVWriter.addData("pusherPotPosition", robotState.pusherPosition);
+        CSVWriter.addData("pusherPotPositionInches", robotState.pusherPosition / PusherConstants.kTicksPerInch);
+        CSVWriter.addData("pusherPotVelocity", robotState.pusherVelocity * PusherConstants.kPusherPotSpeedUnitConversion);
     }
 
     public boolean onTarget() {

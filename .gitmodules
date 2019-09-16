@@ -1,0 +1,3 @@
+[submodule "FRC-Control-Center"]
+	path = FRC-Control-Center
+	url = https://github.com/qhdwight/frc-control-center

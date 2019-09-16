@@ -8,14 +8,13 @@ import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurn
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.IntakeBeginCycleRoutine;
-import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherOutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shooter.ShooterExpelRoutine;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForCargoElevator;
-import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
-import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.Constants.PhysicalConstants;
+import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.subsystems.Shooter;
+import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -90,7 +89,7 @@ public class RightStartThreeCargoAutoMode extends AutoModeBase {
         //move elevator up while driving
         //elevator constant is a placeholder
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(StartToCargoShip), true),
-                new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight2Inches, 1)));
+                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight2Inches, 1)));
 
         //shoot cargo
         routines.add(new PusherOutRoutine());
@@ -137,7 +136,7 @@ public class RightStartThreeCargoAutoMode extends AutoModeBase {
         //move elevator up while driving
         //elevator constant is a placeholder
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(StartToCargoShip), true),
-                new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight2Inches, 1)));
+                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight2Inches, 1)));
 
         //shoot cargo
         routines.add(new PusherOutRoutine());

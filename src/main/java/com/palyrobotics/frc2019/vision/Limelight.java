@@ -1,8 +1,8 @@
 package com.palyrobotics.frc2019.vision;
 
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 import com.palyrobotics.frc2019.vision.LimelightControlMode.*;
-import com.palyrobotics.frc2019.config.Constants.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;

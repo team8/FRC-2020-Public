@@ -1,14 +1,12 @@
 package com.palyrobotics.frc2019.config;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.util.JoystickInput;
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.XboxInput;
 import com.palyrobotics.frc2019.util.trajectory.*;
-import com.revrobotics.ControlType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Holds all hardware input, such as sensors. <br />
@@ -24,7 +22,7 @@ public class RobotState {
 
 	private static RobotState instance = new RobotState();
 
-	public double matchStartTime;
+	public long matchStartTimeMs;
 
 	public static RobotState getInstance() {
 		return instance;
@@ -39,10 +37,9 @@ public class RobotState {
 	public double leftSetpoint = 0;
 	public double rightSetpoint = 0;
 
-	public double robotVelocity;
-	public double robotAccel;
+	public double robotVelocity, robotAcceleration;
 
-	public boolean isQuickturning = false;
+	public boolean isQuickTurning = false;
 
 	public boolean cancelAuto = false;
 
@@ -51,7 +48,7 @@ public class RobotState {
 	public double cargoDistance = 0;
 	public double intakeStartAngle = 0;  // Angle in degrees
 	public double intakeAngle = 0;  // Angle in degrees
-	public double intakeVelocity = 0; //rpm
+	public double intakeVelocity = 0; // RPM
 	public boolean hasIntakeStickyFaults = false;
 	public ArrayList<Double> mLeftReadings = new ArrayList<>();
 	public ArrayList<Double> mRightReadings = new ArrayList<>();
@@ -83,8 +80,7 @@ public class RobotState {
 	public double pusherEncVelocity = 0;
 
 	//Elevator sensor data
-    public double elevatorPosition = 0;
-    public double elevatorVelocity = 0;
+    public double elevatorPosition = 0, elevatorVelocity = 0;
 
 	//Robot position
 	public final int kObservationBufferSize = 100;

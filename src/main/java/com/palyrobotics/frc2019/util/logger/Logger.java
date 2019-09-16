@@ -11,7 +11,6 @@ import java.io.StringWriter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,7 +19,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 
-/**
+/**E
  * Log is at /home/lvuser/logs/ directory Unit test safe, creates diff file directory for Mac/Windows/Linux fileName defaults to ex: "Mar13 13-29" using
  * 24-hr-time Can set desired filename manually If log file exists on first start, automatically creates new file
  *

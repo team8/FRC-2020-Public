@@ -5,10 +5,10 @@ import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.subsystems.Drive.DriveController;
-import com.palyrobotics.frc2019.util.*;
-import com.palyrobotics.frc2019.util.logger.Logger;
-
-import java.util.logging.Level;
+import com.palyrobotics.frc2019.util.Pose;
+import com.palyrobotics.frc2019.util.SparkMaxOutput;
+import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SynchronousPID;
 
 public class DriveStraightController implements DriveController {
 
@@ -23,12 +23,12 @@ public class DriveStraightController implements DriveController {
 
 	public DriveStraightController(Pose priorSetpoint, double distance) {
 		target = (priorSetpoint.leftEnc + priorSetpoint.rightEnc) / 2 + distance;
-		Logger.getInstance().logSubsystemThread(Level.INFO, "Target", target);
+//		Logger.getInstance().logSubsystemThread(Level.INFO, "Target", target);
 		cachedPose = priorSetpoint;
 
 		mGains = new Gains(.00035, 0.000004, 0.002, 0, 200, 0);
 		kTolerance = DrivetrainConstants.kAcceptableDrivePositionError;
-		forwardPID = new SynchronousPID(mGains.P, mGains.I, mGains.D, mGains.izone);
+		forwardPID = new SynchronousPID(mGains.P, mGains.I, mGains.D, mGains.iZone);
 		headingPID = new SynchronousPID(Gains.kVidarDriveStraightTurnkP, 0, 0.005);
 		forwardPID.setOutputRange(-1, 1);
 		headingPID.setOutputRange(-0.2, 0.2);
@@ -40,7 +40,7 @@ public class DriveStraightController implements DriveController {
 	@Override
 	public boolean onTarget() {
 		if(cachedPose == null) {
-			Logger.getInstance().logSubsystemThread(Level.FINER, "Cached pose is null");
+//			Logger.getInstance().logSubsystemThread(Level.FINER, "Cached pose is null");
 			return false;
 		}
 
@@ -62,7 +62,7 @@ public class DriveStraightController implements DriveController {
 		leftOutput.setPercentOutput(throttle + turn);
 		rightOutput.setPercentOutput(throttle - turn);
 
-		Logger.getInstance().logSubsystemThread(Level.FINEST, "Error", forwardPID.getError());
+//		Logger.getInstance().logSubsystemThread(Level.FINEST, "Error", forwardPID.getError());
 		return new SparkSignal(leftOutput, rightOutput);
 	}
 

@@ -1,8 +1,8 @@
 package com.palyrobotics.frc2019.util;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.*;
-import com.palyrobotics.frc2019.config.Gains;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.vision.Limelight;
 

@@ -8,10 +8,7 @@ import com.palyrobotics.frc2019.config.dashboard.DashboardValue;
 import com.palyrobotics.frc2019.subsystems.controllers.*;
 import com.palyrobotics.frc2019.util.*;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
-import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.Path;
-
-import java.util.logging.Level;
 
 /**
  * Represents the drivetrain Uses controllers or cheesydrivehelper/proportionaldrivehelper to calculate DriveSignal
@@ -66,8 +63,6 @@ public class Drive extends Subsystem {
 
 	private DashboardValue leftEncoder;
 	private DashboardValue rightEncoder;
-
-	private CSVWriter mWriter = CSVWriter.getInstance();
 
 	protected Drive() {
 		super("Drive");
@@ -162,7 +157,7 @@ public class Drive extends Subsystem {
 				break;
 			case ON_BOARD_CONTROLLER:
 				if(mController == null) {
-					Logger.getInstance().logSubsystemThread(Level.WARNING, "No onboard controller to use!");
+//					Logger.getInstance().logSubsystemThread(Level.WARNING, "No onboard controller to use!");
 					commands.wantedDriveState = DriveState.NEUTRAL;
 				} else {
 					setDriveOutputs(mController.update(mCachedRobotState));
@@ -193,24 +188,24 @@ public class Drive extends Subsystem {
 		leftEncoder.updateValue(state.drivePose.leftEnc);
 		rightEncoder.updateValue(state.drivePose.rightEnc);
 
-		Logger.getInstance().logSubsystemThread(Level.FINEST, "Left drive encoder", leftEncoder);
-		Logger.getInstance().logSubsystemThread(Level.FINEST, "Right drive encoder", rightEncoder);
+//		Logger.getInstance().logSubsystemThread(Level.FINEST, "Left drive encoder", leftEncoder);
+//		Logger.getInstance().logSubsystemThread(Level.FINEST, "Right drive encoder", rightEncoder);
 
 		DashboardManager.getInstance().publishKVPair(leftEncoder);
 		DashboardManager.getInstance().publishKVPair(rightEncoder);
 
 		DashboardManager.getInstance().publishKVPair(motors);
 
-		mWriter.addData("driveLeftEnc", state.drivePose.leftEnc);
-		mWriter.addData("driveLeftEncVelocity", state.drivePose.leftEncVelocity);
-		mWriter.addData("driveRightEnc", state.drivePose.rightEnc);
-		mWriter.addData("driveRightEncVelocity", state.drivePose.rightEncVelocity);
-		mWriter.addData("driveHeading", state.drivePose.heading);
-		mWriter.addData("driveHeadingVelocity", state.drivePose.headingVelocity);
-		state.drivePose.leftError.ifPresent(integer -> mWriter.addData("driveLeftError", (double) integer));
-		state.drivePose.rightError.ifPresent(integer -> mWriter.addData("driveRightError", (double) integer));
-		mWriter.addData("driveLeftSetpoint", mSignal.leftMotor.getSetpoint());
-		mWriter.addData("driveRightSetpoint", mSignal.rightMotor.getSetpoint());
+		CSVWriter.addData("driveLeftEnc", state.drivePose.leftEnc);
+		CSVWriter.addData("driveLeftEncVelocity", state.drivePose.leftEncVelocity);
+		CSVWriter.addData("driveRightEnc", state.drivePose.rightEnc);
+		CSVWriter.addData("driveRightEncVelocity", state.drivePose.rightEncVelocity);
+		CSVWriter.addData("driveHeading", state.drivePose.heading);
+		CSVWriter.addData("driveHeadingVelocity", state.drivePose.headingVelocity);
+		state.drivePose.leftError.ifPresent(integer -> CSVWriter.addData("driveLeftError", (double) integer));
+		state.drivePose.rightError.ifPresent(integer -> CSVWriter.addData("driveRightError", (double) integer));
+		CSVWriter.addData("driveLeftSetpoint", mSignal.leftMotor.getSetpoint());
+		CSVWriter.addData("driveRightSetpoint", mSignal.rightMotor.getSetpoint());
         // System.out.println("Left arbitrary demand: " + mSignal.leftMotor.getArbitraryFF());
         // System.out.println("Right arbitrary demand: " + mSignal.rightMotor.getArbitraryFF());
 	}

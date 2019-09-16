@@ -4,12 +4,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
-import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.subsystems.Drive;
-import com.palyrobotics.frc2019.util.*;
-
-import java.util.Optional;
+import com.palyrobotics.frc2019.util.Pose;
+import com.palyrobotics.frc2019.util.SparkMaxOutput;
+import com.palyrobotics.frc2019.util.SparkSignal;
 
 /**
  * Created by Robbie on 2/2/19.

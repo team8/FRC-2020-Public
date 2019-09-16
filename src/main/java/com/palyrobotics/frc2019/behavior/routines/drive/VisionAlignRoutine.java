@@ -4,10 +4,7 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
-import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.vision.Limelight;
-
-import java.util.logging.Level;
 
 public class VisionAlignRoutine extends Routine {
     @Override
@@ -38,12 +35,12 @@ public class VisionAlignRoutine extends Routine {
     @Override
     public Commands update(Commands commands) {
         if(mState != VisionAlignRoutine.GyroBBState.TIMED_OUT && (System.currentTimeMillis() - startTime > 6000)) {
-            Logger.getInstance().logRobotThread(Level.WARNING, "Timed Out!");
+//            Logger.getInstance().logRobotThread(Level.WARNING, "Timed Out!");
             mState = VisionAlignRoutine.GyroBBState.TIMED_OUT;
         }
         switch(mState) {
             case START:
-                Logger.getInstance().logRobotThread(Level.FINE, "Set setpoint", mAngle);
+//                Logger.getInstance().logRobotThread(Level.FINE, "Set setpoint", mAngle);
                 drive.setVisionClosedDriveController();
                 commands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
                 mState = VisionAlignRoutine.GyroBBState.TURNING;

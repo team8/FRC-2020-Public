@@ -6,13 +6,14 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
-import com.palyrobotics.frc2019.behavior.routines.intake.*;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeBeginCycleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherOutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shooter.ShooterExpelRoutine;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForCargoElevator;
-import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
 import com.palyrobotics.frc2019.config.Constants.PhysicalConstants;
+import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.subsystems.Shooter;
+import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -90,7 +91,7 @@ public class RightStartCloseHatchTwoCargoSideAutoMode extends AutoModeBase {
         //move elevator up while driving
         //elevator constant is a placeholder
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(DepotToCargoShip), false),
-                new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight2Inches, 1)));
+                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight2Inches, 1)));
         //change elevator constant
 
         //shoot cargo
@@ -116,7 +117,7 @@ public class RightStartCloseHatchTwoCargoSideAutoMode extends AutoModeBase {
         //move elevator down while driving
         //elevator constant is a placeholder
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(CargoShipToDepot), true),
-                new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight2Inches, 1)));
+                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight2Inches, 1)));
         //change elevator constant
 
         //intake cargo

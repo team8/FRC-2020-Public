@@ -2,95 +2,61 @@ package com.palyrobotics.frc2019.subsystems;
 
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
-import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
+import com.palyrobotics.frc2019.util.configv2.Configs;
+import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-import java.util.Optional;
-
 public class Elevator extends Subsystem {
+
     private static Elevator instance = new Elevator("Elevator");
 
     public static Elevator getInstance() {
         return instance;
     }
 
-    public static void resetInstance() {
-        instance = new Elevator("Elevator");
-    }
+    private ElevatorConfig mConfig = Configs.get(ElevatorConfig.class);
 
     public enum ElevatorState {
-        HOLD, //Keeping the elevator position fixed
         MANUAL_POSITIONING, //Moving the elevator with the joystick
         CUSTOM_POSITIONING, //Moving the elevator with a control loop
-        INACTIVE, //Used when the climber is being used
+        PERCENT_OUTPUT,
         IDLE //Not moving
-    }
-
-    public enum ClimberState {
-        HOLD, //Keeping the climber position fixed
-        ON_MANUAL,
-        CUSTOM_POSITIONING, //Moving the climber with a control loop
-        INACTIVE, //Used when the elevator is being used
-        IDLE //Not moving
-    }
-
-    public enum GearboxState {
-        ELEVATOR,
-        CLIMBER
     }
 
     //The variable used in the state machine
     private ElevatorState mElevatorState;
-    private ClimberState mClimberState;
-    private GearboxState mGearboxState;
-
-    private double kElevatorBottomPosition = ElevatorConstants.kBottomPositionInches;
-    private double kElevatorTopPosition = ElevatorConstants.kTopPositionInches;
-
-    //Variables used to check if elevator is at the top or bottom position
-    private boolean isAtTop = false;
-    private boolean isAtBottom = true;
-
-    private boolean movingDown = false;
 
     //Used for specifying where to hold/move to
-    private Optional<Double> mElevatorWantedPosition = Optional.empty();
-    private Optional<Double> mClimberWantedPosition = Optional.empty();
+    private double mElevatorWantedPosition;
 
     //Used to store the robot state for use in methods other than update()
     private RobotState mRobotState;
 
-    private SparkMaxOutput mOutput = new SparkMaxOutput();
-    private DoubleSolenoid.Value mSolenoidOutput = DoubleSolenoid.Value.kForward;
+    private SparkMaxOutput mOutput = new SparkMaxOutput(ControlType.kSmartMotion);
     private boolean mHolderSolenoidOutput = false;
 
     /**
-     * Constructor for Elevator, defaults state to calibrating.
+     * Constructor for Elevator, defaults state to idle.
      *
-     * @param name
-     *            the name of the elevator
+     * @param name the name of the elevator
      */
     protected Elevator(String name) {
         super(name);
         mElevatorState = ElevatorState.IDLE;
-        mClimberState = ClimberState.INACTIVE;
-        mGearboxState = GearboxState.ELEVATOR;
     }
 
     /**
      * Calibration is checked and the variable for the state machine is set after processing the wanted elevator state. State machine used for movement and
      * clearing {@link Elevator#mElevatorWantedPosition} only.
      *
-     * @param commands
-     *            used to obtain wanted elevator state
-     * @param robotState
-     *            used to obtain joystick input and sensor readings
+     * @param commands   used to obtain wanted elevator state
+     * @param robotState used to obtain joystick input and sensor readings
      */
     @Override
     public void update(Commands commands, RobotState robotState) {
@@ -98,79 +64,37 @@ public class Elevator extends Subsystem {
         mRobotState = robotState;
         mHolderSolenoidOutput = commands.holderOutput;
 
-        mClimberState = ClimberState.INACTIVE;
-        mSolenoidOutput = DoubleSolenoid.Value.kForward;
-
         handleElevatorState(commands);
 
         //Execute update loop based on the current state
         //Does not switch between states, only performs actions
         switch (mElevatorState) {
-            case HOLD:
-                commands.elevatorMoving = false;
-                //If at the bottom, supply no power
-                if (isAtBottom) {
-                    mOutput.setPercentOutput(0.0);
-                } else {
-                    //Control loop to hold position otherwise
-                    mOutput.setTargetPosition(mElevatorWantedPosition.get(), ElevatorConstants.kHoldVoltage, Gains.elevatorPosition);
-                }
-                break;
             case MANUAL_POSITIONING:
                 //Clear any existing wanted positions
-                if (mElevatorWantedPosition.isPresent()) {
-                    mElevatorWantedPosition = Optional.empty();
-                }
-
-                commands.elevatorMoving = false;
-
                 if (OtherConstants.operatorXBoxController) {
-                    mOutput.setPercentOutput(ElevatorConstants.kUncalibratedManualPower * mRobotState.operatorXboxControllerInput.getRightY());
+                    mOutput.setPercentOutput(mConfig.manualMaxPercentOut * mRobotState.operatorXboxControllerInput.getRightY());
                 } else {
-                    mOutput.setPercentOutput(ElevatorConstants.kUncalibratedManualPower * mRobotState.operatorJoystickInput.getY());
+                    mOutput.setPercentOutput(mConfig.manualMaxPercentOut * mRobotState.operatorJoystickInput.getY());
                 }
-
                 break;
             case CUSTOM_POSITIONING:
-                commands.elevatorMoving = true;
                 //Control loop
-//                System.out.println("Elevator custom pos to " + mElevatorWantedPosition.get());
-
-                mOutput.setTargetPosition(mElevatorWantedPosition.get(), ElevatorConstants.kHoldVoltage, Gains.elevatorPosition);
-
+                mOutput.setTargetPositionSmartMotion(mElevatorWantedPosition, ElevatorConfig.kElevatorInchPerRevolution, mConfig.ff);
                 break;
             case IDLE:
-                commands.elevatorMoving = false;
                 //Clear any existing wanted positions
-                if (mElevatorWantedPosition.isPresent()) {
-                    mElevatorWantedPosition = Optional.empty();
-                }
-
                 mOutput.setPercentOutput(0.0);
                 break;
-            case INACTIVE:
-                commands.elevatorMoving = false;
-                if(mElevatorWantedPosition.isPresent()) {
-                    mElevatorWantedPosition = Optional.empty();
-                }
-            default:
+            case PERCENT_OUTPUT:
+                mOutput.setPercentOutput(commands.customElevatorPercentOutput);
                 break;
         }
 
-
-        mWriter.addData("elevatorPosition", mRobotState.elevatorPosition);
-        mWriter.addData("elevatorPositionInches", mRobotState.elevatorPosition / ElevatorConstants.kElevatorRotationsPerInch);
-        mWriter.addData("elevatorVelocity", mRobotState.elevatorVelocity);
-        mWriter.addData("elevatorVelocityInchPerSec", mRobotState.elevatorVelocity * ElevatorConstants.kElevatorSpeedUnitConversion);
-        mElevatorWantedPosition.ifPresent(elevatorWantedPosition -> mWriter.addData("elevatorWantedPosition", elevatorWantedPosition));
-        mWriter.addData("elevatorSetpoint", mOutput.getSetpoint());
-
-        mWriter.addData("climberPosition", mRobotState.elevatorPosition);
-        mWriter.addData("climberPositionInches", mRobotState.elevatorPosition / ElevatorConstants.kClimberRotationsPerInch);
-        mWriter.addData("elevatorVelocity", mRobotState.elevatorVelocity);
-        mWriter.addData("elevatorVelocityInchPerSec", mRobotState.elevatorVelocity * ElevatorConstants.kClimberSpeedUnitConversion);
-        mClimberWantedPosition.ifPresent(climberWantedPosition -> mWriter.addData("climberWantedPosition", climberWantedPosition));
-        mWriter.addData("climberSetpoint", mOutput.getSetpoint());
+        CSVWriter.addData("elevatorAppliedOutput", HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getAppliedOutput());
+        CSVWriter.addData("elevatorPositionInch", mRobotState.elevatorPosition);
+        CSVWriter.addData("elevatorVelInchPerSec", mRobotState.elevatorVelocity);
+        CSVWriter.addData("elevatorWantedPos", mElevatorWantedPosition);
+        CSVWriter.addData("elevatorSetpointInch", mOutput.getSetpoint());
     }
 
     /**
@@ -180,88 +104,37 @@ public class Elevator extends Subsystem {
      *
      * <b>Teleop joystick movement overrides everything else!</b> <br>
      * <br>
-     *
+     * <p>
      * Behavior for desired states:
      * <ul>
-     * <li>{@link ElevatorState#HOLD}: Sets the desired holding position and state to hold.</li>
      * <li>{@link ElevatorState#MANUAL_POSITIONING}: Sets the state to manual.</li>
      * <li>{@link ElevatorState#CUSTOM_POSITIONING}: Sets the desired custom position and state to custom positioning. If not calibrated, set to calibrate instead.</li>
      * <li>{@link ElevatorState#IDLE}: Sets to idle.</li>
      * </ul>
      *
-     *
-     *
-     * @param commands
-     *            the commands used to get the wanted state
+     * @param commands the commands used to get the wanted state
      */
     private void handleElevatorState(Commands commands) {
-        if(commands.wantedElevatorState == ElevatorState.HOLD) {
-            //Set the wanted elevator position if not already set, or if switching from a
-            //different state
-            if(!mElevatorWantedPosition.isPresent() || mElevatorState != commands.wantedElevatorState) {
-                mElevatorWantedPosition = Optional.of(mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch);
-            }
-            mElevatorState = commands.wantedElevatorState;
-        } else if(commands.wantedElevatorState == ElevatorState.CUSTOM_POSITIONING) {
-            //Assume bottom position is the bottom
-
-            if (!mElevatorWantedPosition.isPresent()) {
-                mElevatorWantedPosition = Optional.of(mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch);
-            }
-            if(!mElevatorWantedPosition.equals(Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get()))) {
-                mElevatorWantedPosition = Optional.of(commands.robotSetpoints.elevatorPositionSetpoint.get());
-                if(mElevatorWantedPosition.get() >= mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch) {
-                    movingDown = false;
-                } else {
-                    movingDown = true;
-                }
-            }
-            mElevatorState = ElevatorState.CUSTOM_POSITIONING;
-        } else {
-            //For idle/manual positioning, just set it
-            mElevatorState = commands.wantedElevatorState;
-        }
-
-        //If custom positioning is finished, hold it
-//        if(elevatorOnTarget()) {
-//            //Hold it next cycle
-//            commands.wantedElevatorState = ElevatorState.HOLD;
-//        }
-    }
-
-    private void handleClimberState(Commands commands) {
-        if(commands.wantedClimberState == ClimberState.HOLD) {
-            //Set the wanted climberposition if not already set, or if switching from a
-            //different state
-            if(!mClimberWantedPosition.isPresent() || mClimberState != commands.wantedClimberState) {
-                mClimberWantedPosition = Optional.of(mRobotState.elevatorPosition/ElevatorConstants.kClimberRotationsPerInch);
-            }
-            mClimberState = commands.wantedClimberState;
-        } else if(commands.wantedClimberState == ClimberState.CUSTOM_POSITIONING) {
-            if(!mClimberWantedPosition.equals(Optional.of(commands.robotSetpoints.climberPositionSetpoint.get()))) {
-                mClimberWantedPosition = Optional.of(commands.robotSetpoints.climberPositionSetpoint.get());
-            }
-            mClimberState = ClimberState.CUSTOM_POSITIONING;
-        } else {
-            //For idle/manual positioning, just set it
-            mClimberState = commands.wantedClimberState;
-        }
-
-        //If custom positioning is finished, hold it
-        if(climberOnTarget()) {
-            //Hold it next cycle
-            commands.wantedClimberState = ClimberState.HOLD;
+        switch (commands.wantedElevatorState) {
+            case CUSTOM_POSITIONING:
+                mElevatorWantedPosition = commands.robotSetpoints.elevatorPositionSetpoint.orElseThrow();
+                mElevatorState = ElevatorState.CUSTOM_POSITIONING;
+                break;
+            default:
+                //For idle/manual positioning, just set it
+                mElevatorState = commands.wantedElevatorState;
+                break;
         }
     }
 
     @Override
     public void start() {
-        clearWantedPositions();
+        resetWantedPosition();
     }
 
     @Override
     public void stop() {
-        clearWantedPositions();
+        resetWantedPosition();
     }
 
     public SparkMaxOutput getOutput() {
@@ -269,70 +142,26 @@ public class Elevator extends Subsystem {
     }
 
     public DoubleSolenoid.Value getSolenoidOutput() {
-        return mSolenoidOutput;
+        return DoubleSolenoid.Value.kForward;
     }
 
     public boolean getHolderSolenoidOutput() {
         return mHolderSolenoidOutput;
     }
 
-    public Optional<Double> getElevatorWantedPosition() {
-        return mElevatorWantedPosition;
-    }
-
-    public boolean getIsAtTop() {
-        return isAtTop;
-    }
-
     /**
      * If the elevator is on target. Only for {@link ElevatorState#CUSTOM_POSITIONING}.
      *
-     * @return
-     *         <p>
-     *         false if {@link Elevator#mElevatorState} is not {@link ElevatorState#CUSTOM_POSITIONING}, or whether it's within position and velocity tolerances
-     *         otherwise
-     *         </p>
+     * @return If {@link Elevator#mElevatorState} is not {@link ElevatorState#CUSTOM_POSITIONING},
+     * or whether it's within position and velocity tolerances otherwise
      */
     public boolean elevatorOnTarget() {
-        if(mElevatorState != ElevatorState.CUSTOM_POSITIONING) {
-            return false;
-        }
-        return (Math.abs(mElevatorWantedPosition.get() - mRobotState.elevatorPosition/ElevatorConstants.kElevatorRotationsPerInch) < ElevatorConstants.kAcceptablePositionError)
-                && (Math.abs(mRobotState.elevatorVelocity*ElevatorConstants.kElevatorSpeedUnitConversion) < ElevatorConstants.kAcceptableVelocityError);
+        return mElevatorState == ElevatorState.CUSTOM_POSITIONING
+                && Math.abs(mElevatorWantedPosition - mRobotState.elevatorPosition) < mConfig.acceptablePositionError
+                && Math.abs(mRobotState.elevatorVelocity) < mConfig.acceptableVelocityError;
     }
 
-    /**
-     * If the climber is on target. Only for {@link ClimberState#CUSTOM_POSITIONING}.
-     *
-     * @return
-     *         <p>
-     *         false if {@link Elevator#mClimberState} is not {@link ClimberState#CUSTOM_POSITIONING}, or whether it's within position and velocity tolerances
-     *         otherwise
-     *         </p>
-     */
-    public boolean climberOnTarget() {
-        if(mClimberState != ClimberState.CUSTOM_POSITIONING) {
-            return false;
-        }
-
-        return (Math.abs(mClimberWantedPosition.get() - mRobotState.elevatorPosition/ElevatorConstants.kClimberRotationsPerInch) < ElevatorConstants.kClimberAcceptablePositionError)
-                && (Math.abs(mRobotState.elevatorVelocity*ElevatorConstants.kClimberSpeedUnitConversion) < ElevatorConstants.kClimberAcceptableVelocityError);
-    }
-
-    public void clearWantedPositions() {
-        mElevatorWantedPosition = Optional.empty();
-        mClimberWantedPosition = Optional.empty();
-    }
-
-    public ElevatorState getElevatorState() {
-        return mElevatorState;
-    }
-
-    public ClimberState getClimberState() {
-        return mClimberState;
-    }
-
-    public GearboxState getmGearboxState() {
-        return mGearboxState;
+    public void resetWantedPosition() {
+        mElevatorWantedPosition = 0.0;
     }
 }

@@ -1,19 +1,22 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
-import com.palyrobotics.frc2019.config.Constants.ElevatorConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.Constants.ShooterConstants;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.util.TalonSRXOutput;
+import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
+import com.palyrobotics.frc2019.util.configv2.Configs;
 
-public class Shooter extends Subsystem{
+public class Shooter extends Subsystem {
     public static Shooter instance = new Shooter("Shooter");
 
-    public static Shooter getInstance() { return instance; }
+    public static Shooter getInstance() {
+        return instance;
+    }
 
-    public static void resetInstance() { instance = new Shooter("Shooter"); }
+    public static void resetInstance() {
+        instance = new Shooter("Shooter");
+    }
 
     private double mOutput;
 
@@ -49,7 +52,7 @@ public class Shooter extends Subsystem{
     public void update(Commands commands, RobotState robotState) {
         mState = commands.wantedShooterState;
 
-        switch(mState) {
+        switch (mState) {
             case IDLE:
                 commands.shooterSpinning = false;
                 mOutput = 0;
@@ -60,7 +63,7 @@ public class Shooter extends Subsystem{
                 if (commands.customShooterSpeed) {
                     mOutput = robotState.operatorXboxControllerInput.leftTrigger; //TODO: change control?
                 } else {
-                    if(robotState.elevatorPosition < ElevatorConstants.kElevatorCargoHeight3Inches + 8.0) { // up is negative
+                    if (robotState.elevatorPosition > Configs.get(ElevatorConfig.class).elevatorCargoHeight3Inches - 8.0) {
                         mOutput = ShooterConstants.kLevel3MotorVelocity;
                     } else {
                         mOutput = ShooterConstants.kExpellingMotorVelocity;
@@ -70,17 +73,17 @@ public class Shooter extends Subsystem{
                 break;
         }
 
-        if(1 / OtherConstants.deltaTime <= mExpellingCycles) { // Once enough time passes, ready to expel
+        if (1 / OtherConstants.deltaTime <= mExpellingCycles) { // Once enough time passes, ready to expel
             readyToExpel = true;
         } else {
             readyToExpel = false;
         }
 
-        if(readyToExpel && robotState.hasCargo) { // Rumble until expelled
+        if (readyToExpel && robotState.hasCargo) { // Rumble until expelled
             mRumbleLength = 0.5;
         }
 
-        if(cachedCargoState && !robotState.hasCargo) { // Stop rumbling once you go from cargo -> no cargo
+        if (cachedCargoState && !robotState.hasCargo) { // Stop rumbling once you go from cargo -> no cargo
             mRumbleLength = -1;
             mExpellingCycles = 0;
         }

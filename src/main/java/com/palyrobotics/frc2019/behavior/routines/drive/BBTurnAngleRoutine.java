@@ -4,9 +4,6 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
-import com.palyrobotics.frc2019.util.logger.Logger;
-
-import java.util.logging.Level;
 
 public class BBTurnAngleRoutine extends Routine {
 
@@ -38,12 +35,12 @@ public class BBTurnAngleRoutine extends Routine {
 	@Override
 	public Commands update(Commands commands) {
 		if(mState != GyroBBState.TIMED_OUT && (System.currentTimeMillis() - startTime > 5000)) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Timed Out!");
+//			Logger.getInstance().logRobotThread(Level.WARNING, "Timed Out!");
 			mState = GyroBBState.TIMED_OUT;
 		}
 		switch(mState) {
 			case START:
-				Logger.getInstance().logRobotThread(Level.FINE, "Set setpoint", mAngle);
+//				Logger.getInstance().logRobotThread(Level.FINE, "Set setpoint", mAngle);
 				drive.setTurnAngleSetpoint(mAngle);
 				commands.wantedDriveState = Drive.DriveState.ON_BOARD_CONTROLLER;
 				mState = GyroBBState.TURNING;

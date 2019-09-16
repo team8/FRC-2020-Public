@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
-import com.palyrobotics.frc2019.config.Constants.*;
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Drive;
@@ -30,7 +30,7 @@ public class VisionTurnAngleController implements Drive.DriveController {
     public VisionTurnAngleController(Pose currentPose) {
         this.mCachedPose = currentPose;
         Gains turnGains = new Gains(.017, 0, 0, 0, 200, 0);
-        pidController = new SynchronousPID(turnGains.P, turnGains.I, turnGains.D, turnGains.izone);
+        pidController = new SynchronousPID(turnGains.P, turnGains.I, turnGains.D, turnGains.iZone);
         pidController.setOutputRange(-1,1);
         pidController.setSetpoint(0);
         pidController.calculate(Limelight.getInstance().getYawToTarget());

@@ -1,17 +1,11 @@
 package com.palyrobotics.frc2019.auto;
 
-import com.palyrobotics.frc2019.auto.AutoModeBase.*;
 import com.palyrobotics.frc2019.auto.modes.Fanlin;
-import com.palyrobotics.frc2019.auto.modes.Hecker;
-import com.palyrobotics.frc2019.auto.modes.test;
 import com.palyrobotics.frc2019.auto.testautos.FTestAuto;
-import com.palyrobotics.frc2019.auto.testautos.TestAutoMode;
-import com.palyrobotics.frc2019.util.logger.Logger;
 import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 /**
  * @author Nihar, based off Team 254 2015
@@ -82,11 +76,11 @@ public class AutoModeSelector {
 	 */
 	public AutoModeBase getAutoModeByName(String name) {
 		if(!(mAutoMap.containsKey(name))) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "AutoModeSelector does not contain auto mode", name);
+//			Logger.getInstance().logRobotThread(Level.WARNING, "AutoModeSelector does not contain auto mode", name);
 			return null;
 		}
 		int index = mAutoMap.get(name);
-		Logger.getInstance().logRobotThread(Level.INFO, "Setting auto mode by name", name);
+//		Logger.getInstance().logRobotThread(Level.INFO, "Setting auto mode by name", name);
 		return mAutoModes.get(index);
 	}
 
@@ -101,10 +95,10 @@ public class AutoModeSelector {
 
 	public AutoModeBase getAutoModeByIndex(int index) {
 		if(index < 0 || index >= mAutoModes.size()) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Invalid AutoMode index, defautling to 0", index);
+//			Logger.getInstance().logRobotThread(Level.WARNING, "Invalid AutoMode index, defautling to 0", index);
 			index = 0;
 		}
-		Logger.getInstance().logRobotThread(Level.INFO, "Selected AutoMode by index", mAutoModes.get(index));
+//		Logger.getInstance().logRobotThread(Level.INFO, "Selected AutoMode by index", mAutoModes.get(index));
 		return mAutoModes.get(index);
 	}
 }

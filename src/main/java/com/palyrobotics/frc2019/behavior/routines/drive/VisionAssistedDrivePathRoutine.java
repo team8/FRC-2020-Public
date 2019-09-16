@@ -3,17 +3,14 @@ package com.palyrobotics.frc2019.behavior.routines.drive;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
-import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
-import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * Created by Robbie on 3/18/19.
@@ -64,7 +61,7 @@ public class VisionAssistedDrivePathRoutine extends Routine {
 
             mPath = new Path(absoluteList);
         }
-        Logger.getInstance().logSubsystemThread(Level.INFO, "Starting Drive Path Routine");
+//        Logger.getInstance().logSubsystemThread(Level.INFO, "Starting Drive Path Routine");
 
         drive.setTrajectoryController(mPath, mLookAhead, mInverted, mTolerance);
     }
@@ -90,7 +87,7 @@ public class VisionAssistedDrivePathRoutine extends Routine {
 
     @Override
     public Commands cancel(Commands commands) {
-        Logger.getInstance().logSubsystemThread(Level.INFO, "Drive Path Routine finished");
+//        Logger.getInstance().logSubsystemThread(Level.INFO, "Drive Path Routine finished");
         drive.setNeutral();
         commands.wantedDriveState = Drive.DriveState.NEUTRAL;
         return commands;
@@ -120,7 +117,7 @@ public class VisionAssistedDrivePathRoutine extends Routine {
         final int offsetX = 0;
         final int offsetY = 0;
         String enumeratedPath = "";
-        List<Path.Waypoint> path = mPath.getWaypoints();
+        List<Path.Waypoint> path = mPath.getWayPoints();
         enumeratedPath += "0,0,0\n";
         for (int i = 0; i < path.size(); i++) {
             enumeratedPath += (path.get(i).position.getX() +offsetX)  + "," + (path.get(i).position.getY() + offsetY) + "," + path.get(i).speed + "\n";

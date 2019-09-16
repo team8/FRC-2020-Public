@@ -3,14 +3,9 @@ package com.palyrobotics.frc2019.behavior.routines.drive;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
-import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
-import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
-import edu.wpi.first.wpilibj.Timer;
-
-import java.util.logging.Level;
 
 /**
  * Created by EricLiu on 4/13/17.
@@ -56,7 +51,7 @@ public class DriveSensorResetRoutine extends Routine {
 	@Override
 	public boolean finished() {
 		if(System.currentTimeMillis() - mStartTime > mTimeout * 1000) {
-			Logger.getInstance().logRobotThread(Level.WARNING, "Drive sensor reset routine timed out!");
+//			Logger.getInstance().logRobotThread(Level.WARNING, "Drive sensor reset routine timed out!");
 			return true;
 		} else if(Math.abs(drive.getPose().leftEnc) <= DrivetrainConstants.kAcceptableEncoderZeroError
 				&& Math.abs(drive.getPose().rightEnc) <= DrivetrainConstants.kAcceptableEncoderZeroError

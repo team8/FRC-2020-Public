@@ -1,11 +1,9 @@
 package com.palyrobotics.frc2019.config;
 
-import java.io.File;
-import java.util.logging.Level;
-
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
-import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.JSONFormatter;
+
+import java.io.File;
 
 /**
  * Created by Eric on 2/12/18
@@ -59,7 +57,7 @@ public class AutoDistances {
 	
 	private static void setAutoDistances() { // run after loading chosen field
 		if (field == null) { // If the field file doesn't exist, keep default values
-			Logger.getInstance().logRobotThread(Level.FINE, "Field json file not found");
+//			Logger.getInstance().logRobotThread(Level.FINE, "Field json file not found");
 			return;
 		}
 

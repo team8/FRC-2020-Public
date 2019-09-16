@@ -3,18 +3,15 @@ package com.palyrobotics.frc2019.auto.testautos;
 import com.palyrobotics.frc2019.auto.AutoModeBase;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
-import com.palyrobotics.frc2019.behavior.routines.drive.*;
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
+import com.palyrobotics.frc2019.behavior.routines.drive.SparkMaxRoutine;
 import com.palyrobotics.frc2019.config.Gains;
-import com.palyrobotics.frc2019.util.DriveSignal;
-import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.SparkSignal;
-import com.palyrobotics.frc2019.util.logger.Logger;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 /**
  * Created by Nihar on 1/11/17. An AutoMode for running test autonomous
@@ -41,7 +38,7 @@ public class TestAutoMode extends AutoModeBase {
 
 	@Override
 	public void prestart() {
-		Logger.getInstance().logRobotThread(Level.FINE, "Starting TestAutoMode");
+//		Logger.getInstance().logRobotThread(Level.FINE, "Starting TestAutoMode");
 	}
 
 	private Routine testF() {

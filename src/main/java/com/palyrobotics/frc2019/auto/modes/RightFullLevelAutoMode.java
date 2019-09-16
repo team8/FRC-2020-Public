@@ -7,15 +7,17 @@ import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
-import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
-import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
-import com.palyrobotics.frc2019.behavior.routines.intake.*;
-import com.palyrobotics.frc2019.behavior.routines.pusher.*;
+import com.palyrobotics.frc2019.behavior.routines.intake.IntakeBeginCycleRoutine;
+import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
+import com.palyrobotics.frc2019.behavior.routines.pusher.PusherOutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shooter.ShooterExpelRoutine;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForCargoElevator;
-import com.palyrobotics.frc2019.config.Constants.*;
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
+import com.palyrobotics.frc2019.config.Constants.PhysicalConstants;
+import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.subsystems.Shooter;
+import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -216,7 +218,7 @@ public class RightFullLevelAutoMode extends AutoModeBase {
 
         //move elevator up while driving
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(DepotToRocketShipMid), false),
-                new ElevatorCustomPositioningRoutine(ElevatorConstants.kElevatorCargoHeight1Inches, 1)));
+                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight1Inches, 1)));
 
         //shoot cargo
         routines.add(new PusherOutRoutine());

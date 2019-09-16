@@ -2,10 +2,7 @@ package com.palyrobotics.frc2019.behavior.routines.shovel;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.robot.OperatorInterface;
 import com.palyrobotics.frc2019.robot.Robot;
-import com.palyrobotics.frc2019.subsystems.Intake;
-import com.palyrobotics.frc2019.subsystems.Pusher;
 import com.palyrobotics.frc2019.subsystems.Shovel;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 

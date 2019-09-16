@@ -1,5 +1,9 @@
 package com.palyrobotics.frc2019.util.logger;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+import edu.wpi.first.wpilibj.DriverStation;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,11 +18,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Log is at /home/lvuser/logs/ directory Unit test safe, creates diff file directory for Mac/Windows/Linux fileName defaults to ex: "Mar13 13-29" using

@@ -12,125 +12,111 @@ public class SparkMaxOutput {
     private ControlType mSparkMode;
 
     // Output Setpoint
-    private double mSparkSetpoint;
+    private double mSparkReference;
 
-    // Arbitrary FeedForwards
-    private double arbitraryDemand;
+    // Arbitrary Feed Forward / Demand
+    private double mArbitraryDemand;
 
-    private double smartMotionCruiseVel;
-    private double smartMotionAccel;
+    private double mSmartMotionPositionConversion;
 
     public SparkMaxOutput() {
-        mGains = new Gains(0,0,0,0,0,0);
-        mSparkMode = ControlType.kPosition;
+        this(ControlType.kPosition);
+    }
+
+    public SparkMaxOutput(ControlType controlType) {
+        mGains = new Gains(0, 0, 0, 0, 0, 0);
+        mSparkMode = controlType;
     }
 
     public SparkMaxOutput(SparkMaxOutput otherSpark) {
-        mGains = otherSpark.getGains();
-        arbitraryDemand = otherSpark.getArbitraryFF();
-        mSparkSetpoint = otherSpark.getSetpoint();
-        mSparkMode = otherSpark.getControlType();
+        mGains = otherSpark.mGains;
+        mArbitraryDemand = otherSpark.mArbitraryDemand;
+        mSparkReference = otherSpark.mSparkReference;
+        mSparkMode = otherSpark.mSparkMode;
     }
 
     public SparkMaxOutput(Gains gains, ControlType controlMode, double setpoint) {
         mGains = gains;
         mSparkMode = controlMode;
-        mSparkSetpoint = setpoint;
+        mSparkReference = setpoint;
     }
 
     public void setTargetVelocity(double velocitySetpoint) {
-        this.mSparkSetpoint = velocitySetpoint;
-        this.mSparkMode = ControlType.kVelocity;
+        mSparkReference = velocitySetpoint;
+        mSparkMode = ControlType.kVelocity;
     }
 
     public void setTargetVelocity(double velocitySetpoint, Gains gains) {
-        this.mSparkSetpoint = velocitySetpoint;
-        this.mSparkMode = ControlType.kVelocity;
-        this.mGains = gains;
+        mSparkReference = velocitySetpoint;
+        mSparkMode = ControlType.kVelocity;
+        mGains = gains;
     }
 
     public void setTargetVelocity(double velocitySetpoint, double arbitraryDemand, Gains gains) {
-        this.mSparkSetpoint = velocitySetpoint;
-        this.mSparkMode = ControlType.kVelocity;
-        this.arbitraryDemand = arbitraryDemand;
-        this.mGains = gains;
+        mSparkReference = velocitySetpoint;
+        mSparkMode = ControlType.kVelocity;
+        mArbitraryDemand = arbitraryDemand;
+        mGains = gains;
     }
 
     public void setTargetPosition(double posSetpoint) {
-        this.mSparkSetpoint = posSetpoint;
-        this.mSparkMode = ControlType.kPosition;
-        this.arbitraryDemand = 0.0;
+        mSparkReference = posSetpoint;
+        mSparkMode = ControlType.kPosition;
+        mArbitraryDemand = 0.0;
     }
 
     public void setTargetPosition(double posSetpoint, Gains gains) {
-        this.mSparkSetpoint = posSetpoint;
-        this.mSparkMode = ControlType.kPosition;
-        this.arbitraryDemand = 0.0;
-        this.mGains = gains;
+        mSparkReference = posSetpoint;
+        mSparkMode = ControlType.kPosition;
+        mArbitraryDemand = 0.0;
+        mGains = gains;
     }
 
     public void setTargetPosition(double posSetpoint, double arbitraryDemand, Gains gains) {
-        this.mSparkSetpoint = posSetpoint;
-        this.mSparkMode = ControlType.kPosition;
-        this.arbitraryDemand = arbitraryDemand;
-        this.mGains = gains;
+        mSparkReference = posSetpoint;
+        mSparkMode = ControlType.kPosition;
+        mArbitraryDemand = arbitraryDemand;
+        mGains = gains;
     }
 
-    public void setTargetPositionSmartMotion(double posSetpoint, double maxVel, double maxAccel) {
-        configureSmartMotion(maxVel, maxAccel);
-        this.mSparkSetpoint = posSetpoint;
-        this.mSparkMode = ControlType.kSmartMotion;
-        this.arbitraryDemand = 0.0;
-    }
-
-    public void setTargetPositionSmartMotion(double posSetpoint, double maxVel, double maxAccel, Gains gains) {
-        configureSmartMotion(maxVel, maxAccel);
-        this.mSparkSetpoint = posSetpoint;
-        this.mSparkMode = ControlType.kSmartMotion;
-        this.arbitraryDemand = 0.0;
-        this.mGains = gains;
-    }
-
-    public void setTargetPositionSmartMotion(double posSetpoint, double maxVel, double maxAccel, double arbitraryDemand, Gains gains) {
-        configureSmartMotion(maxVel, maxAccel);
-        this.mSparkSetpoint = posSetpoint;
-        this.mSparkMode = ControlType.kSmartMotion;
-        this.arbitraryDemand = arbitraryDemand;
-        this.mGains = gains;
+    public void setTargetPositionSmartMotion(double setpoint, double positionConversion, double arbitraryDemand) {
+        mSparkReference = setpoint;
+        mSmartMotionPositionConversion = positionConversion;
+        mSparkMode = ControlType.kSmartMotion;
+        mArbitraryDemand = arbitraryDemand;
     }
 
     public void setPercentOutput(double output) {
-        this.mSparkSetpoint = output;
-        this.mSparkMode = ControlType.kDutyCycle;
+        mSparkReference = output;
+        mSparkMode = ControlType.kDutyCycle;
     }
 
     public void setVoltage(double output) {
-        this.mSparkSetpoint = output;
-        this.mSparkMode = ControlType.kVoltage;
-    }
-
-    public void configureSmartMotion(double maxVel, double maxAccel) {
-        this.smartMotionAccel = maxAccel;
-        this.smartMotionCruiseVel = maxVel;
+        mSparkReference = output;
+        mSparkMode = ControlType.kVoltage;
     }
 
     public void setGains(Gains gains) {
-        this.mGains = gains;
+        mGains = gains;
     }
 
     public Gains getGains() {
-        return this.mGains;
+        return mGains;
     }
 
     public double getSetpoint() {
-        return this.mSparkSetpoint;
+        return mSparkReference;
     }
 
-    public double getArbitraryFF() {
-        return this.arbitraryDemand;
+    public double getArbitraryDemand() {
+        return mArbitraryDemand;
+    }
+
+    public double getSmartMotionSetpointAdjusted() {
+        return mSparkReference / mSmartMotionPositionConversion;
     }
 
     public ControlType getControlType() {
-        return this.mSparkMode;
+        return mSparkMode;
     }
 }

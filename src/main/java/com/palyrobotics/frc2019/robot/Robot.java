@@ -1,107 +1,92 @@
 package com.palyrobotics.frc2019.robot;
 
-import java.util.logging.Level;
-
-import com.palyrobotics.frc2019.auto.AutoModeBase;
-import com.palyrobotics.frc2019.auto.AutoModeSelector;
 import com.palyrobotics.frc2019.behavior.RoutineManager;
-import com.palyrobotics.frc2019.config.AutoDistances;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
-import com.palyrobotics.frc2019.subsystems.Drive;
-import com.palyrobotics.frc2019.subsystems.Elevator;
-import com.palyrobotics.frc2019.subsystems.Fingers;
-import com.palyrobotics.frc2019.subsystems.Intake;
-import com.palyrobotics.frc2019.subsystems.Pusher;
-import com.palyrobotics.frc2019.subsystems.Shooter;
-import com.palyrobotics.frc2019.subsystems.Shovel;
+import com.palyrobotics.frc2019.subsystems.*;
+import com.palyrobotics.frc2019.util.commands.CommandReceiver;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
-import com.palyrobotics.frc2019.util.logger.DataLogger;
-import com.palyrobotics.frc2019.util.logger.Logger;
-import com.palyrobotics.frc2019.util.loops.Looper;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
-
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import jdk.swing.interop.SwingInterOpUtils;
 
 public class Robot extends TimedRobot {
-	//Instantiate singleton classes
-	private static RobotState robotState = RobotState.getInstance();
+    //Instantiate singleton classes
+    private static RobotState robotState = RobotState.getInstance();
 
-	public static RobotState getRobotState() {
-		return robotState;
-	}
+    public static RobotState getRobotState() {
+        return robotState;
+    }
 
-	//Single instance to be passed around
-	private static Commands commands = Commands.getInstance();
+    //Single instance to be passed around
+    private static Commands commands = Commands.getInstance();
 
-	public static Commands getCommands() {
-		return commands;
-	}
+    public static Commands getCommands() {
+        return commands;
+    }
 
-	private OperatorInterface operatorInterface = OperatorInterface.getInstance();
-	private RoutineManager mRoutineManager = RoutineManager.getInstance();
+    private OperatorInterface operatorInterface = OperatorInterface.getInstance();
+    private RoutineManager mRoutineManager = RoutineManager.getInstance();
 
-	private CSVWriter mWriter = CSVWriter.getInstance();
-
-	//Subsystem controllers
-	private Drive mDrive = Drive.getInstance();
-	private Elevator mElevator = Elevator.getInstance();
-	private Shovel mShovel = Shovel.getInstance();
-	private Shooter mShooter = Shooter.getInstance();
-	private Pusher mPusher = Pusher.getInstance();
-	private Fingers mFingers = Fingers.getInstance();
+    //Subsystem controllers
+    private Drive mDrive = Drive.getInstance();
+    private Elevator mElevator = Elevator.getInstance();
+    private Shovel mShovel = Shovel.getInstance();
+    private Shooter mShooter = Shooter.getInstance();
+    private Pusher mPusher = Pusher.getInstance();
+    private Fingers mFingers = Fingers.getInstance();
     private Intake mIntake = Intake.getInstance();
 
-	//Hardware Updater
-	private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mElevator, mShooter, mPusher, mShovel, mFingers, mIntake);
+    //Hardware Updater
+    private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mElevator, mShooter, mPusher, mShovel, mFingers, mIntake);
 
-	// Started boolean for if auto has been started.
-	private boolean mAutoStarted = false;
+    // Started boolean for if auto has been started.
+    private boolean mAutoStarted = false;
 
-	private int disabledCycles;
+    private int disabledCycles;
 
-	private boolean breakoutTeleopInitCalled = false;
+    private boolean breakoutTeleopInitCalled = false;
 
-	public Looper looper;
-	
-	@Override
-	public void robotInit() {
+    private CommandReceiver mCommandReceiver = new CommandReceiver();
 
-		Logger.getInstance().setFileName("3-2-Testing");
-		DataLogger.getInstance().setFileName("3-2-Testing");
+    @Override
+    public void robotInit() {
 
-		Logger.getInstance().start();
-		DataLogger.getInstance().start();
+//        Logger.getInstance().setFileName("3-2-Testing");
+//        DataLogger.getInstance().setFileName("3-2-Testing");
+//
+//        Logger.getInstance().start();
+//        DataLogger.getInstance().start();
+//
+//        Logger.getInstance().logRobotThread(Level.INFO, "Start robotInit()");
 
-		Logger.getInstance().logRobotThread(Level.INFO, "Start robotInit()");
-		
-		DashboardManager.getInstance().robotInit();
+        DashboardManager.getInstance().robotInit();
 
-		mHardwareUpdater.initHardware();
+        mHardwareUpdater.initHardware();
 
-		mElevator.clearWantedPositions();
-		this.looper = new Looper();
-//		looper.register(mHardwareUpdater.logLoop);
+        mElevator.resetWantedPosition();
 
-		mWriter.cleanFile();
+        CSVWriter.cleanFile();
 
-		DriveTeam.configConstants();
+        DriveTeam.configConstants();
 
-		Logger.getInstance().logRobotThread(Level.INFO, "End robotInit()");
+        mCommandReceiver.start();
 
-	}
+        if (RobotBase.isSimulation()) robotState.matchStartTimeMs = System.currentTimeMillis();
 
-	
+//        Logger.getInstance().logRobotThread(Level.INFO, "End robotInit()");
 
-	@Override
-	public void autonomousInit() {
+    }
 
-		 teleopInit();
+
+    @Override
+    public void autonomousInit() {
+
+        teleopInit();
 
 //        if(robotState.cancelAuto) {
 //            robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
@@ -141,17 +126,17 @@ public class Robot extends TimedRobot {
 //            Logger.getInstance().logRobotThread(Level.INFO, "End autoInit()");
 //        }
 
-	}
+    }
 
 
-	@Override
-	public void autonomousPeriodic() {
+    @Override
+    public void autonomousPeriodic() {
 
 //        System.out.println("Left Encoder: " + robotState.drivePose.leftEnc);
 //        System.out.println("Right Encoder: " + robotState.drivePose.rightEnc);
 //        System.out.println("Gyro Heading: " + robotState.drivePose.heading);
 
-		teleopPeriodic();
+        teleopPeriodic();
 
 //         if(robotState.cancelAuto) {
 //			 robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
@@ -188,150 +173,138 @@ public class Robot extends TimedRobot {
 //             DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime() - start) / 1.0e6);
 //             DataLogger.getInstance().cycle();
 //         }
-	}
+    }
 
-	@Override
-	public void teleopInit() {
+    @Override
+    public void teleopInit() {
 //		System.out.println("TELE STARTED");
-		Logger.getInstance().start();
-		DataLogger.getInstance().start();
+//        Logger.getInstance().start();
+//        DataLogger.getInstance().start();
+//
+//        Logger.getInstance().logRobotThread(Level.INFO, "Start teleopInit()");
 
-		Logger.getInstance().logRobotThread(Level.INFO, "Start teleopInit()");
+        robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
+        robotState.reset(0.0, new RigidTransform2d());
+        mHardwareUpdater.updateState(robotState);
+        mHardwareUpdater.updateHardware();
+        mRoutineManager.reset(commands);
+        DashboardManager.getInstance().toggleCANTable(true);
+        commands.wantedDriveState = Drive.DriveState.CHEZY; //switch to chezy after auto ends
+        commands = operatorInterface.updateCommands(commands);
+        CSVWriter.cleanFile();
+        startSubsystems();
+        mHardwareUpdater.enableBrakeMode();
+        robotState.reset(0, new RigidTransform2d());
+        robotState.matchStartTimeMs = System.currentTimeMillis();
 
-		looper.start();
+        // Set limelight to driver camera mode - redundancy for testing purposes
+        Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER);
 
-		robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
-		robotState.reset(0.0, new RigidTransform2d());
-		mHardwareUpdater.updateState(robotState);
-		mHardwareUpdater.updateHardware();
-		mRoutineManager.reset(commands);
-		DashboardManager.getInstance().toggleCANTable(true);
-		commands.wantedDriveState = Drive.DriveState.CHEZY; //switch to chezy after auto ends
-		commands.wantedGearboxState = Elevator.GearboxState.ELEVATOR;
-		commands = operatorInterface.updateCommands(commands);
-        mWriter.cleanFile();
-		startSubsystems();
-		mHardwareUpdater.enableBrakeMode();
-		robotState.reset(0, new RigidTransform2d());
-		robotState.matchStartTime = System.currentTimeMillis();
+//        Logger.getInstance().logRobotThread(Level.INFO, "End teleopInit()");
 
-		// Set limelight to driver camera mode - redundancy for testing purposes
-		Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER);
+    }
 
-        Logger.getInstance().logRobotThread(Level.INFO, "End teleopInit()");
-		
-	}
+    @Override
+    public void testInit() {
+        System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
+    }
 
-	@Override
-	public void teleopPeriodic() {
-		long start = System.nanoTime();
-		commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
-		
-		mHardwareUpdater.updateState(robotState);
-		
-		updateSubsystems();
-		
-		//Update the hardware
-		mHardwareUpdater.updateHardware();
+    @Override
+    public void teleopPeriodic() {
+        commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
+        mHardwareUpdater.updateState(robotState);
+        updateSubsystems();
+        mHardwareUpdater.updateHardware();
+    }
 
-		if(mWriter.getSize() > 10000) {
-			mWriter.write();
-		}
-		
-		DataLogger.getInstance().logData(Level.FINE, "loop_dt", (System.nanoTime()-start)/1.0e6);
-		DataLogger.getInstance().cycle();
+    @Override
+    public void disabledInit() {
 
-//		System.out.println("Limelight zdist: " + Limelight.getInstance().getCorrectedEstimatedDistanceZ());
+//        Logger.getInstance().logRobotThread(Level.INFO, "Start disabledInit()");
+//        Logger.getInstance().logRobotThread(Level.INFO, "Stopping logger...");
+//
+//        Logger.getInstance().cleanup();
+//        DataLogger.getInstance().cleanup();
 
-	}
+        mAutoStarted = false;
 
-	@Override
-	public void disabledInit() {
+        robotState.reset(0, new RigidTransform2d());
+        //Stops updating routines
+        mRoutineManager.reset(commands);
+        //Creates a new Commands instance in place of the old one
+        Commands.reset();
+        commands = Commands.getInstance();
 
-		Logger.getInstance().logRobotThread(Level.INFO, "Start disabledInit()");
-		Logger.getInstance().logRobotThread(Level.INFO, "Stopping logger...");
-
-		Logger.getInstance().cleanup();
-		DataLogger.getInstance().cleanup();
-
-		mAutoStarted = false;
-
-		looper.stop();
-
-		robotState.reset(0, new RigidTransform2d());
-		//Stops updating routines
-		mRoutineManager.reset(commands);
-		//Creates a new Commands instance in place of the old one
-		Commands.reset();
-		commands = Commands.getInstance();
-
-		robotState.gamePeriod = RobotState.GamePeriod.DISABLED;
-		//Stop controllers
-		mDrive.setNeutral();
-		stopSubsystems();
+        robotState.gamePeriod = RobotState.GamePeriod.DISABLED;
+        //Stop controllers
+        mDrive.setNeutral();
+        stopSubsystems();
 
         // Set Limelight to vision pipeline to enable pit testing
-		Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
+        Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
-		HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
-		mHardwareUpdater.disableBrakeMode();
+        HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
+        mHardwareUpdater.disableBrakeMode();
 
-		mWriter.write();
+        CSVWriter.write();
 
-		//Manually run garbage collector
-		System.gc();
-	}
+        //Manually run garbage collector
+        System.gc();
+    }
 
-	@Override
-	public void disabledPeriodic() {
-		System.out.println("Pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
-        System.out.println("Pusher Ultrasonic: " + HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
-        System.out.println("Left Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
-        System.out.println("Right Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
+    @Override
+    public void disabledPeriodic() {
+//		System.out.println("Pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
+//        System.out.println("Pusher Ultrasonic: " + HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
+//        System.out.println("Left Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+//        System.out.println("Right Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
 //		System.out.println("PusherBackup Ultrasonic: " + HardwareAdapter.getInstance().getPusher().pusherSecondaryUltrasonic.getRangeInches());
 
 //		System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
 
 //        System.out.println();
 //        System.out.println();
-	}
+    }
 
-	private void startSubsystems() {
-		mShovel.start();
-		mDrive.start();
-		mElevator.start();
-		mShooter.start();
-		mPusher.start();
-		mFingers.start();
+    private void startSubsystems() {
+        mShovel.start();
+        mDrive.start();
+        mElevator.start();
+        mShooter.start();
+        mPusher.start();
+        mFingers.start();
 		mIntake.start();
-	}
+    }
 
-	private void updateSubsystems() {
-		mDrive.update(commands, robotState);
-		mElevator.update(commands, robotState);
-		mShooter.update(commands, robotState);
-		mPusher.update(commands, robotState);
-		mFingers.update(commands, robotState);
-		mShovel.update(commands, robotState);
-		mIntake.update(commands, robotState);
-	}
+    private void updateSubsystems() {
+        mDrive.update(commands, robotState);
+        mElevator.update(commands, robotState);
+        mShooter.update(commands, robotState);
+        mPusher.update(commands, robotState);
+        mFingers.update(commands, robotState);
+        mShovel.update(commands, robotState);
+        mIntake.update(commands, robotState);
+    }
 
 
-	private void stopSubsystems() {
-		mDrive.stop();
-		mElevator.stop();
-		mShooter.stop();
-		mPusher.stop();
-		mFingers.stop();
-		mShovel.stop();
+    private void stopSubsystems() {
+        mDrive.stop();
+        mElevator.stop();
+        mShooter.stop();
+        mPusher.stop();
+        mFingers.stop();
+        mShovel.stop();
 		mIntake.stop();
-	}
+    }
 
-	@Override
-	public void robotPeriodic() {
-		// System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
-		// System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
-		// System.out.println("left ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
-		// System.out.println("right ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
-	}
+    @Override
+    public void robotPeriodic() {
+
+        mCommandReceiver.update();
+
+        // System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+        // System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
+        // System.out.println("left ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+        // System.out.println("right ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
+    }
 }
