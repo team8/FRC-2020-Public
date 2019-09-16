@@ -270,7 +270,7 @@ public class Intake extends Subsystem {
 
         CSVWriter.addData("intakeAngle", mRobotState.intakeAngle);
         mIntakeWantedPosition.ifPresent(intakeWantedPosition -> CSVWriter.addData("intakeWantedPosition", intakeWantedPosition));
-        CSVWriter.addData("intakeSparkSetpoint", mSparkOutput.getSetpoint());
+        CSVWriter.addData("intakeSparkSetpoint", mSparkOutput.getReference());
     }
 
     public double getRumbleLength() {
@@ -308,6 +308,6 @@ public class Intake extends Subsystem {
 
     @Override
     public String getStatus() {
-        return String.format("Intake State: %s\nOutput Control Mode: %s\nSpark Output: %.2f\nUp Down Output: %s", mWheelState, mSparkOutput.getControlType(), mSparkOutput.getSetpoint(), mUpDownState);
+        return String.format("Intake State: %s\nOutput Control Mode: %s\nSpark Output: %.2f\nUp Down Output: %s", mWheelState, mSparkOutput.getControlType(), mSparkOutput.getReference(), mUpDownState);
     }
 }

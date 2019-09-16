@@ -30,9 +30,10 @@ public class SparkMaxOutput {
 
     public SparkMaxOutput(SparkMaxOutput otherSpark) {
         mGains = otherSpark.mGains;
-        mArbitraryDemand = otherSpark.mArbitraryDemand;
-        mSparkReference = otherSpark.mSparkReference;
         mSparkMode = otherSpark.mSparkMode;
+        mSparkReference = otherSpark.mSparkReference;
+        mArbitraryDemand = otherSpark.mArbitraryDemand;
+        mSmartMotionPositionConversion = otherSpark.mSmartMotionPositionConversion;
     }
 
     public SparkMaxOutput(Gains gains, ControlType controlMode, double setpoint) {
@@ -104,7 +105,7 @@ public class SparkMaxOutput {
         return mGains;
     }
 
-    public double getSetpoint() {
+    public double getReference() {
         return mSparkReference;
     }
 

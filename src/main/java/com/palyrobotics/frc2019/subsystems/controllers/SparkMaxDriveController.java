@@ -42,11 +42,11 @@ public class SparkMaxDriveController implements Drive.DriveController {
 		Pose output = mCachedState.drivePose.copy();
 		switch(mSignal.leftMotor.getControlType()) {
 			case kPosition:
-				output.leftEnc = mSignal.leftMotor.getSetpoint();
+				output.leftEnc = mSignal.leftMotor.getReference();
 				output.leftEncVelocity = 0;
 				break;
 			case kVelocity:
-				output.leftEncVelocity = mSignal.leftMotor.getSetpoint();
+				output.leftEncVelocity = mSignal.leftMotor.getReference();
 				break;
 			case kDutyCycle:
 				//Open loop motor
@@ -55,11 +55,11 @@ public class SparkMaxDriveController implements Drive.DriveController {
 
 		switch(mSignal.rightMotor.getControlType()) {
 			case kPosition:
-				output.leftEnc = mSignal.leftMotor.getSetpoint();
+				output.leftEnc = mSignal.leftMotor.getReference();
 				output.leftEncVelocity = 0;
 				break;
 			case kVelocity:
-				output.leftEncVelocity = mSignal.leftMotor.getSetpoint();
+				output.leftEncVelocity = mSignal.leftMotor.getReference();
 				break;
 			case kDutyCycle:
 				//Open loop motor
@@ -82,9 +82,9 @@ public class SparkMaxDriveController implements Drive.DriveController {
 
 		//Motion magic is not PID so ignore whether talon closed loop error is around
 		if(mSignal.leftMotor.getControlType().equals(ControlMode.MotionMagic)) {
-			return (Math.abs(mCachedState.drivePose.leftEnc - mSignal.leftMotor.getSetpoint()) < positionTolerance)
+			return (Math.abs(mCachedState.drivePose.leftEnc - mSignal.leftMotor.getReference()) < positionTolerance)
 					&& (Math.abs(mCachedState.drivePose.leftEncVelocity) < velocityTolerance)
-					&& (Math.abs(mCachedState.drivePose.rightEnc - mSignal.rightMotor.getSetpoint()) < positionTolerance)
+					&& (Math.abs(mCachedState.drivePose.rightEnc - mSignal.rightMotor.getReference()) < positionTolerance)
 					&& (Math.abs(mCachedState.drivePose.rightEncVelocity) < velocityTolerance);
 		}
 		if(!mCachedState.drivePose.leftError.isPresent() || !mCachedState.drivePose.rightError.isPresent()) {

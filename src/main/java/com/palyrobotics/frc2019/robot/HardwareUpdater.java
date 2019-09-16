@@ -184,7 +184,7 @@ class HardwareUpdater {
         masterElevatorSpark.enableSoftLimit(SoftLimitDirection.kForward, false);
         masterElevatorSpark.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
-        // TODO re-enable when Spark fixes the smart motion with conversion factors
+        // TODO change when Spark conversion works
 //        masterElevatorSpark.getEncoder().setPositionConversionFactor(1.0 / ElevatorConfig.kElevatorRotationsPerInch);
 //        masterElevatorSpark.getEncoder().setVelocityConversionFactor(ElevatorConfig.kElevatorSpeedUnitConversion);
 
@@ -216,7 +216,7 @@ class HardwareUpdater {
 
         intakeMasterSpark.setIdleMode(IdleMode.kBrake);
 
-        // TODO fix when conversion is fixed from Spark
+        // TODO change when Spark conversion works
 //        intakeMasterSpark.getEncoder().setPositionConversionFactor(IntakeConstants.kArmDegreesPerRevolution);
 //        intakeMasterSpark.getEncoder().setVelocityConversionFactor(IntakeConstants.kArmDegreePerSecPerRpm);
 
@@ -340,7 +340,7 @@ class HardwareUpdater {
         robotState.hasHatch = (robotState.shovelCurrentDraw > ShovelConstants.kMaxShovelCurrentDraw);
 
         CANEncoder elevatorEncoder = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder();
-        // TODO fix when conversion works
+        // TODO change when Spark conversion works
         robotState.elevatorPosition = elevatorEncoder.getPosition() * ElevatorConfig.kElevatorInchPerRevolution;
         robotState.elevatorVelocity = elevatorEncoder.getVelocity() * ElevatorConfig.kElevatorInchPerSecPerRpm;
 
@@ -410,7 +410,7 @@ class HardwareUpdater {
                 1 / IntakeConstants.kArmPotentiometerTicksPerDegree * Math.abs(HardwareAdapter.getInstance().getIntake().potentiometer.get() -
                         IntakeConstants.kMaxAngleTicks);
         HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().setPosition(
-                Robot.getRobotState().intakeStartAngle / IntakeConstants.kArmDegreesPerRevolution
+                Robot.getRobotState().intakeStartAngle / IntakeConstants.kArmDegreesPerRevolution // TODO change when Spark conversion works
         );
     }
 
@@ -598,8 +598,8 @@ class HardwareUpdater {
 //        if (output.getControlType() == ControlType.kSmartMotion) System.out.println(output.getSetpoint());
         spark.getPIDController().setReference(
                 output.getControlType() == ControlType.kSmartMotion
-                        ? output.getSmartMotionSetpointAdjusted()
-                        : output.getSetpoint(),
+                        ? output.getReference()
+                        : output.getSmartMotionSetpointAdjusted(),
                 output.getControlType(),
                 output.getControlType() == ControlType.kSmartMotion ? 1 : 0, // TODO named constants for PID slots
                 output.getArbitraryDemand(),
@@ -614,18 +614,20 @@ class HardwareUpdater {
 
     private void updateSmartMotionGains(CANSparkMax spark, Gains gains, double acceleration, double velocity, double velocityConversion) {
         CANPIDController controller = spark.getPIDController();
-        controller.setP(gains.P * velocityConversion, 1);
-        controller.setD(gains.D * velocityConversion, 1);
-        controller.setI(gains.I * velocityConversion, 1);
-        controller.setFF(gains.F * velocityConversion, 1);
-        controller.setIZone(gains.iZone, 1); // TODO use position conversion
+        // TODO change when Spark conversion works
+        int SMART_MOTION_PID_SLOT = 1;
+        controller.setP(gains.P * velocityConversion, SMART_MOTION_PID_SLOT);
+        controller.setD(gains.D * velocityConversion, SMART_MOTION_PID_SLOT);
+        controller.setI(gains.I * velocityConversion, SMART_MOTION_PID_SLOT);
+        controller.setFF(gains.F * velocityConversion, SMART_MOTION_PID_SLOT);
+        controller.setIZone(gains.iZone, SMART_MOTION_PID_SLOT); // TODO use position conversion
         controller.setIAccum(0.0);
-        controller.setSmartMotionMaxAccel(acceleration / velocityConversion, 1);
-        controller.setSmartMotionMaxVelocity(velocity / velocityConversion, 1);
-        controller.setOutputRange(-0.7, 0.7, 1);
-        controller.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, 1);
-        controller.setSmartMotionAllowedClosedLoopError(0.0, 1); // TODO zero?
-        controller.setSmartMotionMinOutputVelocity(0.0, 1);
+        controller.setSmartMotionMaxAccel(acceleration / velocityConversion, SMART_MOTION_PID_SLOT);
+        controller.setSmartMotionMaxVelocity(velocity / velocityConversion, SMART_MOTION_PID_SLOT);
+        controller.setOutputRange(-1.0, 1.0, SMART_MOTION_PID_SLOT);
+        controller.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, SMART_MOTION_PID_SLOT);
+        controller.setSmartMotionAllowedClosedLoopError(0.0, SMART_MOTION_PID_SLOT);
+        controller.setSmartMotionMinOutputVelocity(0.0, SMART_MOTION_PID_SLOT);
         spark.setClosedLoopRampRate(gains.rampRate);
     }
 

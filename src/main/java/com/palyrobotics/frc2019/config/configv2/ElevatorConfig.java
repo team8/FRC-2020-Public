@@ -13,8 +13,7 @@ public class ElevatorConfig extends AbstractSubsystemConfig {
             secondStageCanStartMovingArm,
             acceptablePositionError,
             acceptableVelocityError,
-            climberAcceptablePositionError,
-            climberAcceptableVelocityError,
+            closedLoopZoneHeight,
             a, v,
             p, i, d, f, ff;
 

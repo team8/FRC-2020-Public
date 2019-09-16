@@ -96,8 +96,8 @@ public class OnboardDriveController implements Drive.DriveController {
 
 	private SparkSignal getArbFFOutput(Pose drivePose) {
 		SparkSignal signal = updatePID(0, 0, 0, 0);
-		signal.leftMotor.setTargetVelocity(leftSetpoint.vel, signal.leftMotor.getSetpoint()*12.0, new Gains(mGains.p, 0, mGains.d, 0, 0, 0));
-		signal.rightMotor.setTargetVelocity(rightSetpoint.vel, signal.rightMotor.getSetpoint()*12.0, new Gains(mGains.p, 0, mGains.d, 0, 0, 0));
+		signal.leftMotor.setTargetVelocity(leftSetpoint.vel, signal.leftMotor.getReference()*12.0, new Gains(mGains.p, 0, mGains.d, 0, 0, 0));
+		signal.rightMotor.setTargetVelocity(rightSetpoint.vel, signal.rightMotor.getReference()*12.0, new Gains(mGains.p, 0, mGains.d, 0, 0, 0));
 		
 		return signal;
 	}

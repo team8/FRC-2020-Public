@@ -95,6 +95,6 @@ public class Pusher extends Subsystem {
     }
     @Override
     public String getStatus() {
-        return "Pusher State: " + mState + "\nPusher output" + mOutput.getSetpoint();
+        return "Pusher State: " + mState + "\nPusher output" + mOutput.getReference();
     }
 }

@@ -14,10 +14,10 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class Elevator extends Subsystem {
 
-    private static Elevator instance = new Elevator("Elevator");
+    private static Elevator sInstance = new Elevator();
 
     public static Elevator getInstance() {
-        return instance;
+        return sInstance;
     }
 
     private ElevatorConfig mConfig = Configs.get(ElevatorConfig.class);
@@ -41,26 +41,20 @@ public class Elevator extends Subsystem {
     private SparkMaxOutput mOutput = new SparkMaxOutput(ControlType.kSmartMotion);
     private boolean mHolderSolenoidOutput = false;
 
-    /**
-     * Constructor for Elevator, defaults state to idle.
-     *
-     * @param name the name of the elevator
-     */
-    protected Elevator(String name) {
-        super(name);
+    private Elevator() {
+        super("Elevator");
         mElevatorState = ElevatorState.IDLE;
     }
 
     /**
      * Calibration is checked and the variable for the state machine is set after processing the wanted elevator state. State machine used for movement and
-     * clearing {@link Elevator#mElevatorWantedPosition} only.
+     * clearing {@link #mElevatorWantedPosition} only.
      *
      * @param commands   used to obtain wanted elevator state
      * @param robotState used to obtain joystick input and sensor readings
      */
     @Override
     public void update(Commands commands, RobotState robotState) {
-        //Update for use in handleElevatorState()
         mRobotState = robotState;
         mHolderSolenoidOutput = commands.holderOutput;
 
@@ -79,10 +73,15 @@ public class Elevator extends Subsystem {
                 break;
             case CUSTOM_POSITIONING:
                 //Control loop
-                mOutput.setTargetPositionSmartMotion(mElevatorWantedPosition, ElevatorConfig.kElevatorInchPerRevolution, mConfig.ff);
+                boolean belowClosedLoopZone = mRobotState.elevatorPosition < mConfig.closedLoopZoneHeight,
+                        wantedPositionHigherThanCurrent = mElevatorWantedPosition > mRobotState.elevatorPosition;
+                if (!belowClosedLoopZone || wantedPositionHigherThanCurrent) {
+                    mOutput.setTargetPositionSmartMotion(mElevatorWantedPosition, ElevatorConfig.kElevatorInchPerRevolution, mConfig.ff);
+                } else {
+                    mOutput.setPercentOutput(0.0);
+                }
                 break;
             case IDLE:
-                //Clear any existing wanted positions
                 mOutput.setPercentOutput(0.0);
                 break;
             case PERCENT_OUTPUT:
@@ -94,11 +93,11 @@ public class Elevator extends Subsystem {
         CSVWriter.addData("elevatorPositionInch", mRobotState.elevatorPosition);
         CSVWriter.addData("elevatorVelInchPerSec", mRobotState.elevatorVelocity);
         CSVWriter.addData("elevatorWantedPos", mElevatorWantedPosition);
-        CSVWriter.addData("elevatorSetpointInch", mOutput.getSetpoint());
+        CSVWriter.addData("elevatorSetpointInch", mOutput.getReference());
     }
 
     /**
-     * Process wanted elevator state and joystick inputs into mElevatorState for the state machine. Sets {@link Elevator#mElevatorWantedPosition} for use in the state
+     * Process wanted elevator state and joystick inputs into mElevatorState for the state machine. Sets {@link #mElevatorWantedPosition} for use in the state
      * machine. Does not clear it. At the end, always check if any custom positioning has finished, and if so, set the state to hold. <br>
      * <br>
      *
@@ -137,22 +136,10 @@ public class Elevator extends Subsystem {
         resetWantedPosition();
     }
 
-    public SparkMaxOutput getOutput() {
-        return mOutput;
-    }
-
-    public DoubleSolenoid.Value getSolenoidOutput() {
-        return DoubleSolenoid.Value.kForward;
-    }
-
-    public boolean getHolderSolenoidOutput() {
-        return mHolderSolenoidOutput;
-    }
-
     /**
      * If the elevator is on target. Only for {@link ElevatorState#CUSTOM_POSITIONING}.
      *
-     * @return If {@link Elevator#mElevatorState} is not {@link ElevatorState#CUSTOM_POSITIONING},
+     * @return If {@link #mElevatorState} is not {@link ElevatorState#CUSTOM_POSITIONING},
      * or whether it's within position and velocity tolerances otherwise
      */
     public boolean elevatorOnTarget() {
@@ -163,5 +150,17 @@ public class Elevator extends Subsystem {
 
     public void resetWantedPosition() {
         mElevatorWantedPosition = 0.0;
+    }
+
+    public SparkMaxOutput getOutput() {
+        return mOutput;
+    }
+
+    public DoubleSolenoid.Value getSolenoidOutput() {
+        return DoubleSolenoid.Value.kForward;
+    }
+
+    public boolean getHolderSolenoidOutput() {
+        return mHolderSolenoidOutput;
     }
 }

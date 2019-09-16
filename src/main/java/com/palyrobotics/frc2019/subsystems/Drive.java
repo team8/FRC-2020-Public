@@ -204,8 +204,8 @@ public class Drive extends Subsystem {
 		CSVWriter.addData("driveHeadingVelocity", state.drivePose.headingVelocity);
 		state.drivePose.leftError.ifPresent(integer -> CSVWriter.addData("driveLeftError", (double) integer));
 		state.drivePose.rightError.ifPresent(integer -> CSVWriter.addData("driveRightError", (double) integer));
-		CSVWriter.addData("driveLeftSetpoint", mSignal.leftMotor.getSetpoint());
-		CSVWriter.addData("driveRightSetpoint", mSignal.rightMotor.getSetpoint());
+		CSVWriter.addData("driveLeftSetpoint", mSignal.leftMotor.getReference());
+		CSVWriter.addData("driveRightSetpoint", mSignal.rightMotor.getReference());
         // System.out.println("Left arbitrary demand: " + mSignal.leftMotor.getArbitraryFF());
         // System.out.println("Right arbitrary demand: " + mSignal.rightMotor.getArbitraryFF());
 	}
@@ -331,8 +331,8 @@ public class Drive extends Subsystem {
 
 	@Override
 	public String getStatus() {
-		return "Drive State: " + mState + "\nOutput Control Mode: " + mSignal.leftMotor.getControlType() + "\nLeft Setpoint: " + mSignal.leftMotor.getSetpoint()
-				+ "\nRight Setpoint: " + mSignal.rightMotor.getSetpoint() + "\nLeft Enc: " + mCachedPose.leftEnc + "\nRight Enc: " + mCachedPose.rightEnc
+		return "Drive State: " + mState + "\nOutput Control Mode: " + mSignal.leftMotor.getControlType() + "\nLeft Setpoint: " + mSignal.leftMotor.getReference()
+				+ "\nRight Setpoint: " + mSignal.rightMotor.getReference() + "\nLeft Enc: " + mCachedPose.leftEnc + "\nRight Enc: " + mCachedPose.rightEnc
 				+ "\nGyro: " + mCachedPose.heading + "\n";
 	}
 }

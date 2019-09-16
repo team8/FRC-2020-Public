@@ -12,11 +12,11 @@ public class ElevatorCustomPositioningRoutine extends Routine {
 
     private double mPosition;
     private double mTimeout;
-    private long mStartTime = -1;
+    private Long mStartTime;
     private boolean hasSetAllVars = false;
 
-    private Optional<Path> mPath = Optional.empty();
-    private Optional<String> mRoutineStartWayPoint = Optional.empty();
+    private Path mPath;
+    private String mRoutineStartWayPoint;
 
     public ElevatorCustomPositioningRoutine(double position, double timeout) {
         this.mPosition = position;
@@ -26,21 +26,21 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     public ElevatorCustomPositioningRoutine(double position, double timeout, Path path, String routineStartWayPoint) {
         this.mPosition = position;
         this.mTimeout = timeout;
-        this.mPath = Optional.of(path);
-        this.mRoutineStartWayPoint = Optional.of(routineStartWayPoint);
+        this.mPath = path;
+        this.mRoutineStartWayPoint = routineStartWayPoint;
     }
 
     @Override
     public void start() {
-        if (mPath.isEmpty()) {
+        if (mPath == null) {
             mStartTime = System.currentTimeMillis();
         }
     }
 
     @Override
     public Commands update(Commands commands) {
-        if (mPath.isEmpty() || (mRoutineStartWayPoint.isPresent() && mPath.get().getMarkersCrossed().contains(mRoutineStartWayPoint.get()))) {
-            if (mStartTime == -1) mStartTime = System.currentTimeMillis();
+        if (mPath == null || (mRoutineStartWayPoint != null && mPath.getMarkersCrossed().contains(mRoutineStartWayPoint))) {
+            if (mStartTime == null) mStartTime = System.currentTimeMillis();
             hasSetAllVars = true;
             commands.wantedElevatorState = Elevator.ElevatorState.CUSTOM_POSITIONING;
             commands.robotSetpoints.elevatorPositionSetpoint = Optional.of(mPosition);
@@ -57,23 +57,12 @@ public class ElevatorCustomPositioningRoutine extends Routine {
 
     @Override
     public boolean finished() {
-        if (mStartTime != -1) {
+        if (mStartTime != null) {
             if (System.currentTimeMillis() - mStartTime > mTimeout * 1000) {
-//                System.out.println("ECPR timing out");
                 return true;
             }
         }
-
-//        if(elevator.getElevatorWantedPosition().isPresent(E)) {
-//            if(elevator.getElevatorWantedPosition().get() == ElevatorConstants.kBottomPositionInches) {
-//                return true;
-//            }
-//        }
-
-        System.out.println("Cancelling this");
-
-//        return hasSetAllVars && elevator.elevatorOnTarget();
-        return false;
+        return hasSetAllVars && elevator.elevatorOnTarget();
     }
 
     @Override
