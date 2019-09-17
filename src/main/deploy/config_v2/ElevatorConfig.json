@@ -10,6 +10,7 @@
   "acceptablePositionError" : 0.5,
   "acceptableVelocityError" : 1.0,
   "closedLoopZoneHeight": 2,
+  "outOfClosedLoopZoneIdleDelayMs": 200,
   "a" : 64,
   "v" : 59,
   "p" : 0,

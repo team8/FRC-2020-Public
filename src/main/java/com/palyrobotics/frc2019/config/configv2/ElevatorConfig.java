@@ -14,6 +14,7 @@ public class ElevatorConfig extends AbstractSubsystemConfig {
             acceptablePositionError,
             acceptableVelocityError,
             closedLoopZoneHeight,
+            outOfClosedLoopZoneIdleDelayMs,
             a, v,
             p, i, d, f, ff;
 

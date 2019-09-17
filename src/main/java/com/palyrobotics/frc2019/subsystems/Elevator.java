@@ -39,7 +39,9 @@ public class Elevator extends Subsystem {
     private RobotState mRobotState;
 
     private SparkMaxOutput mOutput = new SparkMaxOutput(ControlType.kSmartMotion);
-    private boolean mHolderSolenoidOutput = false;
+    private boolean mHolderSolenoidOutput;
+
+    private long mLastTimeWhenInClosedLoopMs;
 
     private Elevator() {
         super("Elevator");
@@ -73,9 +75,12 @@ public class Elevator extends Subsystem {
                 break;
             case CUSTOM_POSITIONING:
                 //Control loop
+                long currentTimeMs = System.currentTimeMillis();
                 boolean inClosedLoopZone = mRobotState.elevatorPosition >= mConfig.closedLoopZoneHeight,
-                        wantedPositionInClosedLoopZone = mElevatorWantedPosition >= mConfig.closedLoopZoneHeight;
-                if (inClosedLoopZone || wantedPositionInClosedLoopZone) {
+                        wantedPositionInClosedLoopZone = mElevatorWantedPosition >= mConfig.closedLoopZoneHeight,
+                        useClosedLoopOutOfRange = currentTimeMs - mLastTimeWhenInClosedLoopMs > mConfig.outOfClosedLoopZoneIdleDelayMs;
+                if (inClosedLoopZone) mLastTimeWhenInClosedLoopMs = currentTimeMs;
+                if (inClosedLoopZone || wantedPositionInClosedLoopZone || useClosedLoopOutOfRange) {
                     mOutput.setTargetPositionSmartMotion(mElevatorWantedPosition, ElevatorConfig.kElevatorInchPerRevolution, mConfig.ff);
                 } else {
                     mOutput.setIdle();
@@ -93,7 +98,7 @@ public class Elevator extends Subsystem {
         CSVWriter.addData("elevatorPositionInch", mRobotState.elevatorPosition);
         CSVWriter.addData("elevatorVelInchPerSec", mRobotState.elevatorVelocity);
         CSVWriter.addData("elevatorWantedPos", mElevatorWantedPosition);
-        CSVWriter.addData("elevatorSetpointInch", mOutput.getReference());
+        CSVWriter.addData("elevatorSetPointInch", mOutput.getReference());
     }
 
     /**

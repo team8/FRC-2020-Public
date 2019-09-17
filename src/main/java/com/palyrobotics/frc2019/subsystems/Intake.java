@@ -238,14 +238,15 @@ public class Intake extends Subsystem {
                 mSparkOutput.setIdle(); //TODO: Fix this based on what control method wanted
                 break;
             case CUSTOM_ANGLE:
-                boolean
-                        inClosedLoopZone = mRobotState.intakeAngle >= IntakeConstants.kLowestAngle && mRobotState.intakeAngle <= IntakeConstants.kHighestAngle,
-                        wantedAngleInClosedLoopZone = mIntakeWantedAngle >= IntakeConstants.kLowestAngle && mIntakeWantedAngle <= IntakeConstants.kHighestAngle;
-                if (inClosedLoopZone || wantedAngleInClosedLoopZone) {
-                    mSparkOutput.setTargetPositionSmartMotion(mIntakeWantedAngle, IntakeConstants.kArmDegreesPerRevolution, arbitraryDemand);
-                } else {
-                    mSparkOutput.setIdle();
-                }
+//                boolean
+//                        inClosedLoopZone = mRobotState.intakeAngle >= IntakeConstants.kLowestAngle && mRobotState.intakeAngle <= IntakeConstants.kHighestAngle,
+//                        wantedAngleInClosedLoopZone = mIntakeWantedAngle >= IntakeConstants.kLowestAngle && mIntakeWantedAngle <= IntakeConstants.kHighestAngle;
+//                if (inClosedLoopZone || wantedAngleInClosedLoopZone) {
+//                    mSparkOutput.setTargetPositionSmartMotion(mIntakeWantedAngle, IntakeConstants.kArmDegreesPerRevolution, arbitraryDemand);
+//                } else {
+//                    mSparkOutput.setIdle();
+//                }
+                mSparkOutput.setTargetPositionSmartMotion(mIntakeWantedAngle, IntakeConstants.kArmDegreesPerRevolution, arbitraryDemand);
                 break;
             case ZERO_VELOCITY:
                 mSparkOutput.setTargetVelocity(0.0);
