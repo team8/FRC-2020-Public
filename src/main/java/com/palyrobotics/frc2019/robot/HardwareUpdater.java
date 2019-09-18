@@ -194,7 +194,7 @@ class HardwareUpdater {
                 masterElevatorSpark,
                 new Gains(elevatorConfig.p, elevatorConfig.i, elevatorConfig.d, elevatorConfig.f, 0, 0.0),
                 elevatorConfig.a, elevatorConfig.v,
-                ElevatorConfig.kElevatorInchPerSecPerRpm
+                ElevatorConfig.kElevatorInchesPerSecondPerRpm
         );
     }
 
@@ -237,7 +237,7 @@ class HardwareUpdater {
                 intakeMasterSpark,
                 Gains.intakeSmartMotion,
                 Gains.kVidarIntakeSmartMotionMaxAcceleration, Gains.kVidarIntakeSmartMotionMaxVelocity,
-                IntakeConstants.kArmDegreePerSecPerRpm
+                IntakeConstants.kArmDegreesPerSecondPerRpm
         );
     }
 
@@ -341,8 +341,8 @@ class HardwareUpdater {
 
         CANEncoder elevatorEncoder = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder();
         // TODO change when Spark conversion works
-        robotState.elevatorPosition = elevatorEncoder.getPosition() * ElevatorConfig.kElevatorInchPerRevolution;
-        robotState.elevatorVelocity = elevatorEncoder.getVelocity() * ElevatorConfig.kElevatorInchPerSecPerRpm;
+        robotState.elevatorPosition = elevatorEncoder.getPosition() * ElevatorConfig.kElevatorInchesPerRevolution;
+        robotState.elevatorVelocity = elevatorEncoder.getVelocity() * ElevatorConfig.kElevatorInchesPerSecondPerRpm;
 
         PigeonIMU gyro = HardwareAdapter.getInstance().getDrivetrain().gyro;
         if (gyro != null) {
@@ -370,7 +370,7 @@ class HardwareUpdater {
 
         CANEncoder armEncoder = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder();
         robotState.intakeAngle = armEncoder.getPosition() * IntakeConstants.kArmDegreesPerRevolution;
-        robotState.intakeVelocity = armEncoder.getVelocity() * IntakeConstants.kArmDegreePerSecPerRpm;
+        robotState.intakeVelocity = armEncoder.getVelocity() * IntakeConstants.kArmDegreesPerSecondPerRpm;
 
         double time = Timer.getFPGATimestamp();
 
@@ -596,9 +596,7 @@ class HardwareUpdater {
     private void updateSparkMax(CANSparkMax spark, SparkMaxOutput output) {
 //        if (output.getControlType() == ControlType.kSmartMotion) System.out.println(output.getSetpoint());
         spark.getPIDController().setReference(
-                output.getControlType() == ControlType.kSmartMotion
-                        ? output.getReference()
-                        : output.getSmartMotionSetpointAdjusted(),
+                output.getReference(),
                 output.getControlType(),
                 output.getControlType() == ControlType.kSmartMotion ? 1 : 0, // TODO named constants for PID slots
                 output.getArbitraryDemand(),

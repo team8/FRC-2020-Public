@@ -22,8 +22,8 @@ public class ElevatorConfig extends AbstractSubsystemConfig {
 
     private static final double kSpoolEffectiveDiameter = 2.9;
     public static final double
-            kElevatorInchPerRevolution = (1.0 / (kSpoolEffectiveDiameter * Math.PI)) * (52.0 / 12.0) * (50.0 / 26.0) * (60.0 / 40.0), // R → in
-            kElevatorInchPerSecPerRpm = (1.0 / kElevatorInchPerRevolution) / 60.0; // RPM → in/s
+            kElevatorInchesPerRevolution = (1.0 / (kSpoolEffectiveDiameter * Math.PI)) * (52.0 / 12.0) * (50.0 / 26.0) * (60.0 / 40.0), // R → in
+            kElevatorInchesPerSecondPerRpm = (1.0 / kElevatorInchesPerRevolution) / 60.0; // RPM → in/s
 
 //            kClimberRotationsPerInch = 1.0 / (kSpoolEffectiveDiameter * Math.PI) * (52.0 / 12.0) * (50.0 / 26.0) * (60.0 / 40.0) * (66.0 / 14.0), // R → in
 //            kClimberSpeedUnitConversion = (1.0 / kClimberRotationsPerInch) / 60.0; // RPM → in/s

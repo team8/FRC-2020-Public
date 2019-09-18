@@ -53,5 +53,5 @@ public class IntakeConstants {
     // Using the NEO built in Encoder, so we must account for reduction.  ~= 42 / 360 * 118
     public static final double
             kArmDegreesPerRevolution = (360.0) / ((68.0 / 14.0) * (38.0 / 18.0) * (36.0 / 14.0) * (54.0 / 12.0)), // R → Degree
-            kArmDegreePerSecPerRpm = kArmDegreesPerRevolution / 60.0; // RPM → Degrees per Second
+            kArmDegreesPerSecondPerRpm = kArmDegreesPerRevolution / 60.0; // RPM → Degrees per Second
 }

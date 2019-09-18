@@ -249,7 +249,7 @@ public class Intake extends Subsystem {
                 mSparkOutput.setTargetPositionSmartMotion(mIntakeWantedAngle, IntakeConstants.kArmDegreesPerRevolution, arbitraryDemand);
                 break;
             case ZERO_VELOCITY:
-                mSparkOutput.setTargetVelocity(0.0);
+                mSparkOutput.setTargetSmartVelocity(0.0, IntakeConstants.kArmDegreesPerSecondPerRpm, arbitraryDemand);
             case IDLE:
                 mIntakeWantedAngle = null;
                 mSparkOutput.setIdle();
