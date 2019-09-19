@@ -129,6 +129,10 @@ public class Robot extends TimedRobot {
     }
 
 
+    protected Robot() {
+        super();
+    }
+
     @Override
     public void autonomousPeriodic() {
 

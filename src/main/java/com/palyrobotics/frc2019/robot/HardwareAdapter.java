@@ -3,6 +3,7 @@ package com.palyrobotics.frc2019.robot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.palyrobotics.frc2019.config.Constants.IntakeConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.Constants.PortConstants;
 import com.palyrobotics.frc2019.util.XboxController;
@@ -107,6 +108,13 @@ public class HardwareAdapter {
             instance.intakeSlaveSpark.getEncoder().setPosition(0);
         }
 
+        public void calibrateIntakeEncoderWithPotentiometer() {
+            Robot.getRobotState().intakeStartAngle =
+                    IntakeConstants.kMaxAngle - 1 / IntakeConstants.kArmPotentiometerTicksPerDegree * Math.abs(potentiometer.get() - IntakeConstants.kMaxAngleTicks);
+            intakeMasterSpark.getEncoder().setPosition
+                    (Robot.getRobotState().intakeStartAngle / IntakeConstants.kArmDegreesPerRevolution); // TODO change when Spark conversion works
+        }
+
         IntakeHardware() {
             intakeTalon = new WPI_TalonSRX(PortConstants.kVidarIntakeTalonDeviceID);
             intakeMasterSpark = new CANSparkMax(PortConstants.kVidarIntakeMasterDeviceID, MotorType.kBrushless);
@@ -207,7 +215,7 @@ public class HardwareAdapter {
 
         final Joystick driveStick = new Joystick(0);
         final Joystick turnStick = new Joystick(1);
-//        public final Joystick backupStick = new Joystick(3);
+        //        public final Joystick backupStick = new Joystick(3);
         XboxController operatorXboxController = null;
 
         Joysticks() {

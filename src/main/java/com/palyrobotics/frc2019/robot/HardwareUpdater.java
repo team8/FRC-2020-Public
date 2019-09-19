@@ -91,7 +91,7 @@ class HardwareUpdater {
         configureIntakeHardware();
         configureShooterHardware();
         configurePusherHardware();
-        startIntakeArm();
+        HardwareAdapter.getInstance().getIntake().calibrateIntakeEncoderWithPotentiometer();
     }
 
     private void configureDriveHardware() {
@@ -403,14 +403,6 @@ class HardwareUpdater {
         robotState.pusherVelocity = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder().getVelocity();
 
         updateUltrasonicSensors(robotState);
-    }
-
-    private void startIntakeArm() {
-        HardwareAdapter.IntakeHardware intakeHardware = HardwareAdapter.getInstance().getIntake();
-        Robot.getRobotState().intakeStartAngle =
-                IntakeConstants.kMaxAngle - 1 / IntakeConstants.kArmPotentiometerTicksPerDegree * Math.abs(intakeHardware.potentiometer.get() - IntakeConstants.kMaxAngleTicks);
-        intakeHardware.intakeMasterSpark.getEncoder().setPosition
-                (Robot.getRobotState().intakeStartAngle / IntakeConstants.kArmDegreesPerRevolution); // TODO change when Spark conversion works
     }
 
     private void updateUltrasonicSensors(RobotState robotState) {

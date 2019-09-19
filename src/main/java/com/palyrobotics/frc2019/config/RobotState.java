@@ -50,7 +50,7 @@ public class RobotState {
 	public double intakeAngle = 0;  // Angle in degrees
 	public double intakeVelocity = 0; // RPM
 	public boolean hasIntakeStickyFaults = false;
-	public ArrayList<Double> mLeftReadings = new ArrayList<>();
+	public ArrayList<Double> mLeftReadings = new ArrayList<>(); // TODO make queue?
 	public ArrayList<Double> mRightReadings = new ArrayList<>();
 
 	//Pusher
