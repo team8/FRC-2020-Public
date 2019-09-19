@@ -595,12 +595,14 @@ class HardwareUpdater {
 
     private void updateSparkMax(CANSparkMax spark, SparkMaxOutput output) {
 //        if (output.getControlType() == ControlType.kSmartMotion) System.out.println(output.getSetpoint());
+        ControlType controlType = output.getControlType();
+        boolean isSmart = controlType == ControlType.kSmartMotion || controlType == ControlType.kSmartVelocity;
         spark.getPIDController().setReference(
                 output.getReference(),
-                output.getControlType(),
-                output.getControlType() == ControlType.kSmartMotion ? 1 : 0, // TODO named constants for PID slots
+                controlType,
+                isSmart ? 1 : 0, // TODO named constants for PID slots
                 output.getArbitraryDemand(),
-                output.getControlType() == ControlType.kSmartMotion // TODO make both use percent out
+                isSmart // TODO make both use percent out
                         ? CANPIDController.ArbFFUnits.kPercentOut
                         : CANPIDController.ArbFFUnits.kVoltage);
     }
