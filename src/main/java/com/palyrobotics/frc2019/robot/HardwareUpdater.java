@@ -10,6 +10,7 @@ import com.palyrobotics.frc2019.config.Constants.*;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
+import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
@@ -184,17 +185,15 @@ class HardwareUpdater {
         masterElevatorSpark.enableSoftLimit(SoftLimitDirection.kForward, false);
         masterElevatorSpark.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
-        // TODO change when Spark conversion works
-//        masterElevatorSpark.getEncoder().setPositionConversionFactor(1.0 / ElevatorConfig.kElevatorRotationsPerInch);
-//        masterElevatorSpark.getEncoder().setVelocityConversionFactor(ElevatorConfig.kElevatorSpeedUnitConversion);
+        masterElevatorSpark.getEncoder().setPositionConversionFactor(ElevatorConfig.kElevatorInchesPerRevolution);
+        masterElevatorSpark.getEncoder().setVelocityConversionFactor(ElevatorConfig.kElevatorInchesPerMinutePerRpm);
 
         ElevatorConfig elevatorConfig = Configs.get(ElevatorConfig.class);
         updateSparkGains(masterElevatorSpark, Gains.elevatorPosition, 0);
         updateSmartMotionGains(
                 masterElevatorSpark,
                 new Gains(elevatorConfig.p, elevatorConfig.i, elevatorConfig.d, elevatorConfig.f, 0, 0.0),
-                elevatorConfig.a, elevatorConfig.v,
-                ElevatorConfig.kElevatorInchesPerSecondPerRpm
+                elevatorConfig.a, elevatorConfig.v
         );
     }
 
@@ -216,9 +215,8 @@ class HardwareUpdater {
 
         intakeMasterSpark.setIdleMode(IdleMode.kBrake);
 
-        // TODO change when Spark conversion works
-//        intakeMasterSpark.getEncoder().setPositionConversionFactor(IntakeConstants.kArmDegreesPerRevolution);
-//        intakeMasterSpark.getEncoder().setVelocityConversionFactor(IntakeConstants.kArmDegreePerSecPerRpm);
+        intakeMasterSpark.getEncoder().setPositionConversionFactor(IntakeConfig.kArmDegreesPerRevolution);
+        intakeMasterSpark.getEncoder().setVelocityConversionFactor(IntakeConfig.kArmDegreesPerMinutePerRpm);
 
         intakeTalon.setInverted(true);
 
@@ -236,8 +234,7 @@ class HardwareUpdater {
         updateSmartMotionGains(
                 intakeMasterSpark,
                 Gains.intakeSmartMotion,
-                Gains.kVidarIntakeSmartMotionMaxAcceleration, Gains.kVidarIntakeSmartMotionMaxVelocity,
-                IntakeConstants.kArmDegreesPerSecondPerRpm
+                Gains.kVidarIntakeSmartMotionMaxAcceleration, Gains.kVidarIntakeSmartMotionMaxVelocity
         );
     }
 
@@ -340,9 +337,8 @@ class HardwareUpdater {
         robotState.hasHatch = (robotState.shovelCurrentDraw > ShovelConstants.kMaxShovelCurrentDraw);
 
         CANEncoder elevatorEncoder = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder();
-        // TODO change when Spark conversion works
-        robotState.elevatorPosition = elevatorEncoder.getPosition() * ElevatorConfig.kElevatorInchesPerRevolution;
-        robotState.elevatorVelocity = elevatorEncoder.getVelocity() * ElevatorConfig.kElevatorInchesPerSecondPerRpm;
+        robotState.elevatorPosition = elevatorEncoder.getPosition();
+        robotState.elevatorVelocity = elevatorEncoder.getVelocity();
 
         PigeonIMU gyro = HardwareAdapter.getInstance().getDrivetrain().gyro;
         if (gyro != null) {
@@ -369,8 +365,8 @@ class HardwareUpdater {
         robotState.robotVelocity = robotVelocity;
 
         CANEncoder armEncoder = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder();
-        robotState.intakeAngle = armEncoder.getPosition() * IntakeConstants.kArmDegreesPerRevolution;
-        robotState.intakeVelocity = armEncoder.getVelocity() * IntakeConstants.kArmDegreesPerSecondPerRpm;
+        robotState.intakeAngle = armEncoder.getPosition();
+        robotState.intakeVelocity = armEncoder.getVelocity();
 
         double time = Timer.getFPGATimestamp();
 
@@ -421,9 +417,10 @@ class HardwareUpdater {
             robotState.mRightReadings.remove(0);
         }
 
-        int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
-        int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < IntakeConstants.kCargoInchTolerance)).count();
-        robotState.hasCargo = (leftTotal >= IntakeConstants.kCargoCountRequired || rightTotal >= IntakeConstants.kCargoCountRequired);
+        IntakeConfig intakeConfig = Configs.get(IntakeConfig.class);
+        int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> (i < intakeConfig.cargoInchTolerance)).count();
+        int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < intakeConfig.cargoInchTolerance)).count();
+        robotState.hasCargo = (leftTotal >= intakeConfig.cargoCountRequired || rightTotal >= intakeConfig.cargoCountRequired);
         robotState.cargoDistance = Math.min(mUltrasonicLeft.getRangeInches(), mUltrasonicRight.getRangeInches());
 
 
@@ -603,23 +600,16 @@ class HardwareUpdater {
         updateSparkGains(spark, gains, 0);
     }
 
-    private void updateSmartMotionGains(CANSparkMax spark, Gains gains, double acceleration, double velocity, double velocityConversion) {
+    private void updateSmartMotionGains(CANSparkMax spark, Gains gains, double acceleration, double velocity) {
         CANPIDController controller = spark.getPIDController();
-        // TODO change when Spark conversion works
         int SMART_MOTION_PID_SLOT = 1;
-        controller.setP(gains.P * velocityConversion, SMART_MOTION_PID_SLOT);
-        controller.setD(gains.D * velocityConversion, SMART_MOTION_PID_SLOT);
-        controller.setI(gains.I * velocityConversion, SMART_MOTION_PID_SLOT);
-        controller.setFF(gains.F * velocityConversion, SMART_MOTION_PID_SLOT);
-        controller.setIZone(gains.iZone, SMART_MOTION_PID_SLOT); // TODO use position conversion
-        controller.setIAccum(0.0);
-        controller.setSmartMotionMaxAccel(acceleration / velocityConversion, SMART_MOTION_PID_SLOT);
-        controller.setSmartMotionMaxVelocity(velocity / velocityConversion, SMART_MOTION_PID_SLOT);
+        updateSparkGains(spark, gains, SMART_MOTION_PID_SLOT);
+        controller.setSmartMotionMaxAccel(acceleration, SMART_MOTION_PID_SLOT);
+        controller.setSmartMotionMaxVelocity(velocity, SMART_MOTION_PID_SLOT);
         controller.setOutputRange(-1.0, 1.0, SMART_MOTION_PID_SLOT);
         controller.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, SMART_MOTION_PID_SLOT);
         controller.setSmartMotionAllowedClosedLoopError(0.0, SMART_MOTION_PID_SLOT);
         controller.setSmartMotionMinOutputVelocity(0.0, SMART_MOTION_PID_SLOT);
-        spark.setClosedLoopRampRate(gains.rampRate);
     }
 
     private void updateSparkGains(CANSparkMax spark, Gains gains, int slotID) {

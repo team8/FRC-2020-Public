@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2019.util.configv2;
 
 import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
+import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import com.palyrobotics.frc2019.config.configv2.ServiceConfig;
 import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.revrobotics.CANError;
@@ -14,11 +15,13 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
- * Config storage using JSON
+ * Configuration storage using JSON
  * <p>
  * Register classes with {@link #sConfigs} and get the working copy via {@link #get(Class)}
  *
@@ -28,23 +31,22 @@ public class Configs {
 
     interface SetPidValue {
         CANError set(CANPIDController controller, double value, int slot);
+
     }
+
+    private static ObjectMapper sMapper = new ObjectMapper();
 
     private static final Path CONFIG_FOLDER = RobotBase.isReal()
             ? Paths.get(Filesystem.getDeployDirectory().toString(), "config_v2")
             : Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", "config_v2");
 
-    private static Class[] sConfigs = new Class[]{ElevatorConfig.class, ServiceConfig.class};
-
-    private static ObjectMapper sMapper = new ObjectMapper();
-    private static Map<String, Class<?>> sNameToClass = new HashMap<>(sConfigs.length);
-
-    private static Map<Class<?>, Object> sConfigMap = new HashMap<>(sConfigs.length) {{
-        for (Class<?> configClass : sConfigs) {
-            put(configClass, readGenericConfig(configClass));
-            sNameToClass.put(configClass.getSimpleName(), configClass);
-        }
-    }};
+    private static List<Class<? extends AbstractConfig>> sConfigs = List.of(
+            ElevatorConfig.class, IntakeConfig.class, ServiceConfig.class
+    );
+    private static Map<String, Class<? extends AbstractConfig>> sNameToClass = sConfigs.stream()
+            .collect(Collectors.toMap(Class::getSimpleName, Function.identity()));
+    private static Map<Class<? extends AbstractConfig>, Object> sConfigMap = sConfigs.stream()
+            .collect(Collectors.toMap(Function.identity(), Configs::readGenericConfig));
 
     private static Map<String, SetPidValue> sConfigNameToControllerSetter = Map.ofEntries(
             Map.entry("p", CANPIDController::setP),
@@ -54,6 +56,7 @@ public class Configs {
             Map.entry("a", CANPIDController::setSmartMotionMaxAccel),
             Map.entry("v", CANPIDController::setSmartMotionMaxVelocity)
     );
+
 
     /**
      * Retrieve the singleton for this given config class.
@@ -72,11 +75,9 @@ public class Configs {
         return sConfigMap.get(configClass);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T extends AbstractConfig> boolean save(Class<T> configClass) {
-        T config = (T) sConfigMap.get(configClass);
         try {
-            writeConfig(config);
+            saveChecked(configClass);
             return true;
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -84,7 +85,7 @@ public class Configs {
         }
     }
 
-    public static void saveRaw(Class<?> configClass) throws IOException {
+    public static void saveChecked(Class<?> configClass) throws IOException {
         writeConfig(sConfigMap.get(configClass));
     }
 
@@ -101,7 +102,7 @@ public class Configs {
         }
     }
 
-    public static Class<?> getClassFromName(String name) {
+    public static Class<? extends AbstractConfig> getClassFromName(String name) {
         return sNameToClass.get(name);
     }
 

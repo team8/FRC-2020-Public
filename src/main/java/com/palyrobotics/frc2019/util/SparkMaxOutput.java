@@ -17,9 +17,6 @@ public class SparkMaxOutput {
     // Arbitrary Feed Forward / Demand
     private double mArbitraryDemand;
 
-    // TODO change when Spark conversion works
-    private double mSmartMotionConversion;
-
     public SparkMaxOutput() {
         this(ControlType.kPosition);
     } // TODO probably should change to duty cycle
@@ -33,7 +30,6 @@ public class SparkMaxOutput {
         mSparkMode = otherSpark.mSparkMode;
         mSparkReference = otherSpark.mSparkReference;
         mArbitraryDemand = otherSpark.mArbitraryDemand;
-        mSmartMotionConversion = otherSpark.mSmartMotionConversion;
     }
 
     public SparkMaxOutput(Gains gains, ControlType controlMode, double reference) {
@@ -46,7 +42,6 @@ public class SparkMaxOutput {
         mSparkReference = targetVelocity;
         mSparkMode = ControlType.kSmartVelocity;
         mArbitraryDemand = arbitraryDemand;
-        mSmartMotionConversion = velocityConversion;
     }
 
     public void setTargetVelocity(double targetVelocity) {
@@ -75,9 +70,8 @@ public class SparkMaxOutput {
         mGains = gains;
     }
 
-    public void setTargetPositionSmartMotion(double positionSetPoint, double positionConversion, double arbitraryDemand) {
+    public void setTargetPositionSmartMotion(double positionSetPoint, double arbitraryDemand) {
         mSparkReference = positionSetPoint;
-        mSmartMotionConversion = positionConversion;
         mSparkMode = ControlType.kSmartMotion;
         mArbitraryDemand = arbitraryDemand;
     }
@@ -107,9 +101,7 @@ public class SparkMaxOutput {
     }
 
     public double getReference() {
-        return (mSparkMode == ControlType.kSmartMotion || mSparkMode == ControlType.kSmartVelocity)
-                ? mSparkReference / mSmartMotionConversion
-                : mSparkReference;
+        return mSparkReference;
     }
 
     public double getArbitraryDemand() {

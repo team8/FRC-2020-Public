@@ -3,10 +3,11 @@ package com.palyrobotics.frc2019.robot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.palyrobotics.frc2019.config.Constants.IntakeConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.Constants.PortConstants;
+import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import com.palyrobotics.frc2019.util.XboxController;
+import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.*;
@@ -97,7 +98,7 @@ public class HardwareAdapter {
         }
 
         final WPI_TalonSRX intakeTalon;
-        public final CANSparkMax intakeMasterSpark;
+        final CANSparkMax intakeMasterSpark;
         final CANSparkMax intakeSlaveSpark;
         final Ultrasonic intakeUltrasonicLeft;
         final Ultrasonic intakeUltrasonicRight;
@@ -109,10 +110,13 @@ public class HardwareAdapter {
         }
 
         public void calibrateIntakeEncoderWithPotentiometer() {
-            Robot.getRobotState().intakeStartAngle =
-                    IntakeConstants.kMaxAngle - 1 / IntakeConstants.kArmPotentiometerTicksPerDegree * Math.abs(potentiometer.get() - IntakeConstants.kMaxAngleTicks);
-            intakeMasterSpark.getEncoder().setPosition
-                    (Robot.getRobotState().intakeStartAngle / IntakeConstants.kArmDegreesPerRevolution); // TODO change when Spark conversion works
+            double
+                    maxArmAngle = Configs.get(IntakeConfig.class).maxAngle,
+                    potentiometerDegreesPerTick = 1 / IntakeConfig.kArmPotentiometerTicksPerDegree,
+                    potentiometerTicks = potentiometer.get() - Configs.get(IntakeConfig.class).potentiometerMaxAngleTicks,
+                    intakeStartAngle = maxArmAngle - potentiometerDegreesPerTick * Math.abs(potentiometerTicks);
+            Robot.getRobotState().intakeStartAngle = intakeStartAngle;
+            intakeMasterSpark.getEncoder().setPosition(intakeStartAngle);
         }
 
         IntakeHardware() {

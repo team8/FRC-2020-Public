@@ -1,10 +1,11 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.IntakeConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
+import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.revrobotics.ControlType;
 
@@ -15,6 +16,9 @@ public class Intake extends Subsystem {
     public static Intake getInstance() {
         return instance;
     }
+
+    private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
+
 
     private SparkMaxOutput mSparkOutput = new SparkMaxOutput(ControlType.kSmartMotion);
     private double mTalonOutput, mRumbleLength;
@@ -139,62 +143,62 @@ public class Intake extends Subsystem {
         // 2. Compensate for robot acceleration.  Derivation is similar to that for an inverted pendulum,
         // and can be found on slack.
         // 3. Compensate for centripetal acceleration on the arm.
-        double arbitraryDemand = IntakeConstants.kGravityFF * Math.cos(Math.toRadians(robotState.intakeAngle - IntakeConstants.kAngleOffset))
-                + IntakeConstants.kAccelerationCompensation * robotState.robotAcceleration * Math.sin(Math.toRadians(robotState.intakeAngle - IntakeConstants.kAngleOffset))
-                + IntakeConstants.kCentripetalCoefficient * robotState.drivePose.headingVelocity * robotState.drivePose.headingVelocity * Math.sin(Math.toRadians(robotState.intakeAngle - IntakeConstants.kAngleOffset));
+        double arbitraryDemand = mConfig.gravityFF * Math.cos(Math.toRadians(robotState.intakeAngle - mConfig.angleOffset))
+                + mConfig.accelerationCompensation * robotState.robotAcceleration * Math.sin(Math.toRadians(robotState.intakeAngle - mConfig.angleOffset))
+                + mConfig.centripetalCoefficient * robotState.drivePose.headingVelocity * robotState.drivePose.headingVelocity * Math.sin(Math.toRadians(robotState.intakeAngle - mConfig.angleOffset));
 
         switch (mMacroState) {
             case STOWED:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_ANGLE;
-                mIntakeWantedAngle = IntakeConstants.kMaxAngle;
+                mIntakeWantedAngle = mConfig.maxAngle;
                 break;
             case GROUND_INTAKING:
                 mWheelState = WheelState.INTAKING;
                 mUpDownState = UpDownState.CUSTOM_ANGLE;
-                mIntakeWantedAngle = IntakeConstants.kIntakeAngle;
+                mIntakeWantedAngle = mConfig.intakeAngle;
                 break;
             case LIFTING:
                 mWheelState = WheelState.SLOW;
                 mUpDownState = UpDownState.CUSTOM_ANGLE;
-                mIntakeWantedAngle = IntakeConstants.kHandOffAngle;
+                mIntakeWantedAngle = mConfig.handOffAngle;
                 break;
             case DROPPING:
                 mWheelState = WheelState.DROPPING;
                 mUpDownState = UpDownState.CUSTOM_ANGLE;
-                mIntakeWantedAngle = IntakeConstants.kHandOffAngle;
+                mIntakeWantedAngle = mConfig.handOffAngle;
                 // todo: add some sort of timeout so this doesn't finish immediately
                 break;
             case HOLDING_MID:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_ANGLE;
-                mIntakeWantedAngle = IntakeConstants.kHoldAngle;
+                mIntakeWantedAngle = mConfig.holdAngle;
                 break;
             case HOLDING_ROCKET:
             case TUCK:
                 mWheelState = WheelState.SLOW;
                 mUpDownState = UpDownState.CUSTOM_ANGLE;
-                mIntakeWantedAngle = IntakeConstants.kRocketExpelAngle;
+                mIntakeWantedAngle = mConfig.rocketExpelAngle;
                 break;
             case INTAKING_ROCKET:
                 mWheelState = WheelState.MEDIUM;
                 mUpDownState = UpDownState.CUSTOM_ANGLE;
-                mIntakeWantedAngle = IntakeConstants.kRocketExpelAngle;
+                mIntakeWantedAngle = mConfig.rocketExpelAngle;
                 break;
             case EXPELLING_ROCKET:
                 mWheelState = WheelState.EXPELLING;
                 mUpDownState = UpDownState.CUSTOM_ANGLE;
-                mIntakeWantedAngle = IntakeConstants.kRocketExpelAngle;
+                mIntakeWantedAngle = mConfig.rocketExpelAngle;
                 break;
             case CLIMBING:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_ANGLE;
-                mIntakeWantedAngle = IntakeConstants.kClimbAngle;
+                mIntakeWantedAngle = mConfig.climbAngle;
                 break;
             case DOWN:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.CUSTOM_ANGLE;
-                mIntakeWantedAngle = IntakeConstants.kIntakeAngle;
+                mIntakeWantedAngle = mConfig.intakeAngle;
                 break;
             case HOLDING:
                 mWheelState = WheelState.IDLE;
@@ -211,23 +215,23 @@ public class Intake extends Subsystem {
                 if (commands.customIntakeSpeed) {
                     mTalonOutput = robotState.operatorXboxControllerInput.leftTrigger;
                 } else {
-                    mTalonOutput = IntakeConstants.kMotorVelocity;
+                    mTalonOutput = mConfig.motorVelocity;
                 }
                 break;
             case IDLE:
                 mTalonOutput = 0;
                 break;
             case DROPPING:
-                mTalonOutput = IntakeConstants.kDroppingVelocity;
+                mTalonOutput = mConfig.droppingVelocity;
                 break;
             case EXPELLING:
-                mTalonOutput = IntakeConstants.kExpellingVelocity;
+                mTalonOutput = mConfig.expellingVelocity;
                 break;
             case SLOW:
-                mTalonOutput = IntakeConstants.kVerySlowly;
+                mTalonOutput = mConfig.verySlowly;
                 break;
             case MEDIUM:
-                mTalonOutput = IntakeConstants.kMedium;
+                mTalonOutput = mConfig.medium;
                 break;
         }
 
@@ -246,10 +250,10 @@ public class Intake extends Subsystem {
 //                } else {
 //                    mSparkOutput.setIdle();
 //                }
-                mSparkOutput.setTargetPositionSmartMotion(mIntakeWantedAngle, IntakeConstants.kArmDegreesPerRevolution, arbitraryDemand);
+                mSparkOutput.setTargetPositionSmartMotion(mIntakeWantedAngle, arbitraryDemand);
                 break;
             case ZERO_VELOCITY:
-                mSparkOutput.setTargetSmartVelocity(0.0, IntakeConstants.kArmDegreesPerSecondPerRpm, arbitraryDemand);
+                mSparkOutput.setTargetSmartVelocity(0.0, IntakeConfig.kArmDegreesPerMinutePerRpm, arbitraryDemand);
             case IDLE:
                 mIntakeWantedAngle = null;
                 mSparkOutput.setIdle();
@@ -287,8 +291,8 @@ public class Intake extends Subsystem {
 
     private boolean intakeOnTarget() {
         return mIntakeWantedAngle != null
-                && (Math.abs(mIntakeWantedAngle - mRobotState.intakeAngle) < IntakeConstants.kAcceptableAngularError)
-                && (Math.abs(mRobotState.intakeVelocity) < IntakeConstants.kAngularVelocityError);
+                && (Math.abs(mIntakeWantedAngle - mRobotState.intakeAngle) < mConfig.acceptableAngularError)
+                && (Math.abs(mRobotState.intakeVelocity) < mConfig.angularVelocityError);
     }
 
     @Override

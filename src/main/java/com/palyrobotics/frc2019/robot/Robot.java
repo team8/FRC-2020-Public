@@ -3,10 +3,13 @@ package com.palyrobotics.frc2019.robot;
 import com.palyrobotics.frc2019.behavior.RoutineManager;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
+import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
 import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.commands.CommandReceiver;
+import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.vision.Limelight;
@@ -15,14 +18,12 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Robot extends TimedRobot {
-    //Instantiate singleton classes
     private static RobotState robotState = RobotState.getInstance();
 
     public static RobotState getRobotState() {
         return robotState;
     }
 
-    //Single instance to be passed around
     private static Commands commands = Commands.getInstance();
 
     public static Commands getCommands() {
@@ -32,7 +33,7 @@ public class Robot extends TimedRobot {
     private OperatorInterface operatorInterface = OperatorInterface.getInstance();
     private RoutineManager mRoutineManager = RoutineManager.getInstance();
 
-    //Subsystem controllers
+    /* Subsystems */
     private Drive mDrive = Drive.getInstance();
     private Elevator mElevator = Elevator.getInstance();
     private Shovel mShovel = Shovel.getInstance();
@@ -41,15 +42,7 @@ public class Robot extends TimedRobot {
     private Fingers mFingers = Fingers.getInstance();
     private Intake mIntake = Intake.getInstance();
 
-    //Hardware Updater
     private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mElevator, mShooter, mPusher, mShovel, mFingers, mIntake);
-
-    // Started boolean for if auto has been started.
-    private boolean mAutoStarted = false;
-
-    private int disabledCycles;
-
-    private boolean breakoutTeleopInitCalled = false;
 
     private CommandReceiver mCommandReceiver = new CommandReceiver();
 
@@ -79,9 +72,7 @@ public class Robot extends TimedRobot {
         if (RobotBase.isSimulation()) robotState.matchStartTimeMs = System.currentTimeMillis();
 
 //        Logger.getInstance().logRobotThread(Level.INFO, "End robotInit()");
-
     }
-
 
     @Override
     public void autonomousInit() {
@@ -126,11 +117,6 @@ public class Robot extends TimedRobot {
 //            Logger.getInstance().logRobotThread(Level.INFO, "End autoInit()");
 //        }
 
-    }
-
-
-    protected Robot() {
-        super();
     }
 
     @Override
@@ -230,17 +216,15 @@ public class Robot extends TimedRobot {
 //        Logger.getInstance().cleanup();
 //        DataLogger.getInstance().cleanup();
 
-        mAutoStarted = false;
-
         robotState.reset(0, new RigidTransform2d());
-        //Stops updating routines
+        // Stops updating routines
         mRoutineManager.reset(commands);
-        //Creates a new Commands instance in place of the old one
+        // Creates a new Commands instance in place of the old one
         Commands.reset();
         commands = Commands.getInstance();
 
         robotState.gamePeriod = RobotState.GamePeriod.DISABLED;
-        //Stop controllers
+        // Stop controllers
         mDrive.setNeutral();
         stopSubsystems();
 
@@ -252,7 +236,7 @@ public class Robot extends TimedRobot {
 
         CSVWriter.write();
 
-        //Manually run garbage collector
+        // Manually run garbage collector
         System.gc();
     }
 
@@ -270,6 +254,17 @@ public class Robot extends TimedRobot {
 //        System.out.println();
     }
 
+    @Override
+    public void robotPeriodic() {
+
+        mCommandReceiver.update();
+
+        // System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+        // System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
+        // System.out.println("left ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+        // System.out.println("right ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
+    }
+
     private void startSubsystems() {
         mShovel.start();
         mDrive.start();
@@ -277,7 +272,7 @@ public class Robot extends TimedRobot {
         mShooter.start();
         mPusher.start();
         mFingers.start();
-		mIntake.start();
+        mIntake.start();
     }
 
     private void updateSubsystems() {
@@ -290,7 +285,6 @@ public class Robot extends TimedRobot {
         mIntake.update(commands, robotState);
     }
 
-
     private void stopSubsystems() {
         mDrive.stop();
         mElevator.stop();
@@ -298,17 +292,6 @@ public class Robot extends TimedRobot {
         mPusher.stop();
         mFingers.stop();
         mShovel.stop();
-		mIntake.stop();
-    }
-
-    @Override
-    public void robotPeriodic() {
-
-        mCommandReceiver.update();
-
-        // System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
-        // System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
-        // System.out.println("left ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
-        // System.out.println("right ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
+        mIntake.stop();
     }
 }

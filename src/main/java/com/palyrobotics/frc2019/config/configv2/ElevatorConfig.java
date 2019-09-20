@@ -9,7 +9,6 @@ public class ElevatorConfig extends AbstractSubsystemConfig {
             manualMaxPercentOut,
             elevatorCargoHeight2Inches, elevatorCargoBallHeight, elevatorCargoHeight1Inches,
             handOffHeight,
-            testHeight,
             secondStageCanStartMovingArm,
             acceptablePositionError,
             acceptableVelocityError,
@@ -22,9 +21,6 @@ public class ElevatorConfig extends AbstractSubsystemConfig {
 
     private static final double kSpoolEffectiveDiameter = 2.9;
     public static final double
-            kElevatorInchesPerRevolution = (kSpoolEffectiveDiameter * Math.PI) * (12.0 / 52.0) * (26.0 / 50.0) * (40.0 / 60.0), // R → in
-            kElevatorInchesPerSecondPerRpm = kElevatorInchesPerRevolution / 60.0; // RPM → in/s
-
-//            kClimberRotationsPerInch = 1.0 / (kSpoolEffectiveDiameter * Math.PI) * (52.0 / 12.0) * (50.0 / 26.0) * (60.0 / 40.0) * (66.0 / 14.0), // R → in
-//            kClimberSpeedUnitConversion = (1.0 / kClimberRotationsPerInch) / 60.0; // RPM → in/s
+            kElevatorInchesPerRevolution = (kSpoolEffectiveDiameter * Math.PI) * (12.0 / 52.0) * (26.0 / 50.0) * (40.0 / 60.0), // rev → in
+            kElevatorInchesPerMinutePerRpm = kElevatorInchesPerRevolution; // rev/min → in/min
 }

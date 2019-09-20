@@ -25,7 +25,6 @@ public class CommandReceiver {
     private Server mServer;
     private AtomicString mResult = new AtomicString(), mCommand = new AtomicString();
 
-
     public CommandReceiver() {
         mParser = ArgumentParsers.newFor("rio-terminal").build();
         Subparsers subparsers = mParser.addSubparsers().dest("command");
@@ -108,7 +107,6 @@ public class CommandReceiver {
     }
 
     private String handleParsedCommand(Namespace parse) throws ArgumentParserException {
-//        System.out.println(parse);
         // TODO less nesting >:( refactor into functions
         String commandName = parse.getString("command");
         switch (commandName) {
@@ -157,7 +155,7 @@ public class CommandReceiver {
                             }
                             case "save": {
                                 try {
-                                    Configs.saveRaw(configClass);
+                                    Configs.saveChecked(configClass);
                                     return String.format("Saved config for %s", configName);
                                 } catch (IOException saveException) {
                                     saveException.printStackTrace();
