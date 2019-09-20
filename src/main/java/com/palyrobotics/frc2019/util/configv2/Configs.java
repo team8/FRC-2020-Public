@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -93,6 +94,25 @@ public class Configs {
         return sNameToClass.get(name);
     }
 
+    public static void set(AbstractConfig config, Field field, Object value) throws IllegalAccessException {
+        field.set(config, value);
+        notifyUpdated(config.getClass());
+    }
+
+    public static boolean reload(Class<? extends AbstractConfig> configClass) {
+        AbstractConfig existing = sConfigMap.get(configClass), onFile = read(configClass);
+        try {
+            if (existing == null || !sMapper.writeValueAsString(existing).equals(sMapper.writeValueAsString(onFile))) {
+                sConfigMap.put(configClass, read(configClass));
+                notifyUpdated(configClass);
+                return true;
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        return false;
+    }
+
     private static void watchService() {
         try {
             WatchService watcher = FileSystems.getDefault().newWatchService();
@@ -118,9 +138,7 @@ public class Configs {
                             System.out.printf("Config hot %s reloaded%n", configName);
                             AbstractConfig config = Configs.read(configClass);
                             sConfigMap.put(configClass, config);
-                            Optional.ofNullable(sListeners.get(configClass)).ifPresent(
-                                    listeners -> listeners.forEach(consumer -> consumer.accept(configClass))
-                            );
+                            notifyUpdated(configClass);
                             alreadySeen.add(configName);
                         } else {
                             System.err.printf("Unknown file %s%n", context);
@@ -135,6 +153,12 @@ public class Configs {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    private static void notifyUpdated(Class<? extends AbstractConfig> configClass) {
+        Optional.ofNullable(sListeners.get(configClass)).ifPresent(
+                listeners -> listeners.forEach(consumer -> consumer.accept(configClass))
+        );
     }
 
     private static <T extends AbstractConfig> T read(Class<T> configClass) {

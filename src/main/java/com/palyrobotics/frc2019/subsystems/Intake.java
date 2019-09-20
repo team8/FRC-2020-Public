@@ -39,8 +39,8 @@ public class Intake extends Subsystem {
 
     private enum UpDownState {
         CLIMBING,
-        MANUAL, // Moving elevator with joystick
-        CUSTOM_ANGLE, // Moving elevator with a control loop
+        MANUAL,
+        CUSTOM_ANGLE,
         ZERO_VELOCITY,
         IDLE
     }
@@ -269,8 +269,8 @@ public class Intake extends Subsystem {
         cachedCargoState = robotState.hasCargo;
 
         CSVWriter.addData("intakeAngle", mRobotState.intakeAngle);
-        if (mIntakeWantedAngle != null) CSVWriter.addData("intakeWantedPosition", mIntakeWantedAngle);
-        CSVWriter.addData("intakeSparkSetpoint", mSparkOutput.getReference());
+        if (mIntakeWantedAngle != null) CSVWriter.addData("intakeWantedAngle", mIntakeWantedAngle);
+        CSVWriter.addData("intakeTargetAngle", mSparkOutput.getReference());
     }
 
     public double getRumbleLength() {
@@ -297,6 +297,6 @@ public class Intake extends Subsystem {
 
     @Override
     public String getStatus() {
-        return String.format("Intake State: %s\nOutput Control Mode: %s\nSpark Output: %.2f\nUp Down Output: %s", mWheelState, mSparkOutput.getControlType(), mSparkOutput.getReference(), mUpDownState);
+        return String.format("Intake State: %s%nOutput Control Mode: %s%nSpark Output: %.2f%nUp Down Output: %s", mWheelState, mSparkOutput.getControlType(), mSparkOutput.getReference(), mUpDownState);
     }
 }

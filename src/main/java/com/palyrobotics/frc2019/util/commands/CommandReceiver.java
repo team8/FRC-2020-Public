@@ -14,6 +14,8 @@ import net.sourceforge.argparse4j.inf.*;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 
 public class CommandReceiver {
@@ -36,10 +38,11 @@ public class CommandReceiver {
         Subparser get = subparsers.addParser("get");
         get.addArgument("config_name");
         get.addArgument("config_field").nargs("?"); // "?" means this is optional, and will default to null if not supplied
+        subparsers.addParser("reload").addArgument("config_name");
         Subparser run = subparsers.addParser("run");
         run.addArgument("routine_name").setDefault("measure_elevator_speed");
         run.addArgument("parameters").nargs("*");
-        subparsers.addParser("save").addArgument("save_config_name");
+        subparsers.addParser("save").addArgument("config_name");
         subparsers.addParser("calibrate").addSubparsers().dest("subsystem")
                 .addParser("arm").help("Resets the Spark encoder so it is in-line with the potentiometer");
     }
@@ -89,7 +92,7 @@ public class CommandReceiver {
         mCommand.tryGetAndReset(command -> {
             if (command == null) return;
             String result = executeCommand(command);
-            System.out.println(String.format("Result: %s", result));
+//            System.out.println(String.format("Result: %s", result));
             mResult.setAndNotify(result);
         });
     }
@@ -102,7 +105,10 @@ public class CommandReceiver {
             Namespace parse = mParser.parseArgs(command.trim().split("\\s+"));
             result = handleParsedCommand(parse);
         } catch (ArgumentParserException parseException) {
-            result = parseException.getMessage();
+            StringWriter help = new StringWriter();
+            PrintWriter printer = new PrintWriter(help);
+            parseException.getParser().printHelp(printer);
+            result = String.format("Error running command: %s%n%s", parseException.getMessage(), help.toString());
         }
         return result;
     }
@@ -113,7 +119,8 @@ public class CommandReceiver {
         switch (commandName) {
             case "get":
             case "set":
-            case "save": {
+            case "save":
+            case "reload": {
                 String configName = parse.getString("config_name");
                 try {
                     Class<? extends AbstractConfig> configClass = Configs.getClassFromName(configName);
@@ -143,7 +150,7 @@ public class CommandReceiver {
                                         String stringValue = parse.getString("config_value");
                                         if (stringValue == null) return "Must provide a value to set!";
                                         try {
-                                            field.set(configObject, sMapper.readValue(stringValue, field.getType()));
+                                            Configs.set(configObject, field, sMapper.readValue(stringValue, field.getType()));
                                             return String.format("Set field %s on config %s to %s", fieldName, configName, stringValue);
                                         } catch (IOException parseException) {
                                             return String.format("Error parsing %s for field %s on config %s", stringValue, fieldName, configName);
@@ -162,6 +169,10 @@ public class CommandReceiver {
                                     saveException.printStackTrace();
                                     return String.format("File system error saving config %s - this should NOT happen!", configName);
                                 }
+                            }
+                            case "reload": {
+                                boolean didReload = Configs.reload(configClass);
+                                return String.format(didReload ? "Reloaded config %s" : "Did not reload config %s", configName);
                             }
                             default: {
                                 throw new RuntimeException();
