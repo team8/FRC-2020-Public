@@ -3,22 +3,18 @@ package com.palyrobotics.frc2019.util.configv2;
 import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import com.palyrobotics.frc2019.config.configv2.ServiceConfig;
-import com.palyrobotics.frc2019.robot.HardwareAdapter;
-import com.revrobotics.CANError;
-import com.revrobotics.CANPIDController;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * Configuration storage using JSON
@@ -29,34 +25,23 @@ import java.util.stream.Collectors;
  */
 public class Configs {
 
-    interface SetPidValue {
-        CANError set(CANPIDController controller, double value, int slot);
-
-    }
-
     private static ObjectMapper sMapper = new ObjectMapper();
 
-    private static final Path CONFIG_FOLDER = RobotBase.isReal()
+    private static final Path CONFIG_FOLDER = (RobotBase.isReal()
             ? Paths.get(Filesystem.getDeployDirectory().toString(), "config_v2")
-            : Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", "config_v2");
+            : Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", "config_v2")).toAbsolutePath();
 
-    private static List<Class<? extends AbstractConfig>> sConfigs = List.of(
+    private static final List<Class<? extends AbstractConfig>> sConfigs = List.of(
             ElevatorConfig.class, IntakeConfig.class, ServiceConfig.class
     );
-    private static Map<String, Class<? extends AbstractConfig>> sNameToClass = sConfigs.stream()
-            .collect(Collectors.toMap(Class::getSimpleName, Function.identity()));
-    private static Map<Class<? extends AbstractConfig>, Object> sConfigMap = sConfigs.stream()
-            .collect(Collectors.toMap(Function.identity(), Configs::readGenericConfig));
+    private static final ConcurrentHashMap<String, Class<? extends AbstractConfig>> sNameToClass = new ConcurrentHashMap<>(sConfigs.size());
+    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, AbstractConfig> sConfigMap = new ConcurrentHashMap<>(sConfigs.size());
+    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, List<Consumer<Class<? extends AbstractConfig>>>> sListeners = new ConcurrentHashMap<>();
+    private static final Thread sModifiedListener = new Thread(Configs::watchService);
 
-    private static Map<String, SetPidValue> sConfigNameToControllerSetter = Map.ofEntries(
-            Map.entry("p", CANPIDController::setP),
-            Map.entry("i", CANPIDController::setI),
-            Map.entry("d", CANPIDController::setP),
-            Map.entry("f", CANPIDController::setFF),
-            Map.entry("a", CANPIDController::setSmartMotionMaxAccel),
-            Map.entry("v", CANPIDController::setSmartMotionMaxVelocity)
-    );
-
+    static {
+        sModifiedListener.start();
+    }
 
     /**
      * Retrieve the singleton for this given config class.
@@ -68,16 +53,31 @@ public class Configs {
      */
     @SuppressWarnings("unchecked")
     public static <T extends AbstractConfig> T get(Class<T> configClass) {
-        return (T) sConfigMap.get(configClass);
+        T config = (T) sConfigMap.get(configClass);
+        if (config == null) {
+            config = read(configClass);
+            sConfigMap.put(configClass, config);
+            sNameToClass.put(configClass.getSimpleName(), configClass);
+        }
+        return config;
     }
 
-    public static Object getRaw(Class<?> configClass) {
-        return sConfigMap.get(configClass);
+    /**
+     * Listen for changes in a configuration file. An on-changed event is fired once when this function is invoked for initial setup.
+     *
+     * @param configClass Class of the config.
+     * @param onChanged   Listener which consumes new config instance.
+     * @param <T>         Type of the config class. This is usually inferred from the class argument.
+     */
+    public static <T extends AbstractConfig> void listen(Class<T> configClass, Consumer<T> onChanged) {
+        onChanged.accept(get(configClass));
+        var consumers = sListeners.computeIfAbsent(configClass, newValue -> new ArrayList<>());
+        consumers.add(bet -> onChanged.accept(get(configClass))); // TODO kinda whack
     }
 
     public static <T extends AbstractConfig> boolean save(Class<T> configClass) {
         try {
-            saveChecked(configClass);
+            saveOrThrow(configClass);
             return true;
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -85,70 +85,86 @@ public class Configs {
         }
     }
 
-    public static void saveChecked(Class<?> configClass) throws IOException {
+    public static void saveOrThrow(Class<? extends AbstractConfig> configClass) throws IOException {
         writeConfig(sConfigMap.get(configClass));
-    }
-
-    public static void setRaw(Object config, Field field, Object value) throws IllegalAccessException {
-        System.out.println("Setting value!");
-        field.set(config, value);
-        // TODO refactor into better architecture
-        String fieldName = field.getName();
-        if (sConfigNameToControllerSetter.containsKey(fieldName) && value instanceof Double) {
-            CANPIDController controller = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getPIDController();
-            double doubleValue = (double) value;
-            sConfigNameToControllerSetter.get(fieldName).set(controller, doubleValue, 1);
-            System.out.printf("Set %s to %f%n", fieldName, doubleValue);
-        }
     }
 
     public static Class<? extends AbstractConfig> getClassFromName(String name) {
         return sNameToClass.get(name);
     }
 
-    private static File getFileForConfig(Class<?> configClass) {
-        return Paths.get(CONFIG_FOLDER.toString(), String.format("%s.json", configClass.getSimpleName())).toFile();
-    }
-
-    private static <T> T readGenericConfig(Class<T> configClass) {
-        File configFile = getFileForConfig(configClass);
-        String configClassName = configClass.getSimpleName();
-        if (!configFile.exists()) {
-            System.err.printf("A default config file was not found for %s. Writing defaults...%n", configClassName);
-            return saveDefaultConfig(configClass);
-        }
+    private static void watchService() {
         try {
-            return sMapper.readValue(configFile, configClass);
-        } catch (IOException readException) {
-            System.err.printf("An error occurred trying to read config for class %s%n", configClassName);
-            readException.printStackTrace();
-            return saveDefaultConfig(configClass);
-        }
-    }
-
-    private static <T> T saveDefaultConfig(Class<T> configClass) {
-        try {
-            T newConfig = configClass.getDeclaredConstructor().newInstance();
-            try {
-                writeConfig(newConfig);
-                System.out.printf("Wrote defaults for %s%n", configClass.getSimpleName());
-            } catch (IOException writeDefaultsException) {
-                System.err.println("Error writing defaults - this should not happen!");
-                writeDefaultsException.printStackTrace();
+            WatchService watcher = FileSystems.getDefault().newWatchService();
+            CONFIG_FOLDER.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
+            while (true) {
+                try {
+                    WatchKey key = watcher.take();
+                    /* Since there are two times when the listener is notified when a file is saved,
+                     * once for the actual content and another time for the timestamp updated,
+                     * sleeping will capture both into the same poll event list.
+                     * From there, we can filter out what we have already seen to avoid updating more than once. */
+                    Thread.sleep(100);
+                    List<String> alreadySeen = new ArrayList<>();
+                    for (WatchEvent<?> pollEvent : key.pollEvents()) {
+                        if (pollEvent.kind() == StandardWatchEventKinds.OVERFLOW) continue;
+                        @SuppressWarnings("unchecked")
+                        WatchEvent<Path> event = (WatchEvent<Path>) pollEvent;
+                        Path context = event.context();
+                        String configName = context.getFileName().toString().replace(".json", "");
+                        Class<? extends AbstractConfig> configClass = sNameToClass.get(configName);
+                        if (configClass != null) {
+                            if (alreadySeen.contains(configName)) continue;
+                            System.out.printf("Config hot %s reloaded%n", configName);
+                            AbstractConfig config = Configs.read(configClass);
+                            sConfigMap.put(configClass, config);
+                            Optional.ofNullable(sListeners.get(configClass)).ifPresent(
+                                    listeners -> listeners.forEach(consumer -> consumer.accept(configClass))
+                            );
+                            alreadySeen.add(configName);
+                        } else {
+                            System.err.printf("Unknown file %s%n", context);
+                        }
+                    }
+                    if (!key.reset()) {
+                        break;
+                    }
+                } catch (InterruptedException ignored) {
+                }
             }
-            return newConfig;
-        } catch (Exception createBlankException) {
-            System.err.printf("Fatal error, could not create blank config for class %s. Is this a legit non-abstract class?%n", configClass.getSimpleName());
-            createBlankException.printStackTrace();
-            throw new RuntimeException();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 
-    private static void writeConfig(Object newConfig) throws IOException {
-        File file = getFileForConfig(newConfig.getClass()), parentFile = file.getParentFile();
-        if (!parentFile.exists()) {
-            if (!parentFile.mkdirs()) throw new IOException();
+    private static <T extends AbstractConfig> T read(Class<T> configClass) {
+        Path configFile = getFileForConfig(configClass);
+        String configClassName = configClass.getSimpleName();
+        if (!Files.exists(configFile)) {
+            String errorMessage = String.format("A config file was not found for %s", configClassName);
+            throw new RuntimeException(errorMessage);
         }
-        sMapper.defaultPrettyPrintingWriter().writeValue(file, newConfig);
+        try {
+            return sMapper.readValue(configFile.toFile(), configClass);
+        } catch (IOException readException) {
+            readException.printStackTrace();
+            String errorMessage = String.format("An error occurred trying to read config for class %s%n", configClassName);
+            try {
+                System.out.println(sMapper.defaultPrettyPrintingWriter().writeValueAsString(configClass.getConstructor().newInstance()));
+            } catch (IOException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            throw new RuntimeException(errorMessage, readException);
+        }
+    }
+
+    private static Path getFileForConfig(Class<? extends AbstractConfig> configClass) {
+        return CONFIG_FOLDER.resolve(String.format("%s.json", configClass.getSimpleName()));
+    }
+
+    private static <T extends AbstractConfig> void writeConfig(T newConfig) throws IOException {
+        Path file = getFileForConfig(newConfig.getClass());
+        Files.createDirectories(file.getParent().getParent());
+        sMapper.defaultPrettyPrintingWriter().writeValue(file.toFile(), newConfig);
     }
 }

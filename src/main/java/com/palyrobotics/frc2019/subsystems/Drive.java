@@ -191,10 +191,10 @@ public class Drive extends Subsystem {
 //		Logger.getInstance().logSubsystemThread(Level.FINEST, "Left drive encoder", leftEncoder);
 //		Logger.getInstance().logSubsystemThread(Level.FINEST, "Right drive encoder", rightEncoder);
 
-		DashboardManager.getInstance().publishKVPair(leftEncoder);
-		DashboardManager.getInstance().publishKVPair(rightEncoder);
-
-		DashboardManager.getInstance().publishKVPair(motors);
+//		DashboardManager.getInstance().publishKVPair(leftEncoder);
+//		DashboardManager.getInstance().publishKVPair(rightEncoder);
+//
+//		DashboardManager.getInstance().publishKVPair(motors);
 
 		CSVWriter.addData("driveLeftEnc", state.drivePose.leftEnc);
 		CSVWriter.addData("driveLeftEncVelocity", state.drivePose.leftEncVelocity);

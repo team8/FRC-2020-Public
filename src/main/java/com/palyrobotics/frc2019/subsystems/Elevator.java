@@ -23,19 +23,16 @@ public class Elevator extends Subsystem {
     private ElevatorConfig mConfig = Configs.get(ElevatorConfig.class);
 
     public enum ElevatorState {
-        MANUAL_POSITIONING, //Moving the elevator with the joystick
-        CUSTOM_POSITIONING, //Moving the elevator with a control loop
+        MANUAL_POSITIONING,
+        CUSTOM_POSITIONING,
         PERCENT_OUTPUT,
-        IDLE //Not moving
+        IDLE
     }
 
-    //The variable used in the state machine
     private ElevatorState mElevatorState;
 
-    //Used for specifying where to hold/move to
     private double mElevatorWantedPosition;
 
-    //Used to store the robot state for use in methods other than update()
     private RobotState mRobotState;
 
     private SparkMaxOutput mOutput = new SparkMaxOutput(ControlType.kSmartMotion);
@@ -62,26 +59,22 @@ public class Elevator extends Subsystem {
 
         handleElevatorState(commands);
 
-        //Execute update loop based on the current state
-        //Does not switch between states, only performs actions
+        // Execute update loop based on the current state
+        // Does not switch between states, only performs actions
         switch (mElevatorState) {
             case MANUAL_POSITIONING:
-                //Clear any existing wanted positions
-                if (OtherConstants.operatorXBoxController) {
-                    mOutput.setPercentOutput(mConfig.manualMaxPercentOut * mRobotState.operatorXboxControllerInput.getRightY());
-                } else {
-                    mOutput.setPercentOutput(mConfig.manualMaxPercentOut * mRobotState.operatorJoystickInput.getY());
-                }
+                mOutput.setPercentOutput(mConfig.manualMaxPercentOut * (OtherConstants.operatorXBoxController
+                        ? mRobotState.operatorXboxControllerInput.getRightY()
+                        : mRobotState.operatorJoystickInput.getY()));
                 break;
             case CUSTOM_POSITIONING:
-                //Control loop
                 long currentTimeMs = System.currentTimeMillis();
                 boolean inClosedLoopZone = mRobotState.elevatorPosition >= mConfig.closedLoopZoneHeight,
                         wantedPositionInClosedLoopZone = mElevatorWantedPosition >= mConfig.closedLoopZoneHeight,
                         useClosedLoopOutOfRange = currentTimeMs - mLastTimeWhenInClosedLoopMs > mConfig.outOfClosedLoopZoneIdleDelayMs;
                 if (inClosedLoopZone) mLastTimeWhenInClosedLoopMs = currentTimeMs;
                 if (inClosedLoopZone || wantedPositionInClosedLoopZone || useClosedLoopOutOfRange) {
-                    mOutput.setTargetPositionSmartMotion(mElevatorWantedPosition, mConfig.ff);
+                    mOutput.setTargetPositionSmartMotion(mElevatorWantedPosition, mConfig.feedForward);
                 } else {
                     mOutput.setIdle();
                 }
@@ -125,7 +118,6 @@ public class Elevator extends Subsystem {
                 mElevatorState = ElevatorState.CUSTOM_POSITIONING;
                 break;
             default:
-                //For idle/manual positioning, just set it
                 mElevatorState = commands.wantedElevatorState;
                 break;
         }

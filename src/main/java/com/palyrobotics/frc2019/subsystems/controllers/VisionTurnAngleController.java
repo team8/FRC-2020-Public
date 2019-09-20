@@ -30,7 +30,7 @@ public class VisionTurnAngleController implements Drive.DriveController {
     public VisionTurnAngleController(Pose currentPose) {
         this.mCachedPose = currentPose;
         Gains turnGains = new Gains(.017, 0, 0, 0, 200, 0);
-        pidController = new SynchronousPID(turnGains.P, turnGains.I, turnGains.D, turnGains.iZone);
+        pidController = new SynchronousPID(turnGains.p, turnGains.i, turnGains.d, turnGains.iZone);
         pidController.setOutputRange(-1,1);
         pidController.setSetpoint(0);
         pidController.calculate(Limelight.getInstance().getYawToTarget());

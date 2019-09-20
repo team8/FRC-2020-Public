@@ -1,5 +1,6 @@
 package com.palyrobotics.frc2019.config.configv2;
 
+import com.palyrobotics.frc2019.config.SmartGains;
 import com.palyrobotics.frc2019.util.configv2.AbstractSubsystemConfig;
 
 public class IntakeConfig extends AbstractSubsystemConfig {
@@ -43,9 +44,12 @@ public class IntakeConfig extends AbstractSubsystemConfig {
             cargoInchTolerance,
             cargoCountRequired;
 
+    public SmartGains gains = SmartGains.emptyGains;
+
     /* Unit Conversion */
-    public static final double kArmPotentiometerTicksPerDegree = (4.5 / 1.0) * ((1.0 / 5.0) / 360.0);
     public static final double
+            kArmPotentiometerTicksPerDegree = (4.5 / 1.0) * ((1.0 / 5.0) / 360.0),
             kArmDegreesPerRevolution = (360.0) / ((68.0 / 14.0) * (38.0 / 18.0) * (36.0 / 14.0) * (54.0 / 12.0)), // rev → deg
             kArmDegreesPerMinutePerRpm = kArmDegreesPerRevolution; // rev/min → deg/min
+
 }

@@ -9,6 +9,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2019.config.Constants.*;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.SmartGains;
 import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import com.palyrobotics.frc2019.subsystems.*;
@@ -188,13 +189,8 @@ class HardwareUpdater {
         masterElevatorSpark.getEncoder().setPositionConversionFactor(ElevatorConfig.kElevatorInchesPerRevolution);
         masterElevatorSpark.getEncoder().setVelocityConversionFactor(ElevatorConfig.kElevatorInchesPerMinutePerRpm);
 
-        ElevatorConfig elevatorConfig = Configs.get(ElevatorConfig.class);
         updateSparkGains(masterElevatorSpark, Gains.elevatorPosition, 0);
-        updateSmartMotionGains(
-                masterElevatorSpark,
-                new Gains(elevatorConfig.p, elevatorConfig.i, elevatorConfig.d, elevatorConfig.f, 0, 0.0),
-                elevatorConfig.a, elevatorConfig.v
-        );
+        Configs.listen(ElevatorConfig.class, config -> updateSmartMotionGains(masterElevatorSpark, config.gains));
     }
 
     private void configureIntakeHardware() {
@@ -227,15 +223,11 @@ class HardwareUpdater {
         intakeTalon.configForwardSoftLimitEnable(false, 0);
         intakeTalon.configReverseSoftLimitEnable(false, 0);
 
-        intakeTalon.configPeakOutputForward(1, 0);
-        intakeTalon.configPeakOutputReverse(-1, 0);
+        intakeTalon.configPeakOutputForward(1.0, 0);
+        intakeTalon.configPeakOutputReverse(-1.0, 0);
 
         updateSparkGains(intakeMasterSpark, Gains.intakePosition, 0);
-        updateSmartMotionGains(
-                intakeMasterSpark,
-                Gains.intakeSmartMotion,
-                Gains.kVidarIntakeSmartMotionMaxAcceleration, Gains.kVidarIntakeSmartMotionMaxVelocity
-        );
+        Configs.listen(IntakeConfig.class, config -> updateSmartMotionGains(intakeMasterSpark, config.gains));
     }
 
     private void configureShooterHardware() {
@@ -316,7 +308,7 @@ class HardwareUpdater {
         shovelTalon.configReverseSoftLimitEnable(false, 0);
     }
 
-    private double[] m_AccelerometerAngles = new double[3]; // Cached array to prevent more garbage
+    private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
 
     /**
      * Takes all of the sensor data from the hardware, and unwraps it into the current {@link RobotState}.
@@ -360,8 +352,8 @@ class HardwareUpdater {
 
         double robotVelocity = (robotState.drivePose.leftEncVelocity + robotState.drivePose.rightEncVelocity) / 2;
 
-        HardwareAdapter.getInstance().getDrivetrain().gyro.getAccelerometerAngles(m_AccelerometerAngles);
-        robotState.robotAcceleration = m_AccelerometerAngles[0];
+        HardwareAdapter.getInstance().getDrivetrain().gyro.getAccelerometerAngles(mAccelerometerAngles);
+        robotState.robotAcceleration = mAccelerometerAngles[0];
         robotState.robotVelocity = robotVelocity;
 
         CANEncoder armEncoder = HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder();
@@ -561,10 +553,10 @@ class HardwareUpdater {
     private void updateTalonSRX(WPI_TalonSRX talon, TalonSRXOutput output) {
         if (output.getControlMode().equals(ControlMode.Position) || output.getControlMode().equals(ControlMode.Velocity)
                 || output.getControlMode().equals(ControlMode.MotionMagic)) {
-            talon.config_kP(output.profile, output.gains.P, 0);
-            talon.config_kI(output.profile, output.gains.I, 0);
-            talon.config_kD(output.profile, output.gains.D, 0);
-            talon.config_kF(output.profile, output.gains.F, 0);
+            talon.config_kP(output.profile, output.gains.p, 0);
+            talon.config_kI(output.profile, output.gains.i, 0);
+            talon.config_kD(output.profile, output.gains.d, 0);
+            talon.config_kF(output.profile, output.gains.f, 0);
             talon.config_IntegralZone(output.profile, output.gains.iZone, 0);
             talon.configClosedloopRamp(output.gains.rampRate, 0);
         }
@@ -600,12 +592,12 @@ class HardwareUpdater {
         updateSparkGains(spark, gains, 0);
     }
 
-    private void updateSmartMotionGains(CANSparkMax spark, Gains gains, double acceleration, double velocity) {
+    private void updateSmartMotionGains(CANSparkMax spark, SmartGains gains) {
         CANPIDController controller = spark.getPIDController();
         int SMART_MOTION_PID_SLOT = 1;
         updateSparkGains(spark, gains, SMART_MOTION_PID_SLOT);
-        controller.setSmartMotionMaxAccel(acceleration, SMART_MOTION_PID_SLOT);
-        controller.setSmartMotionMaxVelocity(velocity, SMART_MOTION_PID_SLOT);
+        controller.setSmartMotionMaxAccel(gains.acceleration, SMART_MOTION_PID_SLOT);
+        controller.setSmartMotionMaxVelocity(gains.velocity, SMART_MOTION_PID_SLOT);
         controller.setOutputRange(-1.0, 1.0, SMART_MOTION_PID_SLOT);
         controller.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, SMART_MOTION_PID_SLOT);
         controller.setSmartMotionAllowedClosedLoopError(0.0, SMART_MOTION_PID_SLOT);
@@ -614,10 +606,10 @@ class HardwareUpdater {
 
     private void updateSparkGains(CANSparkMax spark, Gains gains, int slotID) {
         CANPIDController controller = spark.getPIDController();
-        controller.setP(gains.P, slotID);
-        controller.setD(gains.D, slotID);
-        controller.setI(gains.I, slotID);
-        controller.setFF(gains.F, slotID);
+        controller.setP(gains.p, slotID);
+        controller.setD(gains.d, slotID);
+        controller.setI(gains.i, slotID);
+        controller.setFF(gains.f, slotID);
         controller.setIZone(gains.iZone, slotID);
         controller.setIAccum(0.0);
         spark.setClosedLoopRampRate(gains.rampRate); // TODO this is not a per PID slot basis, it is global config

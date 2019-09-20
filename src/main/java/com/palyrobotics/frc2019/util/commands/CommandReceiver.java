@@ -7,6 +7,7 @@ import com.palyrobotics.frc2019.behavior.RoutineManager;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorMeasureSpeedAtOutputRoutine;
 import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.robot.HardwareAdapter;
+import com.palyrobotics.frc2019.util.configv2.AbstractConfig;
 import com.palyrobotics.frc2019.util.configv2.Configs;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.*;
@@ -115,9 +116,9 @@ public class CommandReceiver {
             case "save": {
                 String configName = parse.getString("config_name");
                 try {
-                    Class<?> configClass = Configs.getClassFromName(configName);
+                    Class<? extends AbstractConfig> configClass = Configs.getClassFromName(configName);
                     if (configClass == null) throw new ClassNotFoundException();
-                    Object configObject = Configs.getRaw(configClass);
+                    AbstractConfig configObject = Configs.get(configClass);
                     String fieldName = parse.getString("config_field");
                     try {
                         switch (commandName) {
@@ -142,7 +143,7 @@ public class CommandReceiver {
                                         String stringValue = parse.getString("config_value");
                                         if (stringValue == null) return "Must provide a value to set!";
                                         try {
-                                            Configs.setRaw(configObject, field, sMapper.readValue(stringValue, field.getType()));
+                                            field.set(configObject, sMapper.readValue(stringValue, field.getType()));
                                             return String.format("Set field %s on config %s to %s", fieldName, configName, stringValue);
                                         } catch (IOException parseException) {
                                             return String.format("Error parsing %s for field %s on config %s", stringValue, fieldName, configName);
@@ -155,7 +156,7 @@ public class CommandReceiver {
                             }
                             case "save": {
                                 try {
-                                    Configs.saveChecked(configClass);
+                                    Configs.saveOrThrow(configClass);
                                     return String.format("Saved config for %s", configName);
                                 } catch (IOException saveException) {
                                     saveException.printStackTrace();
@@ -181,7 +182,7 @@ public class CommandReceiver {
                     case "measure_elevator_speed": {
                         try {
                             double percentOutput = Double.parseDouble(parse.<String>getList("parameters").get(0));
-                            RoutineManager.getInstance().addNewRoutine(new ElevatorMeasureSpeedAtOutputRoutine(percentOutput, Configs.get(ElevatorConfig.class).ff, -10));
+                            RoutineManager.getInstance().addNewRoutine(new ElevatorMeasureSpeedAtOutputRoutine(percentOutput, Configs.get(ElevatorConfig.class).feedForward, -10));
                             return String.format("Starting measure elevator routine with percent output %f", percentOutput);
                         } catch (Exception exception) {
                             throw new ArgumentParserException("Could not parse parameters", exception, mParser);

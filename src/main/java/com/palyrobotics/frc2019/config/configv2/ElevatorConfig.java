@@ -1,5 +1,6 @@
 package com.palyrobotics.frc2019.config.configv2;
 
+import com.palyrobotics.frc2019.config.SmartGains;
 import com.palyrobotics.frc2019.util.configv2.AbstractSubsystemConfig;
 
 public class ElevatorConfig extends AbstractSubsystemConfig {
@@ -14,8 +15,9 @@ public class ElevatorConfig extends AbstractSubsystemConfig {
             acceptableVelocityError,
             closedLoopZoneHeight,
             outOfClosedLoopZoneIdleDelayMs,
-            a, v,
-            p, i, d, f, ff;
+            feedForward;
+
+    public SmartGains gains = SmartGains.emptyGains;
 
     public static final float kMaxHeightInches = -80.0f;
 
