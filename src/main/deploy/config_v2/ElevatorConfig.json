@@ -1,8 +1,8 @@
 {
-    "elevatorCargoHeight3Inches": 95.5,
+    "elevatorCargoHeight3Inches": 52.0,
     "manualMaxPercentOut": 0.5,
-    "elevatorCargoHeight2Inches": 43.5,
-    "elevatorCargoBallHeight": 40.55,
+    "elevatorCargoHeight2Inches": 25.0,
+    "elevatorCargoBallHeight": 20.0,
     "elevatorCargoHeight1Inches": 0.0,
     "handOffHeight": 2.0,
     "secondStageCanStartMovingArm": 29.0,
@@ -12,13 +12,13 @@
     "outOfClosedLoopZoneIdleDelayMs": 200,
     "feedForward": 0.0310,
     "gains": {
-        "p": 0.0,
+        "p": 0.000005,
         "i": 0.0,
         "d": 0.0,
-        "f": 0.0,
-        "rampRate": 0.0,
+        "f": 0.0002621578947368421,
+        "rampRate": 0.1,
         "iZone": 0,
-        "acceleration": 0.0,
-        "velocity": 0.0
+        "acceleration": 6200,
+        "velocity": 2400
     }
 }

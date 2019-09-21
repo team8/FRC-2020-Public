@@ -420,7 +420,6 @@ class HardwareUpdater {
 
         //Cargo Distance from Pusher
         Ultrasonic mPusherUltrasonic = HardwareAdapter.getInstance().getPusher().pusherUltrasonic;
-        System.out.println(mPusherUltrasonic.getRangeInches());
         robotState.mPusherReadings.add(mPusherUltrasonic.getRangeInches());
         if (robotState.mPusherReadings.size() > 10) {
             robotState.mPusherReadings.remove(0);
@@ -532,7 +531,7 @@ class HardwareUpdater {
     }
 
     private void updateFingers() {
-        HardwareAdapter.getInstance().getFingers().openCloseSolenoid.set(mFingers.getOpenCloseOutput() == DoubleSolenoid.Value.kReverse ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+        HardwareAdapter.getInstance().getFingers().openCloseSolenoid.set(mFingers.getOpenCloseOutput());
         HardwareAdapter.getInstance().getFingers().pusherSolenoid.set(mFingers.getExpelOutput());
     }
 
@@ -575,7 +574,6 @@ class HardwareUpdater {
     }
 
     private void updateSparkMax(CANSparkMax spark, SparkMaxOutput output) {
-//        if (output.getControlType() == ControlType.kSmartMotion) System.out.println(output.getSetpoint());
         ControlType controlType = output.getControlType();
         boolean isSmart = controlType == ControlType.kSmartMotion || controlType == ControlType.kSmartVelocity;
         spark.getPIDController().setReference(
@@ -593,6 +591,7 @@ class HardwareUpdater {
     }
 
     private void updateSmartMotionGains(CANSparkMax spark, SmartGains gains) {
+        System.out.println(gains);
         CANPIDController controller = spark.getPIDController();
         int SMART_MOTION_PID_SLOT = 1;
         updateSparkGains(spark, gains, SMART_MOTION_PID_SLOT);

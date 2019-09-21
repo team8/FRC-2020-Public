@@ -6,8 +6,8 @@
     "verySlowly": 0.03,
     "medium": 0.2,
     "maxAngle": 118.0,
-    "potentiometerMaxAngleTicks": 0.6095,
-    "gravityFF": 0.03,
+    "potentiometerMaxAngleTicks": 0.613832808491713,
+    "gravityFF": 0.028,
     "accelerationCompensation": 0.0,
     "centripetalCoefficient": 0.0,
     "angleOffset": 11.89,
@@ -24,13 +24,13 @@
     "cargoInchTolerance": 7.65,
     "cargoCountRequired": 6.0,
     "gains": {
-        "p": 0.0,
+        "p": 0.000001,
         "i": 0.0,
         "d": 0.0,
-        "f": 0.0,
-        "rampRate": 0.0,
+        "f": 0.000058,
+        "rampRate": 0.15,
         "iZone": 0,
-        "acceleration": 0.0,
-        "velocity": 0.0
+        "acceleration": 46000,
+        "velocity": 13000
     }
 }

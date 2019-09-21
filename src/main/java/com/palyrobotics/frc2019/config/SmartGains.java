@@ -15,4 +15,9 @@ public class SmartGains extends Gains {
         this.acceleration = acceleration;
         this.velocity = velocity;
     }
+
+    @Override
+    public String toString() {
+        return String.format("SmartGains{acceleration=%s, velocity=%s, p=%s, i=%s, d=%s, f=%s, rampRate=%s, iZone=%d}", acceleration, velocity, p, i, d, f, rampRate, iZone);
+    }
 }
