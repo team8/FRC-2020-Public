@@ -110,7 +110,7 @@ public class HardwareAdapter {
         }
 
         public void calibrateIntakeEncoderWithPotentiometer() {
-//            double
+            double
                     maxArmAngle = Configs.get(IntakeConfig.class).maxAngle,
                     potentiometerDegreesPerTick = 1 / IntakeConfig.kArmPotentiometerTicksPerDegree,
                     potentiometerTicks = potentiometer.get() - Configs.get(IntakeConfig.class).potentiometerMaxAngleTicks,
