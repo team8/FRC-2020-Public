@@ -1,15 +1,16 @@
 package com.palyrobotics.frc2019.config.dashboard;
 
+import com.palyrobotics.frc2019.util.service.RobotService;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-public class DashboardManager {
+public class DashboardManager implements RobotService {
 
-    //Usage of cantable or not
+    // Usage of CAN tables or not
     private boolean mEnableCANTable = true;
 
-    //Allow motion profile gains to be modified over NT
-    public final boolean mPidTuning = false;
+    // Allow motion profile gains to be modified over network tables
+    private final boolean mPidTuning = false;
 
     private static DashboardManager sInstance = new DashboardManager();
 
@@ -25,30 +26,20 @@ public class DashboardManager {
 
     private boolean isUnitTest;
 
-    private DashboardManager() {
-    }
-
-    public void robotInit() {
+    @Override
+    public void start() {
         try {
             initializeRobotTable();
             initializeCANTable();
-//            Logger.getInstance().logRobotThread(Level.FINE, "Successfully initialized cantables");
+//            Logger.getInstance().logRobotThread(Level.FINE, "Successfully initialized CAN tables");
         } catch (Exception e) {
             isUnitTest = true;
         }
     }
 
-    private void initializeRobotTable() {
-        this.mNetInstance = NetworkTableInstance.getDefault();
-        this.mRobotTable = mNetInstance.getTable(TABLE_NAME);
-    }
+    @Override
+    public void update() {
 
-    private void initializeCANTable() {
-        //Gains.initNetworkTableGains();
-        if (mEnableCANTable) {
-            this.mCANTable = mNetInstance.getTable(CAN_TABLE_NAME);
-            mNetInstance.setUpdateRate(.005);
-        }
     }
 
     /**
@@ -66,7 +57,7 @@ public class DashboardManager {
         }
         //If we are now connected
         if (mRobotTable != null && !isUnitTest) {
-            this.mRobotTable.getEntry(d.getKey()).setString(d.getValue());
+            mRobotTable.getEntry(d.getKey()).setString(d.getValue());
         }
     }
 
@@ -75,7 +66,7 @@ public class DashboardManager {
             return;
         }
         if (mCANTable != null) {
-            this.mCANTable.getEntry(key).setString(value + "\n");
+            mCANTable.getEntry(key).setString(value + "\n");
         } else {
             //try to reach it again
             try {
@@ -88,7 +79,7 @@ public class DashboardManager {
     }
 
     /**
-     * Start or stop sending cantable data
+     * Start or stop sending CAN table data
      *
      * @param start true if you want to start sending data
      */
@@ -96,16 +87,28 @@ public class DashboardManager {
         if (start) {
             if (mCANTable != null && !isUnitTest) {
 //                Logger.getInstance().logRobotThread(Level.FINER, "Started CANTables");
-                this.mCANTable.getEntry("start").setString("true");
-                this.mCANTable.getEntry("end").setString("false");
+                mCANTable.getEntry("start").setString("true");
+                mCANTable.getEntry("end").setString("false");
             } else {
 //                Logger.getInstance().logRobotThread(Level.WARNING, "Error in CANTables");
             }
         } else {
             if (mCANTable != null && !isUnitTest) {
-                this.mCANTable.getEntry("start").setString("false");
-                this.mCANTable.getEntry("end").setString("true");
+                mCANTable.getEntry("start").setString("false");
+                mCANTable.getEntry("end").setString("true");
             }
+        }
+    }
+
+    private void initializeRobotTable() {
+        mNetInstance = NetworkTableInstance.getDefault();
+        mRobotTable = mNetInstance.getTable(TABLE_NAME);
+    }
+
+    private void initializeCANTable() {
+        if (mEnableCANTable) {
+            mCANTable = mNetInstance.getTable(CAN_TABLE_NAME);
+            mNetInstance.setUpdateRate(0.005);
         }
     }
 }

@@ -20,13 +20,11 @@ public class RoutineManager {
         return instance;
     }
 
-    protected RoutineManager() {
-    }
-
     //Routines that are being run
-    private ArrayList<Routine> runningRoutines = new ArrayList<>();
-    private ArrayList<Routine> routinesToRemove = new ArrayList<>();
-    private ArrayList<Routine> routinesToAdd = new ArrayList<>();
+    private ArrayList<Routine>
+            runningRoutines = new ArrayList<>(),
+            routinesToRemove = new ArrayList<>(),
+            routinesToAdd = new ArrayList<>();
 
     /**
      * Stores the new routine to be added in next update cycle <br />

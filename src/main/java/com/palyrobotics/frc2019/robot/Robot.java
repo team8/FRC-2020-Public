@@ -3,21 +3,25 @@ package com.palyrobotics.frc2019.robot;
 import com.palyrobotics.frc2019.behavior.RoutineManager;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
-import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
+import com.palyrobotics.frc2019.config.configv2.ServiceConfig;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
 import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.commands.CommandReceiver;
 import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2019.util.service.RobotService;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Robot extends TimedRobot {
+
     private static RobotState robotState = RobotState.getInstance();
 
     public static RobotState getRobotState() {
@@ -41,10 +45,11 @@ public class Robot extends TimedRobot {
     private Pusher mPusher = Pusher.getInstance();
     private Fingers mFingers = Fingers.getInstance();
     private Intake mIntake = Intake.getInstance();
+    private List<Subsystem> mSubsystems = new ArrayList<>(7);
 
     private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mElevator, mShooter, mPusher, mShovel, mFingers, mIntake);
 
-    private CommandReceiver mCommandReceiver = new CommandReceiver();
+    private List<RobotService> mServices = new ArrayList<>();
 
     @Override
     public void robotInit() {
@@ -57,7 +62,17 @@ public class Robot extends TimedRobot {
 //
 //        Logger.getInstance().logRobotThread(Level.INFO, "Start robotInit()");
 
-        DashboardManager.getInstance().robotInit();
+        // TODO this is bad - find way to automate this
+        ServiceConfig services = Configs.get(ServiceConfig.class);
+        if (services.enableDrive) mSubsystems.add(mDrive);
+        if (services.enableElevator) mSubsystems.add(mElevator);
+        if (services.enableShooter) mSubsystems.add(mShooter);
+        if (services.enablePusher) mSubsystems.add(mPusher);
+        if (services.enableShovel) mSubsystems.add(mShovel);
+        if (services.enableFingers) mSubsystems.add(mFingers);
+        if (services.enableIntake) mSubsystems.add(mIntake);
+        if (services.enableCommandReceiver) mServices.add(new CommandReceiver());
+        if (services.enableDashboard) mServices.add(new DashboardManager());
 
         mHardwareUpdater.initHardware();
 
@@ -67,7 +82,7 @@ public class Robot extends TimedRobot {
 
         DriveTeam.configConstants();
 
-        mCommandReceiver.start();
+        mServices.forEach(RobotService::start);
 
         if (RobotBase.isSimulation()) robotState.matchStartTimeMs = System.currentTimeMillis();
 
@@ -257,7 +272,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
 
-        mCommandReceiver.update();
+        mServices.forEach(RobotService::update);
 
         // System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
         // System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
@@ -266,32 +281,16 @@ public class Robot extends TimedRobot {
     }
 
     private void startSubsystems() {
-        mShovel.start();
-        mDrive.start();
-        mElevator.start();
-        mShooter.start();
-        mPusher.start();
-        mFingers.start();
-        mIntake.start();
+        mSubsystems.forEach(Subsystem::start);
     }
 
     private void updateSubsystems() {
-        mDrive.update(commands, robotState);
-        mElevator.update(commands, robotState);
-        mShooter.update(commands, robotState);
-        mPusher.update(commands, robotState);
-        mFingers.update(commands, robotState);
-        mShovel.update(commands, robotState);
-        mIntake.update(commands, robotState);
+        for (Subsystem subsystem : mSubsystems) {
+            subsystem.update(commands, robotState);
+        }
     }
 
     private void stopSubsystems() {
-        mDrive.stop();
-        mElevator.stop();
-        mShooter.stop();
-        mPusher.stop();
-        mFingers.stop();
-        mShovel.stop();
-        mIntake.stop();
+        mSubsystems.forEach(Subsystem::stop);
     }
 }

@@ -5,7 +5,9 @@ import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import com.palyrobotics.frc2019.config.configv2.ServiceConfig;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.introspect.VisibilityChecker;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -26,18 +28,36 @@ import java.util.function.Consumer;
  */
 public class Configs {
 
-    private static ObjectMapper sMapper = new ObjectMapper();
+    /* ============================================================================================================= */
 
-    private static final Path CONFIG_FOLDER = (RobotBase.isReal()
-            ? Paths.get(Filesystem.getDeployDirectory().toString(), "config_v2")
-            : Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", "config_v2")).toAbsolutePath();
-
+    /**
+     * Register classes to be JSON configurable here. This will automatically try to load them from the deploy folder.
+     */
     private static final List<Class<? extends AbstractConfig>> sConfigs = List.of(
             ElevatorConfig.class, IntakeConfig.class, ServiceConfig.class
     );
+
+    /* ============================================================================================================= */
+
+    private static ObjectMapper sMapper = new ObjectMapper();
+
+    static {
+        // Allows us to serialize private fields
+        sMapper.setVisibilityChecker(new VisibilityChecker.Std(Visibility.ANY, Visibility.ANY, Visibility.ANY, Visibility.ANY, Visibility.ANY));
+    }
+
+    public static ObjectMapper getMapper() {
+        return sMapper;
+    }
+
+    private static final String CONFIG_FOLDER_NAME = "config_v2";
+    private static final Path CONFIG_FOLDER = (RobotBase.isReal()
+            ? Paths.get(Filesystem.getDeployDirectory().toString(), CONFIG_FOLDER_NAME)
+            : Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", CONFIG_FOLDER_NAME)).toAbsolutePath();
+
     private static final ConcurrentHashMap<String, Class<? extends AbstractConfig>> sNameToClass = new ConcurrentHashMap<>(sConfigs.size());
     private static final ConcurrentHashMap<Class<? extends AbstractConfig>, AbstractConfig> sConfigMap = new ConcurrentHashMap<>(sConfigs.size());
-    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, List<Consumer<Class<? extends AbstractConfig>>>> sListeners = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, List<Runnable>> sListeners = new ConcurrentHashMap<>();
     private static final Thread sModifiedListener = new Thread(Configs::watchService);
 
     static {
@@ -72,8 +92,8 @@ public class Configs {
      */
     public static <T extends AbstractConfig> void listen(Class<T> configClass, Consumer<T> onChanged) {
         onChanged.accept(get(configClass));
-        var consumers = sListeners.computeIfAbsent(configClass, newValue -> new ArrayList<>());
-        consumers.add(bet -> onChanged.accept(get(configClass))); // TODO kinda whack
+        var consumers = sListeners.computeIfAbsent(configClass, newValue -> new ArrayList<>(1));
+        consumers.add(() -> onChanged.accept(get(configClass))); // TODO kinda whack
     }
 
     public static <T extends AbstractConfig> boolean save(Class<T> configClass) {
@@ -113,13 +133,25 @@ public class Configs {
         return false;
     }
 
+    public static void toJson(Object object) {
+        try {
+            System.out.println(sMapper.defaultPrettyPrintingWriter().writeValueAsString(object));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This should be started in a new thread to watch changes for the folder containing the JSON configuration files.
+     * It detects when files are modified and written to on disk, then reloads them calling {@link #notifyUpdated(Class)}.
+     */
     private static void watchService() {
         try {
             WatchService watcher = FileSystems.getDefault().newWatchService();
             CONFIG_FOLDER.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
             while (true) {
                 try {
-                    WatchKey key = watcher.take();
+                    WatchKey key = watcher.take(); // Blocks until an event
                     /* Since there are two times when the listener is notified when a file is saved,
                      * once for the actual content and another time for the timestamp updated,
                      * sleeping will capture both into the same poll event list.
@@ -156,9 +188,8 @@ public class Configs {
     }
 
     private static void notifyUpdated(Class<? extends AbstractConfig> configClass) {
-        Optional.ofNullable(sListeners.get(configClass)).ifPresent(
-                listeners -> listeners.forEach(consumer -> consumer.accept(configClass))
-        );
+        // TODO nasty
+        Optional.ofNullable(sListeners.get(configClass)).ifPresent(listeners -> listeners.forEach(Runnable::run));
     }
 
     private static <T extends AbstractConfig> T read(Class<T> configClass) {
@@ -174,9 +205,12 @@ public class Configs {
             readException.printStackTrace();
             String errorMessage = String.format("An error occurred trying to read config for class %s%n", configClassName);
             try {
-                System.out.println(sMapper.defaultPrettyPrintingWriter().writeValueAsString(configClass.getConstructor().newInstance()));
-            } catch (IOException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
+                System.out.printf("%s. See here for a default JSON file and double-check yours:%n%s%n",
+                        errorMessage,
+                        sMapper.defaultPrettyPrintingWriter().writeValueAsString(configClass.getConstructor().newInstance())
+                );
+            } catch (IOException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException exception) {
+                exception.printStackTrace();
             }
             throw new RuntimeException(errorMessage, readException);
         }

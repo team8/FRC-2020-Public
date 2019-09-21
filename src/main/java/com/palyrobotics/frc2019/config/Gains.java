@@ -185,10 +185,14 @@ public class Gains {
         }
     }
 
-    public static final Gains emptyGains = new Gains(0.0, 0.0, 0.0, 0.0, 0, 0.0);
+    public static final Gains emptyGains = new Gains();
 
     public double p, i, d, f, rampRate;
     public int iZone; // TODO I Zone is double on sparks, not integer like Talon/Victor
+
+    public Gains() {
+        this(0.0, 0.0, 0.0, 0.0, 0, 0.0);
+    }
 
     public Gains(double p, double i, double d, double f, int iZone, double rampRate) {
         this.p = p;
@@ -212,12 +216,12 @@ public class Gains {
                 iZone == gains.iZone;
     }
 
-    @Override
+    @Override // Auto-generated
     public int hashCode() {
         return Objects.hash(p, i, d, f, rampRate, iZone);
     }
 
-    @Override
+    @Override // Auto-generated
     public String toString() {
         return String.format("Gains{p=%s, i=%s, d=%s, f=%s, rampRate=%s, iZone=%d}", p, i, d, f, rampRate, iZone);
     }

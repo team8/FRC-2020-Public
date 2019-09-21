@@ -31,9 +31,7 @@ public class IntakeConfig extends AbstractSubsystemConfig {
             holdAngle, // Same relative angle as above
             handOffAngle, // Place where the drop to the elevator occurs
             rocketExpelAngle,
-            climbAngle,
-            lowestAngle = intakeAngle,
-            highestAngle = handOffAngle;
+            climbAngle;
 
     public double holdTolerance; // Number of degrees of tolerance on arm hold to move elevator
 
@@ -50,6 +48,6 @@ public class IntakeConfig extends AbstractSubsystemConfig {
     public static final double
             kArmPotentiometerTicksPerDegree = (4.5 / 1.0) * ((1.0 / 5.0) / 360.0),
             kArmDegreesPerRevolution = (360.0) / ((68.0 / 14.0) * (38.0 / 18.0) * (36.0 / 14.0) * (54.0 / 12.0)), // rev → deg
-            kArmDegreesPerMinutePerRpm = kArmDegreesPerRevolution; // rev/min → deg/min
+            kArmDegreesPerMinutePerRpm = kArmDegreesPerRevolution; // rev/min → deg/min TODO fix once we figure out velocity conversion
 
 }

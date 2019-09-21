@@ -6,8 +6,6 @@ import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 import com.palyrobotics.frc2019.util.SparkSignal;
 
-import java.util.Optional;
-
 public class DriveTimeRoutine extends Routine {
 	private long mEndTime;
 	private SparkSignal mDrivePower;
@@ -38,7 +36,7 @@ public class DriveTimeRoutine extends Routine {
 	@Override
 	public Commands update(Commands commands) {
 		commands.wantedDriveState = Drive.DriveState.OPEN_LOOP;
-		commands.robotSetpoints.drivePowerSetpoint = Optional.of(mDrivePower);
+		commands.robotSetPoints.drivePowerSetpoint = mDrivePower;
 		return commands;
 	}
 

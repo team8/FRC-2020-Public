@@ -5,11 +5,10 @@ import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.SparkSignal;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 /**
- * Commands represent the desired setpoints and subsystem states for the robot. <br />
- * Store Requests (enum) for each subsystem and setpoints {@link Setpoints} <br />
+ * Commands represent the desired set points and subsystem states for the robot. <br />
+ * Store Requests (enum) for each subsystem and set points {@link SetPoints} <br />
  * Variables are public and have default values to prevent NullPointerExceptions
  *
  * @author Nihar
@@ -22,12 +21,9 @@ public class Commands {
         return instance;
     }
 
-    protected Commands() {
-    }
-
     public ArrayList<Routine> wantedRoutines = new ArrayList<>();
 
-    //Store WantedStates for each subsystem state machine
+    // Store WantedStates for each subsystem state machine
     public Drive.DriveState wantedDriveState = Drive.DriveState.NEUTRAL;
 
     public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
@@ -39,26 +35,26 @@ public class Commands {
 
     public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
     public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
-    public boolean blockFingers = false;
+    public boolean blockFingers;
 
     public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.HOLDING;
 
     public boolean disableIntakeScaling = true;
 
-    public boolean customShooterSpeed = false, customIntakeSpeed = false;
+    public boolean customShooterSpeed, customIntakeSpeed;
 
     public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.IDLE;
     public double customElevatorPercentOutput;
 
-    public boolean holderOutput = false;
+    public boolean holderOutput;
 
-    public boolean customShovelSpeed = false;
-    public boolean autoPlacerOutput = false;
+    public boolean customShovelSpeed;
+    public boolean autoPlacerOutput;
 
-    public boolean intakeHFX = false, intakeHasHatch = false;
-    public boolean hasCargo = false, hasPusherCargo = false;
+    public boolean intakeHFX, intakeHasHatch;
+    public boolean hasCargo, hasPusherCargo;
 
-    public boolean shooterSpinning = false;
+    public boolean shooterSpinning;
 
     public void addWantedRoutine(Routine wantedRoutine) {
         for (Routine routine : wantedRoutines) {
@@ -75,36 +71,37 @@ public class Commands {
     }
 
     /**
-     * Stores numeric setpoints
+     * Stores numeric set points
      *
      * @author Nihar
      */
-    public static class Setpoints {
-        public Optional<SparkSignal> drivePowerSetpoint = Optional.empty();
-        public Optional<Double> elevatorPositionSetpoint = Optional.empty();
-        public Optional<Double> climberPositionSetpoint = Optional.empty();
-        public Optional<Double> pusherPositionSetpoint = Optional.empty();
-        public Optional<Double> intakePositionSetpoint = Optional.empty();
-        public Optional<Double> climbRateSetpoint = Optional.empty();
+    public static class SetPoints {
+        public SparkSignal drivePowerSetpoint;
+        public Double
+                elevatorPositionSetpoint,
+                climberPositionSetpoint,
+                pusherPositionSetpoint,
+                intakePositionSetpoint,
+                climbRateSetpoint;
 
         /**
-         * Resets all the setpoints
+         * Resets all the set points
          */
         public void reset() {
-            drivePowerSetpoint = Optional.empty();
-            elevatorPositionSetpoint = Optional.empty();
-            climberPositionSetpoint = Optional.empty();
-            pusherPositionSetpoint = Optional.empty();
-            intakePositionSetpoint = Optional.empty();
-            climbRateSetpoint = Optional.empty();
+            drivePowerSetpoint = null;
+            elevatorPositionSetpoint = null;
+            climberPositionSetpoint = null;
+            pusherPositionSetpoint = null;
+            intakePositionSetpoint = null;
+            climbRateSetpoint = null;
         }
     }
 
-    //All robot setpoints
-    public Setpoints robotSetpoints = new Setpoints();
+    // All robot set points
+    public SetPoints robotSetPoints = new SetPoints();
 
-    //Allows you to cancel all running routines
-    public boolean cancelCurrentRoutines = false;
+    // Allows you to cancel all running routines
+    public boolean cancelCurrentRoutines;
 
     /**
      * @return a copy of these commands
@@ -132,15 +129,15 @@ public class Commands {
 
         copy.wantedRoutines.addAll(this.wantedRoutines);
 
-        //Copy robot setpoints
-        copy.robotSetpoints = new Setpoints();
-        //Copy optionals that are present
-        robotSetpoints.drivePowerSetpoint.ifPresent((SparkSignal signal) -> copy.robotSetpoints.drivePowerSetpoint = Optional.of(signal));
-        robotSetpoints.elevatorPositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.elevatorPositionSetpoint = Optional.of(elevatorPositionSetpoint));
-        robotSetpoints.climberPositionSetpoint.ifPresent((Double climberPositionSetpoint) -> copy.robotSetpoints.climberPositionSetpoint = Optional.of(climberPositionSetpoint));
-        robotSetpoints.intakePositionSetpoint.ifPresent((Double elevatorPositionSetpoint) -> copy.robotSetpoints.intakePositionSetpoint = Optional.of(elevatorPositionSetpoint));
-        robotSetpoints.pusherPositionSetpoint.ifPresent((Double pusherPositionSetpoint) -> copy.robotSetpoints.pusherPositionSetpoint = Optional.of(pusherPositionSetpoint));
-        robotSetpoints.climbRateSetpoint.ifPresent((Double climbRateSetpoint) -> copy.robotSetpoints.climbRateSetpoint = Optional.of(climbRateSetpoint));
+        // Copy robot set points
+        copy.robotSetPoints = new SetPoints();
+        // Copy optionals that are present
+        copy.robotSetPoints.drivePowerSetpoint = robotSetPoints.drivePowerSetpoint;
+        copy.robotSetPoints.elevatorPositionSetpoint = robotSetPoints.elevatorPositionSetpoint;
+        copy.robotSetPoints.climberPositionSetpoint = robotSetPoints.climberPositionSetpoint;
+        copy.robotSetPoints.intakePositionSetpoint = robotSetPoints.intakePositionSetpoint;
+        copy.robotSetPoints.pusherPositionSetpoint = robotSetPoints.pusherPositionSetpoint;
+        copy.robotSetPoints.climbRateSetpoint = robotSetPoints.climbRateSetpoint;
         return copy;
     }
 

@@ -6,28 +6,26 @@ import com.palyrobotics.frc2019.subsystems.Elevator;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 
-import java.util.Optional;
-
 public class ElevatorCustomPositioningRoutine extends Routine {
 
     private double mPosition;
     private double mTimeout;
     private Long mStartTime;
-    private boolean hasSetAllVars = false;
+    private boolean hasSetAllVars;
 
     private Path mPath;
     private String mRoutineStartWayPoint;
 
     public ElevatorCustomPositioningRoutine(double position, double timeout) {
-        this.mPosition = position;
-        this.mTimeout = timeout;
+        mPosition = position;
+        mTimeout = timeout;
     }
 
     public ElevatorCustomPositioningRoutine(double position, double timeout, Path path, String routineStartWayPoint) {
-        this.mPosition = position;
-        this.mTimeout = timeout;
-        this.mPath = path;
-        this.mRoutineStartWayPoint = routineStartWayPoint;
+        mPosition = position;
+        mTimeout = timeout;
+        mPath = path;
+        mRoutineStartWayPoint = routineStartWayPoint;
     }
 
     @Override
@@ -43,7 +41,7 @@ public class ElevatorCustomPositioningRoutine extends Routine {
             if (mStartTime == null) mStartTime = System.currentTimeMillis();
             hasSetAllVars = true;
             commands.wantedElevatorState = Elevator.ElevatorState.CUSTOM_POSITIONING;
-            commands.robotSetpoints.elevatorPositionSetpoint = Optional.of(mPosition);
+            commands.robotSetPoints.elevatorPositionSetpoint = mPosition;
         }
         return commands;
     }
@@ -51,7 +49,6 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     @Override
     public Commands cancel(Commands commands) {
         commands.wantedElevatorState = Elevator.ElevatorState.CUSTOM_POSITIONING;
-//        System.out.println("cancelling all fucktacklind");
         return commands;
     }
 

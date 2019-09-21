@@ -6,8 +6,10 @@ public class SmartGains extends Gains {
 
     public double acceleration, velocity;
 
-    public SmartGains() {
-        this(0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.0);
+    private SmartGains() {
+        super();
+        this.acceleration = 0.0;
+        this.velocity = 0.0;
     }
 
     public SmartGains(double p, double i, double d, double f, int iZone, double rampRate, double acceleration, double velocity) {
@@ -16,7 +18,7 @@ public class SmartGains extends Gains {
         this.velocity = velocity;
     }
 
-    @Override
+    @Override // Auto-generated
     public String toString() {
         return String.format("SmartGains{acceleration=%s, velocity=%s, p=%s, i=%s, d=%s, f=%s, rampRate=%s, iZone=%d}", acceleration, velocity, p, i, d, f, rampRate, iZone);
     }

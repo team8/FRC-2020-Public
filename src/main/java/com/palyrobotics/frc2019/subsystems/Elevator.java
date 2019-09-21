@@ -114,7 +114,7 @@ public class Elevator extends Subsystem {
     private void handleElevatorState(Commands commands) {
         switch (commands.wantedElevatorState) {
             case CUSTOM_POSITIONING:
-                mElevatorWantedPosition = commands.robotSetpoints.elevatorPositionSetpoint.orElseThrow();
+                mElevatorWantedPosition = commands.robotSetPoints.elevatorPositionSetpoint;
                 mElevatorState = ElevatorState.CUSTOM_POSITIONING;
                 break;
             default:

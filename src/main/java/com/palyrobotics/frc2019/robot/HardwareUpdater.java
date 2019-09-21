@@ -591,7 +591,7 @@ class HardwareUpdater {
     }
 
     private void updateSmartMotionGains(CANSparkMax spark, SmartGains gains) {
-        System.out.println(gains);
+        System.out.printf("Using smart gains: %s%n", gains);
         CANPIDController controller = spark.getPIDController();
         int SMART_MOTION_PID_SLOT = 1;
         updateSparkGains(spark, gains, SMART_MOTION_PID_SLOT);

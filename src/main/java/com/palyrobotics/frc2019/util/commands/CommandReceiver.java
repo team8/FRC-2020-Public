@@ -9,6 +9,7 @@ import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.util.configv2.AbstractConfig;
 import com.palyrobotics.frc2019.util.configv2.Configs;
+import com.palyrobotics.frc2019.util.service.RobotService;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.*;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -18,11 +19,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 
-public class CommandReceiver {
+public class CommandReceiver implements RobotService {
 
     private static final int PORT = 5808;
 
-    private static ObjectMapper sMapper = new ObjectMapper();
+    private static ObjectMapper sMapper = Configs.getMapper();
 
     private final ArgumentParser mParser;
     private Server mServer;
@@ -47,6 +48,7 @@ public class CommandReceiver {
                 .addParser("arm").help("Resets the Spark encoder so it is in-line with the potentiometer");
     }
 
+    @Override
     public void start() {
         mServer = new Server();
         mServer.getKryo().setRegistrationRequired(false);
