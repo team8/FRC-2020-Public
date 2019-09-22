@@ -18,6 +18,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CommandReceiver implements RobotService {
 
@@ -115,6 +121,14 @@ public class CommandReceiver implements RobotService {
         return result;
     }
 
+    private Field getField(Class<?> clazz, String name) throws NoSuchFieldException {
+        Map<String, Field> fields = new HashMap<>();
+        for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
+            fields.putAll(Arrays.stream(c.getDeclaredFields()).collect(Collectors.toMap(Field::getName, Function.identity())));
+        }
+        return Optional.ofNullable(fields.get(name)).orElseThrow(NoSuchFieldException::new);
+    }
+
     private String handleParsedCommand(Namespace parse) throws ArgumentParserException {
         // TODO less nesting >:( refactor into functions
         String commandName = parse.getString("command");
@@ -128,34 +142,41 @@ public class CommandReceiver implements RobotService {
                     Class<? extends AbstractConfig> configClass = Configs.getClassFromName(configName);
                     if (configClass == null) throw new ClassNotFoundException();
                     AbstractConfig configObject = Configs.get(configClass);
-                    String fieldName = parse.getString("config_field");
+                    String allFieldNames = parse.getString("config_field");
                     try {
                         switch (commandName) {
                             case "set":
                             case "get": {
-                                Field field = fieldName == null ? null : configClass.getDeclaredField(fieldName);
+                                String[] fieldNames = allFieldNames == null ? null : allFieldNames.split("\\.");
+                                Object fieldValue = configObject, fieldParentValue = null;
+                                Field field = null;
+                                if (fieldNames != null && fieldNames.length != 0) {
+                                    for (String fieldName : fieldNames) {
+                                        field = getField(field == null ? configClass : field.getType(), fieldName);
+                                        fieldParentValue = fieldValue;
+                                        fieldValue = field.get(fieldValue);
+                                    }
+                                }
                                 switch (commandName) {
                                     case "get": {
-                                        if (field == null) {
-                                            try {
-                                                return sMapper.defaultPrettyPrintingWriter().writeValueAsString(configObject);
-                                            } catch (IOException formatConfigException) {
-                                                formatConfigException.printStackTrace();
-                                                return "Error getting JSON file. This should not happen!";
-                                            }
-                                        } else {
-                                            return String.format("[%s] %s: %s", configName, fieldName, field.get(configObject));
+                                        String display;
+                                        try {
+                                            display = sMapper.defaultPrettyPrintingWriter().writeValueAsString(fieldValue);
+                                        } catch (IOException ignored) {
+                                            display = fieldValue.toString();
                                         }
+                                        return String.format("[%s] %s: %s", configName, allFieldNames == null ? "all" : allFieldNames, display);
                                     }
                                     case "set": {
                                         if (field == null) return "Can't set entire config file yet!";
                                         String stringValue = parse.getString("config_value");
                                         if (stringValue == null) return "Must provide a value to set!";
                                         try {
-                                            Configs.set(configObject, field, sMapper.readValue(stringValue, field.getType()));
-                                            return String.format("Set field %s on config %s to %s", fieldName, configName, stringValue);
+                                            Object newFieldValue = sMapper.readValue(stringValue, field.getType());
+                                            Configs.set(configObject, fieldParentValue, field, newFieldValue);
+                                            return String.format("Set field %s on config %s to %s", allFieldNames, configName, stringValue);
                                         } catch (IOException parseException) {
-                                            return String.format("Error parsing %s for field %s on config %s", stringValue, fieldName, configName);
+                                            return String.format("Error parsing %s for field %s on config %s", stringValue, allFieldNames, configName);
                                         }
                                     }
                                     default: {
@@ -181,9 +202,10 @@ public class CommandReceiver implements RobotService {
                             }
                         }
                     } catch (NoSuchFieldException noFieldException) {
-                        return String.format("Error getting field %s, it does not exist!", fieldName);
-                    } catch (IllegalAccessException illegalAccessException) {
-                        return String.format("Error setting field %s", fieldName);
+                        return String.format("Error getting field %s, it does not exist!", allFieldNames);
+                    } catch (IllegalAccessException | IllegalArgumentException illegalAccessException) {
+                        illegalAccessException.printStackTrace();
+                        return String.format("Error setting field %s", allFieldNames);
                     }
                 } catch (ClassNotFoundException configException) {
                     return String.format("Unknown config class %s", configName);

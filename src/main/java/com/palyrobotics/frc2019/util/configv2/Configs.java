@@ -114,11 +114,18 @@ public class Configs {
         return sNameToClass.get(name);
     }
 
-    public static void set(AbstractConfig config, Field field, Object value) throws IllegalAccessException {
-        field.set(config, value);
+    public static void set(AbstractConfig config, Object object, Field field, Object value) throws IllegalAccessException {
+        field.set(object, value);
         notifyUpdated(config.getClass());
     }
 
+    /**
+     * If different, replace the working specified config with the one on the filesystem.
+     * This also updates listeners.
+     *
+     * @param configClass Class of the config.
+     * @return Whether or not the config was updated.
+     */
     public static boolean reload(Class<? extends AbstractConfig> configClass) {
         AbstractConfig existing = sConfigMap.get(configClass), onFile = read(configClass);
         try {
@@ -133,17 +140,25 @@ public class Configs {
         return false;
     }
 
-    public static void toJson(Object object) {
+    /**
+     * Helper method to use the {@link #sMapper} of this class to easily produce a JSON string.
+     * This handles errors internally.
+     *
+     * @param object Any arbitrary object to try and write to JSON.
+     * @return The object in JSON format if possible or else "Invalid"
+     */
+    public static String toJson(Object object) {
         try {
-            System.out.println(sMapper.defaultPrettyPrintingWriter().writeValueAsString(object));
-        } catch (IOException e) {
-            e.printStackTrace();
+            return sMapper.defaultPrettyPrintingWriter().writeValueAsString(object);
+        } catch (IOException formatException) {
+            formatException.printStackTrace();
+            return "Invalid";
         }
     }
 
     /**
      * This should be started in a new thread to watch changes for the folder containing the JSON configuration files.
-     * It detects when files are modified and written to on disk, then reloads them calling {@link #notifyUpdated(Class)}.
+     * It detects when files are modified and written in the filesystem, then reloads them calling {@link #notifyUpdated(Class)}.
      */
     private static void watchService() {
         try {
@@ -192,11 +207,21 @@ public class Configs {
         Optional.ofNullable(sListeners.get(configClass)).ifPresent(listeners -> listeners.forEach(Runnable::run));
     }
 
+    /**
+     * Read the given config from the filesystem. There must be a file and it must be valid mappable JSON,
+     * desired behavior is to crash if else. In attempt to help the user when there is an invalid JSON file,
+     * a default empty class of the same type is printed to console to show desired format (helpful for debugging).
+     *
+     * @param configClass Class of the config.
+     * @param <T>         Type of the config. Must extend {@link AbstractConfig}.
+     * @return Instance of given type.
+     * @throws RuntimeException when the file cannot be found or it could not be parsed. This is considered a critical error.
+     */
     private static <T extends AbstractConfig> T read(Class<T> configClass) {
         Path configFile = getFileForConfig(configClass);
         String configClassName = configClass.getSimpleName();
         if (!Files.exists(configFile)) {
-            String errorMessage = String.format("A config file was not found for %s", configClassName);
+            String errorMessage = String.format("A config file was not found for %s. Critical error, aborting.", configClassName);
             throw new RuntimeException(errorMessage);
         }
         try {
@@ -222,6 +247,7 @@ public class Configs {
 
     private static <T extends AbstractConfig> void writeConfig(T newConfig) throws IOException {
         Path file = getFileForConfig(newConfig.getClass());
+        // Creates all folders leading up to target files's parent folder
         Files.createDirectories(file.getParent().getParent());
         sMapper.defaultPrettyPrintingWriter().writeValue(file.toFile(), newConfig);
     }
