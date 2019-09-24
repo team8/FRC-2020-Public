@@ -1,0 +1,6 @@
+{
+    "motorVelocity": 0.8,
+    "expellingMotorVelocity": -0.28,
+    "smallExpelMotorVelocity": 0.0,
+    "maxShovelCurrentDraw": 20.0
+}

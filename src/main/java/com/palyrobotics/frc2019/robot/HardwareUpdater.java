@@ -6,12 +6,16 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.palyrobotics.frc2019.config.Constants.*;
+import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.config.Constants.OtherConstants;
+import com.palyrobotics.frc2019.config.Constants.PusherConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.SmartGains;
 import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
+import com.palyrobotics.frc2019.config.configv2.PortConstants;
+import com.palyrobotics.frc2019.config.configv2.ShovelConfig;
 import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
@@ -326,7 +330,7 @@ class HardwareUpdater {
 
         robotState.hatchIntakeUp = !HardwareAdapter.getInstance().getShovel().upDownHFX.get();
         robotState.shovelCurrentDraw = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp.getCurrent(Configs.get(PortConstants.class).vidarShovelPDPPort);
-        robotState.hasHatch = (robotState.shovelCurrentDraw > ShovelConstants.kMaxShovelCurrentDraw);
+        robotState.hasHatch = (robotState.shovelCurrentDraw > Configs.get(ShovelConfig.class).maxShovelCurrentDraw);
 
         CANEncoder elevatorEncoder = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder();
         robotState.elevatorPosition = elevatorEncoder.getPosition();

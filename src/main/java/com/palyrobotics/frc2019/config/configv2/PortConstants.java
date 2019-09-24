@@ -1,34 +1,34 @@
-package com.palyrobotics.frc2019.config.Constants;
+package com.palyrobotics.frc2019.config.configv2;
 
 import com.palyrobotics.frc2019.util.configv2.AbstractConfig;
 
 public class PortConstants extends AbstractConfig {
-    // DRIVETRAIN
-    // CAN BUS slots for drivetrain
+    
+    // Drivetrain
     public int vidarLeftDriveMasterDeviceID, vidarLeftDriveSlave1DeviceID, vidarLeftDriveSlave2DeviceID;
 
     public int vidarRightDriveMasterDeviceID, vidarRightDriveSlave1DeviceID, vidarRightDriveSlave2DeviceID;
 
-    // ELEVATOR
+    // Elevator
     public int vidarElevatorMasterSparkID, vidarElevatorSlaveSparkID;
 
     public int vidarElevatorDoubleSolenoidForwardsID, vidarElevatorDoubleSolenoidReverseID, vidarElevatorHolderSolenoidID;
 
-    // INTAKE
+    // Intake
     public int vidarIntakeMasterDeviceID, vidarIntakeSlaveDeviceID, vidarIntakeTalonDeviceID, vidarAnalogPot;
 
-    // SHOOTER
+    // Shooter
     public int vidarShooterMasterVictorDeviceID, vidarShooterSlaveVictorDeviceID;
 
-    // SHOVEL
+    // Shovel
     public int vidarShovelDeviceID, vidarShovelSolenoidUpDownID, vidarShovelSolenoidUpDownID2;
 
     public int vidarShovelHFXPort, vidarShovelPDPPort;
 
-    // PUSHER
+    // Pusher
     public int vidarPusherSparkID, vidarPusherPotID;
 
-    // FINGERS
+    // Fingers
     public int vidarOpenCloseSolenoidForwardID, vidarOpenCloseSolenoidReverseID, vidarExpelSolenoidForwardID, vidarExpelSolenoidReverseID;
 
     /**

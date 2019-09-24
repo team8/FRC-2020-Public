@@ -2,21 +2,23 @@ package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
-import com.palyrobotics.frc2019.config.Constants.ShovelConstants;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.configv2.ShovelConfig;
+import com.palyrobotics.frc2019.util.configv2.Configs;
 
 public class Shovel extends Subsystem {
-    public static Shovel instance = new Shovel();
+
+    private static Shovel sInstance = new Shovel();
 
     public static Shovel getInstance() {
-        return instance;
+        return sInstance;
     }
-
-    public static void resetInstance() { instance = new Shovel(); }
 
     private double mVictorOutput;
 
     private double mRumbleLength;
+
+    private ShovelConfig mConfig = Configs.get(ShovelConfig.class);
 
     private boolean cachedHatchState;
 
@@ -54,30 +56,30 @@ public class Shovel extends Subsystem {
         commands.intakeHFX = robotState.hatchIntakeUp;
         commands.intakeHasHatch = robotState.hasHatch;
 
-        switch(mWheelState) {
+        switch (mWheelState) {
             case INTAKING:
-                if(commands.customShovelSpeed) {
+                if (commands.customShovelSpeed) {
                     mVictorOutput = robotState.operatorXboxControllerInput.leftTrigger;
                 } else {
-                    mVictorOutput = ShovelConstants.kMotorVelocity;
+                    mVictorOutput = mConfig.motorVelocity;
                 }
                 break;
             case EXPELLING:
-                if(commands.customShovelSpeed) {
+                if (commands.customShovelSpeed) {
                     mVictorOutput = -robotState.operatorXboxControllerInput.leftTrigger;
                 } else {
-                    mVictorOutput = ShovelConstants.kExpellingMotorVelocity;
+                    mVictorOutput = mConfig.expellingMotorVelocity;
                 }
                 break;
             case SMALL_EXPEL:
-                mVictorOutput = ShovelConstants.kSmallExpelMotorVelocity;
+                mVictorOutput = mConfig.smallExpelMotorVelocity;
                 break;
             case IDLE:
                 mVictorOutput = 0;
                 break;
         }
 
-        switch(mUpDownOutput) {
+        switch (mUpDownOutput) {
             case UP:
                 mUpDownOutput = UpDownState.UP;
                 mVictorOutput = 0.0;
@@ -87,9 +89,9 @@ public class Shovel extends Subsystem {
                 break;
         }
 
-        if(!cachedHatchState && cachedHatchState) {
+        if (!cachedHatchState && cachedHatchState) { // TODO huh, this always false
             mRumbleLength = 0.25;
-        } else if(mRumbleLength <= 0) {
+        } else if (mRumbleLength <= 0) {
             mRumbleLength = -1;
         }
 
@@ -104,17 +106,12 @@ public class Shovel extends Subsystem {
         mRumbleLength -= OtherConstants.deltaTime;
     }
 
-
     public WheelState getWheelState() {
         return mWheelState;
     }
 
     public boolean getUpDownOutput() {
-        if(mUpDownOutput == UpDownState.UP) {
-            return true;
-        } else {
-            return false;
-        }
+        return mUpDownOutput == UpDownState.UP;
     }
 
     public double getPercentOutput() {
@@ -122,9 +119,6 @@ public class Shovel extends Subsystem {
     }
 
     public String getStatus() {
-        return "Shovel Intake State: " + mWheelState + "\nVictor Output: " + mVictorOutput +
-                "\nUp Down Output: " + mUpDownOutput + "\n";
+        return String.format("Shovel Intake State: %s%nVictor Output: %s%nUp Down Output: %s%n", mWheelState, mVictorOutput, mUpDownOutput);
     }
-
-
 }

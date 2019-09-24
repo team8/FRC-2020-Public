@@ -79,8 +79,6 @@ public class DrivetrainConstants {
 
     @Override
     public String toString() {
-        return "kQuickStopAccumulatorDecreaseRate " + kQuickStopAccumulatorDecreaseRate + "kQuickStopAccumulatorDecreaseThreshold "
-                + kQuickStopAccumulatorDecreaseThreshold + "kNegativeInertiaScalar " + kNegativeInertiaScalar + "kAlpha " + kAlpha + "kDriveInchesPerRotation "
-                + kDriveInchesPerRotation + "kDriveInchesPerDegree" + kDriveInchesPerDegree + "kDriveSpeedUnitConversion " + kDriveSpeedUnitConversion;
+        return String.format("kQuickStopAccumulatorDecreaseRate %skQuickStopAccumulatorDecreaseThreshold %skNegativeInertiaScalar %skAlpha %skDriveInchesPerRotation %skDriveInchesPerDegree%skDriveSpeedUnitConversion %s", kQuickStopAccumulatorDecreaseRate, kQuickStopAccumulatorDecreaseThreshold, kNegativeInertiaScalar, kAlpha, kDriveInchesPerRotation, kDriveInchesPerDegree, kDriveSpeedUnitConversion);
     }
 }

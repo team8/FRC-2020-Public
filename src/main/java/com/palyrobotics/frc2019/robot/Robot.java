@@ -2,9 +2,9 @@ package com.palyrobotics.frc2019.robot;
 
 import com.palyrobotics.frc2019.behavior.RoutineManager;
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.PortConstants;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.configv2.ServiceConfig;
+import com.palyrobotics.frc2019.config.configv2.ShovelConfig;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
 import com.palyrobotics.frc2019.subsystems.*;
