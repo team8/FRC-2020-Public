@@ -1,5 +1,6 @@
 package com.palyrobotics.frc2019.util.configv2;
 
+import com.palyrobotics.frc2019.config.Constants.PortConstants;
 import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import com.palyrobotics.frc2019.config.configv2.ServiceConfig;
@@ -34,7 +35,7 @@ public class Configs {
      * Register classes to be JSON configurable here. This will automatically try to load them from the deploy folder.
      */
     private static final List<Class<? extends AbstractConfig>> sConfigs = List.of(
-            ElevatorConfig.class, IntakeConfig.class, ServiceConfig.class
+            ElevatorConfig.class, IntakeConfig.class, ServiceConfig.class, PortConstants.class
     );
 
     /* ============================================================================================================= */

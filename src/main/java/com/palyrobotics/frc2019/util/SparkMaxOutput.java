@@ -38,7 +38,7 @@ public class SparkMaxOutput {
         mSparkReference = reference;
     }
 
-    public void setTargetSmartVelocity(double targetVelocity, double velocityConversion, double arbitraryDemand) {
+    public void setTargetSmartVelocity(double targetVelocity, double arbitraryDemand) {
         mSparkReference = targetVelocity;
         mSparkMode = ControlType.kSmartVelocity;
         mArbitraryDemand = arbitraryDemand;

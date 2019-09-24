@@ -325,7 +325,7 @@ class HardwareUpdater {
 //		robotState.backupStickInput.update(HardwareAdapter.getInstance().getJoysticks().backupStick);
 
         robotState.hatchIntakeUp = !HardwareAdapter.getInstance().getShovel().upDownHFX.get();
-        robotState.shovelCurrentDraw = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp.getCurrent(PortConstants.kVidarShovelPDPPort);
+        robotState.shovelCurrentDraw = HardwareAdapter.getInstance().getMiscellaneousHardware().pdp.getCurrent(Configs.get(PortConstants.class).vidarShovelPDPPort);
         robotState.hasHatch = (robotState.shovelCurrentDraw > ShovelConstants.kMaxShovelCurrentDraw);
 
         CANEncoder elevatorEncoder = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.getEncoder();

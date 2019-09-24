@@ -1,61 +1,41 @@
 package com.palyrobotics.frc2019.config.Constants;
 
-public class PortConstants {
-    //DRIVETRAIN
-    //CAN BUS slots for drivetrain
-    public static final int kVidarLeftDriveMasterDeviceID = 15;
-    public static final int kVidarLeftDriveSlave1DeviceID = 14;
-    public static final int kVidarLeftDriveSlave2DeviceID = 13;
+import com.palyrobotics.frc2019.util.configv2.AbstractConfig;
 
-    public static final int kVidarRightDriveMasterDeviceID = 20;
-    public static final int kVidarRightDriveSlave1DeviceID = 1;
-    public static final int kVidarRightDriveSlave2DeviceID = 2;
+public class PortConstants extends AbstractConfig {
+    // DRIVETRAIN
+    // CAN BUS slots for drivetrain
+    public int vidarLeftDriveMasterDeviceID, vidarLeftDriveSlave1DeviceID, vidarLeftDriveSlave2DeviceID;
 
-    //ELEVATOR
-    public static final int kVidarElevatorMasterSparkID = 3;
-    public static final int kVidarElevatorSlaveSparkID = 12;
+    public int vidarRightDriveMasterDeviceID, vidarRightDriveSlave1DeviceID, vidarRightDriveSlave2DeviceID;
 
-    public static final int kVidarElevatorDoubleSolenoidForwardsID = 1;
-    public static final int kVidarElevatorDoubleSolenoidReverseID = 6;
-    public static final int kVidarElevatorHolderSolenoidID = 0;
+    // ELEVATOR
+    public int vidarElevatorMasterSparkID, vidarElevatorSlaveSparkID;
 
-    //INTAKE
-    public static final int kVidarIntakeMasterDeviceID = 4;
-    public static final int kVidarIntakeSlaveDeviceID = 5;
-    public static final int kVidarIntakeTalonDeviceID = 6;
-    public static final int kVidarAnalogPot = 2;
+    public int vidarElevatorDoubleSolenoidForwardsID, vidarElevatorDoubleSolenoidReverseID, vidarElevatorHolderSolenoidID;
 
-    //SHOOTER
-    public static final int kVidarShooterMasterVictorDeviceID = 10;
-    public static final int kVidarShooterSlaveVictorDeviceID = 9;
+    // INTAKE
+    public int vidarIntakeMasterDeviceID, vidarIntakeSlaveDeviceID, vidarIntakeTalonDeviceID, vidarAnalogPot;
 
-    //SHOVEL
-    public static final int kVidarShovelDeviceID = 8;
-    public static final int kVidarShovelSolenoidUpDownID = 7;
-    public static final int kVidarShovelSolenoidUpDownID2 = 0;
+    // SHOOTER
+    public int vidarShooterMasterVictorDeviceID, vidarShooterSlaveVictorDeviceID;
 
-    public static final int kVidarShovelHFXPort = 4;
-    public static final int kVidarShovelPDPPort = 9;
+    // SHOVEL
+    public int vidarShovelDeviceID, vidarShovelSolenoidUpDownID, vidarShovelSolenoidUpDownID2;
 
-    //PUSHER
-    public static final int kVidarPusherSparkID = 11;
-    public static final int kVidarPusherPotID = 0;
+    public int vidarShovelHFXPort, vidarShovelPDPPort;
 
-    //FINGERS
-    public static final int kVidarOpenCloseSolenoidForwardID = 2;
-    public static final int kVidarOpenCloseSolenoidReverseID = 5;
-    public static final int kVidarExpelSolenoidForwardID = 3;
-    public static final int kVidarExpelSolenoidReverseID = 4;
+    // PUSHER
+    public int vidarPusherSparkID, vidarPusherPotID;
+
+    // FINGERS
+    public int vidarOpenCloseSolenoidForwardID, vidarOpenCloseSolenoidReverseID, vidarExpelSolenoidForwardID, vidarExpelSolenoidReverseID;
 
     /**
      * Ultrasonics
      */
 
-    public static final int kVidarIntakeLeftUltrasonicPing = 0; // red
-    public static final int kVidarIntakeLeftUltrasonicEcho = 1;
-    public static final int kVidarIntakeRightUltrasonicPing = 2; // brown
-    public static final int kVidarIntakeRightUltrasonicEcho = 3;
+    public int vidarIntakeLeftUltrasonicPing, vidarIntakeLeftUltrasonicEcho, vidarIntakeRightUltrasonicPing, vidarIntakeRightUltrasonicEcho;
 
-    public static final int kVidarPusherUltrasonicPing = 8;
-    public static final int kVidarPusherUltrasonicEcho = 9;
+    public int vidarPusherUltrasonicPing, vidarPusherUltrasonicEcho;
 }
