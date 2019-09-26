@@ -32,10 +32,10 @@ public class BangBangTurnAngleController implements Drive.DriveController {
     @Override
     public SparkDriveSignal update(RobotState state) {
         if (onTarget()) {
-            return SparkDriveSignal.getNeutralSignal();
+            return new SparkDriveSignal();
         }
         mCachedPose = state.drivePose;
-        SparkDriveSignal output = SparkDriveSignal.getNeutralSignal();
+        SparkDriveSignal output = new SparkDriveSignal();
         if (Math.abs(mCachedPose.heading - mTargetHeading) < 35) {
             mPower *= .20;
         }
@@ -50,7 +50,7 @@ public class BangBangTurnAngleController implements Drive.DriveController {
     }
 
     @Override
-    public Pose getSetpoint() {
+    public Pose getSetPoint() {
         mCachedPose.heading = mTargetHeading;
 //        Pose setpoint = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
         return mCachedPose;

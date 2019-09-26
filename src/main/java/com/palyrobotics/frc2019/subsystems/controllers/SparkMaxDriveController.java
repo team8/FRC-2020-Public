@@ -38,7 +38,7 @@ public class SparkMaxDriveController implements Drive.DriveController {
 	}
 
 	@Override
-	public Pose getSetpoint() {
+	public Pose getSetPoint() {
 		Pose output = mCachedState.drivePose.copy();
 		switch(mSignal.leftOutput.getControlType()) {
 			case kPosition:

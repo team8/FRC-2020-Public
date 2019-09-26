@@ -56,7 +56,7 @@ public class Drive extends Subsystem {
     //Cached robot state, updated by looper
     private RobotState mCachedRobotState;
     //Stores output
-    private SparkDriveSignal mSignal = SparkDriveSignal.getNeutralSignal();
+    private SparkDriveSignal mSignal = new SparkDriveSignal();
 
 //    private DashboardValue motors;
 
@@ -161,7 +161,7 @@ public class Drive extends Subsystem {
                 if (!newController && mIsNewState) {
                     resetController();
                 }
-                setDriveOutputs(SparkDriveSignal.getNeutralSignal());
+                setDriveOutputs(new SparkDriveSignal());
 
                 if (mCachedRobotState.gamePeriod.equals(RobotState.GamePeriod.TELEOP)) {
                     if (mIsNewState) {
@@ -213,7 +213,7 @@ public class Drive extends Subsystem {
     public void setNeutral() {
         mController = null;
         mState = DriveState.NEUTRAL;
-        setDriveOutputs(SparkDriveSignal.getNeutralSignal());
+        setDriveOutputs(new SparkDriveSignal());
     }
 
     public void setSparkMaxController(SparkDriveSignal signal) {
@@ -221,12 +221,12 @@ public class Drive extends Subsystem {
         newController = true;
     }
 
-    public void setVisionAngleSetpoint() {
+    public void setVisionAngleSetPoint() {
         mController = new VisionTurnAngleController(mCachedPose);
         newController = true;
     }
 
-    public void setTurnAngleSetpoint(double heading) {
+    public void setTurnAngleSetPoint(double heading) {
         mController = new BangBangTurnAngleController(mCachedPose, heading);
         newController = true;
     }
@@ -315,7 +315,7 @@ public class Drive extends Subsystem {
     public interface DriveController {
         SparkDriveSignal update(RobotState state);
 
-        Pose getSetpoint();
+        Pose getSetPoint();
 
         boolean onTarget();
     }

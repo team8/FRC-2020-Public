@@ -32,20 +32,20 @@ public class VisionTurnAngleController implements Drive.DriveController {
         Gains turnGains = new Gains(.017, 0, 0, 0, 200, 0);
         pidController = new SynchronousPID(turnGains.p, turnGains.i, turnGains.d, turnGains.iZone);
         pidController.setOutputRange(-1,1);
-        pidController.setSetpoint(0);
+        pidController.setSetPoint(0);
         pidController.calculate(Limelight.getInstance().getYawToTarget());
     }
 
     @Override
     public SparkDriveSignal update(RobotState state) {
         if(this.onTarget()) {
-            return SparkDriveSignal.getNeutralSignal();
+            return new SparkDriveSignal();
         }
 
         mCachedPose = state.drivePose;
         double error = Limelight.getInstance().getYawToTarget();
         double turn = pidController.calculate(error);
-        SparkDriveSignal output = SparkDriveSignal.getNeutralSignal();
+        SparkDriveSignal output = new SparkDriveSignal();
         output.leftOutput.setPercentOutput(turn);
         output.rightOutput.setPercentOutput(-turn);
 
@@ -53,7 +53,7 @@ public class VisionTurnAngleController implements Drive.DriveController {
     }
 
     @Override
-    public Pose getSetpoint() {
+    public Pose getSetPoint() {
         mCachedPose.heading = 0;
         Pose setpoint = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
         return mCachedPose;

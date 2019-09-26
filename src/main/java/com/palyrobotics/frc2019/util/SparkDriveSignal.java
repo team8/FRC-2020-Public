@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2019.util;
 
 import com.revrobotics.ControlType;
+import com.revrobotics.SparkMax;
 
 import java.util.Objects;
 
@@ -8,16 +9,14 @@ public class SparkDriveSignal {
 
     public SparkMaxOutput leftOutput, rightOutput;
 
+    public SparkDriveSignal() {
+        leftOutput = new SparkMaxOutput(ControlType.kDutyCycle);
+        rightOutput = new SparkMaxOutput(ControlType.kDutyCycle);
+    }
+
     public SparkDriveSignal(SparkMaxOutput leftOutput, SparkMaxOutput rightOutput) {
         this.leftOutput = leftOutput;
         this.rightOutput = rightOutput;
-    }
-
-    public static SparkDriveSignal getNeutralSignal() {
-        SparkMaxOutput
-                leftNeutral = new SparkMaxOutput(ControlType.kDutyCycle),
-                rightNeutral = new SparkMaxOutput(ControlType.kDutyCycle);
-        return new SparkDriveSignal(leftNeutral, rightNeutral);
     }
 
     @Override // Auto-generated

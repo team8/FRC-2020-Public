@@ -52,7 +52,7 @@ public class FTestAuto extends AutoModeBase {
     private ParallelRoutine getDrive() {
 //        Gains mShortGains = Gains.vidarShortDriveMotionMagicGains;
 //
-        SparkDriveSignal driveBackup = SparkDriveSignal.getNeutralSignal();
+        SparkDriveSignal driveBackup = new SparkDriveSignal();
         driveBackup.leftOutput.setPercentOutput(.6);
         driveBackup.rightOutput.setPercentOutput(.6);
         ArrayList<Routine> sequence = new ArrayList<>();

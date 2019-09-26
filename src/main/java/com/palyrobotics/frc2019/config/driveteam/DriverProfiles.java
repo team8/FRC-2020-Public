@@ -3,35 +3,35 @@ package com.palyrobotics.frc2019.config.driveteam;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 
-public class DriverProfiles {
-	/**
-	 * Class for configuring the control DrivetrainConstants for the robot Has one static method which configures the DrivetrainConstants based off the driver
-	 * 
-	 * @author Justin
-	 */
-	public static void configureConstants() {
-		switch(OtherConstants.kDriverName) {
-			case BRYAN:
-				DrivetrainConstants.kDeadband = 0.02;
-				DrivetrainConstants.kMaxAccelRate = 2.00;
+class DriverProfiles {
 
-				DrivetrainConstants.kDriveSensitivity = 0.85;
+    /**
+     * Class for configuring the control DrivetrainConstants for the robot Has one static method which configures the DrivetrainConstants based off the driver
+     *
+     * @author Justin
+     */
+    static void configureConstants() {
+        switch (OtherConstants.kDriverName) {
+            case BRYAN:
+                DrivetrainConstants.kDeadband = 0.02;
+                DrivetrainConstants.kMaxAccelRate = 2.00;
 
-				DrivetrainConstants.kQuickTurnSensitivity = .7;//0.8;
-				DrivetrainConstants.kPreciseQuickTurnSensitivity = 0.4;//0.35;
+                DrivetrainConstants.kDriveSensitivity = 0.85;
 
-				DrivetrainConstants.kQuickTurnSensitivityThreshold = 1.01;
+                DrivetrainConstants.kQuickTurnSensitivity = .7;//0.8;
+                DrivetrainConstants.kPreciseQuickTurnSensitivity = 0.4;//0.35;
 
-				DrivetrainConstants.kQuickStopAccumulatorDecreaseRate = 0.8;//0.8;
+                DrivetrainConstants.kQuickTurnSensitivityThreshold = 1.01;
 
-				DrivetrainConstants.kQuickStopAccumulatorDecreaseThreshold = 1.2;//1.2;
-				DrivetrainConstants.kNegativeInertiaScalar = 6.0;
+                DrivetrainConstants.kQuickStopAccumulatorDecreaseRate = 0.8;//0.8;
 
-				DrivetrainConstants.kAlpha = 0.45;//0.55;//0.45;
+                DrivetrainConstants.kQuickStopAccumulatorDecreaseThreshold = 1.2;//1.2;
+                DrivetrainConstants.kNegativeInertiaScalar = 6.0;
 
-				DrivetrainConstants.kCyclesUntilStop = 50;
+                DrivetrainConstants.kAlpha = 0.45;//0.55;//0.45;
 
-				break;
-		}
-	}
+                DrivetrainConstants.kCyclesUntilStop = 50;
+                break;
+        }
+    }
 }

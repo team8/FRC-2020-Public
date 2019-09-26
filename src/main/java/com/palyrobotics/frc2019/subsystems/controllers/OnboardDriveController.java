@@ -37,7 +37,7 @@ public class OnboardDriveController implements Drive.DriveController {
 	
 	public OnboardDriveController(OnboardControlType controlType, TrajectoryGains gains) {
 		//Use copy constructors and prevent the signal passed in from being modified externally
-		this.mSignal = SparkDriveSignal.getNeutralSignal();
+		this.mSignal = new SparkDriveSignal();
 		this.leftSetpoint = new TrajectorySegment();
 		this.rightSetpoint = new TrajectorySegment();
 		this.mGains = gains;
@@ -58,7 +58,7 @@ public class OnboardDriveController implements Drive.DriveController {
 				this.mSignal = getArbFFOutput(state.drivePose);
 				break;
 			default:
-				this.mSignal = SparkDriveSignal.getNeutralSignal();
+				this.mSignal = new SparkDriveSignal();
 				break;
 		}
 
@@ -143,7 +143,7 @@ public class OnboardDriveController implements Drive.DriveController {
 	}
 
 	@Override
-	public Pose getSetpoint() {
+	public Pose getSetPoint() {
 		return new Pose(0, 0, 0, 0, 0, 0, 0, 0);
 	}
 

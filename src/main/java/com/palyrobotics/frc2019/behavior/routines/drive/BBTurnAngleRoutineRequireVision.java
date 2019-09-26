@@ -45,7 +45,7 @@ public class BBTurnAngleRoutineRequireVision extends Routine {
 		switch(mState) {
 			case START:
 //				Logger.getInstance().logRobotThread(Level.FINE, "Set setpoint", mAngle);
-				drive.setTurnAngleSetpoint(mAngle);
+				drive.setTurnAngleSetPoint(mAngle);
 				commands.wantedDriveState = Drive.DriveState.ON_BOARD_CONTROLLER;
 				mState = GyroBBState.TURNING;
 				break;

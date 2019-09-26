@@ -8,7 +8,7 @@ import com.palyrobotics.frc2019.util.SparkDriveSignal;
 public class TimedDriveController implements DriveController {
 
     private double mVoltage, mTime, mStartTime;
-    private SparkDriveSignal mSignal = SparkDriveSignal.getNeutralSignal();
+    private SparkDriveSignal mSignal = new SparkDriveSignal();
 
     public TimedDriveController(double voltage, double time) {
         mVoltage = voltage;
@@ -29,7 +29,7 @@ public class TimedDriveController implements DriveController {
     }
 
     @Override
-    public Pose getSetpoint() {
+    public Pose getSetPoint() {
         return new Pose(0, 0, 0, 0, 0, 0, 0, 0);
     }
 }

@@ -43,7 +43,7 @@ public class TestAutoMode extends AutoModeBase {
 
 	private Routine testF() {
 		double power = 0.1;
-		SparkDriveSignal signal = SparkDriveSignal.getNeutralSignal();
+		SparkDriveSignal signal = new SparkDriveSignal();
 		signal.leftOutput.setTargetVelocity(20, Gains.vidarVelocity);
 		signal.rightOutput.setTargetVelocity(20, Gains.vidarVelocity);
 

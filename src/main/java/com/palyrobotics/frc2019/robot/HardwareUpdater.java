@@ -564,16 +564,16 @@ class HardwareUpdater {
             talon.configClosedloopRamp(output.gains.rampRate, 0);
         }
         if (output.getControlMode().equals(ControlMode.MotionMagic)) {
-            talon.configMotionAcceleration(output.accel, 0);
-            talon.configMotionCruiseVelocity(output.cruiseVel, 0);
+            talon.configMotionAcceleration(output.acceleration, 0);
+            talon.configMotionCruiseVelocity(output.cruiseVelocity, 0);
         }
         if (output.getControlMode().equals(ControlMode.Velocity)) {
             talon.configAllowableClosedloopError(output.profile, 0, 0);
         }
         if (output.getArbitraryFF() != 0.0 && output.getControlMode().equals(ControlMode.Position)) {
-            talon.set(output.getControlMode(), output.getSetpoint(), DemandType.ArbitraryFeedForward, output.getArbitraryFF());
+            talon.set(output.getControlMode(), output.getSetPoint(), DemandType.ArbitraryFeedForward, output.getArbitraryFF());
         } else {
-            talon.set(output.getControlMode(), output.getSetpoint(), DemandType.Neutral, 0.0);
+            talon.set(output.getControlMode(), output.getSetPoint(), DemandType.Neutral, 0.0);
         }
     }
 

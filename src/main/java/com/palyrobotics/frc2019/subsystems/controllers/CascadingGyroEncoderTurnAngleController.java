@@ -46,7 +46,7 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
 
         if (mCachedPose == null) {
 //        	Logger.getInstance().logSubsystemThread(Level.WARNING, "CascadingGyroEncoderTurnAngle", "Cached pose is null!");
-            return SparkDriveSignal.getNeutralSignal();
+            return new SparkDriveSignal();
         } else {
             double currentHeading = mCachedPose.heading;
             double error = mTargetHeading - currentHeading;
@@ -81,7 +81,7 @@ public class CascadingGyroEncoderTurnAngleController implements DriveController 
     }
 
     @Override
-    public Pose getSetpoint() {
+    public Pose getSetPoint() {
         return null;
     }
 

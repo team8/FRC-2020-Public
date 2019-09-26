@@ -26,7 +26,7 @@ public class VisionClosedController implements Drive.DriveController {
 
     private int mUpdateCyclesForward;
 
-    private SparkDriveSignal mSignal = SparkDriveSignal.getNeutralSignal();
+    private SparkDriveSignal mSignal = new SparkDriveSignal();
 
     @Override
     public SparkDriveSignal update(RobotState robotState) {
@@ -55,7 +55,7 @@ public class VisionClosedController implements Drive.DriveController {
             if (angularPower > MAX_ANGULAR_POWER) angularPower = MAX_ANGULAR_POWER;
             if (angularPower < -MAX_ANGULAR_POWER) angularPower = -MAX_ANGULAR_POWER;
         } else {
-            SparkDriveSignal mSignal = SparkDriveSignal.getNeutralSignal();
+            SparkDriveSignal mSignal = new SparkDriveSignal();
             mSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
             mSignal.rightOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
             return mSignal;
@@ -86,7 +86,7 @@ public class VisionClosedController implements Drive.DriveController {
     }
 
     @Override
-    public Pose getSetpoint() {
+    public Pose getSetPoint() {
         // TODO use default constructor?
         return new Pose(0, 0, 0, 0, 0, 0, 0, 0);
     }

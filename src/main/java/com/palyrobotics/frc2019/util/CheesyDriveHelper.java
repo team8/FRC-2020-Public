@@ -154,7 +154,7 @@ public class CheesyDriveHelper {
 			rightPower = -1.0;
 		}
 
-		SparkDriveSignal mSignal = SparkDriveSignal.getNeutralSignal();
+		SparkDriveSignal mSignal = new SparkDriveSignal();
 
 		mSignal.leftOutput.setPercentOutput(leftPower);
 		mSignal.rightOutput.setPercentOutput(rightPower);

@@ -32,8 +32,8 @@ public class DriveStraightController implements DriveController {
 		headingPID = new SynchronousPID(Gains.kVidarDriveStraightTurnkP, 0, 0.005);
 		forwardPID.setOutputRange(-1, 1);
 		headingPID.setOutputRange(-0.2, 0.2);
-		forwardPID.setSetpoint(target);
-		headingPID.setSetpoint(priorSetpoint.heading);
+		forwardPID.setSetPoint(target);
+		headingPID.setSetPoint(priorSetpoint.heading);
 
 	}
 
@@ -67,7 +67,7 @@ public class DriveStraightController implements DriveController {
 	}
 
 	@Override
-	public Pose getSetpoint() {
+	public Pose getSetPoint() {
 		return new Pose(target, 0, 0, target, 0, 0, 0, 0);
 	}
 

@@ -204,7 +204,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 
     //HOPING THIS METHOD NEVER GETS CALLED
     @Override
-    public Pose getSetpoint() {
+    public Pose getSetPoint() {
         Pose setpoint = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
         return setpoint;
     }

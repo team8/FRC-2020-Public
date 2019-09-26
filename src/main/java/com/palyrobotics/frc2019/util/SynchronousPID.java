@@ -6,21 +6,23 @@ package com.palyrobotics.frc2019.util;
  * Does all computation synchronously (i.e. the calculate() function must be called by the user from his own thread)
  */
 public class SynchronousPID {
-    private double mP; //factor for "proportional" control
-    private double mI; //factor for "integral" control
-    private double mIZone; //error needs to be within iZone to kick in "integral" control
-    private double mD; //factor for "derivative" control
-    private double mMaximumOutput = 1.0; //|maximum output|
-    private double mMinimumOutput = -1.0; //|minimum output|
-    private double mMaximumInput = 0.0; //maximum input - limit setpoint to this
-    private double mMinimumInput = 0.0; //minimum input - limit setpoint to this
+    private double
+            mP, //factor for "proportional" control
+            mI, //factor for "integral" control
+            mIZone, //error needs to be within iZone to kick in "integral" control
+            mD, //factor for "derivative" control
+            mMaximumOutput = 1.0, //|maximum output|
+            mMinimumOutput = -1.0, //|minimum output|
+            mMaximumInput, //maximum input - limit set point to this
+            mMinimumInput; //minimum input - limit set point to this
     private boolean mContinuous = false; //do the endpoints wrap around? eg. Absolute encoder
-    private double mPrevError = 0.0; //the prior sensor input (used to compute velocity)
-    private double mTotalError = 0.0; //the sum of the errors for use in the integral calc
-    private double mSetpoint = 0.0;
-    private double mError = 0.0;
-    private double mResult = 0.0;
-    private double mLastInput = Double.NaN;
+    private double
+            mPrevError, //the prior sensor input (used to compute velocity)
+            mTotalError, //the sum of the errors for use in the integral calc
+            mSetPoint,
+            mError,
+            mResult,
+            mLastInput = Double.NaN;
 
     public SynchronousPID() {
     }
@@ -60,7 +62,7 @@ public class SynchronousPID {
      */
     public double calculate(double input) {
         mLastInput = input;
-        mError = mSetpoint - input;
+        mError = mSetPoint - input;
         if (mContinuous) {
             if (Math.abs(mError) > (mMaximumInput - mMinimumInput) / 2) {
                 if (mError > 0) {
@@ -139,7 +141,7 @@ public class SynchronousPID {
 
     /**
      * Set the PID controller to consider the input to be continuous, Rather then using the max and min in as constraints, it considers them to be the same
-     * point and automatically calculates the shortest route to the setpoint.
+     * point and automatically calculates the shortest route to the set point.
      *
      * @param continuous Set to true turns on continuous, false turns off continuous
      */
@@ -149,7 +151,7 @@ public class SynchronousPID {
 
     /**
      * Set the PID controller to consider the input to be continuous, Rather then using the max and min in as constraints, it considers them to be the same
-     * point and automatically calculates the shortest route to the setpoint.
+     * point and automatically calculates the shortest route to the set point.
      */
     public void setContinuous() {
         setContinuous(true);
@@ -167,7 +169,7 @@ public class SynchronousPID {
         }
         mMinimumInput = minimumInput;
         mMaximumInput = maximumInput;
-        setSetpoint(mSetpoint);
+        setSetPoint(mSetPoint);
     }
 
     /**
@@ -185,33 +187,33 @@ public class SynchronousPID {
     }
 
     /**
-     * Set the setpoint for the PID controller
+     * Set the set point for the PID controller
      *
-     * @param setpoint the desired setpoint
+     * @param setPoint the desired set point
      */
-    public void setSetpoint(double setpoint) {
+    public void setSetPoint(double setPoint) {
         if (mMaximumInput > mMinimumInput) {
-            if (setpoint > mMaximumInput) {
-                mSetpoint = mMaximumInput;
+            if (setPoint > mMaximumInput) {
+                mSetPoint = mMaximumInput;
             } else {
-                mSetpoint = Math.max(setpoint, mMinimumInput);
+                mSetPoint = Math.max(setPoint, mMinimumInput);
             }
         } else {
-            mSetpoint = setpoint;
+            mSetPoint = setPoint;
         }
     }
 
     /**
-     * Returns the current setpoint of the PID controller
+     * Returns the current set point of the PID controller
      *
-     * @return the current setpoint
+     * @return the current set point
      */
-    public double getSetpoint() {
-        return mSetpoint;
+    public double getSetPoint() {
+        return mSetPoint;
     }
 
     /**
-     * Returns the current difference of the input from the setpoint
+     * Returns the current difference of the input from the set point
      *
      * @return the current error
      */
@@ -225,7 +227,7 @@ public class SynchronousPID {
      * @return true if the error is less than the tolerance
      */
     public boolean onTarget(double tolerance) {
-        return !Double.isNaN(mLastInput) && Math.abs(mLastInput - mSetpoint) < tolerance;
+        return !Double.isNaN(mLastInput) && Math.abs(mLastInput - mSetPoint) < tolerance;
     }
 
     /**
@@ -236,7 +238,7 @@ public class SynchronousPID {
         mPrevError = 0;
         mTotalError = 0;
         mResult = 0;
-        mSetpoint = 0;
+        mSetPoint = 0;
     }
 
     public void resetIntegrator() {
