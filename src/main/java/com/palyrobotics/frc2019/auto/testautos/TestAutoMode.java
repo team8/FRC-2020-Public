@@ -7,7 +7,7 @@ import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.SparkMaxRoutine;
 import com.palyrobotics.frc2019.config.Gains;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 
@@ -43,9 +43,9 @@ public class TestAutoMode extends AutoModeBase {
 
 	private Routine testF() {
 		double power = 0.1;
-		SparkSignal signal = SparkSignal.getNeutralSignal();
-		signal.leftMotor.setTargetVelocity(20, Gains.vidarVelocity);
-		signal.rightMotor.setTargetVelocity(20, Gains.vidarVelocity);
+		SparkDriveSignal signal = SparkDriveSignal.getNeutralSignal();
+		signal.leftOutput.setTargetVelocity(20, Gains.vidarVelocity);
+		signal.rightOutput.setTargetVelocity(20, Gains.vidarVelocity);
 
 //		signal.leftMotor.setPercentOutput(0.4);
 //		signal.rightMotor.setPercentOutput(0.4);

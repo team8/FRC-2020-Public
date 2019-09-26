@@ -8,7 +8,8 @@ import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
 import com.palyrobotics.frc2019.subsystems.controllers.SparkMaxDriveController;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
+import com.revrobotics.ControlType;
 
 /**
  * Created by Nihar on 2/12/17.
@@ -17,13 +18,13 @@ import com.palyrobotics.frc2019.util.SparkSignal;
  */
 public class SparkMaxRoutine extends Routine {
     private boolean relativeSetpoint;
-    private final SparkSignal mSignal;
+    private final SparkDriveSignal mSignal;
 
     private double timeout;
     private double startTime;
     private static RobotState robotState;
 
-    public SparkMaxRoutine(SparkSignal controller, boolean relativeSetpoint) {
+    public SparkMaxRoutine(SparkDriveSignal controller, boolean relativeSetpoint) {
         this.mSignal = controller;
         this.timeout = 1 << 30;
         this.relativeSetpoint = relativeSetpoint;
@@ -35,7 +36,7 @@ public class SparkMaxRoutine extends Routine {
      *
      * Timeout is in seconds
      */
-    public SparkMaxRoutine(SparkSignal controller, boolean relativeSetpoint, double timeout) {
+    public SparkMaxRoutine(SparkDriveSignal controller, boolean relativeSetpoint, double timeout) {
         this.mSignal = controller;
         this.relativeSetpoint = relativeSetpoint;
         this.timeout = timeout * 1000;
@@ -48,9 +49,9 @@ public class SparkMaxRoutine extends Routine {
         startTime = System.currentTimeMillis();
 
         if (relativeSetpoint) {
-            if (mSignal.leftMotor.getControlType().equals(ControlMode.Position)) {
-                mSignal.leftMotor.setTargetPosition(mSignal.leftMotor.getReference() + robotState.drivePose.leftEnc, mSignal.leftMotor.getGains());
-                mSignal.rightMotor.setTargetPosition(mSignal.rightMotor.getReference() + robotState.drivePose.rightEnc, mSignal.rightMotor.getGains());
+            if (mSignal.leftOutput.getControlType().equals(ControlType.kPosition)) {
+                mSignal.leftOutput.setTargetPosition(mSignal.leftOutput.getReference() + robotState.drivePose.leftEnc, mSignal.leftOutput.getGains());
+                mSignal.rightOutput.setTargetPosition(mSignal.rightOutput.getReference() + robotState.drivePose.rightEnc, mSignal.rightOutput.getGains());
 
             }
         }

@@ -39,7 +39,7 @@ public class VisionAssistedDrivePathRoutine extends Routine {
     @Override
     public void start() {
 
-        if(mRelative) {
+        if (mRelative) {
             ArrayList<Path.Waypoint> absoluteList = new ArrayList<>();
             for (Path.Waypoint point : pathList) {
                 if (point.isRelative) {
@@ -71,11 +71,11 @@ public class VisionAssistedDrivePathRoutine extends Routine {
         commands.wantedDriveState = Drive.DriveState.ON_BOARD_CONTROLLER;
         this.mPath = this.getPath();
         System.out.println(mPath.getMarkersCrossed().toString());
-        if(mPath.getMarkersCrossed().contains(enableVisionMarker) && !startedRoutine) {
+        if (mPath.getMarkersCrossed().contains(enableVisionMarker) && !startedRoutine) {
             startedRoutine = true;
             Drive.getInstance().setVisionClosedDriveController();
         }
-        if(startedRoutine) {
+        if (startedRoutine) {
 //            System.out.println("Vision Assist Mode");
             Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
             Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
@@ -104,7 +104,7 @@ public class VisionAssistedDrivePathRoutine extends Routine {
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[] { drive };
+        return new Subsystem[]{drive};
     }
 
     @Override
@@ -120,7 +120,7 @@ public class VisionAssistedDrivePathRoutine extends Routine {
         List<Path.Waypoint> path = mPath.getWayPoints();
         enumeratedPath += "0,0,0\n";
         for (int i = 0; i < path.size(); i++) {
-            enumeratedPath += (path.get(i).position.getX() +offsetX)  + "," + (path.get(i).position.getY() + offsetY) + "," + path.get(i).speed + "\n";
+            enumeratedPath += (path.get(i).position.getX() + offsetX) + "," + (path.get(i).position.getY() + offsetY) + "," + path.get(i).speed + "\n";
         }
         return enumeratedPath;
     }

@@ -2,7 +2,7 @@ package com.palyrobotics.frc2019.config;
 
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.subsystems.*;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
 
 import java.util.ArrayList;
 
@@ -76,7 +76,7 @@ public class Commands {
      * @author Nihar
      */
     public static class SetPoints {
-        public SparkSignal drivePowerSetpoint;
+        public SparkDriveSignal drivePowerSetpoint;
         public Double
                 elevatorPositionSetpoint,
                 climberPositionSetpoint,

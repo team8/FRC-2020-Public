@@ -5,7 +5,7 @@ import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.util.Pose;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
 import com.palyrobotics.frc2019.util.SynchronousPID;
 import com.palyrobotics.frc2019.vision.Limelight;
 
@@ -37,17 +37,17 @@ public class VisionTurnAngleController implements Drive.DriveController {
     }
 
     @Override
-    public SparkSignal update(RobotState state) {
+    public SparkDriveSignal update(RobotState state) {
         if(this.onTarget()) {
-            return SparkSignal.getNeutralSignal();
+            return SparkDriveSignal.getNeutralSignal();
         }
 
         mCachedPose = state.drivePose;
         double error = Limelight.getInstance().getYawToTarget();
         double turn = pidController.calculate(error);
-        SparkSignal output = SparkSignal.getNeutralSignal();
-        output.leftMotor.setPercentOutput(turn);
-        output.rightMotor.setPercentOutput(-turn);
+        SparkDriveSignal output = SparkDriveSignal.getNeutralSignal();
+        output.leftOutput.setPercentOutput(turn);
+        output.rightOutput.setPercentOutput(-turn);
 
         return output;
     }

@@ -459,8 +459,8 @@ class HardwareUpdater {
      * Updates the drivetrain Uses SparkOutput and can run off-board control loops through SRX
      */
     private void updateDrivetrain() {
-        updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark, mDrive.getDriveSignal().leftMotor);
-        updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark, mDrive.getDriveSignal().rightMotor);
+        updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark, mDrive.getDriveSignal().leftOutput);
+        updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark, mDrive.getDriveSignal().rightOutput);
 
 //		SparkMaxOutput c = new SparkMaxOutput();
 //		c.setPercentOutput(HardwareAdapter.getInstance().getJoysticks().driveStick.getY());

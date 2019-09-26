@@ -5,16 +5,12 @@ import com.revrobotics.ControlType;
 
 public class SparkMaxOutput {
 
-    // Control Gains
     private Gains mGains = Gains.emptyGains;
 
-    // Control Type
     private ControlType mSparkMode;
 
-    // Output Reference
     private double mSparkReference;
 
-    // Arbitrary Feed Forward / Demand
     private double mArbitraryDemand;
 
     public SparkMaxOutput() {

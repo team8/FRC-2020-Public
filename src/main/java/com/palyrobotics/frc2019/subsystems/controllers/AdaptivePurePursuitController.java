@@ -7,7 +7,7 @@ import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.OnboardControlType;
 import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.TrajectorySegment;
 import com.palyrobotics.frc2019.util.Pose;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2019.util.trajectory.*;
 import edu.wpi.first.wpilibj.Timer;
@@ -25,22 +25,22 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 
     private static final double kEpsilon = 1E-9;
 
-    double mFixedLookahead;
-    Path mPath;
-    RigidTransform2d.Delta mLastCommand;
-    Kinematics.DriveVelocity mLastDriveVelocity;
-    double mLastTime;
-    double mMaxAccel;
-    double mDt;
-    boolean mReversed;
-    double mPathCompletionTolerance;
+    private double mFixedLookahead;
+    private Path mPath;
+    private RigidTransform2d.Delta mLastCommand;
+    private Kinematics.DriveVelocity mLastDriveVelocity;
+    private double mLastTime;
+    private double mMaxAcceleration;
+    private double mDt;
+    private boolean mReversed;
+    private double mPathCompletionTolerance;
 
     private OnboardDriveController onboardController;
 
     public AdaptivePurePursuitController(double fixed_lookahead, double max_accel, double nominal_dt, Path path, boolean reversed,
                                          double path_completion_tolerance) {
         mFixedLookahead = fixed_lookahead;
-        mMaxAccel = max_accel;
+        mMaxAcceleration = max_accel;
         mPath = path;
         mDt = nominal_dt;
         mLastCommand = null;
@@ -57,7 +57,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
      * @return the left and right drive voltage outputs needed to move in the calculated Delta
      */
     @Override
-    public SparkSignal update(RobotState state) {
+    public SparkDriveSignal update(RobotState state) {
 
         //Get estimated robot position
         RigidTransform2d robot_pose = state.getLatestFieldToVehicle().getValue();
@@ -87,17 +87,17 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 
         //Ensure we don't accelerate too fast from the previous command
         double accel = (speed - mLastCommand.dx) / dt;
-        if (accel < -mMaxAccel) {
-            speed = mLastCommand.dx - mMaxAccel * dt;
-        } else if (accel > mMaxAccel) {
-            speed = mLastCommand.dx + mMaxAccel * dt;
+        if (accel < -mMaxAcceleration) {
+            speed = mLastCommand.dx - mMaxAcceleration * dt;
+        } else if (accel > mMaxAcceleration) {
+            speed = mLastCommand.dx + mMaxAcceleration * dt;
         }
 
         //Ensure we slow down in time to stop
         //vf^2 = v^2 + 2*a*d
         //0 = v^2 + 2*a*d
         double remaining_distance = mPath.getRemainingLength();
-        double max_allowed_speed = Math.sqrt(2 * mMaxAccel * remaining_distance);
+        double max_allowed_speed = Math.sqrt(2 * mMaxAcceleration * remaining_distance);
 
         //Ensure we don't go faster than the maximum path following speed
         max_allowed_speed = Math.min(max_allowed_speed, DrivetrainConstants.kPathFollowingMaxVel);
@@ -154,11 +154,11 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 
     //An abstraction of a circular arc used for turning motion
     public static class Circle {
-        public final Translation2d center;
-        public final double radius;
-        public final boolean turn_right;
+        final Translation2d center;
+        final double radius;
+        final boolean turn_right;
 
-        public Circle(Translation2d center, double radius, boolean turn_right) {
+        Circle(Translation2d center, double radius, boolean turn_right) {
             this.center = center;
             this.radius = radius;
             this.turn_right = turn_right;
@@ -172,7 +172,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
      * @param lookahead_point - the coordinates of the lookahead point
      * @return - A circular arc representing the path, null if the arc is degenerate
      */
-    public static Optional<Circle> joinPath(RigidTransform2d robot_pose, Translation2d lookahead_point) {
+    private static Optional<Circle> joinPath(RigidTransform2d robot_pose, Translation2d lookahead_point) {
         double x1 = robot_pose.getTranslation().getX();
         double y1 = robot_pose.getTranslation().getY();
         double x2 = lookahead_point.getX();

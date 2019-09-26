@@ -5,106 +5,105 @@ import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.util.Pose;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
 import com.palyrobotics.frc2019.vision.Limelight;
 
 /**
  * Turns drivetrain using the gyroscope and bang-bang control loop
  *
  * @author Robbie, Nihar
- *
  */
 public class VisionClosedController implements Drive.DriveController {
 
-    private double oldYawToTarget;
-    private long oldTime;
+    private static final double
+            MAX_ANGULAR_POWER = 0.6,
+            DISTANCE_POW_CONST = 2.5 * Gains.kVidarTrajectorykV;
 
-    private int updateCyclesForward = 0;
+    private final Limelight mLimelight = Limelight.getInstance();
 
-    private final double distancePowConst = 2.5 * Gains.kVidarTrajectorykV;
+    private double mLastYawError;
+    private long mLastTimeMs;
 
-    /**
-     *            Pass in the latest robot state
-     * @param
-     */
-    public VisionClosedController() {
-    }
+    private int mUpdateCyclesForward;
 
-    public double getAdjustedDistancePower() {
-        if (Limelight.getInstance().isTargetFound()) {
-            return Limelight.getInstance().getCorrectedEstimatedDistanceZ() * this.distancePowConst;
-        }
-        else {
-            return 0.0;
-        }
-    }
+    private SparkDriveSignal mSignal = SparkDriveSignal.getNeutralSignal();
 
     @Override
-    public SparkSignal update(RobotState robotState) {
+    public SparkDriveSignal update(RobotState robotState) {
         double angularPower;
-        if(Limelight.getInstance().isTargetFound()) {
-            double kP = .03;
-            double kD = .009;
+        if (mLimelight.isTargetFound()) {
+            double kP, kD;
 
             if (robotState.gamePeriod == RobotState.GamePeriod.AUTO) {
-                kD = 0;
-                kP = .013;
+                kD = 0.0;
+                kP = 0.013;
+            } else {
+                kP = 0.03;
+                kD = 0.009;
             }
 
-            angularPower = -Limelight.getInstance().getYawToTarget() * kP
-                    - ((Limelight.getInstance().getYawToTarget() - oldYawToTarget) / (System.currentTimeMillis() - oldTime) * 1000) * kD;
-            oldYawToTarget = Limelight.getInstance().getYawToTarget();
-            oldTime = System.currentTimeMillis();
+            long
+                    currentTime = System.currentTimeMillis(),
+                    deltaSeconds = (currentTime - mLastTimeMs) / 1000L;
+            double
+                    yawError = mLimelight.getYawToTarget(),
+                    yawErrorDerivative = (yawError - mLastYawError) / deltaSeconds;
+            angularPower = -yawError * kP - yawErrorDerivative * kD;
+            mLastYawError = yawError;
+            mLastTimeMs = currentTime;
             // |angularPower| should be at most 0.6
-            if (angularPower > 0.6) angularPower = 0.6;
-            if (angularPower < -0.6) angularPower = -0.6;
+            if (angularPower > MAX_ANGULAR_POWER) angularPower = MAX_ANGULAR_POWER;
+            if (angularPower < -MAX_ANGULAR_POWER) angularPower = -MAX_ANGULAR_POWER;
         } else {
-            SparkSignal mSignal = SparkSignal.getNeutralSignal();
-            mSignal.leftMotor.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
-            mSignal.rightMotor.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
-
+            SparkDriveSignal mSignal = SparkDriveSignal.getNeutralSignal();
+            mSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
+            mSignal.rightOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
             return mSignal;
         }
 
-        double leftPower =  getAdjustedDistancePower();
-        double rightPower = getAdjustedDistancePower();
+        double
+                leftPower = getAdjustedDistancePower(),
+                rightPower = getAdjustedDistancePower();
 
         angularPower *= -1;
         //angularPower *= mOldThrottle;
         leftPower *= (1 + angularPower);
         rightPower *= (1 - angularPower);
 
-
-        if(leftPower > 1.0) {
+        if (leftPower > 1.0) {
             leftPower = 1.0;
-        } else if(rightPower > 1.0) {
+        } else if (rightPower > 1.0) {
             rightPower = 1.0;
-        } else if(leftPower < -1.0) {
+        } else if (leftPower < -1.0) {
             leftPower = -1.0;
-        } else if(rightPower < -1.0) {
+        } else if (rightPower < -1.0) {
             rightPower = -1.0;
         }
 
-        SparkSignal mSignal = SparkSignal.getNeutralSignal();
-
-        mSignal.leftMotor.setPercentOutput(leftPower);
-        mSignal.rightMotor.setPercentOutput(rightPower);
+        mSignal.leftOutput.setPercentOutput(leftPower);
+        mSignal.rightOutput.setPercentOutput(rightPower);
         return mSignal;
     }
 
     @Override
     public Pose getSetpoint() {
-        Pose setpoint = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
-        return setpoint;
+        // TODO use default constructor?
+        return new Pose(0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     @Override
     public boolean onTarget() {
-        // once the target is out of sight, we are on target (after 3 update cycles of just creeping forward
-        if (!Limelight.getInstance().isTargetFound()) {
-            updateCyclesForward += 1;
+        // Once the target is out of sight, we are on target (after 3 update cycles of just creeping forward
+        if (!mLimelight.isTargetFound()) {
+            mUpdateCyclesForward += 1;
         }
-        return !Limelight.getInstance().isTargetFound() && (updateCyclesForward > 3);
+        return !mLimelight.isTargetFound() && (mUpdateCyclesForward > 3);
+    }
+
+    private double getAdjustedDistancePower() {
+        return mLimelight.isTargetFound()
+                ? mLimelight.getCorrectedEstimatedDistanceZ() * DISTANCE_POW_CONST
+                : 0.0;
     }
 
 }

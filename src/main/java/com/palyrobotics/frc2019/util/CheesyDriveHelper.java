@@ -14,7 +14,7 @@ public class CheesyDriveHelper {
 	private boolean mInitialBrake;
 	private double mOldThrottle = 0.0, mBrakeRate;
 
-	public SparkSignal cheesyDrive(Commands commands, RobotState robotState) {
+	public SparkDriveSignal cheesyDrive(Commands commands, RobotState robotState) {
 		double throttle = -robotState.leftStickInput.getY();
 		double wheel = robotState.rightStickInput.getX();
 
@@ -154,10 +154,10 @@ public class CheesyDriveHelper {
 			rightPower = -1.0;
 		}
 
-		SparkSignal mSignal = SparkSignal.getNeutralSignal();
+		SparkDriveSignal mSignal = SparkDriveSignal.getNeutralSignal();
 
-		mSignal.leftMotor.setPercentOutput(leftPower);
-		mSignal.rightMotor.setPercentOutput(rightPower);
+		mSignal.leftOutput.setPercentOutput(leftPower);
+		mSignal.rightOutput.setPercentOutput(rightPower);
 		return mSignal;
 	}
 

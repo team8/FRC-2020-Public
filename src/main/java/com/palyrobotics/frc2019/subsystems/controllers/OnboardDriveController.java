@@ -6,7 +6,7 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
 import com.revrobotics.ControlType;
 
 /**
@@ -16,7 +16,7 @@ import com.revrobotics.ControlType;
  */
 public class OnboardDriveController implements Drive.DriveController {
 
-	private SparkSignal mSignal;
+	private SparkDriveSignal mSignal;
 	private RobotState mCachedState;
 	private OnboardControlType controlType; 
 	private TrajectoryGains mGains;
@@ -37,7 +37,7 @@ public class OnboardDriveController implements Drive.DriveController {
 	
 	public OnboardDriveController(OnboardControlType controlType, TrajectoryGains gains) {
 		//Use copy constructors and prevent the signal passed in from being modified externally
-		this.mSignal = SparkSignal.getNeutralSignal();
+		this.mSignal = SparkDriveSignal.getNeutralSignal();
 		this.leftSetpoint = new TrajectorySegment();
 		this.rightSetpoint = new TrajectorySegment();
 		this.mGains = gains;
@@ -45,7 +45,7 @@ public class OnboardDriveController implements Drive.DriveController {
 	}
 
 	@Override
-	public SparkSignal update(RobotState state) {
+	public SparkDriveSignal update(RobotState state) {
 		mCachedState = state;
 		switch (this.controlType) {
 			case kPosition:
@@ -58,7 +58,7 @@ public class OnboardDriveController implements Drive.DriveController {
 				this.mSignal = getArbFFOutput(state.drivePose);
 				break;
 			default:
-				this.mSignal = SparkSignal.getNeutralSignal();
+				this.mSignal = SparkDriveSignal.getNeutralSignal();
 				break;
 		}
 
@@ -76,7 +76,7 @@ public class OnboardDriveController implements Drive.DriveController {
 		this.rightSetpoint = rightSetpoint;
 	}
 
-	private SparkSignal getPositionOutput(Pose drivePose) {
+	private SparkDriveSignal getPositionOutput(Pose drivePose) {
 		double left_sp = leftSetpoint.pos;
 		double left_pv = drivePose.leftEnc;
 		double right_sp = rightSetpoint.pos;
@@ -85,7 +85,7 @@ public class OnboardDriveController implements Drive.DriveController {
 		return updatePID(left_sp, left_pv, right_sp, right_pv);
 	}
 
-	private SparkSignal getVelocityOutput(Pose drivePose) {
+	private SparkDriveSignal getVelocityOutput(Pose drivePose) {
 		double left_sp = leftSetpoint.vel;
 		double left_pv = drivePose.leftEncVelocity;
 		double right_sp = rightSetpoint.vel;
@@ -94,10 +94,10 @@ public class OnboardDriveController implements Drive.DriveController {
 		return updatePID(left_sp, left_pv, right_sp, right_pv);
 	}
 
-	private SparkSignal getArbFFOutput(Pose drivePose) {
-		SparkSignal signal = updatePID(0, 0, 0, 0);
-		signal.leftMotor.setTargetVelocity(leftSetpoint.vel, signal.leftMotor.getReference()*12.0, new Gains(mGains.p, 0, mGains.d, 0, 0, 0));
-		signal.rightMotor.setTargetVelocity(rightSetpoint.vel, signal.rightMotor.getReference()*12.0, new Gains(mGains.p, 0, mGains.d, 0, 0, 0));
+	private SparkDriveSignal getArbFFOutput(Pose drivePose) {
+		SparkDriveSignal signal = updatePID(0, 0, 0, 0);
+		signal.leftOutput.setTargetVelocity(leftSetpoint.vel, signal.leftOutput.getReference()*12.0, new Gains(mGains.p, 0, mGains.d, 0, 0, 0));
+		signal.rightOutput.setTargetVelocity(rightSetpoint.vel, signal.rightOutput.getReference()*12.0, new Gains(mGains.p, 0, mGains.d, 0, 0, 0));
 		
 		return signal;
 	}
@@ -106,7 +106,7 @@ public class OnboardDriveController implements Drive.DriveController {
 	 * sp = setpoint, goal value
 	 * pv = process variable, actual value
 	 */
-	private SparkSignal updatePID(double left_sp, double left_pv, double right_sp, double right_pv) {
+	private SparkDriveSignal updatePID(double left_sp, double left_pv, double right_sp, double right_pv) {
 
 		//calculate error
 		double left_error = left_sp - left_pv;
@@ -139,7 +139,7 @@ public class OnboardDriveController implements Drive.DriveController {
 		left_last_error = left_error;
 		right_last_error = right_error;
 
-		return new SparkSignal(new SparkMaxOutput(null, ControlType.kDutyCycle, left_output), new SparkMaxOutput(null, ControlType.kDutyCycle, right_output));
+		return new SparkDriveSignal(new SparkMaxOutput(null, ControlType.kDutyCycle, left_output), new SparkMaxOutput(null, ControlType.kDutyCycle, right_output));
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import com.palyrobotics.frc2019.robot.Robot;
 import com.palyrobotics.frc2019.subsystems.Drive.DriveController;
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
 import com.palyrobotics.frc2019.util.SynchronousPID;
 
 public class DriveStraightController implements DriveController {
@@ -50,7 +50,7 @@ public class DriveStraightController implements DriveController {
 	}
 
 	@Override
-	public SparkSignal update(RobotState state) {
+	public SparkDriveSignal update(RobotState state) {
 		SparkMaxOutput leftOutput = new SparkMaxOutput();
 		SparkMaxOutput rightOutput = new SparkMaxOutput();
 		cachedPose = state.drivePose;
@@ -63,7 +63,7 @@ public class DriveStraightController implements DriveController {
 		rightOutput.setPercentOutput(throttle - turn);
 
 //		Logger.getInstance().logSubsystemThread(Level.FINEST, "Error", forwardPID.getError());
-		return new SparkSignal(leftOutput, rightOutput);
+		return new SparkDriveSignal(leftOutput, rightOutput);
 	}
 
 	@Override

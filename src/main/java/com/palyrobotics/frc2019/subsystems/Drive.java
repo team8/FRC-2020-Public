@@ -48,26 +48,26 @@ public class Drive extends Subsystem {
     private boolean newController;
 
     //Encoder DPP
-    private final double kWheelbaseWidth; //Get from CAD
-    private final double kTurnSlipFactor; //Measure empirically
+//    private final double kWheelbaseWidth; //Get from CAD
+//    private final double kTurnSlipFactor; //Measure empirically
 
     //Cache poses to not be allocating at 200Hz
     private Pose mCachedPose = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
     //Cached robot state, updated by looper
     private RobotState mCachedRobotState;
     //Stores output
-    private SparkSignal mSignal = SparkSignal.getNeutralSignal();
+    private SparkDriveSignal mSignal = SparkDriveSignal.getNeutralSignal();
 
-    private DashboardValue motors;
+//    private DashboardValue motors;
 
     private DashboardValue leftEncoder, rightEncoder;
 
     protected Drive() {
         super("Drive");
-        kWheelbaseWidth = 0;
-        kTurnSlipFactor = 0;
+//        kWheelbaseWidth = 0;
+//        kTurnSlipFactor = 0;
 
-        motors = new DashboardValue("driveSpeedUpdate");
+//        motors = new DashboardValue("driveSpeedUpdate");
 
         leftEncoder = new DashboardValue("leftDriveEncoder");
         rightEncoder = new DashboardValue("rightDriveEncoder");
@@ -76,7 +76,7 @@ public class Drive extends Subsystem {
     /**
      * @return DriveSignal
      */
-    public SparkSignal getDriveSignal() {
+    public SparkDriveSignal getDriveSignal() {
         return mSignal;
     }
 
@@ -92,7 +92,7 @@ public class Drive extends Subsystem {
      * <br>
      * Contains a state machine that switches. based on {@link DriveState} and updates the
      * {@link DriveController} with the current {@link RobotState}. The controllers then output
-     * a {@link SparkSignal}, which is then used to {@link Drive#setDriveOutputs}.
+     * a {@link SparkDriveSignal}, which is then used to {@link Drive#setDriveOutputs}.
      * <br><br>
      * <p>
      * States and behavior:
@@ -141,10 +141,10 @@ public class Drive extends Subsystem {
                 setDriveOutputs(mVDH.visionDrive(commands, mCachedRobotState));
                 break;
             case CLOSED_VISION_ASSIST:
-			case OFF_BOARD_CONTROLLER:
-				setDriveOutputs(mController.update(mCachedRobotState));
+            case OFF_BOARD_CONTROLLER:
+                setDriveOutputs(mController.update(mCachedRobotState));
                 break;
-			case ON_BOARD_CONTROLLER:
+            case ON_BOARD_CONTROLLER:
                 if (mController == null) {
 //					Logger.getInstance().logSubsystemThread(Level.WARNING, "No onboard controller to use!");
                     commands.wantedDriveState = DriveState.NEUTRAL;
@@ -161,7 +161,7 @@ public class Drive extends Subsystem {
                 if (!newController && mIsNewState) {
                     resetController();
                 }
-                setDriveOutputs(SparkSignal.getNeutralSignal());
+                setDriveOutputs(SparkDriveSignal.getNeutralSignal());
 
                 if (mCachedRobotState.gamePeriod.equals(RobotState.GamePeriod.TELEOP)) {
                     if (mIsNewState) {
@@ -193,8 +193,8 @@ public class Drive extends Subsystem {
         CSVWriter.addData("driveHeadingVelocity", state.drivePose.headingVelocity);
         state.drivePose.leftError.ifPresent(integer -> CSVWriter.addData("driveLeftError", (double) integer));
         state.drivePose.rightError.ifPresent(integer -> CSVWriter.addData("driveRightError", (double) integer));
-        CSVWriter.addData("driveLeftSetpoint", mSignal.leftMotor.getReference());
-        CSVWriter.addData("driveRightSetpoint", mSignal.rightMotor.getReference());
+        CSVWriter.addData("driveLeftSetpoint", mSignal.leftOutput.getReference());
+        CSVWriter.addData("driveRightSetpoint", mSignal.rightOutput.getReference());
         // System.out.println("Left arbitrary demand: " + mSignal.leftMotor.getArbitraryFF());
         // System.out.println("Right arbitrary demand: " + mSignal.rightMotor.getArbitraryFF());
     }
@@ -203,7 +203,7 @@ public class Drive extends Subsystem {
     public void stop() {
     }
 
-    private void setDriveOutputs(SparkSignal signal) {
+    private void setDriveOutputs(SparkDriveSignal signal) {
         mSignal = signal;
     }
 
@@ -213,10 +213,10 @@ public class Drive extends Subsystem {
     public void setNeutral() {
         mController = null;
         mState = DriveState.NEUTRAL;
-        setDriveOutputs(SparkSignal.getNeutralSignal());
+        setDriveOutputs(SparkDriveSignal.getNeutralSignal());
     }
 
-    public void setSparkMaxController(SparkSignal signal) {
+    public void setSparkMaxController(SparkDriveSignal signal) {
         mController = new SparkMaxDriveController(signal);
         newController = true;
     }
@@ -313,7 +313,7 @@ public class Drive extends Subsystem {
      * Contains an {@code update} method that takes a {@link RobotState} and generates a {@link DriveSignal}.
      */
     public interface DriveController {
-        SparkSignal update(RobotState state);
+        SparkDriveSignal update(RobotState state);
 
         Pose getSetpoint();
 
@@ -322,6 +322,6 @@ public class Drive extends Subsystem {
 
     @Override
     public String getStatus() {
-        return String.format("Drive State: %s%nOutput Control Mode: %s%nLeft Setpoint: %s%nRight Setpoint: %s%nLeft Enc: %s%nRight Enc: %s%nGyro: %s%n", mState, mSignal.leftMotor.getControlType(), mSignal.leftMotor.getReference(), mSignal.rightMotor.getReference(), mCachedPose.leftEnc, mCachedPose.rightEnc, mCachedPose.heading);
+        return String.format("Drive State: %s%nOutput Control Mode: %s%nLeft Setpoint: %s%nRight Setpoint: %s%nLeft Enc: %s%nRight Enc: %s%nGyro: %s%n", mState, mSignal.leftOutput.getControlType(), mSignal.leftOutput.getReference(), mSignal.rightOutput.getReference(), mCachedPose.leftEnc, mCachedPose.rightEnc, mCachedPose.heading);
     }
 }

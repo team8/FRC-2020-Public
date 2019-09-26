@@ -11,15 +11,19 @@ import com.palyrobotics.frc2019.vision.Limelight;
  */
 public class VisionDriveHelper {
 
+    private final Limelight mLimelight = Limelight.getInstance();
+
     private boolean mInitialBrake;
-    private double mOldThrottle = 0.0, mBrakeRate;
-    private boolean found = false;
-    private SynchronousPID pidController;
+    private double mLastThrottle, mBrakeRate;
+    private boolean found;
 
-    private double oldYawToTarget;
-    private long oldTime;
+    private double mLastYawError;
+    private long mLastTimeMs;
 
-    public SparkSignal visionDrive(Commands commands, RobotState robotState) {
+    private final SparkDriveSignal mSignal = SparkDriveSignal.getNeutralSignal();
+
+    public SparkDriveSignal visionDrive(Commands commands, RobotState robotState) {
+
         double throttle = -robotState.leftStickInput.getY();
 
         //Braking if left trigger is pressed
@@ -35,21 +39,21 @@ public class VisionDriveHelper {
         double linearPower = throttle;
 
         //Handle braking
-        if(isBraking) {
+        if (isBraking) {
             //Set up braking rates for linear deceleration in a set amount of time
-            if(mInitialBrake) {
+            if (mInitialBrake) {
                 mInitialBrake = false;
                 //Old throttle initially set to throttle
-                mOldThrottle = linearPower;
+                mLastThrottle = linearPower;
                 //Braking rate set
-                mBrakeRate = mOldThrottle / DrivetrainConstants.kCyclesUntilStop;
+                mBrakeRate = mLastThrottle / DrivetrainConstants.kCyclesUntilStop;
             }
 
             //If braking is not complete, decrease by the brake rate
-            if(Math.abs(mOldThrottle) >= Math.abs(mBrakeRate)) {
+            if (Math.abs(mLastThrottle) >= Math.abs(mBrakeRate)) {
                 //reduce throttle
-                mOldThrottle -= mBrakeRate;
-                linearPower = mOldThrottle;
+                mLastThrottle -= mBrakeRate;
+                linearPower = mLastThrottle;
             } else {
                 linearPower = 0;
             }
@@ -57,50 +61,49 @@ public class VisionDriveHelper {
             mInitialBrake = true;
         }
 
-        if(Limelight.getInstance().isTargetFound()) {
-            double kP = .03;
-            double kD = .005;
+        if (Limelight.getInstance().isTargetFound()) {
+            double kP = 0.03, kD = 0.005;
 //            double kP = Limelight.getInstance().getTargetArea();
 //            double kP = 1.0/Limelight.getInstance().getCorrectedEstimatedDistanceZ();
 //            double kP = .010 * Math.sqrt(Limelight.getInstance().getCorrectedEstimatedDistanceZ());
             //double kP = Limelight.getInstance().getCorrectedEstimatedDistanceZ();
-            angularPower = -Limelight.getInstance().getYawToTarget() * kP
-                    - ((Limelight.getInstance().getYawToTarget() - oldYawToTarget) / (System.currentTimeMillis() - oldTime) * 1000) * kD;
-            oldYawToTarget = Limelight.getInstance().getYawToTarget();
-            oldTime = System.currentTimeMillis();
+            long
+                    currentTime = System.currentTimeMillis(),
+                    deltaSeconds = (currentTime - mLastTimeMs) / 1000L;
+            double
+                    yawError = mLimelight.getYawToTarget(),
+                    yawErrorDerivative = (yawError - mLastYawError) / deltaSeconds;
+            angularPower = -yawError * kP - yawErrorDerivative * kD;
+            mLastYawError = yawError;
+            mLastTimeMs = currentTime;
             // |angularPower| should be at most 0.6
             if (angularPower > 0.6) angularPower = 0.75;
             if (angularPower < -0.6) angularPower = -0.75;
         } else {
             found = false;
-            oldTime = System.currentTimeMillis();
-            angularPower = 0;
+            mLastTimeMs = System.currentTimeMillis();
+            angularPower = 0.0;
         }
 
-        rightPower = leftPower = mOldThrottle = linearPower;
-
+        rightPower = leftPower = mLastThrottle = linearPower;
 
         angularPower *= -1;
         //angularPower *= mOldThrottle;
         leftPower *= (1 + angularPower);
         rightPower *= (1 - angularPower);
 
-
-        if(leftPower > 1.0) {
+        if (leftPower > 1.0) {
             leftPower = 1.0;
-        } else if(rightPower > 1.0) {
+        } else if (rightPower > 1.0) {
             rightPower = 1.0;
-        } else if(leftPower < -1.0) {
+        } else if (leftPower < -1.0) {
             leftPower = -1.0;
-        } else if(rightPower < -1.0) {
+        } else if (rightPower < -1.0) {
             rightPower = -1.0;
         }
 
-        SparkSignal mSignal = SparkSignal.getNeutralSignal();
-
-
-        mSignal.leftMotor.setPercentOutput(leftPower);
-        mSignal.rightMotor.setPercentOutput(rightPower);
+        mSignal.leftOutput.setPercentOutput(leftPower);
+        mSignal.rightOutput.setPercentOutput(rightPower);
         return mSignal;
     }
 
@@ -109,17 +112,17 @@ public class VisionDriveHelper {
      */
     public double remapThrottle(double initialThrottle) {
         double x = Math.abs(initialThrottle);
-        switch(OtherConstants.kDriverName) {
+        switch (OtherConstants.kDriverName) {
             case BRYAN:
                 //Reversal of directions
                 //Stick a 0 cycle in between
-                if(initialThrottle * mOldThrottle < 0) {
+                if (initialThrottle * mLastThrottle < 0) {
                     return 0.0;
                 }
 
                 //Increase in magnitude, deceleration is fine. This misses rapid direction switches, but that's up to driver
-                if(x > Math.abs(mOldThrottle)) {
-                    x = mOldThrottle + Math.signum(initialThrottle) * DrivetrainConstants.kMaxAccelRate;
+                if (x > Math.abs(mLastThrottle)) {
+                    x = mLastThrottle + Math.signum(initialThrottle) * DrivetrainConstants.kMaxAccelRate;
                 } else {
                     x = initialThrottle;
                 }

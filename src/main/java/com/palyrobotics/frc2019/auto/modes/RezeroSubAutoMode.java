@@ -6,7 +6,7 @@ import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveTimeRoutine;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
 
 import java.util.ArrayList;
 
@@ -42,14 +42,14 @@ public class RezeroSubAutoMode extends AutoModeBase {
         backOffOutput.setPercentOutput(invertCord * 0.25);
 
         //drive off platform
-        SparkSignal driveOff = new SparkSignal(backOffOutput, backOffOutput);
+        SparkDriveSignal driveOff = new SparkDriveSignal(backOffOutput, backOffOutput);
         routines.add(new DriveTimeRoutine(0.8, driveOff));
 
         // Back up against the platform
         SparkMaxOutput eachOutput = new SparkMaxOutput();
         eachOutput.setPercentOutput(invertCord * -0.3);
 
-        SparkSignal backUp = new SparkSignal(eachOutput, eachOutput);
+        SparkDriveSignal backUp = new SparkDriveSignal(eachOutput, eachOutput);
         routines.add(new DriveTimeRoutine(1.5, backUp));
 
         // Zero robot state

@@ -9,7 +9,7 @@ import com.palyrobotics.frc2019.vision.Limelight;
 public class VisionAlignRoutine extends Routine {
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[] { drive };
+        return new Subsystem[]{drive};
     }
 
     private double mAngle;
@@ -34,11 +34,11 @@ public class VisionAlignRoutine extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-        if(mState != VisionAlignRoutine.GyroBBState.TIMED_OUT && (System.currentTimeMillis() - startTime > 6000)) {
+        if (mState != VisionAlignRoutine.GyroBBState.TIMED_OUT && (System.currentTimeMillis() - startTime > 6000)) {
 //            Logger.getInstance().logRobotThread(Level.WARNING, "Timed Out!");
             mState = VisionAlignRoutine.GyroBBState.TIMED_OUT;
         }
-        switch(mState) {
+        switch (mState) {
             case START:
 //                Logger.getInstance().logRobotThread(Level.FINE, "Set setpoint", mAngle);
                 drive.setVisionClosedDriveController();
@@ -46,7 +46,7 @@ public class VisionAlignRoutine extends Routine {
                 mState = VisionAlignRoutine.GyroBBState.TURNING;
                 break;
             case TURNING:
-                if(drive.controllerOnTarget()) {
+                if (drive.controllerOnTarget()) {
                     mState = VisionAlignRoutine.GyroBBState.DONE;
                 }
                 break;

@@ -263,9 +263,6 @@ public class OperatorInterface {
             newCommands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
         }
 
-        /**
-         * Shooter Spin Up Control
-         */
         if (mOperatorXboxController.getLeftTriggerPressed()) {
             newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 3));
         }

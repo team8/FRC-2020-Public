@@ -4,7 +4,7 @@ import com.palyrobotics.frc2019.auto.AutoModeBase;
 import com.palyrobotics.frc2019.behavior.ParallelRoutine;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.routines.drive.SparkMaxRoutine;
-import com.palyrobotics.frc2019.util.SparkSignal;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
 
 import java.util.ArrayList;
 
@@ -52,9 +52,9 @@ public class FTestAuto extends AutoModeBase {
     private ParallelRoutine getDrive() {
 //        Gains mShortGains = Gains.vidarShortDriveMotionMagicGains;
 //
-        SparkSignal driveBackup = SparkSignal.getNeutralSignal();
-        driveBackup.leftMotor.setPercentOutput(.6);
-        driveBackup.rightMotor.setPercentOutput(.6);
+        SparkDriveSignal driveBackup = SparkDriveSignal.getNeutralSignal();
+        driveBackup.leftOutput.setPercentOutput(.6);
+        driveBackup.rightOutput.setPercentOutput(.6);
         ArrayList<Routine> sequence = new ArrayList<>();
 //
         sequence.add(new SparkMaxRoutine(driveBackup, false));
