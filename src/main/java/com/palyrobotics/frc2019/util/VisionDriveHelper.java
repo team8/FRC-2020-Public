@@ -16,6 +16,7 @@ public class VisionDriveHelper {
     private boolean mInitialBrake;
     private double mLastThrottle, mBrakeRate;
     private boolean found;
+    private SynchronousPID mPidController = new SynchronousPID(0.03, 0.0, 0.005);
 
     private double mLastYawError;
     private long mLastTimeMs;

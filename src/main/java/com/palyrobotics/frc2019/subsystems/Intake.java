@@ -19,7 +19,6 @@ public class Intake extends Subsystem {
 
     private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
 
-
     private SparkMaxOutput mSparkOutput = new SparkMaxOutput(ControlType.kSmartMotion);
     private double mTalonOutput, mRumbleLength;
 

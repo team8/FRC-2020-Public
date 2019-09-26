@@ -6,21 +6,21 @@ package com.palyrobotics.frc2019.util;
  * Does all computation synchronously (i.e. the calculate() function must be called by the user from his own thread)
  */
 public class SynchronousPID {
-    private double m_P; //factor for "proportional" control
-    private double m_I; //factor for "integral" control
-    private double m_izone; //error needs to be within izone to kick in "integral" control
-    private double m_D; //factor for "derivative" control
-    private double m_maximumOutput = 1.0; //|maximum output|
-    private double m_minimumOutput = -1.0; //|minimum output|
-    private double m_maximumInput = 0.0; //maximum input - limit setpoint to this
-    private double m_minimumInput = 0.0; //minimum input - limit setpoint to this
-    private boolean m_continuous = false; //do the endpoints wrap around? eg. Absolute encoder
-    private double m_prevError = 0.0; //the prior sensor input (used to compute velocity)
-    private double m_totalError = 0.0; //the sum of the errors for use in the integral calc
-    private double m_setpoint = 0.0;
-    private double m_error = 0.0;
-    private double m_result = 0.0;
-    private double m_last_input = Double.NaN;
+    private double mP; //factor for "proportional" control
+    private double mI; //factor for "integral" control
+    private double mIZone; //error needs to be within iZone to kick in "integral" control
+    private double mD; //factor for "derivative" control
+    private double mMaximumOutput = 1.0; //|maximum output|
+    private double mMinimumOutput = -1.0; //|minimum output|
+    private double mMaximumInput = 0.0; //maximum input - limit setpoint to this
+    private double mMinimumInput = 0.0; //minimum input - limit setpoint to this
+    private boolean mContinuous = false; //do the endpoints wrap around? eg. Absolute encoder
+    private double mPrevError = 0.0; //the prior sensor input (used to compute velocity)
+    private double mTotalError = 0.0; //the sum of the errors for use in the integral calc
+    private double mSetpoint = 0.0;
+    private double mError = 0.0;
+    private double mResult = 0.0;
+    private double mLastInput = Double.NaN;
 
     public SynchronousPID() {
     }
@@ -28,29 +28,29 @@ public class SynchronousPID {
     /**
      * Allocate a PID object with the given constants for P, I, D
      *
-     * @param Kp the proportional coefficient
-     * @param Ki the integral coefficient
-     * @param Kd the derivative coefficient
+     * @param p the proportional coefficient
+     * @param i the integral coefficient
+     * @param d the derivative coefficient
      */
-    public SynchronousPID(double Kp, double Ki, double Kd) {
-        m_P = Kp;
-        m_I = Ki;
-        m_D = Kd;
-        m_izone = Double.MAX_VALUE;
+    public SynchronousPID(double p, double i, double d) {
+        mP = p;
+        mI = i;
+        mD = d;
+        mIZone = Double.MAX_VALUE;
     }
 
     /**
      * Allocate a PID object with the given constants for P, I, D
      *
-     * @param Kp the proportional coefficient
-     * @param Ki the integral coefficient
-     * @param Kd the derivative coefficient
+     * @param p the proportional coefficient
+     * @param i the integral coefficient
+     * @param d the derivative coefficient
      */
-    public SynchronousPID(double Kp, double Ki, double Kd, double Kizone) {
-        m_P = Kp;
-        m_I = Ki;
-        m_D = Kd;
-        m_izone = Kizone;
+    public SynchronousPID(double p, double i, double d, double iZone) {
+        mP = p;
+        mI = i;
+        mD = d;
+        mIZone = iZone;
     }
 
     /**
@@ -59,33 +59,33 @@ public class SynchronousPID {
      * @param input the input
      */
     public double calculate(double input) {
-        m_last_input = input;
-        m_error = m_setpoint - input;
-        if (m_continuous) {
-            if (Math.abs(m_error) > (m_maximumInput - m_minimumInput) / 2) {
-                if (m_error > 0) {
-                    m_error = m_error - m_maximumInput + m_minimumInput;
+        mLastInput = input;
+        mError = mSetpoint - input;
+        if (mContinuous) {
+            if (Math.abs(mError) > (mMaximumInput - mMinimumInput) / 2) {
+                if (mError > 0) {
+                    mError = mError - mMaximumInput + mMinimumInput;
                 } else {
-                    m_error = m_error + m_maximumInput - m_minimumInput;
+                    mError = mError + mMaximumInput - mMinimumInput;
                 }
             }
         }
 
-        if ((m_error * m_P < m_maximumOutput) && (m_error * m_P > m_minimumOutput) && m_error < m_izone) {
-            m_totalError += m_error;
+        if ((mError * mP < mMaximumOutput) && (mError * mP > mMinimumOutput) && mError < mIZone) {
+            mTotalError += mError;
         } else {
-            m_totalError = 0;
+            mTotalError = 0;
         }
 
-        m_result = (m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError));
-        m_prevError = m_error;
+        mResult = (mP * mError + mI * mTotalError + mD * (mError - mPrevError));
+        mPrevError = mError;
 
-        if (m_result > m_maximumOutput) {
-            m_result = m_maximumOutput;
-        } else if (m_result < m_minimumOutput) {
-            m_result = m_minimumOutput;
+        if (mResult > mMaximumOutput) {
+            mResult = mMaximumOutput;
+        } else if (mResult < mMinimumOutput) {
+            mResult = mMinimumOutput;
         }
-        return m_result;
+        return mResult;
     }
 
     /**
@@ -96,9 +96,9 @@ public class SynchronousPID {
      * @param d Differential coefficient
      */
     public void setPID(double p, double i, double d) {
-        m_P = p;
-        m_I = i;
-        m_D = d;
+        mP = p;
+        mI = i;
+        mD = d;
     }
 
     /**
@@ -107,7 +107,7 @@ public class SynchronousPID {
      * @return proportional coefficient
      */
     public double getP() {
-        return m_P;
+        return mP;
     }
 
     /**
@@ -116,7 +116,7 @@ public class SynchronousPID {
      * @return integral coefficient
      */
     public double getI() {
-        return m_I;
+        return mI;
     }
 
     /**
@@ -125,7 +125,7 @@ public class SynchronousPID {
      * @return differential coefficient
      */
     public double getD() {
-        return m_D;
+        return mD;
     }
 
     /**
@@ -134,7 +134,7 @@ public class SynchronousPID {
      * @return the latest calculated output
      */
     public double get() {
-        return m_result;
+        return mResult;
     }
 
     /**
@@ -144,7 +144,7 @@ public class SynchronousPID {
      * @param continuous Set to true turns on continuous, false turns off continuous
      */
     public void setContinuous(boolean continuous) {
-        m_continuous = continuous;
+        mContinuous = continuous;
     }
 
     /**
@@ -152,7 +152,7 @@ public class SynchronousPID {
      * point and automatically calculates the shortest route to the setpoint.
      */
     public void setContinuous() {
-        this.setContinuous(true);
+        setContinuous(true);
     }
 
     /**
@@ -165,9 +165,9 @@ public class SynchronousPID {
         if (minimumInput > maximumInput) {
             throw new IllegalArgumentException("Lower bound is greater than upper bound");
         }
-        m_minimumInput = minimumInput;
-        m_maximumInput = maximumInput;
-        setSetpoint(m_setpoint);
+        mMinimumInput = minimumInput;
+        mMaximumInput = maximumInput;
+        setSetpoint(mSetpoint);
     }
 
     /**
@@ -180,8 +180,8 @@ public class SynchronousPID {
         if (minimumOutput > maximumOutput) {
             throw new IllegalArgumentException("Lower bound is greater than upper bound");
         }
-        m_minimumOutput = minimumOutput;
-        m_maximumOutput = maximumOutput;
+        mMinimumOutput = minimumOutput;
+        mMaximumOutput = maximumOutput;
     }
 
     /**
@@ -190,16 +190,14 @@ public class SynchronousPID {
      * @param setpoint the desired setpoint
      */
     public void setSetpoint(double setpoint) {
-        if (m_maximumInput > m_minimumInput) {
-            if (setpoint > m_maximumInput) {
-                m_setpoint = m_maximumInput;
-            } else if (setpoint < m_minimumInput) {
-                m_setpoint = m_minimumInput;
+        if (mMaximumInput > mMinimumInput) {
+            if (setpoint > mMaximumInput) {
+                mSetpoint = mMaximumInput;
             } else {
-                m_setpoint = setpoint;
+                mSetpoint = Math.max(setpoint, mMinimumInput);
             }
         } else {
-            m_setpoint = setpoint;
+            mSetpoint = setpoint;
         }
     }
 
@@ -209,7 +207,7 @@ public class SynchronousPID {
      * @return the current setpoint
      */
     public double getSetpoint() {
-        return m_setpoint;
+        return mSetpoint;
     }
 
     /**
@@ -218,7 +216,7 @@ public class SynchronousPID {
      * @return the current error
      */
     public double getError() {
-        return m_error;
+        return mError;
     }
 
     /**
@@ -227,26 +225,22 @@ public class SynchronousPID {
      * @return true if the error is less than the tolerance
      */
     public boolean onTarget(double tolerance) {
-        return !Double.isNaN(m_last_input) && Math.abs(m_last_input - m_setpoint) < tolerance;
+        return !Double.isNaN(mLastInput) && Math.abs(mLastInput - mSetpoint) < tolerance;
     }
 
     /**
      * Reset all internal terms.
      */
     public void reset() {
-        m_last_input = Double.NaN;
-        m_prevError = 0;
-        m_totalError = 0;
-        m_result = 0;
-        m_setpoint = 0;
+        mLastInput = Double.NaN;
+        mPrevError = 0;
+        mTotalError = 0;
+        mResult = 0;
+        mSetpoint = 0;
     }
 
     public void resetIntegrator() {
-        m_totalError = 0;
-    }
-
-    public String getState() {
-		return String.format("Kp:%s%nKi:%s%nKd:%s%n", m_P, m_I, m_D);
+        mTotalError = 0;
     }
 
     public String getType() {

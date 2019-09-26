@@ -44,18 +44,19 @@ public class OperatorInterface {
 
     private JoystickInput mDriveStick = Robot.getRobotState().leftStickInput;
     private JoystickInput mTurnStick = Robot.getRobotState().rightStickInput;
-    private JoystickInput mClimbStick = Robot.getRobotState().backupStickInput;
+//    private JoystickInput mClimbStick = Robot.getRobotState().backupStickInput;
     private XboxInput mOperatorXboxController;
 
-    public static boolean demandIntakeUp = true; // force intake to come up
-    public static boolean intakeRunning = false; // force intake to come up
-    public static double intakeStartTime = 0; // force intake to come up
-    public static double lastCancelTime = 0;
+//    public static boolean demandIntakeUp = true; // force intake to come up
+//    public static boolean intakeRunning = false; // force intake to come up
+    private static double
+            intakeStartTime = 0.0, // force intake to come up
+            lastCancelTime = 0.0;
 
     // Timestamp when a vision routine was last activated; helps us know when to turn LEDs off
     private static double visionStartTime = 0;
 
-    protected OperatorInterface() {
+    private OperatorInterface() {
         mOperatorXboxController = Robot.getRobotState().operatorXboxControllerInput;
     }
 
@@ -79,17 +80,17 @@ public class OperatorInterface {
     /**
      * Returns modified commands
      *
-     * @param prevCommands
+     * @param lastCommands
      */
-    public Commands updateCommands(Commands prevCommands) {
-        Commands newCommands = prevCommands.copy();
+    Commands updateCommands(Commands lastCommands) {
+        Commands newCommands = lastCommands.copy();
 
         newCommands.cancelCurrentRoutines = false;
 
         /**
          * Drivetrain controls
          */
-        if (prevCommands.wantedDriveState != Drive.DriveState.OFF_BOARD_CONTROLLER && prevCommands.wantedDriveState != Drive.DriveState.ON_BOARD_CONTROLLER) {
+        if (lastCommands.wantedDriveState != Drive.DriveState.OFF_BOARD_CONTROLLER && lastCommands.wantedDriveState != Drive.DriveState.ON_BOARD_CONTROLLER) {
             newCommands.wantedDriveState = Drive.DriveState.CHEZY;
         }
 
@@ -131,7 +132,7 @@ public class OperatorInterface {
             }
         }
 
-        /**
+        /*
          * Hatch Ground Intake/Shovel Control
          */
 //		if(mOperatorXboxController.getButtonX()) {
@@ -168,7 +169,7 @@ public class OperatorInterface {
 
 //		newCommands.wantedElevatorState = Elevator.ElevatorState.MANUAL_POSITIONING;
 
-        /**
+        /*
          * Elevator Control
          */
         if (mOperatorXboxController.getButtonA()) {
@@ -196,7 +197,7 @@ public class OperatorInterface {
             newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel3, new WaitForArmCanTuck(), new IntakeSetRoutine()));
         }
 
-        /**\
+        /*
          * Cargo Intake Control
          */
         if (mOperatorXboxController.getdPadDown()) {
@@ -220,15 +221,13 @@ public class OperatorInterface {
             newCommands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_ROCKET;
         }
 
-
         if (mOperatorXboxController.getLeftTriggerPressed() && newCommands.wantedIntakeState == Intake.IntakeMacroState.HOLDING_ROCKET) {
             newCommands.wantedIntakeState = Intake.IntakeMacroState.INTAKING_ROCKET;
         } else if (!mOperatorXboxController.getLeftTriggerPressed() && newCommands.wantedIntakeState == IntakeMacroState.INTAKING_ROCKET) {
             newCommands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_ROCKET;
         }
 
-
-//		/**
+//		/*
 //		 * Climber Control
 //		 */
 //		if(mClimbStick.getButtonPressed(6)) {
@@ -238,7 +237,7 @@ public class OperatorInterface {
 //			newCommands.wantedClimberState = Elevator.ClimberState.IDLE;
 //		}
 
-        /**
+        /*
          * Pusher Control
          */
         if (mOperatorXboxController.getLeftBumper()) {
@@ -249,7 +248,7 @@ public class OperatorInterface {
             newCommands.wantedPusherInOutState = Pusher.PusherState.SLAM;
         }
 
-        /**
+        /*
          * Pneumatic Hatch Pusher Control
          */
         if (mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState != IntakeMacroState.EXPELLING_ROCKET && !newCommands.blockFingers) {
@@ -267,7 +266,7 @@ public class OperatorInterface {
             newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 3));
         }
 
-        /**
+        /*
          * Cancel all Routines
          */
         if (mDriveStick.getTriggerPressed()) {
