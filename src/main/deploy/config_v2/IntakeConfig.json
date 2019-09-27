@@ -10,7 +10,7 @@
     "gravityFF": 0.028,
     "accelerationCompensation": 0.0,
     "centripetalCoefficient": 0.0,
-    "angleOffset": 11.89,
+    "angleOffset": -7.5,
     "intakeAngle": 23.5,
     "holdAngle": 59.0,
     "handOffAngle": 116.0,
@@ -26,9 +26,21 @@
         "i": 0.0,
         "d": 0.0,
         "f": 0.000058,
-        "rampRate": 0.15,
+        "rampRate": 0.18,
         "iZone": 0,
         "acceleration": 46000,
-        "velocity": 13000
+        "velocity": 13000,
+        "allowableError": 0.6,
+        "minimumOutputVelocity": 0.0
+    },
+    "holdGains": {
+        "p": 0.000001,
+        "i": 0.0,
+        "d": 0.0,
+        "f": 0.000061,
+        "rampRate": 0.2,
+        "iZone": 0,
+        "acceleration": 10000,
+        "velocity": 6000
     }
 }

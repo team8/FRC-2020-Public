@@ -34,6 +34,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
+import java.util.Map;
+
 /**
  * Should only be used in robot package.
  */
@@ -194,7 +196,7 @@ class HardwareUpdater {
         masterElevatorSpark.getEncoder().setVelocityConversionFactor(ElevatorConfig.kElevatorInchesPerMinutePerRpm);
 
         updateSparkGains(masterElevatorSpark, Gains.elevatorPosition, 0);
-        Configs.listen(ElevatorConfig.class, config -> updateSmartMotionGains(masterElevatorSpark, config.gains));
+        Configs.listen(ElevatorConfig.class, config -> updateSmartMotionGains(masterElevatorSpark, config.gains, 1));
     }
 
     private void configureIntakeHardware() {
@@ -231,7 +233,8 @@ class HardwareUpdater {
         intakeTalon.configPeakOutputReverse(-1.0, 0);
 
         updateSparkGains(intakeMasterSpark, Gains.intakePosition, 0);
-        Configs.listen(IntakeConfig.class, config -> updateSmartMotionGains(intakeMasterSpark, config.gains));
+        Configs.listen(IntakeConfig.class, config -> updateSmartMotionGains(intakeMasterSpark, config.gains, 1));
+        Configs.listen(IntakeConfig.class, config -> updateSmartMotionGains(intakeMasterSpark, config.holdGains, 2));
     }
 
     private void configureShooterHardware() {
@@ -577,13 +580,18 @@ class HardwareUpdater {
         }
     }
 
+    private Map<ControlType, Integer> slots = Map.of(
+            ControlType.kSmartMotion, 1,
+            ControlType.kSmartVelocity, 2
+    );
+
     private void updateSparkMax(CANSparkMax spark, SparkMaxOutput output) {
         ControlType controlType = output.getControlType();
         boolean isSmart = controlType == ControlType.kSmartMotion || controlType == ControlType.kSmartVelocity;
         spark.getPIDController().setReference(
                 output.getReference(),
                 controlType,
-                isSmart ? 1 : 0, // TODO named constants for PID slots
+                slots.getOrDefault(controlType, 0), // TODO named constants for PID slots
                 output.getArbitraryDemand(),
                 isSmart // TODO make both use percent out
                         ? CANPIDController.ArbFFUnits.kPercentOut
@@ -594,17 +602,16 @@ class HardwareUpdater {
         updateSparkGains(spark, gains, 0);
     }
 
-    private void updateSmartMotionGains(CANSparkMax spark, SmartGains gains) {
+    private void updateSmartMotionGains(CANSparkMax spark, SmartGains gains, int slot) {
         System.out.printf("Using smart gains: %s%n", gains);
         CANPIDController controller = spark.getPIDController();
-        int SMART_MOTION_PID_SLOT = 1;
-        updateSparkGains(spark, gains, SMART_MOTION_PID_SLOT);
-        controller.setSmartMotionMaxAccel(gains.acceleration, SMART_MOTION_PID_SLOT);
-        controller.setSmartMotionMaxVelocity(gains.velocity, SMART_MOTION_PID_SLOT);
-        controller.setOutputRange(-1.0, 1.0, SMART_MOTION_PID_SLOT);
-        controller.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, SMART_MOTION_PID_SLOT);
-        controller.setSmartMotionAllowedClosedLoopError(0.0, SMART_MOTION_PID_SLOT);
-        controller.setSmartMotionMinOutputVelocity(0.0, SMART_MOTION_PID_SLOT);
+        updateSparkGains(spark, gains, slot);
+        controller.setSmartMotionMaxAccel(gains.acceleration, slot);
+        controller.setSmartMotionMaxVelocity(gains.velocity, slot);
+        controller.setOutputRange(-1.0, 1.0, slot);
+        controller.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, slot);
+        controller.setSmartMotionAllowedClosedLoopError(gains.allowableError, slot);
+        controller.setSmartMotionMinOutputVelocity(gains.minimumOutputVelocity, slot);
     }
 
     private void updateSparkGains(CANSparkMax spark, Gains gains, int slotID) {

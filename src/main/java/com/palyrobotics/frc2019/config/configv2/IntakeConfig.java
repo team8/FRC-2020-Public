@@ -42,7 +42,7 @@ public class IntakeConfig extends AbstractSubsystemConfig {
             cargoInchTolerance,
             cargoCountRequired;
 
-    public SmartGains gains = SmartGains.emptyGains;
+    public SmartGains gains = SmartGains.emptyGains, holdGains = SmartGains.emptyGains;
 
     /* Unit Conversion */
     public static final double
