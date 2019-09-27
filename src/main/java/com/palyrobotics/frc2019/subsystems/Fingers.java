@@ -1,16 +1,21 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.FingerConstants;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.configv2.FingerConfig;
+import com.palyrobotics.frc2019.util.configv2.Configs;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class Fingers extends Subsystem {
     public static Fingers instance = new Fingers();
 
-    public static Fingers getInstance() { return instance; }
+    public static Fingers getInstance() {
+        return instance;
+    }
 
-    public static void resetInstance() {instance = new Fingers(); }
+    public static void resetInstance() {
+        instance = new Fingers();
+    }
 
     private DoubleSolenoid.Value mOpenCloseValue = DoubleSolenoid.Value.kForward;
     private DoubleSolenoid.Value mExpelValue = DoubleSolenoid.Value.kReverse;
@@ -30,7 +35,9 @@ public class Fingers extends Subsystem {
     private FingersState mOpenCloseState = FingersState.CLOSE;
     private PushingState mExpelState = PushingState.CLOSED;
 
-    protected Fingers() { super("Fingers"); }
+    protected Fingers() {
+        super("Fingers");
+    }
 
     @Override
     public void start() {
@@ -45,18 +52,18 @@ public class Fingers extends Subsystem {
     }
 
     @Override
-public void update(Commands commands, RobotState robotState) {
+    public void update(Commands commands, RobotState robotState) {
         mOpenCloseState = commands.wantedFingersOpenCloseState;
         mExpelState = commands.wantedFingersExpelState;
 //        System.out.println(robotState.drivePose.heading);
-        if (Math.abs(Math.abs(robotState.drivePose.heading % 360) - 180) < FingerConstants.kAngleLoadingStationTolerance) {
+        if (Math.abs(Math.abs(robotState.drivePose.heading % 360) - 180) < Configs.get(FingerConfig.class).angleLoadingStationTolerance) {
             // We are at the loading station
             if (mExpelState == PushingState.EXPELLING) {
                 mExpelState = PushingState.CLOSED;
             }
         }
 
-        switch(mOpenCloseState) {
+        switch (mOpenCloseState) {
             case OPEN:
                 mOpenCloseValue = DoubleSolenoid.Value.kForward;
                 break;
@@ -65,7 +72,7 @@ public void update(Commands commands, RobotState robotState) {
                 break;
         }
 
-        switch(mExpelState) {
+        switch (mExpelState) {
             case EXPELLING:
                 mExpelValue = DoubleSolenoid.Value.kForward;
                 break;

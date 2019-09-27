@@ -19,23 +19,10 @@ import java.util.function.Consumer;
 
 /**
  * Configuration storage using JSON
- * <p>
- * Register classes with {@link #sConfigs} and get the working copy via {@link #get(Class)}
  *
  * @author Quintin Dwight
  */
 public class Configs {
-
-    /* ============================================================================================================= */
-
-    /**
-     * Register classes to be JSON configurable here. This will automatically try to load them from the deploy folder.
-     */
-    private static final List<Class<? extends AbstractConfig>> sConfigs = List.of(
-            ElevatorConfig.class, IntakeConfig.class, ShovelConfig.class, ServiceConfig.class, PortConstants.class
-    );
-
-    /* ============================================================================================================= */
 
     private static ObjectMapper sMapper = new ObjectMapper();
 
@@ -53,8 +40,8 @@ public class Configs {
             ? Paths.get(Filesystem.getDeployDirectory().toString(), CONFIG_FOLDER_NAME)
             : Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", CONFIG_FOLDER_NAME)).toAbsolutePath();
 
-    private static final ConcurrentHashMap<String, Class<? extends AbstractConfig>> sNameToClass = new ConcurrentHashMap<>(sConfigs.size());
-    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, AbstractConfig> sConfigMap = new ConcurrentHashMap<>(sConfigs.size());
+    private static final ConcurrentHashMap<String, Class<? extends AbstractConfig>> sNameToClass = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, AbstractConfig> sConfigMap = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<Class<? extends AbstractConfig>, List<Runnable>> sListeners = new ConcurrentHashMap<>();
     private static final Thread sModifiedListener = new Thread(Configs::watchService);
 
@@ -64,7 +51,6 @@ public class Configs {
 
     /**
      * Retrieve the singleton for this given config class.
-     * It must be registered with {@link #sConfigs}.
      *
      * @param configClass Class of the config.
      * @param <T>         Type of the config class. This is usually inferred from the class argument.
