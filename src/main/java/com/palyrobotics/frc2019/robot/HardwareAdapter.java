@@ -100,10 +100,9 @@ public class HardwareAdapter {
         }
 
         final WPI_TalonSRX intakeTalon;
-        final CANSparkMax intakeMasterSpark;
+        public final CANSparkMax intakeMasterSpark;
         final CANSparkMax intakeSlaveSpark;
-        final Ultrasonic intakeUltrasonicLeft;
-        final Ultrasonic intakeUltrasonicRight;
+        final Ultrasonic intakeUltrasonicLeft, intakeUltrasonicRight;
         final AnalogPotentiometer potentiometer;
 
         void resetSensors() {

@@ -20,7 +20,7 @@ public abstract class Routine {
 	protected final Drive drive = Drive.getInstance();
 	protected final Shovel shovel = Shovel.getInstance();
 	protected final Shooter shooter = Shooter.getInstance();
-	protected final Pusher pusher = Pusher.getInstance();
+	protected final Pusher pusher = Pusher.getsInstance();
 	protected final Elevator elevator = Elevator.getInstance();
 	protected final Fingers fingers = Fingers.getInstance();
 	protected final Intake intake = Intake.getInstance();

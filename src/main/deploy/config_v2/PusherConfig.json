@@ -1,0 +1,10 @@
+{
+    "vidarRequiredUltrasonicCount": 0,
+    "vidarDistanceIn": -0.1,
+    "vidarDistanceMiddle": 2.5,
+    "vidarDistanceOut": 7.1,
+    "vidarCargoTolerance": 5.9,
+    "vidarCargoToleranceFar": 7.0,
+    "vidarDistanceCompress": 1.0,
+    "acceptablePositionError": 0.2
+}

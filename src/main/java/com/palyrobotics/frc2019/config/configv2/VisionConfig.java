@@ -4,5 +4,5 @@ import com.palyrobotics.frc2019.util.configv2.AbstractConfig;
 
 public class VisionConfig extends AbstractConfig {
 
-    public double p, d;
+    public double p, i, d;
 }

@@ -21,9 +21,10 @@ public class VisionDriveHelper {
     private final SparkDriveSignal mSignal = new SparkDriveSignal();
 
     private boolean mInitialBrake;
-    private double mLastThrottle, mBrakeRate, mLastYawError;
-    private long mLastTimeMs;
-    private SynchronousPID mPidController = new SynchronousPID(mConfig.p, 0.0, mConfig.d);
+    private double mLastThrottle, mBrakeRate;
+//    private double mLastYawError;
+//    private long mLastTimeMs;
+    private SynchronousPID mPidController = new SynchronousPID(mConfig.p, mConfig.i, mConfig.d);
 
     public SparkDriveSignal visionDrive(Commands commands, RobotState robotState) {
 
@@ -85,7 +86,7 @@ public class VisionDriveHelper {
             if (angularPower > kMaxAngularPower) angularPower = kMaxAngularPower;
             if (angularPower < -kMaxAngularPower) angularPower = -kMaxAngularPower;
         } else {
-            mLastTimeMs = System.currentTimeMillis();
+//            mLastTimeMs = System.currentTimeMillis();
             angularPower = 0.0;
         }
 

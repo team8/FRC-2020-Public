@@ -8,14 +8,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
-import com.palyrobotics.frc2019.config.Constants.PusherConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.SmartGains;
-import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
-import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
-import com.palyrobotics.frc2019.config.configv2.PortConstants;
-import com.palyrobotics.frc2019.config.configv2.ShovelConfig;
+import com.palyrobotics.frc2019.config.configv2.*;
 import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.TalonSRXOutput;
@@ -274,8 +270,8 @@ class HardwareUpdater {
 
         pusherSpark.enableVoltageCompensation(12);
 
-        pusherSpark.getEncoder().setPositionConversionFactor(PusherConstants.kPusherInchesPerRotation);
-        pusherSpark.getEncoder().setVelocityConversionFactor(PusherConstants.kPusherEncSpeedUnitConversion);
+        pusherSpark.getEncoder().setPositionConversionFactor(PusherConfig.kPusherInchesPerRotation);
+        pusherSpark.getEncoder().setVelocityConversionFactor(PusherConfig.kPusherEncSpeedUnitConversion);
         pusherSpark.getPIDController().setOutputRange(-0.7, 0.7);
 
         pusherSpark.setSmartCurrentLimit(56);
@@ -433,9 +429,9 @@ class HardwareUpdater {
         }
 
 
-        int pusherTotalClose = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoTolerance).count();
+        int pusherTotalClose = (int) robotState.mPusherReadings.stream().filter(i -> i < Configs.get(PusherConfig.class).vidarCargoTolerance).count();
 
-        int pusherTotalFar = (int) robotState.mPusherReadings.stream().filter(i -> i < PusherConstants.kVidarCargoToleranceFar).count();
+        int pusherTotalFar = (int) robotState.mPusherReadings.stream().filter(i -> i < Configs.get(PusherConfig.class).vidarCargoToleranceFar).count();
 
         robotState.hasPusherCargo = (pusherTotalClose > OtherConstants.kRequiredUltrasonicCount + 1);
         robotState.hasPusherCargoFar = (pusherTotalFar > OtherConstants.kRequiredUltrasonicCount);

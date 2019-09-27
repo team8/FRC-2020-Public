@@ -3,6 +3,7 @@ package com.palyrobotics.frc2019.robot;
 import com.palyrobotics.frc2019.behavior.RoutineManager;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.configv2.PusherConfig;
 import com.palyrobotics.frc2019.config.configv2.ServiceConfig;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
@@ -42,7 +43,7 @@ public class Robot extends TimedRobot {
     private Elevator mElevator = Elevator.getInstance();
     private Shovel mShovel = Shovel.getInstance();
     private Shooter mShooter = Shooter.getInstance();
-    private Pusher mPusher = Pusher.getInstance();
+    private Pusher mPusher = Pusher.getsInstance();
     private Fingers mFingers = Fingers.getInstance();
     private Intake mIntake = Intake.getInstance();
     private List<Subsystem> mSubsystems = new ArrayList<>(7);
