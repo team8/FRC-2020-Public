@@ -36,25 +36,27 @@ import com.palyrobotics.frc2019.vision.LimelightControlMode;
  * @author Nihar
  */
 public class OperatorInterface {
+
     private static OperatorInterface instance = new OperatorInterface();
 
     public static OperatorInterface getInstance() {
         return instance;
     }
 
-    private JoystickInput mDriveStick = Robot.getRobotState().leftStickInput;
-    private JoystickInput mTurnStick = Robot.getRobotState().rightStickInput;
+    private JoystickInput
+            mDriveStick = Robot.getRobotState().leftStickInput,
+            mTurnStick = Robot.getRobotState().rightStickInput;
 //    private JoystickInput mClimbStick = Robot.getRobotState().backupStickInput;
     private XboxInput mOperatorXboxController;
 
 //    public static boolean demandIntakeUp = true; // force intake to come up
 //    public static boolean intakeRunning = false; // force intake to come up
     private static double
-            intakeStartTime = 0.0, // force intake to come up
-            lastCancelTime = 0.0;
+            intakeStartTime, // force intake to come up
+            lastCancelTime;
 
     // Timestamp when a vision routine was last activated; helps us know when to turn LEDs off
-    private static double visionStartTime = 0;
+    private static double visionStartTimeMs;
 
     private OperatorInterface() {
         mOperatorXboxController = Robot.getRobotState().operatorXboxControllerInput;
@@ -80,14 +82,14 @@ public class OperatorInterface {
     /**
      * Returns modified commands
      *
-     * @param lastCommands
+     * @param lastCommands Last commands
      */
     Commands updateCommands(Commands lastCommands) {
         Commands newCommands = lastCommands.copy();
 
         newCommands.cancelCurrentRoutines = false;
 
-        /**
+        /*
          * Drivetrain controls
          */
         if (lastCommands.wantedDriveState != Drive.DriveState.OFF_BOARD_CONTROLLER && lastCommands.wantedDriveState != Drive.DriveState.ON_BOARD_CONTROLLER) {
@@ -101,7 +103,7 @@ public class OperatorInterface {
         }
 
         if (mTurnStick.getButtonPressed(3)) {
-            visionStartTime = System.currentTimeMillis();
+            visionStartTimeMs = System.currentTimeMillis();
             // Limelight vision tracking on
             if (Limelight.getInstance().getCamMode() != LimelightControlMode.CamMode.VISION) {
                 Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
@@ -110,14 +112,14 @@ public class OperatorInterface {
 
             newCommands.wantedDriveState = Drive.DriveState.VISION_ASSIST;
         } else {
-            if (System.currentTimeMillis() - visionStartTime > OtherConstants.kVisionLEDTimeoutMillis) {
+            if (System.currentTimeMillis() - visionStartTimeMs > OtherConstants.kVisionLEDTimeoutMillis) {
                 Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
                 Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
             }
         }
 
         if (mTurnStick.getButtonPressed(4)) {
-            visionStartTime = System.currentTimeMillis();
+            visionStartTimeMs = System.currentTimeMillis();
             // Limelight vision tracking on
             if (Limelight.getInstance().getCamMode() != LimelightControlMode.CamMode.VISION) {
                 Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
@@ -126,7 +128,7 @@ public class OperatorInterface {
             Drive.getInstance().setVisionClosedDriveController();
             newCommands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
         } else {
-            if (System.currentTimeMillis() - visionStartTime > OtherConstants.kVisionLEDTimeoutMillis) {
+            if (System.currentTimeMillis() - visionStartTimeMs > OtherConstants.kVisionLEDTimeoutMillis) {
                 Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
                 Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
             }

@@ -142,7 +142,7 @@ public class HardwareAdapter {
             return instance;
         }
 
-        final CANSparkMax pusherSpark;
+        final public CANSparkMax pusherSpark;
         final Ultrasonic pusherUltrasonic;
 //		public final Ultrasonic pusherSecondaryUltrasonic;
 //		public final AnalogPotentiometer pusherPotentiometer;
@@ -166,8 +166,7 @@ public class HardwareAdapter {
             return instance;
         }
 
-        final WPI_VictorSPX shooterMasterVictor;
-        final WPI_VictorSPX shooterSlaveVictor;
+        final WPI_VictorSPX shooterMasterVictor, shooterSlaveVictor;
 
         ShooterHardware() {
             shooterMasterVictor = new WPI_VictorSPX(sPortConstants.vidarShooterMasterVictorDeviceID);

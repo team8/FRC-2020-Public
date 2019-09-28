@@ -54,7 +54,7 @@ public class Pusher extends Subsystem {
         switch (mState) {
             case SLAM:
                 mReference = -0.33;
-                if (mSlamTime == -1) {
+                if (mSlamTime == null) {
                     mSlamTime = (double) System.currentTimeMillis();
                 }
                 mOutput.setPercentOutput((System.currentTimeMillis() - mSlamTime > 400) ? mReference / 5.3 : mReference);
@@ -72,6 +72,7 @@ public class Pusher extends Subsystem {
                 break;
         }
 
+        CSVWriter.addData("pusherOutput", HardwareAdapter.getInstance().getPusher().pusherSpark.getAppliedOutput());
         CSVWriter.addData("pusherPos", robotState.pusherPosition);
         CSVWriter.addData("pusherReference", mReference);
         CSVWriter.addData("pusherEncVelocity", robotState.pusherEncVelocity);
@@ -82,7 +83,7 @@ public class Pusher extends Subsystem {
 
     public boolean onTarget() {
         return Math.abs((Robot.getRobotState().pusherPosition - mReference)) < mConfig.acceptablePositionError
-                && Math.abs(Robot.getRobotState().pusherVelocity) < .5;
+                && Math.abs(Robot.getRobotState().pusherVelocity) < 0.5;
     }
 
     public PusherState getPusherState() {
@@ -95,6 +96,6 @@ public class Pusher extends Subsystem {
 
     @Override
     public String getStatus() {
-        return "Pusher State: " + mState + "\nPusher output" + mOutput.getReference();
+        return String.format("Pusher State: %s%nPusher output%s", mState, mOutput.getReference());
     }
 }

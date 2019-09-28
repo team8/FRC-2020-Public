@@ -16,6 +16,7 @@ import java.util.Map;
  *
  */
 public class RobotState {
+
 	public enum GamePeriod {
 		AUTO, TELEOP, DISABLED
 	}

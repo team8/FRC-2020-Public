@@ -25,16 +25,16 @@ import java.util.stream.Collectors;
 
 public class Robot extends TimedRobot {
 
-    private static RobotState robotState = RobotState.getInstance();
+    private static RobotState mRobotState = RobotState.getInstance();
 
     public static RobotState getRobotState() {
-        return robotState;
+        return mRobotState;
     }
 
-    private static Commands commands = Commands.getInstance();
+    private static Commands mCommands = Commands.getInstance();
 
     public static Commands getCommands() {
-        return commands;
+        return mCommands;
     }
 
     private OperatorInterface operatorInterface = OperatorInterface.getInstance();
@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
 
         mEnabledServices.forEach(RobotService::start);
 
-        if (RobotBase.isSimulation()) robotState.matchStartTimeMs = System.currentTimeMillis();
+        if (RobotBase.isSimulation()) mRobotState.matchStartTimeMs = System.currentTimeMillis();
 
 //        Logger.getInstance().logRobotThread(Level.INFO, "End robotInit()");
     }
@@ -183,19 +183,19 @@ public class Robot extends TimedRobot {
 //
 //        Logger.getInstance().logRobotThread(Level.INFO, "Start teleopInit()");
 
-        robotState.gamePeriod = RobotState.GamePeriod.TELEOP;
-        robotState.reset(0.0, new RigidTransform2d());
-        mHardwareUpdater.updateState(robotState);
+        mRobotState.gamePeriod = RobotState.GamePeriod.TELEOP;
+        mRobotState.reset(0.0, new RigidTransform2d());
+        mHardwareUpdater.updateState(mRobotState);
         mHardwareUpdater.updateHardware();
-        mRoutineManager.reset(commands);
+        mRoutineManager.reset(mCommands);
         DashboardManager.getInstance().toggleCANTable(true);
-        commands.wantedDriveState = Drive.DriveState.CHEZY; //switch to chezy after auto ends
-        commands = operatorInterface.updateCommands(commands);
+        mCommands.wantedDriveState = Drive.DriveState.CHEZY; //switch to chezy after auto ends
+        mCommands = operatorInterface.updateCommands(mCommands);
         CSVWriter.cleanFile();
         startSubsystems();
         mHardwareUpdater.enableBrakeMode();
-        robotState.reset(0.0, new RigidTransform2d());
-        robotState.matchStartTimeMs = System.currentTimeMillis();
+        mRobotState.reset(0.0, new RigidTransform2d());
+        mRobotState.matchStartTimeMs = System.currentTimeMillis();
 
         // Set limelight to driver camera mode - redundancy for testing purposes
         Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER);
@@ -211,8 +211,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        commands = mRoutineManager.update(operatorInterface.updateCommands(commands));
-        mHardwareUpdater.updateState(robotState);
+        mCommands = mRoutineManager.update(operatorInterface.updateCommands(mCommands));
+        mHardwareUpdater.updateState(mRobotState);
         updateSubsystems();
         mHardwareUpdater.updateHardware();
     }
@@ -226,14 +226,14 @@ public class Robot extends TimedRobot {
 //        Logger.getInstance().cleanup();
 //        DataLogger.getInstance().cleanup();
 
-        robotState.reset(0.0, new RigidTransform2d());
+        mRobotState.reset(0.0, new RigidTransform2d());
         // Stops updating routines
-        mRoutineManager.reset(commands);
+        mRoutineManager.reset(mCommands);
         // Creates a new Commands instance in place of the old one
         Commands.reset();
-        commands = Commands.getInstance();
+        mCommands = Commands.getInstance();
 
-        robotState.gamePeriod = RobotState.GamePeriod.DISABLED;
+        mRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
         // Stop controllers
         mDrive.setNeutral();
         stopSubsystems();
@@ -297,7 +297,7 @@ public class Robot extends TimedRobot {
 
     private void updateSubsystems() {
         for (Subsystem subsystem : mEnabledSubsystems) {
-            subsystem.update(commands, robotState);
+            subsystem.update(mCommands, mRobotState);
         }
     }
 

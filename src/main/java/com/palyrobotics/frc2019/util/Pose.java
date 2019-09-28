@@ -82,12 +82,12 @@ public class Pose {
 		copy.rightEnc = this.rightEnc;
 		copy.lastRightEnc = this.lastRightEnc;
 		copy.rightEncVelocity = this.rightEncVelocity;
-		copy.leftError = (this.leftError.isPresent()) ? Optional.of(this.leftError.get()) : Optional.empty();
-		copy.rightError = (this.rightError.isPresent()) ? Optional.of(this.rightError.get()) : Optional.empty();
-		copy.leftMotionMagicPos = (this.leftMotionMagicPos.isPresent()) ? Optional.of(this.leftMotionMagicPos.get()) : Optional.empty();
-		copy.rightMotionMagicPos = (this.rightMotionMagicPos.isPresent()) ? Optional.of(this.rightMotionMagicPos.get()) : Optional.empty();
-		copy.leftMotionMagicVel = (this.leftMotionMagicVel.isPresent()) ? Optional.of(this.leftMotionMagicVel.get()) : Optional.empty();
-		copy.rightMotionMagicVel = (this.rightMotionMagicVel.isPresent()) ? Optional.of(this.rightMotionMagicVel.get()) : Optional.empty();
+		copy.leftError = this.leftError;
+		copy.rightError = this.rightError;
+		copy.leftMotionMagicPos = this.leftMotionMagicPos;
+		copy.rightMotionMagicPos = this.rightMotionMagicPos;
+		copy.leftMotionMagicVel = this.leftMotionMagicVel;
+		copy.rightMotionMagicVel = this.rightMotionMagicVel;
 
 		return copy;
 	}

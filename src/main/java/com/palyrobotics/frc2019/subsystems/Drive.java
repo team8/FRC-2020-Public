@@ -128,7 +128,7 @@ public class Drive extends Subsystem {
     @Override
     public void update(Commands commands, RobotState state) {
         mCachedRobotState = state;
-        mCachedPose = state.drivePose.copy();
+        mCachedPose = state.drivePose.copy(); // TODO make copyTo function instead, this creates new instance every time
         boolean mIsNewState = !(mState == commands.wantedDriveState);
         mState = commands.wantedDriveState;
 

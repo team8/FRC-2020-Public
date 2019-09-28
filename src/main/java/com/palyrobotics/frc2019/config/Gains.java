@@ -74,23 +74,24 @@ public class Gains {
 
     //Pusher Constants
     //TODO: Find and tune gains
-    private static final double kVidarPusherPositionkP = 0.18;
-    private static final double kVidarPusherPositionkI = 0.0;
-    private static final double kVidarPusherPositionkD = 1;
-    private static final double kVidarPusherPositionkF = 0.0;
-    private static final int kVidarPusherPositionkIzone = 0;
-    private static final double kVidarPusherPositionkRampRate = 0.0;
-    public static final Gains pusherPosition = new Gains(kVidarPusherPositionkP, kVidarPusherPositionkI, kVidarPusherPositionkD,
-            kVidarPusherPositionkF, kVidarPusherPositionkIzone, kVidarPusherPositionkRampRate);
+    private static final double
+            kVidarPusherPositionP = 0.18,
+            kVidarPusherPositionI = 0.0,
+            kVidarPusherPositionD = 1.0,
+            kVidarPusherPositionF = 0.0;
+    private static final int kVidarPusherPositionIZone = 0;
+    private static final double kVidarPusherPositionRampRate = 0.0;
+    public static final Gains pusherPosition = new Gains(kVidarPusherPositionP, kVidarPusherPositionI, kVidarPusherPositionD,
+            kVidarPusherPositionF, kVidarPusherPositionIZone, kVidarPusherPositionRampRate);
 
-    private static final double kVidarIntakePositionkP = .27; // .3;
-    private static final double kVidarIntakePositionkI = 0.0;
-    private static final double kVidarIntakePositionkD = 0.0; // 2.2;
-    private static final double kVidarIntakePositionkF = 0.0;
-    private static final int kVidarIntakePositionkIzone = 0;
-    private static final double kVidarIntakePositionkRampRate = 1.0;
-    public static final Gains intakePosition = new Gains(kVidarIntakePositionkP, kVidarIntakePositionkI, kVidarIntakePositionkD, kVidarIntakePositionkF,
-            kVidarIntakePositionkIzone, kVidarIntakePositionkRampRate);
+    private static final double kVidarIntakePositionP = .27; // .3;
+    private static final double kVidarIntakePositionI = 0.0;
+    private static final double kVidarIntakePositionD = 0.0; // 2.2;
+    private static final double kVidarIntakePositionF = 0.0;
+    private static final int kVidarIntakePositionIZone = 0;
+    private static final double kVidarIntakePositionRampRate = 1.0;
+    public static final Gains intakePosition = new Gains(kVidarIntakePositionP, kVidarIntakePositionI, kVidarIntakePositionD, kVidarIntakePositionF,
+            kVidarIntakePositionIZone, kVidarIntakePositionRampRate);
 
     //kF = (gear ratio) / (free speed)
     public static final double

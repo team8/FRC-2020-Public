@@ -196,10 +196,10 @@ class HardwareUpdater {
     }
 
     private void configureIntakeHardware() {
-
         HardwareAdapter.IntakeHardware intakeHardware = HardwareAdapter.getInstance().getIntake();
-        CANSparkMax intakeMasterSpark = intakeHardware.intakeMasterSpark;
-        CANSparkMax intakeSlaveSpark = intakeHardware.intakeSlaveSpark;
+        CANSparkMax
+                intakeMasterSpark = intakeHardware.intakeMasterSpark,
+                intakeSlaveSpark = intakeHardware.intakeSlaveSpark;
         WPI_TalonSRX intakeTalon = intakeHardware.intakeTalon;
 
         intakeMasterSpark.restoreFactoryDefaults();
@@ -278,14 +278,14 @@ class HardwareUpdater {
         pusherSpark.setInverted(true);
         pusherSpark.setIdleMode(IdleMode.kBrake);
 
-
         updateSparkGains(pusherSpark, Gains.pusherPosition);
     }
 
     private void startUltrasonics() {
-        Ultrasonic intakeUltrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft;
-        Ultrasonic intakeUltrasonicRight = HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight;
-        Ultrasonic pusherUltrasonic = HardwareAdapter.getInstance().getPusher().pusherUltrasonic;
+        Ultrasonic
+                intakeUltrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft,
+                intakeUltrasonicRight = HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight,
+                pusherUltrasonic = HardwareAdapter.getInstance().getPusher().pusherUltrasonic;
 //		Ultrasonic pusherSecondaryUltrasonic = HardwareAdapter.getInstance().getPusher().pusherSecondaryUltrasonic;
 
 
