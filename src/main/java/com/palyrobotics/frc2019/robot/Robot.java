@@ -17,8 +17,10 @@ import com.palyrobotics.frc2019.vision.LimelightControlMode;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class Robot extends TimedRobot {
@@ -48,11 +50,11 @@ public class Robot extends TimedRobot {
     private Intake mIntake = Intake.getInstance();
     private List<Subsystem>
             mSubsystems = List.of(mDrive, mElevator, mShooter, mPusher, mShovel, mFingers, mIntake),
-            mEnabledSubsystems = new ArrayList<>(7);
+            mEnabledSubsystems;
 
     private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mElevator, mShooter, mPusher, mShovel, mFingers, mIntake);
 
-    private List<RobotService> mServices = new ArrayList<>();
+    private List<RobotService> mEnabledServices;
 
     @Override
     public void robotInit() {
@@ -65,12 +67,7 @@ public class Robot extends TimedRobot {
 //
 //        Logger.getInstance().logRobotThread(Level.INFO, "Start robotInit()");
 
-        ServiceConfig services = Configs.get(ServiceConfig.class);
-        mEnabledSubsystems = mSubsystems.stream()
-                .filter(subsystem -> services.enabledServices.contains(subsystem.getConfigName()))
-                .collect(Collectors.toList());
-        if (services.enabledServices.contains("commandReceiver")) mServices.add(new CommandReceiver());
-        if (services.enabledServices.contains("dashboardManager")) mServices.add(new DashboardManager());
+        setupSubsystemsAndServices();
 
         mHardwareUpdater.initHardware();
 
@@ -80,7 +77,7 @@ public class Robot extends TimedRobot {
 
         DriveTeam.configConstants();
 
-        mServices.forEach(RobotService::start);
+        mEnabledServices.forEach(RobotService::start);
 
         if (RobotBase.isSimulation()) robotState.matchStartTimeMs = System.currentTimeMillis();
 
@@ -269,13 +266,29 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-
-        mServices.forEach(RobotService::update);
+        mEnabledServices.forEach(RobotService::update);
 
         // System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
         // System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
         // System.out.println("left ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
         // System.out.println("right ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
+    }
+
+    private void setupSubsystemsAndServices() {
+        // TODO meh
+        ServiceConfig services = Configs.get(ServiceConfig.class);
+        Map<String, Supplier<RobotService>> configToService = Map.of(
+                "commandReceiver", CommandReceiver::new,
+                "dashboardManager", DashboardManager::new
+        );
+        mEnabledServices = services.enabledServices.stream()
+                .map(serviceName -> configToService.get(serviceName).get())
+                .collect(Collectors.toList());
+        Map<String, Subsystem> configToSubsystem = mSubsystems.stream()
+                .collect(Collectors.toMap(Subsystem::getConfigName, Function.identity()));
+        mEnabledSubsystems = services.enabledSubsystems.stream()
+                .map(configToSubsystem::get)
+                .collect(Collectors.toList());
     }
 
     private void startSubsystems() {

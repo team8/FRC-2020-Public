@@ -8,5 +8,8 @@
         "fingers",
         "shooter",
         "elevator"
+    ],
+    "enabledSubsystems": [
+        "enabledSubsystems"
     ]
 }

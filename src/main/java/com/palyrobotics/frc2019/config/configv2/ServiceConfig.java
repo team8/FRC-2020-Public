@@ -8,5 +8,5 @@ import java.util.List;
 public class ServiceConfig extends AbstractConfig {
 
     public boolean competitionMode;
-    public List<String> enabledServices = new ArrayList<>();
+    public List<String> enabledServices = new ArrayList<>(), enabledSubsystems = new ArrayList<>();
 }
