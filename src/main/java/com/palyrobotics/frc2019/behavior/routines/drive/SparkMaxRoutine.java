@@ -51,7 +51,6 @@ public class SparkMaxRoutine extends Routine {
             if (mSignal.leftOutput.getControlType().equals(ControlType.kPosition)) {
                 mSignal.leftOutput.setTargetPosition(mSignal.leftOutput.getReference() + robotState.drivePose.leftEnc, mSignal.leftOutput.getGains());
                 mSignal.rightOutput.setTargetPosition(mSignal.rightOutput.getReference() + robotState.drivePose.rightEnc, mSignal.rightOutput.getGains());
-
             }
         }
         drive.setSparkMaxController(mSignal);

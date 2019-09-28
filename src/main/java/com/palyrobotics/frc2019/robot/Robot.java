@@ -236,6 +236,7 @@ public class Robot extends TimedRobot {
         sRobotState.reset(0.0, new RigidTransform2d());
         // Stops updating routines
         mRoutineManager.reset(mCommands);
+
         // Creates a new Commands instance in place of the old one
         Commands.reset();
         mCommands = Commands.getInstance();
@@ -279,6 +280,7 @@ public class Robot extends TimedRobot {
         // System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
         // System.out.println("left ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
         // System.out.println("right ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
+
     }
 
     private void setupSubsystemsAndServices() {

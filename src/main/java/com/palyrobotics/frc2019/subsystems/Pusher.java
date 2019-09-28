@@ -50,7 +50,7 @@ public class Pusher extends Subsystem {
         mState = commands.wantedPusherInOutState;
         switch (mState) {
             case START:
-                mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
+                mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn, 0.0);
                 break;
             case IN:
                 if (mConfig.useSlam) {
@@ -62,11 +62,11 @@ public class Pusher extends Subsystem {
                     mOutput.setPercentOutput((currentTimeMs - mSlamTime > 400) ? percentOutput / 5.5 : percentOutput);
                     HardwareAdapter.getInstance().getPusher().resetSensors();
                 } else {
-                    mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
+                    mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn, 0.0);
                 }
                 break;
             case OUT:
-                mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceOut);
+                mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceOut, 0.0);
                 mSlamTime = null;
                 break;
         }

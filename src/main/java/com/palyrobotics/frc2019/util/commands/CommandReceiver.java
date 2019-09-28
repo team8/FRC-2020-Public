@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 public class CommandReceiver implements RobotService {
 
     private static final int PORT = 5808;
-
     private static ObjectMapper sMapper = Configs.getMapper();
 
     private final ArgumentParser mParser;
@@ -148,6 +147,7 @@ public class CommandReceiver implements RobotService {
                     if (configClass == null) throw new ClassNotFoundException();
                     AbstractConfig configObject = Configs.get(configClass);
                     String allFieldNames = parse.getString("config_field");
+
                     try {
                         switch (commandName) {
                             case "set":

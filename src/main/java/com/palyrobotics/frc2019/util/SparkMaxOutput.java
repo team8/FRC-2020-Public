@@ -5,10 +5,12 @@ import com.revrobotics.ControlType;
 
 public class SparkMaxOutput {
 
+    // Control Gains
     private Gains mGains = Gains.emptyGains;
 
     private ControlType mSparkMode;
 
+    // Output Reference
     private double mSparkReference;
 
     private double mArbitraryDemand;
@@ -34,7 +36,7 @@ public class SparkMaxOutput {
         mSparkReference = reference;
     }
 
-    public void setTargetSmartVelocity(double targetVelocity, double arbitraryDemand) {
+    public void setTargetSmartVelocity(double targetVelocity, double velocityConversion, double arbitraryDemand) {
         mSparkReference = targetVelocity;
         mSparkMode = ControlType.kSmartVelocity;
         mArbitraryDemand = arbitraryDemand;
@@ -66,12 +68,8 @@ public class SparkMaxOutput {
         mGains = gains;
     }
 
-    public void setTargetPositionSmartMotion(double setPoint) {
-        setTargetPositionSmartMotion(setPoint, 0.0);
-    }
-
-    public void setTargetPositionSmartMotion(double setPoint, double arbitraryDemand) {
-        mSparkReference = setPoint;
+    public void setTargetPositionSmartMotion(double positionSetPoint, double arbitraryDemand) {
+        mSparkReference = positionSetPoint;
         mSparkMode = ControlType.kSmartMotion;
         mArbitraryDemand = arbitraryDemand;
     }

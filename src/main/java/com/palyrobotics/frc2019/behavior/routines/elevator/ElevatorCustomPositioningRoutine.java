@@ -11,7 +11,7 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     private double mPosition;
     private double mTimeout;
     private Long mStartTime;
-    private boolean hasSetAllVars;
+    private boolean hasSetAllVars = false;
 
     private Path mPath;
     private String mRoutineStartWayPoint;
@@ -22,10 +22,10 @@ public class ElevatorCustomPositioningRoutine extends Routine {
     }
 
     public ElevatorCustomPositioningRoutine(double position, double timeout, Path path, String routineStartWayPoint) {
-        mPosition = position;
-        mTimeout = timeout;
-        mPath = path;
-        mRoutineStartWayPoint = routineStartWayPoint;
+        this.mPosition = position;
+        this.mTimeout = timeout;
+        this.mPath = path;
+        this.mRoutineStartWayPoint = routineStartWayPoint;
     }
 
     @Override

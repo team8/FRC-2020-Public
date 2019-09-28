@@ -324,4 +324,5 @@ public class Drive extends Subsystem {
     public String getStatus() {
         return String.format("Drive State: %s%nOutput Control Mode: %s%nLeft Setpoint: %s%nRight Setpoint: %s%nLeft Enc: %s%nRight Enc: %s%nGyro: %s%n", mState, mSignal.leftOutput.getControlType(), mSignal.leftOutput.getReference(), mSignal.rightOutput.getReference(), mCachedPose.leftEnc, mCachedPose.rightEnc, mCachedPose.heading);
     }
+
 }
