@@ -1,6 +1,8 @@
 {
     "enabledServices": [
-        "commandReceiver",
+        "commandReceiver"
+    ],
+    "enabledSubsystems": [
         "drive",
         "intake",
         "shovel",
@@ -8,8 +10,5 @@
         "fingers",
         "shooter",
         "elevator"
-    ],
-    "enabledSubsystems": [
-        "enabledSubsystems"
     ]
 }

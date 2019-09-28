@@ -206,7 +206,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
+        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+//        System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
     }
 
     @Override
