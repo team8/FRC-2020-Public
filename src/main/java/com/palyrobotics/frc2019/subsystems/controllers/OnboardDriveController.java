@@ -5,8 +5,8 @@ import com.palyrobotics.frc2019.config.Gains.TrajectoryGains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.util.Pose;
-import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.SparkDriveSignal;
+import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.revrobotics.ControlType;
 
 /**

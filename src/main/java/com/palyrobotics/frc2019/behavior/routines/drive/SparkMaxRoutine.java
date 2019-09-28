@@ -1,6 +1,5 @@
 package com.palyrobotics.frc2019.behavior.routines.drive;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;

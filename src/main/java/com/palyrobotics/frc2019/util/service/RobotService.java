@@ -5,4 +5,6 @@ public interface RobotService {
     void start();
 
     void update();
+
+    String getConfigName();
 }

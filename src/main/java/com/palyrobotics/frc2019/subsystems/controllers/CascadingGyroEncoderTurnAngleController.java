@@ -6,8 +6,8 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.subsystems.Drive.DriveController;
 import com.palyrobotics.frc2019.util.Pose;
-import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.SparkDriveSignal;
+import com.palyrobotics.frc2019.util.SparkMaxOutput;
 
 public class CascadingGyroEncoderTurnAngleController implements DriveController {
 

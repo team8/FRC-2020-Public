@@ -3,8 +3,6 @@ package com.palyrobotics.frc2019.robot;
 import com.palyrobotics.frc2019.behavior.RoutineManager;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.configv2.FingerConfig;
-import com.palyrobotics.frc2019.config.configv2.PusherConfig;
 import com.palyrobotics.frc2019.config.configv2.ServiceConfig;
 import com.palyrobotics.frc2019.config.dashboard.DashboardManager;
 import com.palyrobotics.frc2019.config.driveteam.DriveTeam;
@@ -21,6 +19,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Robot extends TimedRobot {
 
@@ -47,7 +46,9 @@ public class Robot extends TimedRobot {
     private Pusher mPusher = Pusher.getsInstance();
     private Fingers mFingers = Fingers.getInstance();
     private Intake mIntake = Intake.getInstance();
-    private List<Subsystem> mSubsystems = new ArrayList<>(7);
+    private List<Subsystem>
+            mSubsystems = List.of(mDrive, mElevator, mShooter, mPusher, mShovel, mFingers, mIntake),
+            mEnabledSubsystems = new ArrayList<>(7);
 
     private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mElevator, mShooter, mPusher, mShovel, mFingers, mIntake);
 
@@ -64,17 +65,12 @@ public class Robot extends TimedRobot {
 //
 //        Logger.getInstance().logRobotThread(Level.INFO, "Start robotInit()");
 
-        // TODO this is bad - find way to automate this
         ServiceConfig services = Configs.get(ServiceConfig.class);
-        if (services.enableDrive) mSubsystems.add(mDrive);
-        if (services.enableElevator) mSubsystems.add(mElevator);
-        if (services.enableShooter) mSubsystems.add(mShooter);
-        if (services.enablePusher) mSubsystems.add(mPusher);
-        if (services.enableShovel) mSubsystems.add(mShovel);
-        if (services.enableFingers) mSubsystems.add(mFingers);
-        if (services.enableIntake) mSubsystems.add(mIntake);
-        if (services.enableCommandReceiver) mServices.add(new CommandReceiver());
-        if (services.enableDashboard) mServices.add(new DashboardManager());
+        mEnabledSubsystems = mSubsystems.stream()
+                .filter(subsystem -> services.enabledServices.contains(subsystem.getConfigName()))
+                .collect(Collectors.toList());
+        if (services.enabledServices.contains("commandReceiver")) mServices.add(new CommandReceiver());
+        if (services.enabledServices.contains("dashboardManager")) mServices.add(new DashboardManager());
 
         mHardwareUpdater.initHardware();
 
@@ -201,7 +197,7 @@ public class Robot extends TimedRobot {
         CSVWriter.cleanFile();
         startSubsystems();
         mHardwareUpdater.enableBrakeMode();
-        robotState.reset(0, new RigidTransform2d());
+        robotState.reset(0.0, new RigidTransform2d());
         robotState.matchStartTimeMs = System.currentTimeMillis();
 
         // Set limelight to driver camera mode - redundancy for testing purposes
@@ -233,7 +229,7 @@ public class Robot extends TimedRobot {
 //        Logger.getInstance().cleanup();
 //        DataLogger.getInstance().cleanup();
 
-        robotState.reset(0, new RigidTransform2d());
+        robotState.reset(0.0, new RigidTransform2d());
         // Stops updating routines
         mRoutineManager.reset(commands);
         // Creates a new Commands instance in place of the old one
@@ -283,16 +279,16 @@ public class Robot extends TimedRobot {
     }
 
     private void startSubsystems() {
-        mSubsystems.forEach(Subsystem::start);
+        mEnabledSubsystems.forEach(Subsystem::start);
     }
 
     private void updateSubsystems() {
-        for (Subsystem subsystem : mSubsystems) {
+        for (Subsystem subsystem : mEnabledSubsystems) {
             subsystem.update(commands, robotState);
         }
     }
 
     private void stopSubsystems() {
-        mSubsystems.forEach(Subsystem::stop);
+        mEnabledSubsystems.forEach(Subsystem::stop);
     }
 }

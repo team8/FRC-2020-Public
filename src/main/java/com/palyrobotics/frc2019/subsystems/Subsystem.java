@@ -4,31 +4,32 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
 
 public abstract class Subsystem {
-	private String mName;
 
-	public Subsystem(String name) {
-		this.mName = name;
-	}
+    private String mName;
 
-	//Updates the subsystem with current commands and state
-	public abstract void update(Commands commands, RobotState robotState);
+    public Subsystem(String name) {
+        mName = name;
+    }
 
-	public String getName() {
-		return mName;
-	}
+    public abstract void update(Commands commands, RobotState robotState);
 
-	@Override
-	public String toString() {
-		return mName;
-	}
+    public String getConfigName() {
+        return mName;
+    }
 
-	public void start() {
-	}
+    @Override
+    public String toString() {
+        return mName;
+    }
 
-	public void stop() {
-	}
+    public void start() {
 
-	public String getStatus() {
-		return null;
-	}
+    }
+
+    public void stop() {
+    }
+
+    public String getStatus() {
+        return null;
+    }
 }

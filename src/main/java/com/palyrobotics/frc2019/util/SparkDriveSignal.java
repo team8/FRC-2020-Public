@@ -1,7 +1,6 @@
 package com.palyrobotics.frc2019.util;
 
 import com.revrobotics.ControlType;
-import com.revrobotics.SparkMax;
 
 import java.util.Objects;
 

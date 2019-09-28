@@ -34,7 +34,7 @@ public class Shovel extends Subsystem {
     private UpDownState mUpDownOutput = UpDownState.UP;
 
     protected Shovel() {
-        super("Hatch Intake");
+        super("shovel");
     }
 
     @Override

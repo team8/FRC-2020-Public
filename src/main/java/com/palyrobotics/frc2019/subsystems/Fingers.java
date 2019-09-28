@@ -7,6 +7,7 @@ import com.palyrobotics.frc2019.util.configv2.Configs;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class Fingers extends Subsystem {
+
     public static Fingers instance = new Fingers();
 
     public static Fingers getInstance() {
@@ -36,7 +37,7 @@ public class Fingers extends Subsystem {
     private PushingState mExpelState = PushingState.CLOSED;
 
     protected Fingers() {
-        super("Fingers");
+        super("fingers");
     }
 
     @Override

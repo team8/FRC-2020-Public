@@ -41,7 +41,7 @@ public class Elevator extends Subsystem {
     private long mLastTimeWhenInClosedLoopMs;
 
     private Elevator() {
-        super("Elevator");
+        super("elevator");
         mElevatorState = ElevatorState.IDLE;
     }
 

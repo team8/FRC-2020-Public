@@ -63,7 +63,7 @@ public class Drive extends Subsystem {
     private DashboardValue leftEncoder, rightEncoder;
 
     protected Drive() {
-        super("Drive");
+        super("drive");
 //        kWheelbaseWidth = 0;
 //        kTurnSlipFactor = 0;
 

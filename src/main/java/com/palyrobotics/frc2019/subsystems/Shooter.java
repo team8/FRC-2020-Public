@@ -8,14 +8,15 @@ import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.util.configv2.Configs;
 
 public class Shooter extends Subsystem {
-    public static Shooter instance = new Shooter("Shooter");
+
+    private static Shooter sInstance = new Shooter();
 
     public static Shooter getInstance() {
-        return instance;
+        return sInstance;
     }
 
     public static void resetInstance() {
-        instance = new Shooter("Shooter");
+        sInstance = new Shooter();
     }
 
     private double mOutput;
@@ -25,7 +26,6 @@ public class Shooter extends Subsystem {
     private boolean cachedCargoState;
 
     private double mExpellingCycles;
-    private boolean readyToExpel;
 
     public enum ShooterState {
         SPIN_UP,
@@ -34,8 +34,8 @@ public class Shooter extends Subsystem {
 
     private ShooterState mState = ShooterState.IDLE;
 
-    protected Shooter(String name) {
-        super(name);
+    protected Shooter() {
+        super("shooter");
     }
 
     @Override
@@ -73,11 +73,8 @@ public class Shooter extends Subsystem {
                 break;
         }
 
-        if (1 / OtherConstants.deltaTime <= mExpellingCycles) { // Once enough time passes, ready to expel
-            readyToExpel = true;
-        } else {
-            readyToExpel = false;
-        }
+        // Once enough time passes, ready to expel
+        boolean readyToExpel = 1 / OtherConstants.deltaTime <= mExpellingCycles;
 
         if (readyToExpel && robotState.hasCargo) { // Rumble until expelled
             mRumbleLength = 0.5;
@@ -106,6 +103,6 @@ public class Shooter extends Subsystem {
 
     @Override
     public String getStatus() {
-        return "Shooter State: " + mState + "\nVictor Output: " + mOutput;
+        return String.format("Shooter State: %s%nVictor Output: %s", mState, mOutput);
     }
 }

@@ -121,6 +121,11 @@ public class CommandReceiver implements RobotService {
         return result;
     }
 
+    @Override
+    public String getConfigName() {
+        return "commandReceiver";
+    }
+
     private Field getField(Class<?> clazz, String name) throws NoSuchFieldException {
         Map<String, Field> fields = new HashMap<>();
         for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {

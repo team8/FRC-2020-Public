@@ -33,7 +33,7 @@ public class Pusher extends Subsystem {
     private PusherState mState = PusherState.IN;
 
     protected Pusher() {
-        super("Pusher");
+        super("pusher");
     }
 
     @Override

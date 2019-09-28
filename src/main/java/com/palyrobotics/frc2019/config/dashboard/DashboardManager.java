@@ -42,6 +42,11 @@ public class DashboardManager implements RobotService {
 
     }
 
+    @Override
+    public String getConfigName() {
+        return "dashboardManager";
+    }
+
     /**
      * Publishes a KV pair to the Network Table.
      *

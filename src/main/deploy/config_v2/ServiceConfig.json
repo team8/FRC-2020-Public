@@ -1,12 +1,12 @@
 {
-  "enableLogger" : false,
-  "enableCommandReceiver": true,
-  "enableDashboard": false,
-  "enableDrive": true,
-  "enableElevator": true,
-  "enableShooter": true,
-  "enablePusher": true,
-  "enableShovel": true,
-  "enableFingers": true,
-  "enableIntake": true
+    "enabledServices": [
+        "commandReceiver",
+        "drive",
+        "intake",
+        "shovel",
+        "pusher",
+        "fingers",
+        "shooter",
+        "elevator"
+    ]
 }

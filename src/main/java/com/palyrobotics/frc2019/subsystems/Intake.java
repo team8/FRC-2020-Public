@@ -70,7 +70,7 @@ public class Intake extends Subsystem {
     private double mLastIntakeQueueTime = 0;
 
     protected Intake() {
-        super("Intake");
+        super("intake");
         mMacroState = IntakeMacroState.IDLE;
     }
 
