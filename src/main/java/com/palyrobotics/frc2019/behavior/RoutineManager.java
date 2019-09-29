@@ -55,7 +55,7 @@ public class RoutineManager {
 //        Logger.getInstance().logRobotThread(Level.FINE, "Routine manager reset");
         Commands output = commands.copy();
         //Cancel all running routines
-        if (runningRoutines.size() != 0) {
+        if (runningRoutines.size() > 0) {
             for (Routine routine : runningRoutines) {
 //                Logger.getInstance().logRobotThread(Level.FINE, "Canceling", routine.getName());
                 output = routine.cancel(output);

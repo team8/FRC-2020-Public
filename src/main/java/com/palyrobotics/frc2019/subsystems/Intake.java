@@ -20,7 +20,7 @@ public class Intake extends Subsystem {
 
     private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
 
-    private SparkMaxOutput mSparkOutput = new SparkMaxOutput(ControlType.kSmartMotion);
+    private SparkMaxOutput mSparkOutput = new SparkMaxOutput(ControlType.kDutyCycle);
     private double mTalonOutput, mRumbleLength;
 
     private Double mIntakeWantedAngle;
@@ -122,10 +122,8 @@ public class Intake extends Subsystem {
         } else if (commands.wantedIntakeState == IntakeMacroState.DROPPING && robotState.hasPusherCargo) {
             mMacroState = IntakeMacroState.HOLDING_MID;
             commands.wantedIntakeState = IntakeMacroState.HOLDING_MID; // reset it
-        } else if (commands.wantedIntakeState == IntakeMacroState.HOLDING
-                && (mMacroState != IntakeMacroState.HOLDING || mIntakeWantedAngle == null)) {
+        } else if (commands.wantedIntakeState == IntakeMacroState.HOLDING && mMacroState != IntakeMacroState.HOLDING) {
             mMacroState = commands.wantedIntakeState;
-            mIntakeWantedAngle = robotState.intakeAngle; // Set to current position, hold it
 //            Logger.getInstance().logRobotThread(Level.INFO, "setting wanted intake pos to " + robotState.intakeAngle);
         } else if (mMacroState != IntakeMacroState.DROPPING
                 && !(mMacroState == IntakeMacroState.GROUND_INTAKING && commands.wantedIntakeState == IntakeMacroState.HOLDING_ROCKET)) {

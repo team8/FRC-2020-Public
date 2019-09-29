@@ -66,8 +66,12 @@ public class SparkMaxOutput {
         mGains = gains;
     }
 
-    public void setTargetPositionSmartMotion(double positionSetPoint, double arbitraryDemand) {
-        mSparkReference = positionSetPoint;
+    public void setTargetPositionSmartMotion(double setPoint) {
+        setTargetPositionSmartMotion(setPoint, 0.0);
+    }
+
+    public void setTargetPositionSmartMotion(double setPoint, double arbitraryDemand) {
+        mSparkReference = setPoint;
         mSparkMode = ControlType.kSmartMotion;
         mArbitraryDemand = arbitraryDemand;
     }

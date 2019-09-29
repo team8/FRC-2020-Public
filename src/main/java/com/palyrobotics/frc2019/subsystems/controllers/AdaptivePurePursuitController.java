@@ -35,7 +35,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
     private boolean mReversed;
     private double mPathCompletionTolerance;
 
-    private OnboardDriveController onboardController;
+    private OnboardDriveController mOnboardController;
 
     public AdaptivePurePursuitController(double fixed_lookahead, double max_accel, double nominal_dt, Path path, boolean reversed,
                                          double path_completion_tolerance) {
@@ -46,8 +46,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
         mLastCommand = null;
         mReversed = reversed;
         mPathCompletionTolerance = path_completion_tolerance;
-
-        this.onboardController = new OnboardDriveController(OnboardControlType.kVelArbFF, Gains.vidarTrajectory);
+        mOnboardController = new OnboardDriveController(OnboardControlType.kVelArbFF, Gains.vidarTrajectory);
     }
 
     /**
@@ -130,7 +129,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
         TrajectorySegment left_segment = new TrajectorySegment(setpoint.left, leftAcc, dt);
         TrajectorySegment right_segment = new TrajectorySegment(setpoint.right, rightAcc, dt);
         try {
-            onboardController.updateSetpoint(left_segment, right_segment, this);
+            mOnboardController.updateSetpoint(left_segment, right_segment, this);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -139,7 +138,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
         mLastCommand = command;
         mLastDriveVelocity = setpoint;
 
-        return onboardController.update(state);
+        return mOnboardController.update(state);
 
     }
 
@@ -205,8 +204,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
     //HOPING THIS METHOD NEVER GETS CALLED
     @Override
     public Pose getSetPoint() {
-        Pose setpoint = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
-        return setpoint;
+        return new Pose(0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     // Really only used for checking point injection, ignore otherwise

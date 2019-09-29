@@ -8,7 +8,7 @@ import com.palyrobotics.frc2019.util.trajectory.Path;
 /**
  * Created by Justin on 3/22/18.
  */
-public class WaypointTriggerRoutine extends Routine{
+public class WaypointTriggerRoutine extends Routine {
     private Routine mRoutine;
     private DrivePathRoutine mDrivePathRoutine;
     private Path mPath;
@@ -16,10 +16,10 @@ public class WaypointTriggerRoutine extends Routine{
     private boolean startedRoutine = false;
 
     public WaypointTriggerRoutine(Routine routine, DrivePathRoutine path, String marker) {
-        this.mRoutine = routine;
-        this.mDrivePathRoutine = path;
-        this.mPath = path.getPath();
-        this.mMarker = marker;
+        mRoutine = routine;
+        mDrivePathRoutine = path;
+        mPath = path.getPath();
+        mMarker = marker;
     }
 
     @Override
@@ -29,12 +29,12 @@ public class WaypointTriggerRoutine extends Routine{
 
     @Override
     public Commands update(Commands commands) {
-        this.mPath = mDrivePathRoutine.getPath();
-        if(mPath.getMarkersCrossed().contains(mMarker) && !startedRoutine) {
+        mPath = mDrivePathRoutine.getPath();
+        if (mPath.getMarkersCrossed().contains(mMarker) && !startedRoutine) {
             mRoutine.start();
             startedRoutine = true;
         }
-        if(startedRoutine) {
+        if (startedRoutine) {
             mRoutine.update(commands);
         }
         return commands;
@@ -57,10 +57,10 @@ public class WaypointTriggerRoutine extends Routine{
 
     @Override
     public String getName() {
-        String name = "WaypointTriggerRoutine of (";
-        name += mRoutine.getName();
-        name += " ";
-        name += mDrivePathRoutine.getName();
-        return name + ")";
+        return "WaypointTriggerRoutine of (" +
+                mRoutine.getName() +
+                " " +
+                mDrivePathRoutine.getName() +
+                ")";
     }
 }

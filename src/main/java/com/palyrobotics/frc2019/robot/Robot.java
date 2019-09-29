@@ -25,10 +25,11 @@ import java.util.stream.Collectors;
 
 public class Robot extends TimedRobot {
 
-    private static RobotState mRobotState = RobotState.getInstance();
+    private static final RobotState sRobotState = RobotState.getInstance();
+    private final Limelight mLimelight = Limelight.getInstance();
 
     public static RobotState getRobotState() {
-        return mRobotState;
+        return sRobotState;
     }
 
     private static Commands mCommands = Commands.getInstance();
@@ -79,7 +80,7 @@ public class Robot extends TimedRobot {
 
         mEnabledServices.forEach(RobotService::start);
 
-        if (RobotBase.isSimulation()) mRobotState.matchStartTimeMs = System.currentTimeMillis();
+        if (RobotBase.isSimulation()) sRobotState.matchStartTimeMs = System.currentTimeMillis();
 
 //        Logger.getInstance().logRobotThread(Level.INFO, "End robotInit()");
     }
@@ -113,7 +114,7 @@ public class Robot extends TimedRobot {
 //            //		commands.wantedIntakeUpDownState = Intake.UpDownState.UP;
 //
 //            // Limelight LED on
-////         Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+////         mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
 //
 //            mWriter.cleanFile();
 //
@@ -183,22 +184,22 @@ public class Robot extends TimedRobot {
 //
 //        Logger.getInstance().logRobotThread(Level.INFO, "Start teleopInit()");
 
-        mRobotState.gamePeriod = RobotState.GamePeriod.TELEOP;
-        mRobotState.reset(0.0, new RigidTransform2d());
-        mHardwareUpdater.updateState(mRobotState);
-        mHardwareUpdater.updateHardware();
+        sRobotState.gamePeriod = RobotState.GamePeriod.TELEOP;
+        sRobotState.reset(0.0, new RigidTransform2d());
+        mHardwareUpdater.updateState(sRobotState);
         mRoutineManager.reset(mCommands);
         DashboardManager.getInstance().toggleCANTable(true);
         mCommands.wantedDriveState = Drive.DriveState.CHEZY; //switch to chezy after auto ends
         mCommands = operatorInterface.updateCommands(mCommands);
         CSVWriter.cleanFile();
-        startSubsystems();
+        mEnabledSubsystems.forEach(Subsystem::start);;
+        mHardwareUpdater.updateHardware();
         mHardwareUpdater.enableBrakeMode();
-        mRobotState.reset(0.0, new RigidTransform2d());
-        mRobotState.matchStartTimeMs = System.currentTimeMillis();
+        sRobotState.reset(0.0, new RigidTransform2d());
+        sRobotState.matchStartTimeMs = System.currentTimeMillis();
 
         // Set limelight to driver camera mode - redundancy for testing purposes
-        Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER);
+        mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
 
 //        Logger.getInstance().logRobotThread(Level.INFO, "End teleopInit()");
 
@@ -206,15 +207,22 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
-//        System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
+//        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+        System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
+    }
+
+    @Override
+    public void testPeriodic() {
+
     }
 
     @Override
     public void teleopPeriodic() {
         mCommands = mRoutineManager.update(operatorInterface.updateCommands(mCommands));
-        mHardwareUpdater.updateState(mRobotState);
-        updateSubsystems();
+        mHardwareUpdater.updateState(sRobotState);
+        for (Subsystem subsystem : mEnabledSubsystems) {
+            subsystem.update(mCommands, sRobotState);
+        }
         mHardwareUpdater.updateHardware();
     }
 
@@ -227,21 +235,21 @@ public class Robot extends TimedRobot {
 //        Logger.getInstance().cleanup();
 //        DataLogger.getInstance().cleanup();
 
-        mRobotState.reset(0.0, new RigidTransform2d());
+        sRobotState.reset(0.0, new RigidTransform2d());
         // Stops updating routines
         mRoutineManager.reset(mCommands);
         // Creates a new Commands instance in place of the old one
         Commands.reset();
         mCommands = Commands.getInstance();
 
-        mRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
+        sRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
         // Stop controllers
         mDrive.setNeutral();
-        stopSubsystems();
+        mEnabledSubsystems.forEach(Subsystem::stop);
 
         // Set Limelight to vision pipeline to enable pit testing
-        Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
-        Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
+        mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
+        mLimelight.setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
         HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
         mHardwareUpdater.disableBrakeMode();
 
@@ -291,19 +299,5 @@ public class Robot extends TimedRobot {
                 .map(configToSubsystem::get)
                 .collect(Collectors.toList());
         mEnabledSubsystems.forEach(System.out::println);
-    }
-
-    private void startSubsystems() {
-        mEnabledSubsystems.forEach(Subsystem::start);
-    }
-
-    private void updateSubsystems() {
-        for (Subsystem subsystem : mEnabledSubsystems) {
-            subsystem.update(mCommands, mRobotState);
-        }
-    }
-
-    private void stopSubsystems() {
-        mEnabledSubsystems.forEach(Subsystem::stop);
     }
 }

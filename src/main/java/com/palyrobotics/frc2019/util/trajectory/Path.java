@@ -20,11 +20,11 @@ import java.util.*;
  * @author Team 254, Calvin Yan
  */
 public class Path {
-    protected static final double kSegmentCompletePercentage = .9;
+    private static final double kSegmentCompletePercentage = .9;
 
-    protected List<Waypoint> mWaypoints;
-    protected List<PathSegment> mSegments;
-    protected Set<String> mMarkersCrossed;
+    private List<Waypoint> mWaypoints;
+    private List<PathSegment> mSegments;
+    private Set<String> mMarkersCrossed;
 
     /**
      * A point along the Path, which consists of the location, the speed, and a string marker (that future code can identify). Paths consist of a List of
@@ -199,7 +199,7 @@ public class Path {
      * the velocity is the smaller value between Constants.kPathFollowingMaxVel and k/curvature, where k is an arbitrary constant.
      */
 
-    public void setVelocities(List<Waypoint> wayPoints) {
+    private void setVelocities(List<Waypoint> wayPoints) {
         for (int i = 0; i < wayPoints.size() - 1; i++) {
             // Check if velocity has not already been set
             if (wayPoints.get(i).speed == -1) {
@@ -297,7 +297,7 @@ public class Path {
 		return intersection_point.map(translation2d -> new PathSegment.Sample(translation2d, last_segment.getSpeed())).orElseGet(() -> new PathSegment.Sample(last_segment.getEnd(), last_segment.getSpeed()));
     }
 
-    static Optional<Translation2d> getFirstCircleSegmentIntersection(PathSegment segment, Translation2d center, double radius) {
+    private static Optional<Translation2d> getFirstCircleSegmentIntersection(PathSegment segment, Translation2d center, double radius) {
         double x1 = segment.getStart().getX() - center.getX();
         double y1 = segment.getStart().getY() - center.getY();
         double x2 = segment.getEnd().getX() - center.getX();
@@ -336,6 +336,6 @@ public class Path {
     }
 
     public List<Waypoint> getWayPoints() {
-        return this.mWaypoints;
+        return mWaypoints;
     }
 }

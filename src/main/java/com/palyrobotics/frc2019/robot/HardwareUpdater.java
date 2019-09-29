@@ -38,7 +38,7 @@ import java.util.Map;
 
 class HardwareUpdater {
 
-    // Subsystem references
+    /* Subsystems */
     private Drive mDrive;
     private Intake mIntake;
     private Elevator mElevator;
@@ -99,17 +99,18 @@ class HardwareUpdater {
     }
 
     private void configureDriveHardware() {
-
         HardwareAdapter.DrivetrainHardware drivetrainHardware = HardwareAdapter.getInstance().getDrivetrain();
         drivetrainHardware.resetSensors();
 
-        CANSparkMax leftMasterSpark = drivetrainHardware.leftMasterSpark;
-        CANSparkMax leftSlave1Spark = drivetrainHardware.leftSlave1Spark;
-        CANSparkMax leftSlave2Spark = drivetrainHardware.leftSlave2Spark;
+        CANSparkMax
+                leftMasterSpark = drivetrainHardware.leftMasterSpark,
+                leftSlave1Spark = drivetrainHardware.leftSlave1Spark,
+                leftSlave2Spark = drivetrainHardware.leftSlave2Spark;
 
-        CANSparkMax rightMasterSpark = drivetrainHardware.rightMasterSpark;
-        CANSparkMax rightSlave1Spark = drivetrainHardware.rightSlave1Spark;
-        CANSparkMax rightSlave2Spark = drivetrainHardware.rightSlave2Spark;
+        CANSparkMax
+                rightMasterSpark = drivetrainHardware.rightMasterSpark,
+                rightSlave1Spark = drivetrainHardware.rightSlave1Spark,
+                rightSlave2Spark = drivetrainHardware.rightSlave2Spark;
 
 //		leftMasterSpark.restoreFactoryDefaults();
 //		leftSlave1Spark.restoreFactoryDefaults();
@@ -126,14 +127,14 @@ class HardwareUpdater {
 //		rightSlave1Spark.enableVoltageCompensation(12);
 //		rightSlave2Spark.enableVoltageCompensation(12);
 
-        drivetrainHardware.sparks.forEach(spark -> {
+        for (CANSparkMax spark : drivetrainHardware.sparks) {
             CANEncoder encoder = spark.getEncoder();
             CANPIDController controller = spark.getPIDController();
             encoder.setPositionConversionFactor(DrivetrainConstants.kDriveInchesPerRotation);
             encoder.setVelocityConversionFactor(DrivetrainConstants.kDriveSpeedUnitConversion);
             controller.setOutputRange(-DrivetrainConstants.kDriveMaxClosedLoopOutput, DrivetrainConstants.kDriveMaxClosedLoopOutput);
             spark.setSmartCurrentLimit(DrivetrainConstants.kCurrentLimit);
-        });
+        }
 
         // leftMasterSpark.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 3);
         // rightMasterSpark.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 3);
@@ -163,7 +164,6 @@ class HardwareUpdater {
     }
 
     private void configureElevatorHardware() {
-
         HardwareAdapter.ElevatorHardware elevatorHardware = HardwareAdapter.getInstance().getElevator();
         CANSparkMax masterElevatorSpark = elevatorHardware.elevatorMasterSpark;
         CANSparkMax slaveElevatorSpark = elevatorHardware.elevatorSlaveSpark;
@@ -204,7 +204,6 @@ class HardwareUpdater {
 
         intakeMasterSpark.restoreFactoryDefaults();
         intakeSlaveSpark.restoreFactoryDefaults();
-        intakeHardware.resetSensors();
 
         intakeSlaveSpark.follow(intakeMasterSpark);
 
@@ -261,7 +260,6 @@ class HardwareUpdater {
     }
 
     private void configurePusherHardware() {
-
         HardwareAdapter.getInstance().getPusher().resetSensors();
 
         CANSparkMax pusherSpark = HardwareAdapter.getInstance().getPusher().pusherSpark;
@@ -279,6 +277,7 @@ class HardwareUpdater {
         pusherSpark.setIdleMode(IdleMode.kBrake);
 
         updateSparkGains(pusherSpark, Gains.pusherPosition);
+        updateSmartMotionGains(pusherSpark, Configs.get(PusherConfig.class).gains, 1);
     }
 
     private void startUltrasonics() {
@@ -495,9 +494,10 @@ class HardwareUpdater {
 
     private boolean shouldRumble() {
         boolean rumble;
-        double intakeRumbleLength = mIntake.getRumbleLength();
-        double shovelRumbleLength = mShovel.getRumbleLength();
-        double shooterRumbleLength = mShooter.getRumbleLength();
+        double
+                intakeRumbleLength = mIntake.getRumbleLength(),
+                shovelRumbleLength = mShovel.getRumbleLength(),
+                shooterRumbleLength = mShooter.getRumbleLength();
 
         if (intakeRumbleLength > 0) {
             rumble = true;
@@ -576,7 +576,7 @@ class HardwareUpdater {
         }
     }
 
-    private Map<ControlType, Integer> slots = Map.of(
+    private Map<ControlType, Integer> controlTypeToSlot = Map.of(
             ControlType.kSmartMotion, 1,
             ControlType.kSmartVelocity, 2
     );
@@ -587,7 +587,7 @@ class HardwareUpdater {
         spark.getPIDController().setReference(
                 output.getReference(),
                 controlType,
-                slots.getOrDefault(controlType, 0), // TODO named constants for PID slots
+                controlTypeToSlot.getOrDefault(controlType, 0),
                 output.getArbitraryDemand(),
                 isSmart // TODO make both use percent out
                         ? CANPIDController.ArbFFUnits.kPercentOut

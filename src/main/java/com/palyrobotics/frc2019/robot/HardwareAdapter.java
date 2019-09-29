@@ -29,10 +29,10 @@ public class HardwareAdapter {
      * DRIVETRAIN - 6 CANSparkMax, 1 Gyro
      */
     public static class DrivetrainHardware {
-        private static DrivetrainHardware instance = new DrivetrainHardware();
+        private static DrivetrainHardware sInstance = new DrivetrainHardware();
 
         private static DrivetrainHardware getInstance() {
-            return instance;
+            return sInstance;
         }
 
         final CANSparkMax
@@ -66,10 +66,10 @@ public class HardwareAdapter {
      * Elevator - 2 CANSparkMax, 1 Encoder, 1 DoubleSolenoid
      */
     public static class ElevatorHardware {
-        private static ElevatorHardware instance = new ElevatorHardware();
+        private static ElevatorHardware sInstance = new ElevatorHardware();
 
         private static ElevatorHardware getInstance() {
-            return instance;
+            return sInstance;
         }
 
         public final CANSparkMax elevatorMasterSpark;
@@ -77,8 +77,8 @@ public class HardwareAdapter {
         final DoubleSolenoid elevatorShifter;
 
         void resetSensors() {
-            instance.elevatorMasterSpark.getEncoder().setPosition(0);
-            instance.elevatorSlaveSpark.getEncoder().setPosition(0);
+            sInstance.elevatorMasterSpark.getEncoder().setPosition(0);
+            sInstance.elevatorSlaveSpark.getEncoder().setPosition(0);
         }
 
         ElevatorHardware() {
@@ -93,10 +93,10 @@ public class HardwareAdapter {
      * Intake - 2 CANSparkMax, 1 WPI_TalonSRX, 2 Ultrasonics
      */
     public static class IntakeHardware {
-        private static IntakeHardware instance = new IntakeHardware();
+        private static IntakeHardware sInstance = new IntakeHardware();
 
         private static IntakeHardware getInstance() {
-            return instance;
+            return sInstance;
         }
 
         final WPI_TalonSRX intakeTalon;
@@ -105,19 +105,12 @@ public class HardwareAdapter {
         final Ultrasonic intakeUltrasonicLeft, intakeUltrasonicRight;
         final AnalogPotentiometer potentiometer;
 
-        void resetSensors() {
-            instance.intakeMasterSpark.getEncoder().setPosition(0);
-            instance.intakeSlaveSpark.getEncoder().setPosition(0);
-        }
-
         public void calibrateIntakeEncoderWithPotentiometer() {
             double
                     maxArmAngle = Configs.get(IntakeConfig.class).maxAngle,
                     potentiometerDegreesPerTick = 1 / IntakeConfig.kArmPotentiometerTicksPerDegree,
                     potentiometerTicks = potentiometer.get() - Configs.get(IntakeConfig.class).potentiometerMaxAngleTicks,
                     intakeStartAngle = maxArmAngle - potentiometerDegreesPerTick * Math.abs(potentiometerTicks);
-//            double intakeStartAngle = Configs.get(IntakeConfig.class).maxAngle -
-//                    1 / IntakeConfig.kArmPotentiometerTicksPerDegree * Math.abs(potentiometer.get() - Configs.get(IntakeConfig.class).potentiometerMaxAngleTicks);
             Robot.getRobotState().intakeStartAngle = intakeStartAngle;
             intakeMasterSpark.getEncoder().setPosition(intakeStartAngle);
         }
@@ -136,10 +129,10 @@ public class HardwareAdapter {
      * Pusher - 1 WPI_VictorSPX, 2 Ultrasonics
      */
     public static class PusherHardware {
-        private static PusherHardware instance = new PusherHardware();
+        private static PusherHardware sInstance = new PusherHardware();
 
         private static PusherHardware getInstance() {
-            return instance;
+            return sInstance;
         }
 
         final public CANSparkMax pusherSpark;
@@ -148,7 +141,7 @@ public class HardwareAdapter {
 //		public final AnalogPotentiometer pusherPotentiometer;
 
         public void resetSensors() {
-            instance.pusherSpark.getEncoder().setPosition(0);
+            sInstance.pusherSpark.getEncoder().setPosition(0);
         }
 
         PusherHardware() {
@@ -160,10 +153,10 @@ public class HardwareAdapter {
     }
 
     public static class ShooterHardware {
-        private static ShooterHardware instance = new ShooterHardware();
+        private static ShooterHardware sInstance = new ShooterHardware();
 
         private static ShooterHardware getInstance() {
-            return instance;
+            return sInstance;
         }
 
         final WPI_VictorSPX shooterMasterVictor, shooterSlaveVictor;
@@ -178,10 +171,10 @@ public class HardwareAdapter {
      * Hatch Intake - 1 WPI_VictorSPX, 1 SingleSolenoid
      */
     public static class ShovelHardware {
-        private static ShovelHardware instance = new ShovelHardware();
+        private static ShovelHardware sInstance = new ShovelHardware();
 
         private static ShovelHardware getInstance() {
-            return instance;
+            return sInstance;
         }
 
         final WPI_TalonSRX shovelTalon;
@@ -196,14 +189,13 @@ public class HardwareAdapter {
     }
 
     public static class FingersHardware {
-        private static FingersHardware instance = new FingersHardware();
+        private static FingersHardware sInstance = new FingersHardware();
 
         public static FingersHardware getInstance() {
-            return instance;
+            return sInstance;
         }
 
-        final DoubleSolenoid openCloseSolenoid;
-        final DoubleSolenoid pusherSolenoid;
+        final DoubleSolenoid openCloseSolenoid, pusherSolenoid;
 
         FingersHardware() {
             openCloseSolenoid = new DoubleSolenoid(0, sPortConstants.vidarOpenCloseSolenoidForwardID, sPortConstants.vidarOpenCloseSolenoidReverseID);
@@ -211,18 +203,16 @@ public class HardwareAdapter {
         }
     }
 
-    //Joysticks for operator interface
     public static class Joysticks {
-        private static Joysticks instance = new Joysticks();
+        private static Joysticks sInstance = new Joysticks();
 
         private static Joysticks getInstance() {
-            return instance;
+            return sInstance;
         }
 
-        final Joystick driveStick = new Joystick(0);
-        final Joystick turnStick = new Joystick(1);
+        final Joystick driveStick = new Joystick(0), turnStick = new Joystick(1);
         //        public final Joystick backupStick = new Joystick(3);
-        XboxController operatorXboxController = null;
+        XboxController operatorXboxController;
 
         Joysticks() {
             if (OtherConstants.operatorXBoxController) {
@@ -235,10 +225,10 @@ public class HardwareAdapter {
      * Miscellaneous Hardware - Compressor sensor(Analog Input), Compressor, PDP
      */
     public static class MiscellaneousHardware {
-        private static MiscellaneousHardware instance = new MiscellaneousHardware();
+        private static MiscellaneousHardware sInstance = new MiscellaneousHardware();
 
         private static MiscellaneousHardware getInstance() {
-            return instance;
+            return sInstance;
         }
 
         final Compressor compressor;
@@ -251,7 +241,7 @@ public class HardwareAdapter {
 
     }
 
-    //Wrappers to access hardware groups
+    // Wrappers to access hardware groups
     public DrivetrainHardware getDrivetrain() {
         return DrivetrainHardware.getInstance();
     }
@@ -288,10 +278,9 @@ public class HardwareAdapter {
         return MiscellaneousHardware.getInstance();
     }
 
-    //Singleton set up
-    private static final HardwareAdapter instance = new HardwareAdapter();
+    private static final HardwareAdapter sInstance = new HardwareAdapter();
 
     public static HardwareAdapter getInstance() {
-        return instance;
+        return sInstance;
     }
 }

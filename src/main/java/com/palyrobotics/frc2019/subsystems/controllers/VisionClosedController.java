@@ -39,7 +39,6 @@ public class VisionClosedController implements Drive.DriveController {
             if (angularPower > MAX_ANGULAR_POWER) angularPower = MAX_ANGULAR_POWER;
             if (angularPower < -MAX_ANGULAR_POWER) angularPower = -MAX_ANGULAR_POWER;
         } else {
-            SparkDriveSignal mSignal = new SparkDriveSignal();
             mSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
             mSignal.rightOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
             return mSignal;
