@@ -178,7 +178,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-//		System.out.println("TELE STARTED");
+//		System.out.println("TELEOP STARTED");
 //        Logger.getInstance().start();
 //        DataLogger.getInstance().start();
 //
@@ -189,10 +189,10 @@ public class Robot extends TimedRobot {
         mHardwareUpdater.updateState(sRobotState);
         mRoutineManager.reset(mCommands);
         DashboardManager.getInstance().toggleCANTable(true);
-        mCommands.wantedDriveState = Drive.DriveState.CHEZY; //switch to chezy after auto ends
+        mCommands.wantedDriveState = Drive.DriveState.CHEZY; // Switch to chezy after auto ends
         mCommands = operatorInterface.updateCommands(mCommands);
         CSVWriter.cleanFile();
-        mEnabledSubsystems.forEach(Subsystem::start);;
+        mEnabledSubsystems.forEach(Subsystem::start);
         mHardwareUpdater.updateHardware();
         mHardwareUpdater.enableBrakeMode();
         sRobotState.reset(0.0, new RigidTransform2d());
@@ -202,13 +202,12 @@ public class Robot extends TimedRobot {
         mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
 
 //        Logger.getInstance().logRobotThread(Level.INFO, "End teleopInit()");
-
     }
 
     @Override
     public void testInit() {
 //        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
-        System.out.println(HardwareAdapter.getInstance().getIntake().potentiometer.get());
+        System.out.printf("Potentiometer Arm: %s%n", HardwareAdapter.getInstance().getIntake().potentiometer.get());
     }
 
     @Override
@@ -228,7 +227,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-
 //        Logger.getInstance().logRobotThread(Level.INFO, "Start disabledInit()");
 //        Logger.getInstance().logRobotThread(Level.INFO, "Stopping logger...");
 //
