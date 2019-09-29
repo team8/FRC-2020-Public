@@ -45,7 +45,7 @@ public class CommandsTest {
 		mCommands.robotSetpoints.drivePowerSetpoint = Optional.of(DriveSignal.getNeutralSignal());
 		copy.robotSetpoints.drivePowerSetpoint = null;
 
-		assertThat("Copy modified original setpoints", mCommands.robotSetpoints.drivePowerSetpoint.get(), equalTo(DriveSignal.getNeutralSignal()));
+		assertThat("Copy modified original set points", mCommands.robotSetpoints.drivePowerSetpoint.get(), equalTo(DriveSignal.getNeutralSignal()));
 
 		System.out.println(copy.cancelCurrentRoutines);
 		System.out.println(copy.wantedRoutines);

@@ -114,20 +114,20 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
             command = new RigidTransform2d.Delta(speed, 0, 0);
         }
 
-        //Convert command to setpoint (left / right velocity)
-        Kinematics.DriveVelocity setpoint = Kinematics.inverseKinematics(command);
+        //Convert command to set point (left / right velocity)
+        Kinematics.DriveVelocity setPoint = Kinematics.inverseKinematics(command);
 
-        //Calculate acceleration of each side based on last setpoint
-        double leftAcc = (setpoint.left - mLastDriveVelocity.left) / dt;
-        double rightAcc = (setpoint.right - mLastDriveVelocity.right) / dt;
+        //Calculate acceleration of each side based on last setPoint
+        double leftAcc = (setPoint.left - mLastDriveVelocity.left) / dt;
+        double rightAcc = (setPoint.right - mLastDriveVelocity.right) / dt;
 
         CSVWriter.addData("lastDriveVelocityLeft", mLastDriveVelocity.left);
         CSVWriter.addData("lastDriveVelocityRight", mLastDriveVelocity.right);
 
-        //Pass velocity and acceleration setpoints into onboard controller which
-        //Returns a SparkSignal with velocity setpoint and arbitrary feedforward
-        TrajectorySegment left_segment = new TrajectorySegment(setpoint.left, leftAcc, dt);
-        TrajectorySegment right_segment = new TrajectorySegment(setpoint.right, rightAcc, dt);
+        //Pass velocity and acceleration set points into onboard controller which
+        //Returns a SparkSignal with velocity setPoint and arbitrary feedforward
+        TrajectorySegment left_segment = new TrajectorySegment(setPoint.left, leftAcc, dt);
+        TrajectorySegment right_segment = new TrajectorySegment(setPoint.right, rightAcc, dt);
         try {
             mOnboardController.updateSetpoint(left_segment, right_segment, this);
         } catch (IllegalAccessException e) {
@@ -136,7 +136,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
 
         mLastTime = now;
         mLastCommand = command;
-        mLastDriveVelocity = setpoint;
+        mLastDriveVelocity = setPoint;
 
         return mOnboardController.update(state);
 

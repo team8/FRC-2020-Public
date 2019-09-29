@@ -55,7 +55,7 @@ public class VisionTurnAngleController implements Drive.DriveController {
     @Override
     public Pose getSetPoint() {
         mCachedPose.heading = 0;
-        Pose setpoint = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
+//        Pose setPoint = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
         return mCachedPose;
     }
 

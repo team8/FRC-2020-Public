@@ -11,7 +11,7 @@ import com.revrobotics.ControlType;
 
 /**
  * Used to run onboard position or velocity control of the drivetrain
- * This controller is intended to be used in a cascading manner, with a parent controller that generates realtime setpoints
+ * This controller is intended to be used in a cascading manner, with a parent controller that generates realtime set points
  */
 public class OnboardDriveController implements Drive.DriveController {
     private SparkDriveSignal mSignal;
@@ -101,7 +101,7 @@ public class OnboardDriveController implements Drive.DriveController {
     }
 
     /**
-     * sp = setpoint, goal value
+     * sp = set point, goal value
      * pv = process variable, actual value
      */
     private SparkDriveSignal updatePID(double left_sp, double left_pv, double right_sp, double right_pv) {
@@ -152,7 +152,7 @@ public class OnboardDriveController implements Drive.DriveController {
 	}
 
     /**
-     * Helper class to represent a setpoint
+     * Helper class to represent a set point
      */
     public static class TrajectorySegment {
 
@@ -180,7 +180,7 @@ public class OnboardDriveController implements Drive.DriveController {
         }
 
         public String toString() {
-            return "pos: " + pos + "; vel: " + vel + "; acc: " + acc + "; dt: " + dt;
+            return String.format("pos: %s; vel: %s; acc: %s; dt: %s", pos, vel, acc, dt);
         }
     }
 

@@ -7,61 +7,58 @@ import com.palyrobotics.frc2019.subsystems.Subsystem;
 import com.palyrobotics.frc2019.util.SparkDriveSignal;
 
 public class DriveTimeRoutine extends Routine {
-	private long mEndTime;
-	private SparkDriveSignal mDrivePower;
+    private long mEndTime;
+    private SparkDriveSignal mDrivePower;
 
-	/**
-	 * Constructs with a specified time setpoint and velocity
-	 * 
-	 * @param time
-	 *            How long to drive (seconds)
-	 * @param drivePower
-	 *            LegacyDrive signal to output (left/right speeds -1 to 1)
-	 */
-	public DriveTimeRoutine(double time, SparkDriveSignal drivePower) {
-		//Keeps the offset prepared, when routine starts, will add System.currentTime
-		mEndTime = (long) (1000 * time);
-		this.mDrivePower = drivePower;
-	}
+    /**
+     * Constructs with a specified time set point and velocity
+     *
+     * @param time       How long to drive (seconds)
+     * @param drivePower LegacyDrive signal to output (left/right speeds -1 to 1)
+     */
+    public DriveTimeRoutine(double time, SparkDriveSignal drivePower) {
+        //Keeps the offset prepared, when routine starts, will add System.currentTime
+        mEndTime = (long) (1000 * time);
+        mDrivePower = drivePower;
+    }
 
-	@Override
-	public void start() {
-		drive.resetController();
-		//mEndTime already has the desired drive time
-		mEndTime += System.currentTimeMillis();
-	}
+    @Override
+    public void start() {
+        drive.resetController();
+        //mEndTime already has the desired drive time
+        mEndTime += System.currentTimeMillis();
+    }
 
-	//Routines just change the states of the robotsetpoints, which the behavior manager then moves the physical
-	//subsystems based on.
-	@Override
-	public Commands update(Commands commands) {
-		commands.wantedDriveState = Drive.DriveState.OPEN_LOOP;
-		commands.robotSetPoints.drivePowerSetpoint = mDrivePower;
-		return commands;
-	}
+    // Routines just change the states of the robot set points, which the behavior manager then moves the physical subsystems based on.
+    @Override
+    public Commands update(Commands commands) {
+        commands.wantedDriveState = Drive.DriveState.OPEN_LOOP;
+        commands.robotSetPoints.drivePowerSetpoint = mDrivePower;
+        return commands;
+    }
 
-	@Override
-	public Commands cancel(Commands commands) {
+    @Override
+    public Commands cancel(Commands commands) {
 //		Logger.getInstance().logRobotThread(Level.FINE, "Cancelling");
-		commands.wantedDriveState = Drive.DriveState.NEUTRAL;
-		drive.resetController();
-		drive.setNeutral();
-		return commands;
-	}
+        commands.wantedDriveState = Drive.DriveState.NEUTRAL;
+        drive.resetController();
+        drive.setNeutral();
+        return commands;
+    }
 
-	@Override
-	public boolean finished() {
-		//Finish after the time is up
-		return (System.currentTimeMillis() >= mEndTime);
-	}
+    @Override
+    public boolean finished() {
+        //Finish after the time is up
+        return (System.currentTimeMillis() >= mEndTime);
+    }
 
-	@Override
-	public String getName() {
-		return "DriveTimeRoutine";
-	}
+    @Override
+    public String getName() {
+        return "DriveTimeRoutine";
+    }
 
-	@Override
-	public Subsystem[] getRequiredSubsystems() {
-		return new Subsystem[] { drive };
-	}
+    @Override
+    public Subsystem[] getRequiredSubsystems() {
+        return new Subsystem[]{drive};
+    }
 }

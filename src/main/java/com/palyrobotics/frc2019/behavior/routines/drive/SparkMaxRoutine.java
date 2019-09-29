@@ -76,11 +76,11 @@ public class SparkMaxRoutine extends Routine {
     public boolean finished() {
         //Wait for controller to be added before finishing routine
         // if(Math.abs(mSignal.leftMotor.getSetpoint() - Robot.getRobotState().leftSetpoint) > 1) {
-        // 	Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark setpoints! desired, actual");
+        // 	Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark set points! desired, actual");
         // 	Logger.getInstance().logRobotThread(Level.WARNING, "Left", mSignal.leftMotor.getSetpoint() + ", " + Robot.getRobotState().leftSetpoint);
         // 	return false;
         // } else if(Math.abs(mSignal.rightMotor.getSetpoint() - Robot.getRobotState().rightSetpoint) > 1) {
-        // 	Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark setpoints! desired, actual");
+        // 	Logger.getInstance().logRobotThread(Level.WARNING, "Mismatched desired spark and actual spark set points! desired, actual");
         // 	Logger.getInstance().logRobotThread(Level.WARNING, "Right", mSignal.rightMotor.getSetpoint() + ", " + Robot.getRobotState().rightSetpoint);
         // 	return false;
         // } else if(mSignal.leftMotor.getControlType() != Robot.getRobotState().leftControlMode) {

@@ -43,7 +43,7 @@ public class TrajectoryFollower {
 
 	private TrajectoryConfig config_ = new TrajectoryConfig();
 	private double goal_position_;
-	private TrajectorySetpoint setpoint_ = new TrajectorySetpoint();
+	private TrajectorySetpoint set_point_ = new TrajectorySetpoint();
 
 	public TrajectoryFollower() {
 	}
@@ -59,7 +59,7 @@ public class TrajectoryFollower {
 
 	public void setGoal(TrajectorySetpoint current_state, double goal_position) {
 		goal_position_ = goal_position;
-		setpoint_ = current_state;
+		set_point_ = current_state;
 		reset_ = true;
 		error_sum_ = 0.0;
 	}
@@ -87,13 +87,13 @@ public class TrajectoryFollower {
 		}
 
 		if(isFinishedTrajectory()) {
-			setpoint_.pos = goal_position_;
-			setpoint_.vel = 0;
-			setpoint_.acc = 0;
+			set_point_.pos = goal_position_;
+			set_point_.vel = 0;
+			set_point_.acc = 0;
 		} else {
 			//Compute the new commanded position, velocity, and acceleration.
-			double distance_to_go = goal_position_ - setpoint_.pos;
-			double cur_vel = setpoint_.vel;
+			double distance_to_go = goal_position_ - set_point_.pos;
+			double cur_vel = set_point_.vel;
 			double cur_vel2 = cur_vel * cur_vel;
 			boolean inverted = false;
 			if(distance_to_go < 0) {
@@ -144,19 +144,19 @@ public class TrajectoryFollower {
 				next_state_.vel *= -1;
 				next_state_.acc *= -1;
 			}
-			setpoint_.pos += next_state_.pos;
-			setpoint_.vel = next_state_.vel;
-			setpoint_.acc = next_state_.acc;
+			set_point_.pos += next_state_.pos;
+			set_point_.vel = next_state_.vel;
+			set_point_.acc = next_state_.acc;
 
 		}
-		double error = setpoint_.pos - position;
+		double error = set_point_.pos - position;
 		if(reset_) {
 			//Prevent jump in derivative term when we have been reset.
 			reset_ = false;
 			last_error_ = error;
 			error_sum_ = 0;
 		}
-		double output = kp_ * error + kd_ * ((error - last_error_) / dt - setpoint_.vel) + (kv_ * setpoint_.vel + ka_ * setpoint_.acc);
+		double output = kp_ * error + kd_ * ((error - last_error_) / dt - set_point_.vel) + (kv_ * set_point_.vel + ka_ * set_point_.acc);
 		if(output < 1.0 && output > -1.0) {
 			//Only integrate error if the output isn't already saturated.
 			error_sum_ += error * dt;
@@ -168,10 +168,10 @@ public class TrajectoryFollower {
 	}
 
 	public boolean isFinishedTrajectory() {
-		return Math.abs(setpoint_.pos - goal_position_) < 1E-3 && Math.abs(setpoint_.vel) < 1E-2;
+		return Math.abs(set_point_.pos - goal_position_) < 1E-3 && Math.abs(set_point_.vel) < 1E-2;
 	}
 
 	public TrajectorySetpoint getCurrentSetpoint() {
-		return setpoint_;
+		return set_point_;
 	}
 }

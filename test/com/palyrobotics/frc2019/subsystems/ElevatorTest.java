@@ -35,8 +35,8 @@ public class ElevatorTest {
 			elevator.update(commands, robotState);
 			assertFalse("Calibration timed out!", ++counter > 5000);
 		}
-		assertTrue("Elevator bottom setpoint not properly set", Math.abs(elevator.getElevatorBottomPosition().get()) <= 4 );
-		assertThat("Elevator top setpoint not properly set", elevator.getElevatorTopPosition(), equalTo(Optional.of(Constants.kElevatorTopBottomDifferenceInches * Constants.kElevatorTicksPerInch)));
+		assertTrue("Elevator bottom set point not properly set", Math.abs(elevator.getElevatorBottomPosition().get()) <= 4 );
+		assertThat("Elevator top set point not properly set", elevator.getElevatorTopPosition(), equalTo(Optional.of(Constants.kElevatorTopBottomDifferenceInches * Constants.kElevatorTicksPerInch)));
 
 		assertFalse("Elevator is calibrating when it should be finished", elevator.getState() == ElevatorState.CALIBRATING);
 	}
@@ -50,8 +50,8 @@ public class ElevatorTest {
 		elevator.update(commands, robotState);
         elevator.update(commands, robotState);
 
-		assertThat("Elevator bottom setpoint not properly set", elevator.getElevatorBottomPosition(), equalTo(Optional.of(0.0)));
-		assertThat("Elevator top setpoint not properly set", elevator.getElevatorTopPosition(), equalTo(Optional.of(Constants.kElevatorTopBottomDifferenceInches * Constants.kElevatorTicksPerInch)));
+		assertThat("Elevator bottom set point not properly set", elevator.getElevatorBottomPosition(), equalTo(Optional.of(0.0)));
+		assertThat("Elevator top set point not properly set", elevator.getElevatorTopPosition(), equalTo(Optional.of(Constants.kElevatorTopBottomDifferenceInches * Constants.kElevatorTicksPerInch)));
 
 		assertFalse("Elevator is calibrating when it should be finished", elevator.getState() == ElevatorState.CALIBRATING);
 	}
@@ -65,8 +65,8 @@ public class ElevatorTest {
 		elevator.update(commands, robotState);
         elevator.update(commands, robotState);
 
-		assertThat("Elevator bottom setpoint not properly set", elevator.getElevatorBottomPosition().get(), equalTo(0.0));
-		assertThat("Elevator top setpoint not properly set", elevator.getElevatorTopPosition().get(), equalTo(Constants.kElevatorTopBottomDifferenceInches * Constants.kElevatorTicksPerInch));
+		assertThat("Elevator bottom set point not properly set", elevator.getElevatorBottomPosition().get(), equalTo(0.0));
+		assertThat("Elevator top set point not properly set", elevator.getElevatorTopPosition().get(), equalTo(Constants.kElevatorTopBottomDifferenceInches * Constants.kElevatorTicksPerInch));
 		assertFalse("Elevator is calibrating when it should be finished", elevator.getState() == ElevatorState.CALIBRATING);
 	}
 

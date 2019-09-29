@@ -39,9 +39,9 @@ public class ElevatorTest {
 			elevator.update(commands, robotState);
 			assertFalse("Calibration timed out!", ++counter > 5000);
 		}
-		assertThat("Elevator bottom setpoint not properly set",
+		assertThat("Elevator bottom set point not properly set",
 				elevator.getElevatorBottomPosition(), equalTo(Optional.of(0.0)));
-		assertThat("Elevator top setpoint not properly set",
+		assertThat("Elevator top set point not properly set",
 				elevator.getElevatorTopPosition(), equalTo(Optional.of(Constants.kTopBottomEncoderDifference)));
 
 		assertFalse("Elevator is calibrating when it should be finished",
@@ -55,9 +55,9 @@ public class ElevatorTest {
 
 		elevator.update(commands, robotState);
 
-		assertThat("Elevator bottom setpoint not properly set", elevator.getElevatorBottomPosition(),
+		assertThat("Elevator bottom set point not properly set", elevator.getElevatorBottomPosition(),
 				equalTo(Optional.of(0.0)));
-		assertThat("Elevator top setpoint not properly set", elevator.getElevatorTopPosition(),
+		assertThat("Elevator top set point not properly set", elevator.getElevatorTopPosition(),
 				equalTo(Optional.of(Constants.kTopBottomEncoderDifference)));
 
 		assertFalse("Elevator is calibrating when it should be finished",
@@ -71,9 +71,9 @@ public class ElevatorTest {
 		robotState.elevatorTopHFX = true;
 		elevator.update(commands, robotState);
 
-		assertThat("Elevator bottom setpoint not properly set",
+		assertThat("Elevator bottom set point not properly set",
 				elevator.getElevatorBottomPosition().get(), equalTo(0.0));
-		assertThat("Elevator top setpoint not properly set",
+		assertThat("Elevator top set point not properly set",
 				elevator.getElevatorTopPosition().get(), equalTo(Constants.kTopBottomEncoderDifference));
 		assertFalse("Elevator is calibrating when it should be finished",
 				elevator.getState() == ElevatorState.CALIBRATING);

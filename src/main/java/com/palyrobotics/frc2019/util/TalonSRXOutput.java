@@ -93,11 +93,11 @@ public class TalonSRXOutput {
     /**
      * Sets Talon to ControlMode.Position
      *
-     * @param setpoint, target distance in native units
+     * @param setPoint, target distance in native units
      */
-    public void setPosition(double setpoint, Gains gains) {
+    public void setPosition(double setPoint, Gains gains) {
         controlMode = ControlMode.Position;
-        this.setPoint = setpoint;
+        this.setPoint = setPoint;
         this.gains = gains;
         this.arbitraryDemand = 0.0;
     }
@@ -106,11 +106,11 @@ public class TalonSRXOutput {
     /**
      * Sets Talon to ControlMode.Position
      *
-     * @param setpoint, target distance in native units
+     * @param setPoint, target distance in native units
      */
-    public void setPosition(double setpoint, Gains gains, double arbitraryDemand) {
+    public void setPosition(double setPoint, Gains gains, double arbitraryDemand) {
         controlMode = ControlMode.Position;
-        this.setPoint = setpoint;
+        this.setPoint = setPoint;
         this.gains = gains;
         this.arbitraryDemand = arbitraryDemand;
     }

@@ -21,7 +21,7 @@ public class TimedDriveRoutine extends Routine {
     }
 
     /*
-     * START = Set new drive setpoint DRIVING = Waiting to reach drive setpoint DONE = reached target or not operating
+     * START = Set new drive set point DRIVING = Waiting to reach drive set point DONE = reached target or not operating
      */
     private enum DriveStraightRoutineState {
         START, DRIVING, DONE

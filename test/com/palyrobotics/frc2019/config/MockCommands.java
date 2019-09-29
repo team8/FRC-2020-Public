@@ -38,7 +38,7 @@ public class MockCommands extends Commands {
 			copy.wantedRoutines.add(r);
 		}
 
-		//Copy robot setpoints
+		//Copy robot set points
 		copy.robotSetpoints = new MockSetpoints();
 		//Copy optionals that are present
 		robotSetpoints.drivePowerSetpoint.ifPresent((DriveSignal signal) -> copy.robotSetpoints.drivePowerSetpoint = Optional.of(signal));
