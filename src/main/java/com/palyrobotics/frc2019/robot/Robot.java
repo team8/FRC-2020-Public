@@ -290,6 +290,7 @@ public class Robot extends TimedRobot {
         mEnabledSubsystems = services.enabledSubsystems.stream()
                 .map(configToSubsystem::get)
                 .collect(Collectors.toList());
+        mEnabledSubsystems.forEach(System.out::println);
     }
 
     private void startSubsystems() {
