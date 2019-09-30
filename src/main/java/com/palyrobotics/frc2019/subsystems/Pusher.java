@@ -19,10 +19,12 @@ public class Pusher extends Subsystem {
 
     private PusherConfig mConfig = Configs.get(PusherConfig.class);
 
+    private Double mSlamTime;
+
     private SparkMaxOutput mOutput = new SparkMaxOutput();
 
     public enum PusherState {
-        IN, MIDDLE, OUT
+        IN, MIDDLE, OUT, SLAM
     }
 
     private PusherState mState = PusherState.IN;
@@ -47,6 +49,15 @@ public class Pusher extends Subsystem {
 
         mState = commands.wantedPusherInOutState;
         switch (mState) {
+            case SLAM:
+                long currentTimeMs = System.currentTimeMillis();
+                double percentOutput = -0.2;
+                if (mSlamTime == null) {
+                    mSlamTime = (double) currentTimeMs;
+                }
+                mOutput.setPercentOutput((currentTimeMs - mSlamTime > 400) ? percentOutput / 5.5 : percentOutput);
+                HardwareAdapter.getInstance().getPusher().resetSensors();
+                break;
             case IN:
                 mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
                 break;
