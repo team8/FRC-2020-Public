@@ -9,5 +9,6 @@
         "fingers",
         "shooter",
         "elevator"
-    ]
+    ],
+    "sendMultiplier": 1.0
 }

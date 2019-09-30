@@ -599,13 +599,14 @@ class HardwareUpdater {
     }
 
     private void updateSmartMotionGains(CANSparkMax spark, SmartGains gains, int slot) {
+        RobotConfig robotConfig = Configs.get(RobotConfig.class);
         System.out.printf("Using smart gains: %s%n", gains);
         CANPIDController controller = spark.getPIDController();
         updateSparkGains(spark, gains, slot);
-        controller.setSmartMotionMaxAccel(gains.acceleration, slot);
-        controller.setSmartMotionMaxVelocity(gains.velocity, slot);
+        controller.setSmartMotionMaxAccel(gains.acceleration * robotConfig.sendMultiplier, slot);
+        controller.setSmartMotionMaxVelocity(gains.velocity * robotConfig.sendMultiplier, slot);
         controller.setOutputRange(-1.0, 1.0, slot);
-        controller.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, slot);
+        controller.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, slot); // TODO this does not even do anything as of 1.40
         controller.setSmartMotionAllowedClosedLoopError(gains.allowableError, slot);
         controller.setSmartMotionMinOutputVelocity(gains.minimumOutputVelocity, slot);
     }
