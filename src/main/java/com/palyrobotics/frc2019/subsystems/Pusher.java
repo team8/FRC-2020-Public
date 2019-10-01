@@ -24,10 +24,10 @@ public class Pusher extends Subsystem {
     private SparkMaxOutput mOutput = new SparkMaxOutput();
 
     public enum PusherState {
-        IN, MIDDLE, OUT, SLAM
+        IN, MIDDLE, OUT, START
     }
 
-    private PusherState mState = PusherState.IN;
+    private PusherState mState = PusherState.START;
 
     protected Pusher() {
         super("pusher");
@@ -35,12 +35,12 @@ public class Pusher extends Subsystem {
 
     @Override
     public void start() {
-        mState = PusherState.IN;
+        mState = PusherState.START;
     }
 
     @Override
     public void stop() {
-        mState = PusherState.IN;
+        mState = PusherState.START;
     }
 
     @Override
@@ -49,20 +49,25 @@ public class Pusher extends Subsystem {
 
         mState = commands.wantedPusherInOutState;
         switch (mState) {
-            case SLAM:
-                long currentTimeMs = System.currentTimeMillis();
-                double percentOutput = -0.2;
-                if (mSlamTime == null) {
-                    mSlamTime = (double) currentTimeMs;
-                }
-                mOutput.setPercentOutput((currentTimeMs - mSlamTime > 400) ? percentOutput / 5.5 : percentOutput);
-                HardwareAdapter.getInstance().getPusher().resetSensors();
+            case START:
+                mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
                 break;
             case IN:
-                mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
+                if (mConfig.useSlam) {
+                    long currentTimeMs = System.currentTimeMillis();
+                    double percentOutput = -0.2;
+                    if (mSlamTime == null) {
+                        mSlamTime = (double) currentTimeMs;
+                    }
+                    mOutput.setPercentOutput((currentTimeMs - mSlamTime > 400) ? percentOutput / 5.5 : percentOutput);
+                    HardwareAdapter.getInstance().getPusher().resetSensors();
+                } else {
+                    mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
+                }
                 break;
             case OUT:
                 mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceOut);
+                mSlamTime = null;
                 break;
         }
 

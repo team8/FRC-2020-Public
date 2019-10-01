@@ -28,7 +28,7 @@ public class Commands {
 
     public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
 
-    public Pusher.PusherState wantedPusherInOutState = Pusher.PusherState.IN;
+    public Pusher.PusherState wantedPusherInOutState = Pusher.PusherState.START;
 
     public Shovel.WheelState wantedShovelWheelState = Shovel.WheelState.IDLE;
     public Shovel.UpDownState wantedShovelUpDownState = Shovel.UpDownState.UP;

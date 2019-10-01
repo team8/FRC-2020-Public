@@ -15,7 +15,7 @@ public class PusherInRoutine extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-        commands.wantedPusherInOutState = Pusher.PusherState.SLAM;
+        commands.wantedPusherInOutState = Pusher.PusherState.IN;
         alreadyRan = true;
         return commands;
     }

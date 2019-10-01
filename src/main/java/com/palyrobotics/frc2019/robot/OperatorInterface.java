@@ -243,11 +243,11 @@ public class OperatorInterface {
          * Pusher Control
          */
         if (mOperatorXboxController.getLeftBumper()) {
-            newCommands.wantedPusherInOutState = Pusher.PusherState.SLAM;
+            newCommands.wantedPusherInOutState = Pusher.PusherState.IN;
         } else if (mOperatorXboxController.getRightBumper()) {
             newCommands.wantedPusherInOutState = Pusher.PusherState.OUT;
         } else if (mDriveStick.getButtonPressed(7)) {
-            newCommands.wantedPusherInOutState = Pusher.PusherState.SLAM;
+            newCommands.wantedPusherInOutState = Pusher.PusherState.IN;
         }
 
         /*

@@ -15,6 +15,7 @@ public class PusherConfig extends AbstractSubsystemConfig {
             vidarCargoTolerance,
             vidarCargoToleranceFar,
             vidarDistanceCompress;
+    public boolean useSlam;
 
     public SmartGains gains = SmartGains.emptyGains;
 
