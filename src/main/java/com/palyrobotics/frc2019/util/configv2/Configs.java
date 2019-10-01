@@ -1,8 +1,6 @@
 package com.palyrobotics.frc2019.util.configv2;
 
 
-import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
-import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;

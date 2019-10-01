@@ -7,34 +7,21 @@
     "medium": 0.2,
     "maxAngle": 118.0,
     "potentiometerMaxAngleTicks": 0.613832808491713,
-<<<<<<< HEAD
     "gravityFF": 0.026,
     "accelerationCompensation": 0.0,
     "centripetalCoefficient": 0.0,
     "angleOffset": 19,
-=======
-    "gravityFF": 0.028,
-    "accelerationCompensation": 0.0,
-    "centripetalCoefficient": 0.0,
-    "angleOffset": 11.89,
->>>>>>> ca19f22... 142/pid zones (#143)
     "intakeAngle": 23.5,
     "holdAngle": 59.0,
     "handOffAngle": 116.0,
     "rocketExpelAngle": 84.0,
     "climbAngle": -30.0,
-<<<<<<< HEAD
-=======
-    "lowestAngle": 23.5,
-    "highestAngle": 116.0,
->>>>>>> ca19f22... 142/pid zones (#143)
     "holdTolerance": 14.5,
     "acceptableAngularError": 3.0,
     "angularVelocityError": 10.0,
     "cargoInchTolerance": 7.65,
     "cargoCountRequired": 6.0,
     "gains": {
-<<<<<<< HEAD
         "p": 0.000002,
         "i": 0.0,
         "d": 0.0,
@@ -55,15 +42,5 @@
         "iZone": 0,
         "acceleration": 10000,
         "velocity": 6000
-=======
-        "p": 0.000001,
-        "i": 0.0,
-        "d": 0.0,
-        "f": 0.000058,
-        "rampRate": 0.15,
-        "iZone": 0,
-        "acceleration": 46000,
-        "velocity": 13000
->>>>>>> ca19f22... 142/pid zones (#143)
     }
 }
