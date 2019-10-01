@@ -10,6 +10,7 @@ import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.revrobotics.ControlType;
+import com.revrobotics.SparkMax;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class Elevator extends Subsystem {
@@ -31,18 +32,23 @@ public class Elevator extends Subsystem {
 
     private ElevatorState mElevatorState;
 
-    private double mElevatorWantedPosition;
+    private Double mElevatorWantedPosition;
 
     private RobotState mRobotState;
 
-    private SparkMaxOutput mOutput = new SparkMaxOutput(ControlType.kSmartMotion);
-    private boolean mHolderSolenoidOutput;
+    private SparkMaxOutput mOutput;
 
     private long mLastTimeWhenInClosedLoopMs;
 
     private Elevator() {
         super("elevator");
+    }
+
+    @Override
+    public void reset() {
         mElevatorState = ElevatorState.IDLE;
+        mElevatorWantedPosition = null;
+        mOutput = SparkMaxOutput.getIdle();
     }
 
     /**
@@ -55,7 +61,6 @@ public class Elevator extends Subsystem {
     @Override
     public void update(Commands commands, RobotState robotState) {
         mRobotState = robotState;
-        mHolderSolenoidOutput = commands.holderOutput;
 
         handleElevatorState(commands);
 
@@ -71,7 +76,7 @@ public class Elevator extends Subsystem {
                 long currentTimeMs = System.currentTimeMillis();
                 boolean inClosedLoopZone = mRobotState.elevatorPosition >= mConfig.closedLoopZoneHeight,
                         wantedPositionInClosedLoopZone = mElevatorWantedPosition >= mConfig.closedLoopZoneHeight,
-                        useClosedLoopOutOfRange = currentTimeMs - mLastTimeWhenInClosedLoopMs > mConfig.outOfClosedLoopZoneIdleDelayMs;
+                        useClosedLoopOutOfRange = currentTimeMs - mLastTimeWhenInClosedLoopMs < mConfig.outOfClosedLoopZoneIdleDelayMs;
                 if (inClosedLoopZone) mLastTimeWhenInClosedLoopMs = currentTimeMs;
                 if (inClosedLoopZone || wantedPositionInClosedLoopZone || useClosedLoopOutOfRange) {
                     mOutput.setTargetPositionSmartMotion(mElevatorWantedPosition, mConfig.feedForward);
@@ -118,19 +123,10 @@ public class Elevator extends Subsystem {
                 mElevatorState = ElevatorState.CUSTOM_POSITIONING;
                 break;
             default:
+                mElevatorWantedPosition = null;
                 mElevatorState = commands.wantedElevatorState;
                 break;
         }
-    }
-
-    @Override
-    public void start() {
-        resetWantedPosition();
-    }
-
-    @Override
-    public void stop() {
-        resetWantedPosition();
     }
 
     /**
@@ -145,19 +141,11 @@ public class Elevator extends Subsystem {
                 && Math.abs(mRobotState.elevatorVelocity) < mConfig.acceptableVelocityError;
     }
 
-    public void resetWantedPosition() {
-        mElevatorWantedPosition = 0.0;
-    }
-
     public SparkMaxOutput getOutput() {
         return mOutput;
     }
 
     public DoubleSolenoid.Value getSolenoidOutput() {
         return DoubleSolenoid.Value.kForward;
-    }
-
-    public boolean getHolderSolenoidOutput() {
-        return mHolderSolenoidOutput;
     }
 }

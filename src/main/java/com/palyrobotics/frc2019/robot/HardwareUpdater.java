@@ -388,9 +388,9 @@ class HardwareUpdater {
 
         robotState.addObservations(time, odometry, velocity);
 
-        // Update pusher sensors
-        robotState.pusherPosition = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder().getPosition();
-        robotState.pusherVelocity = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder().getVelocity();
+        CANEncoder pusherEncoder = HardwareAdapter.getInstance().getPusher().pusherSpark.getEncoder();
+        robotState.pusherPosition = pusherEncoder.getPosition();
+        robotState.pusherVelocity = pusherEncoder.getVelocity();
 
         updateUltrasonicSensors(robotState);
     }
@@ -544,12 +544,8 @@ class HardwareUpdater {
 //		System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getAppliedOutput());
     }
 
-    void enableBrakeMode() {
-        HardwareAdapter.getInstance().getDrivetrain().sparks.forEach(spark -> spark.setIdleMode(IdleMode.kBrake));
-    }
-
-    void disableBrakeMode() {
-        HardwareAdapter.getInstance().getDrivetrain().sparks.forEach(spark -> spark.setIdleMode(IdleMode.kCoast));
+    void setDriveBrakeMode(IdleMode idleMode) {
+        HardwareAdapter.getInstance().getDrivetrain().sparks.forEach(spark -> spark.setIdleMode(idleMode));
     }
 
     private void updateTalonSRX(WPI_TalonSRX talon, TalonSRXOutput output) {

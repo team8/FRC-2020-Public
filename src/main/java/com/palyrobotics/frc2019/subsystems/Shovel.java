@@ -14,13 +14,13 @@ public class Shovel extends Subsystem {
         return sInstance;
     }
 
-    private double mVictorOutput;
+    private double mOutput;
 
     private double mRumbleLength;
 
     private ShovelConfig mConfig = Configs.get(ShovelConfig.class);
 
-    private boolean cachedHatchState;
+    private boolean mCachedHasCargo;
 
     public enum WheelState {
         INTAKING, EXPELLING, IDLE, SMALL_EXPEL
@@ -38,15 +38,12 @@ public class Shovel extends Subsystem {
     }
 
     @Override
-    public void start() {
+    public void reset() {
         mWheelState = WheelState.IDLE;
         mUpDownOutput = UpDownState.UP;
-    }
-
-    @Override
-    public void stop() {
-        mWheelState = WheelState.IDLE;
-        mUpDownOutput = UpDownState.UP;
+        mOutput = 0.0;
+        mRumbleLength = -1;
+        mCachedHasCargo = false;
     }
 
     @Override
@@ -59,43 +56,43 @@ public class Shovel extends Subsystem {
         switch (mWheelState) {
             case INTAKING:
                 if (commands.customShovelSpeed) {
-                    mVictorOutput = robotState.operatorXboxControllerInput.leftTrigger;
+                    mOutput = robotState.operatorXboxControllerInput.leftTrigger;
                 } else {
-                    mVictorOutput = mConfig.motorVelocity;
+                    mOutput = mConfig.motorVelocity;
                 }
                 break;
             case EXPELLING:
                 if (commands.customShovelSpeed) {
-                    mVictorOutput = -robotState.operatorXboxControllerInput.leftTrigger;
+                    mOutput = -robotState.operatorXboxControllerInput.leftTrigger;
                 } else {
-                    mVictorOutput = mConfig.expellingMotorVelocity;
+                    mOutput = mConfig.expellingMotorVelocity;
                 }
                 break;
             case SMALL_EXPEL:
-                mVictorOutput = mConfig.smallExpelMotorVelocity;
+                mOutput = mConfig.smallExpelMotorVelocity;
                 break;
             case IDLE:
-                mVictorOutput = 0;
+                mOutput = 0;
                 break;
         }
 
         switch (mUpDownOutput) {
             case UP:
                 mUpDownOutput = UpDownState.UP;
-                mVictorOutput = 0.0;
+                mOutput = 0.0;
                 break;
             case DOWN:
                 mUpDownOutput = UpDownState.DOWN;
                 break;
         }
 
-        if (!cachedHatchState && cachedHatchState) { // TODO huh, this always false
+        if (!mCachedHasCargo && mCachedHasCargo) { // TODO huh, this always false
             mRumbleLength = 0.25;
         } else if (mRumbleLength <= 0) {
             mRumbleLength = -1;
         }
 
-        cachedHatchState = robotState.hasHatch;
+        mCachedHasCargo = robotState.hasHatch;
     }
 
     public double getRumbleLength() {
@@ -115,10 +112,10 @@ public class Shovel extends Subsystem {
     }
 
     public double getPercentOutput() {
-        return mVictorOutput;
+        return mOutput;
     }
 
     public String getStatus() {
-        return String.format("Shovel Intake State: %s%nVictor Output: %s%nUp Down Output: %s%n", mWheelState, mVictorOutput, mUpDownOutput);
+        return String.format("Shovel Intake State: %s%nOutput: %s%nUp Down Output: %s%n", mWheelState, mOutput, mUpDownOutput);
     }
 }

@@ -21,10 +21,10 @@ public class VisionDriveHelper {
 
     private boolean mInitialBrake;
     private double mLastThrottle, mBrakeRate;
-    private boolean found = false;
-//    private double mLastYawError;
+    //    private double mLastYawError;
 //    private long mLastTimeMs;
     private SynchronousPID mPidController = new SynchronousPID(mConfig.p, mConfig.i, mConfig.d);
+    private CheesyDriveHelper mCDH = new CheesyDriveHelper();
 
     public SparkDriveSignal visionDrive(Commands commands, RobotState robotState) {
 
@@ -65,7 +65,8 @@ public class VisionDriveHelper {
             mInitialBrake = true;
         }
 
-        if (Limelight.getInstance().isTargetFound()) {
+        boolean hasFoundTarget;
+        if (mLimelight.isTargetFound()) {
 //            double kP = 0.03, kD = 0.005;
 //            double kP = Limelight.getInstance().getTargetArea();
 //            double kP = 1.0/Limelight.getInstance().getCorrectedEstimatedDistanceZ();
@@ -81,17 +82,16 @@ public class VisionDriveHelper {
 //            mLastYawError = yawError;
 //            mLastTimeMs = currentTime;
             angularPower = mPidController.calculate(mLimelight.getYawToTarget());
-
             // |angularPower| should be at most 0.6
             if (angularPower > kMaxAngularPower) angularPower = kMaxAngularPower;
             if (angularPower < -kMaxAngularPower) angularPower = -kMaxAngularPower;
-            found = true;
-            if(Limelight.getInstance().getCorrectedEstimatedDistanceZ() < DrivetrainConstants.kVisionTargetThreshold) {
-                RobotState.getInstance().atThreshold = true;
+            hasFoundTarget = true;
+            if (mLimelight.getCorrectedEstimatedDistanceZ() < DrivetrainConstants.kVisionTargetThreshold) {
+                robotState.atVisionTargetThreshold = true;
             }
         } else {
 //            mLastTimeMs = System.currentTimeMillis();
-            found = false;
+            hasFoundTarget = false;
             angularPower = 0.0;
         }
 
@@ -112,8 +112,8 @@ public class VisionDriveHelper {
             rightOutput = -1.0;
         }
 
-        if (!found && !RobotState.getInstance().atThreshold) {
-            return new CheesyDriveHelper().cheesyDrive(commands,robotState);
+        if (!hasFoundTarget && !robotState.atVisionTargetThreshold) {
+            return mCDH.cheesyDrive(commands, robotState);
         } else {
             mSignal.leftOutput.setPercentOutput(leftOutput);
             mSignal.rightOutput.setPercentOutput(rightOutput);

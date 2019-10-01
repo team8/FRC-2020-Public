@@ -15,10 +15,10 @@ import java.util.ArrayList;
  */
 public class Commands {
 
-    private static Commands instance = new Commands();
+    private static Commands sInstance = new Commands();
 
     public static Commands getInstance() {
-        return instance;
+        return sInstance;
     }
 
     public ArrayList<Routine> wantedRoutines = new ArrayList<>();
@@ -46,8 +46,6 @@ public class Commands {
     public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.IDLE;
     public double customElevatorPercentOutput;
 
-    public boolean holderOutput;
-
     public boolean customShovelSpeed;
     public boolean autoPlacerOutput;
 
@@ -66,8 +64,9 @@ public class Commands {
         wantedRoutines.add(wantedRoutine);
     }
 
-    public static void reset() {
-        instance = new Commands();
+    public static Commands reset() {
+        sInstance = new Commands();
+        return sInstance;
     }
 
     /**
@@ -124,7 +123,6 @@ public class Commands {
         copy.wantedIntakeState = this.wantedIntakeState;
         copy.disableIntakeScaling = this.disableIntakeScaling;
         copy.hasPusherCargo = this.hasPusherCargo;
-        copy.holderOutput = this.holderOutput;
         copy.shooterSpinning = this.shooterSpinning;
 
         copy.wantedRoutines.addAll(this.wantedRoutines);

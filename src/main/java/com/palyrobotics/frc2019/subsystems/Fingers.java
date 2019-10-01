@@ -41,13 +41,7 @@ public class Fingers extends Subsystem {
     }
 
     @Override
-    public void start() {
-        mOpenCloseState = FingersState.CLOSE;
-        mExpelState = PushingState.CLOSED;
-    }
-
-    @Override
-    public void stop() {
+    public void reset() {
         mOpenCloseState = FingersState.CLOSE;
         mExpelState = PushingState.CLOSED;
     }

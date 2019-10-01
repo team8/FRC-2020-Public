@@ -76,15 +76,13 @@ public class RobotState {
 	public Pose drivePose = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
 
 	//Pusher sensor data
-	public double pusherPosition = 0;
-	public double pusherVelocity = 0;
-	public double pusherEncVelocity = 0;
+	public double pusherPosition, pusherVelocity;
 
 	//Elevator sensor data
-    public double elevatorPosition = 0, elevatorVelocity = 0;
+    public double elevatorPosition, elevatorVelocity;
 
     //Vision drive data
-    public boolean atThreshold = false;
+    public boolean atVisionTargetThreshold;
 
 	//Robot position
 	public final int kObservationBufferSize = 100;

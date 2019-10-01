@@ -15,15 +15,11 @@ public class Shooter extends Subsystem {
         return sInstance;
     }
 
-    public static void resetInstance() {
-        sInstance = new Shooter();
-    }
-
     private double mOutput;
 
     private double mRumbleLength;
 
-    private boolean cachedCargoState;
+    private boolean mCachedHasCargo;
 
     private double mExpellingCycles;
 
@@ -39,12 +35,11 @@ public class Shooter extends Subsystem {
     }
 
     @Override
-    public void start() {
-        mState = ShooterState.IDLE;
-    }
-
-    @Override
-    public void stop() {
+    public void reset() {
+        mOutput = 0.0;
+        mRumbleLength = -1;
+        mCachedHasCargo = false;
+        mExpellingCycles = 0;
         mState = ShooterState.IDLE;
     }
 
@@ -80,12 +75,12 @@ public class Shooter extends Subsystem {
             mRumbleLength = 0.5;
         }
 
-        if (cachedCargoState && !robotState.hasCargo) { // Stop rumbling once you go from cargo -> no cargo
+        if (mCachedHasCargo && !robotState.hasCargo) { // Stop rumbling once you go from cargo -> no cargo
             mRumbleLength = -1;
             mExpellingCycles = 0;
         }
 
-        cachedCargoState = robotState.hasCargo;
+        mCachedHasCargo = robotState.hasCargo;
     }
 
     public double getRumbleLength() {

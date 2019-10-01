@@ -22,7 +22,7 @@ public class VisionAlignRoutine extends Routine {
     }
 
     public VisionAlignRoutine() {
-        this.mAngle = Limelight.getInstance().getYawToTarget();
+        mAngle = Limelight.getInstance().getYawToTarget();
     }
 
     @Override

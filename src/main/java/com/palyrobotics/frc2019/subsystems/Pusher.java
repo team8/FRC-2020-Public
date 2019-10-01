@@ -19,28 +19,25 @@ public class Pusher extends Subsystem {
 
     private PusherConfig mConfig = Configs.get(PusherConfig.class);
 
-    private Double mSlamTime;
+    private Double mSlamStartTimeMs;
 
-    private SparkMaxOutput mOutput = new SparkMaxOutput();
+    private SparkMaxOutput mOutput;
 
     public enum PusherState {
         IN, MIDDLE, OUT, START
     }
 
-    private PusherState mState = PusherState.START;
+    private PusherState mState;
+
+    @Override
+    public void reset() {
+        mOutput = SparkMaxOutput.getIdle();
+        mSlamStartTimeMs = null;
+        mState = PusherState.START;
+    }
 
     protected Pusher() {
         super("pusher");
-    }
-
-    @Override
-    public void start() {
-        mState = PusherState.START;
-    }
-
-    @Override
-    public void stop() {
-        mState = PusherState.START;
     }
 
     @Override
@@ -50,34 +47,35 @@ public class Pusher extends Subsystem {
         mState = commands.wantedPusherInOutState;
         switch (mState) {
             case START:
-                mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn, 0.0);
+                mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
+                mSlamStartTimeMs = null;
                 break;
             case IN:
                 if (mConfig.useSlam) {
                     long currentTimeMs = System.currentTimeMillis();
-                    double percentOutput = -0.2;
-                    if (mSlamTime == null) {
-                        mSlamTime = (double) currentTimeMs;
+                    if (mSlamStartTimeMs == null) {
+                        mSlamStartTimeMs = (double) currentTimeMs;
                     }
-                    mOutput.setPercentOutput((currentTimeMs - mSlamTime > 400) ? percentOutput / 5.5 : percentOutput);
-                    HardwareAdapter.getInstance().getPusher().resetSensors();
+                    double percentOutput = mConfig.slamPercentOutput;
+                    boolean afterSlamTime = currentTimeMs - mSlamStartTimeMs > mConfig.slamTimeMs;
+                    if (afterSlamTime) percentOutput *= mConfig.slamHoldMultiplier;
+                    mOutput.setPercentOutput(percentOutput);
+                    HardwareAdapter.getInstance().getPusher().resetSensors(); // Zero encoder since we assume to slam to in position
                 } else {
-                    mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn, 0.0);
+                    mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
                 }
                 break;
             case OUT:
-                mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceOut, 0.0);
-                mSlamTime = null;
+                mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceOut);
+                mSlamStartTimeMs = null;
                 break;
         }
 
         CSVWriter.addData("pusherOutput", HardwareAdapter.getInstance().getPusher().pusherSpark.getAppliedOutput());
         CSVWriter.addData("pusherPos", robotState.pusherPosition);
         CSVWriter.addData("pusherSetPoint", mOutput.getReference());
-        CSVWriter.addData("pusherEncVelocity", robotState.pusherEncVelocity);
-        CSVWriter.addData("pusherPotPosition", robotState.pusherPosition);
-        CSVWriter.addData("pusherPotPositionInches", robotState.pusherPosition / PusherConfig.kTicksPerInch);
-        CSVWriter.addData("pusherPotVelocity", robotState.pusherVelocity * PusherConfig.kPusherPotSpeedUnitConversion);
+        CSVWriter.addData("pusherVelocity", robotState.pusherVelocity);
+        CSVWriter.addData("pusherPosition", robotState.pusherPosition);
     }
 
     public boolean onTarget() {

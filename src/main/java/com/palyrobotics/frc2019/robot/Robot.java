@@ -14,6 +14,7 @@ import com.palyrobotics.frc2019.util.service.RobotService;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
+import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 
@@ -32,13 +33,13 @@ public class Robot extends TimedRobot {
         return sRobotState;
     }
 
-    private static Commands mCommands = Commands.getInstance();
+    private static Commands sCommands = Commands.getInstance();
 
     public static Commands getCommands() {
-        return mCommands;
+        return sCommands;
     }
 
-    private OperatorInterface operatorInterface = OperatorInterface.getInstance();
+    private OperatorInterface mOperatorInterface = OperatorInterface.getInstance();
     private RoutineManager mRoutineManager = RoutineManager.getInstance();
 
     /* Subsystems */
@@ -71,8 +72,6 @@ public class Robot extends TimedRobot {
         setupSubsystemsAndServices();
 
         mHardwareUpdater.initHardware();
-
-        mElevator.resetWantedPosition();
 
         CSVWriter.cleanFile();
 
@@ -177,34 +176,6 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void teleopInit() {
-//		System.out.println("TELEOP STARTED");
-//        Logger.getInstance().start();
-//        DataLogger.getInstance().start();
-//
-//        Logger.getInstance().logRobotThread(Level.INFO, "Start teleopInit()");
-
-        sRobotState.gamePeriod = RobotState.GamePeriod.TELEOP;
-        sRobotState.reset(0.0, new RigidTransform2d());
-        mHardwareUpdater.updateState(sRobotState);
-        mRoutineManager.reset(mCommands);
-        DashboardManager.getInstance().toggleCANTable(true);
-        mCommands.wantedDriveState = Drive.DriveState.CHEZY; // Switch to chezy after auto ends
-        mCommands = operatorInterface.updateCommands(mCommands);
-        CSVWriter.cleanFile();
-        mEnabledSubsystems.forEach(Subsystem::start);
-        mHardwareUpdater.updateHardware();
-        mHardwareUpdater.enableBrakeMode();
-        sRobotState.reset(0.0, new RigidTransform2d());
-        sRobotState.matchStartTimeMs = System.currentTimeMillis();
-
-        // Set limelight to driver camera mode - redundancy for testing purposes
-        mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
-
-//        Logger.getInstance().logRobotThread(Level.INFO, "End teleopInit()");
-    }
-
-    @Override
     public void testInit() {
 //        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
         System.out.printf("Potentiometer Arm: %s%n", HardwareAdapter.getInstance().getIntake().potentiometer.get());
@@ -216,13 +187,46 @@ public class Robot extends TimedRobot {
     }
 
     @Override
+    public void teleopInit() {
+//		System.out.println("TELEOP STARTED");
+//        Logger.getInstance().start();
+//        DataLogger.getInstance().start();
+//
+//        Logger.getInstance().logRobotThread(Level.INFO, "Start teleopInit()");
+
+        sRobotState.gamePeriod = RobotState.GamePeriod.TELEOP;
+        mRoutineManager.reset(sCommands);
+//        DashboardManager.getInstance().toggleCANTable(true);
+        sCommands.wantedDriveState = Drive.DriveState.CHEZY; // Switch to chezy after auto ends
+        CSVWriter.cleanFile();
+        mEnabledSubsystems.forEach(Subsystem::start);
+        mHardwareUpdater.setDriveBrakeMode(IdleMode.kBrake);
+        sRobotState.matchStartTimeMs = System.currentTimeMillis();
+
+        // Set limelight to driver camera mode - redundancy for testing purposes
+        mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
+
+//        Logger.getInstance().logRobotThread(Level.INFO, "End teleopInit()");
+    }
+
+    @Override
     public void teleopPeriodic() {
-        mCommands = mRoutineManager.update(operatorInterface.updateCommands(mCommands));
+        sCommands = mRoutineManager.update(mOperatorInterface.updateCommands(sCommands));
         mHardwareUpdater.updateState(sRobotState);
         for (Subsystem subsystem : mEnabledSubsystems) {
-            subsystem.update(mCommands, sRobotState);
+            subsystem.update(sCommands, sRobotState);
         }
         mHardwareUpdater.updateHardware();
+    }
+
+    @Override
+    public void robotPeriodic() {
+        mEnabledServices.forEach(RobotService::update);
+
+        // System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
+        // System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
+        // System.out.println("left ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+        // System.out.println("right ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
     }
 
     @Override
@@ -235,22 +239,20 @@ public class Robot extends TimedRobot {
 
         sRobotState.reset(0.0, new RigidTransform2d());
         // Stops updating routines
-        mRoutineManager.reset(mCommands);
+        mRoutineManager.reset(sCommands);
 
         // Creates a new Commands instance in place of the old one
-        Commands.reset();
-        mCommands = Commands.getInstance();
+        sCommands = Commands.reset();
 
         sRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
-        // Stop controllers
-        mDrive.setNeutral();
+        // Stop subsystems and reset their states
         mEnabledSubsystems.forEach(Subsystem::stop);
 
         // Set Limelight to vision pipeline to enable pit testing
         mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
         mLimelight.setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
         HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
-        mHardwareUpdater.disableBrakeMode();
+        mHardwareUpdater.setDriveBrakeMode(IdleMode.kCoast);
 
         CSVWriter.write();
 
@@ -272,17 +274,6 @@ public class Robot extends TimedRobot {
 //        System.out.println();
     }
 
-    @Override
-    public void robotPeriodic() {
-        mEnabledServices.forEach(RobotService::update);
-
-        // System.out.println("intake_enc: " + HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
-        // System.out.println("intake_pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
-        // System.out.println("left ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
-        // System.out.println("right ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
-
-    }
-
     private void setupSubsystemsAndServices() {
         // TODO meh
         RobotConfig services = Configs.get(RobotConfig.class);
@@ -298,6 +289,7 @@ public class Robot extends TimedRobot {
         mEnabledSubsystems = services.enabledSubsystems.stream()
                 .map(configToSubsystem::get)
                 .collect(Collectors.toList());
+        System.out.println("Enabled subsystems: ");
         mEnabledSubsystems.forEach(System.out::println);
     }
 }

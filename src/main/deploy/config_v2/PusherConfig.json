@@ -8,6 +8,9 @@
     "vidarDistanceCompress": 1.0,
     "acceptablePositionError": 0.2,
     "acceptableVelocityError": 20,
+    "slamPercentOutput": -0.2,
+    "slamHoldMultiplier": 0.18,
+    "slamTimeMs": 400,
     "gains": {
         "p": 0.0,
         "i": 0.0,

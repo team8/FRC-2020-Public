@@ -8,7 +8,6 @@ import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
-import com.revrobotics.ControlType;
 
 public class Intake extends Subsystem {
 
@@ -20,7 +19,7 @@ public class Intake extends Subsystem {
 
     private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
 
-    private SparkMaxOutput mSparkOutput = new SparkMaxOutput(ControlType.kDutyCycle);
+    private SparkMaxOutput mSparkOutput = SparkMaxOutput.getIdle();
     private double mTalonOutput, mRumbleLength;
 
     private Double mIntakeWantedAngle;
@@ -75,16 +74,7 @@ public class Intake extends Subsystem {
     }
 
     @Override
-    public void start() {
-        mWheelState = WheelState.IDLE;
-        mUpDownState = UpDownState.IDLE;
-        mMacroState = IntakeMacroState.IDLE;
-    }
-
-    @Override
-    public void stop() {
-        mWheelState = WheelState.IDLE;
-        mUpDownState = UpDownState.IDLE;
+    public void reset() {
         mMacroState = IntakeMacroState.IDLE;
     }
 
@@ -202,6 +192,7 @@ public class Intake extends Subsystem {
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.ZERO_VELOCITY;
                 break;
+            default:
             case IDLE:
                 mWheelState = WheelState.IDLE;
                 mUpDownState = UpDownState.IDLE;
@@ -216,9 +207,6 @@ public class Intake extends Subsystem {
                     mTalonOutput = mConfig.motorVelocity;
                 }
                 break;
-            case IDLE:
-                mTalonOutput = 0;
-                break;
             case DROPPING:
                 mTalonOutput = mConfig.droppingVelocity;
                 break;
@@ -230,6 +218,10 @@ public class Intake extends Subsystem {
                 break;
             case MEDIUM:
                 mTalonOutput = mConfig.medium;
+                break;
+            default:
+            case IDLE:
+                mTalonOutput = 0;
                 break;
         }
 
@@ -252,6 +244,7 @@ public class Intake extends Subsystem {
                 break;
             case ZERO_VELOCITY:
                 mSparkOutput.setTargetSmartVelocity(0.0, IntakeConfig.kArmDegreesPerMinutePerRpm, arbitraryDemand);
+            default:
             case IDLE:
                 mIntakeWantedAngle = null;
                 mSparkOutput.setIdle();

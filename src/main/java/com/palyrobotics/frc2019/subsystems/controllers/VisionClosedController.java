@@ -42,10 +42,10 @@ public class VisionClosedController implements Drive.DriveController {
             if (angularPower < -MAX_ANGULAR_POWER) angularPower = -MAX_ANGULAR_POWER;
 
             if (Limelight.getInstance().getCorrectedEstimatedDistanceZ() < DrivetrainConstants.kVisionTargetThreshold) {
-                RobotState.getInstance().atThreshold = true;
+                RobotState.getInstance().atVisionTargetThreshold = true;
             }
         } else {
-            if (!robotState.atThreshold) {
+            if (!robotState.atVisionTargetThreshold) {
                 return new CheesyDriveHelper().cheesyDrive(Commands.getInstance(), RobotState.getInstance());
             } else {
                 SparkDriveSignal mSignal = new SparkDriveSignal();

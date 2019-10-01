@@ -114,7 +114,7 @@ public class OperatorInterface {
             newCommands.wantedDriveState = Drive.DriveState.VISION_ASSIST;
         } else {
             if (!mTurnStick.getButtonPressed(4)) {
-                RobotState.getInstance().atThreshold = false;
+                RobotState.getInstance().atVisionTargetThreshold = false;
             }
             if (System.currentTimeMillis() - visionStartTimeMs > OtherConstants.kVisionLEDTimeoutMillis) {
                 Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
@@ -133,7 +133,7 @@ public class OperatorInterface {
             newCommands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
         } else {
             if (!mTurnStick.getButtonPressed(3)) {
-                RobotState.getInstance().atThreshold = false;
+                RobotState.getInstance().atVisionTargetThreshold = false;
             }
             if (System.currentTimeMillis() - visionStartTimeMs > OtherConstants.kVisionLEDTimeoutMillis) {
                 Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off

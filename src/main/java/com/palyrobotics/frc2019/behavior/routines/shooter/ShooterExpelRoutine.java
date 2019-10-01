@@ -36,7 +36,6 @@ public class ShooterExpelRoutine extends Routine {
     @Override
     public Commands update(Commands commands) {
         commands.wantedShooterState = wantedShooterState;
-        commands.holderOutput = Elevator.getInstance().getHolderSolenoidOutput();
         commands.customShooterSpeed = false;
 
         return commands;

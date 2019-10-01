@@ -5,10 +5,11 @@ import com.palyrobotics.frc2019.config.RobotState;
 
 public abstract class Subsystem {
 
-    private String mName;
+    private final String mName;
 
     public Subsystem(String name) {
         mName = name;
+        reset();
     }
 
     public abstract void update(Commands commands, RobotState robotState);
@@ -23,10 +24,14 @@ public abstract class Subsystem {
     }
 
     public void start() {
-
+        reset();
     }
 
     public void stop() {
+        reset();
+    }
+
+    public void reset() {
     }
 
     public String getStatus() {

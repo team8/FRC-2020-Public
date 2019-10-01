@@ -36,6 +36,10 @@ public class SparkMaxOutput {
         mSparkReference = reference;
     }
 
+    public static SparkMaxOutput getIdle() {
+        return new SparkMaxOutput(ControlType.kDutyCycle);
+    }
+
     public void setTargetSmartVelocity(double targetVelocity, double velocityConversion, double arbitraryDemand) {
         mSparkReference = targetVelocity;
         mSparkMode = ControlType.kSmartVelocity;
@@ -66,6 +70,10 @@ public class SparkMaxOutput {
         mSparkMode = ControlType.kPosition;
         mArbitraryDemand = arbitraryDemand;
         mGains = gains;
+    }
+
+    public void setTargetPositionSmartMotion(double positionSetPoint) {
+        setTargetPositionSmartMotion(positionSetPoint, 0.0);
     }
 
     public void setTargetPositionSmartMotion(double positionSetPoint, double arbitraryDemand) {

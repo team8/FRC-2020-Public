@@ -38,24 +38,22 @@ public class Drive extends Subsystem {
 
     private DriveState mState = DriveState.NEUTRAL;
 
-    //Helper class to calculate teleop output
+    // Helper class to calculate teleop output
     private CheesyDriveHelper mCDH = new CheesyDriveHelper();
 
     private VisionDriveHelper mVDH = new VisionDriveHelper();
 
     private Drive.DriveController mController;
-    //Used for off board controllers to be called only once
+    // Used for off board controllers to be called only once
     private boolean newController;
 
-    //Encoder DPP
+    // Encoder DPP
 //    private final double kWheelbaseWidth; //Get from CAD
 //    private final double kTurnSlipFactor; //Measure empirically
 
-    //Cache poses to not be allocating at 200Hz
+    // Cache poses to not be allocating at 200Hz
     private Pose mCachedPose = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
-    //Cached robot state, updated by looper
-    private RobotState mCachedRobotState;
-    //Stores output
+    private RobotState mRobotState;
     private SparkDriveSignal mSignal = new SparkDriveSignal();
 
 //    private DashboardValue motors;
@@ -81,9 +79,9 @@ public class Drive extends Subsystem {
     }
 
     @Override
-    public void start() {
+    public void reset() {
         setNeutral();
-        mCachedRobotState = RobotState.getInstance();
+        mRobotState = RobotState.getInstance();
     }
 
     /**
@@ -127,7 +125,7 @@ public class Drive extends Subsystem {
      */
     @Override
     public void update(Commands commands, RobotState state) {
-        mCachedRobotState = state;
+        mRobotState = state;
         mCachedPose = state.drivePose.copy(); // TODO make copyTo function instead, this creates new instance every time
         boolean mIsNewState = !(mState == commands.wantedDriveState);
         mState = commands.wantedDriveState;
@@ -135,21 +133,21 @@ public class Drive extends Subsystem {
 //		System.out.println(mState);
         switch (mState) {
             case CHEZY:
-                setDriveOutputs(mCDH.cheesyDrive(commands, mCachedRobotState));
+                setDriveOutputs(mCDH.cheesyDrive(commands, mRobotState));
                 break;
             case VISION_ASSIST:
-                setDriveOutputs(mVDH.visionDrive(commands, mCachedRobotState));
+                setDriveOutputs(mVDH.visionDrive(commands, mRobotState));
                 break;
             case CLOSED_VISION_ASSIST:
             case OFF_BOARD_CONTROLLER:
-                setDriveOutputs(mController.update(mCachedRobotState));
+                setDriveOutputs(mController.update(mRobotState));
                 break;
             case ON_BOARD_CONTROLLER:
                 if (mController == null) {
 //					Logger.getInstance().logSubsystemThread(Level.WARNING, "No onboard controller to use!");
                     commands.wantedDriveState = DriveState.NEUTRAL;
                 } else {
-                    setDriveOutputs(mController.update(mCachedRobotState));
+                    setDriveOutputs(mController.update(mRobotState));
                 }
                 break;
             case OPEN_LOOP:
@@ -163,7 +161,7 @@ public class Drive extends Subsystem {
                 }
                 setDriveOutputs(new SparkDriveSignal());
 
-                if (mCachedRobotState.gamePeriod.equals(RobotState.GamePeriod.TELEOP)) {
+                if (mRobotState.gamePeriod.equals(RobotState.GamePeriod.TELEOP)) {
                     if (mIsNewState) {
                         resetController();
                     }
@@ -197,10 +195,6 @@ public class Drive extends Subsystem {
         CSVWriter.addData("driveRightSetpoint", mSignal.rightOutput.getReference());
         // System.out.println("Left arbitrary demand: " + mSignal.leftMotor.getArbitraryFF());
         // System.out.println("Right arbitrary demand: " + mSignal.rightMotor.getArbitraryFF());
-    }
-
-    @Override
-    public void stop() {
     }
 
     private void setDriveOutputs(SparkDriveSignal signal) {
@@ -241,21 +235,21 @@ public class Drive extends Subsystem {
         mController = new AdaptivePurePursuitController(DrivetrainConstants.kPathFollowingLookahead, DrivetrainConstants.kPathFollowingMaxAccel,
                 DrivetrainConstants.kNormalLoopsDt, path,
                 inverted, 0);
-        mController.update(mCachedRobotState);
+        mController.update(mRobotState);
         newController = true;
     }
 
     public void setTrajectoryController(Path path, double lookahead, boolean inverted) {
         mController = new AdaptivePurePursuitController(lookahead, DrivetrainConstants.kPathFollowingMaxAccel, DrivetrainConstants.kNormalLoopsDt, path,
                 inverted, 0);
-        mController.update(mCachedRobotState);
+        mController.update(mRobotState);
         newController = true;
     }
 
     public void setTrajectoryController(Path path, double lookahead, boolean inverted, double tolerance) {
         mController = new AdaptivePurePursuitController(lookahead, DrivetrainConstants.kPathFollowingMaxAccel, DrivetrainConstants.kNormalLoopsDt, path,
                 inverted, tolerance);
-        mController.update(mCachedRobotState);
+        mController.update(mRobotState);
         newController = true;
     }
 
@@ -289,7 +283,7 @@ public class Drive extends Subsystem {
      */
     public Pose getPose() {
         //If drivetrain has not had first update yet, return initial robot pose of 0,0,0,0,0,0
-        if (mCachedRobotState == null) {
+        if (mRobotState == null) {
             return new Pose(0, 0, 0, 0, 0, 0, 0, 0);
         }
         return mCachedPose;
