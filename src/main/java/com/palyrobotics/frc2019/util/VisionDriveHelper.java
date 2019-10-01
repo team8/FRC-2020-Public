@@ -21,6 +21,8 @@ public class VisionDriveHelper {
 
     private boolean mInitialBrake;
     private double mLastThrottle, mBrakeRate;
+    private boolean found = false;
+    private boolean atTarget = false;
 //    private double mLastYawError;
 //    private long mLastTimeMs;
     private SynchronousPID mPidController = new SynchronousPID(mConfig.p, mConfig.i, mConfig.d);
@@ -84,8 +86,10 @@ public class VisionDriveHelper {
             // |angularPower| should be at most 0.6
             if (angularPower > kMaxAngularPower) angularPower = kMaxAngularPower;
             if (angularPower < -kMaxAngularPower) angularPower = -kMaxAngularPower;
+            found = true;
         } else {
 //            mLastTimeMs = System.currentTimeMillis();
+            found = false;
             angularPower = 0.0;
         }
 
@@ -106,9 +110,13 @@ public class VisionDriveHelper {
             rightOutput = -1.0;
         }
 
-        mSignal.leftOutput.setPercentOutput(leftOutput);
-        mSignal.rightOutput.setPercentOutput(rightOutput);
-        return mSignal;
+        if (!found) {
+            return new CheesyDriveHelper().cheesyDrive(commands,robotState);
+        } else {
+            mSignal.leftOutput.setPercentOutput(leftOutput);
+            mSignal.rightOutput.setPercentOutput(rightOutput);
+            return mSignal;
+        }
     }
 
 //    /**
