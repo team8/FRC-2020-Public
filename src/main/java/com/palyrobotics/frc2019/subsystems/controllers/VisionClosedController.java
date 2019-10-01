@@ -1,10 +1,12 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
+import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.configv2.VisionConfig;
 import com.palyrobotics.frc2019.subsystems.Drive;
+import com.palyrobotics.frc2019.util.CheesyDriveHelper;
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.SparkDriveSignal;
 import com.palyrobotics.frc2019.util.SynchronousPID;
@@ -38,10 +40,19 @@ public class VisionClosedController implements Drive.DriveController {
             // |angularPower| should be at most 0.6
             if (angularPower > MAX_ANGULAR_POWER) angularPower = MAX_ANGULAR_POWER;
             if (angularPower < -MAX_ANGULAR_POWER) angularPower = -MAX_ANGULAR_POWER;
+
+            if (Limelight.getInstance().getCorrectedEstimatedDistanceZ() < DrivetrainConstants.kVisionTargetThreshold) {
+                RobotState.getInstance().atThreshold = true;
+            }
         } else {
-            mSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
-            mSignal.rightOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
-            return mSignal;
+            if (!robotState.atThreshold) {
+                return new CheesyDriveHelper().cheesyDrive(Commands.getInstance(), RobotState.getInstance());
+            } else {
+                SparkDriveSignal mSignal = new SparkDriveSignal();
+                mSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
+                mSignal.rightOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
+                return mSignal;
+            }
         }
 
         double

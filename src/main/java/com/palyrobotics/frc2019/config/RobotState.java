@@ -83,6 +83,9 @@ public class RobotState {
 	//Elevator sensor data
     public double elevatorPosition = 0, elevatorVelocity = 0;
 
+    //Vision drive data
+    public boolean atThreshold = false;
+
 	//Robot position
 	public final int kObservationBufferSize = 100;
 	public final double kMaxTargetAge = 0.4;

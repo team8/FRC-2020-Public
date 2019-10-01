@@ -57,6 +57,8 @@ public class DrivetrainConstants {
     public static final double kVisionLookingForTargetCreepPower = 0.18;
     public static final double kDriveMaxClosedLoopOutput = 1.0;
 
+    public static final double kVisionTargetThreshold = 20.0; //threshold before target cannot be seen //TODO: Change this threshold
+
     /**
      * Tolerances
      */

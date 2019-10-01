@@ -22,7 +22,6 @@ public class VisionDriveHelper {
     private boolean mInitialBrake;
     private double mLastThrottle, mBrakeRate;
     private boolean found = false;
-    private boolean atTarget = false;
 //    private double mLastYawError;
 //    private long mLastTimeMs;
     private SynchronousPID mPidController = new SynchronousPID(mConfig.p, mConfig.i, mConfig.d);
@@ -87,6 +86,9 @@ public class VisionDriveHelper {
             if (angularPower > kMaxAngularPower) angularPower = kMaxAngularPower;
             if (angularPower < -kMaxAngularPower) angularPower = -kMaxAngularPower;
             found = true;
+            if(Limelight.getInstance().getCorrectedEstimatedDistanceZ() < DrivetrainConstants.kVisionTargetThreshold) {
+                RobotState.getInstance().atThreshold = true;
+            }
         } else {
 //            mLastTimeMs = System.currentTimeMillis();
             found = false;
@@ -110,13 +112,13 @@ public class VisionDriveHelper {
             rightOutput = -1.0;
         }
 
-        if (!found) {
+        if (!found && !RobotState.getInstance().atThreshold) {
             return new CheesyDriveHelper().cheesyDrive(commands,robotState);
         } else {
             mSignal.leftOutput.setPercentOutput(leftOutput);
             mSignal.rightOutput.setPercentOutput(rightOutput);
-            return mSignal;
         }
+        return mSignal;
     }
 
 //    /**

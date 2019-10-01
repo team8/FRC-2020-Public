@@ -20,6 +20,7 @@ import com.palyrobotics.frc2019.behavior.routines.waits.WaitForHatchIntakeUp;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.Constants.OtherConstants;
+import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
 import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.subsystems.Intake.IntakeMacroState;
@@ -112,6 +113,9 @@ public class OperatorInterface {
 
             newCommands.wantedDriveState = Drive.DriveState.VISION_ASSIST;
         } else {
+            if (!mTurnStick.getButtonPressed(4)) {
+                RobotState.getInstance().atThreshold = false;
+            }
             if (System.currentTimeMillis() - visionStartTimeMs > OtherConstants.kVisionLEDTimeoutMillis) {
                 Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
                 Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
@@ -128,6 +132,9 @@ public class OperatorInterface {
             Drive.getInstance().setVisionClosedDriveController();
             newCommands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
         } else {
+            if (!mTurnStick.getButtonPressed(3)) {
+                RobotState.getInstance().atThreshold = false;
+            }
             if (System.currentTimeMillis() - visionStartTimeMs > OtherConstants.kVisionLEDTimeoutMillis) {
                 Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
                 Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
