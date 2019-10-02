@@ -43,6 +43,8 @@ public class OtherConstants {
     // Physical constants of the limelight mount
     public static final double kLimelightElevationAngleDegrees = -8.11;
     public static final double kLimelightHeightInches = 39.44;
+    // Limelight pipeline
+    public static final int kLimelightHatchPipeline = 0, kLimelightCargoPipeline = 1;
     // Limelight video feed dimensions
     public static final double kLimelightHeightPixels = 240;
     public static final double kLimelightWidthPixels = 320;

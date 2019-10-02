@@ -38,11 +38,13 @@ import com.palyrobotics.frc2019.vision.LimelightControlMode;
  */
 public class OperatorInterface {
 
-    private static OperatorInterface instance = new OperatorInterface();
+    private static OperatorInterface sInstance = new OperatorInterface();
 
     public static OperatorInterface getInstance() {
-        return instance;
+        return sInstance;
     }
+
+    private final Limelight mLimelight = Limelight.getInstance();
 
     private JoystickInput
             mDriveStick = Robot.getRobotState().leftStickInput,
@@ -106,9 +108,9 @@ public class OperatorInterface {
         if (mTurnStick.getButtonPressed(3)) {
             visionStartTimeMs = System.currentTimeMillis();
             // Limelight vision tracking on
-            if (Limelight.getInstance().getCamMode() != LimelightControlMode.CamMode.VISION) {
-                Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
-                Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
+            if (mLimelight.getCamMode() != LimelightControlMode.CamMode.VISION) {
+                mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
+                mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
             }
 
             newCommands.wantedDriveState = Drive.DriveState.VISION_ASSIST;
@@ -117,17 +119,17 @@ public class OperatorInterface {
                 RobotState.getInstance().atVisionTargetThreshold = false;
             }
             if (System.currentTimeMillis() - visionStartTimeMs > OtherConstants.kVisionLEDTimeoutMillis) {
-                Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
-                Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+                mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
+                mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
             }
         }
 
         if (mTurnStick.getButtonPressed(4)) {
             visionStartTimeMs = System.currentTimeMillis();
             // Limelight vision tracking on
-            if (Limelight.getInstance().getCamMode() != LimelightControlMode.CamMode.VISION) {
-                Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.VISION);
-                Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
+            if (mLimelight.getCamMode() != LimelightControlMode.CamMode.VISION) {
+                mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
+                mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
             }
             Drive.getInstance().setVisionClosedDriveController();
             newCommands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
@@ -136,8 +138,8 @@ public class OperatorInterface {
                 RobotState.getInstance().atVisionTargetThreshold = false;
             }
             if (System.currentTimeMillis() - visionStartTimeMs > OtherConstants.kVisionLEDTimeoutMillis) {
-                Limelight.getInstance().setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
-                Limelight.getInstance().setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+                mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
+                mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
             }
         }
 

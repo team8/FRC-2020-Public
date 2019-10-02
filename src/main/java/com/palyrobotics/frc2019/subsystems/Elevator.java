@@ -9,8 +9,6 @@ import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
-import com.revrobotics.ControlType;
-import com.revrobotics.SparkMax;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class Elevator extends Subsystem {

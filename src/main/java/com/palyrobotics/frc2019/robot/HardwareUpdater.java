@@ -19,6 +19,7 @@ import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.trajectory.Kinematics;
 import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.util.trajectory.Rotation2d;
+import com.palyrobotics.frc2019.vision.Limelight;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANPIDController.AccelStrategy;
@@ -412,7 +413,12 @@ class HardwareUpdater {
         IntakeConfig intakeConfig = Configs.get(IntakeConfig.class);
         int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> (i < intakeConfig.cargoInchTolerance)).count();
         int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < intakeConfig.cargoInchTolerance)).count();
+        boolean lastHasCargo = robotState.hasCargo;
         robotState.hasCargo = (leftTotal >= intakeConfig.cargoCountRequired || rightTotal >= intakeConfig.cargoCountRequired);
+        if (lastHasCargo != robotState.hasCargo) {
+            int properPipeline = robotState.hasCargo ? OtherConstants.kLimelightHatchPipeline : OtherConstants.kLimelightCargoPipeline;
+            Limelight.getInstance().setPipeline(properPipeline);
+        }
         robotState.cargoDistance = Math.min(mUltrasonicLeft.getRangeInches(), mUltrasonicRight.getRangeInches());
 
 
