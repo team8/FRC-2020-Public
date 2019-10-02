@@ -22,7 +22,7 @@ public class Pusher extends Subsystem {
     private Double mSlamStartTimeMs;
 
     private SparkMaxOutput mOutput;
-    private boolean mFirstEncoderReset = true;
+    private boolean mIsFirstTickForSlamResetEncoder = true;
 
     public enum PusherState {
         IN, MIDDLE, OUT, START
@@ -35,6 +35,7 @@ public class Pusher extends Subsystem {
         mOutput = SparkMaxOutput.getIdle();
         mSlamStartTimeMs = null;
         mState = PusherState.START;
+        mIsFirstTickForSlamResetEncoder = true;
     }
 
     protected Pusher() {
@@ -49,7 +50,7 @@ public class Pusher extends Subsystem {
         switch (mState) {
             case START:
                 mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
-                mFirstEncoderReset = true;
+                mIsFirstTickForSlamResetEncoder = true;
                 mSlamStartTimeMs = null;
                 break;
             case IN:
@@ -61,9 +62,9 @@ public class Pusher extends Subsystem {
                     double percentOutput = mConfig.slamPercentOutput;
                     boolean afterSlamTime = currentTimeMs - mSlamStartTimeMs > mConfig.slamTimeMs;
                     if (afterSlamTime) {
-                        if (mFirstEncoderReset) {
+                        if (mIsFirstTickForSlamResetEncoder) {
                             HardwareAdapter.getInstance().getPusher().resetSensors(); // Zero encoder since we assume to slam to in position
-                            mFirstEncoderReset = false;
+                            mIsFirstTickForSlamResetEncoder = false;
                         } else {
                             mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
                         }
@@ -76,7 +77,7 @@ public class Pusher extends Subsystem {
                 break;
             case OUT:
                 mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceOut);
-                mFirstEncoderReset = true;
+                mIsFirstTickForSlamResetEncoder = true;
                 mSlamStartTimeMs = null;
                 break;
         }
