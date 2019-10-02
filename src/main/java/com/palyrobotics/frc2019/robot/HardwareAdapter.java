@@ -8,6 +8,7 @@ import com.palyrobotics.frc2019.config.configv2.IntakeConfig;
 import com.palyrobotics.frc2019.config.configv2.PortConstants;
 import com.palyrobotics.frc2019.util.XboxController;
 import com.palyrobotics.frc2019.util.configv2.Configs;
+import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.*;
@@ -140,8 +141,8 @@ public class HardwareAdapter {
 //		public final Ultrasonic pusherSecondaryUltrasonic;
 //		public final AnalogPotentiometer pusherPotentiometer;
 
-        public void resetSensors() {
-            sInstance.pusherSpark.getEncoder().setPosition(0);
+        public boolean resetSensors() {
+            return sInstance.pusherSpark.getEncoder().setPosition(0.0) == CANError.kOk;
         }
 
         PusherHardware() {

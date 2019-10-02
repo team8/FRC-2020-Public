@@ -63,8 +63,8 @@ public class Pusher extends Subsystem {
                     boolean afterSlamTime = currentTimeMs - mSlamStartTimeMs > mConfig.slamTimeMs;
                     if (afterSlamTime) {
                         if (mIsFirstTickForSlamResetEncoder) {
-                            HardwareAdapter.getInstance().getPusher().resetSensors(); // Zero encoder since we assume to slam to in position
-                            mIsFirstTickForSlamResetEncoder = false;
+                            if (HardwareAdapter.getInstance().getPusher().resetSensors()) // Zero encoder since we assume to slam to in position
+                                mIsFirstTickForSlamResetEncoder = false;
                         } else {
                             mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
                         }
