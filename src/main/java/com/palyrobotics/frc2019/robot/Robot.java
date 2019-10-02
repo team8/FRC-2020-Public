@@ -254,7 +254,7 @@ public class Robot extends TimedRobot {
         mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
         mLimelight.setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
         HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
-        mHardwareUpdater.setIdleMode(mConfig.disabledUseBrakeMode ? IdleMode.kBrake : IdleMode.kCoast);
+        mHardwareUpdater.setIdleMode(mConfig.disabledUseCoast ? IdleMode.kCoast : IdleMode.kBrake);
 
         CSVWriter.write();
 

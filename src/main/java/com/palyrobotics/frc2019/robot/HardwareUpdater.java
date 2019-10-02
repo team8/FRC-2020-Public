@@ -582,6 +582,7 @@ class HardwareUpdater {
     private void updateSparkMax(CANSparkMax spark, SparkMaxOutput output) {
         ControlType controlType = output.getControlType();
         boolean isSmart = controlType == ControlType.kSmartMotion || controlType == ControlType.kSmartVelocity;
+        if (Configs.get(RobotConfig.class).disableSparkOutput) return;
         spark.getPIDController().setReference(
                 output.getReference(),
                 controlType,
