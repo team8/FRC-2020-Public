@@ -210,8 +210,6 @@ class HardwareUpdater {
         intakeMasterSpark.enableVoltageCompensation(12);
         intakeSlaveSpark.enableVoltageCompensation(12);
 
-        intakeMasterSpark.setIdleMode(IdleMode.kBrake);
-
         intakeMasterSpark.getEncoder().setPositionConversionFactor(IntakeConfig.kArmDegreesPerRevolution);
         intakeMasterSpark.getEncoder().setVelocityConversionFactor(IntakeConfig.kArmDegreesPerMinutePerRpm);
 
@@ -544,8 +542,12 @@ class HardwareUpdater {
 //		System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getAppliedOutput());
     }
 
-    void setDriveBrakeMode(IdleMode idleMode) {
+    void setIdleMode(IdleMode idleMode) {
         HardwareAdapter.getInstance().getDrivetrain().sparks.forEach(spark -> spark.setIdleMode(idleMode));
+        HardwareAdapter.getInstance().getIntake().intakeMasterSpark.setIdleMode(idleMode);
+        HardwareAdapter.getInstance().getIntake().intakeSlaveSpark.setIdleMode(idleMode);
+        HardwareAdapter.getInstance().getElevator().elevatorMasterSpark.setIdleMode(idleMode);
+        HardwareAdapter.getInstance().getElevator().elevatorSlaveSpark.setIdleMode(idleMode);
     }
 
     private void updateTalonSRX(WPI_TalonSRX talon, TalonSRXOutput output) {

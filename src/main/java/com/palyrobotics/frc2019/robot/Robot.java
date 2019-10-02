@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
 
     private static final RobotState sRobotState = RobotState.getInstance();
     private final Limelight mLimelight = Limelight.getInstance();
+    private final RobotConfig mConfig = Configs.get(RobotConfig.class);
 
     public static RobotState getRobotState() {
         return sRobotState;
@@ -200,7 +201,7 @@ public class Robot extends TimedRobot {
         sCommands.wantedDriveState = Drive.DriveState.CHEZY; // Switch to chezy after auto ends
         CSVWriter.cleanFile();
         mEnabledSubsystems.forEach(Subsystem::start);
-        mHardwareUpdater.setDriveBrakeMode(IdleMode.kBrake);
+        mHardwareUpdater.setIdleMode(IdleMode.kBrake);
         sRobotState.matchStartTimeMs = System.currentTimeMillis();
 
         // Set limelight to driver camera mode - redundancy for testing purposes
@@ -253,7 +254,7 @@ public class Robot extends TimedRobot {
         mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
         mLimelight.setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
         HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
-        mHardwareUpdater.setDriveBrakeMode(IdleMode.kCoast);
+        mHardwareUpdater.setIdleMode(mConfig.disabledUseBrakeMode ? IdleMode.kBrake : IdleMode.kCoast);
 
         CSVWriter.write();
 
@@ -277,17 +278,16 @@ public class Robot extends TimedRobot {
 
     private void setupSubsystemsAndServices() {
         // TODO meh
-        RobotConfig services = Configs.get(RobotConfig.class);
         Map<String, Supplier<RobotService>> configToService = Map.of(
                 "commandReceiver", CommandReceiver::new,
                 "dashboardManager", DashboardManager::new
         );
-        mEnabledServices = services.enabledServices.stream()
+        mEnabledServices = mConfig.enabledServices.stream()
                 .map(serviceName -> configToService.get(serviceName).get())
                 .collect(Collectors.toList());
         Map<String, Subsystem> configToSubsystem = mSubsystems.stream()
                 .collect(Collectors.toMap(Subsystem::getConfigName, Function.identity()));
-        mEnabledSubsystems = services.enabledSubsystems.stream()
+        mEnabledSubsystems = mConfig.enabledSubsystems.stream()
                 .map(configToSubsystem::get)
                 .collect(Collectors.toList());
         System.out.println("Enabled subsystems: ");
