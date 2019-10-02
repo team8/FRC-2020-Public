@@ -19,7 +19,7 @@ public class Intake extends Subsystem {
 
     private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
 
-    private SparkMaxOutput mSparkOutput = SparkMaxOutput.getIdle();
+    private SparkMaxOutput mOutput = SparkMaxOutput.getIdle();
     private double mTalonOutput, mRumbleLength;
 
     private Double mIntakeWantedAngle;
@@ -70,12 +70,12 @@ public class Intake extends Subsystem {
 
     protected Intake() {
         super("intake");
-        mMacroState = IntakeMacroState.IDLE;
     }
 
     @Override
     public void reset() {
         mMacroState = IntakeMacroState.IDLE;
+        mOutput = SparkMaxOutput.getIdle();
     }
 
     @Override
@@ -112,9 +112,6 @@ public class Intake extends Subsystem {
         } else if (commands.wantedIntakeState == IntakeMacroState.DROPPING && robotState.hasPusherCargo) {
             mMacroState = IntakeMacroState.HOLDING_MID;
             commands.wantedIntakeState = IntakeMacroState.HOLDING_MID; // reset it
-        } else if (commands.wantedIntakeState == IntakeMacroState.HOLDING && mMacroState != IntakeMacroState.HOLDING) {
-            mMacroState = commands.wantedIntakeState;
-//            Logger.getInstance().logRobotThread(Level.INFO, "setting wanted intake pos to " + robotState.intakeAngle);
         } else if (mMacroState != IntakeMacroState.DROPPING
                 && !(mMacroState == IntakeMacroState.GROUND_INTAKING && commands.wantedIntakeState == IntakeMacroState.HOLDING_ROCKET)) {
             mMacroState = commands.wantedIntakeState;
@@ -229,7 +226,7 @@ public class Intake extends Subsystem {
 
         switch (mUpDownState) {
             case MANUAL:
-                mSparkOutput.setIdle(); //TODO: Fix this based on what control method wanted
+                mOutput.setIdle(); //TODO: Fix this based on what control method wanted
                 break;
             case CUSTOM_ANGLE:
 //                boolean
@@ -240,14 +237,14 @@ public class Intake extends Subsystem {
 //                } else {
 //                    mSparkOutput.setIdle();
 //                }
-                mSparkOutput.setTargetPositionSmartMotion(mIntakeWantedAngle, arbitraryDemand);
+                mOutput.setTargetPositionSmartMotion(mIntakeWantedAngle, arbitraryDemand);
                 break;
             case ZERO_VELOCITY:
-                mSparkOutput.setTargetSmartVelocity(0.0, IntakeConfig.kArmDegreesPerMinutePerRpm, arbitraryDemand);
+                mOutput.setTargetSmartVelocity(0.0, arbitraryDemand);
             default:
             case IDLE:
                 mIntakeWantedAngle = null;
-                mSparkOutput.setIdle();
+                mOutput.setIdle();
                 break;
         }
 
@@ -262,7 +259,7 @@ public class Intake extends Subsystem {
         CSVWriter.addData("intakeAngle", mRobotState.intakeAngle);
         CSVWriter.addData("intakeOutput", HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getAppliedOutput());
         if (mIntakeWantedAngle != null) CSVWriter.addData("intakeWantedAngle", mIntakeWantedAngle);
-        CSVWriter.addData("intakeTargetAngle", mSparkOutput.getReference());
+        CSVWriter.addData("intakeTargetAngle", mOutput.getReference());
     }
 
     public double getRumbleLength() {
@@ -274,7 +271,7 @@ public class Intake extends Subsystem {
     }
 
     public SparkMaxOutput getSparkOutput() {
-        return mSparkOutput;
+        return mOutput;
     }
 
     public double getTalonOutput() {
@@ -289,6 +286,6 @@ public class Intake extends Subsystem {
 
     @Override
     public String getStatus() {
-        return String.format("Intake State: %s%nOutput Control Mode: %s%nSpark Output: %.2f%nUp Down Output: %s", mWheelState, mSparkOutput.getControlType(), mSparkOutput.getReference(), mUpDownState);
+        return String.format("Intake State: %s%nOutput Control Mode: %s%nSpark Output: %.2f%nUp Down Output: %s", mWheelState, mOutput.getControlType(), mOutput.getReference(), mUpDownState);
     }
 }

@@ -584,11 +584,11 @@ class HardwareUpdater {
                 output.getReference(),
                 controlType,
                 controlTypeToSlot.getOrDefault(controlType, 0),
-
                 output.getArbitraryDemand(),
                 isSmart // TODO make both use percent out
                         ? CANPIDController.ArbFFUnits.kPercentOut
                         : CANPIDController.ArbFFUnits.kVoltage);
+//        System.out.printf("%s,%s%n", output.getControlType(), output.getReference());
     }
 
     private void updateSparkGains(CANSparkMax spark, Gains gains) {

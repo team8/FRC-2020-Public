@@ -7,7 +7,7 @@ import java.util.List;
 
 public class RobotConfig extends AbstractConfig {
 
-    public boolean competitionMode;
+    public boolean competitionMode, disabledUseBrakeMode;
     public double sendMultiplier = 1.0;
     public List<String> enabledServices = new ArrayList<>(), enabledSubsystems = new ArrayList<>();
 }

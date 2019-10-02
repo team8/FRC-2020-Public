@@ -40,7 +40,7 @@
         "f": 0.000061,
         "rampRate": 0.2,
         "iZone": 0,
-        "acceleration": 10000,
-        "velocity": 6000
+        "acceleration": 20000,
+        "velocity": 8000
     }
 }

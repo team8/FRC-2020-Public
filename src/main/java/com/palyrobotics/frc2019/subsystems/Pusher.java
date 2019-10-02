@@ -22,6 +22,7 @@ public class Pusher extends Subsystem {
     private Double mSlamStartTimeMs;
 
     private SparkMaxOutput mOutput;
+    private boolean mFirstEncoderReset = true;
 
     public enum PusherState {
         IN, MIDDLE, OUT, START
@@ -48,6 +49,7 @@ public class Pusher extends Subsystem {
         switch (mState) {
             case START:
                 mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
+                mFirstEncoderReset = true;
                 mSlamStartTimeMs = null;
                 break;
             case IN:
@@ -58,15 +60,23 @@ public class Pusher extends Subsystem {
                     }
                     double percentOutput = mConfig.slamPercentOutput;
                     boolean afterSlamTime = currentTimeMs - mSlamStartTimeMs > mConfig.slamTimeMs;
-                    if (afterSlamTime) percentOutput *= mConfig.slamHoldMultiplier;
-                    mOutput.setPercentOutput(percentOutput);
-                    HardwareAdapter.getInstance().getPusher().resetSensors(); // Zero encoder since we assume to slam to in position
+                    if (afterSlamTime) {
+                        if (mFirstEncoderReset) {
+                            HardwareAdapter.getInstance().getPusher().resetSensors(); // Zero encoder since we assume to slam to in position
+                            mFirstEncoderReset = false;
+                        } else {
+                            mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
+                        }
+                    } else {
+                        mOutput.setPercentOutput(percentOutput);
+                    }
                 } else {
                     mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
                 }
                 break;
             case OUT:
                 mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceOut);
+                mFirstEncoderReset = true;
                 mSlamStartTimeMs = null;
                 break;
         }

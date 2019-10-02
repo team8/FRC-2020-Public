@@ -247,6 +247,7 @@ public class Robot extends TimedRobot {
         sRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
         // Stop subsystems and reset their states
         mEnabledSubsystems.forEach(Subsystem::stop);
+        mHardwareUpdater.updateHardware();
 
         // Set Limelight to vision pipeline to enable pit testing
         mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
