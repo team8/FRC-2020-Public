@@ -179,7 +179,9 @@ public class Robot extends TimedRobot {
     @Override
     public void testInit() {
 //        System.out.println(HardwareAdapter.getInstance().getIntake().intakeMasterSpark.getEncoder().getPosition());
-        System.out.printf("Potentiometer Arm: %s%n", HardwareAdapter.getInstance().getIntake().potentiometer.get());
+//        System.out.printf("Potentiometer Arm: %s%n", HardwareAdapter.getInstance().getIntake().potentiometer.get());
+        mEnabledSubsystems.forEach(Subsystem::reset);
+        mHardwareUpdater.updateHardware();
     }
 
     @Override
