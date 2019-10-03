@@ -82,6 +82,10 @@ public class Robot extends TimedRobot {
 
         if (RobotBase.isSimulation()) sRobotState.matchStartTimeMs = System.currentTimeMillis();
 
+        Configs.listen(RobotConfig.class, config -> {
+            if (isDisabled()) mHardwareUpdater.setIdleMode(config.disabledUseCoast ? IdleMode.kCoast : IdleMode.kBrake);
+        });
+
 //        Logger.getInstance().logRobotThread(Level.INFO, "End robotInit()");
     }
 
