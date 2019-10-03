@@ -19,8 +19,8 @@
     "holdTolerance": 14.5,
     "acceptableAngularError": 3.0,
     "angularVelocityError": 10.0,
-    "cargoInchTolerance": 7.65,
-    "cargoCountRequired": 6.0,
+    "cargoInchTolerance": 7.0,
+    "cargoCountRequired": 5.5,
     "gains": {
         "p": 0.000002,
         "i": 0.0,

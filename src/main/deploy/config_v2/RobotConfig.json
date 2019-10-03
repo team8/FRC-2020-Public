@@ -11,5 +11,5 @@
         "shooter",
         "elevator"
     ],
-    "sendMultiplier": 1.0
+    "sendMultiplier": 0.95
 }

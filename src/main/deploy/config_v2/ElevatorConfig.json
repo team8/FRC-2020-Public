@@ -2,7 +2,7 @@
     "elevatorCargoHeight3Inches": 52.0,
     "manualMaxPercentOut": 0.5,
     "elevatorCargoHeight2Inches": 25.0,
-    "elevatorCargoBallHeight": 20.0,
+    "elevatorCargoBallHeight": 25.0,
     "elevatorCargoHeight1Inches": 0.0,
     "handOffHeight": 2.0,
     "secondStageCanStartMovingArm": 29.0,

@@ -234,8 +234,8 @@ public class CommandReceiver implements RobotService {
                 }
             }
             case "calibrate": {
-                HardwareAdapter.getInstance().getIntake().calibrateIntakeEncoderWithPotentiometer();
-                return "Calibrated intake!";
+                double potentiometer = HardwareAdapter.getInstance().getIntake().calibrateIntakeEncoderWithPotentiometer();
+                return String.format("Calibrated intake with potentiometer value %f%n", potentiometer);
             }
             default: {
                 throw new RuntimeException();

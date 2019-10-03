@@ -276,7 +276,7 @@ class HardwareUpdater {
         pusherSpark.setIdleMode(IdleMode.kBrake);
 
         updateSparkGains(pusherSpark, Gains.pusherPosition);
-        updateSmartMotionGains(pusherSpark, Configs.get(PusherConfig.class).gains, 1);
+        Configs.listen(PusherConfig.class, config -> updateSmartMotionGains(pusherSpark, config.gains, 1));
     }
 
     private void startUltrasonics() {
@@ -413,14 +413,9 @@ class HardwareUpdater {
         IntakeConfig intakeConfig = Configs.get(IntakeConfig.class);
         int leftTotal = (int) robotState.mLeftReadings.stream().filter(i -> (i < intakeConfig.cargoInchTolerance)).count();
         int rightTotal = (int) robotState.mRightReadings.stream().filter(i -> (i < intakeConfig.cargoInchTolerance)).count();
-        boolean lastHasCargo = robotState.hasCargo;
         robotState.hasCargo = (leftTotal >= intakeConfig.cargoCountRequired || rightTotal >= intakeConfig.cargoCountRequired);
-        if (lastHasCargo != robotState.hasCargo) {
-            int properPipeline = robotState.hasCargo ? OtherConstants.kLimelightHatchPipeline : OtherConstants.kLimelightCargoPipeline;
-            Limelight.getInstance().setPipeline(properPipeline);
-        }
-        robotState.cargoDistance = Math.min(mUltrasonicLeft.getRangeInches(), mUltrasonicRight.getRangeInches());
 
+        robotState.cargoDistance = Math.min(mUltrasonicLeft.getRangeInches(), mUltrasonicRight.getRangeInches());
 
         // HAS CARGO IN CARRIAGE
 
@@ -436,10 +431,16 @@ class HardwareUpdater {
 
         int pusherTotalFar = (int) robotState.mPusherReadings.stream().filter(i -> i < Configs.get(PusherConfig.class).vidarCargoToleranceFar).count();
 
+        boolean lastHasPusherCargoFar = robotState.hasPusherCargoFar;
         robotState.hasPusherCargo = (pusherTotalClose > OtherConstants.kRequiredUltrasonicCount + 1);
         robotState.hasPusherCargoFar = (pusherTotalFar > OtherConstants.kRequiredUltrasonicCount);
 
-        robotState.cargoPusherDistance = (mPusherUltrasonic.getRangeInches());
+        if (lastHasPusherCargoFar != robotState.hasPusherCargoFar) {
+            int properPipeline = robotState.hasCargo ? OtherConstants.kLimelightCargoPipeline : OtherConstants.kLimelightHatchPipeline;
+            Limelight.getInstance().setPipeline(properPipeline);
+        }
+
+        robotState.cargoPusherDistance = mPusherUltrasonic.getRangeInches();
 //		System.out.println(robotState.cargoPusherDistance);
     }
 

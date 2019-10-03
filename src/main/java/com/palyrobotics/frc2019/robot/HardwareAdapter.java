@@ -106,7 +106,12 @@ public class HardwareAdapter {
         final Ultrasonic intakeUltrasonicLeft, intakeUltrasonicRight;
         final AnalogPotentiometer potentiometer;
 
-        public void calibrateIntakeEncoderWithPotentiometer() {
+        /**
+         * Set the initial position of the intake arm to be in-line with potentiometer.
+         *
+         * @return The reading from the arm potentiometer.
+         */
+        public double calibrateIntakeEncoderWithPotentiometer() {
             double
                     maxArmAngle = Configs.get(IntakeConfig.class).maxAngle,
                     potentiometerDegreesPerTick = 1 / IntakeConfig.kArmPotentiometerTicksPerDegree,
@@ -114,6 +119,7 @@ public class HardwareAdapter {
                     intakeStartAngle = maxArmAngle - potentiometerDegreesPerTick * Math.abs(potentiometerTicks);
             Robot.getRobotState().intakeStartAngle = intakeStartAngle;
             intakeMasterSpark.getEncoder().setPosition(intakeStartAngle);
+            return potentiometer.get();
         }
 
         IntakeHardware() {

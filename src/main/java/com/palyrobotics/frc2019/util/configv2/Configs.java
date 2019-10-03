@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 
 /**
  * Configuration storage using JSON
+ *
  * @author Quintin Dwight
  */
 public class Configs {
@@ -165,9 +166,13 @@ public class Configs {
                         Class<? extends AbstractConfig> configClass = sNameToClass.get(configName);
                         if (configClass != null) {
                             if (alreadySeen.contains(configName)) continue;
-                            System.out.printf("Config hot %s reloaded%n", configName);
-                            AbstractConfig config = Configs.read(configClass);
-                            sConfigMap.put(configClass, config);
+                            System.out.printf("Config named %s hot reloaded%n", configName);
+                            try {
+                                sMapper.updatingReader(get(configClass)).readValue(getFileForConfig(configClass).toFile());
+                            } catch (IOException readException) {
+                                handleParseError(readException, configClass).printStackTrace();
+                                System.err.printf("Error updating config for %s. Aborting reload.%n", configName);
+                            }
                             notifyUpdated(configClass);
                             alreadySeen.add(configName);
                         } else {
@@ -204,24 +209,29 @@ public class Configs {
         Path configFile = getFileForConfig(configClass);
         String configClassName = configClass.getSimpleName();
         if (!Files.exists(configFile)) {
-            String errorMessage = String.format("A config file was not found for %s. Critical error, aborting.", configClassName);
+            String errorMessage = String.format("A config file was not found for %s. Critical error, aborting.%n", configClassName);
             throw new RuntimeException(errorMessage);
         }
         try {
             return sMapper.readValue(configFile.toFile(), configClass);
         } catch (IOException readException) {
-            readException.printStackTrace();
-            String errorMessage = String.format("An error occurred trying to read config for class %s%n", configClassName);
-            try {
-                System.out.printf("%s. See here for a default JSON file and double-check yours:%n%s%n",
-                        errorMessage,
-                        sMapper.defaultPrettyPrintingWriter().writeValueAsString(configClass.getConstructor().newInstance())
-                );
-            } catch (IOException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException exception) {
-                exception.printStackTrace();
-            }
-            throw new RuntimeException(errorMessage, readException);
+            RuntimeException exception = handleParseError(readException, configClass);
+            exception.printStackTrace();
+            throw exception;
         }
+    }
+
+    private static RuntimeException handleParseError(IOException readException, Class<? extends AbstractConfig> configClass) {
+        String errorMessage = String.format("An error occurred trying to read config for class %s%n", configClass.getSimpleName());
+        try {
+            System.out.printf("%sSee here for a default JSON file and double-check yours:%n%s%n",
+                    errorMessage,
+                    sMapper.defaultPrettyPrintingWriter().writeValueAsString(configClass.getConstructor().newInstance())
+            );
+        } catch (IOException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException exception) {
+            exception.printStackTrace();
+        }
+        return new RuntimeException(errorMessage, readException);
     }
 
     private static Path getFileForConfig(Class<? extends AbstractConfig> configClass) {
