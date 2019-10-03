@@ -44,6 +44,8 @@ public class IntakeConfig extends AbstractSubsystemConfig {
 
     public SmartGains gains = SmartGains.emptyGains, holdGains = SmartGains.emptyGains;
 
+    public boolean useBrokenPotFix;
+
     /* Unit Conversion */
     public static final double
             kArmPotentiometerTicksPerDegree = (4.5 / 1.0) * ((1.0 / 5.0) / 360.0),

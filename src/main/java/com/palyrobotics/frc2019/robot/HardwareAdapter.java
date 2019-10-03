@@ -112,11 +112,17 @@ public class HardwareAdapter {
          * @return The reading from the arm potentiometer.
          */
         public double calibrateIntakeEncoderWithPotentiometer() {
-            double
-                    maxArmAngle = Configs.get(IntakeConfig.class).maxAngle,
-                    potentiometerDegreesPerTick = 1 / IntakeConfig.kArmPotentiometerTicksPerDegree,
-                    potentiometerTicks = potentiometer.get() - Configs.get(IntakeConfig.class).potentiometerMaxAngleTicks,
-                    intakeStartAngle = maxArmAngle - potentiometerDegreesPerTick * Math.abs(potentiometerTicks);
+            IntakeConfig intakeConfig = Configs.get(IntakeConfig.class);
+            double intakeStartAngle;
+            if (intakeConfig.useBrokenPotFix) {
+                intakeStartAngle = intakeConfig.maxAngle;
+            } else {
+                double
+                        maxArmAngle = intakeConfig.maxAngle,
+                        potentiometerDegreesPerTick = 1 / IntakeConfig.kArmPotentiometerTicksPerDegree,
+                        potentiometerTicks = potentiometer.get() - intakeConfig.potentiometerMaxAngleTicks;
+                intakeStartAngle = maxArmAngle - potentiometerDegreesPerTick * Math.abs(potentiometerTicks);
+            }
             Robot.getRobotState().intakeStartAngle = intakeStartAngle;
             intakeMasterSpark.getEncoder().setPosition(intakeStartAngle);
             return potentiometer.get();
