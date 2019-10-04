@@ -59,6 +59,8 @@ public class Robot extends TimedRobot {
 
     private List<RobotService> mEnabledServices;
 
+    int count = 0;
+
     @Override
     public void robotInit() {
 
@@ -186,11 +188,19 @@ public class Robot extends TimedRobot {
 //        System.out.printf("Potentiometer Arm: %s%n", HardwareAdapter.getInstance().getIntake().potentiometer.get());
         mEnabledSubsystems.forEach(Subsystem::reset);
         mHardwareUpdater.updateHardware();
+        count = 0;
     }
 
     @Override
     public void testPeriodic() {
-
+        count++;
+        if (count % 50 == 0) {
+            System.out.println("Left Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
+            System.out.println("Right Ultrasonic: " + HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
+            System.out.println("Pusher Ultrasonic: " + HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
+            System.out.println("Arm Pot: " + HardwareAdapter.getInstance().getIntake().potentiometer.get());
+            System.out.println();
+        }
     }
 
     @Override
