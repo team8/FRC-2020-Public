@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Configuration storage using JSON
@@ -138,6 +139,10 @@ public class Configs {
             formatException.printStackTrace();
             return "Invalid";
         }
+    }
+
+    public static List<String> getActiveConfigNames() {
+        return sConfigMap.keySet().stream().map(Class::getSimpleName).collect(Collectors.toList());
     }
 
     /**

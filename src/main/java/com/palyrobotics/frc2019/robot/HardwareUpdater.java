@@ -227,8 +227,10 @@ class HardwareUpdater {
         intakeTalon.configPeakOutputReverse(-1.0, 0);
 
         updateSparkGains(intakeMasterSpark, Gains.intakePosition, 0);
-        Configs.listen(IntakeConfig.class, config -> updateSmartMotionGains(intakeMasterSpark, config.gains, 1));
-        Configs.listen(IntakeConfig.class, config -> updateSmartMotionGains(intakeMasterSpark, config.holdGains, 2));
+        Configs.listen(IntakeConfig.class, config -> {
+            updateSmartMotionGains(intakeMasterSpark, config.gains, 1);
+            updateSmartMotionGains(intakeMasterSpark, config.holdGains, 2);
+        });
     }
 
     private void configureShooterHardware() {

@@ -11,6 +11,7 @@ import com.palyrobotics.frc2019.util.configv2.AbstractConfig;
 import com.palyrobotics.frc2019.util.configv2.Configs;
 import com.palyrobotics.frc2019.util.service.RobotService;
 import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.*;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -44,6 +45,7 @@ public class CommandReceiver implements RobotService {
         Subparser get = subparsers.addParser("get");
         get.addArgument("config_name");
         get.addArgument("config_field").nargs("?"); // "?" means this is optional, and will default to null if not supplied
+        get.addArgument("--raw").action(Arguments.storeTrue());
         subparsers.addParser("reload").addArgument("config_name");
         Subparser run = subparsers.addParser("run");
         run.addArgument("routine_name").setDefault("measure_elevator_speed");
@@ -142,12 +144,14 @@ public class CommandReceiver implements RobotService {
             case "save":
             case "reload": {
                 String configName = parse.getString("config_name");
+                if (commandName.equals("get") && configName.equals("Configs")) {
+                    return String.join(",", Configs.getActiveConfigNames());
+                }
                 try {
                     Class<? extends AbstractConfig> configClass = Configs.getClassFromName(configName);
                     if (configClass == null) throw new ClassNotFoundException();
                     AbstractConfig configObject = Configs.get(configClass);
                     String allFieldNames = parse.getString("config_field");
-
                     try {
                         switch (commandName) {
                             case "set":
@@ -170,7 +174,9 @@ public class CommandReceiver implements RobotService {
                                         } catch (IOException ignored) {
                                             display = fieldValue.toString();
                                         }
-                                        return String.format("[%s] %s: %s", configName, allFieldNames == null ? "all" : allFieldNames, display);
+                                        return parse.getBoolean("raw")
+                                                ? display
+                                                : String.format("[%s] %s: %s", configName, allFieldNames == null ? "all" : allFieldNames, display);
                                     }
                                     case "set": {
                                         if (field == null) return "Can't set entire config file yet!";
