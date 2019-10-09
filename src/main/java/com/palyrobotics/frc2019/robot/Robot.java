@@ -76,7 +76,7 @@ public class Robot extends TimedRobot {
 
         mHardwareUpdater.initHardware();
 
-        CSVWriter.cleanFile();
+//        CSVWriter.cleanFile();
 
         DriveTeam.configConstants();
 
@@ -266,9 +266,9 @@ public class Robot extends TimedRobot {
         mEnabledSubsystems.forEach(Subsystem::stop);
         mHardwareUpdater.updateHardware();
 
-        // Set Limelight to vision pipeline to enable pit testing
-        mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
-        mLimelight.setLEDMode(LimelightControlMode.LedMode.CURRENT_PIPELINE_MODE);
+        mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
+        mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+
         HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
         mHardwareUpdater.setIdleMode(mConfig.disabledUseCoast ? IdleMode.kCoast : IdleMode.kBrake);
 

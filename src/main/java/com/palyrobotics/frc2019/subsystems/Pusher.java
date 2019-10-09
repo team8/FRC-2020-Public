@@ -64,10 +64,12 @@ public class Pusher extends Subsystem {
                             if (HardwareAdapter.getInstance().getPusher().resetSensors()) // Zero encoder since we assume to slam to in position
                                 mIsFirstTickForSlamResetEncoder = false;
                         } else {
-                            mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);
+                            mOutput.setPercentOutput(-0.05);
                         }
+                    } else if (robotState.pusherPosition > mConfig.vidarDistanceOut - 0.4) {
+                        mOutput.setPercentOutput(-0.55);
                     } else {
-                        mOutput.setPercentOutput(percentOutput);
+                        mOutput.setPercentOutput(-0.28);
                     }
                 } else {
                     mOutput.setTargetPositionSmartMotion(mConfig.vidarDistanceIn);

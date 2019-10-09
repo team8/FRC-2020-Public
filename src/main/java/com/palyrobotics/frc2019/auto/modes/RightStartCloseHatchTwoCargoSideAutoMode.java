@@ -91,7 +91,7 @@ public class RightStartCloseHatchTwoCargoSideAutoMode extends AutoModeBase {
         //move elevator up while driving
         //elevator constant is a placeholder
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(DepotToCargoShip), false),
-                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight2Inches, 1)));
+                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorHatchHeight2, 1)));
         //change elevator constant
 
         //shoot cargo
@@ -117,7 +117,7 @@ public class RightStartCloseHatchTwoCargoSideAutoMode extends AutoModeBase {
         //move elevator down while driving
         //elevator constant is a placeholder
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(CargoShipToDepot), true),
-                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight2Inches, 1)));
+                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorHatchHeight2, 1)));
         //change elevator constant
 
         //intake cargo

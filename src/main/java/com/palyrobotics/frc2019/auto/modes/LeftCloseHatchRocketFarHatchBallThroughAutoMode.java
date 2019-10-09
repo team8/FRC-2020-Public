@@ -177,7 +177,7 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
         DepotToRocketShip.add(new Waypoint(kLeftRocketShipClose, 0));
         //move elevator up while driving
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(DepotToRocketShip), false),
-                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight1Inches, 1)));
+                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorHeight1, 1)));
 
         //shoot cargo
         routines.add(new PusherOutRoutine());

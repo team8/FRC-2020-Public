@@ -6,9 +6,11 @@ import com.palyrobotics.frc2019.util.configv2.AbstractSubsystemConfig;
 public class ElevatorConfig extends AbstractSubsystemConfig {
 
     public double
-            elevatorCargoHeight3Inches,
             manualMaxPercentOut,
-            elevatorCargoHeight2Inches, elevatorCargoBallHeight, elevatorCargoHeight1Inches,
+            elevatorHeight1,
+            elevatorHatchHeight2,
+            elevatorCargoHeight2,
+            elevatorHeight3,
             handOffHeight,
             secondStageCanStartMovingArm,
             acceptablePositionError,

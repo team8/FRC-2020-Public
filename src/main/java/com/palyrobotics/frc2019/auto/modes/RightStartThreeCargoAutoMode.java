@@ -89,7 +89,7 @@ public class RightStartThreeCargoAutoMode extends AutoModeBase {
         //move elevator up while driving
         //elevator constant is a placeholder
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(StartToCargoShip), true),
-                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight2Inches, 1)));
+                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorHatchHeight2, 1)));
 
         //shoot cargo
         routines.add(new PusherOutRoutine());
@@ -136,7 +136,7 @@ public class RightStartThreeCargoAutoMode extends AutoModeBase {
         //move elevator up while driving
         //elevator constant is a placeholder
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(StartToCargoShip), true),
-                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight2Inches, 1)));
+                new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorHatchHeight2, 1)));
 
         //shoot cargo
         routines.add(new PusherOutRoutine());

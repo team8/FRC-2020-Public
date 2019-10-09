@@ -1,9 +1,9 @@
 {
-    "elevatorCargoHeight3Inches": 52.0,
     "manualMaxPercentOut": 0.5,
-    "elevatorCargoHeight2Inches": 25.0,
-    "elevatorCargoBallHeight": 25.0,
-    "elevatorCargoHeight1Inches": 0.0,
+    "elevatorHeight1": 0.0,
+    "elevatorHatchHeight2": 25.0,
+    "elevatorCargoHeight2": 25.0,
+    "elevatorHeight3": 52.0,
     "handOffHeight": 2.0,
     "secondStageCanStartMovingArm": 29.0,
     "acceptablePositionError": 0.5,
@@ -18,7 +18,7 @@
         "f": 0.0002621578947368421,
         "rampRate": 0.1,
         "iZone": 0,
-        "acceleration": 6200,
+        "acceleration": 6500,
         "velocity": 2400
     }
 }

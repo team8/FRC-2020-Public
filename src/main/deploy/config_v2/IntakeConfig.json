@@ -19,8 +19,8 @@
     "holdTolerance": 14.5,
     "acceptableAngularError": 3.0,
     "angularVelocityError": 10.0,
-    "cargoInchTolerance": 7.0,
-    "cargoCountRequired": 5.5,
+    "cargoInchTolerance": 7.25,
+    "cargoCountRequired": 5.0,
     "gains": {
         "p": 0.000002,
         "i": 0.0,
@@ -28,7 +28,7 @@
         "f": 0.000059,
         "rampRate": 0.12,
         "iZone": 0,
-        "acceleration": 46000,
+        "acceleration": 44000,
         "velocity": 13000,
         "allowableError": 0.3,
         "minimumOutputVelocity": 0.0

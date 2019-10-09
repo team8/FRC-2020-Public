@@ -183,30 +183,28 @@ public class OperatorInterface {
         /*
          * Elevator Control
          */
-        if (mOperatorXboxController.getButtonA()) {
-            Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight1Inches, .1);
+        if (mOperatorXboxController.getButtonA()) { // Level 1
+            Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorHeight1, .1);
             newCommands.cancelCurrentRoutines = false;
-//			newCommands.addWantedRoutine(elevatorLevel1);
             newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel1));
-        } else if (mOperatorXboxController.getButtonB()) {
+        } else if (mOperatorXboxController.getButtonB()) { // Level 2
             double levelHeight;
-            if (Robot.getRobotState().hasPusherCargoFar) {
-                levelHeight = Configs.get(ElevatorConfig.class).elevatorCargoBallHeight;
-            } else {
-                levelHeight = Configs.get(ElevatorConfig.class).elevatorCargoHeight2Inches;
+            if (Robot.getRobotState().hasPusherCargoFar) { // Has cargo -> cargo height 2
+                levelHeight = Configs.get(ElevatorConfig.class).elevatorCargoHeight2;
+            } else { // hatch height 2
+                levelHeight = Configs.get(ElevatorConfig.class).elevatorHatchHeight2;
             }
             Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(levelHeight, .1);
             newCommands.cancelCurrentRoutines = false;
-//			newCommands.addWantedRoutine(elevatorLevel2);
-//			newCommands.addWantedRoutine(new PusherInRoutine());
             newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel2, new WaitForArmCanTuck(), new IntakeSetRoutine()));
         } else if (mOperatorXboxController.getButtonY()) {
-            Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorCargoHeight3Inches, .1);
+            Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorHeight3, .1);
             newCommands.cancelCurrentRoutines = false;
 //			newCommands.addWantedRoutine(elevatorLevel3);
 //			newCommands.addWantedRoutine(new PusherInRoutine());
             newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel3, new WaitForArmCanTuck(), new IntakeSetRoutine()));
         }
+
 
         /*
          * Cargo Intake Control

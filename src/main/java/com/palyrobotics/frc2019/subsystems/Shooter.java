@@ -58,7 +58,7 @@ public class Shooter extends Subsystem {
                 if (commands.customShooterSpeed) {
                     mOutput = robotState.operatorXboxControllerInput.leftTrigger; //TODO: change control?
                 } else {
-                    if (robotState.elevatorPosition > Configs.get(ElevatorConfig.class).elevatorCargoHeight3Inches - 8.0) {
+                    if (robotState.elevatorPosition > Configs.get(ElevatorConfig.class).elevatorHeight3 - 8.0) {
                         mOutput = ShooterConstants.kLevel3MotorVelocity;
                     } else {
                         mOutput = ShooterConstants.kExpellingMotorVelocity;

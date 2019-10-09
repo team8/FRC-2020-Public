@@ -21,7 +21,7 @@ import com.palyrobotics.frc2019.vision.Limelight;
 public class VisionClosedController implements Drive.DriveController {
 
     private static final double
-            MAX_ANGULAR_POWER = 0.6,
+            MAX_ANGULAR_POWER = 0.4, //0.6
             DISTANCE_POW_CONST = 2 * Gains.kVidarTrajectorykV;
 
     private final Limelight mLimelight = Limelight.getInstance();

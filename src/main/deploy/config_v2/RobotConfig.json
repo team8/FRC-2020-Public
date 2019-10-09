@@ -11,5 +11,6 @@
         "shooter",
         "elevator"
     ],
+    "disabledUseCoast": true,
     "sendMultiplier": 1.0
 }

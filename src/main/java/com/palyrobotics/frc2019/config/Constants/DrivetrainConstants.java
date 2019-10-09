@@ -55,9 +55,9 @@ public class DrivetrainConstants {
      */
     public static final double kTurnInPlacePower = .45; //for bang bang
     public static final double kVisionLookingForTargetCreepPower = 0.18;
-    public static final double kDriveMaxClosedLoopOutput = 1.0;
+    public static final double kDriveMaxClosedLoopOutput = 0.9;
 
-    public static final double kVisionTargetThreshold = 20.0; //threshold before target cannot be seen //TODO: Change this threshold
+    public static final double kVisionTargetThreshold = 5; //threshold before target cannot be seen //TODO: Change this threshold
 
     /**
      * Tolerances
@@ -77,7 +77,7 @@ public class DrivetrainConstants {
     public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90.0;
     public static final double kDriveSpeedUnitConversion = kDriveInchesPerRotation / 60.0;
 
-    public static final int kCurrentLimit = 48; // amps
+    public static final int kCurrentLimit = 36; // amps
 
     @Override
     public String toString() {
