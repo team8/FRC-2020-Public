@@ -6,12 +6,12 @@ public class WaitForCargoGroundIntake extends WaitRoutine {
 
     @Override
     public boolean isCompleted() {
-        return robotState.hasCargo;
+        return mRobotState.hasIntakeCargo;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[]{intake};
+        return new Subsystem[]{mIntake};
     }
 
     @Override

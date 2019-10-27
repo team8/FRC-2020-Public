@@ -4,39 +4,37 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Shooter;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * @author Jason, Alan
  */
 public class ShooterExpelRoutine extends Routine {
 
-    private Shooter.ShooterState wantedShooterState;
+    private Shooter.ShooterState mWantedShooterState;
 
     //How long the wheels spin for (seconds)
     private double mTimeout;
 
-    private long mStartTime;
+    private double mStartTime;
 
     /**
-     *
      * @param wantedShooterState the desired state
-     * @param timeout how long (seconds) to run for
+     * @param timeout            how long (seconds) to run for
      */
     public ShooterExpelRoutine(Shooter.ShooterState wantedShooterState, double timeout) {
-        this.wantedShooterState = wantedShooterState;
+        mWantedShooterState = wantedShooterState;
         mTimeout = timeout;
     }
 
     @Override
     public void start() {
-        mStartTime = System.currentTimeMillis();
+        mStartTime = Timer.getFPGATimestamp();
     }
 
     @Override
     public Commands update(Commands commands) {
-        commands.wantedShooterState = wantedShooterState;
-        commands.customShooterSpeed = false;
-
+        commands.wantedShooterState = mWantedShooterState;
         return commands;
     }
 
@@ -47,17 +45,17 @@ public class ShooterExpelRoutine extends Routine {
     }
 
     @Override
-    public boolean finished() {
-        return System.currentTimeMillis() - mStartTime > mTimeout * 1000;
+    public boolean isFinished() {
+        return Timer.getFPGATimestamp() - mStartTime > mTimeout;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[] { shooter };
+        return new Subsystem[]{mShooter};
     }
 
     @Override
     public String getName() {
-        return "ShooterExpelRoutine";
+        return "Shooter Expel Routine";
     }
 }

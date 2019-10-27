@@ -6,12 +6,12 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.*;
-import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersExpelRoutine;
-import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherOutRoutine;
-import com.palyrobotics.frc2019.config.Constants.PhysicalConstants;
+import com.palyrobotics.frc2019.config.constants.PhysicalConstants;
+import com.palyrobotics.frc2019.subsystems.Fingers;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -27,21 +27,21 @@ public class Fanlin extends AutoModeBase {
     //    public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches;
     public static double kOffsetX = -20 - 25;
     public static double kOffsetY = PhysicalConstants.kLevel3Width * .5 + PhysicalConstants.kLevel2Width * .5;
-    public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
-    public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
+    public static double kCargoShipRightFrontX = sDistances.level1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
+    public static double kCargoShipRightFrontY = -(sDistances.fieldWidth * .5 - (sDistances.cargoRightY + sDistances.cargoOffsetY));
     public static double kHabLineX = PhysicalConstants.kUpperPlatformLength + PhysicalConstants.kLowerPlatformLength;
     public static double kRightLoadingStationX = 0;
-    public static double kRightLoadingStationY = -(mDistances.kFieldWidth * .5 - mDistances.kRightLoadingY);
+    public static double kRightLoadingStationY = -(sDistances.fieldWidth * .5 - sDistances.rightLoadingY);
     public static double kRightDepotX = PhysicalConstants.kUpperPlatformLength;
-    public static double kRightDepotY = -(mDistances.kFieldWidth * .5 - mDistances.kDepotFromRightY);
-    public static double kRightRocketShipCloseX = mDistances.kHabRightRocketCloseX + kHabLineX;
-    public static double kRightRocketShipCloseY = -(mDistances.kFieldWidth * .5 - mDistances.kRightRocketCloseY);
-    public static double kRightRocketShipMidX = kHabLineX + mDistances.kHabRightRocketMidX;
-    public static double kRightRocketShipMidY = -(mDistances.kFieldWidth * .5 - mDistances.kRightRocketMidY);
-    public static double kRightRocketShipFarX = mDistances.kFieldWidth - mDistances.kMidlineRightRocketFarX;
-    public static double kRightRocketShipFarY = -(mDistances.kFieldWidth * .5 - mDistances.kRightRocketFarY);
-    public static double kRightFirstCargoShipX = kCargoShipRightFrontX + mDistances.kCargoOffsetX;
-    public static double kRightFirstCargoShipY = mDistances.kFieldWidth * .5 - mDistances.kCargoRightY;
+    public static double kRightDepotY = -(sDistances.fieldWidth * .5 - sDistances.depotFromRightY);
+    public static double kRightRocketShipCloseX = sDistances.habRightRocketCloseX + kHabLineX;
+    public static double kRightRocketShipCloseY = -(sDistances.fieldWidth * .5 - sDistances.rightRocketCloseY);
+    public static double kRightRocketShipMidX = kHabLineX + sDistances.habRightRocketMidX;
+    public static double kRightRocketShipMidY = -(sDistances.fieldWidth * .5 - sDistances.rightRocketMidY);
+    public static double kRightRocketShipFarX = sDistances.fieldWidth - sDistances.midLineRightRocketFarX;
+    public static double kRightRocketShipFarY = -(sDistances.fieldWidth * .5 - sDistances.rightRocketFarY);
+    public static double kRightFirstCargoShipX = kCargoShipRightFrontX + sDistances.cargoOffsetX;
+    public static double kRightFirstCargoShipY = sDistances.fieldWidth * .5 - sDistances.cargoRightY;
 
 
     public Translation2d kCargoShipRightFront = new Translation2d(kCargoShipRightFrontX + PhysicalConstants.kRobotWidthInches * .2 + kOffsetX,
@@ -59,11 +59,11 @@ public class Fanlin extends AutoModeBase {
 
     @Override
     public String toString() {
-        return mAlliance + this.getClass().toString();
+        return sAlliance + this.getClass().toString();
     }
 
     @Override
-    public void prestart() {
+    public void preStart() {
 
     }
 
@@ -93,7 +93,7 @@ public class Fanlin extends AutoModeBase {
         routines.add(new ParallelRoutine(new VisionClosedDriveRoutine(), new PusherOutRoutine()));
 
         //latch on to hatch
-        routines.add(new FingersOpenRoutine());
+        routines.add(new FingersRoutine(Fingers.FingersState.OPEN));
         //wait
         routines.add(new TimeoutRoutine(.2));
         //pusher back in
@@ -128,11 +128,11 @@ public class Fanlin extends AutoModeBase {
 
 
         //release hatch
-        routines.add(new FingersCloseRoutine());
-        routines.add(new FingersExpelRoutine(.05));
+        routines.add(new FingersRoutine(Fingers.FingersState.CLOSE));
+        routines.add(new FingersExpelRoutine(0.05));
 
         //wait
-        routines.add(new TimeoutRoutine(.4));
+        routines.add(new TimeoutRoutine(0.4));
 
         //pusher back in
         routines.add(new PusherInRoutine());
@@ -144,6 +144,6 @@ public class Fanlin extends AutoModeBase {
 
     @Override
     public String getKey() {
-        return mAlliance.toString();
+        return sAlliance.toString();
     }
 }

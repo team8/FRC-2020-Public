@@ -3,6 +3,7 @@ package com.palyrobotics.frc2019.util.csvlogger;
 import com.palyrobotics.frc2019.config.RobotState;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,7 +12,7 @@ import java.nio.file.Paths;
 import java.util.function.UnaryOperator;
 
 /**
- * @author Jason Liu
+ * @author Jason Liu, Quintin Dwight
  */
 public class CSVWriter {
     private static final String COMMA_DELIMITER = ",", NEW_LINE_SEPARATOR = "\n";
@@ -29,8 +30,8 @@ public class CSVWriter {
         }
     }
 
-    private static double getTime() {
-        return (System.currentTimeMillis() - RobotState.getInstance().matchStartTimeMs) / 1e3;
+    private static double getTimeSeconds() {
+        return Timer.getFPGATimestamp() - RobotState.getInstance().matchStartTimeSeconds;
     }
 
     private static void addData(String key, Object secondValue, UnaryOperator<StringBuilder> valueCellWriter) {
@@ -44,11 +45,11 @@ public class CSVWriter {
     }
 
     public static void addData(String key, Object value) {
-        addData(key, getTime(), builder -> builder.append(value));
+        addData(key, getTimeSeconds(), builder -> builder.append(value));
     }
 
     public static void addData(String key, double value) {
-        addData(key, getTime(), builder -> builder.append(value));
+        addData(key, getTimeSeconds(), builder -> builder.append(value));
     }
 
     public static int getSize() {

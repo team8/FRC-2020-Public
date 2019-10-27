@@ -4,37 +4,31 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Fingers;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
+import edu.wpi.first.wpilibj.Timer;
 
 public class FingersCycleRoutine extends Routine {
 
-    private Fingers.FingersState wantedFingersOpenCloseState;
-
-    private boolean alreadyRan;
-    private double timeout;
-    private double startTime;
-
-    private final double timeToShoot = 50;
+    private boolean mAlreadyRan;
+    private double mTimeout, mStartTime;
 
     public FingersCycleRoutine(double timeout) {
-        this.timeout = timeout * 1000;
+        mTimeout = timeout;
     }
 
     @Override
     public void start() {
-        startTime = System.currentTimeMillis();
-        alreadyRan = false;
+        mStartTime = Timer.getFPGATimestamp();
+        mAlreadyRan = false;
     }
 
     @Override
     public Commands update(Commands commands) {
         commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
         commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
-
-
-        if(System.currentTimeMillis() > this.timeout + startTime) {
+        if (Timer.getFPGATimestamp() > mTimeout + mStartTime) {
             commands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
             commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
-            alreadyRan = true;
+            mAlreadyRan = true;
         }
         return commands;
     }
@@ -45,17 +39,17 @@ public class FingersCycleRoutine extends Routine {
     }
 
     @Override
-    public boolean finished() {
-        return alreadyRan;
+    public boolean isFinished() {
+        return mAlreadyRan;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[] { fingers };
+        return new Subsystem[]{mFingers};
     }
 
     @Override
     public String getName() {
-        return "FingersCloseRoutine";
+        return "Fingers Close Routine";
     }
 }

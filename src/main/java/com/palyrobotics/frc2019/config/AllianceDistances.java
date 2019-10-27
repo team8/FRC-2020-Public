@@ -1,34 +1,39 @@
 package com.palyrobotics.frc2019.config;
 
+import com.palyrobotics.frc2019.util.config.AbstractConfig;
+
 /**
  * Contains the field distances for an alliance
+ *
  * @author Jason
  */
-public class AllianceDistances {
-    public double kDepotFromLeftY = 71.5;
-    public double kDepotFromRightY = 72.0;
-    public double kLevel2FromRightY = 97.5;
-    public double kLevel2FromLeftY = 97.75;
-    public double kLevel1FromLeftY = 86.75;
-    public double kLevel1FromRightY = 89.75;
-    public double kCargoOffsetX = 40.0;
-    public double kCargoOffsetY = 14.0;
-    public double kLevel1CargoX = 126.75;
-    public double kCargoLeftY = 133.0;
-    public double kCargoRightY = 134.75;
-    public double kMidlineLeftRocketFarX = 70.5;
-    public double kMidlineRightRocketFarX = 73.25;
-    public double kHabLeftRocketCloseX = 117.0;
-    public double kHabRightRocketCloseX = 113.0;
-    public double kHabLeftRocketMidX = 133.5;
-    public double kHabRightRocketMidX = 134.5;
-    public double kLeftRocketFarY = 12.25;
-    public double kRightRocketFarY = 22.5;
-    public double kLeftRocketMidY = 24.75;
-    public double kRightRocketMidY = 34.5;
-    public double kLeftRocketCloseY = 13.25;
-    public double kRightRocketCloseY = 21.75;
-    public double kLeftLoadingY = 26.0;
-    public double kRightLoadingY = 25.5;
-    public double kFieldWidth = 324.0;
+public class AllianceDistances extends AbstractConfig {
+    public String fieldName = "default";
+    public double
+            depotFromLeftY = 71.5,
+            depotFromRightY = 72.0,
+            level2FromRightY = 97.5,
+            level2FromLeftY = 97.75,
+            level1FromLeftY = 86.75,
+            level1FromRightY = 89.75,
+            cargoOffsetX = 40.0,
+            cargoOffsetY = 14.0,
+            level1CargoX = 126.75,
+            cargoLeftY = 133.0,
+            cargoRightY = 134.75,
+            midLineLeftRocketFarX = 70.5,
+            midLineRightRocketFarX = 73.25,
+            habLeftRocketCloseX = 117.0,
+            habRightRocketCloseX = 113.0,
+            habLeftRocketMidX = 133.5,
+            habRightRocketMidX = 134.5,
+            leftRocketFarY = 12.25,
+            rightRocketFarY = 22.5,
+            leftRocketMidY = 24.75,
+            rightRocketMidY = 34.5,
+            leftRocketCloseY = 13.25,
+            rightRocketCloseY = 21.75,
+            leftLoadingY = 26.0,
+            rightLoadingY = 25.5,
+            fieldWidth = 324.0;
 }

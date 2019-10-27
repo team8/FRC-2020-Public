@@ -1,11 +1,11 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.OtherConstants;
-import com.palyrobotics.frc2019.config.Constants.ShooterConstants;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
-import com.palyrobotics.frc2019.util.configv2.Configs;
+import com.palyrobotics.frc2019.config.constants.OtherConstants;
+import com.palyrobotics.frc2019.config.subsystem.ElevatorConfig;
+import com.palyrobotics.frc2019.config.subsystem.ShooterConfig;
+import com.palyrobotics.frc2019.util.config.Configs;
 
 public class Shooter extends Subsystem {
 
@@ -14,6 +14,8 @@ public class Shooter extends Subsystem {
     public static Shooter getInstance() {
         return sInstance;
     }
+
+    private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
 
     private double mOutput;
 
@@ -49,20 +51,14 @@ public class Shooter extends Subsystem {
 
         switch (mState) {
             case IDLE:
-                commands.shooterSpinning = false;
                 mOutput = 0;
                 mExpellingCycles = 0;
                 break;
             case SPIN_UP:
-                commands.shooterSpinning = true;
-                if (commands.customShooterSpeed) {
-                    mOutput = robotState.operatorXboxControllerInput.leftTrigger; //TODO: change control?
+                if (robotState.elevatorPosition > Configs.get(ElevatorConfig.class).elevatorHeight3 - 8.0) {
+                    mOutput = mConfig.level3MotorVelocity;
                 } else {
-                    if (robotState.elevatorPosition > Configs.get(ElevatorConfig.class).elevatorHeight3 - 8.0) {
-                        mOutput = ShooterConstants.kLevel3MotorVelocity;
-                    } else {
-                        mOutput = ShooterConstants.kExpellingMotorVelocity;
-                    }
+                    mOutput = mConfig.expellingMotorVelocity;
                 }
                 mExpellingCycles++;
                 break;
@@ -71,16 +67,16 @@ public class Shooter extends Subsystem {
         // Once enough time passes, ready to expel
         boolean readyToExpel = 1 / OtherConstants.deltaTime <= mExpellingCycles;
 
-        if (readyToExpel && robotState.hasCargo) { // Rumble until expelled
+        if (readyToExpel && robotState.hasIntakeCargo) { // Rumble until expelled
             mRumbleLength = 0.5;
         }
 
-        if (mCachedHasCargo && !robotState.hasCargo) { // Stop rumbling once you go from cargo -> no cargo
+        if (mCachedHasCargo && !robotState.hasIntakeCargo) { // Stop rumbling once you go from cargo -> no cargo
             mRumbleLength = -1;
             mExpellingCycles = 0;
         }
 
-        mCachedHasCargo = robotState.hasCargo;
+        mCachedHasCargo = robotState.hasIntakeCargo;
     }
 
     public double getRumbleLength() {

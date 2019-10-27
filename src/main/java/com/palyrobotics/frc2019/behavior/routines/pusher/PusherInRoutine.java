@@ -3,10 +3,10 @@ package com.palyrobotics.frc2019.behavior.routines.pusher;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.configv2.PusherConfig;
+import com.palyrobotics.frc2019.config.subsystem.PusherConfig;
 import com.palyrobotics.frc2019.subsystems.Pusher;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
-import com.palyrobotics.frc2019.util.configv2.Configs;
+import com.palyrobotics.frc2019.util.config.Configs;
 
 public class PusherInRoutine extends Routine {
 
@@ -27,17 +27,17 @@ public class PusherInRoutine extends Routine {
     }
 
     @Override
-    public boolean finished() {
+    public boolean isFinished() {
         return RobotState.getInstance().pusherPosition < Configs.get(PusherConfig.class).acceptablePositionError;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[] { pusher };
+        return new Subsystem[] {mPusher};
     }
 
     @Override
     public String getName() {
-        return "PusherInRoutine";
+        return "Pusher In Routine";
     }
 }

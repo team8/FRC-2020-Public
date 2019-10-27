@@ -3,36 +3,27 @@ package com.palyrobotics.frc2019.robot;
 import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
-import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
-import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
-import com.palyrobotics.frc2019.behavior.routines.intake.IntakeBeginCycleRoutine;
-import com.palyrobotics.frc2019.behavior.routines.intake.IntakeLevelOneRocketRoutine;
-import com.palyrobotics.frc2019.behavior.routines.intake.IntakeSetRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.IntakeUpRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shooter.ShooterExpelRoutine;
-import com.palyrobotics.frc2019.behavior.routines.shovel.ShovelDownRoutine;
-import com.palyrobotics.frc2019.behavior.routines.shovel.ShovelUpRoutine;
-import com.palyrobotics.frc2019.behavior.routines.shovel.WaitForHatchIntakeCurrentSpike;
-import com.palyrobotics.frc2019.behavior.routines.waits.WaitForArmCanTuck;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForElevatorCanMove;
-import com.palyrobotics.frc2019.behavior.routines.waits.WaitForHatchIntakeUp;
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
-import com.palyrobotics.frc2019.config.Constants.OtherConstants;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
+import com.palyrobotics.frc2019.config.constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.config.constants.OtherConstants;
+import com.palyrobotics.frc2019.config.subsystem.ElevatorConfig;
 import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.subsystems.Intake.IntakeMacroState;
-import com.palyrobotics.frc2019.util.ChezyMath;
-import com.palyrobotics.frc2019.util.JoystickInput;
-import com.palyrobotics.frc2019.util.XboxInput;
-import com.palyrobotics.frc2019.util.configv2.Configs;
+import com.palyrobotics.frc2019.util.config.Configs;
+import com.palyrobotics.frc2019.util.input.Joystick;
+import com.palyrobotics.frc2019.util.input.XboxController;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
- * Used to produce Commands {@link Commands} from human input Singleton class. Should only be used in robot package.
+ * Used to produce {@link Commands}'s from human input. Should only be used in robot package.
  *
  * @author Nihar
  */
@@ -46,23 +37,13 @@ public class OperatorInterface {
 
     private final Limelight mLimelight = Limelight.getInstance();
 
-    private JoystickInput
-            mDriveStick = Robot.getRobotState().leftStickInput,
-            mTurnStick = Robot.getRobotState().rightStickInput;
-//    private JoystickInput mClimbStick = Robot.getRobotState().backupStickInput;
-    private XboxInput mOperatorXboxController;
-
-//    public static boolean demandIntakeUp = true; // force intake to come up
-//    public static boolean intakeRunning = false; // force intake to come up
-    private static double
-            intakeStartTime, // force intake to come up
-            lastCancelTime;
+    private final Joystick mDriveStick = HardwareAdapter.getInstance().getJoysticks().driveStick, mTurnStick = HardwareAdapter.getInstance().getJoysticks().turnStick;
+    private final XboxController mOperatorXboxController = HardwareAdapter.getInstance().getJoysticks().operatorXboxController;
 
     // Timestamp when a vision routine was last activated; helps us know when to turn LEDs off
-    private static double visionStartTimeMs;
+    private double mVisionStartTimeSeconds;
 
     private OperatorInterface() {
-        mOperatorXboxController = Robot.getRobotState().operatorXboxControllerInput;
     }
 
     /**
@@ -85,67 +66,59 @@ public class OperatorInterface {
     /**
      * Returns modified commands
      *
-     * @param lastCommands Last commands
+     * @param commands Last commands
      */
-    Commands updateCommands(Commands lastCommands) {
-        Commands newCommands = lastCommands.copy();
+    Commands updateCommands(Commands commands) {
 
-        newCommands.cancelCurrentRoutines = false;
+        commands.cancelCurrentRoutines = false;
 
         /*
          * Drivetrain controls
          */
-        if (lastCommands.wantedDriveState != Drive.DriveState.OFF_BOARD_CONTROLLER && lastCommands.wantedDriveState != Drive.DriveState.ON_BOARD_CONTROLLER) {
-            newCommands.wantedDriveState = Drive.DriveState.CHEZY;
+        if (commands.wantedDriveState != Drive.DriveState.OFF_BOARD_CONTROLLER && commands.wantedDriveState != Drive.DriveState.ON_BOARD_CONTROLLER) {
+            commands.wantedDriveState = Drive.DriveState.CHEZY;
         }
-
-        //More safety
-        if (Math.abs(ChezyMath.handleDeadband(mDriveStick.getY(), DrivetrainConstants.kDeadband)) > 0.0
-                || Math.abs(ChezyMath.handleDeadband(mTurnStick.getX(), DrivetrainConstants.kDeadband)) > 0.0) {
-            newCommands.wantedDriveState = Drive.DriveState.CHEZY;
+        // More safety
+        if (Math.abs(mDriveStick.getY()) > DrivetrainConstants.kDeadband || Math.abs(mTurnStick.getX()) > DrivetrainConstants.kDeadband) {
+            commands.wantedDriveState = Drive.DriveState.CHEZY;
         }
+        commands.driveThrottle = -mDriveStick.getY();
+        commands.driveWheel = mTurnStick.getX();
+        commands.isQuickTurn = mTurnStick.getTrigger();
+        commands.isBraking = mDriveStick.getTrigger();
 
-        if (mTurnStick.getButtonPressed(3)) {
-            visionStartTimeMs = System.currentTimeMillis();
+        if (mTurnStick.getRawButton(3)) {
+            mVisionStartTimeSeconds = Timer.getFPGATimestamp();
             // Limelight vision tracking on
-            if (mLimelight.getCamMode() != LimelightControlMode.CamMode.VISION) {
-                mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
-                mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
-            }
-
-            newCommands.wantedDriveState = Drive.DriveState.VISION_ASSIST;
+            setVision(true);
+            commands.wantedDriveState = Drive.DriveState.VISION_ASSIST;
         } else {
-            if (!mTurnStick.getButtonPressed(4)) {
+            if (!mTurnStick.getRawButton(4)) {
                 RobotState.getInstance().atVisionTargetThreshold = false;
             }
-            if (System.currentTimeMillis() - visionStartTimeMs > OtherConstants.kVisionLEDTimeoutMillis) {
-                mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
-                mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+            if (Timer.getFPGATimestamp() - mVisionStartTimeSeconds > OtherConstants.kVisionLEDTimeoutSeconds) {
+                setVision(false);
             }
         }
 
-        if (mTurnStick.getButtonPressed(4)) {
-            visionStartTimeMs = System.currentTimeMillis();
+        if (mTurnStick.getRawButton(4)) {
+            mVisionStartTimeSeconds = Timer.getFPGATimestamp();
             // Limelight vision tracking on
-            if (mLimelight.getCamMode() != LimelightControlMode.CamMode.VISION) {
-                mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
-                mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON); // Limelight LED on
-            }
+            setVision(true);
             Drive.getInstance().setVisionClosedDriveController();
-            newCommands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
+            commands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
         } else {
-            if (!mTurnStick.getButtonPressed(3)) {
+            if (!mTurnStick.getRawButton(3)) {
                 RobotState.getInstance().atVisionTargetThreshold = false;
             }
-            if (System.currentTimeMillis() - visionStartTimeMs > OtherConstants.kVisionLEDTimeoutMillis) {
-                mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER); // Limelight LED off
-                mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+            if (Timer.getFPGATimestamp() - mVisionStartTimeSeconds > OtherConstants.kVisionLEDTimeoutSeconds) {
+                setVision(false);
             }
         }
 
-        /*
-         * Hatch Ground Intake/Shovel Control
-         */
+//        /*
+//         * Hatch Ground Intake/Shovel Control
+//         */
 //		if(mOperatorXboxController.getButtonX()) {
 //			if(prevCommands.wantedShovelUpDownState == Shovel.UpDownState.UP) {
 //				newCommands.wantedShovelUpDownState = Shovel.UpDownState.DOWN;
@@ -155,132 +128,119 @@ public class OperatorInterface {
 //				newCommands.cancelCurrentRoutines = true;
 //			}
 //		}
-
-        if (mOperatorXboxController.getButtonX() && newCommands.wantedShovelUpDownState == Shovel.UpDownState.UP && (lastCancelTime + 200) < System.currentTimeMillis()) {
-            intakeStartTime = System.currentTimeMillis();
-            newCommands.addWantedRoutine(new SequentialRoutine(new ShovelDownRoutine(),
-                    new FingersCloseRoutine(),
-                    new PusherInRoutine(),
-                    new WaitForHatchIntakeCurrentSpike(Shovel.WheelState.INTAKING),
-                    new ShovelUpRoutine(),
-                    new WaitForHatchIntakeUp(),
-                    new FingersOpenRoutine()));
-        } else if (mOperatorXboxController.getButtonX() && (System.currentTimeMillis() - 450 > OperatorInterface.intakeStartTime) && newCommands.wantedShovelUpDownState == Shovel.UpDownState.DOWN) {
-            intakeStartTime = System.currentTimeMillis();
-            newCommands.cancelCurrentRoutines = true;
-            newCommands.wantedShovelUpDownState = Shovel.UpDownState.UP;
-            lastCancelTime = System.currentTimeMillis();
-        }
-
+//
+//        if (mOperatorXboxController.getButtonX() && commands.wantedShovelUpDownState == Shovel.UpDownState.UP && (mLastCancelTime + 200) < System.currentTimeMillis()) {
+//            mIntakeStartTime = System.currentTimeMillis();
+//            commands.addWantedRoutine(new SequentialRoutine(new ShovelDownRoutine(),
+//                    new FingersRoutine(Fingers.FingersState.CLOSE),
+//                    new PusherInRoutine(),
+//                    new WaitForHatchIntakeCurrentSpike(Shovel.WheelState.INTAKING),
+//                    new ShovelUpRoutine(),
+//                    new WaitForHatchIntakeUp(),
+//                    new FingersRoutine(Fingers.FingersState.OPEN)));
+//        } else if (mOperatorXboxController.getButtonX() && (System.currentTimeMillis() - 450 > mIntakeStartTime) && commands.wantedShovelUpDownState == Shovel.UpDownState.DOWN) {
+//            mIntakeStartTime = System.currentTimeMillis();
+//            commands.cancelCurrentRoutines = true;
+//            commands.wantedShovelUpDownState = Shovel.UpDownState.UP;
+//            mLastCancelTime = System.currentTimeMillis();
+//        }
+//
 //        if(mOperatorXboxController.getButtonB()) {
 //            Routine hatchCycle = new ShovelExpelCycle(FingerConstants.kFingersCycleTime);
 //            newCommands.cancelCurrentRoutines = false;
 //            newCommands.addWantedRoutine(hatchCycle);
 //        }
 
-//		newCommands.wantedElevatorState = Elevator.ElevatorState.MANUAL_POSITIONING;
-
         /*
          * Elevator Control
          */
-        if (mOperatorXboxController.getButtonA()) { // Level 1
-            Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorHeight1, .1);
-            newCommands.cancelCurrentRoutines = false;
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel1));
-        } else if (mOperatorXboxController.getButtonB()) { // Level 2
-            double levelHeight;
-            if (Robot.getRobotState().hasPusherCargoFar) { // Has cargo -> cargo height 2
-                levelHeight = Configs.get(ElevatorConfig.class).elevatorCargoHeight2;
-            } else { // hatch height 2
-                levelHeight = Configs.get(ElevatorConfig.class).elevatorHatchHeight2;
-            }
-            Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(levelHeight, .1);
-            newCommands.cancelCurrentRoutines = false;
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel2, new WaitForArmCanTuck(), new IntakeSetRoutine()));
-        } else if (mOperatorXboxController.getButtonY()) {
-            Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(Configs.get(ElevatorConfig.class).elevatorHeight3, .1);
-            newCommands.cancelCurrentRoutines = false;
-//			newCommands.addWantedRoutine(elevatorLevel3);
-//			newCommands.addWantedRoutine(new PusherInRoutine());
-            newCommands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel3, new WaitForArmCanTuck(), new IntakeSetRoutine()));
+        ElevatorConfig elevatorConfig = Configs.get(ElevatorConfig.class);
+        double rightStick = mOperatorXboxController.getY(Hand.kRight);
+        if (Math.abs(rightStick) > 0.1) {
+            commands.wantedElevatorState = Elevator.ElevatorState.MANUAL_VELOCITY;
+            commands.customElevatorVelocity = -rightStick * elevatorConfig.gains.velocity * elevatorConfig.manualPowerMultiplier;
         }
-
+        if (mOperatorXboxController.getAButtonPressed()) { // Level 1
+            Routine elevatorLevel1 = new ElevatorCustomPositioningRoutine(elevatorConfig.elevatorHeight1, 1.0);
+            commands.cancelCurrentRoutines = false;
+            commands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel1));
+        } else if (mOperatorXboxController.getBButtonPressed()) { // Level 2
+            double levelHeight = Robot.getRobotState().hasPusherCargoFar
+                    ? elevatorConfig.elevatorCargoHeight2
+                    : elevatorConfig.elevatorHatchHeight2;
+            // Has cargo -> cargo height 2
+            Routine elevatorLevel2 = new ElevatorCustomPositioningRoutine(levelHeight, 1.0);
+            commands.cancelCurrentRoutines = false;
+            commands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel2));
+        } else if (mOperatorXboxController.getYButtonPressed()) { // Level 3
+            Routine elevatorLevel3 = new ElevatorCustomPositioningRoutine(elevatorConfig.elevatorHeight3, 1.0);
+            commands.cancelCurrentRoutines = false;
+            commands.addWantedRoutine(new SequentialRoutine(new PusherInRoutine(), new IntakeUpRoutine(), new WaitForElevatorCanMove(), elevatorLevel3));
+        }
 
         /*
          * Cargo Intake Control
          */
-        if (mOperatorXboxController.getdPadDown()) {
-            newCommands.cancelCurrentRoutines = false;
-            // newCommands.wantedIntakeState = Intake.IntakeMacroState.DOWN;
-            newCommands.addWantedRoutine(new IntakeBeginCycleRoutine());
-        } else if (mOperatorXboxController.getdPadUp()) {
-            newCommands.cancelCurrentRoutines = false;
-            newCommands.addWantedRoutine(new IntakeUpRoutine());
-        } else if (mOperatorXboxController.getdPadRight()) {
-            newCommands.cancelCurrentRoutines = false;
-            newCommands.addWantedRoutine(new IntakeLevelOneRocketRoutine());
-        } else if (mOperatorXboxController.getdPadLeft()) {
-            newCommands.cancelCurrentRoutines = false;
-            newCommands.wantedIntakeState = Intake.IntakeMacroState.STOWED;
+        if (mOperatorXboxController.getDPadDownPressed()) {
+            commands.cancelCurrentRoutines = false;
+            commands.wantedIntakeState = IntakeMacroState.DOWN_FOR_GROUND_INTAKE;
+            commands.wantedPusherInOutState = Pusher.PusherState.IN;
+        } else if (mOperatorXboxController.getDPadUpPressed()) {
+            commands.cancelCurrentRoutines = false;
+            commands.wantedIntakeState = IntakeMacroState.HOLDING_OUT_OF_WAY;
+        } else if (mOperatorXboxController.getDPadLeftPressed()) {
+            commands.cancelCurrentRoutines = false;
+            commands.wantedIntakeState = IntakeMacroState.HOLDING_CARGO;
+        } else if (mOperatorXboxController.getDPadRightPressed()) {
+            commands.cancelCurrentRoutines = false;
+            commands.wantedIntakeState = IntakeMacroState.DROPPING_INTO_CARRIAGE;
         }
 
-        if (mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState == Intake.IntakeMacroState.HOLDING_ROCKET) {
-            newCommands.wantedIntakeState = Intake.IntakeMacroState.EXPELLING_ROCKET;
-        } else if (!mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState == Intake.IntakeMacroState.EXPELLING_ROCKET) {
-            newCommands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_ROCKET;
+        /* Intake arm for scoring in the cargo bays */
+        if (mOperatorXboxController.getRightTrigger() && commands.wantedIntakeState == Intake.IntakeMacroState.HOLDING_CARGO) {
+            commands.wantedIntakeState = Intake.IntakeMacroState.EXPELLING_CARGO;
+        } else if (!mOperatorXboxController.getRightTrigger() && commands.wantedIntakeState == Intake.IntakeMacroState.EXPELLING_CARGO) {
+            commands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_CARGO;
+        }
+        if (mOperatorXboxController.getLeftTrigger() && commands.wantedIntakeState == Intake.IntakeMacroState.HOLDING_CARGO) {
+            commands.wantedIntakeState = Intake.IntakeMacroState.INTAKING_CARGO;
+        } else if (!mOperatorXboxController.getLeftTrigger() && commands.wantedIntakeState == IntakeMacroState.INTAKING_CARGO) {
+            commands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_CARGO;
         }
 
-        if (mOperatorXboxController.getLeftTriggerPressed() && newCommands.wantedIntakeState == Intake.IntakeMacroState.HOLDING_ROCKET) {
-            newCommands.wantedIntakeState = Intake.IntakeMacroState.INTAKING_ROCKET;
-        } else if (!mOperatorXboxController.getLeftTriggerPressed() && newCommands.wantedIntakeState == IntakeMacroState.INTAKING_ROCKET) {
-            newCommands.wantedIntakeState = Intake.IntakeMacroState.HOLDING_ROCKET;
+        /* Pusher control */
+        if (mOperatorXboxController.getLeftBumperPressed()) {
+            commands.wantedPusherInOutState = Pusher.PusherState.IN;
+        } else if (mOperatorXboxController.getRightBumperPressed()) {
+            commands.wantedPusherInOutState = Pusher.PusherState.OUT;
+        } else if (mDriveStick.getRawButtonPressed(7)) {
+            commands.wantedPusherInOutState = Pusher.PusherState.IN;
         }
 
-//		/*
-//		 * Climber Control
-//		 */
-//		if(mClimbStick.getButtonPressed(6)) {
-//			newCommands.wantedClimberState = Elevator.ClimberState.ON_MANUAL;
-//		}
-//		else {
-//			newCommands.wantedClimberState = Elevator.ClimberState.IDLE;
-//		}
-
-        /*
-         * Pusher Control
-         */
-        if (mOperatorXboxController.getLeftBumper()) {
-            newCommands.wantedPusherInOutState = Pusher.PusherState.IN;
-        } else if (mOperatorXboxController.getRightBumper()) {
-            newCommands.wantedPusherInOutState = Pusher.PusherState.OUT;
-        } else if (mDriveStick.getButtonPressed(7)) {
-            newCommands.wantedPusherInOutState = Pusher.PusherState.IN;
-        }
-
-        /*
-         * Pneumatic Hatch Pusher Control
-         */
-        if (mOperatorXboxController.getRightTriggerPressed() && newCommands.wantedIntakeState != IntakeMacroState.EXPELLING_ROCKET && !newCommands.blockFingers) {
-//			Routine hatchCycle = new FingersCycleRoutine(FingerConstants.kFingersCycleTime);
-//			newCommands.cancelCurrentRoutines = false;
-//			newCommands.addWantedRoutine(hatchCycle);
-            newCommands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
-            newCommands.wantedFingersExpelState = Fingers.PushingState.EXPELLING;
-        } else if (newCommands.wantedShovelUpDownState != Shovel.UpDownState.DOWN) {
-            newCommands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
-            newCommands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
+        /* Pneumatic hatch pusher control */
+        if (mOperatorXboxController.getRightTrigger() && commands.wantedIntakeState != IntakeMacroState.EXPELLING_CARGO) {
+            commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
+            commands.wantedFingersExpelState = Fingers.PushingState.EXPELLING;
+        } else {
+            commands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
+            commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
         }
 
         if (mOperatorXboxController.getLeftTriggerPressed()) {
-            newCommands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 3));
+            commands.addWantedRoutine(new ShooterExpelRoutine(Shooter.ShooterState.SPIN_UP, 5.0));
         }
 
-        /*
-         * Cancel all Routines
-         */
         if (mDriveStick.getTriggerPressed()) {
-            newCommands.cancelCurrentRoutines = true;
+            commands.cancelCurrentRoutines = true;
         }
-        return newCommands;
+
+        mOperatorXboxController.updateLastInputs();
+
+        return commands;
+    }
+
+    private void setVision(boolean on) {
+        mLimelight.setCamMode(on ? LimelightControlMode.CamMode.VISION : LimelightControlMode.CamMode.DRIVER); // Limelight LED off
+        mLimelight.setLEDMode(on ? LimelightControlMode.LedMode.FORCE_ON : LimelightControlMode.LedMode.FORCE_OFF);
     }
 }

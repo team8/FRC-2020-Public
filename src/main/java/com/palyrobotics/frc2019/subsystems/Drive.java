@@ -1,12 +1,13 @@
 package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.dashboard.DashboardValue;
+import com.palyrobotics.frc2019.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2019.subsystems.controllers.*;
-import com.palyrobotics.frc2019.util.*;
-import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2019.util.CheesyDriveHelper;
+import com.palyrobotics.frc2019.util.Pose;
+import com.palyrobotics.frc2019.util.SparkDriveSignal;
+import com.palyrobotics.frc2019.util.VisionDriveHelper;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 
 /**
@@ -15,10 +16,10 @@ import com.palyrobotics.frc2019.util.trajectory.Path;
  * @author Not Nihar
  */
 public class Drive extends Subsystem {
-    private static Drive instance = new Drive();
+    private static Drive sInstance = new Drive();
 
     public static Drive getInstance() {
-        return instance;
+        return sInstance;
     }
 
     /**
@@ -52,23 +53,12 @@ public class Drive extends Subsystem {
 //    private final double kTurnSlipFactor; //Measure empirically
 
     // Cache poses to not be allocating at 200Hz
-    private Pose mCachedPose = new Pose(0, 0, 0, 0, 0, 0, 0, 0);
+    private Pose mPose = new Pose();
     private RobotState mRobotState;
     private SparkDriveSignal mSignal = new SparkDriveSignal();
 
-//    private DashboardValue motors;
-
-    private DashboardValue leftEncoder, rightEncoder;
-
     protected Drive() {
         super("drive");
-//        kWheelbaseWidth = 0;
-//        kTurnSlipFactor = 0;
-
-//        motors = new DashboardValue("driveSpeedUpdate");
-
-        leftEncoder = new DashboardValue("leftDriveEncoder");
-        rightEncoder = new DashboardValue("rightDriveEncoder");
     }
 
     /**
@@ -85,7 +75,7 @@ public class Drive extends Subsystem {
     }
 
     /**
-     * <h1>Updates the drivetrain and its {@link DriveSignal}</h1>
+     * <h1>Updates the drivetrain and its {@link SparkDriveSignal}</h1>
      *
      * <br>
      * Contains a state machine that switches. based on {@link DriveState} and updates the
@@ -97,7 +87,7 @@ public class Drive extends Subsystem {
      * <ul>
      * 	<li>
      *        {@link DriveState#CHEZY}:
-     * 		Sets drive outputs using a {@link DriveSignal} from a {@link CheesyDriveHelper}.
+     * 		Sets drive outputs using a {@link SparkDriveSignal} from a {@link CheesyDriveHelper}.
      * 	</li>
      * 	<li>
      *        {@link DriveState#OFF_BOARD_CONTROLLER}:
@@ -114,7 +104,7 @@ public class Drive extends Subsystem {
      * 	</li>
      * 	<li>
      *        {@link DriveState#NEUTRAL}:
-     * 		Sets drive outputs to {@link DriveSignal#getNeutralSignal()}. Will also
+     * 		Sets drive outputs to a blank {@link SparkDriveSignal}. Will also
      *        {@link Drive#resetController} if in a new state and set {@link DriveState#CHEZY} if in
      *        {@code TELEOP}.
      * 	</li>
@@ -126,11 +116,9 @@ public class Drive extends Subsystem {
     @Override
     public void update(Commands commands, RobotState state) {
         mRobotState = state;
-        mCachedPose = state.drivePose.copy(); // TODO make copyTo function instead, this creates new instance every time
-        boolean mIsNewState = !(mState == commands.wantedDriveState);
+        state.drivePose.copyTo(mPose);
+        boolean mIsNewState = mState != commands.wantedDriveState;
         mState = commands.wantedDriveState;
-
-//		System.out.println(mState);
         switch (mState) {
             case CHEZY:
                 setDriveOutputs(mCDH.cheesyDrive(commands, mRobotState));
@@ -151,8 +139,8 @@ public class Drive extends Subsystem {
                 }
                 break;
             case OPEN_LOOP:
-                if (commands.robotSetPoints.drivePowerSetpoint != null) {
-                    setDriveOutputs(commands.robotSetPoints.drivePowerSetpoint);
+                if (commands.robotSetPoints.drivePowerSetPoint != null) {
+                    setDriveOutputs(commands.robotSetPoints.drivePowerSetPoint);
                 }
                 break;
             case NEUTRAL:
@@ -160,7 +148,6 @@ public class Drive extends Subsystem {
                     resetController();
                 }
                 setDriveOutputs(new SparkDriveSignal());
-
                 if (mRobotState.gamePeriod.equals(RobotState.GamePeriod.TELEOP)) {
                     if (mIsNewState) {
                         resetController();
@@ -172,29 +159,14 @@ public class Drive extends Subsystem {
 
         mState = commands.wantedDriveState;
 
-        leftEncoder.updateValue(state.drivePose.leftEnc);
-        rightEncoder.updateValue(state.drivePose.rightEnc);
-
-//		Logger.getInstance().logSubsystemThread(Level.FINEST, "Left drive encoder", leftEncoder);
-//		Logger.getInstance().logSubsystemThread(Level.FINEST, "Right drive encoder", rightEncoder);
-
-//		DashboardManager.getInstance().publishKVPair(leftEncoder);
-//		DashboardManager.getInstance().publishKVPair(rightEncoder);
-//
-//		DashboardManager.getInstance().publishKVPair(motors);
-
-        CSVWriter.addData("driveLeftEnc", state.drivePose.leftEnc);
-        CSVWriter.addData("driveLeftEncVelocity", state.drivePose.leftEncVelocity);
-        CSVWriter.addData("driveRightEnc", state.drivePose.rightEnc);
-        CSVWriter.addData("driveRightEncVelocity", state.drivePose.rightEncVelocity);
-        CSVWriter.addData("driveHeading", state.drivePose.heading);
-        CSVWriter.addData("driveHeadingVelocity", state.drivePose.headingVelocity);
-        state.drivePose.leftError.ifPresent(integer -> CSVWriter.addData("driveLeftError", (double) integer));
-        state.drivePose.rightError.ifPresent(integer -> CSVWriter.addData("driveRightError", (double) integer));
-        CSVWriter.addData("driveLeftSetpoint", mSignal.leftOutput.getReference());
-        CSVWriter.addData("driveRightSetpoint", mSignal.rightOutput.getReference());
-        // System.out.println("Left arbitrary demand: " + mSignal.leftMotor.getArbitraryFF());
-        // System.out.println("Right arbitrary demand: " + mSignal.rightMotor.getArbitraryFF());
+//        CSVWriter.addData("driveLeftEnc", state.drivePose.leftEncoderPosition);
+//        CSVWriter.addData("driveLeftEncVelocity", state.drivePose.leftEncoderVelocity);
+//        CSVWriter.addData("driveRightEnc", state.drivePose.rightEncoderPosition);
+//        CSVWriter.addData("driveRightEncVelocity", state.drivePose.rightEncoderVelocity);
+//        CSVWriter.addData("driveHeading", state.drivePose.heading);
+//        CSVWriter.addData("driveHeadingVelocity", state.drivePose.headingVelocity);
+//        CSVWriter.addData("driveLeftSetPoint", mSignal.leftOutput.getReference());
+//        CSVWriter.addData("driveRightSetPoint", mSignal.rightOutput.getReference());
     }
 
     private void setDriveOutputs(SparkDriveSignal signal) {
@@ -210,18 +182,13 @@ public class Drive extends Subsystem {
         setDriveOutputs(new SparkDriveSignal());
     }
 
-    public void setSparkMaxController(SparkDriveSignal signal) {
-        mController = new SparkMaxDriveController(signal);
-        newController = true;
-    }
-
     public void setVisionAngleSetPoint() {
-        mController = new VisionTurnAngleController(mCachedPose);
+        mController = new VisionTurnAngleController(mPose);
         newController = true;
     }
 
     public void setTurnAngleSetPoint(double heading) {
-        mController = new BangBangTurnAngleController(mCachedPose, heading);
+        mController = new BangBangTurnAngleController(mPose, heading);
         newController = true;
     }
 
@@ -254,12 +221,12 @@ public class Drive extends Subsystem {
     }
 
     public void setDriveStraight(double distance) {
-        mController = new DriveStraightController(mCachedPose, distance);
+        mController = new DriveStraightController(mPose, distance);
         newController = true;
     }
 
     public void setCascadingGyroEncoderTurnAngleController(double angle) {
-        mController = new CascadingGyroEncoderTurnAngleController(mCachedPose, angle);
+        mController = new CascadingGyroEncoderTurnAngleController(mPose, angle);
         newController = true;
     }
 
@@ -283,10 +250,9 @@ public class Drive extends Subsystem {
      */
     public Pose getPose() {
         //If drivetrain has not had first update yet, return initial robot pose of 0,0,0,0,0,0
-        if (mRobotState == null) {
-            return new Pose(0, 0, 0, 0, 0, 0, 0, 0);
-        }
-        return mCachedPose;
+        return mRobotState == null
+                ? new Pose()
+                : mPose;
     }
 
     public Drive.DriveController getController() {
@@ -304,7 +270,7 @@ public class Drive extends Subsystem {
     /**
      * <h1>Interface for drive controllers</h1>
      * <p>
-     * Contains an {@code update} method that takes a {@link RobotState} and generates a {@link DriveSignal}.
+     * Contains an {@code update} method that takes a {@link RobotState} and generates a {@link SparkDriveSignal}.
      */
     public interface DriveController {
         SparkDriveSignal update(RobotState state);
@@ -316,7 +282,6 @@ public class Drive extends Subsystem {
 
     @Override
     public String getStatus() {
-        return String.format("Drive State: %s%nOutput Control Mode: %s%nLeft Setpoint: %s%nRight Setpoint: %s%nLeft Enc: %s%nRight Enc: %s%nGyro: %s%n", mState, mSignal.leftOutput.getControlType(), mSignal.leftOutput.getReference(), mSignal.rightOutput.getReference(), mCachedPose.leftEnc, mCachedPose.rightEnc, mCachedPose.heading);
+        return String.format("Drive State: %s%nOutput Control Mode: %s%nLeft Set Point: %s%nRight Set Point: %s%nLeft Position: %s%nRight Position: %s%nGyro: %s%n", mState, mSignal.leftOutput.getControlType(), mSignal.leftOutput.getReference(), mSignal.rightOutput.getReference(), mPose.leftEncoderPosition, mPose.rightEncoderPosition, mPose.heading);
     }
-
 }

@@ -1,0 +1,29 @@
+{
+    "distanceIn": 0.0,
+    "distanceOut": 5.6,
+    "cargoTolerance": 5.9,
+    "cargoToleranceFar": 7.0,
+    "acceptablePositionError": 0.2,
+    "acceptableVelocityError": 20,
+    "slamPercentOutput": -0.35,
+    "slamHoldMultiplier": 0.2,
+    "slamTime": 0.55,
+    "useSlam": false,
+    "smartGains": {
+        "p": 0.0,
+        "i": 0.0,
+        "d": 0.0001,
+        "f": 0.00021,
+        "iZone": 0.0,
+        "acceleration": 13000.0,
+        "velocity": 2200.0,
+        "allowableError": 0.01
+    },
+    "positionGains": {
+        "p": 0.35,
+        "i": 0.0,
+        "d": 0.0,
+        "f": 0.0,
+        "iZone": 0.0
+    }
+}

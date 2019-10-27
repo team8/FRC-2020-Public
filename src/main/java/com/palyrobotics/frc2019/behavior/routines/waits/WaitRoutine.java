@@ -6,7 +6,7 @@ import com.palyrobotics.frc2019.subsystems.Subsystem;
 
 public abstract class WaitRoutine extends Routine {
 
-    protected boolean isDone;
+    private boolean mIsDone;
 
     @Override
     public final void start() {}
@@ -15,19 +15,18 @@ public abstract class WaitRoutine extends Routine {
 
     @Override
     public final Commands update(Commands commands) {
-        this.isDone = isCompleted();
+        mIsDone = isCompleted();
         return commands;
     }
 
     @Override
     public final Commands cancel(Commands commands) {
-//        System.out.println("Done");
         return commands;
     }
 
     @Override
-    public final boolean finished() {
-        return this.isDone;
+    public final boolean isFinished() {
+        return mIsDone;
     }
 
     @Override

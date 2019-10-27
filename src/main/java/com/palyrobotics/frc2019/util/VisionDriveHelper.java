@@ -1,140 +1,102 @@
 package com.palyrobotics.frc2019.util;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.*;
-import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.VisionConfig;
+import com.palyrobotics.frc2019.config.constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.util.config.Configs;
+import com.palyrobotics.frc2019.util.control.SynchronousPID;
 import com.palyrobotics.frc2019.vision.Limelight;
 
 /**
- * CheesyDriveHelper implements the calculations used in CheesyDrive for teleop control. Returns a DriveSignal for the motor output
+ * {@link CheesyDriveHelper} implements the calculations used for operator control.
+ * Returns a {@link SparkDriveSignal} for the motor output.
  */
 public class VisionDriveHelper {
 
-    private boolean mInitialBrake;
-    private double mOldThrottle = 0.0, mBrakeRate;
-    private boolean found = false;
-    private SynchronousPID pidController;
+    private static final double kMaxAngularPower = 0.4;
 
-    private double oldYawToTarget;
-    private long oldTime;
+    private final Limelight mLimelight = Limelight.getInstance();
+    private final SparkDriveSignal mSignal = new SparkDriveSignal();
+    private final SynchronousPID mPidController = new SynchronousPID(Configs.get(VisionConfig.class).gains);
+    private final CheesyDriveHelper mCDH = new CheesyDriveHelper();
+    private boolean mInitialBrake;
+    private double mLastThrottle, mBrakeRate;
 
     public SparkDriveSignal visionDrive(Commands commands, RobotState robotState) {
-        double throttle = -robotState.leftStickInput.getY();
 
-        //Braking if left trigger is pressed
-        boolean isBraking = robotState.leftStickInput.getTriggerPressed();
+        double throttle = commands.driveThrottle;
 
-        throttle = ChezyMath.handleDeadband(throttle, DrivetrainConstants.kDeadband);
+        // Braking if left trigger is pressed
+        boolean isBraking = commands.isBraking;
 
-        double leftPower, rightPower;
+        throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadband);
 
-        double angularPower;
-
-        //linear power is what's actually sent to motor, throttle is input
+        // Linear power is what's actually sent to motor, throttle is input
         double linearPower = throttle;
 
-        //Handle braking
-        if(isBraking) {
-            //Set up braking rates for linear deceleration in a set amount of time
-            if(mInitialBrake) {
+        // Handle braking
+        if (isBraking) {
+            // Set up braking rates for linear deceleration in a set amount of time
+            if (mInitialBrake) {
                 mInitialBrake = false;
-                //Old throttle initially set to throttle
-                mOldThrottle = linearPower;
-                //Braking rate set
-                mBrakeRate = mOldThrottle / DrivetrainConstants.kCyclesUntilStop;
+                // Old throttle initially set to throttle
+                mLastThrottle = linearPower;
+                // Braking rate set
+                mBrakeRate = mLastThrottle / DrivetrainConstants.kCyclesUntilStop;
             }
 
-            //If braking is not complete, decrease by the brake rate
-            if(Math.abs(mOldThrottle) >= Math.abs(mBrakeRate)) {
-                //reduce throttle
-                mOldThrottle -= mBrakeRate;
-                linearPower = mOldThrottle;
+            // If braking is not complete, decrease by the brake rate
+            if (Math.abs(mLastThrottle) >= Math.abs(mBrakeRate)) {
+                // reduce throttle
+                mLastThrottle -= mBrakeRate;
+                linearPower = mLastThrottle;
             } else {
                 linearPower = 0;
             }
         } else {
             mInitialBrake = true;
         }
+        mLastThrottle = linearPower;
 
-        if(Limelight.getInstance().isTargetFound()) {
-            double kP = .03;
-            double kD = .005;
-//            double kP = Limelight.getInstance().getTargetArea();
-//            double kP = 1.0/Limelight.getInstance().getCorrectedEstimatedDistanceZ();
-//            double kP = .010 * Math.sqrt(Limelight.getInstance().getCorrectedEstimatedDistanceZ());
-            //double kP = Limelight.getInstance().getCorrectedEstimatedDistanceZ();
-            angularPower = -Limelight.getInstance().getYawToTarget() * kP
-                    - ((Limelight.getInstance().getYawToTarget() - oldYawToTarget) / (System.currentTimeMillis() - oldTime) * 1000) * kD;
-            oldYawToTarget = Limelight.getInstance().getYawToTarget();
-            oldTime = System.currentTimeMillis();
+        double angularPower;
+        boolean hasFoundTarget;
+        if (mLimelight.isTargetFound()) {
+            angularPower = mPidController.calculate(mLimelight.getYawToTarget());
             // |angularPower| should be at most 0.6
-            if (angularPower > 0.6) angularPower = 0.75;
-            if (angularPower < -0.6) angularPower = -0.75;
+            if (angularPower > kMaxAngularPower) angularPower = kMaxAngularPower;
+            if (angularPower < -kMaxAngularPower) angularPower = -kMaxAngularPower;
+            hasFoundTarget = true;
+            if (mLimelight.getCorrectedEstimatedDistanceZ() < DrivetrainConstants.kVisionTargetThreshold) {
+                robotState.atVisionTargetThreshold = true;
+            }
         } else {
-            found = false;
-            oldTime = System.currentTimeMillis();
-            angularPower = 0;
+            hasFoundTarget = false;
+            angularPower = 0.0;
         }
 
-        rightPower = leftPower = mOldThrottle = linearPower;
+        angularPower *= -1.0;
+        double leftOutput, rightOutput;
+//        angularPower *= mOldThrottle;
+        leftOutput = linearPower + angularPower;
+        rightOutput = linearPower - angularPower;
 
-
-        angularPower *= -1;
-        //angularPower *= mOldThrottle;
-        leftPower *= (1 + angularPower);
-        rightPower *= (1 - angularPower);
-
-
-        if(leftPower > 1.0) {
-            leftPower = 1.0;
-        } else if(rightPower > 1.0) {
-            rightPower = 1.0;
-        } else if(leftPower < -1.0) {
-            leftPower = -1.0;
-        } else if(rightPower < -1.0) {
-            rightPower = -1.0;
+        if (leftOutput > 1.0) {
+            leftOutput = 1.0;
+        } else if (rightOutput > 1.0) {
+            rightOutput = 1.0;
+        } else if (leftOutput < -1.0) {
+            leftOutput = -1.0;
+        } else if (rightOutput < -1.0) {
+            rightOutput = -1.0;
         }
 
-        SparkMaxOutput left = new SparkMaxOutput();
-        SparkMaxOutput right = new SparkMaxOutput();
-        SparkDriveSignal out = new SparkDriveSignal(left, right);
-
-        left.setPercentOutput(leftPower);
-        right.setPercentOutput(rightPower);
-        return out;
-    }
-
-    /**
-     * Throttle tuning functions
-     */
-    public double remapThrottle(double initialThrottle) {
-        double x = Math.abs(initialThrottle);
-        switch(OtherConstants.kDriverName) {
-            case BRYAN:
-                //Reversal of directions
-                //Stick a 0 cycle in between
-                if(initialThrottle * mOldThrottle < 0) {
-                    return 0.0;
-                }
-
-                //Increase in magnitude, deceleration is fine. This misses rapid direction switches, but that's up to driver
-                if(x > Math.abs(mOldThrottle)) {
-                    x = mOldThrottle + Math.signum(initialThrottle) * DrivetrainConstants.kMaxAccelRate;
-                } else {
-                    x = initialThrottle;
-                }
-
-                //				x = initialThrottle;
-                break;
+        if (throttle < 0.0 || (!hasFoundTarget && !robotState.atVisionTargetThreshold)) {
+            return mCDH.cheesyDrive(commands, robotState);
+        } else {
+            mSignal.leftOutput.setPercentOutput(leftOutput);
+            mSignal.rightOutput.setPercentOutput(rightOutput);
         }
-        return x;
-    }
-
-    /**
-     * Limits the given input to the given magnitude.
-     */
-    public double limit(double v, double limit) {
-        return (Math.abs(v) < limit) ? v : limit * (v < 0 ? -1 : 1);
+        return mSignal;
     }
 }

@@ -1,0 +1,18 @@
+{
+    "enabledServices": [
+        "commandReceiver"
+    ],
+    "enabledSubsystems": [
+        "drive",
+        "fingers",
+        "pusher",
+        "intake",
+        "elevator",
+        "shooter"
+    ],
+    "coastDriveIfDisabled": false,
+    "coastElevatorIfDisabled": false,
+    "coastArmIfDisabled": false,
+    "disableSparkOutput": false,
+    "smartMotionMultiplier": 0.95
+}

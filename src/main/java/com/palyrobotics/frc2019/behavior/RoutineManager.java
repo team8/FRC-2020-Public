@@ -3,10 +3,7 @@ package com.palyrobotics.frc2019.behavior;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * Handles the updating of commands by passing them to each running routine. <br />
@@ -14,58 +11,46 @@ import java.util.HashSet;
  * @author Nihar, Ailyn
  */
 public class RoutineManager {
-    private static RoutineManager instance = new RoutineManager();
+    private static RoutineManager sInstance = new RoutineManager();
 
     public static RoutineManager getInstance() {
-        return instance;
+        return sInstance;
     }
 
     //Routines that are being run
     private ArrayList<Routine>
-            runningRoutines = new ArrayList<>(),
-            routinesToRemove = new ArrayList<>(),
-            routinesToAdd = new ArrayList<>();
+            mRunningRoutines = new ArrayList<>(),
+            mRoutinesToRemove = new ArrayList<>(),
+            mRoutinesToAdd = new ArrayList<>();
 
     /**
      * Stores the new routine to be added in next update cycle <br />
      * Will automatically cancel any existing routines with the same subsystems
-     *
-     * @param newRoutine
      */
     public void addNewRoutine(Routine newRoutine) {
-        if (newRoutine == null) {
-//            Logger.getInstance().logRobotThread(Level.WARNING, "Tried to add null routine to routine manager!");
-            throw new NullPointerException();
-        }
-        routinesToAdd.add(newRoutine);
+        mRoutinesToAdd.add(Objects.requireNonNull(newRoutine));
     }
 
     public ArrayList<Routine> getCurrentRoutines() {
-        return runningRoutines;
+        return mRunningRoutines;
     }
 
     /**
      * Wipes all current routines <br />
      * Pass in the commands so that routines can clean up
-     *
-     * @param commands
-     * @return modified commands if needed
      */
     public Commands reset(Commands commands) {
-//        Logger.getInstance().logRobotThread(Level.FINE, "Routine manager reset");
-        Commands output = commands.copy();
-        //Cancel all running routines
-        if (runningRoutines.size() > 0) {
-            for (Routine routine : runningRoutines) {
-//                Logger.getInstance().logRobotThread(Level.FINE, "Canceling", routine.getName());
-                output = routine.cancel(output);
+        // Cancel all running routines
+        if (mRunningRoutines.size() > 0) {
+            for (Routine routine : mRunningRoutines) {
+                commands = routine.cancel(commands);
             }
         }
-        //Empty the routine buffers
-        runningRoutines.clear();
-        routinesToAdd.clear();
-        routinesToRemove.clear();
-        return output;
+        // Empty the routine buffers
+        mRunningRoutines.clear();
+        mRoutinesToAdd.clear();
+        mRoutinesToRemove.clear();
+        return commands;
     }
 
     /**
@@ -75,55 +60,49 @@ public class RoutineManager {
      * @return Modified commands
      */
     public Commands update(Commands commands) {
-        routinesToRemove = new ArrayList<>();
-        Commands output = commands.copy();
-        //Update all running routines
-        for (Routine routine : runningRoutines) {
-            if (routine.finished()) {
-//                Logger.getInstance().logRobotThread(Level.FINE, "Routine: " + routine.getName() + " finished, canceled");
-                output = routine.cancel(output);
-                routinesToRemove.add(routine);
+        mRoutinesToRemove.clear();
+        // Update all running routines
+        for (Routine routine : mRunningRoutines) {
+            if (routine.isFinished()) {
+                commands = routine.cancel(commands);
+                mRoutinesToRemove.add(routine);
             } else {
-//				System.out.println(routine.getName());
-                output = routine.update(output);
+                commands = routine.update(commands);
             }
         }
 
-        //Remove routines that finished
-        for (Routine routine : routinesToRemove) {
-            runningRoutines.remove(routine);
+        // Remove routines that finished
+        for (Routine routine : mRoutinesToRemove) {
+            mRunningRoutines.remove(routine);
         }
 
-        //Add newest routines after current routines may have finished, start them, and update them
-        for (Routine newRoutine : routinesToAdd) {
-            //combine running routines w/ new routine to check for shared subsystems
-            ArrayList<Routine> conflicts = conflictingRoutines(runningRoutines, newRoutine);
+        // Add newest routines after current routines may have finished, start them, and update them
+        for (Routine newRoutine : mRoutinesToAdd) {
+            // Combine running routines with new routine to check for shared subsystems
+            ArrayList<Routine> conflicts = conflictingRoutines(mRunningRoutines, newRoutine);
             for (Routine routine : conflicts) {
-                output = routine.cancel(output);
-                runningRoutines.remove(routine);
+                commands = routine.cancel(commands);
+                mRunningRoutines.remove(routine);
             }
             newRoutine.start();
-            output = newRoutine.update(output);
-            runningRoutines.add(newRoutine);
+            commands = newRoutine.update(commands);
+            mRunningRoutines.add(newRoutine);
         }
 
-        routinesToAdd.clear();
+        mRoutinesToAdd.clear();
 
-        if (output.cancelCurrentRoutines) {
-            output = this.reset(output);
+        if (commands.cancelCurrentRoutines) {
+            commands = reset(commands);
         }
 
-        //Add new routines this cycle.
-        //Intentionally runs even if cancelCurrentRoutines is true, as these are new routines requested on the same cycle.
-        if (!output.wantedRoutines.isEmpty()) {
-            //Routines requested by newly added routines
-            for (Routine routine : output.wantedRoutines) {
-                addNewRoutine(routine);
-            }
+        // Add new routines this cycle.
+        // Intentionally runs even if cancelCurrentRoutines is true, as these are new routines requested on the same cycle.
+        for (Routine routine : commands.wantedRoutines) {
+            addNewRoutine(routine);
         }
-        //clears the wanted routines every update cycle
-        output.wantedRoutines = new ArrayList<>();
-        return output;
+        // Clears the wanted routines every update cycle
+        commands.wantedRoutines.clear();
+        return commands;
     }
 
     /**
@@ -133,8 +112,8 @@ public class RoutineManager {
      * @param newRoutine   The new routine
      * @return Array of routines that require subsystems the newRoutine needs
      */
-    public ArrayList<Routine> conflictingRoutines(ArrayList<Routine> routinesList, Routine newRoutine) {
-        //Get hash sets of required subsystems for existing routines
+    private ArrayList<Routine> conflictingRoutines(ArrayList<Routine> routinesList, Routine newRoutine) {
+        // Get hash sets of required subsystems for existing routines
         ArrayList<HashSet<Subsystem>> routineSubsystemSets = new ArrayList<>();
         HashSet<Subsystem> subsystemsRequired = new HashSet<>(Arrays.asList(newRoutine.getRequiredSubsystems()));
 
@@ -143,20 +122,16 @@ public class RoutineManager {
         }
 
         ArrayList<Routine> conflicts = new ArrayList<>();
-        //Any existing routines that require the same subsystem are added to routine
+        // Any existing routines that require the same subsystem are added to routine
         for (int j = 0; j < routinesList.size(); j++) {
-            //Find intersection
+            // Find intersection
             routineSubsystemSets.get(j).retainAll(subsystemsRequired);
             if (routineSubsystemSets.get(j).size() != 0) {
                 conflicts.add(routinesList.get(j));
-                //Move to next routine in the list
+                // Move to next routine in the list
             }
         }
         return conflicts;
-    }
-
-    public String getName() {
-        return "RoutineManager";
     }
 
     public static Subsystem[] subsystemSuperset(ArrayList<Routine> routines) {
@@ -168,15 +143,14 @@ public class RoutineManager {
     }
 
     /**
-     * Finds overlapping subsystems Not optimized
+     * Finds overlapping subsystems. Not optimized
      */
-    public static Subsystem[] sharedSubsystems(ArrayList<Routine> routines) {
+    static Subsystem[] sharedSubsystems(ArrayList<Routine> routines) {
         HashMap<Subsystem, Integer> counter = new HashMap<>();
         counter.put(null, 0); //for SampleRoutine
         counter.put(Drive.getInstance(), 0);
         counter.put(Elevator.getInstance(), 0);
         counter.put(Shooter.getInstance(), 0);
-        counter.put(Shovel.getInstance(), 0);
         counter.put(Fingers.getInstance(), 0);
         counter.put(Intake.getInstance(), 0);
         counter.put(Pusher.getsInstance(), 0);
@@ -186,7 +160,7 @@ public class RoutineManager {
                 counter.put(subsystem, counter.get(subsystem) + 1);
             }
         }
-        //Add all subsystems that appear multiple times to return list
+        // Add all subsystems that appear multiple times to return list
         HashSet<Subsystem> conflicts = new HashSet<>();
         for (Subsystem subsystem : counter.keySet()) {
             if (counter.get(subsystem) > 1 && subsystem != null) {

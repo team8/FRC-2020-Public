@@ -6,11 +6,12 @@ import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.TimeoutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.VisionAssistedDrivePathRoutine;
-import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersExpelRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherOutRoutine;
-import com.palyrobotics.frc2019.config.Constants.PhysicalConstants;
+import com.palyrobotics.frc2019.config.constants.PhysicalConstants;
+import com.palyrobotics.frc2019.subsystems.Fingers;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 
@@ -24,17 +25,17 @@ public class RightStartRightFrontCargoAutoMode extends AutoModeBase {
     //    public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches;
     public static double kOffsetX = -20 - 25;
     public static double kOffsetY = PhysicalConstants.kLevel3Width * .5 + PhysicalConstants.kLevel2Width * .5;
-    public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
-    public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
+    public static double kCargoShipRightFrontX = sDistances.level1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
+    public static double kCargoShipRightFrontY = -(sDistances.fieldWidth * .5 - (sDistances.cargoRightY + sDistances.cargoOffsetY));
     public static double kHabLineX = PhysicalConstants.kUpperPlatformLength + PhysicalConstants.kLowerPlatformLength;
 
     @Override
     public String toString() {
-        return mAlliance + this.getClass().toString();
+        return sAlliance + this.getClass().toString();
     }
 
     @Override
-    public void prestart() {
+    public void preStart() {
 
     }
 
@@ -79,11 +80,11 @@ public class RightStartRightFrontCargoAutoMode extends AutoModeBase {
 //        routines.add(new VisionClosedDriveRoutine());
 
         //release hatch
-        routines.add(new FingersCloseRoutine());
-        routines.add(new FingersExpelRoutine(.05));
+        routines.add(new FingersRoutine(Fingers.FingersState.CLOSE));
+        routines.add(new FingersExpelRoutine(0.05));
 
         //wait
-        routines.add(new TimeoutRoutine(.4));
+        routines.add(new TimeoutRoutine(0.4));
 
         //pusher back in
         routines.add(new PusherInRoutine());
@@ -94,7 +95,7 @@ public class RightStartRightFrontCargoAutoMode extends AutoModeBase {
 
     @Override
     public String getKey() {
-        return mAlliance.toString();
+        return sAlliance.toString();
     }
 }
 

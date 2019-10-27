@@ -4,6 +4,7 @@ import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Drive.DriveController;
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.SparkDriveSignal;
+import edu.wpi.first.wpilibj.Timer;
 
 public class TimedDriveController implements DriveController {
 
@@ -13,12 +14,12 @@ public class TimedDriveController implements DriveController {
     public TimedDriveController(double voltage, double time) {
         mVoltage = voltage;
         mTime = time;
-        mStartTime = System.currentTimeMillis();
+        mStartTime = Timer.getFPGATimestamp();
     }
 
     @Override
     public boolean onTarget() {
-        return System.currentTimeMillis() > mStartTime + mTime * 1000;
+        return Timer.getFPGATimestamp() > mStartTime + mTime;
     }
 
     @Override
@@ -30,6 +31,6 @@ public class TimedDriveController implements DriveController {
 
     @Override
     public Pose getSetPoint() {
-        return new Pose(0, 0, 0, 0, 0, 0, 0, 0);
+        return new Pose();
     }
 }

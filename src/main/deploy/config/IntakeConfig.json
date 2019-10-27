@@ -1,0 +1,43 @@
+{
+    "motorVelocity": 0.58,
+    "fastIntakeVelocity": 0.8,
+    "droppingVelocity": 1.0,
+    "expellingVelocity": -0.9,
+    "verySlowly": 0.03,
+    "medium": 0.2,
+    "maxAngle": 118.0,
+    "potentiometerMaxAngleTicks": 0.613832808491713,
+    "gravityFF": 0.026,
+    "accelerationCompensation": 0.0,
+    "centripetalCoefficient": 0.0,
+    "angleOffset": 19,
+    "intakeAngle": 23.5,
+    "holdAngle": 59.0,
+    "handOffAngle": 114.5,
+    "rocketExpelAngle": 84.0,
+    "holdTolerance": 14.5,
+    "acceptableAngularError": 3.0,
+    "angularVelocityError": 10.0,
+    "cargoInchTolerance": 7.25,
+    "cargoCountRequired": 5,
+    "gains": {
+        "p": 0.000002,
+        "i": 0.0,
+        "d": 0.0,
+        "f": 0.000059,
+        "iZone": 0,
+        "acceleration": 44000,
+        "velocity": 13000,
+        "allowableError": 0.3,
+        "minimumOutputVelocity": 0.0
+    },
+    "holdGains": {
+        "p": 0.000001,
+        "i": 0.0,
+        "d": 0.0,
+        "f": 0.000061,
+        "iZone": 0,
+        "acceleration": 20000,
+        "velocity": 8000
+    }
+}

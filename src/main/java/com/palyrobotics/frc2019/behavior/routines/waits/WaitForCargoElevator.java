@@ -6,12 +6,12 @@ public class WaitForCargoElevator extends WaitRoutine {
 
     @Override
     public boolean isCompleted() {
-        return robotState.hasPusherCargo;
+        return mRobotState.hasPusherCargo;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[]{elevator};
+        return new Subsystem[]{mElevator};
     }
 
     @Override

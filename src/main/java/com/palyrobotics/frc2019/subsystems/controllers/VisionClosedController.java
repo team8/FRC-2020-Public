@@ -1,16 +1,16 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
 import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
-import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.configv2.VisionConfig;
+import com.palyrobotics.frc2019.config.VisionConfig;
+import com.palyrobotics.frc2019.config.constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2019.subsystems.Drive;
 import com.palyrobotics.frc2019.util.CheesyDriveHelper;
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.SparkDriveSignal;
-import com.palyrobotics.frc2019.util.SynchronousPID;
-import com.palyrobotics.frc2019.util.configv2.Configs;
+import com.palyrobotics.frc2019.util.config.Configs;
+import com.palyrobotics.frc2019.util.control.SynchronousPID;
 import com.palyrobotics.frc2019.vision.Limelight;
 
 /**
@@ -21,16 +21,15 @@ import com.palyrobotics.frc2019.vision.Limelight;
 public class VisionClosedController implements Drive.DriveController {
 
     private static final double
-            MAX_ANGULAR_POWER = 0.4, //0.6
-            DISTANCE_POW_CONST = 2 * Gains.kVidarTrajectorykV;
+            MAX_ANGULAR_POWER = 0.4, // 0.6
+            DISTANCE_POW_CONST = 2 * Configs.get(DriveConfig.class).trajectoryGains.v;
 
     private final Limelight mLimelight = Limelight.getInstance();
-    private final VisionConfig mConfig = Configs.get(VisionConfig.class);
 
     private int mUpdateCyclesForward;
 
     private SparkDriveSignal mSignal = new SparkDriveSignal();
-    private SynchronousPID mPidController = new SynchronousPID(mConfig.p, mConfig.i, mConfig.d);
+    private SynchronousPID mPidController = new SynchronousPID(Configs.get(VisionConfig.class).gains);
 
     @Override
     public SparkDriveSignal update(RobotState robotState) {
@@ -82,7 +81,7 @@ public class VisionClosedController implements Drive.DriveController {
     @Override
     public Pose getSetPoint() {
         // TODO use default constructor?
-        return new Pose(0, 0, 0, 0, 0, 0, 0, 0);
+        return new Pose();
     }
 
     @Override

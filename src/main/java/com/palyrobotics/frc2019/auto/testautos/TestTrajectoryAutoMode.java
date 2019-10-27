@@ -26,7 +26,7 @@ public class TestTrajectoryAutoMode extends AutoModeBase {
 	}
 
 	@Override
-	public void prestart() {
+	public void preStart() {
 	}
 
 	@Override

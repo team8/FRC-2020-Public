@@ -10,9 +10,9 @@ import java.util.Arrays;
  * Created by Nihar on 12/27/16.
  */
 public class SequentialRoutine extends Routine {
-    private ArrayList<Routine> mRoutines;
-    private int mRunningRoutineIndex = 0;
-    private boolean mIsDone = false;
+    private final ArrayList<Routine> mRoutines;
+    private int mRunningRoutineIndex;
+    private boolean mIsDone;
 
     public SequentialRoutine(ArrayList<Routine> routines) {
         mRoutines = routines;
@@ -29,43 +29,39 @@ public class SequentialRoutine extends Routine {
 
     @Override
     public Commands update(Commands commands) {
-        Commands output = commands.copy();
         if (mIsDone) {
-            return output;
+            return commands;
         }
-        //Update the current routine
-        output = mRoutines.get(mRunningRoutineIndex).update(output);
-        //Keep moving to next routine if the current routine is finished
-        while (mRoutines.get(mRunningRoutineIndex).finished()) {
-            output = mRoutines.get(mRunningRoutineIndex).cancel(output);
+        // Update the current routine
+        commands = mRoutines.get(mRunningRoutineIndex).update(commands);
+        // Keep moving to next routine if the current routine is finished
+        while (mRoutines.get(mRunningRoutineIndex).isFinished()) {
+            commands = mRoutines.get(mRunningRoutineIndex).cancel(commands);
             if (mRunningRoutineIndex <= mRoutines.size() - 1) {
                 mRunningRoutineIndex++;
             }
-
-            //If final routine is finished, don't update anything
+            // If final routine is finished, don't update anything
             if (mRunningRoutineIndex > mRoutines.size() - 1) {
                 mIsDone = true;
                 break;
             }
-
-            //Start the next routine
+            // Start the next routine
             mRoutines.get(mRunningRoutineIndex).start();
         }
-        return output;
-    }
-
-    @Override
-    public Commands cancel(Commands commands) {
-        //If not all routines finished, cancel the current routine. Otherwise everything is already finished.
-        if (mRunningRoutineIndex < mRoutines.size()) {
-            mRoutines.get(mRunningRoutineIndex).cancel(commands);
-        }
-
         return commands;
     }
 
     @Override
-    public boolean finished() {
+    public Commands cancel(Commands commands) {
+        // If not all routines finished, cancel the current routine. Otherwise everything is already finished.
+        if (mRunningRoutineIndex < mRoutines.size()) {
+            mRoutines.get(mRunningRoutineIndex).cancel(commands);
+        }
+        return commands;
+    }
+
+    @Override
+    public boolean isFinished() {
         return mIsDone;
     }
 
@@ -82,10 +78,5 @@ public class SequentialRoutine extends Routine {
         }
         name.append(")");
         return name.toString();
-    }
-
-    @Override
-    public ArrayList<Routine> getEnclosingSequentialRoutine() {
-        return mRoutines;
     }
 }

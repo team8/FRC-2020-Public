@@ -10,83 +10,76 @@ import java.util.Arrays;
  * Created by Nihar on 12/27/16.
  */
 public class ParallelRoutine extends Routine {
-	private ArrayList<Routine> mRoutines;
+    private ArrayList<Routine> mRoutines;
 
-	/**
-	 * Runs all routines at the same time Finishes when all routines finish
-	 * 
-	 * @param routines
-	 */
-	public ParallelRoutine(ArrayList<Routine> routines) {
-		this.mRoutines = routines;
-	}
+    /**
+     * Runs all routines at the same time.
+	 * Finishes when all routines finish.
+     */
+    public ParallelRoutine(ArrayList<Routine> routines) {
+        mRoutines = routines;
+    }
 
     public ParallelRoutine(Routine... routines) {
-	    mRoutines = new ArrayList<>(Arrays.asList(routines));
+        mRoutines = new ArrayList<>(Arrays.asList(routines));
     }
 
     @Override
-	public void start() {
-		for(Routine routine : mRoutines) {
-			routine.start();
-		}
-	}
+    public void start() {
+        for (Routine routine : mRoutines) {
+            routine.start();
+        }
+    }
 
-	@Override
-	public Commands update(Commands commands) {
-		ArrayList<Routine> routinesToRemove = getFinishedAutos();
-		if(!routinesToRemove.isEmpty()) {
-			for (Routine routine : routinesToRemove) {
-				routine.cancel(commands);
-				mRoutines.remove(routine);
+    @Override
+    public Commands update(Commands commands) {
+        ArrayList<Routine> routinesToRemove = getFinishedAutos();
+        if (!routinesToRemove.isEmpty()) {
+            for (Routine routine : routinesToRemove) {
+                routine.cancel(commands);
+                mRoutines.remove(routine);
 //				routinesToRemove.remove(routine);
-			}
-		}
+            }
+        }
 
-		for(Routine routine : mRoutines) {
-			commands = routine.update(commands);
-		}
+        for (Routine routine : mRoutines) {
+            commands = routine.update(commands);
+        }
 
-		return commands;
-	}
+        return commands;
+    }
 
-	@Override
-	public Commands cancel(Commands commands) {
-		return commands;
-	}
+    @Override
+    public Commands cancel(Commands commands) {
+        return commands;
+    }
 
-	public ArrayList<Routine> getFinishedAutos() {
-		ArrayList<Routine> routinesToRemove = new ArrayList<>();
-		for(Routine routine : mRoutines) {
-			if(routine.finished()) {
-				routinesToRemove.add(routine);
-			}
-		}
-		return routinesToRemove;
-	}
+    private ArrayList<Routine> getFinishedAutos() {
+        ArrayList<Routine> routinesToRemove = new ArrayList<>();
+        for (Routine routine : mRoutines) {
+            if (routine.isFinished()) {
+                routinesToRemove.add(routine);
+            }
+        }
+        return routinesToRemove;
+    }
 
-	@Override
-	public boolean finished() {
-		return mRoutines.size() == 0;
-	}
+    @Override
+    public boolean isFinished() {
+        return mRoutines.isEmpty();
+    }
 
-	@Override
-	public Subsystem[] getRequiredSubsystems() {
-		return RoutineManager.sharedSubsystems(mRoutines);
-	}
+    @Override
+    public Subsystem[] getRequiredSubsystems() {
+        return RoutineManager.sharedSubsystems(mRoutines);
+    }
 
-
-	@Override
-	public ArrayList<Routine> getEnclosingParallelRoutine() {
-		return this.mRoutines;
-	}
-
-	@Override
-	public String getName() {
-		String name = "ParallelRoutine of (";
-		for(Routine routine : mRoutines) {
-			name += (routine.getName() + " ");
-		}
-		return name + ")";
-	}
+    @Override
+    public String getName() {
+        StringBuilder name = new StringBuilder("ParallelRoutine of (");
+        for (Routine routine : mRoutines) {
+            name.append(routine.getName()).append(" ");
+        }
+        return name + ")";
+    }
 }

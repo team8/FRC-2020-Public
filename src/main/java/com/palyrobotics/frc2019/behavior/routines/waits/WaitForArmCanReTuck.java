@@ -5,12 +5,12 @@ import com.palyrobotics.frc2019.subsystems.Subsystem;
 public class WaitForArmCanReTuck extends WaitRoutine {
     @Override
     public boolean isCompleted() {
-        return robotState.elevatorPosition < 0.3;
+        return mRobotState.elevatorPosition < 0.3;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[]{intake};
+        return new Subsystem[]{mIntake};
     }
 
     @Override

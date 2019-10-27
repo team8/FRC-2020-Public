@@ -6,18 +6,18 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
-import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCloseRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
-import com.palyrobotics.frc2019.behavior.routines.fingers.FingersOpenRoutine;
+import com.palyrobotics.frc2019.behavior.routines.fingers.FingersRoutine;
 import com.palyrobotics.frc2019.behavior.routines.intake.IntakeBeginCycleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherInRoutine;
 import com.palyrobotics.frc2019.behavior.routines.pusher.PusherOutRoutine;
 import com.palyrobotics.frc2019.behavior.routines.shooter.ShooterExpelRoutine;
 import com.palyrobotics.frc2019.behavior.routines.waits.WaitForCargoElevator;
-import com.palyrobotics.frc2019.config.Constants.PhysicalConstants;
-import com.palyrobotics.frc2019.config.configv2.ElevatorConfig;
+import com.palyrobotics.frc2019.config.constants.PhysicalConstants;
+import com.palyrobotics.frc2019.config.subsystem.ElevatorConfig;
+import com.palyrobotics.frc2019.subsystems.Fingers;
 import com.palyrobotics.frc2019.subsystems.Shooter;
-import com.palyrobotics.frc2019.util.configv2.Configs;
+import com.palyrobotics.frc2019.util.config.Configs;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -34,19 +34,19 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
     public static int kRunSpeed = 50;
     public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches * 0.6;
     public static double kOffsetY = -PhysicalConstants.kLevel3Width * .5 - PhysicalConstants.kLevel2Width * .5;
-    public static double kCargoShipLeftFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
-    public static double kCargoShipLeftFrontY = mDistances.kFieldWidth * .5 - (mDistances.kCargoLeftY + mDistances.kCargoOffsetY);
+    public static double kCargoShipLeftFrontX = sDistances.level1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
+    public static double kCargoShipLeftFrontY = sDistances.fieldWidth * .5 - (sDistances.cargoLeftY + sDistances.cargoOffsetY);
     public static double kHabLineX = PhysicalConstants.kUpperPlatformLength + PhysicalConstants.kLowerPlatformLength;
     public static double kLeftLoadingStationX = 0;
-    public static double kLeftLoadingStationY = mDistances.kFieldWidth * .5 - mDistances.kLeftLoadingY;
+    public static double kLeftLoadingStationY = sDistances.fieldWidth * .5 - sDistances.leftLoadingY;
     public static double kLeftDepotX = PhysicalConstants.kUpperPlatformLength;
-    public static double kLeftDepotY = mDistances.kFieldWidth * .5 - mDistances.kDepotFromLeftY;
-    public static double kLeftRocketShipCloseX = mDistances.kHabLeftRocketCloseX + kHabLineX;
-    public static double kLeftRocketShipCloseY = mDistances.kFieldWidth * .5 - mDistances.kLeftRocketCloseY;
-    public static double kLeftRocketShipMidX = kHabLineX + mDistances.kHabLeftRocketMidX;
-    public static double kLeftRocketShipMidY = mDistances.kFieldWidth * .5 - mDistances.kLeftRocketMidY;
-    public static double kLeftRocketShipFarX = mDistances.kFieldWidth - mDistances.kMidlineLeftRocketFarX;
-    public static double kLeftRocketShipFarY = mDistances.kFieldWidth * .5 - mDistances.kLeftRocketFarY;
+    public static double kLeftDepotY = sDistances.fieldWidth * .5 - sDistances.depotFromLeftY;
+    public static double kLeftRocketShipCloseX = sDistances.habLeftRocketCloseX + kHabLineX;
+    public static double kLeftRocketShipCloseY = sDistances.fieldWidth * .5 - sDistances.leftRocketCloseY;
+    public static double kLeftRocketShipMidX = kHabLineX + sDistances.habLeftRocketMidX;
+    public static double kLeftRocketShipMidY = sDistances.fieldWidth * .5 - sDistances.leftRocketMidY;
+    public static double kLeftRocketShipFarX = sDistances.fieldWidth - sDistances.midLineLeftRocketFarX;
+    public static double kLeftRocketShipFarY = sDistances.fieldWidth * .5 - sDistances.leftRocketFarY;
 
     public Translation2d kCargoShipLeftFront = new Translation2d(kCargoShipLeftFrontX + PhysicalConstants.kRobotWidthInches * .2 + kOffsetX,
             kCargoShipLeftFrontY - PhysicalConstants.kRobotLengthInches * .05 + kOffsetY);
@@ -61,11 +61,11 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
 
     @Override
     public String toString() {
-        return mAlliance + this.getClass().toString();
+        return sAlliance + this.getClass().toString();
     }
 
     @Override
-    public void prestart() {
+    public void preStart() {
 
     }
 
@@ -96,7 +96,7 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
         //get fingers ready for hatch intake
         ArrayList<Routine> getIntakeReady = new ArrayList<>();
         getIntakeReady.add(new PusherOutRoutine());
-        getIntakeReady.add(new FingersCloseRoutine());
+        getIntakeReady.add(new FingersRoutine(Fingers.FingersState.CLOSE));
 
         //drive and ready fingers at the same time
         routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(ForwardCargoShipToLoadingStation), false),
@@ -104,7 +104,7 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
 
         //intake hatch
         routines.add(new PusherInRoutine());
-        routines.add(new FingersOpenRoutine());
+        routines.add(new FingersRoutine(Fingers.FingersState.OPEN));
 
         return new SequentialRoutine(routines);
     }
@@ -196,6 +196,6 @@ public class LeftCloseHatchRocketFarHatchBallThroughAutoMode extends AutoModeBas
 
     @Override
     public String getKey() {
-        return mAlliance.toString();
+        return sAlliance.toString();
     }
 }

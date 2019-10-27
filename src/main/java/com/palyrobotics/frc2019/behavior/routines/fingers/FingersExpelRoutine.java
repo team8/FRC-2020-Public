@@ -4,14 +4,11 @@ import com.palyrobotics.frc2019.behavior.Routine;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.subsystems.Fingers;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
+import edu.wpi.first.wpilibj.Timer;
 
 public class FingersExpelRoutine extends Routine {
 
-    private Fingers.FingersState wantedFingersOpenCloseState;
-
-    private double mTimeout;
-
-    private long mStartTime;
+    private double mTimeout, mStartTime;
 
     public FingersExpelRoutine(double timeout) {
         mTimeout = timeout;
@@ -19,7 +16,7 @@ public class FingersExpelRoutine extends Routine {
 
     @Override
     public void start() {
-        mStartTime = System.currentTimeMillis();
+        mStartTime = Timer.getFPGATimestamp();
     }
 
     @Override
@@ -35,13 +32,13 @@ public class FingersExpelRoutine extends Routine {
     }
 
     @Override
-    public boolean finished() {
-        return System.currentTimeMillis() - mStartTime > mTimeout * 1000;
+    public boolean isFinished() {
+        return Timer.getFPGATimestamp() - mStartTime > mTimeout;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[] { fingers };
+        return new Subsystem[]{mFingers};
     }
 
     @Override

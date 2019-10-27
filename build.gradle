@@ -8,8 +8,11 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
-// Note: No longer Robot, and now RobotStarter in accordance with the 2019 software interface
 def ROBOT_MAIN_CLASS = "com.palyrobotics.frc2019.robot.RobotStarter"
+
+compileJava {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.

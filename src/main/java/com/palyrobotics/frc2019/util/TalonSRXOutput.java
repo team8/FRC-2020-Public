@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2019.util;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.palyrobotics.frc2019.config.Gains;
+import com.palyrobotics.frc2019.util.control.Gains;
 
 import java.util.Objects;
 
@@ -35,7 +35,7 @@ public class TalonSRXOutput {
         controlMode = ControlMode.Disabled;
         setPoint = 0;
         profile = 0;
-        gains = new Gains(0, 0, 0, 0, 0, 0);
+        gains = new Gains(0, 0, 0, 0, 0);
 
         acceleration = 0;
         cruiseVelocity = 0;

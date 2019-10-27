@@ -2,29 +2,22 @@ package com.palyrobotics.frc2019.subsystems;
 
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.config.configv2.FingerConfig;
-import com.palyrobotics.frc2019.util.configv2.Configs;
+import com.palyrobotics.frc2019.config.subsystem.FingerConfig;
+import com.palyrobotics.frc2019.util.config.Configs;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class Fingers extends Subsystem {
 
-    public static Fingers instance = new Fingers();
+    private static Fingers sInstance = new Fingers();
 
     public static Fingers getInstance() {
-        return instance;
+        return sInstance;
     }
 
-    public static void resetInstance() {
-        instance = new Fingers();
-    }
+    private DoubleSolenoid.Value
+            mOpenCloseValue = DoubleSolenoid.Value.kForward,
+            mExpelValue = DoubleSolenoid.Value.kReverse;
 
-    private DoubleSolenoid.Value mOpenCloseValue = DoubleSolenoid.Value.kForward;
-    private DoubleSolenoid.Value mExpelValue = DoubleSolenoid.Value.kReverse;
-
-
-    /**
-     * State of Fingers. OPEN = fingers open, etc
-     */
     public enum FingersState {
         OPEN, CLOSE
     }
@@ -87,6 +80,6 @@ public class Fingers extends Subsystem {
 
     @Override
     public String getStatus() {
-        return "Fingers State: " + mOpenCloseState + "\nExpel State: " + mExpelState;
+        return String.format("Fingers State: %s%nExpel State: %s", mOpenCloseState, mExpelState);
     }
 }

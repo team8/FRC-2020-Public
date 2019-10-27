@@ -46,8 +46,8 @@ public class WaypointTriggerRoutine extends Routine {
     }
 
     @Override
-    public boolean finished() {
-        return startedRoutine && mRoutine.finished();
+    public boolean isFinished() {
+        return startedRoutine && mRoutine.isFinished();
     }
 
     @Override
@@ -57,10 +57,6 @@ public class WaypointTriggerRoutine extends Routine {
 
     @Override
     public String getName() {
-        return "WaypointTriggerRoutine of (" +
-                mRoutine.getName() +
-                " " +
-                mDrivePathRoutine.getName() +
-                ")";
+        return String.format("Waypoint trigger routine of (%s %s)", mRoutine.getName(), mDrivePathRoutine.getName());
     }
 }

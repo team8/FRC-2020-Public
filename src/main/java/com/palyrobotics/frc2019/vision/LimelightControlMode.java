@@ -3,10 +3,6 @@ package com.palyrobotics.frc2019.vision;
 import java.util.HashMap;
 import java.util.Map;
 
-
-/**
- *
- */
 public class LimelightControlMode {
 
     public enum LedMode {
@@ -166,7 +162,6 @@ public class LimelightControlMode {
         public String toString() {
             return name();
         }
-
     }
 
     public enum AdvancedCrosshair {

@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2019.util.trajectory;
 
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.config.constants.DrivetrainConstants;
 
 import java.util.*;
 
@@ -20,54 +20,54 @@ import java.util.*;
  * @author Team 254, Calvin Yan
  */
 public class Path {
-    private static final double kSegmentCompletePercentage = .9;
+    private static final double kSegmentCompletePercentage = 0.9;
 
     private List<Waypoint> mWaypoints;
     private List<PathSegment> mSegments;
     private Set<String> mMarkersCrossed;
 
     /**
-     * A point along the Path, which consists of the location, the speed, and a string marker (that future code can identify). Paths consist of a List of
-     * Waypoints.
+     * A point along the Path, which consists of the location, the speed, and a string marker (that future code can identify).
+     * Paths consist of a List of {@link Waypoint}'s.
      */
     public static class Waypoint {
         public final Translation2d position;
         public final double speed;
-        public final Optional<String> marker;
+        public final String marker;
         public final boolean isRelative;
 
         public Waypoint(Translation2d position) {
             this.position = position;
             this.speed = -1;
-            this.marker = Optional.empty();
             this.isRelative = false;
+            this.marker = null;
         }
 
         public Waypoint(Translation2d position, double speed) {
             this.position = position;
             this.speed = speed;
-            this.marker = Optional.empty();
             this.isRelative = false;
+            this.marker = null;
         }
 
         public Waypoint(Translation2d position, double speed, boolean isRelative) {
             this.position = position;
             this.speed = speed;
-            this.marker = Optional.empty();
             this.isRelative = isRelative;
+            this.marker = null;
         }
 
         public Waypoint(Translation2d position, double speed, String marker) {
             this.position = position;
             this.speed = speed;
-            this.marker = Optional.of(marker);
+            this.marker = marker;
             this.isRelative = false;
         }
 
         public Waypoint(Translation2d position, double speed, String marker, boolean isRelative) {
             this.position = position;
             this.speed = speed;
-            this.marker = Optional.of(marker);
+            this.marker = marker;
             this.isRelative = isRelative;
         }
     }
@@ -85,8 +85,8 @@ public class Path {
         //The first waypoint is already complete
         //If 1, assume sticking a point before this and this point needs to stay
         if (mWaypoints.size() > 1) {
-            Waypoint first_waypoint = mWaypoints.get(0);
-			first_waypoint.marker.ifPresent(s -> mMarkersCrossed.add(s));
+            Waypoint firstWaypoint = mWaypoints.get(0);
+            if (firstWaypoint.marker != null) mMarkersCrossed.add(firstWaypoint.marker);
             mWaypoints.remove(0);
         }
     }
@@ -99,33 +99,33 @@ public class Path {
         double rv = 0.0;
         for (Iterator<PathSegment> it = mSegments.iterator(); it.hasNext(); ) {
             PathSegment segment = it.next();
-            PathSegment.ClosestPointReport closest_point_report = segment.getClosestPoint(position);
-            if (closest_point_report.index >= kSegmentCompletePercentage) {
+            PathSegment.ClosestPointReport closestPointReport = segment.getClosestPoint(position);
+            if (closestPointReport.index >= kSegmentCompletePercentage) {
                 it.remove();
                 if (mWaypoints.size() > 0) {
                     Waypoint waypoint = mWaypoints.get(0);
-					waypoint.marker.ifPresent(s -> mMarkersCrossed.add(s));
+                    if (waypoint.marker != null) mMarkersCrossed.add(waypoint.marker);
                     mWaypoints.remove(0);
                 }
             } else {
-                if (closest_point_report.index > 0.0) {
+                if (closestPointReport.index > 0.0) {
                     //Can shorten this segment
-                    segment.updateStart(closest_point_report.closest_point);
+                    segment.updateStart(closestPointReport.closestPoint);
                 }
                 //We are done
-                rv = closest_point_report.distance;
+                rv = closestPointReport.distance;
                 //...unless the next segment is closer now
                 if (it.hasNext()) {
                     PathSegment next = it.next();
-                    PathSegment.ClosestPointReport next_closest_point_report = next.getClosestPoint(position);
-                    if (next_closest_point_report.index > 0 && next_closest_point_report.index < kSegmentCompletePercentage
-                            && next_closest_point_report.distance < rv) {
-                        next.updateStart(next_closest_point_report.closest_point);
-                        rv = next_closest_point_report.distance;
+                    PathSegment.ClosestPointReport nextClosestPointReport = next.getClosestPoint(position);
+                    if (nextClosestPointReport.index > 0 && nextClosestPointReport.index < kSegmentCompletePercentage
+                            && nextClosestPointReport.distance < rv) {
+                        next.updateStart(nextClosestPointReport.closestPoint);
+                        rv = nextClosestPointReport.distance;
                         mSegments.remove(0);
                         if (mWaypoints.size() > 0) {
                             Waypoint waypoint = mWaypoints.get(0);
-							waypoint.marker.ifPresent(s -> mMarkersCrossed.add(s));
+                            if (waypoint.marker != null) mMarkersCrossed.add(waypoint.marker);
                             mWaypoints.remove(0);
                         }
                     }
@@ -263,38 +263,38 @@ public class Path {
     /**
      * The robot's current position
      *
-     * @param lookahead_distance, A specified distance to predict a future waypoint
+     * @param lookAheadDistance, A specified distance to predict a future waypoint
      * @return A segment of the robot's predicted motion with start/end points and speed.
      */
-    public PathSegment.Sample getLookaheadPoint(Translation2d position, double lookahead_distance) {
+    public PathSegment.Sample getLookaheadPoint(Translation2d position, double lookAheadDistance) {
         if (mSegments.size() == 0) {
             return new PathSegment.Sample(new Translation2d(), 0);
         }
 
         //Check the distances to the start and end of each segment. As soon as
-        //we find a point > lookahead_distance away, we know the right point
+        //we find a point > lookAheadDistance away, we know the right point
         //lies somewhere on that segment.
-        Translation2d position_inverse = position.inverse();
-        if (position_inverse.translateBy(mSegments.get(0).getStart()).norm() >= lookahead_distance) {
+        Translation2d positionInverse = position.inverse();
+        if (positionInverse.translateBy(mSegments.get(0).getStart()).norm() >= lookAheadDistance) {
             //Special case: Before the first point, so just return the first
             //point.
             return new PathSegment.Sample(mSegments.get(0).getStart(), mSegments.get(0).getSpeed());
         }
 		for (PathSegment segment : mSegments) {
-			double distance = position_inverse.translateBy(segment.getEnd()).norm();
-			if (distance >= lookahead_distance) {
+			double distance = positionInverse.translateBy(segment.getEnd()).norm();
+			if (distance >= lookAheadDistance) {
 				//This segment contains the lookahead point
-				Optional<Translation2d> intersection_point = getFirstCircleSegmentIntersection(segment, position, lookahead_distance);
-				if (intersection_point.isPresent()) {
-					return new PathSegment.Sample(intersection_point.get(), segment.getSpeed());
+				Optional<Translation2d> intersectionPoint = getFirstCircleSegmentIntersection(segment, position, lookAheadDistance);
+				if (intersectionPoint.isPresent()) {
+					return new PathSegment.Sample(intersectionPoint.get(), segment.getSpeed());
 				}
 			}
 		}
         //Special case: After the last point, so extrapolate forward.
-        PathSegment last_segment = mSegments.get(mSegments.size() - 1);
-        PathSegment new_last_segment = new PathSegment(last_segment.getStart(), last_segment.interpolate(10000), last_segment.getSpeed());
-        Optional<Translation2d> intersection_point = getFirstCircleSegmentIntersection(new_last_segment, position, lookahead_distance);
-		return intersection_point.map(translation2d -> new PathSegment.Sample(translation2d, last_segment.getSpeed())).orElseGet(() -> new PathSegment.Sample(last_segment.getEnd(), last_segment.getSpeed()));
+        PathSegment lastSegment = mSegments.get(mSegments.size() - 1);
+        PathSegment newLastSegment = new PathSegment(lastSegment.getStart(), lastSegment.interpolate(10000), lastSegment.getSpeed());
+        Optional<Translation2d> intersectionPoint = getFirstCircleSegmentIntersection(newLastSegment, position, lookAheadDistance);
+		return intersectionPoint.map(translation2d -> new PathSegment.Sample(translation2d, lastSegment.getSpeed())).orElseGet(() -> new PathSegment.Sample(lastSegment.getEnd(), lastSegment.getSpeed()));
     }
 
     private static Optional<Translation2d> getFirstCircleSegmentIntersection(PathSegment segment, Translation2d center, double radius) {
@@ -304,33 +304,33 @@ public class Path {
         double y2 = segment.getEnd().getY() - center.getY();
         double dx = x2 - x1;
         double dy = y2 - y1;
-        double dr_squared = dx * dx + dy * dy;
+        double drSquared = dx * dx + dy * dy;
         double det = x1 * y2 - x2 * y1;
 
-        double discriminant = dr_squared * radius * radius - det * det;
+        double discriminant = drSquared * radius * radius - det * det;
         if (discriminant < 0) {
             //No intersection
             return Optional.empty();
         }
 
-        double sqrt_discriminant = Math.sqrt(discriminant);
-        Translation2d pos_solution = new Translation2d((det * dy + (dy < 0 ? -1 : 1) * dx * sqrt_discriminant) / dr_squared + center.getX(),
-                (-det * dx + Math.abs(dy) * sqrt_discriminant) / dr_squared + center.getY());
-        Translation2d neg_solution = new Translation2d((det * dy - (dy < 0 ? -1 : 1) * dx * sqrt_discriminant) / dr_squared + center.getX(),
-                (-det * dx - Math.abs(dy) * sqrt_discriminant) / dr_squared + center.getY());
+        double sqrtDiscriminant = Math.sqrt(discriminant);
+        Translation2d positiveSolution = new Translation2d((det * dy + (dy < 0 ? -1 : 1) * dx * sqrtDiscriminant) / drSquared + center.getX(),
+                (-det * dx + Math.abs(dy) * sqrtDiscriminant) / drSquared + center.getY());
+        Translation2d negativeSolution = new Translation2d((det * dy - (dy < 0 ? -1 : 1) * dx * sqrtDiscriminant) / drSquared + center.getX(),
+                (-det * dx - Math.abs(dy) * sqrtDiscriminant) / drSquared + center.getY());
 
         //Choose the one between start and end that is closest to start
-        double pos_dot_product = segment.dotProduct(pos_solution);
-        double neg_dot_product = segment.dotProduct(neg_solution);
-        if (pos_dot_product < 0 && neg_dot_product >= 0) {
-            return Optional.of(neg_solution);
-        } else if (pos_dot_product >= 0 && neg_dot_product < 0) {
-            return Optional.of(pos_solution);
+        double positionDotProduct = segment.dotProduct(positiveSolution);
+        double negativeDotProduct = segment.dotProduct(negativeSolution);
+        if (positionDotProduct < 0 && negativeDotProduct >= 0) {
+            return Optional.of(negativeSolution);
+        } else if (positionDotProduct >= 0 && negativeDotProduct < 0) {
+            return Optional.of(positiveSolution);
         } else {
-            if (Math.abs(pos_dot_product) <= Math.abs(neg_dot_product)) {
-                return Optional.of(pos_solution);
+            if (Math.abs(positionDotProduct) <= Math.abs(negativeDotProduct)) {
+                return Optional.of(positiveSolution);
             } else {
-                return Optional.of(neg_solution);
+                return Optional.of(negativeSolution);
             }
         }
     }

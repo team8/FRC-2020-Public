@@ -1,14 +1,14 @@
 package com.palyrobotics.frc2019.subsystems.controllers;
 
-import com.palyrobotics.frc2019.config.Constants.DrivetrainConstants;
-import com.palyrobotics.frc2019.config.Gains;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.constants.DrivetrainConstants;
+import com.palyrobotics.frc2019.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2019.subsystems.Drive;
-import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.OnboardControlType;
-import com.palyrobotics.frc2019.subsystems.controllers.OnboardDriveController.TrajectorySegment;
+import com.palyrobotics.frc2019.subsystems.controllers.OnBoardDriveController.OnBoardControlType;
+import com.palyrobotics.frc2019.subsystems.controllers.OnBoardDriveController.TrajectorySegment;
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.SparkDriveSignal;
-import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2019.util.config.Configs;
 import com.palyrobotics.frc2019.util.trajectory.*;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -35,18 +35,18 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
     private boolean mReversed;
     private double mPathCompletionTolerance;
 
-    private OnboardDriveController mOnboardController;
+    private OnBoardDriveController mOnBoardController;
 
-    public AdaptivePurePursuitController(double fixed_lookahead, double max_accel, double nominal_dt, Path path, boolean reversed,
-                                         double path_completion_tolerance) {
-        mFixedLookahead = fixed_lookahead;
-        mMaxAcceleration = max_accel;
+    public AdaptivePurePursuitController(double fixedLookAhead, double maxAcceleration, double nominalDt, Path path, boolean reversed,
+                                         double pathCompletionTolerance) {
+        mFixedLookahead = fixedLookAhead;
+        mMaxAcceleration = maxAcceleration;
         mPath = path;
-        mDt = nominal_dt;
+        mDt = nominalDt;
         mLastCommand = null;
         mReversed = reversed;
-        mPathCompletionTolerance = path_completion_tolerance;
-        mOnboardController = new OnboardDriveController(OnboardControlType.kVelArbFF, Gains.vidarTrajectory);
+        mPathCompletionTolerance = pathCompletionTolerance;
+        mOnBoardController = new OnBoardDriveController(OnBoardControlType.kVelocityWithArbitraryDemand, Configs.get(DriveConfig.class).trajectoryGains);
     }
 
     /**
@@ -59,18 +59,18 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
     public SparkDriveSignal update(RobotState state) {
 
         //Get estimated robot position
-        RigidTransform2d robot_pose = state.getLatestFieldToVehicle().getValue();
+        RigidTransform2d robotPose = state.getLatestFieldToVehicle().getValue();
 
         //Reverse the rotation if the path is reversed
         if (mReversed) {
-            robot_pose = new RigidTransform2d(robot_pose.getTranslation(), robot_pose.getRotation().rotateBy(Rotation2d.fromRadians(Math.PI)));
+            robotPose = new RigidTransform2d(robotPose.getTranslation(), robotPose.getRotation().rotateBy(Rotation2d.fromRadians(Math.PI)));
         }
 
-        double distance_from_path = mPath.update(robot_pose.getTranslation());
-        PathSegment.Sample lookahead_point = mPath.getLookaheadPoint(robot_pose.getTranslation(), distance_from_path + mFixedLookahead);
-        Optional<Circle> circle = joinPath(robot_pose, lookahead_point.translation);
+        double distanceFromPath = mPath.update(robotPose.getTranslation());
+        PathSegment.Sample lookAheadPoint = mPath.getLookaheadPoint(robotPose.getTranslation(), distanceFromPath + mFixedLookahead);
+        Optional<Circle> circle = joinPath(robotPose, lookAheadPoint.translation);
 
-        double speed = lookahead_point.speed;
+        double speed = lookAheadPoint.speed;
         if (mReversed) {
             speed *= -1;
         }
@@ -79,37 +79,37 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
         double now = Timer.getFPGATimestamp();
         double dt = now - mLastTime;
         if (mLastDriveVelocity == null || mLastCommand == null) {
-            mLastDriveVelocity = new Kinematics.DriveVelocity(state.drivePose.leftEncVelocity, state.drivePose.rightEncVelocity);
+            mLastDriveVelocity = new Kinematics.DriveVelocity(state.drivePose.leftEncoderVelocity, state.drivePose.rightEncoderVelocity);
             mLastCommand = Kinematics.forwardKinematics(mLastDriveVelocity);
             dt = mDt;
         }
 
         //Ensure we don't accelerate too fast from the previous command
-        double accel = (speed - mLastCommand.dx) / dt;
-        if (accel < -mMaxAcceleration) {
-            speed = mLastCommand.dx - mMaxAcceleration * dt;
-        } else if (accel > mMaxAcceleration) {
-            speed = mLastCommand.dx + mMaxAcceleration * dt;
+        double acceleration = (speed - mLastCommand.dX) / dt;
+        if (acceleration < -mMaxAcceleration) {
+            speed = mLastCommand.dX - mMaxAcceleration * dt;
+        } else if (acceleration > mMaxAcceleration) {
+            speed = mLastCommand.dX + mMaxAcceleration * dt;
         }
 
         //Ensure we slow down in time to stop
         //vf^2 = v^2 + 2*a*d
         //0 = v^2 + 2*a*d
-        double remaining_distance = mPath.getRemainingLength();
-        double max_allowed_speed = Math.sqrt(2 * mMaxAcceleration * remaining_distance);
+        double remainingDistance = mPath.getRemainingLength();
+        double maxAllowedSpeed = Math.sqrt(2 * mMaxAcceleration * remainingDistance);
 
         //Ensure we don't go faster than the maximum path following speed
-        max_allowed_speed = Math.min(max_allowed_speed, DrivetrainConstants.kPathFollowingMaxVel);
+        maxAllowedSpeed = Math.min(maxAllowedSpeed, DrivetrainConstants.kPathFollowingMaxVel);
 
         //Bound speed by constraints
-        if (Math.abs(speed) > max_allowed_speed) {
-            speed = max_allowed_speed * Math.signum(speed);
+        if (Math.abs(speed) > maxAllowedSpeed) {
+            speed = maxAllowedSpeed * Math.signum(speed);
         }
 
         //Obtain command (linear / angular velocity)
         RigidTransform2d.Delta command;
         if (circle.isPresent()) {
-            command = new RigidTransform2d.Delta(speed, 0, (circle.get().turn_right ? -1 : 1) * Math.abs(speed) / circle.get().radius);
+            command = new RigidTransform2d.Delta(speed, 0, (circle.get().turnRight ? -1 : 1) * Math.abs(speed) / circle.get().radius);
         } else {
             command = new RigidTransform2d.Delta(speed, 0, 0);
         }
@@ -118,18 +118,18 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
         Kinematics.DriveVelocity setPoint = Kinematics.inverseKinematics(command);
 
         //Calculate acceleration of each side based on last setPoint
-        double leftAcc = (setPoint.left - mLastDriveVelocity.left) / dt;
-        double rightAcc = (setPoint.right - mLastDriveVelocity.right) / dt;
+        double leftAcceleration = (setPoint.left - mLastDriveVelocity.left) / dt;
+        double rightAcceleration = (setPoint.right - mLastDriveVelocity.right) / dt;
 
-        CSVWriter.addData("lastDriveVelocityLeft", mLastDriveVelocity.left);
-        CSVWriter.addData("lastDriveVelocityRight", mLastDriveVelocity.right);
+//        CSVWriter.addData("lastDriveVelocityLeft", mLastDriveVelocity.left);
+//        CSVWriter.addData("lastDriveVelocityRight", mLastDriveVelocity.right);
 
         //Pass velocity and acceleration set points into onboard controller which
         //Returns a SparkSignal with velocity setPoint and arbitrary feedforward
-        TrajectorySegment left_segment = new TrajectorySegment(setPoint.left, leftAcc, dt);
-        TrajectorySegment right_segment = new TrajectorySegment(setPoint.right, rightAcc, dt);
+        TrajectorySegment leftSegment = new TrajectorySegment(setPoint.left, leftAcceleration, dt);
+        TrajectorySegment rightSegment = new TrajectorySegment(setPoint.right, rightAcceleration, dt);
         try {
-            mOnboardController.updateSetpoint(left_segment, right_segment, this);
+            mOnBoardController.updateSetPoint(leftSegment, rightSegment, this);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -138,7 +138,7 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
         mLastCommand = command;
         mLastDriveVelocity = setPoint;
 
-        return mOnboardController.update(state);
+        return mOnBoardController.update(state);
 
     }
 
@@ -155,56 +155,56 @@ public class AdaptivePurePursuitController implements Drive.DriveController {
     public static class Circle {
         final Translation2d center;
         final double radius;
-        final boolean turn_right;
+        final boolean turnRight;
 
-        Circle(Translation2d center, double radius, boolean turn_right) {
+        Circle(Translation2d center, double radius, boolean turnRight) {
             this.center = center;
             this.radius = radius;
-            this.turn_right = turn_right;
+            this.turnRight = turnRight;
         }
     }
 
     /**
      * Connect the current position and lookahead point with a circular arc
      *
-     * @param robot_pose      - the current translation and rotation of the robot
-     * @param lookahead_point - the coordinates of the lookahead point
+     * @param robotPose      - the current translation and rotation of the robot
+     * @param lookAheadPoint - the coordinates of the lookahead point
      * @return - A circular arc representing the path, null if the arc is degenerate
      */
-    private static Optional<Circle> joinPath(RigidTransform2d robot_pose, Translation2d lookahead_point) {
-        double x1 = robot_pose.getTranslation().getX();
-        double y1 = robot_pose.getTranslation().getY();
-        double x2 = lookahead_point.getX();
-        double y2 = lookahead_point.getY();
+    private static Optional<Circle> joinPath(RigidTransform2d robotPose, Translation2d lookAheadPoint) {
+        double x1 = robotPose.getTranslation().getX();
+        double y1 = robotPose.getTranslation().getY();
+        double x2 = lookAheadPoint.getX();
+        double y2 = lookAheadPoint.getY();
 
-        Translation2d pose_to_lookahead = robot_pose.getTranslation().inverse().translateBy(lookahead_point);
-        double cross_product = pose_to_lookahead.getX() * robot_pose.getRotation().sin() - pose_to_lookahead.getY() * robot_pose.getRotation().cos();
-        if (Math.abs(cross_product) < kEpsilon) {
+        Translation2d poseToLookahead = robotPose.getTranslation().inverse().translateBy(lookAheadPoint);
+        double crossProduct = poseToLookahead.getX() * robotPose.getRotation().sin() - poseToLookahead.getY() * robotPose.getRotation().cos();
+        if (Math.abs(crossProduct) < kEpsilon) {
             return Optional.empty();
         }
 
         double dx = x1 - x2;
         double dy = y1 - y2;
-        double my = (cross_product > 0 ? -1 : 1) * robot_pose.getRotation().cos();
-        double mx = (cross_product > 0 ? 1 : -1) * robot_pose.getRotation().sin();
+        double my = (crossProduct > 0 ? -1 : 1) * robotPose.getRotation().cos();
+        double mx = (crossProduct > 0 ? 1 : -1) * robotPose.getRotation().sin();
 
-        double cross_term = mx * dx + my * dy;
+        double crossTerm = mx * dx + my * dy;
 
-        if (Math.abs(cross_term) < kEpsilon) {
+        if (Math.abs(crossTerm) < kEpsilon) {
             //Points are collinear
             return Optional.empty();
         }
 
         return Optional.of(new Circle(
-                new Translation2d((mx * (x1 * x1 - x2 * x2 - dy * dy) + 2 * my * x1 * dy) / (2 * cross_term),
-                        (-my * (-y1 * y1 + y2 * y2 + dx * dx) + 2 * mx * y1 * dx) / (2 * cross_term)),
-                .5 * Math.abs((dx * dx + dy * dy) / cross_term), cross_product > 0));
+                new Translation2d((mx * (x1 * x1 - x2 * x2 - dy * dy) + 2 * my * x1 * dy) / (2 * crossTerm),
+                        (-my * (-y1 * y1 + y2 * y2 + dx * dx) + 2 * mx * y1 * dx) / (2 * crossTerm)),
+                .5 * Math.abs((dx * dx + dy * dy) / crossTerm), crossProduct > 0));
     }
 
     //HOPING THIS METHOD NEVER GETS CALLED
     @Override
     public Pose getSetPoint() {
-        return new Pose(0, 0, 0, 0, 0, 0, 0, 0);
+        return new Pose();
     }
 
     // Really only used for checking point injection, ignore otherwise

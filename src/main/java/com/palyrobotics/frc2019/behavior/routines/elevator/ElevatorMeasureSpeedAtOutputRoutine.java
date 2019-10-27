@@ -9,15 +9,17 @@ import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ElevatorMeasureSpeedAtOutputRoutine extends Routine {
 
-    private final double mPercentOutput, mFF, mEncoderCutoff;
+    private final double mPercentOutput, mArbitraryPercentOutput, mEncoderCutoff;
     private ArrayList<Double> mVelocityMeasurements = new ArrayList<>(200);
 
-    public ElevatorMeasureSpeedAtOutputRoutine(double percentOutput, double ff, double encoderCutoff) {
+    public ElevatorMeasureSpeedAtOutputRoutine(double percentOutput, double arbitraryPercentOutput, double encoderCutoff) {
         mPercentOutput = percentOutput;
-        mFF = ff;
+        mArbitraryPercentOutput = arbitraryPercentOutput;
         mEncoderCutoff = encoderCutoff;
     }
 
@@ -29,7 +31,7 @@ public class ElevatorMeasureSpeedAtOutputRoutine extends Routine {
     @Override
     public Commands update(Commands commands) {
         commands.wantedElevatorState = Elevator.ElevatorState.PERCENT_OUTPUT;
-        commands.customElevatorPercentOutput = mPercentOutput + mFF;
+        commands.customElevatorPercentOutput = mPercentOutput + mArbitraryPercentOutput;
         mVelocityMeasurements.add(RobotState.getInstance().elevatorVelocity);
         return commands;
     }
@@ -39,19 +41,23 @@ public class ElevatorMeasureSpeedAtOutputRoutine extends Routine {
         commands.wantedElevatorState = Elevator.ElevatorState.IDLE;
         Collections.sort(mVelocityMeasurements);
         double medianVelocity = mVelocityMeasurements.get(mVelocityMeasurements.size() / 2);
-        System.out.printf("At Percent Output %f Median velocity inch/s: %f (with feed-forward %f)%n", mPercentOutput, medianVelocity, mFF);
+        String output = String.format("At Percent Output %f Median velocity inch/s: %f (with feed-forward %f)%n", mPercentOutput, medianVelocity, mArbitraryPercentOutput);
+        String separator = Stream.generate(() -> "/").limit(output.length()).collect(Collectors.joining());
+        System.out.println(separator);
+        System.out.println(output);
+        System.out.println(separator);
         CSVWriter.addData("measureVelInchPerSec", mPercentOutput, medianVelocity);
         return commands;
     }
 
     @Override
-    public boolean finished() {
+    public boolean isFinished() {
         return RobotState.getInstance().elevatorPosition > mEncoderCutoff;
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[]{elevator};
+        return new Subsystem[]{mElevator};
     }
 
     @Override

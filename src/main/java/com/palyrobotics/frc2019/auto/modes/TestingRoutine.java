@@ -6,8 +6,8 @@ import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.CascadingGyroEncoderTurnAngleRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DriveSensorResetRoutine;
-import com.palyrobotics.frc2019.config.Constants.PhysicalConstants;
 import com.palyrobotics.frc2019.config.RobotState;
+import com.palyrobotics.frc2019.config.constants.PhysicalConstants;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -21,20 +21,20 @@ public class TestingRoutine extends AutoModeBase {
     public static int kRunSpeed = 110;
     public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches * 0.6;
     public static double kOffsetY = PhysicalConstants.kLevel3Width * .5 + PhysicalConstants.kLevel2Width * .5;
-    public static double kCargoShipRightFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
-    public static double kCargoShipRightFrontY = -(mDistances.kFieldWidth * .5 - (mDistances.kCargoRightY + mDistances.kCargoOffsetY));
+    public static double kCargoShipRightFrontX = sDistances.level1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
+    public static double kCargoShipRightFrontY = -(sDistances.fieldWidth * .5 - (sDistances.cargoRightY + sDistances.cargoOffsetY));
     public static double kHabLineX = PhysicalConstants.kUpperPlatformLength + PhysicalConstants.kLowerPlatformLength;
     public static double kRightLoadingStationX = 0;
-    public static double kRightLoadingStationY = -(mDistances.kFieldWidth * .5 - mDistances.kRightLoadingY);
+    public static double kRightLoadingStationY = -(sDistances.fieldWidth * .5 - sDistances.rightLoadingY);
     public RobotState robotState = RobotState.getInstance();
 
     @Override
     public String toString() {
-        return mAlliance + this.getClass().toString();
+        return sAlliance + this.getClass().toString();
     }
 
     @Override
-    public void prestart() {
+    public void preStart() {
 
     }
 
@@ -93,7 +93,7 @@ public class TestingRoutine extends AutoModeBase {
 //        //get fingers ready for hatch intake
 //        ArrayList<Routine> getIntakeReady = new ArrayList<>();
 //        getIntakeReady.add(new PusherOutRoutine());
-//        getIntakeReady.add(new FingersCloseRoutine());
+//        getIntakeReady.add(new FingersRoutine(Fingers.FingersState.CLOSE));
 //
 //        //drive and ready fingers at the same time
 //        routines.add(new ParallelRoutine(new DrivePathRoutine(new Path(ForwardCargoShipToLoadingStation), false),
@@ -106,13 +106,13 @@ public class TestingRoutine extends AutoModeBase {
 //
 //        //drive slowly forward and intake hatch
 //        routines.add(new SequentialRoutine(new DrivePathRoutine(new Path(goForwardABit), false),
-//                new FingersOpenRoutine(), new PusherInRoutine()));
+//                new FingersRoutine(Fingers.FingersState.OPEN), new PusherInRoutine()));
 
         return new SequentialRoutine(routines);
     }
 
     @Override
     public String getKey() {
-        return mAlliance.toString();
+        return sAlliance.toString();
     }
 }

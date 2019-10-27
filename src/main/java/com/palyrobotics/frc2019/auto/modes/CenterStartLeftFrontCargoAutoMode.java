@@ -7,8 +7,8 @@ import com.palyrobotics.frc2019.behavior.SequentialRoutine;
 import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
 import com.palyrobotics.frc2019.behavior.routines.fingers.FingersCycleRoutine;
-import com.palyrobotics.frc2019.config.Constants.OtherConstants;
-import com.palyrobotics.frc2019.config.Constants.PhysicalConstants;
+import com.palyrobotics.frc2019.config.constants.OtherConstants;
+import com.palyrobotics.frc2019.config.constants.PhysicalConstants;
 import com.palyrobotics.frc2019.util.trajectory.Path;
 import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
 import com.palyrobotics.frc2019.util.trajectory.Translation2d;
@@ -24,17 +24,17 @@ public class CenterStartLeftFrontCargoAutoMode extends AutoModeBase {
 
     public static double kOffsetX = -PhysicalConstants.kLowerPlatformLength - PhysicalConstants.kRobotLengthInches * 0.6;
     public static double kOffsetY = 0; //starts at center so the offset is 0
-    public static double kCargoShipLeftFrontX = mDistances.kLevel1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
-    public static double kCargoShipLeftFrontY = mDistances.kFieldWidth * .5 - (mDistances.kCargoLeftY + mDistances.kCargoOffsetY);
+    public static double kCargoShipLeftFrontX = sDistances.level1CargoX + PhysicalConstants.kLowerPlatformLength + PhysicalConstants.kUpperPlatformLength;
+    public static double kCargoShipLeftFrontY = sDistances.fieldWidth * .5 - (sDistances.cargoLeftY + sDistances.cargoOffsetY);
     public static double kHabLineX = PhysicalConstants.kUpperPlatformLength + PhysicalConstants.kLowerPlatformLength;
 
     @Override
     public String toString() {
-        return mAlliance + this.getClass().toString();
+        return sAlliance + this.getClass().toString();
     }
 
     @Override
-    public void prestart() {
+    public void preStart() {
 
     }
 
@@ -47,7 +47,7 @@ public class CenterStartLeftFrontCargoAutoMode extends AutoModeBase {
         ArrayList<Routine> routines = new ArrayList<>();
 
         //rezero
-        routines.add(new RezeroSubAutoMode().Rezero(false));
+        routines.add(new ReZeroSubAutoMode().ReZero(false));
 
         List<Path.Waypoint> StartToCargoShip = new ArrayList<>();
         StartToCargoShip.add(new Waypoint(new Translation2d(kHabLineX + PhysicalConstants.kRobotLengthInches + kOffsetX,
@@ -69,7 +69,7 @@ public class CenterStartLeftFrontCargoAutoMode extends AutoModeBase {
 
     @Override
     public String getKey() {
-        return mAlliance.toString();
+        return sAlliance.toString();
     }
 }
 
