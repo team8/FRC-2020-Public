@@ -87,7 +87,9 @@ public class OperatorInterface {
         commands.isQuickTurn = mTurnStick.getTrigger();
         commands.isBraking = mDriveStick.getTrigger();
 
-        if (mTurnStick.getRawButton(3)) {
+//        boolean wantsAssistedVision = mTurnStick.getRawButton(3) || mDriveStick.getRawButton(3);
+        boolean wantsAssistedVision = mTurnStick.getRawButton(3);
+        if (wantsAssistedVision) {
             mVisionStartTimeSeconds = Timer.getFPGATimestamp();
             // Limelight vision tracking on
             setVision(true);
@@ -108,7 +110,7 @@ public class OperatorInterface {
             Drive.getInstance().setVisionClosedDriveController();
             commands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
         } else {
-            if (!mTurnStick.getRawButton(3)) {
+            if (!wantsAssistedVision) {
                 RobotState.getInstance().atVisionTargetThreshold = false;
             }
             if (Timer.getFPGATimestamp() - mVisionStartTimeSeconds > OtherConstants.kVisionLEDTimeoutSeconds) {
@@ -218,7 +220,9 @@ public class OperatorInterface {
         }
 
         /* Pneumatic hatch pusher control */
-        if (mOperatorXboxController.getRightTrigger() && commands.wantedIntakeState != IntakeMacroState.EXPELLING_CARGO) {
+//        boolean wantsHatchFingers = mOperatorXboxController.getRightTrigger() || mDriveStick.getTrigger();
+        boolean wantsHatchFingers = mOperatorXboxController.getRightTrigger();
+        if (wantsHatchFingers && commands.wantedIntakeState != IntakeMacroState.EXPELLING_CARGO) {
             commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
             commands.wantedFingersExpelState = Fingers.PushingState.EXPELLING;
         } else {

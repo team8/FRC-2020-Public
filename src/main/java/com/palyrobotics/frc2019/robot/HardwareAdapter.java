@@ -11,6 +11,8 @@ import com.palyrobotics.frc2019.util.control.LazySparkMax;
 import com.palyrobotics.frc2019.util.input.Joystick;
 import com.palyrobotics.frc2019.util.input.XboxController;
 import com.revrobotics.CANError;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.*;
 
 import java.util.List;
@@ -230,10 +232,12 @@ public class HardwareAdapter {
 
         final Compressor compressor;
         final PowerDistributionPanel pdp;
+        final UsbCamera fisheyeCam;
 
         MiscellaneousHardware() {
             compressor = new Compressor();
             pdp = new PowerDistributionPanel();
+            fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
         }
     }
 

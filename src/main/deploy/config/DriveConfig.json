@@ -13,10 +13,10 @@
         "p": 0.01,
         "d": 0.05
     },
-    "throttleAccelerationLimit": 0.03,
+    "throttleAccelerationLimit": 0.04,
     "wheelAccelerationLimit": 0.04,
-    "throttleAccelerationThreshold": 0.4,
-    "wheelAccelerationThreshold": 0.5,
+    "throttleAccelerationThreshold": 0.3,
+    "wheelAccelerationThreshold": 0.3,
     "quickStopWeight": 0.125,
     "quickTurnScalar": 0.55,
     "quickStopDeadBand": 0.5,
@@ -28,10 +28,12 @@
     "lowNegativeInertiaTurnScalar": 2.5,
     "wheelNonLinearity": 0.5,
     "controllerRampRate": 0.1,
-    "stallCurrentLimit": 40,
-    "freeCurrentLimit": 40,
+    "stallCurrentLimit": 48,
+    "freeCurrentLimit": 48,
     "freeRpmLimit": 0,
     "nonlinearPasses": 3,
     "brownOutRecoverySeconds": 0.5,
-    "brownOutInitialNerfMultiplier": 0.5
+    "brownOutInitialNerfMultiplier": 0.5,
+    "initialLock": 0.7,
+    "velocityUnlock": 25.0
 }

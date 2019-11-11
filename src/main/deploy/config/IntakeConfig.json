@@ -14,7 +14,7 @@
     "intakeAngle": 23.5,
     "holdAngle": 59.0,
     "handOffAngle": 114.5,
-    "rocketExpelAngle": 84.0,
+    "rocketExpelAngle": 75.0,
     "holdTolerance": 14.5,
     "acceptableAngularError": 3.0,
     "angularVelocityError": 10.0,
@@ -39,5 +39,6 @@
         "iZone": 0,
         "acceleration": 20000,
         "velocity": 8000
-    }
+    },
+    "useBrokenPotFix": true
 }

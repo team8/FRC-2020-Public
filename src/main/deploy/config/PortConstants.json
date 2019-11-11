@@ -27,10 +27,10 @@
     "vidarOpenCloseSolenoidReverseID": 5,
     "vidarExpelSolenoidForwardID": 3,
     "vidarExpelSolenoidReverseID": 4,
-    "vidarIntakeLeftUltrasonicPing": 0,
-    "vidarIntakeLeftUltrasonicEcho": 1,
-    "vidarIntakeRightUltrasonicPing": 2,
-    "vidarIntakeRightUltrasonicEcho": 3,
-    "vidarPusherUltrasonicPing": 8,
-    "vidarPusherUltrasonicEcho": 9
+    "vidarIntakeLeftUltrasonicPing": 1,
+    "vidarIntakeLeftUltrasonicEcho": 0,
+    "vidarIntakeRightUltrasonicPing": 3,
+    "vidarIntakeRightUltrasonicEcho": 2,
+    "vidarPusherUltrasonicPing": 5,
+    "vidarPusherUltrasonicEcho": 4
 }

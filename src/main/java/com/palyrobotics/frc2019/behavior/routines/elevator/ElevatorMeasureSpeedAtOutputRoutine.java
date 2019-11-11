@@ -46,7 +46,7 @@ public class ElevatorMeasureSpeedAtOutputRoutine extends Routine {
         System.out.println(separator);
         System.out.println(output);
         System.out.println(separator);
-        CSVWriter.addData("measureVelInchPerSec", mPercentOutput, medianVelocity);
+//        CSVWriter.addData("measureVelInchPerSec", mPercentOutput, medianVelocity);
         return commands;
     }
 

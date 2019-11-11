@@ -7,7 +7,6 @@
         "fingers",
         "pusher",
         "intake",
-        "elevator",
         "shooter"
     ],
     "coastDriveIfDisabled": false,

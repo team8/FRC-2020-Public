@@ -39,6 +39,8 @@ public class RobotState {
 
     public boolean isQuickTurning;
 
+    public double leftDriveVelocity, rightDriveVelocity;
+
     // Intake
     public boolean hasIntakeCargo;
     public double

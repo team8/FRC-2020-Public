@@ -88,7 +88,7 @@ public class Pusher extends Subsystem {
                 break;
         }
 
-        LiveGraph.getInstance().add("pusher", robotState.pusherPosition);
+//        LiveGraph.getInstance().add("pusher", robotState.pusherPosition);
 
 //        CSVWriter.addData("pusherAppliedOut", robotState.pusherAppliedOutput);
 //        CSVWriter.addData("pusherPos", robotState.pusherPosition);

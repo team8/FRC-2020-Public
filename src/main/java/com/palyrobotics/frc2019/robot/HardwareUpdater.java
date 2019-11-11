@@ -16,6 +16,7 @@ import com.palyrobotics.frc2019.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.config.Configs;
 import com.palyrobotics.frc2019.util.control.LazySparkMax;
+import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -23,6 +24,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.ControlType;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CircularBuffer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
@@ -59,6 +61,7 @@ class HardwareUpdater {
         configureIntakeHardware();
         configureShooterHardware();
         configurePusherHardware();
+        configureMiscellaneousHardware();
         HardwareAdapter.getInstance().getIntake().calibrateIntakeEncoderWithPotentiometer();
     }
 
@@ -213,6 +216,11 @@ class HardwareUpdater {
         pusherSpark.setIdleMode(IdleMode.kBrake);
     }
 
+    private void configureMiscellaneousHardware() {
+        UsbCamera fisheyeCam = HardwareAdapter.getInstance().getMiscellaneousHardware().fisheyeCam;
+        fisheyeCam.setResolution(640,360); // Original is 1920 x 1080
+    }
+
     private void startUltrasonics() {
         Ultrasonic
                 intakeUltrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft,
@@ -242,6 +250,9 @@ class HardwareUpdater {
 
         HardwareAdapter.DrivetrainHardware drivetrain = HardwareAdapter.getInstance().getDrivetrain();
         LazySparkMax elevatorSpark = HardwareAdapter.getInstance().getElevator().elevatorMasterSpark;
+
+        robotState.leftDriveVelocity = drivetrain.leftMasterSpark.getEncoder().getVelocity();
+        robotState.rightDriveVelocity = drivetrain.rightMasterSpark.getEncoder().getVelocity();
 
         CANEncoder elevatorEncoder = elevatorSpark.getEncoder();
         robotState.elevatorPosition = elevatorEncoder.getPosition();
@@ -367,6 +378,10 @@ class HardwareUpdater {
     private void updateDrivetrain() {
         updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark, mDrive.getDriveSignal().leftOutput);
         updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark, mDrive.getDriveSignal().rightOutput);
+//        CSVWriter.addData("leftActualPower", HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark.getAppliedOutput());
+//        CSVWriter.addData("rightActualPower", HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark.getAppliedOutput());
+//        System.out.println("HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark = " + HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark.getAppliedOutput());
+//        System.out.println("HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark = " + HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark.getAppliedOutput());
     }
 
     /**

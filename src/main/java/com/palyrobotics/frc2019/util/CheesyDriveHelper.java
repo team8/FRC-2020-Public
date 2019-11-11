@@ -18,44 +18,58 @@ public class CheesyDriveHelper {
             mOldWheel, mPreviousWheelForRamp, mPreviousThrottleForRamp,
             mQuickStopAccumulator, mNegativeInertiaAccumulator,
             mBrownOutTimeSeconds;
-    private final DriveConfig driveConfig = Configs.get(DriveConfig.class);
+    private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
     private SparkDriveSignal mSignal = new SparkDriveSignal();
 
     public SparkDriveSignal cheesyDrive(Commands commands, RobotState robotState) {
+
+        // Quick-turn if right trigger is pressed
+        boolean isQuickTurn = robotState.isQuickTurning = commands.isQuickTurn;
+
         double totalPowerMultiplier;
         if (RobotController.isBrownedOut()) {
-            totalPowerMultiplier = driveConfig.brownOutInitialNerfMultiplier;
+            totalPowerMultiplier = mDriveConfig.brownOutInitialNerfMultiplier;
             mBrownOutTimeSeconds = Timer.getFPGATimestamp();
         } else {
             totalPowerMultiplier = MathUtil.clamp(
-                    driveConfig.brownOutInitialNerfMultiplier
+                    mDriveConfig.brownOutInitialNerfMultiplier
                             + (Timer.getFPGATimestamp() - mBrownOutTimeSeconds)
-                            * (1 / driveConfig.brownOutRecoverySeconds) * (1 - driveConfig.brownOutInitialNerfMultiplier),
-                    driveConfig.brownOutInitialNerfMultiplier, 1.0
+                            * (1 / mDriveConfig.brownOutRecoverySeconds) * (1 - mDriveConfig.brownOutInitialNerfMultiplier),
+                    mDriveConfig.brownOutInitialNerfMultiplier, 1.0
             );
         }
-
-        CSVWriter.addData("drivePowerMultiplier", totalPowerMultiplier);
-        LiveGraph.getInstance().add("drivePowerMultiplier", totalPowerMultiplier);
+//        CSVWriter.addData("totalPowerMultiplier", totalPowerMultiplier);
 
         double throttle = commands.driveThrottle, wheel = commands.driveWheel;
 
+        boolean underVelocity = Math.abs(robotState.rightDriveVelocity) < mDriveConfig.velocityUnlock &&
+                Math.abs(robotState.leftDriveVelocity) < mDriveConfig.velocityUnlock;
+
+//        CSVWriter.addData("underVelocity", underVelocity);
+//        CSVWriter.addData("leftVelocity", robotState.leftDriveVelocity);
+//        CSVWriter.addData("rightVelocity", robotState.rightDriveVelocity);
+
+        if (Math.abs(throttle) > mDriveConfig.initialLock && underVelocity) {
+            throttle = Math.signum(throttle) * mDriveConfig.initialLock;
+        }
+
+        if (isQuickTurn && Math.abs(wheel) > mDriveConfig.initialLock && underVelocity) {
+            wheel = Math.signum(wheel) * mDriveConfig.initialLock;
+        }
+
         double absoluteThrottle = Math.abs(throttle);
-        if (absoluteThrottle > driveConfig.throttleAccelerationThreshold && absoluteThrottle > Math.abs(mPreviousThrottleForRamp)) {
-            throttle = mPreviousThrottleForRamp + Math.signum(throttle) * driveConfig.throttleAccelerationLimit;
+        if (absoluteThrottle > mDriveConfig.throttleAccelerationThreshold && absoluteThrottle > Math.abs(mPreviousThrottleForRamp)) {
+            throttle = mPreviousThrottleForRamp + Math.signum(throttle) * mDriveConfig.throttleAccelerationLimit;
             absoluteThrottle = Math.abs(throttle);
         }
         mPreviousThrottleForRamp = throttle;
 
         double absoluteWheel = Math.abs(wheel);
-        if (absoluteWheel > driveConfig.wheelAccelerationThreshold && absoluteWheel > Math.abs(mPreviousWheelForRamp)) {
-            wheel = mPreviousWheelForRamp + Math.signum(wheel) * driveConfig.wheelAccelerationLimit;
+        if (isQuickTurn && absoluteWheel > mDriveConfig.wheelAccelerationThreshold && absoluteWheel > Math.abs(mPreviousWheelForRamp)) {
+            wheel = mPreviousWheelForRamp + Math.signum(wheel) * mDriveConfig.wheelAccelerationLimit;
             absoluteWheel = Math.abs(wheel);
         }
         mPreviousWheelForRamp = wheel;
-
-        // Quick-turn if right trigger is pressed
-        boolean isQuickTurn = robotState.isQuickTurning = commands.isQuickTurn;
 
         wheel = MathUtil.handleDeadBand(wheel, DrivetrainConstants.kDeadband);
         throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadband);
@@ -64,20 +78,20 @@ public class CheesyDriveHelper {
         mOldWheel = wheel;
 
         // Map linear wheel input onto a sin wave, three passes
-        for (int i = 0; i < driveConfig.nonlinearPasses; i++)
-            wheel = applyWheelNonLinearPass(wheel, driveConfig.wheelNonLinearity);
+        for (int i = 0; i < mDriveConfig.nonlinearPasses; i++)
+            wheel = applyWheelNonLinearPass(wheel, mDriveConfig.wheelNonLinearity);
 
         // Negative inertia
         double negativeInertiaScalar;
         if (wheel * negativeWheelInertia > 0) {
             // If we are moving away from zero - trying to get more wheel
-            negativeInertiaScalar = driveConfig.lowNegativeInertiaTurnScalar;
+            negativeInertiaScalar = mDriveConfig.lowNegativeInertiaTurnScalar;
         } else {
             // Going back to zero
-            if (absoluteWheel > driveConfig.lowNegativeInertiaThreshold) {
-                negativeInertiaScalar = driveConfig.lowNegativeInertiaFarScalar;
+            if (absoluteWheel > mDriveConfig.lowNegativeInertiaThreshold) {
+                negativeInertiaScalar = mDriveConfig.lowNegativeInertiaFarScalar;
             } else {
-                negativeInertiaScalar = driveConfig.lowNegativeInertiaCloseScalar;
+                negativeInertiaScalar = mDriveConfig.lowNegativeInertiaCloseScalar;
             }
         }
 
@@ -96,15 +110,15 @@ public class CheesyDriveHelper {
         // Quick-turn allows us to turn in place without having to be moving forward or backwards
         double angularPower, overPower;
         if (isQuickTurn) {
-            if (absoluteThrottle < driveConfig.quickStopDeadBand) {
-                double alpha = driveConfig.quickStopWeight;
-                mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator + alpha * MathUtil.clamp01(wheel) * driveConfig.quickStopScalar;
+            if (absoluteThrottle < mDriveConfig.quickStopDeadBand) {
+                double alpha = mDriveConfig.quickStopWeight;
+                mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator + alpha * MathUtil.clamp01(wheel) * mDriveConfig.quickStopScalar;
             }
             overPower = 1.0;
-            angularPower = wheel * driveConfig.quickTurnScalar;
+            angularPower = wheel * mDriveConfig.quickTurnScalar;
         } else {
             overPower = 0.0;
-            angularPower = absoluteThrottle * wheel * driveConfig.turnSensitivity - mQuickStopAccumulator;
+            angularPower = absoluteThrottle * wheel * mDriveConfig.turnSensitivity - mQuickStopAccumulator;
             if (mQuickStopAccumulator > 1.0) {
                 mQuickStopAccumulator -= 1.0;
             } else if (mQuickStopAccumulator < -1.0) {
@@ -134,6 +148,9 @@ public class CheesyDriveHelper {
             leftPower += overPower * (-1.0 - rightPower);
             rightPower = -1.0;
         }
+
+//        CSVWriter.addData("leftWantedPower", leftPower * totalPowerMultiplier);
+//        CSVWriter.addData("rightWantedPower", rightPower * totalPowerMultiplier);
 
         mSignal.leftOutput.setPercentOutput(leftPower * totalPowerMultiplier);
         mSignal.rightOutput.setPercentOutput(rightPower * totalPowerMultiplier);
