@@ -42,6 +42,7 @@ public class DrivetrainConstants {
     public static final double kDriveWheelDiameterInches = 6;
     public static final double kTrackLengthInches = 9.00;
     public static final double kTrackWidthInches = 24.625;
+    public static final double kTrackWidthMeters = 0.625475;
     public static final double kTrackEffectiveDiameter = (kTrackWidthInches * kTrackWidthInches + kTrackLengthInches * kTrackLengthInches) / kTrackWidthInches;
     public static final double kTrackScrubFactor = .9;
     public static final double kPathFollowingLookahead = 39.0;
