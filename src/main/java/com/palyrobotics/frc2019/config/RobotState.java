@@ -2,7 +2,7 @@ package com.palyrobotics.frc2019.config;
 
 import com.palyrobotics.frc2019.util.Pose;
 import com.palyrobotics.frc2019.util.trajectory.*;
-import edu.wpi.first.wpilibj.CircularBuffer;
+import edu.wpi.first.wpiutil.CircularBuffer;
 
 import java.util.List;
 import java.util.Map;

@@ -25,8 +25,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.ControlType;
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CircularBuffer;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpiutil.CircularBuffer;
 
 /**
  * Should only be used in robot package.
