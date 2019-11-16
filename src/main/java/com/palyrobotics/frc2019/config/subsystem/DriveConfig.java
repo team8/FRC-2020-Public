@@ -14,7 +14,7 @@ public class DriveConfig extends AbstractSubsystemConfig {
 
     public TrajectoryGains trajectoryGains;
 
-    public Gains cascadingTurnGains, velocityGains;
+    public Gains cascadingTurnGains, velocityGains, smartVelocityGains;
 
     public double
             throttleAccelerationLimit, wheelAccelerationLimit,

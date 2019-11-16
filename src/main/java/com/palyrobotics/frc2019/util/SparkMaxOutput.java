@@ -19,10 +19,14 @@ public class SparkMaxOutput {
     }
 
     public void setTargetSmartVelocity(double targetVelocity, double arbitraryDemand, SmartGains gains) {
-        mSparkMode = ControlType.kSmartVelocity;
-        mReference = targetVelocity;
+        mSparkMode       = ControlType.kSmartVelocity;
+        mReference       = targetVelocity;
         mArbitraryDemand = arbitraryDemand;
-        mGains = gains;
+        mGains           = gains;
+    }
+
+    public void setTargetSmartVelocity(double targetVelocity, SmartGains gains) {
+        setTargetSmartVelocity(targetVelocity, 0.0, gains);
     }
 
     public void setTargetVelocity(double targetVelocity, Gains gains) {
@@ -30,10 +34,10 @@ public class SparkMaxOutput {
     }
 
     public void setTargetVelocity(double targetVelocity, double arbitraryDemand, Gains gains) {
-        mSparkMode = ControlType.kVelocity;
-        mReference = targetVelocity;
+        mSparkMode       = ControlType.kVelocity;
+        mReference       = targetVelocity;
         mArbitraryDemand = arbitraryDemand;
-        mGains = gains;
+        mGains           = gains;
     }
 
     public void setTargetPosition(double positionSetPoint, Gains gains) {
@@ -41,10 +45,10 @@ public class SparkMaxOutput {
     }
 
     public void setTargetPosition(double positionSetPoint, double arbitraryDemand, Gains gains) {
-        mSparkMode = ControlType.kPosition;
-        mReference = positionSetPoint;
+        mSparkMode       = ControlType.kPosition;
+        mReference       = positionSetPoint;
         mArbitraryDemand = arbitraryDemand;
-        mGains = gains;
+        mGains           = gains;
     }
 
     public void setTargetPositionSmartMotion(double positionSetPoint, SmartGains gains) {
@@ -52,10 +56,10 @@ public class SparkMaxOutput {
     }
 
     public void setTargetPositionSmartMotion(double positionSetPoint, double arbitraryDemand, SmartGains gains) {
-        mSparkMode = ControlType.kSmartMotion;
-        mReference = positionSetPoint;
+        mSparkMode       = ControlType.kSmartMotion;
+        mReference       = positionSetPoint;
         mArbitraryDemand = arbitraryDemand;
-        mGains = gains;
+        mGains           = gains;
     }
 
     public void setIdle() {
@@ -63,17 +67,17 @@ public class SparkMaxOutput {
     }
 
     public void setPercentOutput(double output) {
-        mSparkMode = ControlType.kDutyCycle;
-        mReference = output;
+        mSparkMode       = ControlType.kDutyCycle;
+        mReference       = output;
         mArbitraryDemand = 0.0;
-        mGains = null;
+        mGains           = null;
     }
 
     public void setVoltage(double output) {
-        mSparkMode = ControlType.kVoltage;
-        mReference = output;
+        mSparkMode       = ControlType.kVoltage;
+        mReference       = output;
         mArbitraryDemand = 0.0;
-        mGains = null;
+        mGains           = null;
     }
 
     public Gains getGains() {

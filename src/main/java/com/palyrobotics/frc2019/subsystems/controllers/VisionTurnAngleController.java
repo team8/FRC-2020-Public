@@ -16,8 +16,6 @@ import com.palyrobotics.frc2019.vision.Limelight;
  */
 public class VisionTurnAngleController implements Drive.DriveController {
 
-    private double mPower;
-    private double mTargetHeading;
     private Pose mCachedPose;
     private final SynchronousPID mPidController;
 
@@ -25,7 +23,7 @@ public class VisionTurnAngleController implements Drive.DriveController {
      * @param currentPose Pass in the latest robot state
      */
     public VisionTurnAngleController(Pose currentPose) {
-        this.mCachedPose = currentPose;
+        mCachedPose = currentPose;
         Gains turnGains = new Gains(0.017, 0, 0, 0, 200);
         mPidController = new SynchronousPID(turnGains.p, turnGains.i, turnGains.d, turnGains.iZone);
         mPidController.calculate(Limelight.getInstance().getYawToTarget());
@@ -33,7 +31,7 @@ public class VisionTurnAngleController implements Drive.DriveController {
 
     @Override
     public SparkDriveSignal update(RobotState state) {
-        if (this.onTarget()) {
+        if (onTarget()) {
             return new SparkDriveSignal();
         }
 
