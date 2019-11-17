@@ -3,8 +3,10 @@ package com.palyrobotics.frc2019.config;
 import com.palyrobotics.frc2019.config.constants.DrivetrainConstants;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpiutil.CircularBuffer;
 
 import java.util.List;
@@ -68,6 +70,10 @@ public class RobotState {
 
     public void resetOdometry() {
         m_Odometry.resetPosition(new Pose2d());
+    }
+
+    public void updateOdometry(double headingDegrees, double leftMetersPerSecond, double rightMetersPerSecond) {
+        drivePose = m_Odometry.update(Rotation2d.fromDegrees(headingDegrees), new DifferentialDriveWheelSpeeds(leftMetersPerSecond, rightMetersPerSecond));
     }
 
     public enum GamePeriod {

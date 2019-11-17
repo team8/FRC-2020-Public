@@ -18,6 +18,7 @@ public class DrivetrainConstants {
     public static final double kSmoothingMaxIters = 10000;
     public static final double kTurnVelocityReduction = 2; // A constant for reducing following speed during turns; 1 for slowest turning, 5 for fastest
     public static final double kDriveWheelDiameterInches = 6;
+    public static final double kDriveWheelDiameterMeters = Units.inchesToMeters(kDriveWheelDiameterInches);
     public static final double kTrackLengthInches = 9.00;
     public static final double kTrackWidthInches = 24.625;
     public static final double kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
@@ -48,9 +49,8 @@ public class DrivetrainConstants {
     /**
      * Unit Conversions
      */
-    public static final double kDriveInchesPerRotation = kDriveWheelDiameterInches * Math.PI * (12.0 / 46.0) * (22.0 / 44.0);
-    public static final double kDriveInchesPerDegree = 0.99 * 21.5 / 90.0;
-    public static final double kDriveSpeedUnitConversion = kDriveInchesPerRotation / 60.0;
+    public static final double kDriveMetersPerRotation = kDriveWheelDiameterMeters * Math.PI * (12.0 / 46.0) * (22.0 / 44.0);
+    public static final double kDriveMetersPerSecondPerRpm = kDriveMetersPerRotation / 60.0;
     public static final int kCurrentLimit = 32; // amps
     /**
      * Cheesy Drive Constants Set by DriverProfiles
@@ -75,9 +75,4 @@ public class DrivetrainConstants {
     //Range: (0, 1)
     public static double kAlpha;
     public static double kCyclesUntilStop;
-
-    @Override
-    public String toString() {
-        return String.format("kQuickStopAccumulatorDecreaseRate %skQuickStopAccumulatorDecreaseThreshold %skNegativeInertiaScalar %skAlpha %skDriveInchesPerRotation %skDriveInchesPerDegree%skDriveSpeedUnitConversion %s", kQuickStopAccumulatorDecreaseRate, kQuickStopAccumulatorDecreaseThreshold, kNegativeInertiaScalar, kAlpha, kDriveInchesPerRotation, kDriveInchesPerDegree, kDriveSpeedUnitConversion);
-    }
 }

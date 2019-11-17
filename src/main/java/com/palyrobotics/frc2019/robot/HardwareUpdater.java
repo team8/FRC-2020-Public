@@ -73,8 +73,8 @@ class HardwareUpdater {
             spark.enableVoltageCompensation(11.0);
             spark.setSecondaryCurrentLimit(120);
             CANEncoder encoder = spark.getEncoder();
-            encoder.setPositionConversionFactor(DrivetrainConstants.kDriveInchesPerRotation);
-            encoder.setVelocityConversionFactor(DrivetrainConstants.kDriveSpeedUnitConversion);
+            encoder.setPositionConversionFactor(DrivetrainConstants.kDriveMetersPerRotation);
+            encoder.setVelocityConversionFactor(DrivetrainConstants.kDriveMetersPerSecondPerRpm);
             CANPIDController controller = spark.getPIDController();
             controller.setOutputRange(-DrivetrainConstants.kDriveMaxClosedLoopOutput, DrivetrainConstants.kDriveMaxClosedLoopOutput);
         }
@@ -255,19 +255,6 @@ class HardwareUpdater {
         CANEncoder elevatorEncoder = elevatorSpark.getEncoder();
         robotState.elevatorPosition = elevatorEncoder.getPosition();
         robotState.elevatorVelocity = elevatorEncoder.getVelocity();
-//        robotState.elevatorAppliedOutput = elevatorSpark.getAppliedOutput();
-
-//        PigeonIMU gyro = drivetrain.gyro;
-//        robotState.drivePose.lastHeading = robotState.drivePose.heading;
-//        robotState.drivePose.heading = gyro.getFusedHeading();
-//        robotState.drivePose.headingVelocity = (robotState.drivePose.heading - robotState.drivePose.lastHeading) / DrivetrainConstants.kNormalLoopsDt;
-
-//        robotState.drivePose.lastLeftEncoderPosition = robotState.drivePose.leftEncoderPosition;
-//        robotState.drivePose.leftEncoderPosition = drivetrain.leftMasterSpark.getEncoder().getPosition();
-//        robotState.drivePose.leftEncoderVelocity = drivetrain.leftMasterSpark.getEncoder().getVelocity();
-//        robotState.drivePose.lastRightEncoderPosition = robotState.drivePose.rightEncoderPosition;
-//        robotState.drivePose.rightEncoderPosition = drivetrain.rightMasterSpark.getEncoder().getPosition();
-//        robotState.drivePose.rightEncoderVelocity = drivetrain.rightMasterSpark.getEncoder().getVelocity();
 
 //        double robotVelocity = (robotState.drivePose.leftEncoderVelocity + robotState.drivePose.rightEncoderVelocity) / 2;
 
@@ -289,24 +276,7 @@ class HardwareUpdater {
 
         loopOverrunDebugger.addPoint("Basic");
 
-//        double time = Timer.getFPGATimestamp();
-//
-//        Rotation2d
-//                gyroAngle = Rotation2d.fromDegrees(robotState.drivePose.heading),
-//                gyroVelocity = Rotation2d.fromDegrees(robotState.drivePose.headingVelocity);
-//        RigidTransform2d odometry = robotState.
-//        generateOdometryFromSensors(
-//                robotState.drivePose.leftEncoderPosition - robotState.drivePose.lastLeftEncoderPosition,
-//                robotState.drivePose.rightEncoderPosition - robotState.drivePose.lastRightEncoderPosition,
-//                gyroAngle
-//        );
-//        RigidTransform2d.Delta velocity = Kinematics.forwardKinematics(
-//                robotState.drivePose.leftEncoderVelocity,
-//                robotState.drivePose.rightEncoderVelocity,
-//                gyroVelocity.getRadians()
-//        );
-//
-//        robotState.addObservations(time, odometry, velocity);
+        robotState.updateOdometry();
 
         loopOverrunDebugger.addPoint("Odometry");
 
