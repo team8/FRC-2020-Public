@@ -28,4 +28,5 @@ public class DriveConfig extends AbstractSubsystemConfig {
     public int
             stallCurrentLimit, freeCurrentLimit, freeRpmLimit,
             nonlinearPasses;
+    public double maxPathVelocityMetersPerSecond, maxPathAccelerationMetersPerSecondSquared;
 }

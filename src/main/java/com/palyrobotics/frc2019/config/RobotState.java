@@ -1,7 +1,6 @@
 package com.palyrobotics.frc2019.config;
 
 import com.palyrobotics.frc2019.config.constants.DrivetrainConstants;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
@@ -50,11 +49,6 @@ public class RobotState {
     public double elevatorPosition, elevatorVelocity;
     // Vision drive data
     public boolean atVisionTargetThreshold;
-    public Timer matchTimer = new Timer();
-
-    protected RobotState() {
-        matchTimer.start();
-    }
 
     public static RobotState getInstance() {
         return sInstance;
@@ -77,6 +71,6 @@ public class RobotState {
     }
 
     public enum GamePeriod {
-        AUTO, TELEOP, DISABLED
+        AUTO, TELEOP, TESTING, DISABLED
     }
 }

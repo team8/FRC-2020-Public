@@ -35,5 +35,7 @@
     "brownOutRecoverySeconds": 0.5,
     "brownOutInitialNerfMultiplier": 0.5,
     "initialLock": 0.7,
-    "velocityUnlock": 25.0
+    "velocityUnlock": 25.0,
+    "maxPathVelocityMetersPerSecond": 3.5,
+    "maxPathAccelerationMetersPerSecondSquared": 3.5
 }
