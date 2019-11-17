@@ -276,7 +276,7 @@ class HardwareUpdater {
 
         loopOverrunDebugger.addPoint("Basic");
 
-        robotState.updateOdometry();
+        robotState.updateOdometry(drivetrain.gyro.getFusedHeading(), robotState.leftDriveVelocity, robotState.rightDriveVelocity);
 
         loopOverrunDebugger.addPoint("Odometry");
 
