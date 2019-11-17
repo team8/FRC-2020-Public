@@ -16,32 +16,32 @@ import java.util.ArrayList;
 public class Commands {
 
     private static Commands sInstance = new Commands();
+    public ArrayList<Routine> wantedRoutines = new ArrayList<>();
+    // Store WantedStates for each subsystem state machine
+    public Drive.DriveState wantedDriveState = Drive.DriveState.NEUTRAL;
+    public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
+    public Pusher.PusherState wantedPusherInOutState = Pusher.PusherState.START;
+    public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
+    public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
+    public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.HOLDING_CURRENT_ANGLE;
+    public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.IDLE;
+    public double customElevatorPercentOutput, customElevatorVelocity;
+    public boolean hasPusherCargo;
+    public double driveThrottle, driveWheel;
+    public boolean isQuickTurn, isBraking;
+    // All robot set points
+    public SetPoints robotSetPoints = new SetPoints();
+    // Allows you to cancel all running routines
+    public boolean cancelCurrentRoutines;
 
     public static Commands getInstance() {
         return sInstance;
     }
 
-    public ArrayList<Routine> wantedRoutines = new ArrayList<>();
-
-    // Store WantedStates for each subsystem state machine
-    public Drive.DriveState wantedDriveState = Drive.DriveState.NEUTRAL;
-
-    public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
-
-    public Pusher.PusherState wantedPusherInOutState = Pusher.PusherState.START;
-
-    public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
-    public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
-
-    public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.HOLDING_CURRENT_ANGLE;
-
-    public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.IDLE;
-    public double customElevatorPercentOutput, customElevatorVelocity;
-
-    public boolean hasPusherCargo;
-
-    public double driveThrottle, driveWheel;
-    public boolean isQuickTurn, isBraking;
+    public static Commands reset() {
+        sInstance = new Commands();
+        return sInstance;
+    }
 
     public void addWantedRoutine(Routine wantedRoutine) {
         for (Routine routine : wantedRoutines) {
@@ -52,30 +52,6 @@ public class Commands {
         }
         wantedRoutines.add(wantedRoutine);
     }
-
-    public static Commands reset() {
-        sInstance = new Commands();
-        return sInstance;
-    }
-
-    /**
-     * Stores numeric set points
-     *
-     * @author Nihar
-     */
-    public static class SetPoints {
-        public SparkDriveSignal drivePowerSetPoint;
-        public Double
-                elevatorPositionSetPoint,
-                pusherPositionSetPoint,
-                intakePositionSetPoint;
-    }
-
-    // All robot set points
-    public SetPoints robotSetPoints = new SetPoints();
-
-    // Allows you to cancel all running routines
-    public boolean cancelCurrentRoutines;
 
     public void copyTo(Commands other) {
         other.wantedDriveState = this.wantedDriveState;
@@ -105,5 +81,18 @@ public class Commands {
             log.append(r.getName()).append(" ");
         }
         return log.append("\n").toString();
+    }
+
+    /**
+     * Stores numeric set points
+     *
+     * @author Nihar
+     */
+    public static class SetPoints {
+        public SparkDriveSignal drivePowerSetPoint;
+        public Double
+                elevatorPositionSetPoint,
+                pusherPositionSetPoint,
+                intakePositionSetPoint;
     }
 }

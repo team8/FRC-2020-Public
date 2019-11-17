@@ -188,6 +188,15 @@ public class SynchronousPID {
     }
 
     /**
+     * Returns the current set point of the PID controller
+     *
+     * @return the current set point
+     */
+    public double getSetPoint() {
+        return mSetPoint;
+    }
+
+    /**
      * Set the set point for the PID controller
      *
      * @param setPoint the desired set point
@@ -202,15 +211,6 @@ public class SynchronousPID {
         } else {
             mSetPoint = setPoint;
         }
-    }
-
-    /**
-     * Returns the current set point of the PID controller
-     *
-     * @return the current set point
-     */
-    public double getSetPoint() {
-        return mSetPoint;
     }
 
     /**

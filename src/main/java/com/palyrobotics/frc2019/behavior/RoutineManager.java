@@ -11,17 +11,53 @@ import java.util.*;
  * @author Nihar, Ailyn
  */
 public class RoutineManager {
+
     private static RoutineManager sInstance = new RoutineManager();
-
-    public static RoutineManager getInstance() {
-        return sInstance;
-    }
-
     //Routines that are being run
     private ArrayList<Routine>
             mRunningRoutines = new ArrayList<>(),
             mRoutinesToRemove = new ArrayList<>(),
             mRoutinesToAdd = new ArrayList<>();
+
+    public static RoutineManager getInstance() {
+        return sInstance;
+    }
+
+    public static Subsystem[] subsystemSuperset(ArrayList<Routine> routines) {
+        HashSet<Subsystem> superset = new HashSet<>();
+        for (Routine routine : routines) {
+            superset.addAll(Arrays.asList(routine.getRequiredSubsystems()));
+        }
+        return superset.toArray(new Subsystem[0]);
+    }
+
+    /**
+     * Finds overlapping subsystems. Not optimized
+     */
+    static Subsystem[] sharedSubsystems(ArrayList<Routine> routines) {
+        HashMap<Subsystem, Integer> counter = new HashMap<>();
+        counter.put(null, 0); //for SampleRoutine
+        counter.put(Drive.getInstance(), 0);
+        counter.put(Elevator.getInstance(), 0);
+        counter.put(Shooter.getInstance(), 0);
+        counter.put(Fingers.getInstance(), 0);
+        counter.put(Intake.getInstance(), 0);
+        counter.put(Pusher.getsInstance(), 0);
+        // Count the number of times each subsystem appears
+        for (Routine routine : routines) {
+            for (Subsystem subsystem : routine.getRequiredSubsystems()) {
+                counter.put(subsystem, counter.get(subsystem) + 1);
+            }
+        }
+        // Add all subsystems that appear multiple times to return list
+        HashSet<Subsystem> conflicts = new HashSet<>();
+        for (Subsystem subsystem : counter.keySet()) {
+            if (counter.get(subsystem) > 1 && subsystem != null) {
+                conflicts.add(subsystem);
+            }
+        }
+        return conflicts.toArray(new Subsystem[0]);
+    }
 
     /**
      * Stores the new routine to be added in next update cycle <br />
@@ -132,41 +168,5 @@ public class RoutineManager {
             }
         }
         return conflicts;
-    }
-
-    public static Subsystem[] subsystemSuperset(ArrayList<Routine> routines) {
-        HashSet<Subsystem> superset = new HashSet<>();
-        for (Routine routine : routines) {
-            superset.addAll(Arrays.asList(routine.getRequiredSubsystems()));
-        }
-        return superset.toArray(new Subsystem[0]);
-    }
-
-    /**
-     * Finds overlapping subsystems. Not optimized
-     */
-    static Subsystem[] sharedSubsystems(ArrayList<Routine> routines) {
-        HashMap<Subsystem, Integer> counter = new HashMap<>();
-        counter.put(null, 0); //for SampleRoutine
-        counter.put(Drive.getInstance(), 0);
-        counter.put(Elevator.getInstance(), 0);
-        counter.put(Shooter.getInstance(), 0);
-        counter.put(Fingers.getInstance(), 0);
-        counter.put(Intake.getInstance(), 0);
-        counter.put(Pusher.getsInstance(), 0);
-        // Count the number of times each subsystem appears
-        for (Routine routine : routines) {
-            for (Subsystem subsystem : routine.getRequiredSubsystems()) {
-                counter.put(subsystem, counter.get(subsystem) + 1);
-            }
-        }
-        // Add all subsystems that appear multiple times to return list
-        HashSet<Subsystem> conflicts = new HashSet<>();
-        for (Subsystem subsystem : counter.keySet()) {
-            if (counter.get(subsystem) > 1 && subsystem != null) {
-                conflicts.add(subsystem);
-            }
-        }
-        return conflicts.toArray(new Subsystem[0]);
     }
 }

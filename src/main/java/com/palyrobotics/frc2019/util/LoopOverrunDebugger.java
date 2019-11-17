@@ -3,31 +3,19 @@ package com.palyrobotics.frc2019.util;
 import edu.wpi.first.wpilibj.Timer;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 /**
  * @author Quintin Dwight
  */
 public class LoopOverrunDebugger {
 
-    private static class Measurement {
-        Measurement(String name, double durationSeconds) {
-            this.name = name;
-            this.durationSeconds = durationSeconds;
-        }
-
-        String name;
-        double durationSeconds;
-    }
-
     private String mName;
-    private double mStartTimeSeconds, mLastSeconds;
+    private Timer mTimer = new Timer();
     private Double mPrintDuration;
     private ArrayList<Measurement> mMeasurements = new ArrayList<>(8);
-
     public LoopOverrunDebugger(String name) {
         mName = name;
-        mStartTimeSeconds = mLastSeconds = Timer.getFPGATimestamp();
+        mTimer.start();
     }
 
     public LoopOverrunDebugger(String name, double printDurationSeconds) {
@@ -36,16 +24,12 @@ public class LoopOverrunDebugger {
     }
 
     public void addPoint(String name) {
-        double now = Timer.getFPGATimestamp();
-        double deltaSeconds = now - mLastSeconds;
-        mLastSeconds = now;
-        mMeasurements.add(new Measurement(name, deltaSeconds));
+        mMeasurements.add(new Measurement(name, mTimer.get()));
     }
 
     public void finish() {
-        Optional.ofNullable(mPrintDuration)
-                .filter(printDurationSeconds -> Timer.getFPGATimestamp() - mStartTimeSeconds > printDurationSeconds)
-                .ifPresent(duration -> printSummary());
+        if (mPrintDuration == null || mTimer.get() > mPrintDuration)
+            printSummary();
     }
 
     public void finishAndPrint() {
@@ -56,6 +40,16 @@ public class LoopOverrunDebugger {
         System.out.printf("[Time Summary] [%s]%n", mName);
         for (Measurement measurement : mMeasurements) {
             System.out.printf("    <%s> %f seconds%n", measurement.name, measurement.durationSeconds);
+        }
+    }
+
+    private static class Measurement {
+        String name;
+        double durationSeconds;
+
+        Measurement(String name, double durationSeconds) {
+            this.name = name;
+            this.durationSeconds = durationSeconds;
         }
     }
 }

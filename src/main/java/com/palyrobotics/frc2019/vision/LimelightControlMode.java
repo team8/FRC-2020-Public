@@ -25,12 +25,12 @@ public class LimelightControlMode {
             this.value = value;
         }
 
-        public double getValue() {
-            return value;
-        }
-
         public static LedMode getByValue(double value) {
             return MY_MAP.get(value);
+        }
+
+        public double getValue() {
+            return value;
         }
 
         public String toString() {
@@ -57,12 +57,12 @@ public class LimelightControlMode {
             this.value = value;
         }
 
-        public double getValue() {
-            return value;
-        }
-
         public static CamMode getByValue(double value) {
             return MY_MAP.get(value);
+        }
+
+        public double getValue() {
+            return value;
         }
 
         public String toString() {
@@ -89,12 +89,12 @@ public class LimelightControlMode {
             this.value = value;
         }
 
-        public double getValue() {
-            return value;
-        }
-
         public static StreamType getByValue(double value) {
             return MY_MAP.get(value);
+        }
+
+        public double getValue() {
+            return value;
         }
 
         public String toString() {
@@ -120,12 +120,12 @@ public class LimelightControlMode {
             this.value = value;
         }
 
-        public double getValue() {
-            return value;
-        }
-
         public static Snapshot getByValue(double value) {
             return MY_MAP.get(value);
+        }
+
+        public double getValue() {
+            return value;
         }
 
         public String toString() {
@@ -151,12 +151,12 @@ public class LimelightControlMode {
             this.value = value;
         }
 
-        public Integer getValue() {
-            return value;
-        }
-
         public static AdvancedTarget getByValue(Integer value) {
             return MY_MAP.get(value);
+        }
+
+        public Integer getValue() {
+            return value;
         }
 
         public String toString() {
@@ -182,12 +182,12 @@ public class LimelightControlMode {
             this.value = value;
         }
 
-        public Integer getValue() {
-            return value;
-        }
-
         public static AdvancedCrosshair getByValue(Integer value) {
             return MY_MAP.get(value);
+        }
+
+        public Integer getValue() {
+            return value;
         }
 
         public String toString() {

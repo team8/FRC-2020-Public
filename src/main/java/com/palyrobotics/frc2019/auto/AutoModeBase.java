@@ -5,29 +5,24 @@ import com.palyrobotics.frc2019.config.AllianceDistances;
 import com.palyrobotics.frc2019.util.config.Configs;
 
 public abstract class AutoModeBase {
+
+    // To set the auto mode, set these variables in code!
+    public static Alliance sAlliance = Alliance.BLUE;
+    public static AllianceDistances sDistances;
     private boolean mIsActive;
-
-    public abstract String toString();
-
-    // Will be run before the routine is taken
-    public abstract void preStart();
 
     public AutoModeBase() {
         loadDistances();
     }
 
-    public enum Alliance {
-        RED,
-        BLUE
-    }
-
-    // To set the auto mode, set these variables in code!
-    public static Alliance sAlliance = Alliance.BLUE;
-    public static AllianceDistances sDistances;
-
     private static void loadDistances() {
         sDistances = Configs.get(AllianceDistances.class, "Team8Field");
     }
+
+    public abstract String toString();
+
+    // Will be run before the routine is taken
+    public abstract void preStart();
 
     public abstract Routine getRoutine();
 
@@ -40,4 +35,9 @@ public abstract class AutoModeBase {
     }
 
     public abstract String getKey();
+
+    public enum Alliance {
+        RED,
+        BLUE
+    }
 }

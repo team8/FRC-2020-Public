@@ -10,54 +10,22 @@ import com.palyrobotics.frc2019.util.config.Configs;
 public class Intake extends Subsystem {
 
     private static Intake sInstance = new Intake();
-
-    public static Intake getInstance() {
-        return sInstance;
-    }
-
     private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
-
     private SparkMaxOutput mOutput = new SparkMaxOutput();
     private double mTalonOutput, mRumbleLength;
-
     private Double mIntakeWantedAngle;
     private RobotState mRobotState;
-
     private boolean cachedCargoState;
-
-    private enum WheelState {
-        INTAKING,
-        IDLE,
-        EXPELLING,
-        SLOW,
-        MEDIUM,
-        DROPPING
-    }
-
-    private enum UpDownState {
-        CUSTOM_ANGLE,
-        ZERO_VELOCITY
-    }
-
-    public enum IntakeMacroState {
-        STOWED, // Stowed at the start of the match
-        DOWN_FOR_GROUND_INTAKE,
-        GROUND_INTAKE, // Getting the cargo off the ground
-        LIFTING_FROM_GROUND_INTAKE, // Lifting the cargo into the intake
-        DROPPING_INTO_CARRIAGE, // Dropping the cargo into the pusher carriage
-        HOLDING_OUT_OF_WAY, // Hold out of the way of the pusher
-        HOLDING_CARGO,
-        INTAKING_CARGO,
-        EXPELLING_CARGO,
-        HOLDING_CURRENT_ANGLE
-    }
-
     private WheelState mWheelState;
     private UpDownState mUpDownState;
     private IntakeMacroState mMacroState;
 
     protected Intake() {
         super("intake");
+    }
+
+    public static Intake getInstance() {
+        return sInstance;
     }
 
     @Override
@@ -78,6 +46,7 @@ public class Intake extends Subsystem {
         // The intake macro state has eight possible states.  Any state can be transferred to automatically or manually,
         // but some states need to set auxiliary variables, such as the queue times.
 
+        // TODO should not really be modifying command values
         switch (mMacroState) {
             case STOWED:
             case HOLDING_CURRENT_ANGLE:
@@ -152,7 +121,7 @@ public class Intake extends Subsystem {
         // 3. Compensate for centripetal acceleration on the arm.
         double arbitraryDemand = mConfig.gravityFF * Math.cos(Math.toRadians(robotState.intakeAngle - mConfig.angleOffset))
                 + mConfig.accelerationCompensation * robotState.robotAcceleration * Math.sin(Math.toRadians(robotState.intakeAngle - mConfig.angleOffset))
-                + mConfig.centripetalCoefficient * robotState.drivePose.headingVelocity * robotState.drivePose.headingVelocity * Math.sin(Math.toRadians(robotState.intakeAngle - mConfig.angleOffset));
+                + mConfig.centripetalCoefficient * robotState.robotVelocity * robotState.robotVelocity * Math.sin(Math.toRadians(robotState.intakeAngle - mConfig.angleOffset));
 
         switch (mMacroState) {
             case STOWED:
@@ -284,5 +253,32 @@ public class Intake extends Subsystem {
     @Override
     public String getStatus() {
         return String.format("Intake State: %s%nOutput Control Mode: %s%nSpark Output: %.2f%nUp Down Output: %s", mWheelState, mOutput.getControlType(), mOutput.getReference(), mUpDownState);
+    }
+
+    private enum WheelState {
+        INTAKING,
+        IDLE,
+        EXPELLING,
+        SLOW,
+        MEDIUM,
+        DROPPING
+    }
+
+    private enum UpDownState {
+        CUSTOM_ANGLE,
+        ZERO_VELOCITY
+    }
+
+    public enum IntakeMacroState {
+        STOWED, // Stowed at the start of the match
+        DOWN_FOR_GROUND_INTAKE,
+        GROUND_INTAKE, // Getting the cargo off the ground
+        LIFTING_FROM_GROUND_INTAKE, // Lifting the cargo into the intake
+        DROPPING_INTO_CARRIAGE, // Dropping the cargo into the pusher carriage
+        HOLDING_OUT_OF_WAY, // Hold out of the way of the pusher
+        HOLDING_CARGO,
+        INTAKING_CARGO,
+        EXPELLING_CARGO,
+        HOLDING_CURRENT_ANGLE
     }
 }

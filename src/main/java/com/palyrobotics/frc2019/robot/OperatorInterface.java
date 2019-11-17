@@ -30,20 +30,18 @@ import edu.wpi.first.wpilibj.Timer;
 public class OperatorInterface {
 
     private static OperatorInterface sInstance = new OperatorInterface();
+    private final Limelight mLimelight = Limelight.getInstance();
+    private final Joystick mDriveStick = HardwareAdapter.getInstance().getJoysticks().driveStick, mTurnStick = HardwareAdapter.getInstance().getJoysticks().turnStick;
+    private final XboxController mOperatorXboxController = HardwareAdapter.getInstance().getJoysticks().operatorXboxController;
+    // Timestamp when a vision routine was last activated; helps us know when to turn LEDs off
+    private final Timer mVisionLEDTimer = new Timer();
+
+    private OperatorInterface() {
+        mVisionLEDTimer.start();
+    }
 
     public static OperatorInterface getInstance() {
         return sInstance;
-    }
-
-    private final Limelight mLimelight = Limelight.getInstance();
-
-    private final Joystick mDriveStick = HardwareAdapter.getInstance().getJoysticks().driveStick, mTurnStick = HardwareAdapter.getInstance().getJoysticks().turnStick;
-    private final XboxController mOperatorXboxController = HardwareAdapter.getInstance().getJoysticks().operatorXboxController;
-
-    // Timestamp when a vision routine was last activated; helps us know when to turn LEDs off
-    private double mVisionStartTimeSeconds;
-
-    private OperatorInterface() {
     }
 
     /**
@@ -90,7 +88,6 @@ public class OperatorInterface {
 //        boolean wantsAssistedVision = mTurnStick.getRawButton(3) || mDriveStick.getRawButton(3);
         boolean wantsAssistedVision = mTurnStick.getRawButton(3);
         if (wantsAssistedVision) {
-            mVisionStartTimeSeconds = Timer.getFPGATimestamp();
             // Limelight vision tracking on
             setVision(true);
             commands.wantedDriveState = Drive.DriveState.VISION_ASSIST;
@@ -98,13 +95,13 @@ public class OperatorInterface {
             if (!mTurnStick.getRawButton(4)) {
                 RobotState.getInstance().atVisionTargetThreshold = false;
             }
-            if (Timer.getFPGATimestamp() - mVisionStartTimeSeconds > OtherConstants.kVisionLEDTimeoutSeconds) {
+            if (mVisionLEDTimer.get() > OtherConstants.kVisionLEDTimeoutSeconds) {
                 setVision(false);
             }
         }
 
         if (mTurnStick.getRawButton(4)) {
-            mVisionStartTimeSeconds = Timer.getFPGATimestamp();
+            mVisionLEDTimer.reset();
             // Limelight vision tracking on
             setVision(true);
             Drive.getInstance().setVisionClosedDriveController();
@@ -113,7 +110,7 @@ public class OperatorInterface {
             if (!wantsAssistedVision) {
                 RobotState.getInstance().atVisionTargetThreshold = false;
             }
-            if (Timer.getFPGATimestamp() - mVisionStartTimeSeconds > OtherConstants.kVisionLEDTimeoutSeconds) {
+            if (mVisionLEDTimer.get() > OtherConstants.kVisionLEDTimeoutSeconds) {
                 setVision(false);
             }
         }

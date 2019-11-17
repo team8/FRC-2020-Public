@@ -16,7 +16,6 @@ import com.palyrobotics.frc2019.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2019.util.SparkMaxOutput;
 import com.palyrobotics.frc2019.util.config.Configs;
 import com.palyrobotics.frc2019.util.control.LazySparkMax;
-import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -40,6 +39,7 @@ class HardwareUpdater {
     private Shooter mShooter;
     private Pusher mPusher;
     private Fingers mFingers;
+    private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
 
     HardwareUpdater(Drive drive, Elevator elevator, Shooter shooter, Pusher pusher, Fingers fingers, Intake intake) {
         mDrive = drive;
@@ -218,7 +218,7 @@ class HardwareUpdater {
 
     private void configureMiscellaneousHardware() {
         UsbCamera fisheyeCam = HardwareAdapter.getInstance().getMiscellaneousHardware().fisheyeCam;
-        fisheyeCam.setResolution(640,360); // Original is 1920 x 1080
+        fisheyeCam.setResolution(640, 360); // Original is 1920 x 1080
     }
 
     private void startUltrasonics() {
@@ -239,8 +239,6 @@ class HardwareUpdater {
         pusherUltrasonic.setEnabled(true);
 //		pusherSecondaryUltrasonic.setEnabled(true);
     }
-
-    private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
 
     /**
      * Takes all of the sensor data from the hardware, and unwraps it into the current {@link RobotState}.
@@ -296,7 +294,8 @@ class HardwareUpdater {
 //        Rotation2d
 //                gyroAngle = Rotation2d.fromDegrees(robotState.drivePose.heading),
 //                gyroVelocity = Rotation2d.fromDegrees(robotState.drivePose.headingVelocity);
-//        RigidTransform2d odometry = robotState.generateOdometryFromSensors(
+//        RigidTransform2d odometry = robotState.
+//        generateOdometryFromSensors(
 //                robotState.drivePose.leftEncoderPosition - robotState.drivePose.lastLeftEncoderPosition,
 //                robotState.drivePose.rightEncoderPosition - robotState.drivePose.lastRightEncoderPosition,
 //                gyroAngle

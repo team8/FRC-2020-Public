@@ -10,30 +10,19 @@ import com.palyrobotics.frc2019.util.config.Configs;
 public class Shooter extends Subsystem {
 
     private static Shooter sInstance = new Shooter();
-
-    public static Shooter getInstance() {
-        return sInstance;
-    }
-
     private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
-
     private double mOutput;
-
     private double mRumbleLength;
-
     private boolean mCachedHasCargo;
-
     private double mExpellingCycles;
-
-    public enum ShooterState {
-        SPIN_UP,
-        IDLE
-    }
-
     private ShooterState mState = ShooterState.IDLE;
 
     protected Shooter() {
         super("shooter");
+    }
+
+    public static Shooter getInstance() {
+        return sInstance;
     }
 
     @Override
@@ -87,7 +76,6 @@ public class Shooter extends Subsystem {
         mRumbleLength -= OtherConstants.deltaTime;
     }
 
-
     public double getOutput() {
         return mOutput;
     }
@@ -95,5 +83,10 @@ public class Shooter extends Subsystem {
     @Override
     public String getStatus() {
         return String.format("Shooter State: %s%nVictor Output: %s", mState, mOutput);
+    }
+
+    public enum ShooterState {
+        SPIN_UP,
+        IDLE
     }
 }

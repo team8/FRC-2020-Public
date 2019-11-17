@@ -5,7 +5,6 @@ import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.subsystems.Elevator;
 import com.palyrobotics.frc2019.subsystems.Subsystem;
-import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +45,6 @@ public class ElevatorMeasureSpeedAtOutputRoutine extends Routine {
         System.out.println(separator);
         System.out.println(output);
         System.out.println(separator);
-//        CSVWriter.addData("measureVelInchPerSec", mPercentOutput, medianVelocity);
         return commands;
     }
 

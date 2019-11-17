@@ -1,24 +1,6 @@
 package com.palyrobotics.frc2019.config.constants;
 
 public class OtherConstants {
-    public enum RobotName {
-        VIDAR
-    }
-
-    public enum DriverName {
-        BRYAN
-    }
-
-    public enum OperatorName {
-        GRIFFIN
-    }
-
-    public enum FieldName {
-        //we goin to cmp bois <- for sure :send-it:
-        TEAM_8, TEAM_254, SVR, SVR_PRACTICE, GNR, GNR_PRACTICE, DMR, DMR_PRACTICE, CMP, CMP_PRACTICE
-    }
-
-    public static boolean operatorXBoxController = true;
 
     /**
      * Initialization constants
@@ -27,16 +9,9 @@ public class OtherConstants {
     public static final DriverName kDriverName = DriverName.BRYAN;
     public static final OperatorName kOperatorName = OperatorName.GRIFFIN;
     public static final FieldName kFieldName = FieldName.SVR;
-
     // Time Constants (these might exist elsewhere but whatever)
     public static final double updatesPerSecond = 50.0;
-    public static final double deltaTime = 1/ updatesPerSecond;
-
-
-    public static double kGroundToCarriageInches = 10.5625; // Distance from ground to the bottom of the carriage in the lowest position
-    public static double kCarriageToHatchCenterInches = 6.5625; // Distance from the bottom of the carriage to the center of the hatch expel
-    public static double kCarriageToCargoCenterInches = 17.1744; // Distance from the bottom of the carriage to the center of the cargo expel
-
+    public static final double deltaTime = 1 / updatesPerSecond;
     /**
      * Vision constants
      */
@@ -62,12 +37,27 @@ public class OtherConstants {
     public static final double kVisionDrivePathToleranceClose = 12.0;
     public static final double kVisionAlignDistanceTolerance = 1.0;
     public static final double kVisionAlignSpeedyTolerance = 1.0;
-
     public static final double kVisionLEDTimeoutSeconds = 0.1; // How long after the last vision command should we turn off LEDs
-
-
     public static final int kRequiredUltrasonicCount = 4;
     public static final double kLimelightMinDistance = .001; // If Limelight.getCorrectedEstimatedDistanceZ() returns 0, we replace it with this value
+    public static boolean operatorXBoxController = true;
+    public static double kGroundToCarriageInches = 10.5625; // Distance from ground to the bottom of the carriage in the lowest position
+    public static double kCarriageToHatchCenterInches = 6.5625; // Distance from the bottom of the carriage to the center of the hatch expel
+    public static double kCarriageToCargoCenterInches = 17.1744; // Distance from the bottom of the carriage to the center of the cargo expel
 
+    public enum RobotName {
+        VIDAR
+    }
 
+    public enum DriverName {
+        BRYAN
+    }
+
+    public enum OperatorName {
+        GRIFFIN
+    }
+
+    public enum FieldName {
+        TEAM_8, TEAM_254, SVR, SVR_PRACTICE, GNR, GNR_PRACTICE, DMR, DMR_PRACTICE, CMP, CMP_PRACTICE
+    }
 }

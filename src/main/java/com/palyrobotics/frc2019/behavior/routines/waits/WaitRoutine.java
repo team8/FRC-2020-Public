@@ -9,7 +9,8 @@ public abstract class WaitRoutine extends Routine {
     private boolean mIsDone;
 
     @Override
-    public final void start() {}
+    public final void start() {
+    }
 
     public abstract boolean isCompleted();
 

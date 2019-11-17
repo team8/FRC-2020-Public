@@ -25,29 +25,27 @@ import java.util.stream.Collectors;
  */
 public class Configs {
 
+    private static final String CONFIG_FOLDER_NAME = "config";
+    private static final Path CONFIG_FOLDER = (RobotBase.isReal()
+            ? Paths.get(Filesystem.getDeployDirectory().toString(), CONFIG_FOLDER_NAME)
+            : Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", CONFIG_FOLDER_NAME)).toAbsolutePath();
+    private static final ConcurrentHashMap<String, Class<? extends AbstractConfig>> sNameToClass = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, AbstractConfig> sConfigMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, List<Runnable>> sListeners = new ConcurrentHashMap<>();
     private static ObjectMapper sMapper = new ObjectMapper();
+    private static final Thread sModifiedListener = new Thread(Configs::watchService);
 
     static {
         // Allows us to serialize private fields
         sMapper.setVisibilityChecker(new VisibilityChecker.Std(Visibility.ANY, Visibility.ANY, Visibility.ANY, Visibility.ANY, Visibility.ANY));
     }
 
-    public static ObjectMapper getMapper() {
-        return sMapper;
-    }
-
-    private static final String CONFIG_FOLDER_NAME = "config";
-    private static final Path CONFIG_FOLDER = (RobotBase.isReal()
-            ? Paths.get(Filesystem.getDeployDirectory().toString(), CONFIG_FOLDER_NAME)
-            : Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", CONFIG_FOLDER_NAME)).toAbsolutePath();
-
-    private static final ConcurrentHashMap<String, Class<? extends AbstractConfig>> sNameToClass = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, AbstractConfig> sConfigMap = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, List<Runnable>> sListeners = new ConcurrentHashMap<>();
-    private static final Thread sModifiedListener = new Thread(Configs::watchService);
-
     static {
         sModifiedListener.start();
+    }
+
+    public static ObjectMapper getMapper() {
+        return sMapper;
     }
 
     /**

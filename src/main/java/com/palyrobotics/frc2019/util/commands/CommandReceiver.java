@@ -127,6 +127,9 @@ public class CommandReceiver implements RobotService {
         return "commandReceiver";
     }
 
+    /**
+     * Allows us to get fields that belong to super-classes as well
+     */
     private Field getField(Class<?> clazz, String name) throws NoSuchFieldException {
         Map<String, Field> fields = new HashMap<>();
         for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {

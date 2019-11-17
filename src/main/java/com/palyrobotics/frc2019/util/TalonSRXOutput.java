@@ -13,20 +13,18 @@ import java.util.Objects;
  */
 public class TalonSRXOutput {
 
+    public int profile;
+    public Gains gains;
+    //Used for motion magic
+    public int acceleration;
+    public int cruiseVelocity;
     /**
      * Prevent null pointer exceptions
      */
     private ControlMode controlMode;
-
     //Velocity, Position, MotionMagic, PercentOutput, Current, Disabled, MotionProfile
     private double setPoint; //Encoder ticks
     private double arbitraryDemand; // Arbitrary demand used in the PIDF + PID[1]
-    public int profile;
-    public Gains gains;
-
-    //Used for motion magic
-    public int acceleration;
-    public int cruiseVelocity;
 
     /**
      * Default constructor
@@ -168,22 +166,22 @@ public class TalonSRXOutput {
         return name;
     }
 
-	@Override // Auto-generated
-	public boolean equals(Object other) {
-		if (this == other) return true;
-		if (other == null || getClass() != other.getClass()) return false;
-		TalonSRXOutput otherTalon = (TalonSRXOutput) other;
-		return Double.compare(otherTalon.setPoint, setPoint) == 0 &&
-				Double.compare(otherTalon.arbitraryDemand, arbitraryDemand) == 0 &&
-				profile == otherTalon.profile &&
-				acceleration == otherTalon.acceleration &&
-				cruiseVelocity == otherTalon.cruiseVelocity &&
-				controlMode == otherTalon.controlMode &&
-				gains.equals(otherTalon.gains);
-	}
+    @Override // Auto-generated
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        TalonSRXOutput otherTalon = (TalonSRXOutput) other;
+        return Double.compare(otherTalon.setPoint, setPoint) == 0 &&
+                Double.compare(otherTalon.arbitraryDemand, arbitraryDemand) == 0 &&
+                profile == otherTalon.profile &&
+                acceleration == otherTalon.acceleration &&
+                cruiseVelocity == otherTalon.cruiseVelocity &&
+                controlMode == otherTalon.controlMode &&
+                gains.equals(otherTalon.gains);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(controlMode, setPoint, arbitraryDemand, profile, gains, acceleration, cruiseVelocity);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(controlMode, setPoint, arbitraryDemand, profile, gains, acceleration, cruiseVelocity);
+    }
 }

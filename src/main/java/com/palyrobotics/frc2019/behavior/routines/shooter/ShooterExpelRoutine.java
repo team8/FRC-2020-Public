@@ -16,7 +16,7 @@ public class ShooterExpelRoutine extends Routine {
     //How long the wheels spin for (seconds)
     private double mTimeout;
 
-    private double mStartTime;
+    private Timer mTimer = new Timer();
 
     /**
      * @param wantedShooterState the desired state
@@ -29,7 +29,8 @@ public class ShooterExpelRoutine extends Routine {
 
     @Override
     public void start() {
-        mStartTime = Timer.getFPGATimestamp();
+        mTimer.reset();
+        mTimer.start();
     }
 
     @Override
@@ -46,7 +47,7 @@ public class ShooterExpelRoutine extends Routine {
 
     @Override
     public boolean isFinished() {
-        return Timer.getFPGATimestamp() - mStartTime > mTimeout;
+        return mTimer.get() > mTimeout;
     }
 
     @Override

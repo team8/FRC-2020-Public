@@ -6,7 +6,9 @@ import com.palyrobotics.frc2019.subsystems.Subsystem;
 import edu.wpi.first.wpilibj.Timer;
 
 public class TimeoutRoutine extends Routine {
-    private double mTimeout, mStartTime;
+
+    private double mTimeout;
+    private final Timer mTimer = new Timer();
 
     /**
      * Routine that waits the specified amount of time <br />
@@ -20,7 +22,8 @@ public class TimeoutRoutine extends Routine {
 
     @Override
     public void start() {
-        mStartTime = Timer.getFPGATimestamp();
+        mTimer.reset();
+        mTimer.start();
     }
 
     @Override
@@ -35,7 +38,7 @@ public class TimeoutRoutine extends Routine {
 
     @Override
     public boolean isFinished() {
-        return Timer.getFPGATimestamp() >= mStartTime + mTimeout;
+        return mTimer.get() > mTimeout;
     }
 
     @Override

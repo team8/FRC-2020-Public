@@ -8,7 +8,7 @@ public class MathUtil {
     /**
      * Neutralizes a value within a dead band
      *
-     * @param value      Value to control dead band
+     * @param value    Value to control dead band
      * @param deadBand Value of dead band
      * @return 0 if within dead band, otherwise values
      */

@@ -3,10 +3,8 @@ package com.palyrobotics.frc2019.util;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotState;
 import com.palyrobotics.frc2019.config.constants.DrivetrainConstants;
-import com.palyrobotics.frc2019.config.dashboard.LiveGraph;
 import com.palyrobotics.frc2019.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2019.util.config.Configs;
-import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -14,11 +12,12 @@ import edu.wpi.first.wpilibj.Timer;
  * Implements constant curvature driving. Yoinked from 254 code
  */
 public class CheesyDriveHelper {
+
+    private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
     private double
             mOldWheel, mPreviousWheelForRamp, mPreviousThrottleForRamp,
             mQuickStopAccumulator, mNegativeInertiaAccumulator,
             mBrownOutTimeSeconds;
-    private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
     private SparkDriveSignal mSignal = new SparkDriveSignal();
 
     public SparkDriveSignal cheesyDrive(Commands commands, RobotState robotState) {
@@ -148,9 +147,6 @@ public class CheesyDriveHelper {
             leftPower += overPower * (-1.0 - rightPower);
             rightPower = -1.0;
         }
-
-//        CSVWriter.addData("leftWantedPower", leftPower * totalPowerMultiplier);
-//        CSVWriter.addData("rightWantedPower", rightPower * totalPowerMultiplier);
 
         mSignal.leftOutput.setPercentOutput(leftPower * totalPowerMultiplier);
         mSignal.rightOutput.setPercentOutput(rightPower * totalPowerMultiplier);

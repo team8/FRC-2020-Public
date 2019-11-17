@@ -1,7 +1,6 @@
 package com.palyrobotics.frc2019.vision;
 
 import com.palyrobotics.frc2019.config.constants.OtherConstants;
-import com.palyrobotics.frc2019.util.trajectory.Translation2d;
 import com.palyrobotics.frc2019.vision.LimelightControlMode.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -13,15 +12,14 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class Limelight {
 
     private static Limelight sInstance = new Limelight();
-
-    public static Limelight getInstance() {
-        return sInstance;
-    }
-
     private NetworkTable mTable;
 
     public Limelight() {
         mTable = NetworkTableInstance.getDefault().getTable("limelight");
+    }
+
+    public static Limelight getInstance() {
+        return sInstance;
     }
 
     /**
@@ -92,12 +90,19 @@ public class Limelight {
         mTable.getEntry("tl").setValue(0.0);
     }
 
+    public LedMode getLEDMode() {
+        return LedMode.getByValue(mTable.getEntry("ledMode").getDouble(0.0));
+    }
+
     public void setLEDMode(LedMode ledMode) {
         mTable.getEntry("ledMode").setValue(ledMode.getValue());
     }
 
-    public LedMode getLEDMode() {
-        return LedMode.getByValue(mTable.getEntry("ledMode").getDouble(0.0));
+    /**
+     * @return {@link CamMode} current way the camera is streaming
+     */
+    public CamMode getCamMode() {
+        return CamMode.getByValue(mTable.getEntry("camMode").getDouble(0.0));
     }
 
     /**
@@ -109,10 +114,10 @@ public class Limelight {
     }
 
     /**
-     * @return {@link CamMode} current way the camera is streaming
+     * @return Pipeline index 0-9
      */
-    public CamMode getCamMode() {
-        return CamMode.getByValue(mTable.getEntry("camMode").getDouble(0.0));
+    public int getPipeline() {
+        return (int) mTable.getEntry("pipeline").getDouble(0.0);
     }
 
     /**
@@ -127,11 +132,8 @@ public class Limelight {
         mTable.getEntry("pipeline").setValue(pipeline);
     }
 
-    /**
-     * @return Pipeline index 0-9
-     */
-    public int getPipeline() {
-        return (int) mTable.getEntry("pipeline").getDouble(0.0);
+    public StreamType getStream() {
+        return StreamType.getByValue(mTable.getEntry("stream").getDouble(0.0));
     }
 
     /**
@@ -143,10 +145,9 @@ public class Limelight {
         mTable.getEntry("stream").setValue(stream.getValue());
     }
 
-    public StreamType getStream() {
-        return StreamType.getByValue(mTable.getEntry("stream").getDouble(0.0));
+    public Snapshot getSnapshot() {
+        return Snapshot.getByValue(mTable.getEntry("snapshot").getDouble(0.0));
     }
-
 
     /**
      * @param snapshot {@link Snapshot#ON} - Stop taking snapshots
@@ -154,10 +155,6 @@ public class Limelight {
      */
     public void setSnapshot(Snapshot snapshot) {
         mTable.getEntry("snapshot").setValue(snapshot.getValue());
-    }
-
-    public Snapshot getSnapshot() {
-        return Snapshot.getByValue(mTable.getEntry("snapshot").getDouble(0.0));
     }
 
     // *************** Advanced Usage with Raw Contours *********************
@@ -221,7 +218,6 @@ public class Limelight {
         double h1 = OtherConstants.kLimelightHeightInches;
         double h2 = OtherConstants.kRocketHatchTargetHeight;
         double tx = this.getYawToTarget();
-        //Logger.getInstance().logRobotThread(Level.INFO, "a1: " + a1 + " a2: " + a2 + " h1: " + h1 + " h2: " + h2);
         return ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))) - 10; // 10 = limelight's offset from front of robot
     }
 
@@ -238,7 +234,6 @@ public class Limelight {
         double h1 = OtherConstants.kLimelightHeightInches;
         double h2 = OtherConstants.kRocketHatchTargetHeight;
         double tx = this.getYawToTarget();
-        //Logger.getInstance().logRobotThread(Level.INFO, "a1: " + a1 + " a2: " + a2 + " h1: " + h1 + " h2: " + h2);
         // Avoid divide by zero
         return Math.max(OtherConstants.kLimelightMinDistance, ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))));
     }
@@ -266,18 +261,5 @@ public class Limelight {
 
     public double getPnPYaw() {
         return mTable.getEntry("camtran").getDoubleArray(new double[]{0, 0, 0, 0, 0, 0})[4];
-    }
-
-    /**
-     * Describes a vision target (position and angle)
-     */
-    public static class VisionTarget {
-        public Translation2d position;
-        public double angle;
-
-        public VisionTarget(Translation2d position, double angle) {
-            this.position = position;
-            this.angle = angle;
-        }
     }
 }

@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class FingersExpelRoutine extends Routine {
 
-    private double mTimeout, mStartTime;
+    private double mTimeout;
+    private final Timer mTimer = new Timer();
 
     public FingersExpelRoutine(double timeout) {
         mTimeout = timeout;
@@ -16,7 +17,8 @@ public class FingersExpelRoutine extends Routine {
 
     @Override
     public void start() {
-        mStartTime = Timer.getFPGATimestamp();
+        mTimer.reset();
+        mTimer.start();
     }
 
     @Override
@@ -33,7 +35,7 @@ public class FingersExpelRoutine extends Routine {
 
     @Override
     public boolean isFinished() {
-        return Timer.getFPGATimestamp() - mStartTime > mTimeout;
+        return mTimer.get() > mTimeout;
     }
 
     @Override

@@ -11,11 +11,9 @@ import com.palyrobotics.frc2019.util.commands.CommandReceiver;
 import com.palyrobotics.frc2019.util.config.Configs;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2019.util.service.RobotService;
-import com.palyrobotics.frc2019.util.trajectory.RigidTransform2d;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
 import com.revrobotics.CANSparkMax.IdleMode;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -29,23 +27,12 @@ import java.util.stream.Collectors;
 public class Robot extends TimedRobot {
 
     private static final RobotState sRobotState = RobotState.getInstance();
+    private static Commands sCommands = Commands.getInstance();
     private final Limelight mLimelight = Limelight.getInstance();
     private final RobotConfig mConfig = Configs.get(RobotConfig.class);
     private LiveGraph mLiveGraph = LiveGraph.getInstance();
-
-    public static RobotState getRobotState() {
-        return sRobotState;
-    }
-
-    private static Commands sCommands = Commands.getInstance();
-
-    public static Commands getCommands() {
-        return sCommands;
-    }
-
     private OperatorInterface mOperatorInterface = OperatorInterface.getInstance();
     private RoutineManager mRoutineManager = RoutineManager.getInstance();
-
     /* Subsystems */
     private Drive mDrive = Drive.getInstance();
     private Elevator mElevator = Elevator.getInstance();
@@ -56,12 +43,17 @@ public class Robot extends TimedRobot {
     private List<Subsystem>
             mSubsystems = List.of(mDrive, mElevator, mShooter, mPusher, mFingers, mIntake),
             mEnabledSubsystems;
-
     private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mElevator, mShooter, mPusher, mFingers, mIntake);
-
     private List<RobotService> mEnabledServices;
-
     private int mTick;
+
+    public static RobotState getRobotState() {
+        return sRobotState;
+    }
+
+    public static Commands getCommands() {
+        return sCommands;
+    }
 
     @Override
     public void robotInit() {
@@ -73,7 +65,9 @@ public class Robot extends TimedRobot {
 
         mEnabledServices.forEach(RobotService::start);
 
-        if (RobotBase.isSimulation()) sRobotState.matchStartTimeSeconds = Timer.getFPGATimestamp();
+        if (RobotBase.isSimulation()) {
+            sRobotState.matchTimer.start();
+        }
 
         Configs.listen(RobotConfig.class, config -> setIdleModes());
     }
@@ -127,7 +121,7 @@ public class Robot extends TimedRobot {
         CSVWriter.cleanFile();
         mEnabledSubsystems.forEach(Subsystem::start);
         setIdleModes();
-        sRobotState.matchStartTimeSeconds = Timer.getFPGATimestamp();
+        sRobotState.matchTimer.reset();
 
         // Set limelight to driver camera mode - redundancy for testing purposes
         mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
@@ -150,7 +144,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        sRobotState.reset(0.0, new RigidTransform2d());
+        sRobotState.resetOdometry();
         sRobotState.resetUltrasonics();
         // Stops updating routines
         mRoutineManager.reset(sCommands);

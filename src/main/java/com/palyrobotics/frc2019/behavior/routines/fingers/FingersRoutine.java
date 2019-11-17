@@ -21,7 +21,7 @@ public class FingersRoutine extends OneTimeRoutine {
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[] {mFingers};
+        return new Subsystem[]{mFingers};
     }
 
     @Override

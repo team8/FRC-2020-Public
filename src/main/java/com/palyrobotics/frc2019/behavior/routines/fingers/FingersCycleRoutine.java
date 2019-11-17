@@ -9,7 +9,8 @@ import edu.wpi.first.wpilibj.Timer;
 public class FingersCycleRoutine extends Routine {
 
     private boolean mAlreadyRan;
-    private double mTimeout, mStartTime;
+    private double mTimeout;
+    private final Timer mTimer = new Timer();
 
     public FingersCycleRoutine(double timeout) {
         mTimeout = timeout;
@@ -17,7 +18,8 @@ public class FingersCycleRoutine extends Routine {
 
     @Override
     public void start() {
-        mStartTime = Timer.getFPGATimestamp();
+        mTimer.reset();
+        mTimer.start();
         mAlreadyRan = false;
     }
 
@@ -25,7 +27,7 @@ public class FingersCycleRoutine extends Routine {
     public Commands update(Commands commands) {
         commands.wantedFingersOpenCloseState = Fingers.FingersState.CLOSE;
         commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
-        if (Timer.getFPGATimestamp() > mTimeout + mStartTime) {
+        if (mTimer.get() > mTimeout) {
             commands.wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
             commands.wantedFingersExpelState = Fingers.PushingState.CLOSED;
             mAlreadyRan = true;

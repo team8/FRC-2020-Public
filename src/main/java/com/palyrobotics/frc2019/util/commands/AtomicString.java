@@ -5,9 +5,8 @@ import java.util.function.Consumer;
 
 public class AtomicString {
 
-    private String m_String;
-
     private final ReentrantLock m_Lock = new ReentrantLock();
+    private String m_String;
 
     public String waitAndGet() throws InterruptedException {
         synchronized (m_Lock) {

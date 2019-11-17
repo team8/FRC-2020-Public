@@ -15,9 +15,8 @@ import java.util.function.UnaryOperator;
  * @author Jason Liu, Quintin Dwight
  */
 public class CSVWriter {
-    private static final String COMMA_DELIMITER = ",", NEW_LINE_SEPARATOR = "\n";
+    private static final String COMMA_DELIMITER = ",", NEW_LINE_SEPARATOR = "\n", FILE_NAME = "canlog.csv";
     private static final int ALLOCATE_SIZE = 100000;
-    private static final String FILE_NAME = "canlog.csv";
 
     private static final File sCsvFile = RobotBase.isReal()
             ? Paths.get("/home/lvuser", FILE_NAME).toFile()
@@ -31,7 +30,7 @@ public class CSVWriter {
     }
 
     private static double getTimeSeconds() {
-        return Timer.getFPGATimestamp() - RobotState.getInstance().matchStartTimeSeconds;
+        return RobotState.getInstance().matchTimer.get();
     }
 
     private static void addData(String key, Object secondValue, UnaryOperator<StringBuilder> valueCellWriter) {

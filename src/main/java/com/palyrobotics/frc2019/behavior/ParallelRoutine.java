@@ -10,11 +10,12 @@ import java.util.Arrays;
  * Created by Nihar on 12/27/16.
  */
 public class ParallelRoutine extends Routine {
+
     private ArrayList<Routine> mRoutines;
 
     /**
      * Runs all routines at the same time.
-	 * Finishes when all routines finish.
+     * Finishes when all routines finish.
      */
     public ParallelRoutine(ArrayList<Routine> routines) {
         mRoutines = routines;

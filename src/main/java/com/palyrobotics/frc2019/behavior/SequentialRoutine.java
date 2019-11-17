@@ -10,6 +10,7 @@ import java.util.Arrays;
  * Created by Nihar on 12/27/16.
  */
 public class SequentialRoutine extends Routine {
+
     private final ArrayList<Routine> mRoutines;
     private int mRunningRoutineIndex;
     private boolean mIsDone;

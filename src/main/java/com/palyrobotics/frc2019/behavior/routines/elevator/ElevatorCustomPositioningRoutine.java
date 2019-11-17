@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class ElevatorCustomPositioningRoutine extends Routine {
 
-    private double mPosition, mTimeout, mStartTime;
-    private boolean mHasSetAllCommands;
+    private final Timer mTimeoutTimer = new Timer();
+    private double mPosition, mTimeout;
 
     public ElevatorCustomPositioningRoutine(double position, double timeout) {
         mPosition = position;
@@ -18,12 +18,12 @@ public class ElevatorCustomPositioningRoutine extends Routine {
 
     @Override
     public void start() {
-        mStartTime = Timer.getFPGATimestamp();
+        mTimeoutTimer.reset();
+        mTimeoutTimer.start();
     }
 
     @Override
     public Commands update(Commands commands) {
-        mHasSetAllCommands = true;
         commands.wantedElevatorState = Elevator.ElevatorState.CUSTOM_POSITIONING;
         commands.robotSetPoints.elevatorPositionSetPoint = mPosition;
         return commands;
@@ -37,19 +37,11 @@ public class ElevatorCustomPositioningRoutine extends Routine {
 
     @Override
     public boolean isFinished() {
-        if (Timer.getFPGATimestamp() - mStartTime > mTimeout) {
-            return true;
-        }
-        return mHasSetAllCommands && mElevator.elevatorOnTarget();
+        return mTimeoutTimer.hasPeriodPassed(mTimeout) || mElevator.elevatorOnTarget();
     }
 
     @Override
     public Subsystem[] getRequiredSubsystems() {
         return new Subsystem[]{mElevator};
-    }
-
-    @Override
-    public String getName() {
-        return "Elevator Custom Positioning Routine";
     }
 }
