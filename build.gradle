@@ -2,7 +2,7 @@ import edu.wpi.first.gradlerio.GradleRIOPlugin
 
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2020.1.1-beta-2"
+    id "edu.wpi.first.GradleRIO" version "2020.1.2"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -23,7 +23,7 @@ deploy {
             // or from command line. If not found an exception will be thrown.
             // You can use getTeamOrDefault(team) instead of getTeamNumber if you
             // want to store a team number in this file.
-            team = frc.getTeamOrDefault(8)
+            team = frc.getTeamNumber()
         }
     }
     artifacts {
@@ -55,25 +55,31 @@ repositories {
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
-    compile wpi.deps.wpilib()
-    compile wpi.deps.vendor.java()
+    implementation wpi.deps.wpilib()
+    nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
+
+    implementation wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 
-    compile 'com.fasterxml:jackson-module-json-org:0.9.1'
-    compile 'net.sourceforge.argparse4j:argparse4j:0.8.1'
-    compile 'com.google.guava:guava:11.0.2'
-    compile 'com.googlecode.json-simple:json-simple:1.1'
-    compile 'kryonet:kryonet:2.21'
-    compile 'com.esotericsoftware:kryo:4.0.2'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.hamcrest:hamcrest:2.1'
+    implementation 'com.fasterxml:jackson-module-json-org:0.9.1'
+    implementation 'net.sourceforge.argparse4j:argparse4j:0.8.1'
+    implementation 'com.google.guava:guava:11.0.2'
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
+    implementation 'kryonet:kryonet:2.21'
+    implementation 'com.esotericsoftware:kryo:4.0.2'
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.hamcrest:hamcrest:2.1'
+
+    simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
-    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }

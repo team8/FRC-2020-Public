@@ -1,11 +1,8 @@
 package com.palyrobotics.frc2019.config;
 
-import com.palyrobotics.frc2019.config.constants.DrivetrainConstants;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpiutil.CircularBuffer;
 
 import java.util.List;
@@ -20,8 +17,7 @@ public class RobotState {
 
     public static final int kUltrasonicBufferSize = 10;
     private static RobotState sInstance = new RobotState();
-    private final DifferentialDriveKinematics m_Kinematics = new DifferentialDriveKinematics(DrivetrainConstants.kTrackWidthMeters);
-    private final DifferentialDriveOdometry m_Odometry = new DifferentialDriveOdometry(m_Kinematics);
+    private final DifferentialDriveOdometry m_Odometry = new DifferentialDriveOdometry(new Rotation2d()); // TODO use gyro properly to set this
     // Updated by autoInit, teleopInit, disabledInit
     public GamePeriod gamePeriod = GamePeriod.DISABLED;
     public double robotVelocity, robotAcceleration;
@@ -63,11 +59,11 @@ public class RobotState {
     }
 
     public void resetOdometry() {
-        m_Odometry.resetPosition(new Pose2d());
+        m_Odometry.resetPosition(new Pose2d(), new Rotation2d());
     }
 
     public void updateOdometry(double headingDegrees, double leftMetersPerSecond, double rightMetersPerSecond) {
-        drivePose = m_Odometry.update(Rotation2d.fromDegrees(headingDegrees), new DifferentialDriveWheelSpeeds(leftMetersPerSecond, rightMetersPerSecond));
+        drivePose = m_Odometry.update(Rotation2d.fromDegrees(headingDegrees), leftMetersPerSecond, rightMetersPerSecond);
     }
 
     public enum GamePeriod {

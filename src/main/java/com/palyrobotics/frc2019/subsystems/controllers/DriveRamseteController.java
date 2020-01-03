@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 public class DriveRamseteController implements Drive.DriveController {
 
+    public static final double B = 2.0, ZETA = 0.7;
+
     private final RamseteController mController;
     private final Trajectory mTrajectory;
     private final SparkDriveSignal mOutput;
@@ -24,7 +26,7 @@ public class DriveRamseteController implements Drive.DriveController {
 
     public DriveRamseteController(Trajectory trajectory) {
         mTrajectory = trajectory;
-        mController = new RamseteController(2.0, 0.7);
+        mController = new RamseteController(B, ZETA);
         mTimer.reset();
         mTimer.start();
         mOutput = new SparkDriveSignal();

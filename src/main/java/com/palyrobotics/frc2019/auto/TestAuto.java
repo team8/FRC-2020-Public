@@ -23,7 +23,7 @@ public class TestAuto extends AutoModeBase {
     public Routine getRoutine() {
         return new DrivePathRoutine(List.of(
                 new Pose2d(),
-                new Pose2d(5, 0, new Rotation2d(0)))
+                new Pose2d(5, 0, new Rotation2d()))
         );
     }
 
