@@ -19,14 +19,6 @@ public class Commands {
     public ArrayList<Routine> wantedRoutines = new ArrayList<>();
     // Store WantedStates for each subsystem state machine
     public Drive.DriveState wantedDriveState = Drive.DriveState.NEUTRAL;
-    public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
-    public Pusher.PusherState wantedPusherInOutState = Pusher.PusherState.START;
-    public Fingers.FingersState wantedFingersOpenCloseState = Fingers.FingersState.OPEN;
-    public Fingers.PushingState wantedFingersExpelState = Fingers.PushingState.CLOSED;
-    public Intake.IntakeMacroState wantedIntakeState = Intake.IntakeMacroState.HOLDING_CURRENT_ANGLE;
-    public Elevator.ElevatorState wantedElevatorState = Elevator.ElevatorState.IDLE;
-    public double customElevatorPercentOutput, customElevatorVelocity;
-    public boolean hasPusherCargo;
     public double driveThrottle, driveWheel;
     public boolean isQuickTurn, isBraking;
     // All robot set points
@@ -55,14 +47,7 @@ public class Commands {
 
     public void copyTo(Commands other) {
         other.wantedDriveState = this.wantedDriveState;
-        other.wantedShooterState = this.wantedShooterState;
-        other.wantedElevatorState = this.wantedElevatorState;
         other.cancelCurrentRoutines = this.cancelCurrentRoutines;
-        other.wantedPusherInOutState = this.wantedPusherInOutState;
-        other.wantedFingersOpenCloseState = this.wantedFingersOpenCloseState;
-        other.wantedFingersExpelState = this.wantedFingersExpelState;
-        other.wantedIntakeState = this.wantedIntakeState;
-        other.hasPusherCargo = this.hasPusherCargo;
 
         other.wantedRoutines.addAll(this.wantedRoutines);
 

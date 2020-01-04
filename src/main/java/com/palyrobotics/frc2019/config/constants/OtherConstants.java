@@ -58,6 +58,6 @@ public class OtherConstants {
     }
 
     public enum FieldName {
-        TEAM_8, TEAM_254, SVR, SVR_PRACTICE, GNR, GNR_PRACTICE, DMR, DMR_PRACTICE, CMP, CMP_PRACTICE
+        TEAM_8, TEAM_254, SVR, MBR, MBR_PRACTICE, UR, UR_PRACTICE, CMP, CMP_PRACTICE
     }
 }

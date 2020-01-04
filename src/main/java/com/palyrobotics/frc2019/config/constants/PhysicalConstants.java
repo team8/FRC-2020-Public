@@ -12,11 +12,5 @@ public class PhysicalConstants {
     /**
      * Physical field constants
      */
-    public static double
-            kUpperPlatformLength = 48.0,
-            kLevel1Width = 150.0,
-            kLevel2Width = 40.0,
-            kLevel3Width = 48.0,
-            kLowerPlatformLength = 48.0,
-            kCargoLineGap = 21.5;
+    //TODO: enter these
 }

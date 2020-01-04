@@ -4,8 +4,6 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.palyrobotics.frc2019.behavior.RoutineManager;
-import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorMeasureSpeedAtOutputRoutine;
-import com.palyrobotics.frc2019.config.subsystem.ElevatorConfig;
 import com.palyrobotics.frc2019.robot.HardwareAdapter;
 import com.palyrobotics.frc2019.util.config.AbstractConfig;
 import com.palyrobotics.frc2019.util.config.Configs;
@@ -228,24 +226,13 @@ public class CommandReceiver implements RobotService {
             case "run": {
                 String routineName = parse.getString("routine_name");
                 switch (routineName) {
-                    case "measure_elevator_speed": {
-                        try {
-                            double percentOutput = Double.parseDouble(parse.<String>getList("parameters").get(0));
-                            RoutineManager.getInstance().addNewRoutine(new ElevatorMeasureSpeedAtOutputRoutine(percentOutput, Configs.get(ElevatorConfig.class).feedForward, -10));
-                            return String.format("Starting measure elevator routine with percent output %f", percentOutput);
-                        } catch (Exception exception) {
-                            throw new ArgumentParserException("Could not parse parameters", exception, mParser);
-                        }
-                    }
+
                     default: {
                         throw new ArgumentParserException("Routine not recognized!", mParser);
                     }
                 }
             }
-            case "calibrate": {
-                double potentiometer = HardwareAdapter.getInstance().getIntake().calibrateIntakeEncoderWithPotentiometer();
-                return String.format("Calibrated intake with potentiometer value %f%n", potentiometer);
-            }
+
             default: {
                 throw new RuntimeException();
             }

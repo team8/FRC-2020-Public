@@ -33,15 +33,10 @@ public class Robot extends TimedRobot {
     private RoutineManager mRoutineManager = RoutineManager.getInstance();
     /* Subsystems */
     private Drive mDrive = Drive.getInstance();
-    private Elevator mElevator = Elevator.getInstance();
-    private Shooter mShooter = Shooter.getInstance();
-    private Pusher mPusher = Pusher.getsInstance();
-    private Fingers mFingers = Fingers.getInstance();
-    private Intake mIntake = Intake.getInstance();
     private List<Subsystem>
-            mSubsystems = List.of(mDrive, mElevator, mShooter, mPusher, mFingers, mIntake),
+            mSubsystems = List.of(mDrive),
             mEnabledSubsystems;
-    private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mElevator, mShooter, mPusher, mFingers, mIntake);
+    private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive);
     private List<RobotService> mEnabledServices;
 
     public static RobotState getRobotState() {
@@ -70,8 +65,6 @@ public class Robot extends TimedRobot {
                 ? c -> IdleMode.kBrake // Always brake if enabled
                 : c -> c ? IdleMode.kCoast : IdleMode.kBrake; // Set to config when disabled
         mHardwareUpdater.setDriveIdleMode(f.apply(mConfig.coastDriveIfDisabled));
-        mHardwareUpdater.setElevatorIdleMode(f.apply(mConfig.coastElevatorIfDisabled));
-        mHardwareUpdater.setArmIdleMode(f.apply(mConfig.coastArmIfDisabled));
     }
 
     private void stageInit(RobotState.GamePeriod period)
@@ -99,10 +92,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testPeriodic() {
-        mLiveGraph.add("Left Ultrasonic", HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft.getRangeInches());
-        mLiveGraph.add("Right Ultrasonic", HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight.getRangeInches());
-        mLiveGraph.add("Pusher Ultrasonic", HardwareAdapter.getInstance().getPusher().pusherUltrasonic.getRangeInches());
-        mLiveGraph.add("Arm Potentiometer", HardwareAdapter.getInstance().getIntake().potentiometer.get());
     }
 
     @Override
@@ -136,7 +125,8 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         sRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
         sRobotState.resetOdometry();
-        sRobotState.resetUltrasonics();
+        // TODO: ultrasonics
+        // sRobotState.resetUltrasonics();
 
         // Clear the commands
         sCommands = Commands.reset();

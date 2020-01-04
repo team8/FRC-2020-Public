@@ -3,15 +3,9 @@
         "commandReceiver"
     ],
     "enabledSubsystems": [
-        "drive",
-        "fingers",
-        "pusher",
-        "intake",
-        "shooter"
+        "drive"
     ],
     "coastDriveIfDisabled": false,
-    "coastElevatorIfDisabled": false,
-    "coastArmIfDisabled": false,
     "disableSparkOutput": false,
     "smartMotionMultiplier": 0.95
 }

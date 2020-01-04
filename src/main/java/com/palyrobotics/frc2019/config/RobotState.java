@@ -23,20 +23,15 @@ public class RobotState {
     public double robotVelocity, robotAcceleration;
     public boolean isQuickTurning;
     public double leftDriveVelocity, rightDriveVelocity;
-    // Intake
-    public boolean hasIntakeCargo;
-    public double
-            cargoDistance,
-            intakeStartAngle,  // Angle in degrees
-            intakeAngle,  // Angle in degrees
-            intakeVelocity; // RPM
-    public CircularBuffer
-            leftIntakeReadings = new CircularBuffer(kUltrasonicBufferSize),
-            rightIntakeReadings = new CircularBuffer(kUltrasonicBufferSize);
-    // Pusher
-    public boolean hasPusherCargo, hasPusherCargoFar;
-    public double cargoPusherDistance;
-    public CircularBuffer pusherReadings = new CircularBuffer(kUltrasonicBufferSize);
+
+    // TODO: ultrasonics
+    // public CircularBuffer
+    //         leftIntakeReadings = new CircularBuffer(kUltrasonicBufferSize),
+    //         rightIntakeReadings = new CircularBuffer(kUltrasonicBufferSize);
+    // // Pusher
+    // public boolean hasPusherCargo, hasPusherCargoFar;
+    // public double cargoPusherDistance;
+    // public CircularBuffer pusherReadings = new CircularBuffer(kUltrasonicBufferSize);
     // Pose stores drivetrain sensor data
     public Pose2d drivePose = new Pose2d();
     // Pusher sensor data
@@ -50,13 +45,15 @@ public class RobotState {
         return sInstance;
     }
 
-    public void resetUltrasonics() {
-        for (CircularBuffer buffer : List.of(leftIntakeReadings, rightIntakeReadings, pusherReadings)) {
-            for (int i = 0; i < kUltrasonicBufferSize; i++) {
-                buffer.addFirst(Double.MAX_VALUE);
-            }
-        }
-    }
+
+    // TODO: ultrasonics
+    // public void resetUltrasonics() {
+    //     for (CircularBuffer buffer : List.of(leftIntakeReadings, rightIntakeReadings, pusherReadings)) {
+    //         for (int i = 0; i < kUltrasonicBufferSize; i++) {
+    //             buffer.addFirst(Double.MAX_VALUE);
+    //         }
+    //     }
+    // }
 
     public void resetOdometry() {
         m_Odometry.resetPosition(new Pose2d(), new Rotation2d());

@@ -1,11 +1,6 @@
 package com.palyrobotics.frc2019.auto;
 
 import com.palyrobotics.frc2019.behavior.Routine;
-import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-
-import java.util.List;
 
 public class TestAuto extends AutoModeBase {
 
@@ -19,12 +14,10 @@ public class TestAuto extends AutoModeBase {
 
     }
 
+    //TODO: Update
     @Override
     public Routine getRoutine() {
-        return new DrivePathRoutine(List.of(
-                new Pose2d(),
-                new Pose2d(5, 0, new Rotation2d()))
-        );
+        return null;
     }
 
     @Override

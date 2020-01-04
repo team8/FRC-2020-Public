@@ -14,11 +14,6 @@ public abstract class Routine {
 
     // Keeps access to all subsystems to modify their output and read their status
     protected final Drive mDrive = Drive.getInstance();
-    protected final Shooter mShooter = Shooter.getInstance();
-    protected final Pusher mPusher = Pusher.getsInstance();
-    protected final Elevator mElevator = Elevator.getInstance();
-    protected final Fingers mFingers = Fingers.getInstance();
-    protected final Intake mIntake = Intake.getInstance();
     protected final RobotState mRobotState = RobotState.getInstance();
 
     // Called to start a routine
