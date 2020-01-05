@@ -104,11 +104,13 @@ public class HardwareAdapter {
         final Compressor compressor;
         final PowerDistributionPanel pdp;
         final UsbCamera fisheyeCam;
+        final ColorSensorV3 mColorSensor;
 
         MiscellaneousHardware() {
             compressor = new Compressor();
             pdp = new PowerDistributionPanel();
             fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
+            mColorSensor = new ColorSensorV3(I2C.Port.kOnboard);
         }
 
         private static MiscellaneousHardware getInstance() {

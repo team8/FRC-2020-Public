@@ -9,11 +9,8 @@ import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2020.util.SparkMaxOutput;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LazySparkMax;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.ControlType;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -81,6 +78,11 @@ class HardwareUpdater {
     }
 
     private void configureMiscellaneousHardware() {
+        RobotState.getInstance().mColorMatcher.addColorMatch(RobotState.getInstance().kCyanCPTarget);
+        RobotState.getInstance().mColorMatcher.addColorMatch(RobotState.getInstance().kGreenCPTarget);
+        RobotState.getInstance().mColorMatcher.addColorMatch(RobotState.getInstance().kRedCPTarget);
+        RobotState.getInstance().mColorMatcher.addColorMatch(RobotState.getInstance().kYellowCPTarget);
+
         UsbCamera fisheyeCam = HardwareAdapter.getInstance().getMiscellaneousHardware().fisheyeCam;
         fisheyeCam.setResolution(640, 360); // Original is 1920 x 1080
     }
@@ -115,6 +117,29 @@ class HardwareUpdater {
 
         robotState.leftDriveVelocity = drivetrain.leftMasterSpark.getEncoder().getVelocity();
         robotState.rightDriveVelocity = drivetrain.rightMasterSpark.getEncoder().getVelocity();
+
+        //updating color sensor data
+        robotState.detectedRGBVals = HardwareAdapter.getInstance().getMiscellaneousHardware().mColorSensor.getColor();
+        robotState.closestColorRGB = robotState.mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
+        if (robotState.closestColorRGB.color == robotState.kCyanCPTarget) {
+            robotState.closestColorString = "Cyan";
+        }
+        else if (robotState.closestColorRGB.color == robotState.kYellowCPTarget) {
+            robotState.closestColorString = "Yellow";
+        }
+        else if (robotState.closestColorRGB.color == robotState.kGreenCPTarget) {
+            robotState.closestColorString = "Green";
+        }
+        else if (robotState.closestColorRGB.color == robotState.kRedCPTarget) {
+            robotState.closestColorString = "Red";
+        }
+        robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
+
+        //For testing purposes
+        System.out.println(robotState.closestColorString + " with confidence level of " +  (robotState.closestColorConfidence * 100));
+        System.out.println(robotState.detectedRGBVals.red + ", " + robotState.detectedRGBVals.green + ", " + robotState.detectedRGBVals.blue);
+
+
 
 
 //        double robotVelocity = (robotState.drivePose.leftEncoderVelocity + robotState.drivePose.rightEncoderVelocity) / 2;
@@ -195,6 +220,8 @@ class HardwareUpdater {
 //        System.out.println("HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark = " + HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark.getAppliedOutput());
 //        System.out.println("HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark = " + HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark.getAppliedOutput());
     }
+
+
 
     /**
      * Checks if the compressor should compress and updates it accordingly

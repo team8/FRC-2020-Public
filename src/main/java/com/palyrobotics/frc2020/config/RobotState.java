@@ -3,6 +3,7 @@ package com.palyrobotics.frc2020.config;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * Holds all hardware input, such as sensors. <br />
@@ -44,7 +45,25 @@ public class RobotState {
         return sInstance;
     }
 
+    //Tuned to game manual color control panel ut in reality might be slightly off
+    public final Color kCyanCPTarget = ColorMatch.makeColor(0, 1, 1);
+    public final Color kGreenCPTarget = ColorMatch.makeColor(0, 1, 0);
+    public final Color kRedCPTarget = ColorMatch.makeColor(1, 0, 0);
+    public final Color kYellowCPTarget = ColorMatch.makeColor(1, 1, 0);
 
+    public String closestColorString;
+    public double closestColorConfidence;
+    public Color detectedRGBVals;
+    public ColorMatchResult closestColorRGB;
+
+    /**
+     * A Rev Color Match object is used to register and detect known colors. This can
+     * be calibrated ahead of time or during operation.
+     *
+     * This object uses a simple euclidian distance to estimate the closest match
+     * with given confidence range.
+     */
+    public final ColorMatch mColorMatcher = new ColorMatch();
     // TODO: ultrasonics
     // public void resetUltrasonics() {
     //     for (CircularBuffer buffer : List.of(leftIntakeReadings, rightIntakeReadings, pusherReadings)) {
