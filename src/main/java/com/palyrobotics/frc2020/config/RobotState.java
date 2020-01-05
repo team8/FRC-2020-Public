@@ -46,10 +46,11 @@ public class RobotState {
     }
 
     //Tuned to game manual color control panel ut in reality might be slightly off
-    public final Color kCyanCPTarget = ColorMatch.makeColor(0, 1, 1);
-    public final Color kGreenCPTarget = ColorMatch.makeColor(0, 1, 0);
-    public final Color kRedCPTarget = ColorMatch.makeColor(1, 0, 0);
-    public final Color kYellowCPTarget = ColorMatch.makeColor(1, 1, 0);
+    //Tuned to game manual color but in reality might be slightly off
+    public final Color kCyanCPTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
+    public final Color kGreenCPTarget = ColorMatch.makeColor(0.1, 0.6, 0.25);
+    public final Color kRedCPTarget = ColorMatch.makeColor(0.5, 0.3, 0.1);
+    public final Color kYellowCPTarget = ColorMatch.makeColor(0.3, 0.5, 0.1);
 
     public String closestColorString;
     public double closestColorConfidence;
