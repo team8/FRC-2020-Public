@@ -47,12 +47,6 @@ public class RobotState {
         return sInstance;
     }
 
-    //May need to be returned based on lighting conditions
-    public final Color kCyanCPTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
-    public final Color kGreenCPTarget = ColorMatch.makeColor(0.1, 0.6, 0.25);
-    public final Color kRedCPTarget = ColorMatch.makeColor(0.5, 0.3, 0.1);
-    public final Color kYellowCPTarget = ColorMatch.makeColor(0.3, 0.5, 0.1);
-
     public String closestColorString;
     public double closestColorConfidence;
     public Color detectedRGBVals;

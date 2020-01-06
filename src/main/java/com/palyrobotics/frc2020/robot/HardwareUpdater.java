@@ -3,6 +3,7 @@ package com.palyrobotics.frc2020.robot;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
+import com.palyrobotics.frc2020.config.constants.OtherConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
@@ -78,10 +79,10 @@ class HardwareUpdater {
     }
 
     private void configureMiscellaneousHardware() {
-        RobotState.getInstance().mColorMatcher.addColorMatch(RobotState.getInstance().kCyanCPTarget);
-        RobotState.getInstance().mColorMatcher.addColorMatch(RobotState.getInstance().kGreenCPTarget);
-        RobotState.getInstance().mColorMatcher.addColorMatch(RobotState.getInstance().kRedCPTarget);
-        RobotState.getInstance().mColorMatcher.addColorMatch(RobotState.getInstance().kYellowCPTarget);
+        RobotState.getInstance().mColorMatcher.addColorMatch(OtherConstants.kCyanCPTarget);
+        RobotState.getInstance().mColorMatcher.addColorMatch(OtherConstants.kGreenCPTarget);
+        RobotState.getInstance().mColorMatcher.addColorMatch(OtherConstants.kRedCPTarget);
+        RobotState.getInstance().mColorMatcher.addColorMatch(OtherConstants.kYellowCPTarget);
 
         UsbCamera fisheyeCam = HardwareAdapter.getInstance().getMiscellaneousHardware().fisheyeCam;
         fisheyeCam.setResolution(640, 360); // Original is 1920 x 1080
@@ -121,16 +122,16 @@ class HardwareUpdater {
         //updating color sensor data
         robotState.detectedRGBVals = HardwareAdapter.getInstance().getMiscellaneousHardware().mColorSensor.getColor();
         robotState.closestColorRGB = robotState.mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
-        if (robotState.closestColorRGB.color == robotState.kCyanCPTarget) {
+        if (robotState.closestColorRGB.color == OtherConstants.kCyanCPTarget) {
             robotState.closestColorString = "Cyan";
         }
-        else if (robotState.closestColorRGB.color == robotState.kYellowCPTarget) {
+        else if (robotState.closestColorRGB.color == OtherConstants.kYellowCPTarget) {
             robotState.closestColorString = "Yellow";
         }
-        else if (robotState.closestColorRGB.color == robotState.kGreenCPTarget) {
+        else if (robotState.closestColorRGB.color == OtherConstants.kGreenCPTarget) {
             robotState.closestColorString = "Green";
         }
-        else if (robotState.closestColorRGB.color == robotState.kRedCPTarget) {
+        else if (robotState.closestColorRGB.color == OtherConstants.kRedCPTarget) {
             robotState.closestColorString = "Red";
         }
         robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
