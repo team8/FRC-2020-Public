@@ -24,6 +24,8 @@ public class RobotState {
     public boolean isQuickTurning;
     public double leftDriveVelocity, rightDriveVelocity;
 
+    public String gameData;
+
     // TODO: ultrasonics
     // public CircularBuffer
     //         leftIntakeReadings = new CircularBuffer(kUltrasonicBufferSize),

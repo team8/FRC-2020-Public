@@ -18,9 +18,9 @@
      private final Trajectory mTrajectory;
      private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
 
-     public DrivePathRoutine(List<Pose2d> wayPoints) {
+     public DrivePathRoutine(List<Pose2d> waypoints) {
          mTrajectory = TrajectoryGenerator.generateTrajectory(
-                 wayPoints,
+                 waypoints,
                  new TrajectoryConfig(mDriveConfig.maxPathVelocityMetersPerSecond, mDriveConfig.maxPathAccelerationMetersPerSecondSquared)
          );
      }

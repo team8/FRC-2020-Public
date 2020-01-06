@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.ControlType;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Should only be used in robot package.
@@ -122,6 +123,11 @@ class HardwareUpdater {
 //        robotState.robotAcceleration = mAccelerometerAngles[0];
 //        robotState.robotVelocity = robotVelocity;
 
+
+        robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();
+        if (robotState.gameData.length() > 0) {
+            System.out.println("Game data has been found, color is: " + robotState.gameData);
+        }
 
         loopOverrunDebugger.addPoint("Basic");
 
