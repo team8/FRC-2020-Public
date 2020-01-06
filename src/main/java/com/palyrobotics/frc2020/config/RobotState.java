@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.config;
 
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
@@ -45,8 +47,7 @@ public class RobotState {
         return sInstance;
     }
 
-    //Tuned to game manual color control panel ut in reality might be slightly off
-    //Tuned to game manual color but in reality might be slightly off
+    //May need to be returned based on lighting conditions
     public final Color kCyanCPTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
     public final Color kGreenCPTarget = ColorMatch.makeColor(0.1, 0.6, 0.25);
     public final Color kRedCPTarget = ColorMatch.makeColor(0.5, 0.3, 0.1);
