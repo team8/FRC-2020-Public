@@ -1,6 +1,6 @@
-package com.palyrobotics.frc2019.config;
+package com.palyrobotics.frc2020.config;
 
-import com.palyrobotics.frc2019.util.MockJoystickInput;
+import com.palyrobotics.frc2020.util.MockJoystickInput;
 
 public class MockRobotState extends RobotState {
 	public MockJoystickInput leftStickInput = new MockJoystickInput();

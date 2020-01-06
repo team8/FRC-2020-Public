@@ -1,6 +1,6 @@
-import com.palyrobotics.frc2019.util.control.Gains;
-import com.palyrobotics.frc2019.util.control.LazySparkMax;
-import com.palyrobotics.frc2019.util.control.SmartGains;
+import com.palyrobotics.frc2020.util.control.Gains;
+import com.palyrobotics.frc2020.util.control.LazySparkMax;
+import com.palyrobotics.frc2020.util.control.SmartGains;
 import com.revrobotics.ControlType;
 import org.junit.Test;
 

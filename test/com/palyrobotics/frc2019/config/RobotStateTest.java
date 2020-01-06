@@ -1,6 +1,6 @@
-package com.palyrobotics.frc2019.config;
+package com.palyrobotics.frc2020.config;
 
-import com.palyrobotics.frc2019.robot.Robot;
+import com.palyrobotics.frc2020.robot.Robot;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;

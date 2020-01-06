@@ -1,9 +1,9 @@
-package com.palyrobotics.frc2019.subsystems;
+package com.palyrobotics.frc2020.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.palyrobotics.frc2019.config.*;
-import com.palyrobotics.frc2019.robot.MockRobot;
-import com.palyrobotics.frc2019.subsystems.Elevator.ElevatorState;
+import com.palyrobotics.frc2020.config.*;
+import com.palyrobotics.frc2020.robot.MockRobot;
+import com.palyrobotics.frc2020.subsystems.Elevator.ElevatorState;
 import org.junit.Before;
 import org.junit.Test;
 

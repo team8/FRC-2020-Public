@@ -1,8 +1,8 @@
-package com.palyrobotics.frc2019.auto;
+package com.palyrobotics.frc2020.auto;
 
-import com.palyrobotics.frc2019.auto.modes.*;
-import com.palyrobotics.frc2019.auto.testautos.TestTrajectoryAutoMode;
-import com.palyrobotics.frc2019.config.Constants;
+import com.palyrobotics.frc2020.auto.modes.*;
+import com.palyrobotics.frc2020.auto.testautos.TestTrajectoryAutoMode;
+import com.palyrobotics.frc2020.config.Constants;
 import org.junit.Before;
 import org.junit.Test;
 

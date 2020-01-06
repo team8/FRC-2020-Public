@@ -1,8 +1,8 @@
-package com.palyrobotics.frc2019.suites;
+package com.palyrobotics.frc2020.suites;
 
-import com.palyrobotics.frc2019.behavior.IntakeRoutineTest;
-import com.palyrobotics.frc2019.behavior.RoutineManagerTest;
-import com.palyrobotics.frc2019.subsystems.SubsystemUpdateTest;
+import com.palyrobotics.frc2020.behavior.IntakeRoutineTest;
+import com.palyrobotics.frc2020.behavior.RoutineManagerTest;
+import com.palyrobotics.frc2020.subsystems.SubsystemUpdateTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

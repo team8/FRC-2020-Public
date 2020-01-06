@@ -1,12 +1,12 @@
-package com.palyrobotics.frc2019.behavior;
+package com.palyrobotics.frc2020.behavior;
 
-import com.palyrobotics.frc2019.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
-import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.MockCommands;
-import com.palyrobotics.frc2019.config.MockRobotState;
-import com.palyrobotics.frc2019.robot.MockRobot;
-import com.palyrobotics.frc2019.subsystems.Elevator;
-import com.palyrobotics.frc2019.subsystems.Elevator.ElevatorState;
+import com.palyrobotics.frc2020.behavior.routines.elevator.ElevatorCustomPositioningRoutine;
+import com.palyrobotics.frc2020.config.Commands;
+import com.palyrobotics.frc2020.config.MockCommands;
+import com.palyrobotics.frc2020.config.MockRobotState;
+import com.palyrobotics.frc2020.robot.MockRobot;
+import com.palyrobotics.frc2020.subsystems.Elevator;
+import com.palyrobotics.frc2020.subsystems.Elevator.ElevatorState;
 import org.junit.Before;
 import org.junit.Test;
 

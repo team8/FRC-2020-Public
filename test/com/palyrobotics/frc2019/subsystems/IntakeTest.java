@@ -1,11 +1,11 @@
-package com.palyrobotics.frc2019.subsystems;
+package com.palyrobotics.frc2020.subsystems;
 
-import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.Constants;
-import com.palyrobotics.frc2019.config.RobotState;
-import com.palyrobotics.frc2019.robot.MockRobot;
-import com.palyrobotics.frc2019.subsystems.Intake.OpenCloseState;
-import com.palyrobotics.frc2019.subsystems.Intake.WheelState;
+import com.palyrobotics.frc2020.config.Commands;
+import com.palyrobotics.frc2020.config.Constants;
+import com.palyrobotics.frc2020.config.RobotState;
+import com.palyrobotics.frc2020.robot.MockRobot;
+import com.palyrobotics.frc2020.subsystems.Intake.OpenCloseState;
+import com.palyrobotics.frc2020.subsystems.Intake.WheelState;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.junit.After;
 import org.junit.Before;

@@ -1,10 +1,10 @@
-package com.palyrobotics.frc2019.subsystems;
+package com.palyrobotics.frc2020.subsystems;
 
-import com.palyrobotics.frc2019.config.MockCommands;
-import com.palyrobotics.frc2019.config.MockRobotState;
-import com.palyrobotics.frc2019.robot.MockRobot;
-import com.palyrobotics.frc2019.util.CheesyDriveHelper;
-import com.palyrobotics.frc2019.util.DriveSignal;
+import com.palyrobotics.frc2020.config.MockCommands;
+import com.palyrobotics.frc2020.config.MockRobotState;
+import com.palyrobotics.frc2020.robot.MockRobot;
+import com.palyrobotics.frc2020.util.CheesyDriveHelper;
+import com.palyrobotics.frc2020.util.DriveSignal;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

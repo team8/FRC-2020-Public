@@ -1,7 +1,7 @@
-package com.palyrobotics.frc2019.robot;
+package com.palyrobotics.frc2020.robot;
 
-import com.palyrobotics.frc2019.config.MockCommands;
-import com.palyrobotics.frc2019.config.MockRobotState;
+import com.palyrobotics.frc2020.config.MockCommands;
+import com.palyrobotics.frc2020.config.MockRobotState;
 
 /**
  * Created by EricLiu on 11/12/17.

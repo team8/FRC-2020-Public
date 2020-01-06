@@ -1,9 +1,9 @@
-package com.palyrobotics.frc2019.behavior;
+package com.palyrobotics.frc2020.behavior;
 
-import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.robot.MockRobot;
-import com.palyrobotics.frc2019.subsystems.Drive;
-import com.palyrobotics.frc2019.subsystems.Subsystem;
+import com.palyrobotics.frc2020.config.Commands;
+import com.palyrobotics.frc2020.robot.MockRobot;
+import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Subsystem;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

@@ -1,9 +1,9 @@
-package com.palyrobotics.frc2019.auto;
+package com.palyrobotics.frc2020.auto;
 
-import com.palyrobotics.frc2019.auto.AutoModeBase.Alliance;
-import com.palyrobotics.frc2019.behavior.Routine;
-import com.palyrobotics.frc2019.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2019.config.AutoDistances;
+import com.palyrobotics.frc2020.auto.AutoModeBase.Alliance;
+import com.palyrobotics.frc2020.behavior.Routine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.config.AutoDistances;
 
 import org.junit.Test;
 

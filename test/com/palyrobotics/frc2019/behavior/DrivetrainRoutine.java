@@ -1,11 +1,11 @@
-package com.palyrobotics.frc2019.behavior;
+package com.palyrobotics.frc2020.behavior;
 
-import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.subsystems.Drive;
-import com.palyrobotics.frc2019.subsystems.Subsystem;
+import com.palyrobotics.frc2020.config.Commands;
+import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Subsystem;
 
 /**
- * Created by Nihar on 1/22/17. Used for testing {@link RoutineManager} in {@link com.palyrobotics.frc2019.behavior.RoutineManagerTest}
+ * Created by Nihar on 1/22/17. Used for testing {@link RoutineManager} in {@link com.palyrobotics.frc2020.behavior.RoutineManagerTest}
  */
 public class DrivetrainRoutine extends MockRoutine {
 

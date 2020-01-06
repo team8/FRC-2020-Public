@@ -1,8 +1,8 @@
-package com.palyrobotics.frc2019.util;
+package com.palyrobotics.frc2020.util;
 
-import com.palyrobotics.frc2019.config.Commands;
-import com.palyrobotics.frc2019.config.MockRobotState;
-import com.palyrobotics.frc2019.robot.MockRobot;
+import com.palyrobotics.frc2020.config.Commands;
+import com.palyrobotics.frc2020.config.MockRobotState;
+import com.palyrobotics.frc2020.robot.MockRobot;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertFalse;

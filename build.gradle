@@ -8,7 +8,7 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
-def ROBOT_MAIN_CLASS = "com.palyrobotics.frc2019.robot.RobotStarter"
+def ROBOT_MAIN_CLASS = "com.palyrobotics.frc2020.robot.RobotStarter"
 
 compileJava {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"

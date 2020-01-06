@@ -1,8 +1,8 @@
-package com.palyrobotics.frc2019.config;
+package com.palyrobotics.frc2020.config;
 
-import com.palyrobotics.frc2019.robot.MockRobot;
-import com.palyrobotics.frc2019.subsystems.Drive;
-import com.palyrobotics.frc2019.util.DriveSignal;
+import com.palyrobotics.frc2020.robot.MockRobot;
+import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.util.DriveSignal;
 import org.junit.Test;
 
 import java.util.Optional;

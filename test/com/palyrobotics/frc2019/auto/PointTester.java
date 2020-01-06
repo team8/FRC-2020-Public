@@ -1,9 +1,9 @@
-package com.palyrobotics.frc2019.auto;
+package com.palyrobotics.frc2020.auto;
 
-import com.palyrobotics.frc2019.config.AllianceDistances;
-import com.palyrobotics.frc2019.config.AutoDistances;
-import com.palyrobotics.frc2019.config.Constants;
-import com.palyrobotics.frc2019.util.trajectory.Translation2d;
+import com.palyrobotics.frc2020.config.AllianceDistances;
+import com.palyrobotics.frc2020.config.AutoDistances;
+import com.palyrobotics.frc2020.config.Constants;
+import com.palyrobotics.frc2020.util.trajectory.Translation2d;
 import org.junit.Test;
 
 public class PointTester {

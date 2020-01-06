@@ -1,7 +1,7 @@
-package com.palyrobotics.frc2019.config;
+package com.palyrobotics.frc2020.config;
 
-import com.palyrobotics.frc2019.behavior.Routine;
-import com.palyrobotics.frc2019.util.DriveSignal;
+import com.palyrobotics.frc2020.behavior.Routine;
+import com.palyrobotics.frc2020.util.DriveSignal;
 
 import java.util.Optional;
 

@@ -1,13 +1,13 @@
-package com.palyrobotics.frc2019.suites;
+package com.palyrobotics.frc2020.suites;
 
-import com.palyrobotics.frc2019.auto.AutoModeSelectorTest;
-import com.palyrobotics.frc2019.behavior.RoutineManagerTest;
-import com.palyrobotics.frc2019.config.CommandsTest;
-import com.palyrobotics.frc2019.config.RobotStateTest;
-import com.palyrobotics.frc2019.subsystems.ClimberTest;
-import com.palyrobotics.frc2019.subsystems.DriveTest;
-import com.palyrobotics.frc2019.subsystems.IntakeTest;
-import com.palyrobotics.frc2019.util.CheesyDriveHelperTest;
+import com.palyrobotics.frc2020.auto.AutoModeSelectorTest;
+import com.palyrobotics.frc2020.behavior.RoutineManagerTest;
+import com.palyrobotics.frc2020.config.CommandsTest;
+import com.palyrobotics.frc2020.config.RobotStateTest;
+import com.palyrobotics.frc2020.subsystems.ClimberTest;
+import com.palyrobotics.frc2020.subsystems.DriveTest;
+import com.palyrobotics.frc2020.subsystems.IntakeTest;
+import com.palyrobotics.frc2020.util.CheesyDriveHelperTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

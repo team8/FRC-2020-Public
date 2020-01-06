@@ -1,9 +1,9 @@
 package com.team254.lib.trajectory;
 
-import com.palyrobotics.frc2019.util.trajectory.Path;
-import com.palyrobotics.frc2019.util.trajectory.Path.Waypoint;
-import com.palyrobotics.frc2019.util.trajectory.PathSegment;
-import com.palyrobotics.frc2019.util.trajectory.Translation2d;
+import com.palyrobotics.frc2020.util.trajectory.Path;
+import com.palyrobotics.frc2020.util.trajectory.Path.Waypoint;
+import com.palyrobotics.frc2020.util.trajectory.PathSegment;
+import com.palyrobotics.frc2020.util.trajectory.Translation2d;
 import org.junit.Test;
 
 import java.util.ArrayList;

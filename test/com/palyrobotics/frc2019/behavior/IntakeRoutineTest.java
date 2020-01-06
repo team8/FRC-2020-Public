@@ -1,10 +1,10 @@
-package com.palyrobotics.frc2019.behavior;
+package com.palyrobotics.frc2020.behavior;
 
-import com.palyrobotics.frc2019.behavior.routines.intake.*;
-import com.palyrobotics.frc2019.config.MockCommands;
-import com.palyrobotics.frc2019.config.MockRobotState;
-import com.palyrobotics.frc2019.robot.MockRobot;
-import com.palyrobotics.frc2019.subsystems.Intake;
+import com.palyrobotics.frc2020.behavior.routines.intake.*;
+import com.palyrobotics.frc2020.config.MockCommands;
+import com.palyrobotics.frc2020.config.MockRobotState;
+import com.palyrobotics.frc2020.robot.MockRobot;
+import com.palyrobotics.frc2020.subsystems.Intake;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.junit.Before;
 import org.junit.Test;
