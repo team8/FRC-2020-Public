@@ -107,6 +107,14 @@ class HardwareUpdater {
 //         pusherUltrasonic.setEnabled(true);
 // 		pusherSecondaryUltrasonic.setEnabled(true);
     }
+    /**
+     * A Rev Color Match object is used to register and detect known colors. This can
+     * be calibrated ahead of time or during operation.
+     *
+     * This object uses a simple euclidian distance to estimate the closest match
+     * with given confidence range.
+     */
+    public final ColorMatch mColorMatcher = new ColorMatch();
 
     /**
      * Takes all of the sensor data from the hardware, and unwraps it into the current {@link RobotState}.
@@ -121,7 +129,7 @@ class HardwareUpdater {
 
         //updating color sensor data
         robotState.detectedRGBVals = HardwareAdapter.getInstance().getMiscellaneousHardware().mColorSensor.getColor();
-        robotState.closestColorRGB = robotState.mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
+        robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
         if (robotState.closestColorRGB.color == OtherConstants.kCyanCPTarget) {
             robotState.closestColorString = "Cyan";
         }

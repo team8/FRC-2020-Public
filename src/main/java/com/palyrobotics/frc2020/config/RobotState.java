@@ -52,14 +52,6 @@ public class RobotState {
     public Color detectedRGBVals;
     public ColorMatchResult closestColorRGB;
 
-    /**
-     * A Rev Color Match object is used to register and detect known colors. This can
-     * be calibrated ahead of time or during operation.
-     *
-     * This object uses a simple euclidian distance to estimate the closest match
-     * with given confidence range.
-     */
-    public final ColorMatch mColorMatcher = new ColorMatch();
     // TODO: ultrasonics
     // public void resetUltrasonics() {
     //     for (CircularBuffer buffer : List.of(leftIntakeReadings, rightIntakeReadings, pusherReadings)) {
