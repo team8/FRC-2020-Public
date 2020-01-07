@@ -15,14 +15,18 @@ import edu.wpi.first.wpilibj.util.Color;
  */
 public class RobotState {
 
+    public enum GamePeriod {
+        AUTO, TELEOP, TESTING, DISABLED
+    }
+
     public static final int kUltrasonicBufferSize = 10;
+
     private static RobotState sInstance = new RobotState();
-    private final DifferentialDriveOdometry m_Odometry = new DifferentialDriveOdometry(new Rotation2d()); // TODO use gyro properly to set this
-    // Updated by autoInit, teleopInit, disabledInit
+
     public GamePeriod gamePeriod = GamePeriod.DISABLED;
-    public double robotVelocity, robotAcceleration;
     public boolean isQuickTurning;
-    public double leftDriveVelocity, rightDriveVelocity;
+    public double leftDriveVelocity, rightDriveVelocity, leftDrivePosition, rightDrivePosition;
+    private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d());
 
     public String gameData;
 
@@ -34,12 +38,9 @@ public class RobotState {
     // public boolean hasPusherCargo, hasPusherCargoFar;
     // public double cargoPusherDistance;
     // public CircularBuffer pusherReadings = new CircularBuffer(kUltrasonicBufferSize);
+
     // Pose stores drivetrain sensor data
     public Pose2d drivePose = new Pose2d();
-    // Pusher sensor data
-    public double pusherPosition, pusherVelocity;
-    // Elevator sensor data
-    public double elevatorPosition, elevatorVelocity;
     // Vision drive data
     public boolean atVisionTargetThreshold;
 
@@ -62,14 +63,11 @@ public class RobotState {
     // }
 
     public void resetOdometry() {
-        m_Odometry.resetPosition(new Pose2d(), new Rotation2d());
+        odometry.resetPosition(new Pose2d(), new Rotation2d());
+        System.out.println("Odometry Reset");
     }
 
-    public void updateOdometry(double headingDegrees, double leftMetersPerSecond, double rightMetersPerSecond) {
-        drivePose = m_Odometry.update(Rotation2d.fromDegrees(headingDegrees), leftMetersPerSecond, rightMetersPerSecond);
-    }
-
-    public enum GamePeriod {
-        AUTO, TELEOP, TESTING, DISABLED
+    public void updateOdometry(double headingDegrees, double leftMeters, double rightMeters) {
+        drivePose = odometry.update(Rotation2d.fromDegrees(headingDegrees), leftMeters, rightMeters);
     }
 }

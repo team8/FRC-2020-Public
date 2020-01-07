@@ -174,9 +174,6 @@ public class Drive extends Subsystem {
 
     /**
      * <h1>Various control states for the drivetrain</h1>
-     *
-     * <p>
-     * <p>
      * {@code CHEZY} creates a {@link CheesyDriveHelper} drive with joystick values.
      * {@code OFF_BOARD_CONTROLLER} creates a CANTalon offboard loop.
      * {@code ON_BOARD_CONTROLLER} makes a control loop calculated in code with an open loop.
@@ -189,7 +186,6 @@ public class Drive extends Subsystem {
 
     /**
      * <h1>Interface for drive controllers</h1>
-     * <p>
      * Contains an {@code update} method that takes a {@link RobotState} and generates a {@link SparkDriveSignal}.
      */
     public interface DriveController {

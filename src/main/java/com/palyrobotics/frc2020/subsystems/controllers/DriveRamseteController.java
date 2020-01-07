@@ -6,10 +6,10 @@ import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.SparkDriveSignal;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
@@ -22,11 +22,11 @@ public class DriveRamseteController implements Drive.DriveController {
     private final SparkDriveSignal mOutput;
     private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
     private final Timer mTimer = new Timer();
-    private final DifferentialDriveKinematics mKinematics = new DifferentialDriveKinematics(DrivetrainConstants.kTrackWidthMeters);
 
     public DriveRamseteController(Trajectory trajectory) {
         mTrajectory = trajectory;
         mController = new RamseteController(B, ZETA);
+        mController.setTolerance(DrivetrainConstants.kPathFinishTolerance);
         mTimer.reset();
         mTimer.start();
         mOutput = new SparkDriveSignal();
@@ -34,15 +34,24 @@ public class DriveRamseteController implements Drive.DriveController {
 
     @Override
     public SparkDriveSignal update(RobotState state) {
-        ChassisSpeeds speeds = mController.calculate(state.drivePose, mTrajectory.sample(mTimer.get()));
-        DifferentialDriveWheelSpeeds wheelSpeeds = mKinematics.toWheelSpeeds(speeds);
-        mOutput.leftOutput.setTargetVelocity(wheelSpeeds.leftMetersPerSecond, mDriveConfig.velocityGains);
-        mOutput.rightOutput.setTargetVelocity(wheelSpeeds.rightMetersPerSecond, mDriveConfig.velocityGains);
+        Trajectory.State targetPose = mTrajectory.sample(mTimer.get());
+        ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
+        DifferentialDriveWheelSpeeds wheelSpeeds = DrivetrainConstants.kKinematics.toWheelSpeeds(speeds);
+        mOutput.leftOutput.setTargetSmartVelocity(wheelSpeeds.leftMetersPerSecond * 60.0, mDriveConfig.smartVelocityGains);
+        mOutput.rightOutput.setTargetSmartVelocity(wheelSpeeds.rightMetersPerSecond * 60.0, mDriveConfig.smartVelocityGains);
+        CSVWriter.addData("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
+        CSVWriter.addData("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
+        CSVWriter.addData("currentPoseX", state.drivePose.getTranslation().getX());
+        CSVWriter.addData("currentPoseY", state.drivePose.getTranslation().getY());
+        CSVWriter.addData("leftVelocity", state.leftDriveVelocity);
+        CSVWriter.addData("rightVelocity", state.rightDriveVelocity);
+        CSVWriter.addData("targetPoseX", targetPose.poseMeters.getTranslation().getX());
+        CSVWriter.addData("targetPoseY", targetPose.poseMeters.getTranslation().getY());
         return mOutput;
     }
 
     @Override
     public boolean onTarget() {
-        return false;
+        return mController.atReference();
     }
 }

@@ -43,7 +43,6 @@ public class OtherConstants {
     public static final double kVisionLEDTimeoutSeconds = 0.1; // How long after the last vision command should we turn off LEDs
     public static final int kRequiredUltrasonicCount = 4;
     public static final double kLimelightMinDistance = .001; // If Limelight.getCorrectedEstimatedDistanceZ() returns 0, we replace it with this value
-    public static boolean operatorXBoxController = true;
     public static double kGroundToCarriageInches = 10.5625; // Distance from ground to the bottom of the carriage in the lowest position
     public static double kCarriageToHatchCenterInches = 6.5625; // Distance from the bottom of the carriage to the center of the hatch expel
     public static double kCarriageToCargoCenterInches = 17.1744; // Distance from the bottom of the carriage to the center of the cargo expel

@@ -1,15 +1,17 @@
 package com.palyrobotics.frc2020.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2020.config.PortConstants;
-import com.palyrobotics.frc2020.config.constants.OtherConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LazySparkMax;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.revrobotics.ColorSensorV3;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.*;
+import com.revrobotics.CANEncoder;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 import java.util.List;
 
@@ -22,7 +24,6 @@ import java.util.List;
 public class HardwareAdapter {
 
     private static final PortConstants sPortConstants = Configs.get(PortConstants.class);
-    // Hardware components at the top for maintenance purposes, variables and getters at bottom
 
     private static final HardwareAdapter sInstance = new HardwareAdapter();
 
@@ -44,16 +45,17 @@ public class HardwareAdapter {
     }
 
     /**
-     * DRIVETRAIN - 6 CANSparkMax, 1 Gyro
+     * DRIVETRAIN - 6 CANSparkMax, 1 Gyro via TalonSRX data cable
      */
     public static class DrivetrainHardware {
         private static DrivetrainHardware sInstance = new DrivetrainHardware();
         final LazySparkMax
                 leftMasterSpark, leftSlave1Spark, leftSlave2Spark,
                 rightMasterSpark, rightSlave1Spark, rightSlave2Spark;
+        final CANEncoder leftMasterEncoder, rightMasterEncoder;
         final List<LazySparkMax> sparks;
-        // TODO: gyro
-        // final PigeonIMU gyro;
+
+        final PigeonIMU gyro;
 
         DrivetrainHardware() {
             leftMasterSpark = new LazySparkMax(sPortConstants.vidarLeftDriveMasterDeviceID);
@@ -62,35 +64,22 @@ public class HardwareAdapter {
             rightMasterSpark = new LazySparkMax(sPortConstants.vidarRightDriveMasterDeviceID);
             rightSlave1Spark = new LazySparkMax(sPortConstants.vidarRightDriveSlave1DeviceID);
             rightSlave2Spark = new LazySparkMax(sPortConstants.vidarRightDriveSlave2DeviceID);
+            leftMasterEncoder = leftMasterSpark.getEncoder();
+            rightMasterEncoder = rightMasterSpark.getEncoder();
             sparks = List.of(leftMasterSpark, leftSlave1Spark, leftSlave2Spark, rightMasterSpark, rightSlave1Spark, rightSlave2Spark);
-            // TODO: gyro
-            // gyro = new PigeonIMU(new WPI_TalonSRX(sPortConstants.vidarShovelDeviceID));
+            gyro = new PigeonIMU(new WPI_TalonSRX(8));
         }
 
         private static DrivetrainHardware getInstance() {
             return sInstance;
         }
-
-        // TODO: dt sensor reset
-        // public void resetSensors() {
-        //     gyro.setYaw(0, 0);
-        //     gyro.setFusedHeading(0, 0);
-        //     gyro.setAccumZAngle(0, 0);
-        //     sparks.forEach(spark -> spark.getEncoder().setPosition(0.0));
-        // }
     }
 
     public static class Joysticks {
-        private static Joysticks sInstance = new Joysticks();
-        final Joystick driveStick = new Joystick(0), turnStick = new Joystick(1);
-        //        public final Joystick backupStick = new Joystick(3);
-        XboxController operatorXboxController;
+        private static final Joysticks sInstance = new Joysticks();
 
-        Joysticks() {
-            if (OtherConstants.operatorXBoxController) {
-                operatorXboxController = new XboxController(2);
-            }
-        }
+        final Joystick driveStick = new Joystick(0), turnStick = new Joystick(1);
+        final XboxController operatorXboxController = new XboxController(2);
 
         private static Joysticks getInstance() {
             return sInstance;
@@ -104,14 +93,15 @@ public class HardwareAdapter {
         private static MiscellaneousHardware sInstance = new MiscellaneousHardware();
         final Compressor compressor;
         final PowerDistributionPanel pdp;
-        final UsbCamera fisheyeCam;
+        // final UsbCamera fisheyeCam;
         final ColorSensorV3 mColorSensor;
 
         MiscellaneousHardware() {
             compressor = new Compressor();
             pdp = new PowerDistributionPanel();
-            fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
+            // fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
             mColorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+
         }
 
         private static MiscellaneousHardware getInstance() {

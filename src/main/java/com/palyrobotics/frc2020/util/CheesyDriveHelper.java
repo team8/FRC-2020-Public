@@ -5,8 +5,6 @@ import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.util.config.Configs;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Implements constant curvature driving. Yoinked from 254 code
@@ -15,9 +13,8 @@ public class CheesyDriveHelper {
 
     private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
     private double
-            mOldWheel, mPreviousWheelForRamp, mPreviousThrottleForRamp,
-            mQuickStopAccumulator, mNegativeInertiaAccumulator,
-            mBrownOutTimeSeconds;
+            mOldWheel,
+            mQuickStopAccumulator, mNegativeInertiaAccumulator;
     private SparkDriveSignal mSignal = new SparkDriveSignal();
 
     public SparkDriveSignal cheesyDrive(Commands commands, RobotState robotState) {
@@ -25,53 +22,12 @@ public class CheesyDriveHelper {
         // Quick-turn if right trigger is pressed
         boolean isQuickTurn = robotState.isQuickTurning = commands.isQuickTurn;
 
-        double totalPowerMultiplier;
-        if (RobotController.isBrownedOut()) {
-            totalPowerMultiplier = mDriveConfig.brownOutInitialNerfMultiplier;
-            mBrownOutTimeSeconds = Timer.getFPGATimestamp();
-        } else {
-            totalPowerMultiplier = MathUtil.clamp(
-                    mDriveConfig.brownOutInitialNerfMultiplier
-                            + (Timer.getFPGATimestamp() - mBrownOutTimeSeconds)
-                            * (1 / mDriveConfig.brownOutRecoverySeconds) * (1 - mDriveConfig.brownOutInitialNerfMultiplier),
-                    mDriveConfig.brownOutInitialNerfMultiplier, 1.0
-            );
-        }
-//        CSVWriter.addData("totalPowerMultiplier", totalPowerMultiplier);
-
         double throttle = commands.driveThrottle, wheel = commands.driveWheel;
 
-        boolean underVelocity = Math.abs(robotState.rightDriveVelocity) < mDriveConfig.velocityUnlock &&
-                Math.abs(robotState.leftDriveVelocity) < mDriveConfig.velocityUnlock;
+        double absoluteThrottle = Math.abs(throttle), absoluteWheel = Math.abs(wheel);
 
-//        CSVWriter.addData("underVelocity", underVelocity);
-//        CSVWriter.addData("leftVelocity", robotState.leftDriveVelocity);
-//        CSVWriter.addData("rightVelocity", robotState.rightDriveVelocity);
-
-        if (Math.abs(throttle) > mDriveConfig.initialLock && underVelocity) {
-            throttle = Math.signum(throttle) * mDriveConfig.initialLock;
-        }
-
-        if (isQuickTurn && Math.abs(wheel) > mDriveConfig.initialLock && underVelocity) {
-            wheel = Math.signum(wheel) * mDriveConfig.initialLock;
-        }
-
-        double absoluteThrottle = Math.abs(throttle);
-        if (absoluteThrottle > mDriveConfig.throttleAccelerationThreshold && absoluteThrottle > Math.abs(mPreviousThrottleForRamp)) {
-            throttle = mPreviousThrottleForRamp + Math.signum(throttle) * mDriveConfig.throttleAccelerationLimit;
-            absoluteThrottle = Math.abs(throttle);
-        }
-        mPreviousThrottleForRamp = throttle;
-
-        double absoluteWheel = Math.abs(wheel);
-        if (isQuickTurn && absoluteWheel > mDriveConfig.wheelAccelerationThreshold && absoluteWheel > Math.abs(mPreviousWheelForRamp)) {
-            wheel = mPreviousWheelForRamp + Math.signum(wheel) * mDriveConfig.wheelAccelerationLimit;
-            absoluteWheel = Math.abs(wheel);
-        }
-        mPreviousWheelForRamp = wheel;
-
-        wheel = MathUtil.handleDeadBand(wheel, DrivetrainConstants.kDeadband);
-        throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadband);
+        wheel = MathUtil.handleDeadBand(wheel, DrivetrainConstants.kDeadBand);
+        throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadBand);
 
         double negativeWheelInertia = wheel - mOldWheel;
         mOldWheel = wheel;
@@ -148,8 +104,8 @@ public class CheesyDriveHelper {
             rightPower = -1.0;
         }
 
-        mSignal.leftOutput.setPercentOutput(leftPower * totalPowerMultiplier);
-        mSignal.rightOutput.setPercentOutput(rightPower * totalPowerMultiplier);
+        mSignal.leftOutput.setPercentOutput(leftPower);
+        mSignal.rightOutput.setPercentOutput(rightPower);
         return mSignal;
     }
 
@@ -159,6 +115,6 @@ public class CheesyDriveHelper {
 
     public void reset() {
         mNegativeInertiaAccumulator = mQuickStopAccumulator = 0.0;
-        mOldWheel = mPreviousWheelForRamp = mPreviousThrottleForRamp = 0.0;
+        mOldWheel = 0.0;
     }
 }

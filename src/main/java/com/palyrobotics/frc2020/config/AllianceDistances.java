@@ -9,6 +9,5 @@ import com.palyrobotics.frc2020.util.config.AbstractConfig;
  */
 public class AllianceDistances extends AbstractConfig {
     public String fieldName = "default";
-    public double
-            fieldWidth = 324.0;
+    public double fieldWidth = 324.0;
 }

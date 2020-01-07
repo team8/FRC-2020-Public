@@ -5,8 +5,8 @@ import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.dashboard.LiveGraph;
-import com.palyrobotics.frc2020.config.driveteam.DriveTeam;
-import com.palyrobotics.frc2020.subsystems.*;
+import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Subsystem;
 import com.palyrobotics.frc2020.util.commands.CommandReceiver;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
@@ -53,8 +53,6 @@ public class Robot extends TimedRobot {
 
         mHardwareUpdater.initHardware();
 
-        DriveTeam.configConstants();
-
         mEnabledServices.forEach(RobotService::start);
 
         Configs.listen(RobotConfig.class, config -> setIdleModes());
@@ -67,12 +65,15 @@ public class Robot extends TimedRobot {
         mHardwareUpdater.setDriveIdleMode(f.apply(mConfig.coastDriveIfDisabled));
     }
 
-    private void stageInit(RobotState.GamePeriod period)
-    {
+    private void stageInit(RobotState.GamePeriod period) {
         sRobotState.gamePeriod = period;
         mRoutineManager.reset(sCommands);
         mEnabledSubsystems.forEach(Subsystem::start);
         mHardwareUpdater.updateHardware();
+        mHardwareUpdater.resetDriveSensors();
+        sRobotState.resetOdometry();
+        CSVWriter.cleanFile();
+        CSVWriter.resetTimer();
     }
 
     @Override
@@ -82,7 +83,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        teleopPeriodic();
+        sCommands = mRoutineManager.update(sCommands);
+        mHardwareUpdater.updateState(sRobotState);
+        for (Subsystem subsystem : mEnabledSubsystems) {
+            subsystem.update(sCommands, sRobotState);
+        }
+        mHardwareUpdater.updateHardware();
     }
 
     @Override
@@ -102,8 +108,6 @@ public class Robot extends TimedRobot {
 
         // Set limelight to driver camera mode - redundancy for testing purposes
         mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
-
-        CSVWriter.cleanFile();
     }
 
     @Override
@@ -124,7 +128,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         sRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
-        sRobotState.resetOdometry();
+
         // TODO: ultrasonics
         // sRobotState.resetUltrasonics();
 
@@ -149,7 +153,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-
     }
 
     private void setupSubsystemsAndServices() {

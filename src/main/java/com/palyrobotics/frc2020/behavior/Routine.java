@@ -2,7 +2,8 @@ package com.palyrobotics.frc2020.behavior;
 
 import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotState;
-import com.palyrobotics.frc2020.subsystems.*;
+import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Subsystem;
 
 /**
  * Abstract superclass for a routine, which specifies an autonomous series of actions <br />

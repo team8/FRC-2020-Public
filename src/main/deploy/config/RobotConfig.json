@@ -6,6 +6,6 @@
         "drive"
     ],
     "coastDriveIfDisabled": false,
-    "disableSparkOutput": false,
+    "disableOutput": false,
     "smartMotionMultiplier": 0.95
 }
