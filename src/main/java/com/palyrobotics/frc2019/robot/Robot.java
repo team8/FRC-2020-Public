@@ -1,5 +1,6 @@
 package com.palyrobotics.frc2019.robot;
 
+import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2019.behavior.RoutineManager;
 import com.palyrobotics.frc2019.config.Commands;
 import com.palyrobotics.frc2019.config.RobotConfig;
@@ -10,6 +11,7 @@ import com.palyrobotics.frc2019.subsystems.*;
 import com.palyrobotics.frc2019.util.commands.CommandReceiver;
 import com.palyrobotics.frc2019.util.config.Configs;
 import com.palyrobotics.frc2019.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2019.util.logger.RobotLogger;
 import com.palyrobotics.frc2019.util.service.RobotService;
 import com.palyrobotics.frc2019.vision.Limelight;
 import com.palyrobotics.frc2019.vision.LimelightControlMode;
@@ -49,6 +51,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        Log.setLogger(new RobotLogger(5807));
+        Log.set(1);
+
         setupSubsystemsAndServices();
 
         mHardwareUpdater.initHardware();
