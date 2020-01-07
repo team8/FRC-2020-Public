@@ -31,7 +31,7 @@ public class VisionDriveHelper {
         boolean isBraking = commands.isBraking;
 //        boolean isBraking = false;
 
-        throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadband);
+        throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadBand);
 
         // Linear power is what's actually sent to motor, throttle is input
         double linearPower = throttle;

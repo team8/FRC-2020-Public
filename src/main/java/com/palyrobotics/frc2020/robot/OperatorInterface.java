@@ -6,7 +6,7 @@ import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.constants.OtherConstants;
-import com.palyrobotics.frc2020.subsystems.*;
+import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
@@ -14,8 +14,6 @@ import com.palyrobotics.frc2020.vision.LimelightControlMode;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-
-import java.util.List;
 
 /**
  * Used to produce {@link Commands}'s from human input. Should only be used in robot package.
@@ -97,7 +95,7 @@ public class OperatorInterface {
             commands.wantedDriveState = Drive.DriveState.CHEZY;
         }
         // More safety
-        if (Math.abs(mDriveStick.getY()) > DrivetrainConstants.kDeadband || Math.abs(mTurnStick.getX()) > DrivetrainConstants.kDeadband) {
+        if (Math.abs(mDriveStick.getY()) > DrivetrainConstants.kDeadBand || Math.abs(mTurnStick.getX()) > DrivetrainConstants.kDeadBand) {
             commands.wantedDriveState = Drive.DriveState.CHEZY;
         }
         commands.driveThrottle = -mDriveStick.getY();

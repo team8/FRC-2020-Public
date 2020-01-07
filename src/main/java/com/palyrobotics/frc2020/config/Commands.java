@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2020.config;
 
 import com.palyrobotics.frc2020.behavior.Routine;
-import com.palyrobotics.frc2020.subsystems.*;
+import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.SparkDriveSignal;
 
 import java.util.ArrayList;

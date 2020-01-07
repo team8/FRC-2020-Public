@@ -5,8 +5,6 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
-import java.util.List;
-
 public class TestAuto extends AutoModeBase {
 
     @Override

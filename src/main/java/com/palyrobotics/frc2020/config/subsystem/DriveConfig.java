@@ -19,14 +19,11 @@ public class DriveConfig extends AbstractSubsystemConfig {
     public SmartGains smartVelocityGains;
 
     public double
-            throttleAccelerationLimit, wheelAccelerationLimit,
-            throttleAccelerationThreshold, wheelAccelerationThreshold,
             quickStopWeight, quickTurnScalar, quickStopDeadBand, quickStopScalar,
             turnSensitivity,
             lowNegativeInertiaThreshold, lowNegativeInertiaFarScalar, lowNegativeInertiaCloseScalar, lowNegativeInertiaTurnScalar,
             wheelNonLinearity,
-            controllerRampRate,
-            brownOutRecoverySeconds, brownOutInitialNerfMultiplier, velocityUnlock, initialLock;
+            controllerRampRate;
     public int
             stallCurrentLimit, freeCurrentLimit, freeRpmLimit,
             nonlinearPasses;

@@ -15,10 +15,6 @@
         "velocity": 400.0,
         "acceleration": 600.0
     },
-    "throttleAccelerationLimit": 0.04,
-    "wheelAccelerationLimit": 0.04,
-    "throttleAccelerationThreshold": 0.3,
-    "wheelAccelerationThreshold": 0.3,
     "quickStopWeight": 0.125,
     "quickTurnScalar": 0.55,
     "quickStopDeadBand": 0.5,
@@ -34,10 +30,6 @@
     "freeCurrentLimit": 48,
     "freeRpmLimit": 0,
     "nonlinearPasses": 3,
-    "brownOutRecoverySeconds": 0.5,
-    "brownOutInitialNerfMultiplier": 0.5,
-    "initialLock": 0.7,
-    "velocityUnlock": 25.0,
     "maxPathVelocityMetersPerSecond": 2.0,
     "maxPathAccelerationMetersPerSecondSquared": 4.0
 }

@@ -32,6 +32,12 @@ public class LoopOverrunDebugger {
             printSummary();
     }
 
+    public void reset() {
+        mTimer.stop();
+        mTimer.reset();
+        mMeasurements.clear();
+    }
+
     public void finishAndPrint() {
         printSummary();
     }

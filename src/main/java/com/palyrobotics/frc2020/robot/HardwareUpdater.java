@@ -13,6 +13,7 @@ import com.palyrobotics.frc2020.util.control.LazySparkMax;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.ControlType;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -29,8 +30,11 @@ class HardwareUpdater {
      */
     public final ColorMatch mColorMatcher = new ColorMatch();
 
+    public static final int TIMEOUT_MS = 500;
+
     private Drive mDrive;
     private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
+    private final LoopOverrunDebugger mLoopOverrunDebugger = new LoopOverrunDebugger("UpdateState", 0.02);
 
     HardwareUpdater(Drive drive) {
         mDrive = drive;
@@ -47,17 +51,16 @@ class HardwareUpdater {
 
     private void configureDriveHardware() {
         HardwareAdapter.DrivetrainHardware driveHardware = HardwareAdapter.getInstance().getDrivetrain();
-
         for (CANSparkMax spark : driveHardware.sparks) {
             spark.restoreFactoryDefaults();
-            spark.enableVoltageCompensation(12.0);
+            spark.enableVoltageCompensation(DrivetrainConstants.kMaxVoltage);
             CANEncoder encoder = spark.getEncoder();
             encoder.setPositionConversionFactor(DrivetrainConstants.kDriveMetersPerRotation);
             encoder.setVelocityConversionFactor(DrivetrainConstants.kDriveMetersPerSecondPerRpm);
             CANPIDController controller = spark.getPIDController();
             controller.setOutputRange(-DrivetrainConstants.kDriveMaxClosedLoopOutput, DrivetrainConstants.kDriveMaxClosedLoopOutput);
             DriveConfig config = Configs.get(DriveConfig.class);
-            spark.setSmartCurrentLimit(config.stallCurrentLimit, config.freeCurrentLimit, config.freeRpmLimit);
+//            spark.setSmartCurrentLimit(config.stallCurrentLimit, config.freeCurrentLimit, config.freeRpmLimit);
             spark.setOpenLoopRampRate(config.controllerRampRate);
             spark.setClosedLoopRampRate(config.controllerRampRate);
         }
@@ -71,7 +74,6 @@ class HardwareUpdater {
         driveHardware.rightSlave1Spark.setInverted(true);
         driveHardware.rightSlave2Spark.setInverted(true);
 
-        // Set slave sparks to follower mode
         driveHardware.leftSlave1Spark.follow(driveHardware.leftMasterSpark);
         driveHardware.leftSlave2Spark.follow(driveHardware.leftMasterSpark);
         driveHardware.rightSlave1Spark.follow(driveHardware.rightMasterSpark);
@@ -92,17 +94,18 @@ class HardwareUpdater {
 
     public void resetDriveSensors() {
         HardwareAdapter.DrivetrainHardware driveHardware = HardwareAdapter.getInstance().getDrivetrain();
-        driveHardware.gyro.setYaw(0, 500);
-        driveHardware.gyro.setFusedHeading(0, 500);
-        driveHardware.gyro.setAccumZAngle(0, 500);
+        driveHardware.gyro.setYaw(0, TIMEOUT_MS);
+        driveHardware.gyro.setFusedHeading(0, TIMEOUT_MS);
+        driveHardware.gyro.setAccumZAngle(0, TIMEOUT_MS);
         driveHardware.sparks.forEach(spark -> spark.getEncoder().setPosition(0.0));
+        System.out.println("Drive Sensors Reset");
     }
 
     /**
      * Takes all of the sensor data from the hardware, and unwraps it into the current {@link RobotState}.
      */
     void updateState(RobotState robotState) {
-        LoopOverrunDebugger loopOverrunDebugger = new LoopOverrunDebugger("UpdateState", 0.02);
+        mLoopOverrunDebugger.reset();
 
         HardwareAdapter.DrivetrainHardware drivetrain = HardwareAdapter.getInstance().getDrivetrain();
 
@@ -126,33 +129,23 @@ class HardwareUpdater {
         robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
 
         //For testing purposes
-        System.out.println(robotState.closestColorString + " with confidence level of " + (robotState.closestColorConfidence * 100));
-        System.out.println(robotState.detectedRGBVals.red + ", " + robotState.detectedRGBVals.green + ", " + robotState.detectedRGBVals.blue);
-
-
-//        double robotVelocity = (robotState.drivePose.leftEncoderVelocity + robotState.drivePose.rightEncoderVelocity) / 2;
-
-//        drivetrain.gyro.getAccelerometerAngles(mAccelerometerAngles);
-//        robotState.robotAcceleration = mAccelerometerAngles[0];
-//        robotState.robotVelocity = robotVelocity;
-
+        // System.out.println(robotState.closestColorString + " with confidence level of " + (robotState.closestColorConfidence * 100));
+        // System.out.println(robotState.detectedRGBVals.red + ", " + robotState.detectedRGBVals.green + ", " + robotState.detectedRGBVals.blue);
 
         robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();
-        if (robotState.gameData.length() > 0) {
-            System.out.println("Game data has been found, color is: " + robotState.gameData);
-        }
+        // if (robotState.gameData.length() > 0) {
+        //     System.out.printf("Game data has been found, color is: %s%n", robotState.gameData);
+        // }
 
-        loopOverrunDebugger.addPoint("Basic");
+        mLoopOverrunDebugger.addPoint("Basic");
 
         robotState.updateOdometry(drivetrain.gyro.getFusedHeading(), robotState.leftDrivePosition, robotState.rightDrivePosition);
 
-        loopOverrunDebugger.addPoint("Odometry");
+        mLoopOverrunDebugger.addPoint("Odometry");
 
         updateUltrasonicSensors(robotState);
 
-        loopOverrunDebugger.addPoint("Ultrasonics");
-
-        loopOverrunDebugger.finish();
+        mLoopOverrunDebugger.finish();
     }
 
     private void updateUltrasonicSensors(RobotState robotState) {
@@ -180,10 +173,11 @@ class HardwareUpdater {
      * Checks if the compressor should compress and updates it accordingly
      */
     private void updateMiscellaneousHardware() {
+        Compressor compressor = HardwareAdapter.getInstance().getMiscellaneousHardware().compressor;
         if (shouldCompress()) {
-            HardwareAdapter.getInstance().getMiscellaneousHardware().compressor.start();
+            compressor.start();
         } else {
-            HardwareAdapter.getInstance().getMiscellaneousHardware().compressor.stop();
+            compressor.stop();
         }
         HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(shouldRumble());
     }
@@ -230,7 +224,7 @@ class HardwareUpdater {
 
     private void updateSparkMax(LazySparkMax spark, SparkMaxOutput output) {
         ControlType controlType = output.getControlType();
-        if (!Configs.get(RobotConfig.class).disableSparkOutput) {
+        if (!Configs.get(RobotConfig.class).disableOutput) {
             spark.set(controlType, output.getReference(), output.getArbitraryDemand(), output.getGains());
 //            System.out.printf("%s,%s%n", output.getControlType(), output.getReference());
         }

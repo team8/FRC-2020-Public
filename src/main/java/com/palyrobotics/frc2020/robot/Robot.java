@@ -1,13 +1,12 @@
 package com.palyrobotics.frc2020.robot;
 
 import com.palyrobotics.frc2020.behavior.RoutineManager;
-import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.dashboard.LiveGraph;
-import com.palyrobotics.frc2020.config.driveteam.DriveTeam;
-import com.palyrobotics.frc2020.subsystems.*;
+import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Subsystem;
 import com.palyrobotics.frc2020.util.commands.CommandReceiver;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
@@ -16,8 +15,6 @@ import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 import java.util.List;
 import java.util.Map;
@@ -56,8 +53,6 @@ public class Robot extends TimedRobot {
 
         mHardwareUpdater.initHardware();
 
-        DriveTeam.configConstants();
-
         mEnabledServices.forEach(RobotService::start);
 
         Configs.listen(RobotConfig.class, config -> setIdleModes());
@@ -70,8 +65,7 @@ public class Robot extends TimedRobot {
         mHardwareUpdater.setDriveIdleMode(f.apply(mConfig.coastDriveIfDisabled));
     }
 
-    private void stageInit(RobotState.GamePeriod period)
-    {
+    private void stageInit(RobotState.GamePeriod period) {
         sRobotState.gamePeriod = period;
         mRoutineManager.reset(sCommands);
         mEnabledSubsystems.forEach(Subsystem::start);
@@ -134,7 +128,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         sRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
-        System.out.println("Reset Odometry");
+
         // TODO: ultrasonics
         // sRobotState.resetUltrasonics();
 
