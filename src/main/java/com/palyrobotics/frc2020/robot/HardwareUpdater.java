@@ -20,6 +20,14 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 
 class HardwareUpdater {
+    /**
+     * A Rev Color Match object is used to register and detect known colors. This can
+     * be calibrated ahead of time or during operation.
+     * <p>
+     * This object uses a simple euclidian distance to estimate the closest match
+     * with given confidence range.
+     */
+    public final ColorMatch mColorMatcher = new ColorMatch();
 
     private Drive mDrive;
     private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
@@ -79,10 +87,10 @@ class HardwareUpdater {
     }
 
     private void configureMiscellaneousHardware() {
-        RobotState.getInstance().mColorMatcher.addColorMatch(OtherConstants.kCyanCPTarget);
-        RobotState.getInstance().mColorMatcher.addColorMatch(OtherConstants.kGreenCPTarget);
-        RobotState.getInstance().mColorMatcher.addColorMatch(OtherConstants.kRedCPTarget);
-        RobotState.getInstance().mColorMatcher.addColorMatch(OtherConstants.kYellowCPTarget);
+        mColorMatcher.addColorMatch(OtherConstants.kCyanCPTarget);
+        mColorMatcher.addColorMatch(OtherConstants.kGreenCPTarget);
+        mColorMatcher.addColorMatch(OtherConstants.kRedCPTarget);
+        mColorMatcher.addColorMatch(OtherConstants.kYellowCPTarget);
 
         UsbCamera fisheyeCam = HardwareAdapter.getInstance().getMiscellaneousHardware().fisheyeCam;
         fisheyeCam.setResolution(640, 360); // Original is 1920 x 1080
@@ -107,14 +115,6 @@ class HardwareUpdater {
 //         pusherUltrasonic.setEnabled(true);
 // 		pusherSecondaryUltrasonic.setEnabled(true);
     }
-    /**
-     * A Rev Color Match object is used to register and detect known colors. This can
-     * be calibrated ahead of time or during operation.
-     *
-     * This object uses a simple euclidian distance to estimate the closest match
-     * with given confidence range.
-     */
-    public final ColorMatch mColorMatcher = new ColorMatch();
 
     /**
      * Takes all of the sensor data from the hardware, and unwraps it into the current {@link RobotState}.
@@ -132,23 +132,18 @@ class HardwareUpdater {
         robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
         if (robotState.closestColorRGB.color == OtherConstants.kCyanCPTarget) {
             robotState.closestColorString = "Cyan";
-        }
-        else if (robotState.closestColorRGB.color == OtherConstants.kYellowCPTarget) {
+        } else if (robotState.closestColorRGB.color == OtherConstants.kYellowCPTarget) {
             robotState.closestColorString = "Yellow";
-        }
-        else if (robotState.closestColorRGB.color == OtherConstants.kGreenCPTarget) {
+        } else if (robotState.closestColorRGB.color == OtherConstants.kGreenCPTarget) {
             robotState.closestColorString = "Green";
-        }
-        else if (robotState.closestColorRGB.color == OtherConstants.kRedCPTarget) {
+        } else if (robotState.closestColorRGB.color == OtherConstants.kRedCPTarget) {
             robotState.closestColorString = "Red";
         }
         robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
 
         //For testing purposes
-        System.out.println(robotState.closestColorString + " with confidence level of " +  (robotState.closestColorConfidence * 100));
+        System.out.println(robotState.closestColorString + " with confidence level of " + (robotState.closestColorConfidence * 100));
         System.out.println(robotState.detectedRGBVals.red + ", " + robotState.detectedRGBVals.green + ", " + robotState.detectedRGBVals.blue);
-
-
 
 
 //        double robotVelocity = (robotState.drivePose.leftEncoderVelocity + robotState.drivePose.rightEncoderVelocity) / 2;
@@ -231,7 +226,6 @@ class HardwareUpdater {
     }
 
 
-
     /**
      * Checks if the compressor should compress and updates it accordingly
      */
@@ -274,29 +268,29 @@ class HardwareUpdater {
         HardwareAdapter.getInstance().getDrivetrain().sparks.forEach(spark -> spark.setIdleMode(idleMode));
     }
 
-   // private void updateTalonSRX(WPI_TalonSRX talon, TalonSRXOutput output) {
-   //     if (output.getControlMode().equals(ControlMode.Position) || output.getControlMode().equals(ControlMode.Velocity)
-   //             || output.getControlMode().equals(ControlMode.MotionMagic)) {
-   //         talon.config_kP(output.profile, output.gains.p, 0);
-   //         talon.config_kI(output.profile, output.gains.i, 0);
-   //         talon.config_kD(output.profile, output.gains.d, 0);
-   //         talon.config_kF(output.profile, output.gains.f, 0);
-   //         talon.config_IntegralZone(output.profile, (int) Math.round(output.gains.iZone), 0);
-   //         talon.configClosedloopRamp(output.gains.rampRate, 0);
-   //     }
-   //     if (output.getControlMode().equals(ControlMode.MotionMagic)) {
-   //         talon.configMotionAcceleration(output.acceleration, 0);
-   //         talon.configMotionCruiseVelocity(output.cruiseVelocity, 0);
-   //     }
-   //     if (output.getControlMode().equals(ControlMode.Velocity)) {
-   //         talon.configAllowableClosedloopError(output.profile, 0, 0);
-   //     }
-   //     if (output.getArbitraryFF() != 0.0 && output.getControlMode().equals(ControlMode.Position)) {
-   //         talon.set(output.getControlMode(), output.getSetPoint(), DemandType.ArbitraryFeedForward, output.getArbitraryFF());
-   //     } else {
-   //         talon.set(output.getControlMode(), output.getSetPoint(), DemandType.Neutral, 0.0);
-   //     }
-   // }
+    // private void updateTalonSRX(WPI_TalonSRX talon, TalonSRXOutput output) {
+    //     if (output.getControlMode().equals(ControlMode.Position) || output.getControlMode().equals(ControlMode.Velocity)
+    //             || output.getControlMode().equals(ControlMode.MotionMagic)) {
+    //         talon.config_kP(output.profile, output.gains.p, 0);
+    //         talon.config_kI(output.profile, output.gains.i, 0);
+    //         talon.config_kD(output.profile, output.gains.d, 0);
+    //         talon.config_kF(output.profile, output.gains.f, 0);
+    //         talon.config_IntegralZone(output.profile, (int) Math.round(output.gains.iZone), 0);
+    //         talon.configClosedloopRamp(output.gains.rampRate, 0);
+    //     }
+    //     if (output.getControlMode().equals(ControlMode.MotionMagic)) {
+    //         talon.configMotionAcceleration(output.acceleration, 0);
+    //         talon.configMotionCruiseVelocity(output.cruiseVelocity, 0);
+    //     }
+    //     if (output.getControlMode().equals(ControlMode.Velocity)) {
+    //         talon.configAllowableClosedloopError(output.profile, 0, 0);
+    //     }
+    //     if (output.getArbitraryFF() != 0.0 && output.getControlMode().equals(ControlMode.Position)) {
+    //         talon.set(output.getControlMode(), output.getSetPoint(), DemandType.ArbitraryFeedForward, output.getArbitraryFF());
+    //     } else {
+    //         talon.set(output.getControlMode(), output.getSetPoint(), DemandType.Neutral, 0.0);
+    //     }
+    // }
 
     private void updateSparkMax(LazySparkMax spark, SparkMaxOutput output) {
         ControlType controlType = output.getControlType();
