@@ -152,30 +152,8 @@ class HardwareUpdater {
         mLoopOverrunDebugger.finish();
     }
 
-    private void updateSpinner(RobotState robotState) {
+    private void updateSpinner() {
         HardwareAdapter.getInstance().getSpinnerHardware().spinnerTalon.set(ControlMode.PercentOutput, Spinner.getInstance().getSpinnerPercOutput());
-        //updating color sensor data
-        robotState.detectedRGBVals = HardwareAdapter.getInstance().getSpinnerHardware().mColorSensor.getColor();
-        robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
-        if (robotState.closestColorRGB.color == OtherConstants.kCyanCPTarget) {
-            robotState.closestColorString = "Cyan";
-        } else if (robotState.closestColorRGB.color == OtherConstants.kYellowCPTarget) {
-            robotState.closestColorString = "Yellow";
-        } else if (robotState.closestColorRGB.color == OtherConstants.kGreenCPTarget) {
-            robotState.closestColorString = "Green";
-        } else if (robotState.closestColorRGB.color == OtherConstants.kRedCPTarget) {
-            robotState.closestColorString = "Red";
-        }
-        robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
-
-        robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();
-        if (robotState.gameData.length() > 0) {
-            System.out.println("Game data has been found, color is: " + robotState.gameData);
-        }
-
-        //For testing purposes
-        System.out.println(robotState.closestColorString + " with confidence level of " + (robotState.closestColorConfidence * 100));
-        System.out.println(robotState.detectedRGBVals.red + ", " + robotState.detectedRGBVals.green + ", " + robotState.detectedRGBVals.blue);
     }
 
     private void updateUltrasonicSensors(RobotState robotState) {
@@ -187,6 +165,7 @@ class HardwareUpdater {
      */
     void updateHardware() {
         updateDrivetrain();
+        updateSpinner();
         updateMiscellaneousHardware();
     }
 
