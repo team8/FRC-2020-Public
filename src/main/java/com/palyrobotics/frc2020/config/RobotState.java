@@ -1,8 +1,11 @@
 package com.palyrobotics.frc2020.config;
 
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * Holds all hardware input, such as sensors. <br />
@@ -44,6 +47,10 @@ public class RobotState {
         return sInstance;
     }
 
+    public String closestColorString;
+    public double closestColorConfidence;
+    public Color detectedRGBVals;
+    public ColorMatchResult closestColorRGB;
 
     // TODO: ultrasonics
     // public void resetUltrasonics() {
