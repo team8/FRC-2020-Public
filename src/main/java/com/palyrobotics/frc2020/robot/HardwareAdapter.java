@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LazySparkMax;
@@ -93,15 +94,12 @@ public class HardwareAdapter {
     }
     public static class SpinnerHardware {
         private static SpinnerHardware sInstance = new SpinnerHardware();
-        final TalonSRX spinnerTalon;
+        final WPI_TalonSRX spinnerTalon;
         final ColorSensorV3 mColorSensor;
 
         SpinnerHardware() {
             mColorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-            spinnerTalon = new TalonSRX(sPortConstants.spinnerTalonDeviceID);
-        }
-        public void setSpinnerTalon(double percentOutput) {
-            spinnerTalon.set(ControlMode.PercentOutput, percentOutput);
+            spinnerTalon = new WPI_TalonSRX(sPortConstants.spinnerTalonDeviceID);
         }
 
         public static SpinnerHardware getInstance() {

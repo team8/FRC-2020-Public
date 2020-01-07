@@ -1,11 +1,13 @@
 package com.palyrobotics.frc2020.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.constants.OtherConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2020.util.SparkMaxOutput;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -150,7 +152,8 @@ class HardwareUpdater {
         mLoopOverrunDebugger.finish();
     }
 
-    private void updateColorSensor(RobotState robotState) {
+    private void updateSpinner(RobotState robotState) {
+        HardwareAdapter.getInstance().getSpinnerHardware().spinnerTalon.set(ControlMode.PercentOutput, Spinner.getInstance().getSpinnerPercOutput());
         //updating color sensor data
         robotState.detectedRGBVals = HardwareAdapter.getInstance().getSpinnerHardware().mColorSensor.getColor();
         robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBVals);

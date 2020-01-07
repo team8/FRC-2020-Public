@@ -6,49 +6,60 @@ import com.palyrobotics.frc2020.robot.HardwareAdapter;
 
 public class Spinner extends Subsystem {
 
-    private SpinnerState spinnerState = SpinnerState.IDLE;
-    private String currentColor;
-    private String previousColor;
-    private String gameColorData;
-    private int colorPassed;
+    private static Spinner sInstance = new Spinner();
+    public static Spinner getInstance() { return sInstance; }
+
+    private SpinnerState mSpinnerState;
+    private double mSpinnerPercOutput = 0;
+    private String mCurrentColor;
+    private String mPreviousColor;
+
+    private int mColorPassedCount;
 
     public enum SpinnerState {
         TO_COLOR, SPIN, IDLE
     }
 
-    public Spinner(String name) {
+    public Spinner() {
         super("spinner");
     }
 
     @Override
     public void start() {
-
+        mSpinnerState = Spinner.SpinnerState.IDLE;
     }
 
     @Override
     public void update(Commands commands, RobotState robotState) {
-        spinnerState = Commands.getInstance().wantedSpinnerState;
-        currentColor = RobotState.getInstance().closestColorString;
-        switch (spinnerState) {
+        mSpinnerState = commands.wantedSpinnerState;
+        mCurrentColor = robotState.closestColorString;
+        switch (mSpinnerState) {
             case IDLE:
-                HardwareAdapter.getInstance().getSpinnerHardware().setSpinnerTalon(0);
+                mSpinnerPercOutput = 0;
                 break;
             case SPIN:
-                HardwareAdapter.getInstance().getSpinnerHardware().setSpinnerTalon(0.5);
-                while (colorPassed < 30) {
-                    if (!previousColor.equals(currentColor)) {
-                        colorPassed++;
+                mSpinnerPercOutput = 0.5;
+                if(mColorPassedCount > 30) {
+                    mSpinnerState = SpinnerState.IDLE;
+                    mColorPassedCount = 0;
+                }
+                else {
+                    if (!mPreviousColor.equals(mCurrentColor)) {
+                        mColorPassedCount++;
                     }
                 }
-                spinnerState = SpinnerState.IDLE;
                 break;
             case TO_COLOR:
-                gameColorData = RobotState.getInstance().gameData;
-                HardwareAdapter.getInstance().getSpinnerHardware().setSpinnerTalon(0.25);
-                while (!currentColor.equals(gameColorData)) ;
-                spinnerState = SpinnerState.IDLE;
+                mSpinnerPercOutput = 0.25;
+                if (mCurrentColor.equals(robotState.gameData)) {
+                    mSpinnerState = SpinnerState.IDLE;
+                }
                 break;
         }
-        previousColor = currentColor;
+        mPreviousColor = mCurrentColor;
+    }
+
+    public double getSpinnerPercOutput() {
+        return mSpinnerPercOutput;
     }
 }
