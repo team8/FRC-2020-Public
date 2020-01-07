@@ -22,7 +22,8 @@ public class RobotState {
     public GamePeriod gamePeriod = GamePeriod.DISABLED;
     public double robotVelocity, robotAcceleration;
     public boolean isQuickTurning;
-    public double leftDriveVelocity, rightDriveVelocity;
+    public double leftDriveVelocity, rightDriveVelocity, leftDrivePosition, rightDrivePosition;
+
 
     public String gameData;
 
@@ -65,8 +66,8 @@ public class RobotState {
         m_Odometry.resetPosition(new Pose2d(), new Rotation2d());
     }
 
-    public void updateOdometry(double headingDegrees, double leftMetersPerSecond, double rightMetersPerSecond) {
-        drivePose = m_Odometry.update(Rotation2d.fromDegrees(headingDegrees), leftMetersPerSecond, rightMetersPerSecond);
+    public void updateOdometry(double headingDegrees, double leftMeters, double rightMeters) {
+        drivePose = m_Odometry.update(Rotation2d.fromDegrees(headingDegrees), leftMeters, rightMeters);
     }
 
     public enum GamePeriod {

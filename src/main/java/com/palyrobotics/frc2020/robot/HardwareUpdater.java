@@ -12,7 +12,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LazySparkMax;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.IdleMode;
-import edu.wpi.cscore.UsbCamera;
+import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -38,7 +38,6 @@ class HardwareUpdater {
 
     void initHardware() {
         configureHardware();
-        startUltrasonics();
     }
 
     private void configureHardware() {
@@ -51,24 +50,17 @@ class HardwareUpdater {
 
         for (CANSparkMax spark : driveHardware.sparks) {
             spark.restoreFactoryDefaults();
-            spark.enableVoltageCompensation(11.0);
-            spark.setSecondaryCurrentLimit(120);
+            spark.enableVoltageCompensation(12.0);
             CANEncoder encoder = spark.getEncoder();
             encoder.setPositionConversionFactor(DrivetrainConstants.kDriveMetersPerRotation);
             encoder.setVelocityConversionFactor(DrivetrainConstants.kDriveMetersPerSecondPerRpm);
             CANPIDController controller = spark.getPIDController();
             controller.setOutputRange(-DrivetrainConstants.kDriveMaxClosedLoopOutput, DrivetrainConstants.kDriveMaxClosedLoopOutput);
+            DriveConfig config = Configs.get(DriveConfig.class);
+            spark.setSmartCurrentLimit(config.stallCurrentLimit, config.freeCurrentLimit, config.freeRpmLimit);
+            spark.setOpenLoopRampRate(config.controllerRampRate);
+            spark.setClosedLoopRampRate(config.controllerRampRate);
         }
-
-        Configs.listen(DriveConfig.class, config -> {
-            for (LazySparkMax spark : driveHardware.sparks) {
-                spark.setSmartCurrentLimit(config.stallCurrentLimit, config.freeCurrentLimit, config.freeRpmLimit);
-                spark.setOpenLoopRampRate(config.controllerRampRate);
-                spark.setClosedLoopRampRate(config.controllerRampRate);
-            }
-        });
-        // TODO: dt sensor reset
-        // driveHardware.resetSensors();
 
         // Invert right side
         driveHardware.leftMasterSpark.setInverted(false);
@@ -84,6 +76,8 @@ class HardwareUpdater {
         driveHardware.leftSlave2Spark.follow(driveHardware.leftMasterSpark);
         driveHardware.rightSlave1Spark.follow(driveHardware.rightMasterSpark);
         driveHardware.rightSlave2Spark.follow(driveHardware.rightMasterSpark);
+
+        resetDriveSensors();
     }
 
     private void configureMiscellaneousHardware() {
@@ -92,28 +86,16 @@ class HardwareUpdater {
         mColorMatcher.addColorMatch(OtherConstants.kRedCPTarget);
         mColorMatcher.addColorMatch(OtherConstants.kYellowCPTarget);
 
-        UsbCamera fisheyeCam = HardwareAdapter.getInstance().getMiscellaneousHardware().fisheyeCam;
-        fisheyeCam.setResolution(640, 360); // Original is 1920 x 1080
+        // UsbCamera fisheyeCam = HardwareAdapter.getInstance().getMiscellaneousHardware().fisheyeCam;
+        // fisheyeCam.setResolution(640, 360); // Original is 1920 x 1080
     }
 
-    // TODO: ultrasonics
-    private void startUltrasonics() {
-//         Ultrasonic
-//                 intakeUltrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft,
-//                 intakeUltrasonicRight = HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight,
-//                 pusherUltrasonic = HardwareAdapter.getInstance().getPusher().pusherUltrasonic;
-// 		Ultrasonic pusherSecondaryUltrasonic = HardwareAdapter.getInstance().getPusher().pusherSecondaryUltrasonic;
-//
-//
-//         intakeUltrasonicLeft.setAutomaticMode(true);
-//         intakeUltrasonicRight.setAutomaticMode(true);
-//         pusherUltrasonic.setAutomaticMode(true);
-//		pusherSecondaryUltrasonic.setAutomaticMode(true);
-//
-//         intakeUltrasonicLeft.setEnabled(true);
-//         intakeUltrasonicRight.setEnabled(true);
-//         pusherUltrasonic.setEnabled(true);
-// 		pusherSecondaryUltrasonic.setEnabled(true);
+    public void resetDriveSensors() {
+        HardwareAdapter.DrivetrainHardware driveHardware = HardwareAdapter.getInstance().getDrivetrain();
+        driveHardware.gyro.setYaw(0, 500);
+        driveHardware.gyro.setFusedHeading(0, 500);
+        driveHardware.gyro.setAccumZAngle(0, 500);
+        driveHardware.sparks.forEach(spark -> spark.getEncoder().setPosition(0.0));
     }
 
     /**
@@ -124,8 +106,10 @@ class HardwareUpdater {
 
         HardwareAdapter.DrivetrainHardware drivetrain = HardwareAdapter.getInstance().getDrivetrain();
 
-        robotState.leftDriveVelocity = drivetrain.leftMasterSpark.getEncoder().getVelocity();
-        robotState.rightDriveVelocity = drivetrain.rightMasterSpark.getEncoder().getVelocity();
+        robotState.leftDriveVelocity = drivetrain.leftMasterEncoder.getVelocity() / 60.0;
+        robotState.rightDriveVelocity = drivetrain.rightMasterEncoder.getVelocity() / 60.0;
+        robotState.leftDrivePosition = drivetrain.leftMasterEncoder.getPosition();
+        robotState.rightDrivePosition = drivetrain.rightMasterEncoder.getPosition();
 
         //updating color sensor data
         robotState.detectedRGBVals = HardwareAdapter.getInstance().getMiscellaneousHardware().mColorSensor.getColor();
@@ -160,8 +144,7 @@ class HardwareUpdater {
 
         loopOverrunDebugger.addPoint("Basic");
 
-        // TODO: gyro
-        // robotState.updateOdometry(drivetrain.gyro.getFusedHeading(), robotState.leftDriveVelocity, robotState.rightDriveVelocity);
+        robotState.updateOdometry(drivetrain.gyro.getFusedHeading(), robotState.leftDrivePosition, robotState.rightDrivePosition);
 
         loopOverrunDebugger.addPoint("Odometry");
 
@@ -174,35 +157,6 @@ class HardwareUpdater {
 
     private void updateUltrasonicSensors(RobotState robotState) {
         //TODO: ultrasonics
-
-        // Ultrasonic ultrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft;
-        // robotState.leftIntakeReadings.addFirst(ultrasonicLeft.getRangeInches());
-        // Ultrasonic ultrasonicRight = HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight;
-        // robotState.rightIntakeReadings.addFirst(ultrasonicRight.getRangeInches());
-        //
-        // IntakeConfig intakeConfig = Configs.get(IntakeConfig.class);
-        // robotState.hasIntakeCargo = hasCargoFromReadings(robotState.leftIntakeReadings, intakeConfig.cargoInchTolerance, intakeConfig.cargoCountRequired)
-        //         || hasCargoFromReadings(robotState.rightIntakeReadings, intakeConfig.cargoInchTolerance, intakeConfig.cargoCountRequired);
-        //
-        // robotState.cargoDistance = Math.min(ultrasonicLeft.getRangeInches(), ultrasonicRight.getRangeInches());
-        //
-        // /* Test for cargo in carriage */
-        //
-        // // Cargo Distance from Pusher
-        // Ultrasonic pusherUltrasonic = HardwareAdapter.getInstance().getPusher().pusherUltrasonic;
-        // robotState.pusherReadings.addFirst(pusherUltrasonic.getRangeInches());
-        //
-        // boolean lastHasPusherCargoFar = robotState.hasPusherCargoFar;
-        // PusherConfig pusherConfig = Configs.get(PusherConfig.class);
-        // robotState.hasPusherCargo = hasCargoFromReadings(robotState.pusherReadings, pusherConfig.cargoTolerance, OtherConstants.kRequiredUltrasonicCount + 1);
-        // robotState.hasPusherCargoFar = hasCargoFromReadings(robotState.pusherReadings, pusherConfig.cargoToleranceFar, OtherConstants.kRequiredUltrasonicCount);
-        //
-        // if (lastHasPusherCargoFar != robotState.hasPusherCargoFar) {
-        //     int properPipeline = robotState.hasIntakeCargo ? OtherConstants.kLimelightCargoPipeline : OtherConstants.kLimelightHatchPipeline;
-        //     Limelight.getInstance().setPipeline(properPipeline);
-        // }
-        //
-        // robotState.cargoPusherDistance = pusherUltrasonic.getRangeInches();
     }
 
     /**
@@ -219,10 +173,6 @@ class HardwareUpdater {
     private void updateDrivetrain() {
         updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark, mDrive.getDriveSignal().leftOutput);
         updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark, mDrive.getDriveSignal().rightOutput);
-//        CSVWriter.addData("leftActualPower", HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark.getAppliedOutput());
-//        CSVWriter.addData("rightActualPower", HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark.getAppliedOutput());
-//        System.out.println("HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark = " + HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark.getAppliedOutput());
-//        System.out.println("HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark = " + HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark.getAppliedOutput());
     }
 
 
@@ -242,25 +192,11 @@ class HardwareUpdater {
      * Runs the compressor only when the pressure too low or the current draw is low enough
      */
     private boolean shouldCompress() {
-        return RobotState.getInstance().gamePeriod != RobotState.GamePeriod.AUTO && !RobotState.getInstance().isQuickTurning;
+        return false;
     }
 
     // TODO: Update this
     private boolean shouldRumble() {
-        // boolean rumble;
-        // double
-        //         intakeRumbleLength = mIntake.getRumbleLength(),
-        //         shooterRumbleLength = mShooter.getRumbleLength();
-        // if (intakeRumbleLength > 0) {
-        //     rumble = true;
-        //     mIntake.decreaseRumbleLength();
-        // } else if (shooterRumbleLength > 0) {
-        //     rumble = true;
-        //     mShooter.decreaseRumbleLength();
-        // } else {
-        //     rumble = false;
-        // }
-        // return rumble;
         return false;
     }
 

@@ -9,9 +9,11 @@
         "i": 0.0,
         "d": 5.0
     },
-    "velocityGains": {
-        "p": 0.01,
-        "d": 0.05
+    "smartVelocityGains": {
+        "f": 0.0037,
+        "p": 0.0004,
+        "velocity": 400.0,
+        "acceleration": 600.0
     },
     "throttleAccelerationLimit": 0.04,
     "wheelAccelerationLimit": 0.04,
@@ -36,6 +38,6 @@
     "brownOutInitialNerfMultiplier": 0.5,
     "initialLock": 0.7,
     "velocityUnlock": 25.0,
-    "maxPathVelocityMetersPerSecond": 3.5,
-    "maxPathAccelerationMetersPerSecondSquared": 3.5
+    "maxPathVelocityMetersPerSecond": 2.0,
+    "maxPathAccelerationMetersPerSecondSquared": 4.0
 }

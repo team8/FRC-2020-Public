@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.config.subsystem;
 
 import com.palyrobotics.frc2020.util.config.AbstractSubsystemConfig;
 import com.palyrobotics.frc2020.util.control.Gains;
+import com.palyrobotics.frc2020.util.control.SmartGains;
 import com.palyrobotics.frc2020.util.control.TrajectoryGains;
 
 public class DriveConfig extends AbstractSubsystemConfig {
@@ -14,7 +15,8 @@ public class DriveConfig extends AbstractSubsystemConfig {
 
     public TrajectoryGains trajectoryGains;
 
-    public Gains cascadingTurnGains, velocityGains, smartVelocityGains;
+    public Gains cascadingTurnGains, velocityGains;
+    public SmartGains smartVelocityGains;
 
     public double
             throttleAccelerationLimit, wheelAccelerationLimit,

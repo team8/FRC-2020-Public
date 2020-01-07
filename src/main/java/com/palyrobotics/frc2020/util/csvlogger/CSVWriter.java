@@ -3,6 +3,7 @@ package com.palyrobotics.frc2020.util.csvlogger;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -17,7 +18,7 @@ public class CSVWriter {
     private static final String COMMA_DELIMITER = ",", NEW_LINE_SEPARATOR = "\n", FILE_NAME = "canlog.csv";
     private static final int ALLOCATE_SIZE = 100000;
 
-    private static final DriverStation sDriverStation = DriverStation.getInstance();
+    private static double sStartTime;
     private static final File sCsvFile = RobotBase.isReal()
             ? Paths.get("/home/lvuser", FILE_NAME).toFile()
             : Paths.get(Filesystem.getOperatingDirectory().toString(), FILE_NAME).toFile();
@@ -29,8 +30,16 @@ public class CSVWriter {
         }
     }
 
+    static {
+        resetTimer();
+    }
+
+    public static void resetTimer() {
+        sStartTime = Timer.getFPGATimestamp();
+    }
+
     private static double getTimeSeconds() {
-        return sDriverStation.getMatchTime();
+        return Timer.getFPGATimestamp() - sStartTime;
     }
 
     private static void addData(String key, Object secondValue, UnaryOperator<StringBuilder> valueCellWriter) {

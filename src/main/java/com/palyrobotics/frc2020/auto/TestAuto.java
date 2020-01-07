@@ -21,10 +21,10 @@ public class TestAuto extends AutoModeBase {
 
     @Override
     public Routine getRoutine() {
-        return new DrivePathRoutine(List.of(
+        return new DrivePathRoutine(
                 new Pose2d(),
                 new Pose2d(5, 0, new Rotation2d())
-        ));
+        );
     }
 
     @Override

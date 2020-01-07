@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2020.robot;
 
 import com.palyrobotics.frc2020.behavior.RoutineManager;
+import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.RobotState;
@@ -15,6 +16,8 @@ import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 import java.util.List;
 import java.util.Map;
@@ -73,6 +76,10 @@ public class Robot extends TimedRobot {
         mRoutineManager.reset(sCommands);
         mEnabledSubsystems.forEach(Subsystem::start);
         mHardwareUpdater.updateHardware();
+        mHardwareUpdater.resetDriveSensors();
+        sRobotState.resetOdometry();
+        CSVWriter.cleanFile();
+        CSVWriter.resetTimer();
     }
 
     @Override
@@ -82,7 +89,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        teleopPeriodic();
+        sCommands = mRoutineManager.update(sCommands);
+        mHardwareUpdater.updateState(sRobotState);
+        for (Subsystem subsystem : mEnabledSubsystems) {
+            subsystem.update(sCommands, sRobotState);
+        }
+        mHardwareUpdater.updateHardware();
     }
 
     @Override
@@ -102,8 +114,6 @@ public class Robot extends TimedRobot {
 
         // Set limelight to driver camera mode - redundancy for testing purposes
         mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
-
-        CSVWriter.cleanFile();
     }
 
     @Override
@@ -124,7 +134,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         sRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
-        sRobotState.resetOdometry();
+        System.out.println("Reset Odometry");
         // TODO: ultrasonics
         // sRobotState.resetUltrasonics();
 
@@ -149,7 +159,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-
     }
 
     private void setupSubsystemsAndServices() {

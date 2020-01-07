@@ -49,8 +49,8 @@ public class DrivetrainConstants {
     /**
      * Unit Conversions
      */
-    public static final double kDriveMetersPerRotation = kDriveWheelDiameterMeters * Math.PI * (12.0 / 46.0) * (22.0 / 44.0);
-    public static final double kDriveMetersPerSecondPerRpm = kDriveMetersPerRotation / 60.0;
+    public static final double kDriveMetersPerRotation = 0.04677268475;
+    public static final double kDriveMetersPerSecondPerRpm = kDriveMetersPerRotation;
     public static final int kCurrentLimit = 32; // amps
     /**
      * Cheesy Drive Constants Set by DriverProfiles

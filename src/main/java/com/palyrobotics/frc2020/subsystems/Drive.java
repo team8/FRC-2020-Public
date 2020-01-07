@@ -145,8 +145,8 @@ public class Drive extends Subsystem {
         setDriveOutputs(new SparkDriveSignal());
     }
 
-    public void setTrajectoryController(Trajectory trajectory) {
-        mController = new DriveRamseteController(trajectory);
+    public void setTrajectoryController(boolean isReversed, Trajectory trajectory) {
+        mController = new DriveRamseteController(isReversed, trajectory);
         mController.update(mRobotState);
         newController = true;
     }

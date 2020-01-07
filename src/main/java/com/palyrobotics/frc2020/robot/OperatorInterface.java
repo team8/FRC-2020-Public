@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2020.robot;
 
 import com.palyrobotics.frc2020.behavior.Routine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
@@ -11,6 +12,10 @@ import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+
+import java.util.List;
 
 /**
  * Used to produce {@link Commands}'s from human input. Should only be used in robot package.
@@ -60,9 +65,34 @@ public class OperatorInterface {
 
         commands.cancelCurrentRoutines = false;
 
-        /*
-         * Drivetrain controls
-         */
+        updateDriveCommands(commands);
+
+        if (mOperatorXboxController.getDPadUp()) {
+            commands.addWantedRoutine(new DrivePathRoutine(
+                    new Pose2d(0.0, 0.0, new Rotation2d()),
+                    new Pose2d(2.0, 0.0, new Rotation2d()),
+                    new Pose2d(2.5, 0.5, Rotation2d.fromDegrees(90)),
+                    new Pose2d(2.5, 2.5, Rotation2d.fromDegrees(90)
+                    )));
+//            commands.addWantedRoutine(new DrivePathRoutine(
+//                    new Pose2d(0.0, 0.0, new Rotation2d()),
+//                    new Pose2d(2.5, 0.0, new Rotation2d())
+//            ));
+        } else if (mOperatorXboxController.getDPadDown()) {
+//            commands.addWantedRoutine(new DrivePathRoutine(
+//                    new Pose2d(2.5, 2.5, Rotation2d.fromDegrees(90)),
+//                    new Pose2d(2.5, 0.5, Rotation2d.fromDegrees(90)),
+//                    new Pose2d(2.0, 0.0, new Rotation2d()),
+//                    new Pose2d(0.0, 0.0, new Rotation2d()
+//                    )));
+        }
+
+        mOperatorXboxController.updateLastInputs();
+
+        return commands;
+    }
+
+    private void updateDriveCommands(Commands commands) {
         if (commands.wantedDriveState != Drive.DriveState.OFF_BOARD_CONTROLLER && commands.wantedDriveState != Drive.DriveState.ON_BOARD_CONTROLLER) {
             commands.wantedDriveState = Drive.DriveState.CHEZY;
         }
@@ -108,10 +138,6 @@ public class OperatorInterface {
         if (mDriveStick.getTriggerPressed()) {
             commands.cancelCurrentRoutines = true;
         }
-
-        mOperatorXboxController.updateLastInputs();
-
-        return commands;
     }
 
     private void setVision(boolean on) {
