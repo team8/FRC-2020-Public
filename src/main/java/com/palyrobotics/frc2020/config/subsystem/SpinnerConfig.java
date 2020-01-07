@@ -9,4 +9,8 @@ public class SpinnerConfig extends AbstractSubsystemConfig {
     public List<Integer> colorSensorYellowRGB;
     public List<Integer> colorSensorCyanRGB;
     public List<Integer> colorSensorGreenRGB;
+
+    public double idleOutput;
+    public double rotationOutput;
+    public double positionOutput;
 }

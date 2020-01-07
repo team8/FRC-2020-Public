@@ -30,12 +30,12 @@ public class HardwareAdapter {
 
     private static final HardwareAdapter sInstance = new HardwareAdapter();
 
-    public static HardwareAdapter getInstance() {
+    static HardwareAdapter getInstance() {
         return sInstance;
     }
 
     // Wrappers to access hardware groups
-    public DrivetrainHardware getDrivetrain() {
+    DrivetrainHardware getDrivetrainHardware() {
         return DrivetrainHardware.getInstance();
     }
 
@@ -47,14 +47,14 @@ public class HardwareAdapter {
         return MiscellaneousHardware.getInstance();
     }
 
-    public SpinnerHardware getSpinnerHardware() {
+    SpinnerHardware getSpinnerHardware() {
         return SpinnerHardware.getInstance();
     }
 
     /**
      * DRIVETRAIN - 6 CANSparkMax, 1 Gyro via TalonSRX data cable
      */
-    public static class DrivetrainHardware {
+    static class DrivetrainHardware {
         private static DrivetrainHardware sInstance = new DrivetrainHardware();
         final LazySparkMax
                 leftMasterSpark, leftSlave1Spark, leftSlave2Spark,
@@ -82,7 +82,7 @@ public class HardwareAdapter {
         }
     }
 
-    public static class Joysticks {
+    static class Joysticks {
         private static final Joysticks sInstance = new Joysticks();
 
         final Joystick driveStick = new Joystick(0), turnStick = new Joystick(1);
@@ -92,7 +92,8 @@ public class HardwareAdapter {
             return sInstance;
         }
     }
-    public static class SpinnerHardware {
+
+    static class SpinnerHardware {
         private static SpinnerHardware sInstance = new SpinnerHardware();
         final WPI_TalonSRX spinnerTalon;
         final ColorSensorV3 mColorSensor;
@@ -102,14 +103,14 @@ public class HardwareAdapter {
             spinnerTalon = new WPI_TalonSRX(sPortConstants.spinnerTalonDeviceID);
         }
 
-        public static SpinnerHardware getInstance() {
+        private static SpinnerHardware getInstance() {
             return sInstance;
         }
     }
     /**
      * Miscellaneous Hardware - Compressor sensor(Analog Input), Compressor, PDP
      */
-    public static class MiscellaneousHardware {
+    static class MiscellaneousHardware {
         private static MiscellaneousHardware sInstance = new MiscellaneousHardware();
         final Compressor compressor;
         final PowerDistributionPanel pdp;

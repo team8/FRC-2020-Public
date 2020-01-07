@@ -50,13 +50,6 @@ public class OtherConstants {
     public static double kCarriageToHatchCenterInches = 6.5625; // Distance from the bottom of the carriage to the center of the hatch expel
     public static double kCarriageToCargoCenterInches = 17.1744; // Distance from the bottom of the carriage to the center of the cargo expel
 
-    //May need to be retuned based on lighting conditions
-    private static final SpinnerConfig mSpinnerConfig = Configs.get(SpinnerConfig.class);
-    public static final Color kCyanCPTarget = ColorMatch.makeColor(mSpinnerConfig.colorSensorCyanRGB.get(0), mSpinnerConfig.colorSensorCyanRGB.get(1), mSpinnerConfig.colorSensorCyanRGB.get(2));
-    public static final Color kGreenCPTarget = ColorMatch.makeColor(mSpinnerConfig.colorSensorGreenRGB.get(0), mSpinnerConfig.colorSensorGreenRGB.get(1), mSpinnerConfig.colorSensorGreenRGB.get(2));
-    public static final Color kRedCPTarget = ColorMatch.makeColor(mSpinnerConfig.colorSensorRedRGB.get(0), mSpinnerConfig.colorSensorRedRGB.get(1), mSpinnerConfig.colorSensorRedRGB.get(2));
-    public static final Color kYellowCPTarget = ColorMatch.makeColor(mSpinnerConfig.colorSensorYellowRGB.get(0), mSpinnerConfig.colorSensorYellowRGB.get(1), mSpinnerConfig.colorSensorYellowRGB.get(2));
-
     public enum RobotName {
         VIDAR
     }

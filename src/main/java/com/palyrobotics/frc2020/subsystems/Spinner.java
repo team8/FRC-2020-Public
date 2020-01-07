@@ -2,15 +2,18 @@ package com.palyrobotics.frc2020.subsystems;
 
 import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotState;
-import com.palyrobotics.frc2020.robot.HardwareAdapter;
+import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 
 public class Spinner extends Subsystem {
 
     private static Spinner sInstance = new Spinner();
-    public static Spinner getInstance() { return sInstance; }
 
+    public static Spinner getInstance() {
+        return sInstance;
+    }
+    
     private SpinnerState mSpinnerState;
-    private double mSpinnerPercOutput = 0;
+    private double mOutput = 0;
     private String mCurrentColor;
     private String mPreviousColor;
 
@@ -35,10 +38,10 @@ public class Spinner extends Subsystem {
         mCurrentColor = robotState.closestColorString;
         switch (mSpinnerState) {
             case IDLE:
-                mSpinnerPercOutput = 0;
+                mOutput = SpinnerConstants.idleOutput;
                 break;
             case SPIN:
-                mSpinnerPercOutput = 0.5;
+                mOutput = SpinnerConstants.rotationOutput;
                 if(mColorPassedCount > 30) {
                     mSpinnerState = SpinnerState.IDLE;
                     mColorPassedCount = 0;
@@ -50,7 +53,7 @@ public class Spinner extends Subsystem {
                 }
                 break;
             case TO_COLOR:
-                mSpinnerPercOutput = 0.25;
+                mOutput = SpinnerConstants.positionOutput;
                 if (mCurrentColor.equals(robotState.gameData)) {
                     mSpinnerState = SpinnerState.IDLE;
                 }
@@ -59,7 +62,7 @@ public class Spinner extends Subsystem {
         mPreviousColor = mCurrentColor;
     }
 
-    public double getSpinnerPercOutput() {
-        return mSpinnerPercOutput;
+    public double getOutput() {
+        return mOutput;
     }
 }
