@@ -10,4 +10,10 @@ public class PortConstants extends AbstractConfig {
     public int vidarLeftDriveMasterDeviceID, vidarLeftDriveSlave1DeviceID, vidarLeftDriveSlave2DeviceID;
 
     public int vidarRightDriveMasterDeviceID, vidarRightDriveSlave1DeviceID, vidarRightDriveSlave2DeviceID;
+
+    /**
+     * Spinner
+     */
+    public int spinnerTalonDeviceID;
+
 }

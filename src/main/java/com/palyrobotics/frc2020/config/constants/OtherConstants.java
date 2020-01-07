@@ -1,5 +1,8 @@
 package com.palyrobotics.frc2020.config.constants;
 
+import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
+import com.palyrobotics.frc2020.config.subsystem.SpinnerConfig;
+import com.palyrobotics.frc2020.util.config.Configs;
 import com.revrobotics.ColorMatch;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -46,12 +49,6 @@ public class OtherConstants {
     public static double kGroundToCarriageInches = 10.5625; // Distance from ground to the bottom of the carriage in the lowest position
     public static double kCarriageToHatchCenterInches = 6.5625; // Distance from the bottom of the carriage to the center of the hatch expel
     public static double kCarriageToCargoCenterInches = 17.1744; // Distance from the bottom of the carriage to the center of the cargo expel
-
-    //May need to be returned based on lighting conditions
-    public static final Color kCyanCPTarget = ColorMatch.makeColor(0.1, 0.4, 0.4);
-    public static final Color kGreenCPTarget = ColorMatch.makeColor(0.1, 0.6, 0.25);
-    public static final Color kRedCPTarget = ColorMatch.makeColor(0.5, 0.3, 0.1);
-    public static final Color kYellowCPTarget = ColorMatch.makeColor(0.3, 0.5, 0.1);
 
     public enum RobotName {
         VIDAR

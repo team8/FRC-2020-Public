@@ -2,6 +2,9 @@ package com.palyrobotics.frc2020.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LazySparkMax;
@@ -27,12 +30,12 @@ public class HardwareAdapter {
 
     private static final HardwareAdapter sInstance = new HardwareAdapter();
 
-    public static HardwareAdapter getInstance() {
+    static HardwareAdapter getInstance() {
         return sInstance;
     }
 
     // Wrappers to access hardware groups
-    public DrivetrainHardware getDrivetrain() {
+    DrivetrainHardware getDrivetrainHardware() {
         return DrivetrainHardware.getInstance();
     }
 
@@ -44,10 +47,14 @@ public class HardwareAdapter {
         return MiscellaneousHardware.getInstance();
     }
 
+    SpinnerHardware getSpinnerHardware() {
+        return SpinnerHardware.getInstance();
+    }
+
     /**
      * DRIVETRAIN - 6 CANSparkMax, 1 Gyro via TalonSRX data cable
      */
-    public static class DrivetrainHardware {
+    static class DrivetrainHardware {
         private static DrivetrainHardware sInstance = new DrivetrainHardware();
         final LazySparkMax
                 leftMasterSpark, leftSlave1Spark, leftSlave2Spark,
@@ -75,7 +82,7 @@ public class HardwareAdapter {
         }
     }
 
-    public static class Joysticks {
+    static class Joysticks {
         private static final Joysticks sInstance = new Joysticks();
 
         final Joystick driveStick = new Joystick(0), turnStick = new Joystick(1);
@@ -86,10 +93,24 @@ public class HardwareAdapter {
         }
     }
 
+    static class SpinnerHardware {
+        private static SpinnerHardware sInstance = new SpinnerHardware();
+        final WPI_TalonSRX spinnerTalon;
+        final ColorSensorV3 mColorSensor;
+
+        SpinnerHardware() {
+            mColorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+            spinnerTalon = new WPI_TalonSRX(sPortConstants.spinnerTalonDeviceID);
+        }
+
+        private static SpinnerHardware getInstance() {
+            return sInstance;
+        }
+    }
     /**
      * Miscellaneous Hardware - Compressor sensor(Analog Input), Compressor, PDP
      */
-    public static class MiscellaneousHardware {
+    static class MiscellaneousHardware {
         private static MiscellaneousHardware sInstance = new MiscellaneousHardware();
         final Compressor compressor;
         final PowerDistributionPanel pdp;
@@ -101,8 +122,7 @@ public class HardwareAdapter {
             pdp = new PowerDistributionPanel();
             // fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
             mColorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-
-        }
+ }
 
         private static MiscellaneousHardware getInstance() {
             return sInstance;

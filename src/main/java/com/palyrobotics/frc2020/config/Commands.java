@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.config;
 
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.SparkDriveSignal;
 
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class Commands {
     public ArrayList<Routine> wantedRoutines = new ArrayList<>();
     // Store WantedStates for each subsystem state machine
     public Drive.DriveState wantedDriveState = Drive.DriveState.NEUTRAL;
+    public Spinner.SpinnerState wantedSpinnerState = Spinner.SpinnerState.IDLE;
+
     public double driveThrottle, driveWheel;
     public boolean isQuickTurn, isBraking;
     // All robot set points

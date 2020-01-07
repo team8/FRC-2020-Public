@@ -7,6 +7,7 @@ import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.constants.OtherConstants;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
@@ -131,6 +132,13 @@ public class OperatorInterface {
             if (mVisionLEDTimer.get() > OtherConstants.kVisionLEDTimeoutSeconds) {
                 setVision(false);
             }
+        }
+        if (mOperatorXboxController.getDPadDownPressed()) {
+                commands.wantedSpinnerState = Spinner.SpinnerState.TO_COLOR;
+        }
+
+        if(mOperatorXboxController.getDPadUpPressed()) {
+            commands.wantedSpinnerState = Spinner.SpinnerState.SPIN;
         }
 
         if (mDriveStick.getTriggerPressed()) {
