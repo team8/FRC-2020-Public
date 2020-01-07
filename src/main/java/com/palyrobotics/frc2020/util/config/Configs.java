@@ -12,9 +12,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -29,11 +29,11 @@ public class Configs {
     private static final Path CONFIG_FOLDER = (RobotBase.isReal()
             ? Paths.get(Filesystem.getDeployDirectory().toString(), CONFIG_FOLDER_NAME)
             : Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", CONFIG_FOLDER_NAME)).toAbsolutePath();
-    private static final ConcurrentHashMap<String, Class<? extends AbstractConfig>> sNameToClass = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, AbstractConfig> sConfigMap = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Class<? extends AbstractConfig>, List<Runnable>> sListeners = new ConcurrentHashMap<>();
+    private static final HashMap<String, Class<? extends AbstractConfig>> sNameToClass = new HashMap<>();
+    private static final HashMap<Class<? extends AbstractConfig>, AbstractConfig> sConfigMap = new HashMap<>(16);
+    private static final HashMap<Class<? extends AbstractConfig>, List<Runnable>> sListeners = new HashMap<>();
     private static ObjectMapper sMapper = new ObjectMapper();
-    private static final Thread sModifiedListener = new Thread(Configs::watchService);
+    private static final Thread sModifiedListener = new Thread(Configs::watchService), sRobotThread = Thread.currentThread();
 
     static {
         // Allows us to serialize private fields
@@ -175,7 +175,7 @@ public class Configs {
         try {
             WatchService watcher = FileSystems.getDefault().newWatchService();
             CONFIG_FOLDER.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
-            while (true) {
+            while (!Thread.interrupted()) {
                 try {
                     WatchKey key = watcher.take(); // Blocks until an event
                     /* Since there are two times when the listener is notified when a file is saved,
@@ -184,32 +184,38 @@ public class Configs {
                      * From there, we can filter out what we have already seen to avoid updating more than once. */
                     Thread.sleep(100);
                     List<String> alreadySeen = new ArrayList<>();
-                    for (WatchEvent<?> pollEvent : key.pollEvents()) {
-                        if (pollEvent.kind() == StandardWatchEventKinds.OVERFLOW) continue;
-                        @SuppressWarnings("unchecked")
-                        WatchEvent<Path> event = (WatchEvent<Path>) pollEvent;
-                        Path context = event.context();
-                        String configName = context.getFileName().toString().replace(".json", "");
-                        Class<? extends AbstractConfig> configClass = sNameToClass.get(configName);
-                        if (configClass != null) {
-                            if (alreadySeen.contains(configName)) continue;
-                            System.out.printf("Config named %s hot reloaded%n", configName);
-                            try {
-                                AbstractConfig config = get(configClass);
-                                sMapper.updatingReader(config).readValue(getFileForConfig(configClass).toFile());
-                                config.onPostUpdate();
-                            } catch (IOException readException) {
-                                handleParseError(readException, configClass).printStackTrace();
-                                System.err.printf("Error updating config for %s. Aborting reload.%n", configName);
+                    /* We are on a different thread, so we must be careful updating variables on the main thread.
+                     * Current model is to force the robot thread to wait for a notify once we are done updating variables from our thread. */
+                    synchronized (sRobotThread) {
+                        sRobotThread.wait(100); // In case something goes horribly wrong we can resume robot thread execution
+                        for (WatchEvent<?> pollEvent : key.pollEvents()) {
+                            if (pollEvent.kind() == StandardWatchEventKinds.OVERFLOW) continue;
+                            @SuppressWarnings("unchecked")
+                            WatchEvent<Path> event = (WatchEvent<Path>) pollEvent;
+                            Path context = event.context();
+                            String configName = context.getFileName().toString().replace(".json", "");
+                            Class<? extends AbstractConfig> configClass = sNameToClass.get(configName);
+                            if (configClass != null) {
+                                if (alreadySeen.contains(configName)) continue;
+                                System.out.printf("Config named %s hot reloaded%n", configName);
+                                try {
+                                    AbstractConfig config = get(configClass);
+                                    sMapper.updatingReader(config).readValue(getFileForConfig(configClass).toFile());
+                                    config.onPostUpdate();
+                                } catch (IOException readException) {
+                                    handleParseError(readException, configClass).printStackTrace();
+                                    System.err.printf("Error updating config for %s. Aborting reload.%n", configName);
+                                }
+                                notifyUpdated(configClass);
+                                alreadySeen.add(configName);
+                            } else {
+                                System.err.printf("Unknown file %s%n", context);
                             }
-                            notifyUpdated(configClass);
-                            alreadySeen.add(configName);
-                        } else {
-                            System.err.printf("Unknown file %s%n", context);
                         }
-                    }
-                    if (!key.reset()) {
-                        break;
+                        if (!key.reset()) {
+                            break;
+                        }
+                        sRobotThread.notify();
                     }
                 } catch (InterruptedException ignored) {
                 }
