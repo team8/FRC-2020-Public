@@ -28,7 +28,7 @@ public class RobotState {
     public double leftDriveVelocity, rightDriveVelocity, leftDrivePosition, rightDrivePosition;
     private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d());
 
-    public String gameData;
+    public String gameData = "";
 
     // TODO: ultrasonics
     // public CircularBuffer

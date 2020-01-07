@@ -47,6 +47,7 @@ class HardwareUpdater {
     private void configureHardware() {
         configureDriveHardware();
         configureMiscellaneousHardware();
+        configureSpinner();
     }
 
     private void configureDriveHardware() {
@@ -81,13 +82,14 @@ class HardwareUpdater {
 
         resetDriveSensors();
     }
-
-    private void configureMiscellaneousHardware() {
+    private void configureSpinner() {
         mColorMatcher.addColorMatch(OtherConstants.kCyanCPTarget);
         mColorMatcher.addColorMatch(OtherConstants.kGreenCPTarget);
         mColorMatcher.addColorMatch(OtherConstants.kRedCPTarget);
         mColorMatcher.addColorMatch(OtherConstants.kYellowCPTarget);
+    }
 
+    private void configureMiscellaneousHardware() {
         // UsbCamera fisheyeCam = HardwareAdapter.getInstance().getMiscellaneousHardware().fisheyeCam;
         // fisheyeCam.setResolution(640, 360); // Original is 1920 x 1080
     }
@@ -148,6 +150,31 @@ class HardwareUpdater {
         mLoopOverrunDebugger.finish();
     }
 
+    private void updateColorSensor(RobotState robotState) {
+        //updating color sensor data
+        robotState.detectedRGBVals = HardwareAdapter.getInstance().getSpinnerHardware().mColorSensor.getColor();
+        robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
+        if (robotState.closestColorRGB.color == OtherConstants.kCyanCPTarget) {
+            robotState.closestColorString = "Cyan";
+        } else if (robotState.closestColorRGB.color == OtherConstants.kYellowCPTarget) {
+            robotState.closestColorString = "Yellow";
+        } else if (robotState.closestColorRGB.color == OtherConstants.kGreenCPTarget) {
+            robotState.closestColorString = "Green";
+        } else if (robotState.closestColorRGB.color == OtherConstants.kRedCPTarget) {
+            robotState.closestColorString = "Red";
+        }
+        robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
+
+        robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();
+        if (robotState.gameData.length() > 0) {
+            System.out.println("Game data has been found, color is: " + robotState.gameData);
+        }
+
+        //For testing purposes
+        System.out.println(robotState.closestColorString + " with confidence level of " + (robotState.closestColorConfidence * 100));
+        System.out.println(robotState.detectedRGBVals.red + ", " + robotState.detectedRGBVals.green + ", " + robotState.detectedRGBVals.blue);
+    }
+
     private void updateUltrasonicSensors(RobotState robotState) {
         //TODO: ultrasonics
     }
@@ -167,7 +194,6 @@ class HardwareUpdater {
         updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark, mDrive.getDriveSignal().leftOutput);
         updateSparkMax(HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark, mDrive.getDriveSignal().rightOutput);
     }
-
 
     /**
      * Checks if the compressor should compress and updates it accordingly

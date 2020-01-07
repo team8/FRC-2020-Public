@@ -2,6 +2,8 @@ package com.palyrobotics.frc2020.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LazySparkMax;
@@ -42,6 +44,10 @@ public class HardwareAdapter {
 
     MiscellaneousHardware getMiscellaneousHardware() {
         return MiscellaneousHardware.getInstance();
+    }
+
+    public SpinnerHardware getSpinnerHardware() {
+        return SpinnerHardware.getInstance();
     }
 
     /**
@@ -85,7 +91,23 @@ public class HardwareAdapter {
             return sInstance;
         }
     }
+    public static class SpinnerHardware {
+        private static SpinnerHardware sInstance = new SpinnerHardware();
+        final TalonSRX spinnerTalon;
+        final ColorSensorV3 mColorSensor;
 
+        SpinnerHardware() {
+            mColorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+            spinnerTalon = new TalonSRX(sPortConstants.spinnerTalonDeviceID);
+        }
+        public void setSpinnerTalon(double percentOutput) {
+            spinnerTalon.set(ControlMode.PercentOutput, percentOutput);
+        }
+
+        public static SpinnerHardware getInstance() {
+            return sInstance;
+        }
+    }
     /**
      * Miscellaneous Hardware - Compressor sensor(Analog Input), Compressor, PDP
      */
@@ -101,8 +123,7 @@ public class HardwareAdapter {
             pdp = new PowerDistributionPanel();
             // fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
             mColorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-
-        }
+ }
 
         private static MiscellaneousHardware getInstance() {
             return sInstance;
