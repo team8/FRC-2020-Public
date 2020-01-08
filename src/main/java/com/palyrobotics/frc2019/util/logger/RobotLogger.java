@@ -16,7 +16,9 @@ public class RobotLogger extends Logger {
     private Queue<LogEntry> oldLogs = new LinkedList<>();
     private long firstLogTime = new Date().getTime();
 
-    public RobotLogger(int port) {
+    private final int PORT = 5807;
+
+    public RobotLogger() {
         server = new Server();
         server.getKryo().register(LogEntry.class);
         try {
@@ -31,7 +33,7 @@ public class RobotLogger extends Logger {
                     log(Log.LEVEL_WARN, "Logger", "Connection disconnected", null);
                 }
             });
-            server.bind(port, port);
+            server.bind(PORT, PORT);
             server.start();
 
             Log.setLogger(this);
