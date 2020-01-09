@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 import com.palyrobotics.frc2020.util.commands.CommandReceiver;
@@ -35,10 +36,11 @@ public class Robot extends TimedRobot {
     /* Subsystems */
     private Drive mDrive = Drive.getInstance();
     private Spinner mSpinner = Spinner.getInstance();
+    private Intake mIntake = Intake.getInstance();
     private List<Subsystem>
-            mSubsystems = List.of(mDrive, mSpinner),
+            mSubsystems = List.of(mDrive, mSpinner, mIntake),
             mEnabledSubsystems;
-    private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mSpinner);
+    private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mSpinner, mIntake);
     private List<RobotService> mEnabledServices;
 
     public static RobotState getRobotState() {
