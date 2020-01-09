@@ -7,6 +7,7 @@ import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.constants.OtherConstants;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
@@ -139,6 +140,16 @@ public class OperatorInterface {
 
         if(mOperatorXboxController.getDPadUpPressed()) {
             commands.wantedSpinnerState = Spinner.SpinnerState.SPIN;
+        }
+
+        //TODO: change intake controls maybe
+        /**
+         * Intake controls
+         */
+        if (mOperatorXboxController.getRightBumperPressed()) {
+            commands.wantedIntakeState = Intake.IntakeState.INTAKING;
+        } else {
+            commands.wantedIntakeState = Intake.IntakeState.IDLE;
         }
 
         if (mDriveStick.getTriggerPressed()) {

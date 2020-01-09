@@ -8,6 +8,7 @@ import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Spinner;
+import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2020.util.SparkMaxOutput;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -36,17 +37,21 @@ class HardwareUpdater {
 
     private Drive mDrive;
     private Spinner mSpinner;
+    private Intake mIntake;
     private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
     private final LoopOverrunDebugger mLoopOverrunDebugger = new LoopOverrunDebugger("UpdateState", 0.02);
     // private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
 
-    HardwareUpdater(Drive drive, Spinner spinner) {
+    HardwareUpdater(Drive drive, Spinner spinner, Intake intake) {
         mDrive = drive;
         mSpinner = spinner;
+        mIntake = intake;
     }
 
     void initHardware() {
         configureHardware();
+        configureIntakeHardware();
+        startUltrasonics();
     }
 
     private void configureHardware() {
@@ -94,6 +99,12 @@ class HardwareUpdater {
         mColorMatcher.addColorMatch(SpinnerConstants.kGreenCPTarget);
         mColorMatcher.addColorMatch(SpinnerConstants.kRedCPTarget);
         mColorMatcher.addColorMatch(SpinnerConstants.kYellowCPTarget);
+    }
+
+    private void configureIntakeHardware() {
+        HardwareAdapter.IntakeHardware intakeHardware = HardwareAdapter.getInstance().getIntakeHardware();
+
+        intakeHardware.intakeVictor.setInverted(false);
     }
 
     private void configureMiscellaneousHardware() {
@@ -187,6 +198,7 @@ class HardwareUpdater {
     void updateHardware() {
         updateDrivetrain();
         updateSpinner();
+        updateIntake();
         updateMiscellaneousHardware();
     }
 
@@ -204,6 +216,13 @@ class HardwareUpdater {
 
     private void updateSpinner() {
         HardwareAdapter.getInstance().getSpinnerHardware().spinnerTalon.set(ControlMode.PercentOutput, mSpinner.getOutput());
+    }
+
+    /**
+     * Updates the intake
+     */
+    private void updateIntake() {
+        HardwareAdapter.getInstance().getIntakeHardware().intakeVictor.set(mIntake.getOutput());
     }
 
     /**
