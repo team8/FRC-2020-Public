@@ -102,7 +102,7 @@ class HardwareUpdater {
     }
 
     private void configureIntakeHardware() {
-        HardwareAdapter.IntakeHardware intakeHardware = HardwareAdapter.getInstance().getIntake();
+        HardwareAdapter.IntakeHardware intakeHardware = HardwareAdapter.getInstance().getIntakeHardware();
 
         intakeHardware.intakeVictor.setInverted(false);
     }
@@ -222,7 +222,7 @@ class HardwareUpdater {
      * Updates the intake
      */
     private void updateIntake() {
-        HardwareAdapter.getInstance().getIntake().intakeVictor.set(mIntake.getOutput());
+        HardwareAdapter.getInstance().getIntakeHardware().intakeVictor.set(mIntake.getOutput());
     }
 
     /**
