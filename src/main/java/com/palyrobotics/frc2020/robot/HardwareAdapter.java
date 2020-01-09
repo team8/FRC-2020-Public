@@ -43,7 +43,7 @@ public class HardwareAdapter {
         return DrivetrainHardware.getInstance();
     }
 
-    IntakeHardware getIntake() {
+    IntakeHardware getIntakeHardware() {
         return IntakeHardware.getInstance();
     }
 
