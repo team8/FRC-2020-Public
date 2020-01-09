@@ -6,6 +6,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.palyrobotics.frc2020.config.PortConstants;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.palyrobotics.frc2020.config.PortConstants;
+import com.palyrobotics.frc2020.config.constants.OtherConstants;
+import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LazySparkMax;
 import com.palyrobotics.frc2020.util.input.Joystick;
@@ -37,6 +41,10 @@ public class HardwareAdapter {
     // Wrappers to access hardware groups
     DrivetrainHardware getDrivetrainHardware() {
         return DrivetrainHardware.getInstance();
+    }
+
+    IntakeHardware getIntake() {
+        return IntakeHardware.getInstance();
     }
 
     Joysticks getJoysticks() {
@@ -78,6 +86,19 @@ public class HardwareAdapter {
         }
 
         private static DrivetrainHardware getInstance() {
+            return sInstance;
+        }
+    }
+
+    static class IntakeHardware {
+        private static IntakeHardware sInstance = new IntakeHardware();
+        final WPI_VictorSPX intakeVictor;
+
+        IntakeHardware() {
+            intakeVictor = new WPI_VictorSPX(sPortConstants.vidarIntakeDeviceID);
+        }
+
+        private static IntakeHardware getInstance() {
             return sInstance;
         }
     }

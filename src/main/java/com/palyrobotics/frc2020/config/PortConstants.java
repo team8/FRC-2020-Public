@@ -16,4 +16,9 @@ public class PortConstants extends AbstractConfig {
      */
     public int spinnerTalonDeviceID;
 
+    /**
+     * Intake
+     */
+    public int vidarIntakeDeviceID;
+
 }
