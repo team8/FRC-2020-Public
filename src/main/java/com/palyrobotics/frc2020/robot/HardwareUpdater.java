@@ -31,13 +31,6 @@ class HardwareUpdater {
 
     public static final int TIMEOUT_MS = 500;
 
-    public static final Map<Color, String> COLOR_TO_STRING = Map.of(
-            Spinner.kCyanCPTarget, "Cyan",
-            Spinner.kYellowCPTarget, "Yellow",
-            Spinner.kGreenCPTarget, "Green",
-            Spinner.kRedCPTarget, "Red"
-    );
-
     /**
      * A Rev Color Match object is used to register and detect known colors. This can
      * be calibrated ahead of time or during operation.
@@ -171,7 +164,15 @@ class HardwareUpdater {
         // Updating color sensor data
         robotState.detectedRGBVals = HardwareAdapter.getInstance().getSpinnerHardware().colorSensor.getColor();
         robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
-        robotState.closestColorString = COLOR_TO_STRING.getOrDefault(robotState.closestColorRGB.color, null);
+        if (robotState.closestColorRGB.color == Spinner.kCyanCPTarget) {
+            robotState.closestColorString = "Cyan";
+        } else if (robotState.closestColorRGB.color == Spinner.kYellowCPTarget) {
+            robotState.closestColorString = "Yellow";
+        } else if (robotState.closestColorRGB.color == Spinner.kGreenCPTarget) {
+            robotState.closestColorString = "Green";
+        } else if (robotState.closestColorRGB.color == Spinner.kRedCPTarget) {
+            robotState.closestColorString = "Red";
+        }
         robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
 
         // For testing purposes

@@ -10,8 +10,8 @@
         "d": 5.0
     },
     "smartVelocityGains": {
-        "f": 0.0037,
-        "p": 0.0004,
+        "f": 0.0032,
+        "p": 0.0008,
         "velocity": 400.0,
         "acceleration": 600.0
     },
@@ -30,6 +30,6 @@
     "freeCurrentLimit": 48,
     "freeRpmLimit": 0,
     "nonlinearPasses": 3,
-    "maxPathVelocityMetersPerSecond": 2.0,
-    "maxPathAccelerationMetersPerSecondSquared": 4.0
+    "maxPathVelocityMetersPerSecond": 1.0,
+    "maxPathAccelerationMetersPerSecondSquared": 1.2
 }

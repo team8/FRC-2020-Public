@@ -40,7 +40,7 @@ public class DrivetrainConstants {
             kTrackWidthInches = 24.5,
             kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
     public static final DifferentialDriveKinematics kKinematics = new DifferentialDriveKinematics(DrivetrainConstants.kTrackWidthMeters);
-    public static final double kS = 0.0, kV = 0.0, kA = 0.0;
+    public static final double kS = 0.145, kV = 2.59, kA = 0.484;
     public static final TrajectoryConfig
             kTrajectoryConfig = getStandardTrajectoryConfig(),
             kReverseTrajectoryConfig = getStandardTrajectoryConfig().setReversed(true);

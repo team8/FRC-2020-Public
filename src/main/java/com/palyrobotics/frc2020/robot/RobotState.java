@@ -66,6 +66,6 @@ public class RobotState {
     }
 
     public void updateOdometry(double headingDegrees, double leftMeters, double rightMeters) {
-        drivePose = driveOdometry.update(Rotation2d.fromDegrees(headingDegrees), leftMeters, rightMeters);
+        drivePose = driveOdometry.update(Rotation2d.fromDegrees(Math.IEEEremainder(headingDegrees, 360.0)), leftMeters, rightMeters);
     }
 }
