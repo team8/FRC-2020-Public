@@ -12,11 +12,20 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class DrivePathRoutine extends Routine {
 
     private final Trajectory mTrajectory;
     private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
+
+    public DrivePathRoutine(List<Pose2d> waypoints) {
+        this(waypoints.toArray(new Pose2d[0]));
+    }
+
+    public DrivePathRoutine(boolean isReversed, List<Pose2d> waypoints) {
+        this(isReversed, waypoints.toArray(new Pose2d[0]));
+    }
 
     public DrivePathRoutine(boolean isReversed, Pose2d... waypoints) {
         mTrajectory = TrajectoryGenerator.generateTrajectory(

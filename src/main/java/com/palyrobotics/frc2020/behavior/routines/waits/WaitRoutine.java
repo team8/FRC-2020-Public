@@ -12,11 +12,11 @@ public abstract class WaitRoutine extends Routine {
     public final void start() {
     }
 
-    public abstract boolean isCompleted();
+    public abstract boolean isDone();
 
     @Override
     public final Commands update(Commands commands) {
-        mIsDone = isCompleted();
+        mIsDone = isDone();
         return commands;
     }
 
