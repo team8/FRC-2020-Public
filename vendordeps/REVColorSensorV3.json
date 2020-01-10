@@ -15,7 +15,7 @@
             "sharedLibrary": false,
             "skipInvalidPlatforms": true,
             "sourcesClassifier": "source",
-            "version": "1.0.0"
+            "version": "1.0.1"
         }
     ],
     "fileName": "REVColorSensorV3.json",
@@ -23,7 +23,7 @@
         {
             "artifactId": "ColorSensorV3-java",
             "groupId": "com.revrobotics.frc",
-            "version": "1.0.0"
+            "version": "1.0.1"
         }
     ],
     "jniDependencies": [],
@@ -33,5 +33,5 @@
     ],
     "name": "REVColorSensorV3",
     "uuid": "cda7b4b1-d003-44ac-a1ef-485c1347059a",
-    "version": "1.0.0"
+    "version": "1.0.1"
 }
