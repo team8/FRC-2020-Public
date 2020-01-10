@@ -8,6 +8,9 @@ import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 
+import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.intake.IntakeBallRoutine;
+import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
@@ -50,12 +53,20 @@ public class ShootThreeGetFiveFromRendezvous extends AutoModeBase {
         List<Pose2d> backtostart = new ArrayList<Pose2d>();
         rightrendezvous3.add(new Pose2d(0,0, new Rotation2d(0)));
 
+        //todo: check if rendezvous are where the balls are picked up and comments to be added.
+
+        routines.add(new ShootAllBallsRoutine());
+        //shoot
+
         routines.add(new DrivePathRoutine(leftrendezvous1));
         routines.add(new DrivePathRoutine(leftrendezvous2));
+        routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(leftrendezvous2), 0.8));
         routines.add(new DrivePathRoutine(rightrendezvous1));
         routines.add(new DrivePathRoutine(rightrendezvous2));
         routines.add(new DrivePathRoutine(rightrendezvous3));
-        routines.add(new DrivePathRoutine(backtostart));
+        routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rightrendezvous3), 0.8));
+
+        routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(backtostart), 0.8));
 
 
 

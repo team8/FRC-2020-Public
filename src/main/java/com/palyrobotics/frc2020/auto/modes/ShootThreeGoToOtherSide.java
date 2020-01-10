@@ -5,6 +5,7 @@ import com.palyrobotics.frc2020.auto.AutoModeBase;
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
@@ -32,6 +33,7 @@ public class ShootThreeGoToOtherSide extends AutoModeBase {
 
         //shoot 3 balls
         //pick up 2 balls
+        routines.add(new ShootAllBallsRoutine());
         routines.add(new DrivePathRoutine(otherside));
 
         return new SequentialRoutine(routines);

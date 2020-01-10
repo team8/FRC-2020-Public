@@ -5,6 +5,9 @@ import com.palyrobotics.frc2020.auto.AutoModeBase;
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.intake.IntakeBallRoutine;
+import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
@@ -46,11 +49,12 @@ public class ShootThreeRendezvousThreeEnemyTrenchTwoShootFive extends AutoModeBa
         gobacktostart.add(new Pose2d(0, 0, new Rotation2d(0)));
 
         //shoot 3 balls
-        routines.add(new DrivePathRoutine(enemyTrench));
+        routines.add(new ShootAllBallsRoutine());
         //pick up 2 balls
-        routines.add(new DrivePathRoutine(rendezvous));
-        routines.add(new DrivePathRoutine(gobacktostart));
-        
+        routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(enemyTrench), 0.8));
+        routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous), 0.8));
+        routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(gobacktostart), 0.8));
+
 
         return new SequentialRoutine(routines);
     }

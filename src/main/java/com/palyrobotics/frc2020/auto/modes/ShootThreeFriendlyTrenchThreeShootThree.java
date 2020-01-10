@@ -8,6 +8,9 @@ import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 
+import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.intake.IntakeBallRoutine;
+import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
@@ -40,8 +43,9 @@ public class ShootThreeFriendlyTrenchThreeShootThree extends AutoModeBase {
 
 
         //shoot three balls
-        routines.add(new DrivePathRoutine(friendlytrench)); //pick up balls from friendly trench
+        routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(friendlytrench), 0.8));
         routines.add(new DrivePathRoutine(shoot)); //go back to shoot
+        routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot), 0.8));
         //shoot three balls
 
         return new SequentialRoutine(routines);
