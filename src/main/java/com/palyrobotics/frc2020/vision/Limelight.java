@@ -1,6 +1,5 @@
 package com.palyrobotics.frc2020.vision;
 
-import com.palyrobotics.frc2020.config.constants.OtherConstants;
 import com.palyrobotics.frc2020.vision.LimelightControlMode.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -12,14 +11,15 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class Limelight {
 
     private static Limelight sInstance = new Limelight();
-    private NetworkTable mTable;
 
-    public Limelight() {
-        mTable = NetworkTableInstance.getDefault().getTable("limelight");
-    }
+    private NetworkTable mTable;
 
     public static Limelight getInstance() {
         return sInstance;
+    }
+
+    public Limelight() {
+        mTable = NetworkTableInstance.getDefault().getTable("limelight");
     }
 
     /**
@@ -213,12 +213,13 @@ public class Limelight {
      * @return dist - the estimated distance
      */
     public double getEstimatedDistanceZ() {
-        double a1 = OtherConstants.kLimelightElevationAngleDegrees;
-        double a2 = this.getPitchToTarget();
-        double h1 = OtherConstants.kLimelightHeightInches;
-        double h2 = OtherConstants.kRocketHatchTargetHeight;
-        double tx = this.getYawToTarget();
-        return ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))) - 10; // 10 = limelight's offset from front of robot
+        // TODO implement
+        return 0.0;
+//        double a1 = OtherConstants.kLimelightElevationAngleDegrees;
+//        double a2 = this.getPitchToTarget();
+//        double h1 = OtherConstants.kLimelightHeightInches;
+//        double h2 = OtherConstants.kRocketHatchTargetHeight;
+//        return ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))) - 10; // 10 = limelight's offset from front of robot
     }
 
     /**
@@ -229,13 +230,14 @@ public class Limelight {
      * @return dist - the estimated distance
      */
     public double getCorrectedEstimatedDistanceZ() {
-        double a1 = OtherConstants.kLimelightElevationAngleDegrees;
-        double a2 = this.getPitchToTarget();
-        double h1 = OtherConstants.kLimelightHeightInches;
-        double h2 = OtherConstants.kRocketHatchTargetHeight;
-        double tx = this.getYawToTarget();
-        // Avoid divide by zero
-        return Math.max(OtherConstants.kLimelightMinDistance, ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))));
+        // TODO implement this
+//        double a1 = OtherConstants.kLimelightElevationAngleDegrees;
+//        double a2 = getPitchToTarget();
+//        double h1 = OtherConstants.kLimelightHeightInches;
+//        double h2 = OtherConstants.kRocketHatchTargetHeight;
+//        // Avoid divide by zero
+//        return Math.max(OtherConstants.kLimelightMinDistance, ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))));
+        return 0.0;
     }
 
     /**

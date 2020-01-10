@@ -1,35 +1,34 @@
 package com.palyrobotics.frc2020.util;
 
-import com.palyrobotics.frc2020.config.Commands;
-import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.VisionConfig;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
+import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.SynchronousPID;
 import com.palyrobotics.frc2020.vision.Limelight;
 
 /**
- * {@link CheesyDriveHelper} implements the calculations used for operator control.
+ * {@link CheesyDriveController} implements operator control.
  * Returns a {@link SparkDriveSignal} for the motor output.
  */
-public class VisionDriveHelper {
+public class VisionDriveHelper extends CheesyDriveController {
 
     private static final double kMaxAngularPower = 0.4;
 
     private final Limelight mLimelight = Limelight.getInstance();
-    private final SparkDriveSignal mSignal = new SparkDriveSignal();
     private final SynchronousPID mPidController = new SynchronousPID(Configs.get(VisionConfig.class).gains);
-    private final CheesyDriveHelper mCDH = new CheesyDriveHelper();
     private boolean mInitialBrake;
     private double mLastThrottle, mBrakeRate;
 
-    public SparkDriveSignal visionDrive(Commands commands, RobotState robotState) {
+    @Override
+    public SparkDriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 
-        double throttle = commands.driveThrottle;
+        double throttle = commands.getDriveThrottle();
 
         // Braking if left trigger is pressed
-        boolean isBraking = commands.isBraking;
-//        boolean isBraking = false;
+        boolean isBraking = commands.getWantsBreak();
 
         throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadBand);
 
@@ -78,7 +77,6 @@ public class VisionDriveHelper {
 
         angularPower *= -1.0;
         double leftOutput, rightOutput;
-//        angularPower *= mOldThrottle;
         leftOutput = linearPower + angularPower;
         rightOutput = linearPower - angularPower;
 
@@ -93,7 +91,7 @@ public class VisionDriveHelper {
         }
 
         if (throttle < 0.0 || (!hasFoundTarget && !robotState.atVisionTargetThreshold)) {
-            return mCDH.cheesyDrive(commands, robotState);
+            return super.update(commands, robotState);
         } else {
             mSignal.leftOutput.setPercentOutput(leftOutput);
             mSignal.rightOutput.setPercentOutput(rightOutput);

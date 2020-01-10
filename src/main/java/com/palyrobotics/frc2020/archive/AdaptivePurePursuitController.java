@@ -1,6 +1,6 @@
 //package com.palyrobotics.frc2020.subsystems.controllers;
 //
-//import com.palyrobotics.frc2020.config.RobotState;
+//import com.palyrobotics.frc2020.robot.RobotState;
 //import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 //import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 //import com.palyrobotics.frc2020.subsystems.Drive;

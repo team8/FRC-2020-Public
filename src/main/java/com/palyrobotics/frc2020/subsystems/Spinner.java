@@ -1,26 +1,36 @@
 package com.palyrobotics.frc2020.subsystems;
 
-import com.palyrobotics.frc2020.config.Commands;
-import com.palyrobotics.frc2020.config.RobotState;
-import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
+import com.palyrobotics.frc2020.config.subsystem.SpinnerConfig;
+import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.util.config.Configs;
+import com.revrobotics.ColorMatch;
+import edu.wpi.first.wpilibj.util.Color;
 
 public class Spinner extends Subsystem {
 
+    public enum SpinnerState {
+        TO_COLOR, SPIN, IDLE
+    }
+
     private static Spinner sInstance = new Spinner();
 
-    public static Spinner getInstance() {
-        return sInstance;
-    }
-    
-    private SpinnerState mSpinnerState;
-    private double mOutput = 0;
-    private String mCurrentColor;
+    private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
+
+    public static final Color
+            kCyanCPTarget = ColorMatch.makeColor(mConfig.colorSensorCyanRGB.get(0), mConfig.colorSensorCyanRGB.get(1), mConfig.colorSensorCyanRGB.get(2)),
+            kGreenCPTarget = ColorMatch.makeColor(mConfig.colorSensorGreenRGB.get(0), mConfig.colorSensorGreenRGB.get(1), mConfig.colorSensorGreenRGB.get(2)),
+            kRedCPTarget = ColorMatch.makeColor(mConfig.colorSensorRedRGB.get(0), mConfig.colorSensorRedRGB.get(1), mConfig.colorSensorRedRGB.get(2)),
+            kYellowCPTarget = ColorMatch.makeColor(mConfig.colorSensorYellowRGB.get(0), mConfig.colorSensorYellowRGB.get(1), mConfig.colorSensorYellowRGB.get(2));
+
+    private double mOutput;
     private String mPreviousColor;
 
     private int mColorPassedCount;
 
-    public enum SpinnerState {
-        TO_COLOR, SPIN, IDLE
+    public static Spinner getInstance() {
+        return sInstance;
     }
 
     public Spinner() {
@@ -28,38 +38,28 @@ public class Spinner extends Subsystem {
     }
 
     @Override
-    public void start() {
-        mSpinnerState = Spinner.SpinnerState.IDLE;
-    }
-
-    @Override
-    public void update(Commands commands, RobotState robotState) {
-        mSpinnerState = commands.wantedSpinnerState;
-        mCurrentColor = robotState.closestColorString;
-        switch (mSpinnerState) {
+    public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+        SpinnerState spinnerState = commands.spinnerWantedState;
+        String currentColor = robotState.closestColorString;
+        switch (spinnerState) {
             case IDLE:
-                mOutput = SpinnerConstants.idleOutput;
+                mOutput = mConfig.idleOutput;
                 break;
             case SPIN:
-                mOutput = SpinnerConstants.rotationOutput;
-                if(mColorPassedCount > 30) {
-                    mSpinnerState = SpinnerState.IDLE;
+                mOutput = mConfig.rotationOutput;
+                if (mColorPassedCount > 30) {
                     mColorPassedCount = 0;
-                }
-                else {
-                    if (!mPreviousColor.equals(mCurrentColor)) {
+                } else {
+                    if (!mPreviousColor.equals(currentColor)) {
                         mColorPassedCount++;
                     }
                 }
                 break;
             case TO_COLOR:
-                mOutput = SpinnerConstants.positionOutput;
-                if (mCurrentColor.equals(robotState.gameData)) {
-                    mSpinnerState = SpinnerState.IDLE;
-                }
+                mOutput = mConfig.positionOutput;
                 break;
         }
-        mPreviousColor = mCurrentColor;
+        mPreviousColor = currentColor;
     }
 
     public double getOutput() {

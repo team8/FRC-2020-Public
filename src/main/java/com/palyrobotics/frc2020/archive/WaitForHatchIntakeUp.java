@@ -1,7 +1,7 @@
 //package com.palyrobotics.frc2020.behavior.routines.waits;
 //
 //import com.palyrobotics.frc2020.behavior.Routine;
-//import com.palyrobotics.frc2020.config.Commands;
+//import com.palyrobotics.frc2020.robot.Commands;
 //import com.palyrobotics.frc2020.subsystems.Subsystem;
 //
 //public class WaitForHatchIntakeUp extends Routine {

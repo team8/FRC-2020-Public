@@ -13,15 +13,6 @@ import java.util.List;
 public class TestAuto extends AutoModeBase {
 
     @Override
-    public String toString() {
-        return null;
-    }
-
-    @Override
-    public void preStart() {
-    }
-
-    @Override
     public Routine getRoutine() {
         return new SequentialRoutine(test(), test2(), new TimeoutRoutine(1));
     }
@@ -31,6 +22,7 @@ public class TestAuto extends AutoModeBase {
                 new Pose2d(),
                 new Pose2d(50, 0, new Rotation2d())));
     }
+
     Routine test2() {
         return new DrivePathRoutine(List.of(
                 new Pose2d(100, 0, new Rotation2d()),

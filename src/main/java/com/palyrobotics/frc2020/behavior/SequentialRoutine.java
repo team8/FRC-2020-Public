@@ -1,26 +1,26 @@
 package com.palyrobotics.frc2020.behavior;
 
-import com.palyrobotics.frc2020.config.Commands;
+import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Nihar on 12/27/16.
  */
 public class SequentialRoutine extends Routine {
 
-    private final ArrayList<Routine> mRoutines;
+    private final List<Routine> mRoutines;
     private int mRunningRoutineIndex;
     private boolean mIsDone;
 
-    public SequentialRoutine(ArrayList<Routine> routines) {
-        mRoutines = routines;
+    public SequentialRoutine(Routine... routines) {
+        this(Arrays.asList(routines));
     }
 
-    public SequentialRoutine(Routine... routines) {
-        mRoutines = new ArrayList<>(Arrays.asList(routines));
+    public SequentialRoutine(List<Routine> routines) {
+        mRoutines = routines;
     }
 
     @Override

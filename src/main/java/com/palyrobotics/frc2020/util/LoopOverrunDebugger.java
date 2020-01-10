@@ -13,6 +13,7 @@ public class LoopOverrunDebugger {
     private Timer mTimer = new Timer();
     private Double mPrintDuration;
     private ArrayList<Measurement> mMeasurements = new ArrayList<>(8);
+
     public LoopOverrunDebugger(String name) {
         mName = name;
         mTimer.start();

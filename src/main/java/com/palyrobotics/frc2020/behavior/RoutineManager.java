@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2020.behavior;
 
-import com.palyrobotics.frc2020.config.Commands;
+import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
@@ -24,7 +24,7 @@ public class RoutineManager {
         return sInstance;
     }
 
-    public static Subsystem[] subsystemSuperset(ArrayList<Routine> routines) {
+    public static Subsystem[] subsystemSuperset(List<Routine> routines) {
         HashSet<Subsystem> superset = new HashSet<>();
         for (Routine routine : routines) {
             superset.addAll(Arrays.asList(routine.getRequiredSubsystems()));
@@ -35,7 +35,7 @@ public class RoutineManager {
     /**
      * Finds overlapping subsystems. Not optimized
      */
-    static Subsystem[] sharedSubsystems(ArrayList<Routine> routines) {
+    static Subsystem[] sharedSubsystems(List<Routine> routines) {
         HashMap<Subsystem, Integer> counter = new HashMap<>();
         counter.put(null, 0); //for SampleRoutine
         counter.put(Drive.getInstance(), 0);
@@ -47,9 +47,9 @@ public class RoutineManager {
         }
         // Add all subsystems that appear multiple times to return list
         HashSet<Subsystem> conflicts = new HashSet<>();
-        for (Subsystem subsystem : counter.keySet()) {
-            if (counter.get(subsystem) > 1 && subsystem != null) {
-                conflicts.add(subsystem);
+        for (Map.Entry<Subsystem, Integer> subsystem : counter.entrySet()) {
+            if (subsystem.getValue() > 1 && subsystem.getKey() != null) {
+                conflicts.add(subsystem.getKey());
             }
         }
         return conflicts.toArray(new Subsystem[0]);
@@ -63,7 +63,7 @@ public class RoutineManager {
         mRoutinesToAdd.add(Objects.requireNonNull(newRoutine));
     }
 
-    public ArrayList<Routine> getCurrentRoutines() {
+    public List<Routine> getCurrentRoutines() {
         return mRunningRoutines;
     }
 
@@ -73,7 +73,7 @@ public class RoutineManager {
      */
     public Commands reset(Commands commands) {
         // Cancel all running routines
-        if (mRunningRoutines.size() > 0) {
+        if (!mRunningRoutines.isEmpty()) {
             for (Routine routine : mRunningRoutines) {
                 commands = routine.cancel(commands);
             }
@@ -129,11 +129,11 @@ public class RoutineManager {
 
         // Add new routines this cycle.
         // Intentionally runs even if cancelCurrentRoutines is true, as these are new routines requested on the same cycle.
-        for (Routine routine : commands.wantedRoutines) {
+        for (Routine routine : commands.routinesWanted) {
             addNewRoutine(routine);
         }
         // Clears the wanted routines every update cycle
-        commands.wantedRoutines.clear();
+        commands.routinesWanted.clear();
         return commands;
     }
 
@@ -158,7 +158,7 @@ public class RoutineManager {
         for (int j = 0; j < routinesList.size(); j++) {
             // Find intersection
             routineSubsystemSets.get(j).retainAll(subsystemsRequired);
-            if (routineSubsystemSets.get(j).size() != 0) {
+            if (!routineSubsystemSets.get(j).isEmpty()) {
                 conflicts.add(routinesList.get(j));
                 // Move to next routine in the list
             }

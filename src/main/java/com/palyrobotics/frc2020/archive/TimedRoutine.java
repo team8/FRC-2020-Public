@@ -1,6 +1,6 @@
 //package com.palyrobotics.frc2020.behavior;
 //
-//import com.palyrobotics.frc2020.config.Commands;
+//import com.palyrobotics.frc2020.robot.Commands;
 //import com.palyrobotics.frc2020.subsystems.Subsystem;
 //
 //import java.util.ArrayList;

@@ -1,6 +1,6 @@
 import com.palyrobotics.frc2020.util.control.Gains;
-import com.palyrobotics.frc2020.util.control.LazySparkMax;
 import com.palyrobotics.frc2020.util.control.SmartGains;
+import com.palyrobotics.frc2020.util.control.SparkMax;
 import com.revrobotics.ControlType;
 import org.junit.Test;
 
@@ -19,9 +19,9 @@ public class Tests {
 //    }
 
     @Test
-    public void testLazySpark() {
+    public void testSparkWrapper() {
         if (System.getProperty("os.name").startsWith("Windows")) {
-            var spark = new LazySparkMax(0);
+            var spark = new SparkMax(0);
             var gains = new Gains();
             gains.p = 0.2;
             assertTrue(spark.set(ControlType.kPosition, 0.0, 0.0, gains));

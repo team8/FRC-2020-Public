@@ -1,9 +1,7 @@
 package com.palyrobotics.frc2020.robot;
 
 import com.palyrobotics.frc2020.behavior.RoutineManager;
-import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotConfig;
-import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Intake;
@@ -26,29 +24,52 @@ import java.util.stream.Collectors;
 
 public class Robot extends TimedRobot {
 
-    private static final RobotState sRobotState = RobotState.getInstance();
-    private static Commands sCommands = Commands.getInstance();
+    private Commands mCommands = Commands.getInstance();
+    private final RobotState mRobotState = RobotState.getInstance();
     private final Limelight mLimelight = Limelight.getInstance();
     private final RobotConfig mConfig = Configs.get(RobotConfig.class);
-    private LiveGraph mLiveGraph = LiveGraph.getInstance();
-    private OperatorInterface mOperatorInterface = OperatorInterface.getInstance();
-    private RoutineManager mRoutineManager = RoutineManager.getInstance();
+    private final LiveGraph mLiveGraph = LiveGraph.getInstance();
+    private final OperatorInterface mOperatorInterface = OperatorInterface.getInstance();
+    private final RoutineManager mRoutineManager = RoutineManager.getInstance();
     /* Subsystems */
-    private Drive mDrive = Drive.getInstance();
-    private Spinner mSpinner = Spinner.getInstance();
-    private Intake mIntake = Intake.getInstance();
+    private final Drive mDrive = Drive.getInstance();
+    private final Spinner mSpinner = Spinner.getInstance();
+    private final Intake mIntake = Intake.getInstance();
     private List<Subsystem>
             mSubsystems = List.of(mDrive, mSpinner, mIntake),
             mEnabledSubsystems;
-    private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mSpinner, mIntake);
+    private final HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mSpinner, mIntake);
     private List<RobotService> mEnabledServices;
 
-    public static RobotState getRobotState() {
-        return sRobotState;
+    private void startStage(RobotState.GamePeriod period) {
+        mRobotState.gamePeriod = period;
+        resetCommandsAndRoutines();
+        setDriveIdleMode(false);
+        CSVWriter.cleanFile();
+        CSVWriter.resetTimer();
     }
 
-    public static Commands getCommands() {
-        return sCommands;
+    private void setDriveIdleMode(boolean isIdle) {
+        mHardwareUpdater.setDriveIdleMode(isIdle ? IdleMode.kCoast : IdleMode.kBrake);
+    }
+
+    private void resetCommandsAndRoutines() {
+        mCommands = Commands.resetInstance();
+        mRoutineManager.reset(mCommands);
+        updateSubsystemsAndHardware();
+    }
+
+    private void resetOdometry() {
+        mHardwareUpdater.resetDriveSensors();
+        mRobotState.resetOdometry();
+    }
+
+    private void updateSubsystemsAndHardware() {
+        mHardwareUpdater.updateState(mRobotState);
+        for (Subsystem subsystem : mEnabledSubsystems) {
+            subsystem.update(mCommands, mRobotState);
+        }
+        mHardwareUpdater.updateHardware();
     }
 
     @Override
@@ -59,69 +80,11 @@ public class Robot extends TimedRobot {
 
         mEnabledServices.forEach(RobotService::start);
 
-        Configs.listen(RobotConfig.class, config -> setIdleModes());
-    }
-
-    private void setIdleModes() {
-        Function<Boolean, IdleMode> f = isEnabled()
-                ? c -> IdleMode.kBrake // Always brake if enabled
-                : c -> c ? IdleMode.kCoast : IdleMode.kBrake; // Set to config when disabled
-        mHardwareUpdater.setDriveIdleMode(f.apply(mConfig.coastDriveIfDisabled));
-    }
-
-    private void stageInit(RobotState.GamePeriod period) {
-        sRobotState.gamePeriod = period;
-        mRoutineManager.reset(sCommands);
-        mEnabledSubsystems.forEach(Subsystem::start);
-        mHardwareUpdater.updateHardware();
-        mHardwareUpdater.resetDriveSensors();
-        sRobotState.resetOdometry();
-        CSVWriter.cleanFile();
-        CSVWriter.resetTimer();
-    }
-
-    @Override
-    public void autonomousInit() {
-        stageInit(RobotState.GamePeriod.AUTO);
-    }
-
-    @Override
-    public void autonomousPeriodic() {
-        sCommands = mRoutineManager.update(sCommands);
-        mHardwareUpdater.updateState(sRobotState);
-        for (Subsystem subsystem : mEnabledSubsystems) {
-            subsystem.update(sCommands, sRobotState);
-        }
-        mHardwareUpdater.updateHardware();
-    }
-
-    @Override
-    public void testInit() {
-        stageInit(RobotState.GamePeriod.TESTING);
-    }
-
-    @Override
-    public void testPeriodic() {
-    }
-
-    @Override
-    public void teleopInit() {
-        stageInit(RobotState.GamePeriod.TELEOP);
-        sCommands.wantedDriveState = Drive.DriveState.CHEZY; // Switch to chezy after auto ends
-        setIdleModes();
-
-        // Set limelight to driver camera mode - redundancy for testing purposes
-        mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
-    }
-
-    @Override
-    public void teleopPeriodic() {
-        sCommands = mRoutineManager.update(mOperatorInterface.updateCommands(sCommands));
-        mHardwareUpdater.updateState(sRobotState);
-        for (Subsystem subsystem : mEnabledSubsystems) {
-            subsystem.update(sCommands, sRobotState);
-        }
-        mHardwareUpdater.updateHardware();
+        Configs.listen(RobotConfig.class, config -> {
+            if (isDisabled()) {
+                setDriveIdleMode(config.coastDriveIfDisabled);
+            }
+        });
     }
 
     @Override
@@ -131,32 +94,58 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        sRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
+        mRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
 
         // TODO: ultrasonics
-        // sRobotState.resetUltrasonics();
 
-        // Clear the commands
-        sCommands = Commands.reset();
-
-        // Stop subsystems and reset their states
-        mEnabledSubsystems.forEach(Subsystem::stop);
-        mHardwareUpdater.updateHardware();
+        resetCommandsAndRoutines();
 
         mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
         mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
 
         HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
-        setIdleModes();
+        setDriveIdleMode(mConfig.coastDriveIfDisabled);
 
         CSVWriter.write();
-
-        // Manually run garbage collector
-        System.gc();
     }
 
     @Override
     public void disabledPeriodic() {
+    }
+
+    @Override
+    public void autonomousInit() {
+        startStage(RobotState.GamePeriod.AUTO);
+        resetOdometry();
+    }
+
+    @Override
+    public void autonomousPeriodic() {
+        mCommands = mRoutineManager.update(mCommands);
+        updateSubsystemsAndHardware();
+    }
+
+    @Override
+    public void testInit() {
+        startStage(RobotState.GamePeriod.TESTING);
+        resetOdometry();
+    }
+
+    @Override
+    public void testPeriodic() {
+        teleopPeriodic();
+    }
+
+    @Override
+    public void teleopInit() {
+        startStage(RobotState.GamePeriod.TELEOP);
+        mCommands.setDriveTeleop();
+    }
+
+    @Override
+    public void teleopPeriodic() {
+        mCommands = mRoutineManager.update(mOperatorInterface.updateCommands(mCommands));
+        updateSubsystemsAndHardware();
     }
 
     private void setupSubsystemsAndServices() {

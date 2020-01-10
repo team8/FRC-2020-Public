@@ -2,28 +2,42 @@ package com.palyrobotics.frc2020.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.palyrobotics.frc2020.config.RobotConfig;
-import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
-import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.subsystems.Intake;
+import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2020.util.SparkMaxOutput;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.control.LazySparkMax;
-import com.revrobotics.*;
+import com.palyrobotics.frc2020.util.control.SparkMax;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.ColorMatch;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.util.Color;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Should only be used in robot package.
  */
 
 class HardwareUpdater {
+
+    public static final int TIMEOUT_MS = 500;
+
+    public static final Map<Color, String> COLOR_TO_STRING = Map.of(
+            Spinner.kCyanCPTarget, "Cyan",
+            Spinner.kYellowCPTarget, "Yellow",
+            Spinner.kGreenCPTarget, "Green",
+            Spinner.kRedCPTarget, "Red"
+    );
+
     /**
      * A Rev Color Match object is used to register and detect known colors. This can
      * be calibrated ahead of time or during operation.
@@ -32,8 +46,6 @@ class HardwareUpdater {
      * with given confidence range.
      */
     public final ColorMatch mColorMatcher = new ColorMatch();
-
-    public static final int TIMEOUT_MS = 500;
 
     private Drive mDrive;
     private Spinner mSpinner;
@@ -51,19 +63,20 @@ class HardwareUpdater {
     void initHardware() {
         configureHardware();
         configureIntakeHardware();
-        startUltrasonics();
+        configureUltrasonics();
     }
 
     private void configureHardware() {
         configureDriveHardware();
-        configureSpinner();
+        configureSpinnerHardware();
         configureMiscellaneousHardware();
     }
 
     private void configureDriveHardware() {
         HardwareAdapter.DrivetrainHardware driveHardware = HardwareAdapter.getInstance().getDrivetrainHardware();
 
-        for (CANSparkMax spark : driveHardware.sparks) {
+        DriveConfig driveConfig = Configs.get(DriveConfig.class);
+        for (SparkMax spark : driveHardware.sparks) {
             spark.restoreFactoryDefaults();
             spark.enableVoltageCompensation(DrivetrainConstants.kMaxVoltage);
             CANEncoder encoder = spark.getEncoder();
@@ -71,34 +84,35 @@ class HardwareUpdater {
             encoder.setVelocityConversionFactor(DrivetrainConstants.kDriveMetersPerSecondPerRpm);
             CANPIDController controller = spark.getPIDController();
             controller.setOutputRange(-DrivetrainConstants.kDriveMaxClosedLoopOutput, DrivetrainConstants.kDriveMaxClosedLoopOutput);
-            DriveConfig config = Configs.get(DriveConfig.class);
-//            spark.setSmartCurrentLimit(config.stallCurrentLimit, config.freeCurrentLimit, config.freeRpmLimit);
-            spark.setOpenLoopRampRate(config.controllerRampRate);
-            spark.setClosedLoopRampRate(config.controllerRampRate);
+            spark.setSmartCurrentLimit(driveConfig.stallCurrentLimit, driveConfig.freeCurrentLimit, driveConfig.freeRpmLimit);
+            spark.setOpenLoopRampRate(driveConfig.controllerRampRate);
+            spark.setClosedLoopRampRate(driveConfig.controllerRampRate);
         }
 
-        // Invert right side
-        driveHardware.leftMasterSpark.setInverted(false);
-        driveHardware.leftSlave1Spark.setInverted(false);
-        driveHardware.leftSlave2Spark.setInverted(false);
+        /* Left Side */
+        for (SparkMax spark : List.of(driveHardware.leftMasterSpark, driveHardware.leftSlave1Spark, driveHardware.leftSlave2Spark)) {
+            spark.setInverted(false);
+        }
+        for (SparkMax spark : List.of(driveHardware.leftSlave1Spark, driveHardware.leftSlave2Spark)) {
+            spark.follow(driveHardware.leftMasterSpark);
+        }
 
-        driveHardware.rightMasterSpark.setInverted(true);
-        driveHardware.rightSlave1Spark.setInverted(true);
-        driveHardware.rightSlave2Spark.setInverted(true);
-
-        driveHardware.leftSlave1Spark.follow(driveHardware.leftMasterSpark);
-        driveHardware.leftSlave2Spark.follow(driveHardware.leftMasterSpark);
-        driveHardware.rightSlave1Spark.follow(driveHardware.rightMasterSpark);
-        driveHardware.rightSlave2Spark.follow(driveHardware.rightMasterSpark);
+        /* Right Side */
+        for (SparkMax spark : List.of(driveHardware.rightMasterSpark, driveHardware.rightSlave1Spark, driveHardware.rightSlave2Spark)) {
+            spark.setInverted(true); // Note: Inverted
+        }
+        for (SparkMax spark : List.of(driveHardware.rightSlave1Spark, driveHardware.rightSlave2Spark)) {
+            spark.follow(driveHardware.rightMasterSpark);
+        }
 
         resetDriveSensors();
     }
 
-    private void configureSpinner() {
-        mColorMatcher.addColorMatch(SpinnerConstants.kCyanCPTarget);
-        mColorMatcher.addColorMatch(SpinnerConstants.kGreenCPTarget);
-        mColorMatcher.addColorMatch(SpinnerConstants.kRedCPTarget);
-        mColorMatcher.addColorMatch(SpinnerConstants.kYellowCPTarget);
+    private void configureSpinnerHardware() {
+        mColorMatcher.addColorMatch(Spinner.kCyanCPTarget);
+        mColorMatcher.addColorMatch(Spinner.kGreenCPTarget);
+        mColorMatcher.addColorMatch(Spinner.kRedCPTarget);
+        mColorMatcher.addColorMatch(Spinner.kYellowCPTarget);
     }
 
     private void configureIntakeHardware() {
@@ -122,7 +136,7 @@ class HardwareUpdater {
     }
 
     // TODO: ultrasonics
-    private void startUltrasonics() {
+    private void configureUltrasonics() {
 //         Ultrasonic
 //                 intakeUltrasonicLeft = HardwareAdapter.getInstance().getIntake().intakeUltrasonicLeft,
 //                 intakeUltrasonicRight = HardwareAdapter.getInstance().getIntake().intakeUltrasonicRight,
@@ -149,26 +163,18 @@ class HardwareUpdater {
 
         HardwareAdapter.DrivetrainHardware drivetrain = HardwareAdapter.getInstance().getDrivetrainHardware();
 
-        robotState.leftDriveVelocity = drivetrain.leftMasterEncoder.getVelocity() / 60.0;
-        robotState.rightDriveVelocity = drivetrain.rightMasterEncoder.getVelocity() / 60.0;
-        robotState.leftDrivePosition = drivetrain.leftMasterEncoder.getPosition();
-        robotState.rightDrivePosition = drivetrain.rightMasterEncoder.getPosition();
+        robotState.driveLeftVelocity = drivetrain.leftMasterEncoder.getVelocity() / 60.0;
+        robotState.driveRightVelocity = drivetrain.rightMasterEncoder.getVelocity() / 60.0;
+        robotState.driveLeftPosition = drivetrain.leftMasterEncoder.getPosition();
+        robotState.driveRightPosition = drivetrain.rightMasterEncoder.getPosition();
 
-        //updating color sensor data
-        robotState.detectedRGBVals = HardwareAdapter.getInstance().getMiscellaneousHardware().mColorSensor.getColor();
+        // Updating color sensor data
+        robotState.detectedRGBVals = HardwareAdapter.getInstance().getSpinnerHardware().colorSensor.getColor();
         robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
-        if (robotState.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
-            robotState.closestColorString = "Cyan";
-        } else if (robotState.closestColorRGB.color == SpinnerConstants.kYellowCPTarget) {
-            robotState.closestColorString = "Yellow";
-        } else if (robotState.closestColorRGB.color == SpinnerConstants.kGreenCPTarget) {
-            robotState.closestColorString = "Green";
-        } else if (robotState.closestColorRGB.color == SpinnerConstants.kRedCPTarget) {
-            robotState.closestColorString = "Red";
-        }
+        robotState.closestColorString = COLOR_TO_STRING.getOrDefault(robotState.closestColorRGB.color, null);
         robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
 
-        //For testing purposes
+        // For testing purposes
         // System.out.println(robotState.closestColorString + " with confidence level of " + (robotState.closestColorConfidence * 100));
         // System.out.println(robotState.detectedRGBVals.red + ", " + robotState.detectedRGBVals.green + ", " + robotState.detectedRGBVals.blue);
 
@@ -179,7 +185,7 @@ class HardwareUpdater {
 
         mLoopOverrunDebugger.addPoint("Basic");
 
-        robotState.updateOdometry(drivetrain.gyro.getFusedHeading(), robotState.leftDrivePosition, robotState.rightDrivePosition);
+        robotState.updateOdometry(drivetrain.gyro.getFusedHeading(), robotState.driveLeftPosition, robotState.driveRightPosition);
 
         mLoopOverrunDebugger.addPoint("Odometry");
 
@@ -189,7 +195,7 @@ class HardwareUpdater {
     }
 
     private void updateUltrasonicSensors(RobotState robotState) {
-        //TODO: ultrasonics
+        // TODO: Ultrasonics
     }
 
     /**
@@ -208,10 +214,6 @@ class HardwareUpdater {
     private void updateDrivetrain() {
         updateSparkMax(HardwareAdapter.getInstance().getDrivetrainHardware().leftMasterSpark, mDrive.getDriveSignal().leftOutput);
         updateSparkMax(HardwareAdapter.getInstance().getDrivetrainHardware().rightMasterSpark, mDrive.getDriveSignal().rightOutput);
-//        CSVWriter.addData("leftActualPower", HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark.getAppliedOutput());
-//        CSVWriter.addData("rightActualPower", HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark.getAppliedOutput());
-//        System.out.println("HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark = " + HardwareAdapter.getInstance().getDrivetrain().leftMasterSpark.getAppliedOutput());
-//        System.out.println("HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark = " + HardwareAdapter.getInstance().getDrivetrain().rightMasterSpark.getAppliedOutput());
     }
 
     private void updateSpinner() {
@@ -278,7 +280,7 @@ class HardwareUpdater {
     //     }
     // }
 
-    private void updateSparkMax(LazySparkMax spark, SparkMaxOutput output) {
+    private void updateSparkMax(SparkMax spark, SparkMaxOutput output) {
         ControlType controlType = output.getControlType();
         if (!Configs.get(RobotConfig.class).disableOutput) {
             spark.set(controlType, output.getReference(), output.getArbitraryDemand(), output.getGains());

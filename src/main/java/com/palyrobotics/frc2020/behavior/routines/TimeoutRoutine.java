@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2020.behavior.routines;
 
 import com.palyrobotics.frc2020.behavior.Routine;
-import com.palyrobotics.frc2020.config.Commands;
+import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 import edu.wpi.first.wpilibj.Timer;
 

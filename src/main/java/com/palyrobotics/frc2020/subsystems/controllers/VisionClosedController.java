@@ -1,12 +1,12 @@
 package com.palyrobotics.frc2020.subsystems.controllers;
 
-import com.palyrobotics.frc2020.config.Commands;
-import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.VisionConfig;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
-import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.util.CheesyDriveHelper;
+import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.util.CheesyDriveController;
 import com.palyrobotics.frc2020.util.SparkDriveSignal;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.SynchronousPID;
@@ -17,7 +17,7 @@ import com.palyrobotics.frc2020.vision.Limelight;
  *
  * @author Robbie, Nihar
  */
-public class VisionClosedController implements Drive.DriveController {
+public class VisionClosedController extends CheesyDriveController {
 
     private static final double
             MAX_ANGULAR_POWER = 0.4, // 0.6
@@ -27,11 +27,10 @@ public class VisionClosedController implements Drive.DriveController {
 
     private int mUpdateCyclesForward;
 
-    private SparkDriveSignal mSignal = new SparkDriveSignal();
     private SynchronousPID mPidController = new SynchronousPID(Configs.get(VisionConfig.class).gains);
 
     @Override
-    public SparkDriveSignal update(RobotState robotState) {
+    public SparkDriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
         double angularPower;
         if (mLimelight.isTargetFound()) {
             angularPower = mPidController.calculate(mLimelight.getYawToTarget());
@@ -44,7 +43,7 @@ public class VisionClosedController implements Drive.DriveController {
             }
         } else {
             if (!robotState.atVisionTargetThreshold) {
-                return new CheesyDriveHelper().cheesyDrive(Commands.getInstance(), RobotState.getInstance());
+                return super.update(Commands.getInstance(), RobotState.getInstance());
             } else {
                 SparkDriveSignal mSignal = new SparkDriveSignal();
                 mSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);

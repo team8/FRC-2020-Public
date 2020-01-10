@@ -5,13 +5,13 @@ import com.palyrobotics.frc2020.behavior.Routine;
 
 public class ParallelDrivePathRoutine extends ParallelRoutine { // TODO implement class
 
-    private final Routine m_Routine;
-    private final DrivePathRoutine m_DrivePathRoutine;
-    private final double m_PercentageComplete;
+    private final Routine mRoutine;
+    private final DrivePathRoutine mDrivePathRoutine;
+    private final double mPercentageComplete;
 
     public ParallelDrivePathRoutine(Routine routine, DrivePathRoutine drivePathRoutine, double percentageComplete) {
-        m_Routine = routine;
-        m_DrivePathRoutine = drivePathRoutine;
-        m_PercentageComplete = percentageComplete;
+        mRoutine = routine;
+        mDrivePathRoutine = drivePathRoutine;
+        mPercentageComplete = percentageComplete;
     }
 }

@@ -1,28 +1,29 @@
 package com.palyrobotics.frc2020.util;
 
-import com.palyrobotics.frc2020.config.Commands;
-import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
+import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.config.Configs;
 
 /**
  * Implements constant curvature driving. Yoinked from 254 code
  */
-public class CheesyDriveHelper {
+public class CheesyDriveController extends Drive.DriveController {
 
     private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
     private double
             mOldWheel,
             mQuickStopAccumulator, mNegativeInertiaAccumulator;
-    private SparkDriveSignal mSignal = new SparkDriveSignal();
 
-    public SparkDriveSignal cheesyDrive(Commands commands, RobotState robotState) {
-
+    @Override
+    public SparkDriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
         // Quick-turn if right trigger is pressed
-        boolean isQuickTurn = robotState.isQuickTurning = commands.isQuickTurn;
+        boolean isQuickTurn = robotState.driveIsQuickTurning = commands.getDriveWantsQuickTurn();
 
-        double throttle = commands.driveThrottle, wheel = commands.driveWheel;
+        double throttle = commands.getDriveThrottle(), wheel = commands.getDriveWheel();
 
         double absoluteThrottle = Math.abs(throttle), absoluteWheel = Math.abs(wheel);
 
@@ -111,10 +112,5 @@ public class CheesyDriveHelper {
 
     private double applyWheelNonLinearPass(double wheel, double wheelNonLinearity) {
         return Math.sin(Math.PI / 2.0 * wheelNonLinearity * wheel) / Math.sin(Math.PI / 2.0 * wheelNonLinearity);
-    }
-
-    public void reset() {
-        mNegativeInertiaAccumulator = mQuickStopAccumulator = 0.0;
-        mOldWheel = 0.0;
     }
 }

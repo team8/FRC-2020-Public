@@ -13,26 +13,18 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("Duplicates")
 public class FriendlyTrenchRunTwoShootFive extends AutoModeBase {
-    @Override
-    public String toString() {
-        return this.getClass().toString();
-    }
-
-    @Override
-    public void preStart() {
-
-    }
 
     @Override
     public Routine getRoutine() {
-        ArrayList<Routine> routines = new ArrayList<Routine>();
-        List<Pose2d> friendlyTrench = new ArrayList<Pose2d>();
-        friendlyTrench.add(new Pose2d(170, 60, new Rotation2d(0)));
-        friendlyTrench.add(new Pose2d(140, 60, new Rotation2d(0)));
+        ArrayList<Routine> routines = new ArrayList<>();
+        List<Pose2d> friendlyTrench = new ArrayList<>();
+        friendlyTrench.add(new Pose2d(170, 60, Rotation2d.fromDegrees(0)));
+        friendlyTrench.add(new Pose2d(140, 60, Rotation2d.fromDegrees(0)));
 
-        List<Pose2d> shoot = new ArrayList<Pose2d>();
-        shoot.add(new Pose2d(0, 0, new Rotation2d(0)));
+        List<Pose2d> shoot = new ArrayList<>();
+        shoot.add(new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
         //will have to adjust this to rotate accordingly.
 
         routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(friendlyTrench), 0.8));
@@ -42,11 +34,4 @@ public class FriendlyTrenchRunTwoShootFive extends AutoModeBase {
 
         return new SequentialRoutine(routines);
     }
-
-
-    @Override
-    public String getKey() {
-        return "OurTrenchGrab2Shoot";
-    }
-
 }

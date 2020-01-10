@@ -20,7 +20,7 @@ import java.util.Objects;
  *
  * @author Quintin Dwight
  */
-public class LazySparkMax extends CANSparkMax {
+public class SparkMax extends CANSparkMax {
 
     private static Map<ControlType, Integer> sControlTypeToSlot = Map.of(
             ControlType.kSmartMotion, 1,
@@ -33,7 +33,7 @@ public class LazySparkMax extends CANSparkMax {
     private Map<Integer, Gains> mLastGains = new HashMap<>();
     private RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 
-    public LazySparkMax(int deviceNumber) {
+    public SparkMax(int deviceNumber) {
         super(deviceNumber, MotorType.kBrushless);
     }
 

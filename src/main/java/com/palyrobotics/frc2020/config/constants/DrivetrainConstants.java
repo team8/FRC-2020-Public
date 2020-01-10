@@ -15,7 +15,7 @@ public class DrivetrainConstants {
 
     private static DriveConfig kDriveConfig = Configs.get(DriveConfig.class);
 
-    public static double kMaxVoltage = 12.0;
+    public static final double kMaxVoltage = 12.0;
 
     static TrajectoryConfig getStandardTrajectoryConfig() {
         return new TrajectoryConfig(kDriveConfig.maxPathVelocityMetersPerSecond, kDriveConfig.maxPathAccelerationMetersPerSecondSquared)
@@ -27,6 +27,10 @@ public class DrivetrainConstants {
                                 kMaxVoltage));
     }
 
+    private DrivetrainConstants() {
+
+    }
+
     /**
      * Path following constants
      */
@@ -36,8 +40,8 @@ public class DrivetrainConstants {
             kTrackWidthInches = 24.5,
             kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
     public static final DifferentialDriveKinematics kKinematics = new DifferentialDriveKinematics(DrivetrainConstants.kTrackWidthMeters);
-    public static final double kS = 0.0, kV = 0.0, kA = 0.0; // TODO: fill in with characterization tool
-    public static TrajectoryConfig
+    public static final double kS = 0.0, kV = 0.0, kA = 0.0;
+    public static final TrajectoryConfig
             kTrajectoryConfig = getStandardTrajectoryConfig(),
             kReverseTrajectoryConfig = getStandardTrajectoryConfig().setReversed(true);
     public static final Pose2d kPathFinishTolerance = new Pose2d(new Translation2d(0.2, 0.2), Rotation2d.fromDegrees(5.0));
@@ -46,7 +50,7 @@ public class DrivetrainConstants {
      * Control loop constants for both robots
      */
     public static final double
-            kTurnInPlacePower = .45, // For bang bang
+            kTurnInPlacePower = 0.45, // For bang bang
             kVisionLookingForTargetCreepPower = 0.18,
             kDriveMaxClosedLoopOutput = 0.8,
             kVisionTargetThreshold = 5; // Threshold before target cannot be seen // TODO: change this threshold

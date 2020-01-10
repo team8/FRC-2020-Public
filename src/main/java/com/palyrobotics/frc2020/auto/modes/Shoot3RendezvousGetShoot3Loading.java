@@ -14,33 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("Duplicates")
-
 public class Shoot3RendezvousGetShoot3Loading extends AutoModeBase {
-    @Override
-    public String toString() {
-        return this.getClass().toString();
-    }
-
-    @Override
-    public void preStart() {
-
-    }
 
     @Override
     public Routine getRoutine() {
         //start facing the 3 balls from the leftmost ball if facing the balls from op station
-        ArrayList<Routine> routines = new ArrayList<Routine>();
-        List<Pose2d> rendezvous1 = new ArrayList<Pose2d>();
-        rendezvous1.add(new Pose2d(91, 0, new Rotation2d(0)));
+        ArrayList<Routine> routines = new ArrayList<>();
+        List<Pose2d> rendezvous1 = new ArrayList<>();
+        rendezvous1.add(new Pose2d(91, 0, Rotation2d.fromDegrees(0)));
 
-        List<Pose2d> rendezvous2 = new ArrayList<Pose2d>();
-        rendezvous2.add(new Pose2d(98, 10, new Rotation2d(0)));
+        List<Pose2d> rendezvous2 = new ArrayList<>();
+        rendezvous2.add(new Pose2d(98, 10, Rotation2d.fromDegrees(0)));
 
-        List<Pose2d> shoot = new ArrayList<Pose2d>();
-        shoot.add(new Pose2d(98, 10, new Rotation2d(180)));
+        List<Pose2d> shoot = new ArrayList<>();
+        shoot.add(new Pose2d(98, 10, Rotation2d.fromDegrees(180)));
         //turn here to face the hoop then shoot
         List<Pose2d> goSupply = new ArrayList<>();
-        goSupply.add(new Pose2d(328, 10, new Rotation2d(0)));
+        goSupply.add(new Pose2d(328, 10, Rotation2d.fromDegrees(0)));
         routines.add(new DrivePathRoutine(rendezvous1));
         routines.add(new DrivePathRoutine(rendezvous2));
         routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous2), 0.8));
@@ -49,10 +39,5 @@ public class Shoot3RendezvousGetShoot3Loading extends AutoModeBase {
         //shoot ball
 
         return new SequentialRoutine(routines);
-    }
-
-    @Override
-    public String getKey() {
-        return "Shoot3RendezvousGetThenShoot3ThenGoToLoading";
     }
 }

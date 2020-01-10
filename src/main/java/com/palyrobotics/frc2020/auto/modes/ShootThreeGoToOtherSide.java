@@ -12,36 +12,22 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("Duplicates")
 public class ShootThreeGoToOtherSide extends AutoModeBase {
-    @Override
-    public String toString() {
-        return this.getClass().toString();
-    }
-
-    @Override
-    public void preStart() {
-
-    }
 
     @Override
     public Routine getRoutine() {
-        ArrayList<Routine> routines = new ArrayList<Routine>();
+        ArrayList<Routine> routines = new ArrayList<>();
 
-        List<Pose2d> otherside = new ArrayList<Pose2d>();
-        otherside.add(new Pose2d(350, 0, new Rotation2d(0)));
+        List<Pose2d> otherSide = new ArrayList<>();
+        otherSide.add(new Pose2d(350, 0, Rotation2d.fromDegrees(0)));
 
 
         //shoot 3 balls
         //pick up 2 balls
         routines.add(new ShootAllBallsRoutine());
-        routines.add(new DrivePathRoutine(otherside));
+        routines.add(new DrivePathRoutine(otherSide));
 
         return new SequentialRoutine(routines);
-    }
-
-
-    @Override
-    public String getKey() {
-        return "ShootThreeGoToOtherSide";
     }
 }

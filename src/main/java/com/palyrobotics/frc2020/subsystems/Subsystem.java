@@ -1,7 +1,8 @@
 package com.palyrobotics.frc2020.subsystems;
 
-import com.palyrobotics.frc2020.config.Commands;
-import com.palyrobotics.frc2020.config.RobotState;
+import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
 
 public abstract class Subsystem {
 
@@ -9,10 +10,9 @@ public abstract class Subsystem {
 
     public Subsystem(String name) {
         mName = name;
-        reset();
     }
 
-    public abstract void update(Commands commands, RobotState robotState);
+    public abstract void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState);
 
     public String getConfigName() {
         return mName;
@@ -21,17 +21,6 @@ public abstract class Subsystem {
     @Override
     public String toString() {
         return mName;
-    }
-
-    public void start() {
-        reset();
-    }
-
-    public void stop() {
-        reset();
-    }
-
-    public void reset() {
     }
 
     public String getStatus() {

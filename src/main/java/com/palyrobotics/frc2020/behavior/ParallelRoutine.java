@@ -1,28 +1,29 @@
 package com.palyrobotics.frc2020.behavior;
 
-import com.palyrobotics.frc2020.config.Commands;
+import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Nihar on 12/27/16.
  */
 public class ParallelRoutine extends Routine {
 
-    private ArrayList<Routine> mRoutines;
+    private List<Routine> mRoutines;
+
+    public ParallelRoutine(Routine... routines) {
+        this(Arrays.asList(routines));
+    }
 
     /**
      * Runs all routines at the same time.
      * Finishes when all routines finish.
      */
-    public ParallelRoutine(ArrayList<Routine> routines) {
+    public ParallelRoutine(List<Routine> routines) {
         mRoutines = routines;
-    }
-
-    public ParallelRoutine(Routine... routines) {
-        mRoutines = new ArrayList<>(Arrays.asList(routines));
     }
 
     @Override

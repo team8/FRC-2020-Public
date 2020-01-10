@@ -1,50 +1,38 @@
 package com.palyrobotics.frc2020.subsystems;
 
-import com.palyrobotics.frc2020.config.Commands;
-import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.subsystem.IntakeConfig;
+import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 
 public class Intake extends Subsystem {
-    private static Intake sInstance = new Intake();
-    private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
-    private double mOutput;
-    private IntakeState mState;
-
-    public Intake() {
-        super ("intake");
-    }
 
     public enum IntakeState {
-        IDLE, INTAKING
+        IDLE, INTAKE
     }
+
+    private static Intake sInstance = new Intake();
+
+    private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
+
+    private double mOutput;
 
     public static Intake getInstance() {
         return sInstance;
     }
 
-    public void start() {
-        mState = IntakeState.IDLE;
-        mOutput = 0.0;
-    }
-
-    public void stop() {
-        mState = IntakeState.IDLE;
-        mOutput = 0.0;
-    }
-
-    public void reset() {
-        mState = IntakeState.IDLE;
-        mOutput = 0.0;
+    public Intake() {
+        super("intake");
     }
 
     @Override
-    public void update(Commands commands, RobotState robotState) {
-        mState = commands.wantedIntakeState;
+    public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+        IntakeState mState = commands.intakeWantedState;
         switch (mState) {
             case IDLE:
                 mOutput = 0.0;
-            case INTAKING:
+            case INTAKE:
                 mOutput = mConfig.intakingVelocity;
         }
     }
@@ -52,5 +40,4 @@ public class Intake extends Subsystem {
     public double getOutput() {
         return mOutput;
     }
-
 }

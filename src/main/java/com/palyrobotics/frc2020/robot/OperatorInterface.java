@@ -2,20 +2,16 @@ package com.palyrobotics.frc2020.robot;
 
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.config.Commands;
-import com.palyrobotics.frc2020.config.RobotState;
-import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
-import com.palyrobotics.frc2020.config.constants.OtherConstants;
-import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+
+import java.util.List;
 
 /**
  * Used to produce {@link Commands}'s from human input. Should only be used in robot package.
@@ -25,19 +21,19 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 public class OperatorInterface {
 
     private static OperatorInterface sInstance = new OperatorInterface();
-    private final Limelight mLimelight = Limelight.getInstance();
-    private final Joystick mDriveStick = HardwareAdapter.getInstance().getJoysticks().driveStick, mTurnStick = HardwareAdapter.getInstance().getJoysticks().turnStick;
-    private final XboxController mOperatorXboxController = HardwareAdapter.getInstance().getJoysticks().operatorXboxController;
-    // Timestamp when a vision routine was last activated; helps us know when to turn LEDs off
-    private final Timer mVisionLEDTimer = new Timer();
-
-    private OperatorInterface() {
-        mVisionLEDTimer.start();
-    }
 
     public static OperatorInterface getInstance() {
         return sInstance;
     }
+
+    private final Limelight mLimelight = Limelight.getInstance();
+    private final Joystick mDriveStick = HardwareAdapter.getInstance().getJoysticks().driveStick, mTurnStick = HardwareAdapter.getInstance().getJoysticks().turnStick;
+    private final XboxController mOperatorXboxController = HardwareAdapter.getInstance().getJoysticks().operatorXboxController;
+
+    private final List<Pose2d> kTestWaypoints = List.of(
+            new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+            new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(0.0))
+    );
 
     /**
      * Helper method to only add routines that aren't already in wantedRoutines
@@ -47,12 +43,12 @@ public class OperatorInterface {
      * @return whether or not wantedRoutine was successfully added
      */
     private boolean addWantedRoutine(Commands commands, Routine wantedRoutine) {
-        for (Routine routine : commands.wantedRoutines) {
+        for (Routine routine : commands.routinesWanted) {
             if (routine.getClass().equals(wantedRoutine.getClass())) {
                 return false;
             }
         }
-        commands.wantedRoutines.add(wantedRoutine);
+        commands.routinesWanted.add(wantedRoutine);
         return true;
     }
 
@@ -66,25 +62,11 @@ public class OperatorInterface {
         commands.cancelCurrentRoutines = false;
 
         updateDriveCommands(commands);
+        updateSpinnerCommands(commands);
+        updateIntakeCommands(commands);
 
-        if (mOperatorXboxController.getDPadUp()) {
-            commands.addWantedRoutine(new DrivePathRoutine(
-                    new Pose2d(0.0, 0.0, new Rotation2d()),
-                    new Pose2d(2.0, 0.0, new Rotation2d()),
-                    new Pose2d(2.5, 0.5, Rotation2d.fromDegrees(90)),
-                    new Pose2d(2.5, 2.5, Rotation2d.fromDegrees(90)
-                    )));
-//            commands.addWantedRoutine(new DrivePathRoutine(
-//                    new Pose2d(0.0, 0.0, new Rotation2d()),
-//                    new Pose2d(2.5, 0.0, new Rotation2d())
-//            ));
-        } else if (mOperatorXboxController.getDPadDown()) {
-//            commands.addWantedRoutine(new DrivePathRoutine(
-//                    new Pose2d(2.5, 2.5, Rotation2d.fromDegrees(90)),
-//                    new Pose2d(2.5, 0.5, Rotation2d.fromDegrees(90)),
-//                    new Pose2d(2.0, 0.0, new Rotation2d()),
-//                    new Pose2d(0.0, 0.0, new Rotation2d()
-//                    )));
+        if (mDriveStick.getTriggerPressed()) {
+            commands.cancelCurrentRoutines = true;
         }
 
         mOperatorXboxController.updateLastInputs();
@@ -92,68 +74,40 @@ public class OperatorInterface {
         return commands;
     }
 
-    private void updateDriveCommands(Commands commands) {
-        if (commands.wantedDriveState != Drive.DriveState.OFF_BOARD_CONTROLLER && commands.wantedDriveState != Drive.DriveState.ON_BOARD_CONTROLLER) {
-            commands.wantedDriveState = Drive.DriveState.CHEZY;
+    private void updateIntakeCommands(Commands commands) {
+        if (mOperatorXboxController.getRightBumperPressed()) {
+            commands.intakeWantedState = Intake.IntakeState.INTAKE;
+        } else {
+            commands.intakeWantedState = Intake.IntakeState.IDLE;
         }
-        // More safety
-        if (Math.abs(mDriveStick.getY()) > DrivetrainConstants.kDeadBand || Math.abs(mTurnStick.getX()) > DrivetrainConstants.kDeadBand) {
-            commands.wantedDriveState = Drive.DriveState.CHEZY;
-        }
-        commands.driveThrottle = -mDriveStick.getY();
-        commands.driveWheel = mTurnStick.getX();
-        commands.isQuickTurn = mTurnStick.getTrigger();
-        commands.isBraking = mDriveStick.getTrigger();
+    }
 
-//        boolean wantsAssistedVision = mTurnStick.getRawButton(3) || mDriveStick.getRawButton(3);
+    private void updateSpinnerCommands(Commands commands) {
+        if (mOperatorXboxController.getDPadDownPressed()) {
+            commands.spinnerWantedState = Spinner.SpinnerState.TO_COLOR;
+        }
+        if (mOperatorXboxController.getDPadUpPressed()) {
+            commands.spinnerWantedState = Spinner.SpinnerState.SPIN;
+        }
+    }
+
+    private void updateDriveCommands(Commands commands) {
         boolean wantsAssistedVision = mTurnStick.getRawButton(3);
         if (wantsAssistedVision) {
             // Limelight vision tracking on
-            setVision(true);
-            commands.wantedDriveState = Drive.DriveState.VISION_ASSIST;
+            commands.setDriveVisionAlign();
         } else {
-            if (!mTurnStick.getRawButton(4)) {
-                RobotState.getInstance().atVisionTargetThreshold = false;
-            }
-            if (mVisionLEDTimer.get() > OtherConstants.kVisionLEDTimeoutSeconds) {
-                setVision(false);
-            }
+            commands.setDriveTeleop(
+                    -mDriveStick.getY(), mTurnStick.getX(),
+                    mTurnStick.getTrigger(), mDriveStick.getTrigger()
+            );
         }
-
-        if (mTurnStick.getRawButton(4)) {
-            mVisionLEDTimer.reset();
-            // Limelight vision tracking on
-            setVision(true);
-            Drive.getInstance().setVisionClosedDriveController();
-            commands.wantedDriveState = Drive.DriveState.CLOSED_VISION_ASSIST;
-        } else {
-            if (!wantsAssistedVision) {
-                RobotState.getInstance().atVisionTargetThreshold = false;
-            }
-            if (mVisionLEDTimer.get() > OtherConstants.kVisionLEDTimeoutSeconds) {
-                setVision(false);
-            }
-        }
-        if (mOperatorXboxController.getDPadDownPressed()) {
-                commands.wantedSpinnerState = Spinner.SpinnerState.TO_COLOR;
-        }
-
-        if(mOperatorXboxController.getDPadUpPressed()) {
-            commands.wantedSpinnerState = Spinner.SpinnerState.SPIN;
-        }
-
-        //TODO: change intake controls maybe
-        /**
-         * Intake controls
-         */
-        if (mOperatorXboxController.getRightBumperPressed()) {
-            commands.wantedIntakeState = Intake.IntakeState.INTAKING;
-        } else {
-            commands.wantedIntakeState = Intake.IntakeState.IDLE;
-        }
-
-        if (mDriveStick.getTriggerPressed()) {
-            commands.cancelCurrentRoutines = true;
+        setVision(wantsAssistedVision);
+        /* Path Following */
+        if (mOperatorXboxController.getDPadUp()) {
+            commands.addWantedRoutine(new DrivePathRoutine(kTestWaypoints));
+        } else if (mOperatorXboxController.getDPadDown()) {
+            commands.addWantedRoutine(new DrivePathRoutine(true, kTestWaypoints));
         }
     }
 
