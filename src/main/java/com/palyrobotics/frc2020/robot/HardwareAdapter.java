@@ -9,6 +9,7 @@ import com.palyrobotics.frc2020.config.PortConstants;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.constants.OtherConstants;
+import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LazySparkMax;
@@ -45,6 +46,10 @@ public class HardwareAdapter {
 
     IntakeHardware getIntakeHardware() {
         return IntakeHardware.getInstance();
+    }
+
+    IndexerHardware getIndexerHardware() {
+        return IndexerHardware.getInstance();
     }
 
     Joysticks getJoysticks() {
@@ -99,6 +104,21 @@ public class HardwareAdapter {
         }
 
         private static IntakeHardware getInstance() {
+            return sInstance;
+        }
+    }
+
+    static class IndexerHardware {
+        private static IndexerHardware sInstance = new IndexerHardware();
+        final LazySparkMax indexerHorizontalSpark;
+        final LazySparkMax indexerVerticalSpark;
+
+        IndexerHardware() {
+            indexerHorizontalSpark = new LazySparkMax(sPortConstants.vidarIndexerHorizontalDeviceID);
+            indexerVerticalSpark = new LazySparkMax(sPortConstants.vidarIndexerVerticalDeviceID);
+        }
+
+        private static IndexerHardware getInstance() {
             return sInstance;
         }
     }

@@ -21,4 +21,9 @@ public class PortConstants extends AbstractConfig {
      */
     public int vidarIntakeDeviceID;
 
+    /**
+     * Indexer
+     */
+    public int vidarIndexerHorizontalDeviceID;
+    public int vidarIndexerVerticalDeviceID;
 }

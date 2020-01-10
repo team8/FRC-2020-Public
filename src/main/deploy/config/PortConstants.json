@@ -5,5 +5,8 @@
     "vidarRightDriveMasterDeviceID": 20,
     "vidarRightDriveSlave1DeviceID": 1,
     "vidarRightDriveSlave2DeviceID": 2,
-    "spinnerTalonDeviceID": 0
+    "spinnerTalonDeviceID": 0,
+    "vidarIntakeDeviceID": 5,
+    "vidarIndexerHorizontalDeviceID": 3,
+    "vidarIndexerVerticalDeviceID": 4
 }

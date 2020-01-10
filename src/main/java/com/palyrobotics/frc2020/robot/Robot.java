@@ -5,10 +5,7 @@ import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.dashboard.LiveGraph;
-import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.subsystems.Intake;
-import com.palyrobotics.frc2020.subsystems.Spinner;
-import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.commands.CommandReceiver;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
@@ -37,10 +34,11 @@ public class Robot extends TimedRobot {
     private Drive mDrive = Drive.getInstance();
     private Spinner mSpinner = Spinner.getInstance();
     private Intake mIntake = Intake.getInstance();
+    private Indexer mIndexer = Indexer.getInstance();
     private List<Subsystem>
             mSubsystems = List.of(mDrive, mSpinner, mIntake),
             mEnabledSubsystems;
-    private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mSpinner, mIntake);
+    private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mSpinner, mIntake, mIndexer);
     private List<RobotService> mEnabledServices;
 
     public static RobotState getRobotState() {
