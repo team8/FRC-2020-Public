@@ -19,7 +19,7 @@ public class Shooter extends Subsystem{
     private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
     //yoinks json file values.
 
-    private double mOutput;
+    private SparkMaxOutput mOutput = new SparkMaxOutput();
 
     public enum ShooterState {
         IDLE, SHOOTING
@@ -37,23 +37,22 @@ public class Shooter extends Subsystem{
         mState = commands.wantedShooterState;
         switch(mState){
             case IDLE:
-                mOutput = 0.0;
+                mOutput.setPercentOutput(0);
                 break;
             case SHOOTING:
-                SparkMaxOutput shootOutput = new SparkMaxOutput();
                 //sets up motion profile for the shooter in order to reach a speed.
-                shootOutput.setTargetSmartVelocity(mConfig.maxPowerSpeed, mConfig.shooterGains);
+                mOutput.setTargetSmartVelocity(mConfig.maxPowerSpeed, mConfig.shooterGains);
                 break;
         }
     }
 
     @Override
     public void reset() {
-        mOutput = 0.0;
+        mOutput.setPercentOutput(0);
         mState = ShooterState.IDLE;
     }
 
-    public double getOutput() {
+    public SparkMaxOutput getOutput() {
         return mOutput;
     }
 }
