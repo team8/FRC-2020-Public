@@ -233,10 +233,9 @@ class HardwareUpdater {
         HardwareAdapter.getInstance().getIntakeHardware().intakeVictor.set(mIntake.getOutput());
     }
 
-    private void updateShooter(){
-        HardwareAdapter.getInstance().getShooterHardware().shooterNeo.set(mShooter.getOutput());
+    private void updateShooter() {
+        updateSparkMax(HardwareAdapter.getInstance().getShooterHardware().shooterNeo, mShooter.getOutput());
     }
-
     /**
      * Checks if the compressor should compress and updates it accordingly
      */
