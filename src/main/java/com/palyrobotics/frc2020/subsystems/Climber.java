@@ -17,9 +17,11 @@ public class Climber extends Subsystem{
     private SparkMaxOutput mOutput;
     private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
     private Double mWantedVelocity;
+    private Double mWantedPosition;
+    private RobotState mRobotState;
 
     public enum ClimberState {
-        CUSTOM_VELOCITY, IDLE
+        CUSTOM_VELOCITY, CUSTOM_POSITION, IDLE
     }
 
     public Climber() {
@@ -46,15 +48,22 @@ public class Climber extends Subsystem{
                 mWantedVelocity = commands.climberCustomVelocity;
                 mOutput.setTargetSmartVelocity(mWantedVelocity, mConfig.gravityFeedForward, mConfig.gains);
                 break;
+            case CUSTOM_POSITION: //TODO: check
+                mWantedPosition = commands.robotSetPoints.climberPositionSetPoint;
+                mOutput.setTargetPositionSmartMotion(mWantedPosition, mConfig.gravityFeedForward, mConfig.gains);
             case IDLE:
                 mOutput.setIdle();
                 break;
         }
     }
 
+    public boolean climberOnTarget() {
+        return mClimberState == ClimberState.CUSTOM_POSITION &&
+                Math.abs(mWantedPosition - mRobotState.climberPosition) < mConfig.acceptablePositionError &&
+                Math.abs(mRobotState.climberVelocity) < mConfig.acceptableVelocityError;
+    }
+
     public SparkMaxOutput getOutput() {
         return mOutput;
     }
-
-
 }

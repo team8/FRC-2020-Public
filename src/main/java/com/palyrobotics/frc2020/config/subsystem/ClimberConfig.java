@@ -10,5 +10,10 @@ public class ClimberConfig extends AbstractConfig {
     public float kClimberInchesPerRevolution;
     public float kClimberInchesPerMinutePerRpm;
 
+    public double acceptablePositionError;
+    public double acceptableVelocityError;
+
+    public double climberExtended;
+
     public SmartGains gains;
 }

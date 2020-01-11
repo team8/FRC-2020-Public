@@ -1,16 +1,19 @@
 package com.palyrobotics.frc2020.robot;
 
 import com.palyrobotics.frc2020.behavior.Routine;
+import com.palyrobotics.frc2020.behavior.routines.climber.ClimberCustomPositioningRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.constants.OtherConstants;
+import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
+import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
@@ -157,6 +160,7 @@ public class OperatorInterface {
             commands.wantedIndexerState = Indexer.IndexerState.IDLE;
         }
 
+        ClimberConfig mClimberConfig = Configs.get(ClimberConfig.class);
         double rightStick = mOperatorXboxController.getY(GenericHID.Hand.kRight);
         if (rightStick != 0) {
             commands.wantedClimberState = Climber.ClimberState.CUSTOM_VELOCITY;
@@ -165,7 +169,7 @@ public class OperatorInterface {
             commands.wantedClimberState = Climber.ClimberState.IDLE;
         }
         if (mOperatorXboxController.getAButtonPressed()) {
-
+            commands.addWantedRoutine(new ClimberCustomPositioningRoutine(mClimberConfig.climberExtended));
         }
 
             if (mDriveStick.getTriggerPressed()) {

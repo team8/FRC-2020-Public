@@ -65,9 +65,9 @@ public class Commands {
 
         // Copy optionals that are present
         other.robotSetPoints.drivePowerSetPoint = robotSetPoints.drivePowerSetPoint;
-        other.robotSetPoints.elevatorPositionSetPoint = robotSetPoints.elevatorPositionSetPoint;
-        other.robotSetPoints.intakePositionSetPoint = robotSetPoints.intakePositionSetPoint;
-        other.robotSetPoints.pusherPositionSetPoint = robotSetPoints.pusherPositionSetPoint;
+        other.robotSetPoints.climberPositionSetPoint = robotSetPoints.climberPositionSetPoint;
+//        other.robotSetPoints.intakePositionSetPoint = robotSetPoints.intakePositionSetPoint;
+//        other.robotSetPoints.pusherPositionSetPoint = robotSetPoints.pusherPositionSetPoint;
     }
 
     @Override
@@ -88,8 +88,8 @@ public class Commands {
     public static class SetPoints {
         public SparkDriveSignal drivePowerSetPoint;
         public Double
-                elevatorPositionSetPoint,
-                pusherPositionSetPoint,
-                intakePositionSetPoint;
+                climberPositionSetPoint;
+//                pusherPositionSetPoint,
+//                intakePositionSetPoint;
     }
 }
