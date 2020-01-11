@@ -37,7 +37,7 @@ public class Shooter extends Subsystem{
         mState = commands.wantedShooterState;
         switch(mState){
             case IDLE:
-                mOutput = 0;
+                mOutput = 0.0;
                 break;
             case SHOOTING:
                 SparkMaxOutput shootOutput = new SparkMaxOutput();
