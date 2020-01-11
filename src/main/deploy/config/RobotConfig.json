@@ -5,7 +5,8 @@
     "enabledSubsystems": [
         "drive",
         "spinner",
-        "intake"
+        "intake",
+        "indexer"
     ],
     "coastDriveIfDisabled": false,
     "disableOutput": false,

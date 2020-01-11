@@ -7,6 +7,7 @@ import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
@@ -38,25 +39,28 @@ class HardwareUpdater {
     private Drive mDrive;
     private Spinner mSpinner;
     private Intake mIntake;
+    private Indexer mIndexer;
     private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
     private final LoopOverrunDebugger mLoopOverrunDebugger = new LoopOverrunDebugger("UpdateState", 0.02);
     // private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
 
-    HardwareUpdater(Drive drive, Spinner spinner, Intake intake) {
+    HardwareUpdater(Drive drive, Spinner spinner, Intake intake, Indexer indexer) {
         mDrive = drive;
         mSpinner = spinner;
         mIntake = intake;
+        mIndexer = indexer;
     }
 
     void initHardware() {
         configureHardware();
-        configureIntakeHardware();
         startUltrasonics();
     }
 
     private void configureHardware() {
         configureDriveHardware();
         configureSpinner();
+        configureIntakeHardware();
+        configureIndexerHardware();
         configureMiscellaneousHardware();
     }
 
@@ -105,6 +109,12 @@ class HardwareUpdater {
         HardwareAdapter.IntakeHardware intakeHardware = HardwareAdapter.getInstance().getIntakeHardware();
 
         intakeHardware.intakeVictor.setInverted(false);
+    }
+
+    private void configureIndexerHardware() {
+        HardwareAdapter.IndexerHardware indexerHardware = HardwareAdapter.getInstance().getIndexerHardware();
+
+        indexerHardware.indexerHorizontalSpark.setInverted(false);
     }
 
     private void configureMiscellaneousHardware() {
@@ -199,6 +209,7 @@ class HardwareUpdater {
         updateDrivetrain();
         updateSpinner();
         updateIntake();
+        updateIndexer();
         updateMiscellaneousHardware();
     }
 
@@ -223,6 +234,10 @@ class HardwareUpdater {
      */
     private void updateIntake() {
         HardwareAdapter.getInstance().getIntakeHardware().intakeVictor.set(mIntake.getOutput());
+    }
+
+    private void updateIndexer() {
+        updateSparkMax(HardwareAdapter.getInstance().getIndexerHardware().indexerHorizontalSpark, mIndexer.getOutput());
     }
 
     /**
