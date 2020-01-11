@@ -111,11 +111,9 @@ public class HardwareAdapter {
     static class IndexerHardware {
         private static IndexerHardware sInstance = new IndexerHardware();
         final LazySparkMax indexerHorizontalSpark;
-        final LazySparkMax indexerVerticalSpark;
 
         IndexerHardware() {
             indexerHorizontalSpark = new LazySparkMax(sPortConstants.vidarIndexerHorizontalDeviceID);
-            indexerVerticalSpark = new LazySparkMax(sPortConstants.vidarIndexerVerticalDeviceID);
         }
 
         private static IndexerHardware getInstance() {

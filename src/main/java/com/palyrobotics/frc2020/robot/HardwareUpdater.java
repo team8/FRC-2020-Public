@@ -114,7 +114,6 @@ class HardwareUpdater {
     private void configureIndexerHardware() {
         HardwareAdapter.IndexerHardware indexerHardware = HardwareAdapter.getInstance().getIndexerHardware();
 
-        indexerHardware.indexerVerticalSpark.setInverted(false);
         indexerHardware.indexerHorizontalSpark.setInverted(false);
     }
 
@@ -239,7 +238,6 @@ class HardwareUpdater {
 
     private void updateIndexer() {
         updateSparkMax(HardwareAdapter.getInstance().getIndexerHardware().indexerHorizontalSpark, mIndexer.getOutput());
-        updateSparkMax(HardwareAdapter.getInstance().getIndexerHardware().indexerVerticalSpark, mIndexer.getOutput());
     }
 
     /**
