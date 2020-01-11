@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
     private Intake mIntake = Intake.getInstance();
     private Indexer mIndexer = Indexer.getInstance();
     private List<Subsystem>
-            mSubsystems = List.of(mDrive, mSpinner, mIntake),
+            mSubsystems = List.of(mDrive, mSpinner, mIntake, mIndexer),
             mEnabledSubsystems;
     private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mSpinner, mIntake, mIndexer);
     private List<RobotService> mEnabledServices;

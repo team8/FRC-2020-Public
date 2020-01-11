@@ -8,11 +8,11 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import edu.wpi.first.wpilibj.Spark;
 
 public class Indexer extends Subsystem {
+    
     private static Indexer sInstance = new Indexer();
     private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
     private SparkMaxOutput mOutput;
     private IndexerState mState;
-
 
     public Indexer() {
         super("indexer");
