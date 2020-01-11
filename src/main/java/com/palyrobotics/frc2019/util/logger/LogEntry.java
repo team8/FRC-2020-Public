@@ -6,21 +6,21 @@ import java.util.Objects;
 import java.util.Set;
 
 public class LogEntry {
-    public long timeStamp;
-    public int level;
-    public String category;
-    public String message;
-    public Throwable ex;
+    private long m_TimeStamp;
+    private int m_Level;
+    private String m_Category;
+    private String m_Message;
+    private Throwable m_Cause;
 
     public boolean passesFilter(Set<Integer> levels, Set<String> categories) {
-        if (categories.isEmpty()) {
-            return levels.contains(level);
+        if (categories.contains("all")) {
+            return true;
         }
-        return levels.contains(level) && categories.contains(category);
+        return levels.contains(m_Level) && categories.contains(m_Category);
     }
 
     public String toString() {
-        return toString(1, this.timeStamp);
+        return toString(1, m_TimeStamp);
     }
 
     public String toString(int amount, long timeStamp) {
@@ -28,15 +28,12 @@ public class LogEntry {
 
         long minutes = timeStamp / (1000 * 60);
         long seconds = timeStamp / (1000) % 60;
-
         if (minutes <= 9) log.append('0');
         log.append(minutes);
         log.append(':');
         if (seconds <= 9) log.append('0');
         log.append(seconds);
-
-
-        switch (level) {
+        switch (m_Level) {
             case 5:
                 log.append(" ERROR: ");
                 break;
@@ -55,45 +52,57 @@ public class LogEntry {
             default:
                 log.append(" OTHER ");
         }
-
-        if (category != null) {
-            log.append('[');
-            log.append(category);
-            log.append("] ");
+        if (m_Category != null) {
+            log.append('[').append(m_Category).append("] ");
         } else {
             log.append("[General] ");
         }
-
-        log.append(message);
-
-        if (ex != null) {
+        log.append(m_Message);
+        if (m_Cause != null) {
             StringWriter writer = new StringWriter(256);
-            ex.printStackTrace(new PrintWriter(writer));
-            log.append('\n');
-            log.append(writer.toString().trim());
+            m_Cause.printStackTrace(new PrintWriter(writer));
+            log.append('\n').append(writer.toString().trim());
         }
 
         if (amount > 1) {
-            log.append(" [");
-            log.append(amount);
-            log.append(']');
+            log.append(" [").append(amount).append(']');
         }
 
         return log.toString();
     }
 
-    public boolean equals(LogEntry o) {
-        return Objects.equals(this.message, o.message) && Objects.equals(this.category, o.category) && Objects.equals(this.level, o.level) && Objects.equals(this.ex, o.ex);
+    public boolean canCollapseWith(LogEntry o) {
+        return Objects.equals(this.m_Message, o.m_Message) && Objects.equals(this.m_Category, o.m_Category) && Objects.equals(this.m_Level, o.m_Level) && Objects.equals(this.m_Cause, o.m_Cause);
     }
 
     public LogEntry() {
     }
 
-    public LogEntry(long timeStamp, int level, String category, String message, Throwable ex) {
-        this.timeStamp = timeStamp;
-        this.level = level;
-        this.category = category;
-        this.message = message;
-        this.ex = ex;
+    public LogEntry(long timeStamp, int level, String category, String message, Throwable exception) {
+        this.m_TimeStamp = timeStamp;
+        this.m_Level = level;
+        this.m_Category = category;
+        this.m_Message = message;
+        this.m_Cause = exception;
+    }
+
+    public long getTimeStamp() {
+        return m_TimeStamp;
+    }
+
+    public int getLevel() {
+        return m_Level;
+    }
+
+    public String getCategory() {
+        return m_Category;
+    }
+
+    public String getMessage() {
+        return m_Message;
+    }
+
+    public Throwable getCause() {
+        return m_Cause;
     }
 }

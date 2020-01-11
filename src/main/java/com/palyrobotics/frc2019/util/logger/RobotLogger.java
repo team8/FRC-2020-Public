@@ -19,6 +19,8 @@ public class RobotLogger extends Logger {
     private final int PORT = 5807;
 
     public RobotLogger() {
+        Log.set(1); // Controls what logs actually are shown, 1 -> everything; 7 or above, nothing
+
         server = new Server();
         server.getKryo().register(LogEntry.class);
         try {
@@ -37,7 +39,7 @@ public class RobotLogger extends Logger {
             server.start();
 
             Log.setLogger(this);
-            log(Log.LEVEL_INFO, "Logger", "Started log com.palyrobotics.server", null);
+            log(Log.LEVEL_INFO, "Logger", "Started log server", null);
         } catch (IOException | IllegalMonitorStateException exception) {
             log(Log.LEVEL_ERROR, "Logger", "Exception stack trace", exception);
         }
@@ -50,6 +52,10 @@ public class RobotLogger extends Logger {
             return;
         }
         LogEntry log = new LogEntry(new Date().getTime() - firstLogTime, level, category, message, ex);
+
+        if (ex != null) {
+            ex.printStackTrace();
+        }
 
         oldLogs.add(log);
         if (server.getConnections().length == 0) {

@@ -52,7 +52,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         Log.setLogger(new RobotLogger());
-        Log.set(1);
 
         setupSubsystemsAndServices();
 
