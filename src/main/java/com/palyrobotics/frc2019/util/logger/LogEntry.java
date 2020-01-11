@@ -6,21 +6,21 @@ import java.util.Objects;
 import java.util.Set;
 
 public class LogEntry {
-    private long m_TimeStamp;
-    private int m_Level;
-    private String m_Category;
-    private String m_Message;
-    private Throwable m_Cause;
+    public long timeStamp;
+    public int level;
+    public String category;
+    public String message;
+    public Throwable cause;
 
     public boolean passesFilter(Set<Integer> levels, Set<String> categories) {
         if (categories.contains("all")) {
             return true;
         }
-        return levels.contains(m_Level) && categories.contains(m_Category);
+        return levels.contains(level) && categories.contains(category);
     }
 
     public String toString() {
-        return toString(1, m_TimeStamp);
+        return toString(1, timeStamp);
     }
 
     public String toString(int amount, long timeStamp) {
@@ -33,7 +33,7 @@ public class LogEntry {
         log.append(':');
         if (seconds <= 9) log.append('0');
         log.append(seconds);
-        switch (m_Level) {
+        switch (level) {
             case 5:
                 log.append(" ERROR: ");
                 break;
@@ -52,15 +52,15 @@ public class LogEntry {
             default:
                 log.append(" OTHER ");
         }
-        if (m_Category != null) {
-            log.append('[').append(m_Category).append("] ");
+        if (category != null) {
+            log.append('[').append(category).append("] ");
         } else {
             log.append("[General] ");
         }
-        log.append(m_Message);
-        if (m_Cause != null) {
+        log.append(message);
+        if (cause != null) {
             StringWriter writer = new StringWriter(256);
-            m_Cause.printStackTrace(new PrintWriter(writer));
+            cause.printStackTrace(new PrintWriter(writer));
             log.append('\n').append(writer.toString().trim());
         }
 
@@ -72,37 +72,17 @@ public class LogEntry {
     }
 
     public boolean canCollapseWith(LogEntry o) {
-        return Objects.equals(this.m_Message, o.m_Message) && Objects.equals(this.m_Category, o.m_Category) && Objects.equals(this.m_Level, o.m_Level) && Objects.equals(this.m_Cause, o.m_Cause);
+        return Objects.equals(this.message, o.message) && Objects.equals(this.category, o.category) && Objects.equals(this.level, o.level) && Objects.equals(this.cause, o.cause);
     }
 
     public LogEntry() {
     }
 
     public LogEntry(long timeStamp, int level, String category, String message, Throwable exception) {
-        this.m_TimeStamp = timeStamp;
-        this.m_Level = level;
-        this.m_Category = category;
-        this.m_Message = message;
-        this.m_Cause = exception;
-    }
-
-    public long getTimeStamp() {
-        return m_TimeStamp;
-    }
-
-    public int getLevel() {
-        return m_Level;
-    }
-
-    public String getCategory() {
-        return m_Category;
-    }
-
-    public String getMessage() {
-        return m_Message;
-    }
-
-    public Throwable getCause() {
-        return m_Cause;
+        this.timeStamp = timeStamp;
+        this.level = level;
+        this.category = category;
+        this.message = message;
+        this.cause = exception;
     }
 }

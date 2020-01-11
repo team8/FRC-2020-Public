@@ -7,6 +7,7 @@ import com.esotericsoftware.minlog.*;
 import com.esotericsoftware.minlog.Log.Logger;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -16,7 +17,7 @@ public class RobotLogger extends Logger {
     private Queue<LogEntry> oldLogs = new LinkedList<>();
     private long firstLogTime = new Date().getTime();
 
-    private final int PORT = 5807;
+    private final int PORT = 5802;
 
     public RobotLogger() {
         Log.set(1); // Controls what logs actually are shown, 1 -> everything; 7 or above, nothing
@@ -35,7 +36,7 @@ public class RobotLogger extends Logger {
                     log(Log.LEVEL_WARN, "Logger", "Connection disconnected", null);
                 }
             });
-            server.bind(PORT, PORT);
+            server.bind(new InetSocketAddress(PORT), null);
             server.start();
 
             Log.setLogger(this);
@@ -62,6 +63,7 @@ public class RobotLogger extends Logger {
             System.out.println(log.toString());
         } else {
             while (!oldLogs.isEmpty()) {
+                System.out.printf("stuff was sent boi");
                 server.sendToAllTCP(oldLogs.remove());
             }
         }
