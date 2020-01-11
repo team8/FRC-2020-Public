@@ -8,5 +8,6 @@
     "spinnerTalonDeviceID": 0,
     "vidarIntakeDeviceID": 5,
     "vidarIndexerHorizontalDeviceID": 3,
-    "vidarIndexerVerticalDeviceID": 4
+    "vidarIndexerVerticalDeviceID": 4,
+    "climberSparkID": 0
 }

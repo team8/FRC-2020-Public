@@ -11,5 +11,4 @@ public class ClimberConfig extends AbstractConfig {
     public float kClimberInchesPerMinutePerRpm;
 
     public SmartGains gains;
-
 }

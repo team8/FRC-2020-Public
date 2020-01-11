@@ -4,6 +4,7 @@ import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.util.SparkMaxOutput;
+import com.palyrobotics.frc2020.util.config.Configs;
 
 public class Climber extends Subsystem{
     private static Climber sInstance = new Climber();
@@ -14,7 +15,7 @@ public class Climber extends Subsystem{
 
     private ClimberState mClimberState;
     private SparkMaxOutput mOutput;
-    private ClimberConfig mConfig;
+    private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
     private Double mWantedVelocity;
 
     public enum ClimberState {
