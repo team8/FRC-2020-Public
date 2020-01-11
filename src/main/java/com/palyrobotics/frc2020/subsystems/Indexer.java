@@ -46,7 +46,7 @@ public class Indexer extends Subsystem {
         mState = commands.wantedIndexerState;
         switch (mState) {
             case IDLE:
-                mOutput.setTargetSmartVelocity(0, mConfig.gains);
+                mOutput.setPercentOutput(0);
             case MOVING:
                 mOutput.setTargetSmartVelocity(mConfig.transferVelocity, mConfig.gains);
         }
