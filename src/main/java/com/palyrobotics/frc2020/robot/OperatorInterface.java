@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.constants.OtherConstants;
+import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
@@ -14,6 +15,7 @@ import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -139,7 +141,7 @@ public class OperatorInterface {
                 commands.wantedSpinnerState = Spinner.SpinnerState.TO_COLOR;
         }
 
-        if(mOperatorXboxController.getDPadUpPressed()) {
+        if (mOperatorXboxController.getDPadUpPressed()) {
             commands.wantedSpinnerState = Spinner.SpinnerState.SPIN;
         }
 
@@ -155,8 +157,19 @@ public class OperatorInterface {
             commands.wantedIndexerState = Indexer.IndexerState.IDLE;
         }
 
-        if (mDriveStick.getTriggerPressed()) {
-            commands.cancelCurrentRoutines = true;
+        double rightStick = mOperatorXboxController.getY(GenericHID.Hand.kRight);
+        if (rightStick != 0) {
+            commands.wantedClimberState = Climber.ClimberState.CUSTOM_VELOCITY;
+            commands.climberCustomVelocity = rightStick; //TODO: find out what to multiply by
+        } else {
+            commands.wantedClimberState = Climber.ClimberState.IDLE;
+        }
+        if (mOperatorXboxController.getAButtonPressed()) {
+
+        }
+
+            if (mDriveStick.getTriggerPressed()) {
+                commands.cancelCurrentRoutines = true;
         }
     }
 

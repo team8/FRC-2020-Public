@@ -26,4 +26,9 @@ public class PortConstants extends AbstractConfig {
      */
     public int vidarIndexerHorizontalDeviceID;
     public int vidarIndexerVerticalDeviceID;
+
+    /**
+     * Climber
+     */
+    public int climberSparkID;
 }

@@ -1,6 +1,5 @@
 package com.palyrobotics.frc2020.config;
 
-import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -27,6 +26,9 @@ public class RobotState {
     public boolean isQuickTurning;
     public double leftDriveVelocity, rightDriveVelocity, leftDrivePosition, rightDrivePosition;
     private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(new Rotation2d());
+
+    public double climberVelocity;
+    public double climberPosition;
 
     public String gameData;
 

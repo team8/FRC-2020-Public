@@ -3,9 +3,11 @@ package com.palyrobotics.frc2020.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.RobotState;
+import com.palyrobotics.frc2020.config.constants.ClimberConstants;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
+import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Spinner;
@@ -16,7 +18,6 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LazySparkMax;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -40,15 +41,18 @@ class HardwareUpdater {
     private Spinner mSpinner;
     private Intake mIntake;
     private Indexer mIndexer;
+    private Climber mClimber;
+
     private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
     private final LoopOverrunDebugger mLoopOverrunDebugger = new LoopOverrunDebugger("UpdateState", 0.02);
     // private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
 
-    HardwareUpdater(Drive drive, Spinner spinner, Intake intake, Indexer indexer) {
+    HardwareUpdater(Drive drive, Spinner spinner, Intake intake, Indexer indexer, Climber climber) {
         mDrive = drive;
         mSpinner = spinner;
         mIntake = intake;
         mIndexer = indexer;
+        mClimber = climber;
     }
 
     void initHardware() {
@@ -117,6 +121,26 @@ class HardwareUpdater {
         indexerHardware.indexerHorizontalSpark.setInverted(false);
     }
 
+    private void configureClimberHardware() {
+        HardwareAdapter.ClimberHardware climberHardware = HardwareAdapter.getInstance().getClimberHardware();
+
+        LazySparkMax climberSpark = climberHardware.climberSpark;
+
+        climberSpark.restoreFactoryDefaults();
+
+        climberSpark.enableVoltageCompensation(12); //TODO: check if gucci
+
+        climberSpark.setIdleMode(IdleMode.kBrake);
+
+        climberSpark.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 0.0f);
+        climberSpark.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, ClimberConstants.kClimberMaxHeight);
+        climberSpark.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, false);
+        climberSpark.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, false);
+
+        climberSpark.getEncoder().setPositionConversionFactor(ClimberConstants.kClimberInchesPerRevolution);
+        climberSpark.getEncoder().setVelocityConversionFactor(ClimberConstants.kClimberInchesPerMinutePerRpm);
+    }
+
     private void configureMiscellaneousHardware() {
         // UsbCamera fisheyeCam = HardwareAdapter.getInstance().getMiscellaneousHardware().fisheyeCam;
         // fisheyeCam.setResolution(640, 360); // Original is 1920 x 1080
@@ -164,6 +188,11 @@ class HardwareUpdater {
         robotState.leftDrivePosition = drivetrain.leftMasterEncoder.getPosition();
         robotState.rightDrivePosition = drivetrain.rightMasterEncoder.getPosition();
 
+        HardwareAdapter.ClimberHardware climber = HardwareAdapter.getInstance().getClimberHardware();
+
+        robotState.climberVelocity = climber.climberSpark.getEncoder().getVelocity();
+        robotState.climberPosition = climber.climberSpark.getEncoder().getPosition();
+
         //updating color sensor data
         robotState.detectedRGBVals = HardwareAdapter.getInstance().getMiscellaneousHardware().mColorSensor.getColor();
         robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
@@ -210,6 +239,7 @@ class HardwareUpdater {
         updateSpinner();
         updateIntake();
         updateIndexer();
+        updateClimber();
         updateMiscellaneousHardware();
     }
 
@@ -227,6 +257,10 @@ class HardwareUpdater {
 
     private void updateSpinner() {
         HardwareAdapter.getInstance().getSpinnerHardware().spinnerTalon.set(ControlMode.PercentOutput, mSpinner.getOutput());
+    }
+
+    private void updateClimber() {
+        updateSparkMax(HardwareAdapter.getInstance().getClimberHardware().climberSpark, mClimber.getOutput());
     }
 
     /**

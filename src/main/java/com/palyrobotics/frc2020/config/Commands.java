@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2020.config;
 
 import com.palyrobotics.frc2020.behavior.Routine;
+import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
@@ -25,6 +26,10 @@ public class Commands {
     public Spinner.SpinnerState wantedSpinnerState = Spinner.SpinnerState.IDLE;
     public Intake.IntakeState wantedIntakeState = Intake.IntakeState.IDLE;
     public Indexer.IndexerState wantedIndexerState = Indexer.IndexerState.IDLE;
+    public Climber.ClimberState wantedClimberState = Climber.ClimberState.IDLE;
+
+    public double climberCustomVelocity;
+
     public double driveThrottle, driveWheel;
     public boolean isQuickTurn, isBraking;
     // All robot set points

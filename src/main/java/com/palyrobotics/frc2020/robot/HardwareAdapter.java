@@ -2,9 +2,6 @@ package com.palyrobotics.frc2020.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.palyrobotics.frc2020.config.PortConstants;
@@ -15,8 +12,8 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LazySparkMax;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
-import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANEncoder;
+import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -62,6 +59,10 @@ public class HardwareAdapter {
 
     SpinnerHardware getSpinnerHardware() {
         return SpinnerHardware.getInstance();
+    }
+
+    ClimberHardware getClimberHardware() {
+        return ClimberHardware.getInstance();
     }
 
     /**
@@ -143,6 +144,24 @@ public class HardwareAdapter {
         }
 
         private static SpinnerHardware getInstance() {
+            return sInstance;
+        }
+    }
+
+    static class ClimberHardware {
+        private static ClimberHardware sInstance = new ClimberHardware();
+        final XboxController operatorXboxController = new XboxController(2);
+        final LazySparkMax climberSpark;
+
+        void resetSensors() {
+            sInstance.climberSpark.getEncoder().setPosition(0);
+        }
+
+        ClimberHardware() {
+            climberSpark = new LazySparkMax(sPortConstants.climberSparkID);
+        }
+
+        private static ClimberHardware getInstance() {
             return sInstance;
         }
     }

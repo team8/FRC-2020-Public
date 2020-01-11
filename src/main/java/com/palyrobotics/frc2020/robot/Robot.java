@@ -30,15 +30,18 @@ public class Robot extends TimedRobot {
     private LiveGraph mLiveGraph = LiveGraph.getInstance();
     private OperatorInterface mOperatorInterface = OperatorInterface.getInstance();
     private RoutineManager mRoutineManager = RoutineManager.getInstance();
+
     /* Subsystems */
     private Drive mDrive = Drive.getInstance();
     private Spinner mSpinner = Spinner.getInstance();
     private Intake mIntake = Intake.getInstance();
     private Indexer mIndexer = Indexer.getInstance();
+    private Climber mClimber = Climber.getInstance();
+
     private List<Subsystem>
-            mSubsystems = List.of(mDrive, mSpinner, mIntake, mIndexer),
+            mSubsystems = List.of(mDrive, mSpinner, mIntake, mIndexer, mClimber),
             mEnabledSubsystems;
-    private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mSpinner, mIntake, mIndexer);
+    private HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mSpinner, mIntake, mIndexer, mClimber);
     private List<RobotService> mEnabledServices;
 
     public static RobotState getRobotState() {
