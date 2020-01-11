@@ -47,6 +47,9 @@ public class HardwareAdapter {
         return IntakeHardware.getInstance();
     }
 
+    ShooterHardware getShooterHardware() {
+        return ShooterHardware.getInstance();
+    }
     Joysticks getJoysticks() {
         return Joysticks.getInstance();
     }
@@ -99,6 +102,14 @@ public class HardwareAdapter {
         }
 
         private static IntakeHardware getInstance() {
+            return sInstance;
+        }
+    }
+
+    static class ShooterHardware {
+        private static ShooterHardware sInstance = new ShooterHardware();
+        final LazySparkMax shooterNeo = new LazySparkMax(-1);
+        private static ShooterHardware getInstance() {
             return sInstance;
         }
     }

@@ -1,0 +1,14 @@
+{
+    "maxPowerSpeed": 0.5,
+    "shooterGains": {
+        "p": 0.0,
+        "i": 0.0,
+        "d": 0.0,
+        "f": 0.0,
+        "iZone": 0,
+        "acceleration": 0,
+        "velocity": 0,
+        "allowableError": 0.0,
+        "minimumOutputVelocity": 0.0
+    }
+}

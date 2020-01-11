@@ -3,6 +3,7 @@ package com.palyrobotics.frc2020.config;
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Intake;
+import com.palyrobotics.frc2020.subsystems.Shooter;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.SparkDriveSignal;
 
@@ -23,6 +24,7 @@ public class Commands {
     public Drive.DriveState wantedDriveState = Drive.DriveState.NEUTRAL;
     public Spinner.SpinnerState wantedSpinnerState = Spinner.SpinnerState.IDLE;
     public Intake.IntakeState wantedIntakeState = Intake.IntakeState.IDLE;
+    public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
     public double driveThrottle, driveWheel;
     public boolean isQuickTurn, isBraking;
     // All robot set points
@@ -61,6 +63,7 @@ public class Commands {
         other.robotSetPoints.elevatorPositionSetPoint = robotSetPoints.elevatorPositionSetPoint;
         other.robotSetPoints.intakePositionSetPoint = robotSetPoints.intakePositionSetPoint;
         other.robotSetPoints.pusherPositionSetPoint = robotSetPoints.pusherPositionSetPoint;
+        other.robotSetPoints.shooterPositionSetPoint = robotSetPoints.shooterPositionSetPoint;
     }
 
     @Override
@@ -83,6 +86,7 @@ public class Commands {
         public Double
                 elevatorPositionSetPoint,
                 pusherPositionSetPoint,
-                intakePositionSetPoint;
+                intakePositionSetPoint,
+                shooterPositionSetPoint;
     }
 }

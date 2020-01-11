@@ -7,6 +7,7 @@ import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Shooter;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
@@ -38,14 +39,16 @@ class HardwareUpdater {
     private Drive mDrive;
     private Spinner mSpinner;
     private Intake mIntake;
+    private Shooter mShooter;
     private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
     private final LoopOverrunDebugger mLoopOverrunDebugger = new LoopOverrunDebugger("UpdateState", 0.02);
     // private double[] mAccelerometerAngles = new double[3]; // Cached array to prevent more garbage
 
-    HardwareUpdater(Drive drive, Spinner spinner, Intake intake) {
+    HardwareUpdater(Drive drive, Spinner spinner, Intake intake, Shooter shooter) {
         mDrive = drive;
         mSpinner = spinner;
         mIntake = intake;
+        mShooter = shooter;
     }
 
     void initHardware() {
@@ -57,6 +60,7 @@ class HardwareUpdater {
     private void configureHardware() {
         configureDriveHardware();
         configureSpinner();
+        configureShooterHardware();
         configureMiscellaneousHardware();
     }
 
@@ -105,6 +109,10 @@ class HardwareUpdater {
         HardwareAdapter.IntakeHardware intakeHardware = HardwareAdapter.getInstance().getIntakeHardware();
 
         intakeHardware.intakeVictor.setInverted(false);
+    }
+
+    private void configureShooterHardware() {
+        HardwareAdapter.ShooterHardware ShooterHardware = HardwareAdapter.getInstance().getShooterHardware();
     }
 
     private void configureMiscellaneousHardware() {
@@ -223,6 +231,10 @@ class HardwareUpdater {
      */
     private void updateIntake() {
         HardwareAdapter.getInstance().getIntakeHardware().intakeVictor.set(mIntake.getOutput());
+    }
+
+    private void updateShooter(){
+        HardwareAdapter.getInstance().getShooterHardware().shooterNeo.set(mShooter.getOutput());
     }
 
     /**
