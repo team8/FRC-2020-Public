@@ -8,9 +8,7 @@ import com.esotericsoftware.minlog.Log.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class RobotLogger extends Logger {
     private Server server;
@@ -20,8 +18,6 @@ public class RobotLogger extends Logger {
     private final int PORT = 5802;
 
     public RobotLogger() {
-        Log.set(1); // Controls what logs actually are shown, 1 -> everything; 7 or above, nothing
-
         server = new Server();
         server.getKryo().register(LogEntry.class);
         try {
@@ -36,14 +32,16 @@ public class RobotLogger extends Logger {
                     log(Log.LEVEL_WARN, "Logger", "Connection disconnected", null);
                 }
             });
-            server.bind(new InetSocketAddress(PORT), null);
             server.start();
+            server.bind(PORT, PORT);
 
             Log.setLogger(this);
             log(Log.LEVEL_INFO, "Logger", "Started log server", null);
         } catch (IOException | IllegalMonitorStateException exception) {
             log(Log.LEVEL_ERROR, "Logger", "Exception stack trace", exception);
         }
+
+        Log.set(1); // Controls what logs actually are shown, 1 -> everything; 7 or above, nothing
     }
 
     @Override
@@ -55,6 +53,7 @@ public class RobotLogger extends Logger {
         LogEntry log = new LogEntry(new Date().getTime() - firstLogTime, level, category, message, ex);
 
         if (ex != null) {
+            // Prints stack trace to allow the user to quickly navigate to the error
             ex.printStackTrace();
         }
 
