@@ -19,11 +19,11 @@ public class CheesyDriveController extends Drive.DriveController {
             mQuickStopAccumulator, mNegativeInertiaAccumulator;
 
     @Override
-    public SparkDriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+    public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
         // Quick-turn if right trigger is pressed
         boolean isQuickTurn = robotState.driveIsQuickTurning = commands.getDriveWantsQuickTurn();
 
-        double throttle = commands.getDriveThrottle(), wheel = commands.getDriveWheel();
+        double throttle = commands.getDriveWantedThrottle(), wheel = commands.getDriveWantedWheel();
 
         double absoluteThrottle = Math.abs(throttle), absoluteWheel = Math.abs(wheel);
 
@@ -105,9 +105,8 @@ public class CheesyDriveController extends Drive.DriveController {
             rightPower = -1.0;
         }
 
-        mSignal.leftOutput.setPercentOutput(leftPower);
-        mSignal.rightOutput.setPercentOutput(rightPower);
-        return mSignal;
+        mDriveSignal.leftOutput.setPercentOutput(leftPower);
+        mDriveSignal.rightOutput.setPercentOutput(rightPower);
     }
 
     private double applyWheelNonLinearPass(double wheel, double wheelNonLinearity) {

@@ -23,12 +23,12 @@ public class VisionDriveHelper extends CheesyDriveController {
     private double mLastThrottle, mBrakeRate;
 
     @Override
-    public SparkDriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+    public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 
-        double throttle = commands.getDriveThrottle();
+        double throttle = commands.getDriveWantedThrottle();
 
         // Braking if left trigger is pressed
-        boolean isBraking = commands.getWantsBreak();
+        boolean isBraking = commands.getDriveWantsBreak();
 
         throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadBand);
 
@@ -91,11 +91,10 @@ public class VisionDriveHelper extends CheesyDriveController {
         }
 
         if (throttle < 0.0 || (!hasFoundTarget && !robotState.atVisionTargetThreshold)) {
-            return super.update(commands, robotState);
+            super.update(commands, robotState);
         } else {
-            mSignal.leftOutput.setPercentOutput(leftOutput);
-            mSignal.rightOutput.setPercentOutput(rightOutput);
+            mDriveSignal.leftOutput.setPercentOutput(leftOutput);
+            mDriveSignal.rightOutput.setPercentOutput(rightOutput);
         }
-        return mSignal;
     }
 }

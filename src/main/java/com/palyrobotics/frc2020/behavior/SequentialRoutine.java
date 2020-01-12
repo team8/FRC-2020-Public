@@ -39,6 +39,7 @@ public class SequentialRoutine extends MultipleRoutine {
             mRunningRoutine = mIterator.next();
         }
     }
+
     @Override
     public boolean checkFinished() {
         return mRunningRoutine == null;

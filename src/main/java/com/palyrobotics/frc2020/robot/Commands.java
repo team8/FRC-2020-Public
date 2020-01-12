@@ -40,14 +40,14 @@ public class Commands {
     /* Drive Commands */
     private Drive.DriveState driveWantedState = Drive.DriveState.NEUTRAL;
     // Teleop
-    private double driveThrottle, driveWheel;
+    private double driveWantedThrottle, driveWantedWheel;
     private boolean driveWantsQuickTurn, driveWantsBrake;
     // Signal
     private SparkDriveSignal driveWantedSignal;
     // Path Following
     private Trajectory driveWantedTrajectory;
-
-    private double driveWantedAngle;
+    // Turning
+    private double driveWantedHeading;
 
     public void addWantedRoutines(Routine... wantedRoutines) {
         for (Routine wantedRoutine : wantedRoutines) {
@@ -67,15 +67,15 @@ public class Commands {
         return driveWantsQuickTurn;
     }
 
-    public double getDriveThrottle() {
-        return driveThrottle;
+    public double getDriveWantedThrottle() {
+        return driveWantedThrottle;
     }
 
-    public double getDriveWheel() {
-        return driveWheel;
+    public double getDriveWantedWheel() {
+        return driveWantedWheel;
     }
 
-    public boolean getWantsBreak() {
+    public boolean getDriveWantsBreak() {
         return driveWantsBrake;
     }
 
@@ -83,8 +83,8 @@ public class Commands {
         return driveWantedTrajectory;
     }
 
-    public double getDriveWantedAngle() {
-        return driveWantedAngle;
+    public double getDriveWantedHeading() {
+        return driveWantedHeading;
     }
 
     public SparkDriveSignal getWantedDriveSignal() {
@@ -113,10 +113,19 @@ public class Commands {
             double driveThrottle, double driveWheel,
             boolean driveWantsQuickTurn, boolean driveWantsBrake) {
         driveWantedState = Drive.DriveState.TELEOP;
-        this.driveThrottle = driveThrottle;
-        this.driveWheel = driveWheel;
+        this.driveWantedThrottle = driveThrottle;
+        this.driveWantedWheel = driveWheel;
         this.driveWantsQuickTurn = driveWantsQuickTurn;
         this.driveWantsBrake = driveWantsBrake;
+    }
+
+    public void setDriveNeutral() {
+        driveWantedState = Drive.DriveState.NEUTRAL;
+    }
+
+    public void setDriveTurn(double angle) {
+        driveWantedState = Drive.DriveState.TURN;
+        driveWantedHeading = angle;
     }
 
     public void copyTo(Commands other) {
@@ -134,14 +143,5 @@ public class Commands {
             log.append(r.getName()).append(" ");
         }
         return log.append("\n").toString();
-    }
-
-    public void setDriveNeutral() {
-        driveWantedState = Drive.DriveState.NEUTRAL;
-    }
-
-    public void setDriveTurn(double angle) {
-        driveWantedState = Drive.DriveState.TURN;
-        driveWantedAngle = angle;
     }
 }

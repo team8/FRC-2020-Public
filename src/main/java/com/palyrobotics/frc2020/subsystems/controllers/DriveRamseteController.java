@@ -5,7 +5,6 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.util.SparkDriveSignal;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -29,12 +28,12 @@ public class DriveRamseteController extends Drive.DriveController {
     }
 
     @Override
-    public SparkDriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+    public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
         Trajectory.State targetPose = mTrajectory.sample(mTimer.get());
         ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
         DifferentialDriveWheelSpeeds wheelSpeeds = DrivetrainConstants.kKinematics.toWheelSpeeds(speeds);
-        mSignal.leftOutput.setTargetSmartVelocity(wheelSpeeds.leftMetersPerSecond * 60.0, mDriveConfig.smartVelocityGains);
-        mSignal.rightOutput.setTargetSmartVelocity(wheelSpeeds.rightMetersPerSecond * 60.0, mDriveConfig.smartVelocityGains);
+        mDriveSignal.leftOutput.setTargetSmartVelocity(wheelSpeeds.leftMetersPerSecond * 60.0, mDriveConfig.smartVelocityGains);
+        mDriveSignal.rightOutput.setTargetSmartVelocity(wheelSpeeds.rightMetersPerSecond * 60.0, mDriveConfig.smartVelocityGains);
         CSVWriter.addData("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
         CSVWriter.addData("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
         CSVWriter.addData("currentPoseX", state.drivePose.getTranslation().getX());
@@ -43,7 +42,6 @@ public class DriveRamseteController extends Drive.DriveController {
         CSVWriter.addData("rightVelocity", state.driveRightVelocity);
         CSVWriter.addData("targetPoseX", targetPose.poseMeters.getTranslation().getX());
         CSVWriter.addData("targetPoseY", targetPose.poseMeters.getTranslation().getY());
-        return mSignal;
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.palyrobotics.frc2020.subsystems.controllers;
 
 import com.palyrobotics.frc2020.config.VisionConfig;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
-import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -21,7 +20,7 @@ public class VisionClosedController extends CheesyDriveController {
 
     private static final double
             MAX_ANGULAR_POWER = 0.4, // 0.6
-            DISTANCE_POW_CONST = 2 * Configs.get(DriveConfig.class).trajectoryGains.v;
+            DISTANCE_POW_CONST = 2 * 0.00344;
 
     private final Limelight mLimelight = Limelight.getInstance();
 
@@ -30,7 +29,7 @@ public class VisionClosedController extends CheesyDriveController {
     private SynchronousPID mPidController = new SynchronousPID(Configs.get(VisionConfig.class).gains);
 
     @Override
-    public SparkDriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+    public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
         double angularPower;
         if (mLimelight.isTargetFound()) {
             angularPower = mPidController.calculate(mLimelight.getYawToTarget());
@@ -43,13 +42,13 @@ public class VisionClosedController extends CheesyDriveController {
             }
         } else {
             if (!robotState.atVisionTargetThreshold) {
-                return super.update(commands, robotState);
+                super.update(commands, robotState);
             } else {
                 SparkDriveSignal mSignal = new SparkDriveSignal();
                 mSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
                 mSignal.rightOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
-                return mSignal;
             }
+            return;
         }
 
         double
@@ -71,9 +70,8 @@ public class VisionClosedController extends CheesyDriveController {
             rightOutput = -1.0;
         }
 
-        mSignal.leftOutput.setPercentOutput(leftOutput);
-        mSignal.rightOutput.setPercentOutput(rightOutput);
-        return mSignal;
+        mDriveSignal.leftOutput.setPercentOutput(leftOutput);
+        mDriveSignal.rightOutput.setPercentOutput(rightOutput);
     }
 
     @Override

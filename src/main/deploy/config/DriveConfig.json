@@ -1,19 +1,12 @@
 {
-    "trajectoryGains": {
-        "v": 0.00344,
-        "a": 0.00117,
-        "s": 0.0179
-    },
-    "cascadingTurnGains": {
-        "p": 65.0,
-        "i": 0.0,
-        "d": 5.0
-    },
     "smartVelocityGains": {
         "f": 0.0032,
         "p": 0.0008,
         "velocity": 400.0,
         "acceleration": 600.0
+    },
+    "turnGains": {
+
     },
     "quickStopWeight": 0.125,
     "quickTurnScalar": 0.55,

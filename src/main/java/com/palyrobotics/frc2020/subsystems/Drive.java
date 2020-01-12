@@ -24,9 +24,17 @@ public class Drive extends Subsystem {
 
         protected final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
 
-        protected SparkDriveSignal mSignal = new SparkDriveSignal();
+        protected SparkDriveSignal mDriveSignal = new SparkDriveSignal();
 
-        public abstract SparkDriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState state);
+        public final SparkDriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+            updateSignal(commands, state);
+            return mDriveSignal;
+        }
+
+        /**
+         * Should set {@link #mDriveSignal} to reflect what is currently wanted by {@link Commands}.
+         */
+        public abstract void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state);
 
         public boolean onTarget() {
             return false;
@@ -67,17 +75,16 @@ public class Drive extends Subsystem {
                 case SIGNAL:
                     mController = new DriveController() {
                         @Override
-                        public SparkDriveSignal update(Commands commands, RobotState state) {
-                            return commands.getWantedDriveSignal();
+                        public void updateSignal(Commands commands, RobotState state) {
+                            mSignal = commands.getWantedDriveSignal();
                         }
                     };
                     break;
                 case FOLLOW_PATH:
                     mController = new DriveRamseteController(commands.getDriveTrajectory());
                     break;
-
                 case TURN:
-                    mController = new DriveTurnController(commands.getDriveWantedAngle());
+                    mController = new DriveTurnController(commands.getDriveWantedHeading());
                     break;
             }
         }

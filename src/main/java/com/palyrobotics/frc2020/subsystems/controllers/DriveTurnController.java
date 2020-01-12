@@ -1,25 +1,28 @@
 package com.palyrobotics.frc2020.subsystems.controllers;
 
 import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.util.SparkDriveSignal;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 public class DriveTurnController extends Drive.DriveController {
 
     private double mTargetHeading;
-    private ProfiledPIDController mController = new ProfiledPIDController();
+    private ProfiledPIDController mController = new ProfiledPIDController(
+            mDriveConfig.turnGains.p, mDriveConfig.turnGains.i, mDriveConfig.turnGains.d,
+            new TrapezoidProfile.Constraints(mDriveConfig.turnGains.velocity, mDriveConfig.turnGains.acceleration)
+    );
 
     public DriveTurnController(double targetHeading) {
         mTargetHeading = targetHeading;
     }
 
     @Override
-    public SparkDriveSignal update(Commands commands, RobotState state) {
+    public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
         double targetVelocity = mController.calculate(state.driveHeading, mTargetHeading);
-        mSignal.leftOutput.setTargetSmartVelocity(targetVelocity, mDriveConfig.smartVelocityGains);
-        mSignal.rightOutput.setTargetSmartVelocity(-targetVelocity, mDriveConfig.smartVelocityGains);
-        return mSignal;
+        mDriveSignal.leftOutput.setTargetSmartVelocity(targetVelocity, mDriveConfig.smartVelocityGains);
+        mDriveSignal.rightOutput.setTargetSmartVelocity(-targetVelocity, mDriveConfig.smartVelocityGains);
     }
 }
