@@ -47,6 +47,8 @@ public class Commands {
     // Path Following
     private Trajectory driveWantedTrajectory;
 
+    private double driveWantedAngle;
+
     public void addWantedRoutines(Routine... wantedRoutines) {
         for (Routine wantedRoutine : wantedRoutines) {
             addWantedRoutine(wantedRoutine);
@@ -79,6 +81,10 @@ public class Commands {
 
     public Trajectory getDriveTrajectory() {
         return driveWantedTrajectory;
+    }
+
+    public double getDriveWantedAngle() {
+        return driveWantedAngle;
     }
 
     public SparkDriveSignal getWantedDriveSignal() {
@@ -132,5 +138,10 @@ public class Commands {
 
     public void setDriveNeutral() {
         driveWantedState = Drive.DriveState.NEUTRAL;
+    }
+
+    public void setDriveTurn(double angle) {
+        driveWantedState = Drive.DriveState.TURN;
+        driveWantedAngle = angle;
     }
 }

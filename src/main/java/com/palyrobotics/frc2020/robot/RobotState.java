@@ -27,6 +27,8 @@ public class RobotState {
 
     public GamePeriod gamePeriod = GamePeriod.DISABLED;
 
+    public double driveHeading;
+
     /* Drive */
     public boolean driveIsQuickTurning;
     public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;

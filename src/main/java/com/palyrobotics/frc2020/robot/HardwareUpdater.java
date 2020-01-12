@@ -154,6 +154,8 @@ class HardwareUpdater {
 
         HardwareAdapter.DrivetrainHardware drivetrain = HardwareAdapter.getInstance().getDrivetrainHardware();
 
+        robotState.driveHeading = drivetrain.gyro.getFusedHeading();
+
         robotState.driveLeftVelocity = drivetrain.leftMasterEncoder.getVelocity() / 60.0;
         robotState.driveRightVelocity = drivetrain.rightMasterEncoder.getVelocity() / 60.0;
         robotState.driveLeftPosition = drivetrain.leftMasterEncoder.getPosition();
@@ -184,7 +186,7 @@ class HardwareUpdater {
 
         mLoopOverrunDebugger.addPoint("Basic");
 
-        robotState.updateOdometry(drivetrain.gyro.getFusedHeading(), robotState.driveLeftPosition, robotState.driveRightPosition);
+        robotState.updateOdometry(robotState.driveHeading, robotState.driveLeftPosition, robotState.driveRightPosition);
 
         mLoopOverrunDebugger.addPoint("Odometry");
 
