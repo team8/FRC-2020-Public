@@ -4,7 +4,6 @@ import com.palyrobotics.frc2020.util.config.AbstractConfig;
 import com.palyrobotics.frc2020.util.control.SmartGains;
 
 public class ClimberConfig extends AbstractConfig {
-    public double gravityFeedForward;
 
     public float kClimberMaxHeight;
     public float kClimberInchesPerRevolution;
@@ -12,8 +11,6 @@ public class ClimberConfig extends AbstractConfig {
 
     public double acceptablePositionError;
     public double acceptableVelocityError;
-
-    public double climberExtended;
 
     public SmartGains gains;
 }

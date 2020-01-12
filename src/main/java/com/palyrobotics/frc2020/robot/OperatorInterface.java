@@ -164,12 +164,12 @@ public class OperatorInterface {
         double rightStick = mOperatorXboxController.getY(GenericHID.Hand.kRight);
         if (rightStick != 0) {
             commands.wantedClimberState = Climber.ClimberState.CUSTOM_VELOCITY;
-            commands.climberCustomVelocity = rightStick; //TODO: find out what to multiply by
+            commands.robotSetPoints.climberVelocitySetPoint = rightStick; //TODO: find out what to multiply by
         } else {
             commands.wantedClimberState = Climber.ClimberState.IDLE;
         }
         if (mOperatorXboxController.getAButtonPressed()) {
-            commands.addWantedRoutine(new ClimberCustomPositioningRoutine(mClimberConfig.climberExtended));
+            commands.addWantedRoutine(new ClimberCustomPositioningRoutine(mClimberConfig.kClimberMaxHeight));
         }
 
             if (mDriveStick.getTriggerPressed()) {

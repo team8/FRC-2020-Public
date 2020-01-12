@@ -3,9 +3,9 @@ package com.palyrobotics.frc2020.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.RobotState;
-import com.palyrobotics.frc2020.config.constants.ClimberConstants;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
+import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Drive;
@@ -126,19 +126,21 @@ class HardwareUpdater {
 
         LazySparkMax climberSpark = climberHardware.climberSpark;
 
+        ClimberConfig mConfig = Configs.get(ClimberConfig.class);
+
         climberSpark.restoreFactoryDefaults();
 
-        climberSpark.enableVoltageCompensation(12); //TODO: check if gucci
+        climberSpark.enableVoltageCompensation(12);
 
         climberSpark.setIdleMode(IdleMode.kBrake);
 
         climberSpark.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 0.0f);
-        climberSpark.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, ClimberConstants.kClimberMaxHeight);
+        climberSpark.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, mConfig.kClimberMaxHeight);
         climberSpark.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, false);
         climberSpark.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, false);
 
-        climberSpark.getEncoder().setPositionConversionFactor(ClimberConstants.kClimberInchesPerRevolution);
-        climberSpark.getEncoder().setVelocityConversionFactor(ClimberConstants.kClimberInchesPerMinutePerRpm);
+        climberSpark.getEncoder().setPositionConversionFactor(mConfig.kClimberInchesPerRevolution);
+        climberSpark.getEncoder().setVelocityConversionFactor(mConfig.kClimberInchesPerMinutePerRpm);
     }
 
     private void configureMiscellaneousHardware() {

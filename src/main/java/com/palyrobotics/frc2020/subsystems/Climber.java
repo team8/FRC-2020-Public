@@ -6,7 +6,7 @@ import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.util.SparkMaxOutput;
 import com.palyrobotics.frc2020.util.config.Configs;
 
-public class Climber extends Subsystem{
+public class Climber extends Subsystem {
     private static Climber sInstance = new Climber();
 
     public static Climber getInstance() {
@@ -36,7 +36,6 @@ public class Climber extends Subsystem{
     @Override
     public void reset() {
         mClimberState = ClimberState.IDLE;
-        mWantedVelocity = null;
         mOutput = new SparkMaxOutput();
     }
 
@@ -45,12 +44,12 @@ public class Climber extends Subsystem{
         mClimberState = commands.wantedClimberState;
         switch(mClimberState) {
             case CUSTOM_VELOCITY:
-                mWantedVelocity = commands.climberCustomVelocity;
-                mOutput.setTargetSmartVelocity(mWantedVelocity, mConfig.gravityFeedForward, mConfig.gains);
+                mWantedVelocity = commands.robotSetPoints.climberVelocitySetPoint;
+                mOutput.setTargetSmartVelocity(mWantedVelocity, mConfig.gains);
                 break;
-            case CUSTOM_POSITION: //TODO: check
+            case CUSTOM_POSITION:
                 mWantedPosition = commands.robotSetPoints.climberPositionSetPoint;
-                mOutput.setTargetPositionSmartMotion(mWantedPosition, mConfig.gravityFeedForward, mConfig.gains);
+                mOutput.setTargetPositionSmartMotion(mWantedPosition, mConfig.gains);
             case IDLE:
                 mOutput.setIdle();
                 break;

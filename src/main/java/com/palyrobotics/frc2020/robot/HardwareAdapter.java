@@ -150,12 +150,7 @@ public class HardwareAdapter {
 
     static class ClimberHardware {
         private static ClimberHardware sInstance = new ClimberHardware();
-        final XboxController operatorXboxController = new XboxController(2);
         final LazySparkMax climberSpark;
-
-        void resetSensors() {
-            sInstance.climberSpark.getEncoder().setPosition(0);
-        }
 
         ClimberHardware() {
             climberSpark = new LazySparkMax(sPortConstants.climberSparkID);

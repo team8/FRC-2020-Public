@@ -28,8 +28,6 @@ public class Commands {
     public Indexer.IndexerState wantedIndexerState = Indexer.IndexerState.IDLE;
     public Climber.ClimberState wantedClimberState = Climber.ClimberState.IDLE;
 
-    public double climberCustomVelocity;
-
     public double driveThrottle, driveWheel;
     public boolean isQuickTurn, isBraking;
     // All robot set points
@@ -66,6 +64,7 @@ public class Commands {
         // Copy optionals that are present
         other.robotSetPoints.drivePowerSetPoint = robotSetPoints.drivePowerSetPoint;
         other.robotSetPoints.climberPositionSetPoint = robotSetPoints.climberPositionSetPoint;
+        other.robotSetPoints.climberVelocitySetPoint = robotSetPoints.climberVelocitySetPoint;
 //        other.robotSetPoints.intakePositionSetPoint = robotSetPoints.intakePositionSetPoint;
 //        other.robotSetPoints.pusherPositionSetPoint = robotSetPoints.pusherPositionSetPoint;
     }
@@ -88,7 +87,8 @@ public class Commands {
     public static class SetPoints {
         public SparkDriveSignal drivePowerSetPoint;
         public Double
-                climberPositionSetPoint;
+                climberPositionSetPoint,
+                climberVelocitySetPoint;
 //                pusherPositionSetPoint,
 //                intakePositionSetPoint;
     }
