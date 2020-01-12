@@ -24,5 +24,6 @@ public class PortConstants extends AbstractConfig {
      * Intake
      */
     public int shooterSparkMaxDeviceID;
+    public int shooterSparkMaxSlaveDeviceID;
 
 }

@@ -110,6 +110,8 @@ public class HardwareAdapter {
     static class ShooterHardware {
         private static ShooterHardware sInstance = new ShooterHardware();
         final LazySparkMax shooterNeo = new LazySparkMax(sPortConstants.shooterSparkMaxDeviceID);
+        final LazySparkMax shooterNeoSlave = new LazySparkMax(sPortConstants.shooterSparkMaxSlaveDeviceID);
+
         private static ShooterHardware getInstance() {
             return sInstance;
         }

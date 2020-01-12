@@ -112,6 +112,9 @@ class HardwareUpdater {
     }
 
     private void configureShooterHardware() {
+        HardwareAdapter.ShooterHardware shooterHardware = HardwareAdapter.getInstance().getShooterHardware();
+        shooterHardware.shooterNeoSlave.follow(shooterHardware.shooterNeo);
+
         HardwareAdapter.ShooterHardware ShooterHardware = HardwareAdapter.getInstance().getShooterHardware();
     }
 
