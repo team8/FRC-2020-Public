@@ -64,6 +64,8 @@ public class Commands {
         other.robotSetPoints.intakePositionSetPoint = robotSetPoints.intakePositionSetPoint;
         other.robotSetPoints.pusherPositionSetPoint = robotSetPoints.pusherPositionSetPoint;
         other.robotSetPoints.shooterPositionSetPoint = robotSetPoints.shooterPositionSetPoint;
+        other.robotSetPoints.shooterWantedVelocity = robotSetPoints.shooterWantedVelocity;
+
     }
 
     @Override
@@ -87,6 +89,8 @@ public class Commands {
                 elevatorPositionSetPoint,
                 pusherPositionSetPoint,
                 intakePositionSetPoint,
-                shooterPositionSetPoint;
+                shooterPositionSetPoint,
+                shooterWantedVelocity;
+
     }
 }

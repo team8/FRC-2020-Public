@@ -41,7 +41,7 @@ public class Shooter extends Subsystem{
                 break;
             case SHOOTING:
                 //sets up motion profile for the shooter in order to reach a speed.
-                mOutput.setTargetSmartVelocity(commands.robotSetPoints.shooterPositionSetPoint, mConfig.shooterGains);
+                mOutput.setTargetSmartVelocity(commands.robotSetPoints.shooterWantedVelocity, mConfig.shooterGains);
                 break;
         }
     }
