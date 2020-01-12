@@ -145,8 +145,7 @@ public class OperatorInterface {
 
         if (mOperatorXboxController.getDPadRightPressed()) {
             commands.wantedShooterState = Shooter.ShooterState.SHOOTING;
-        }
-        else {
+        } else {
             commands.wantedShooterState = Shooter.ShooterState.IDLE;
         }
 

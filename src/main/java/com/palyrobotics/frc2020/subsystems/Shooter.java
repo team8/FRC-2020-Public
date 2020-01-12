@@ -17,7 +17,6 @@ public class Shooter extends Subsystem{
     }
 
     private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
-    //yoinks json file values.
 
     private SparkMaxOutput mOutput = new SparkMaxOutput();
 
@@ -41,7 +40,7 @@ public class Shooter extends Subsystem{
                 break;
             case SHOOTING:
                 //sets up motion profile for the shooter in order to reach a speed.
-                mOutput.setTargetSmartVelocity(commands.robotSetPoints.shooterWantedVelocity, mConfig.shooterGains);
+                mOutput.setTargetSmartVelocity(commands.robotSetPoints.shooterVelocitySetPoint, mConfig.shooterGains);
                 break;
         }
     }

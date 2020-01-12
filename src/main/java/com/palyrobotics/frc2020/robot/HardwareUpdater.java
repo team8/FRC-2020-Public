@@ -115,8 +115,8 @@ class HardwareUpdater {
         LazySparkMax shooterNeo = HardwareAdapter.getInstance().getShooterHardware().shooterNeo;
         LazySparkMax shooterNeoSlave = HardwareAdapter.getInstance().getShooterHardware().shooterNeoSlave;
 
-        shooterNeo.setInverted(false);
-        shooterNeoSlave.setInverted(false);
+        shooterNeo.setInverted(true);
+        shooterNeoSlave.setInverted(true);
 
         shooterNeo.restoreFactoryDefaults();
         shooterNeoSlave.restoreFactoryDefaults();
