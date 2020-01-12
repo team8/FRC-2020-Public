@@ -18,10 +18,8 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.util.Color;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Should only be used in robot package.

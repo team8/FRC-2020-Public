@@ -1,38 +1,58 @@
 package com.palyrobotics.frc2020.behavior;
 
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
+import java.util.Set;
+
 /**
- * Abstract superclass for a routine, which specifies an autonomous series of actions <br />
- * Each routine takes in Commands and returns modified set points Requires the specific subsystems
  *
- * @author Nihar; Team 254
  */
 public abstract class Routine {
 
-    // Keeps access to all subsystems to modify their output and read their status
+    private enum RoutineState {
+        INIT, RUNNING, FINISHED
+    }
+
     protected final Drive mDrive = Drive.getInstance();
-    protected final RobotState mRobotState = RobotState.getInstance();
 
-    // Called to start a routine
-    public abstract void start();
+    private RoutineState mState = RoutineState.INIT;
 
-    // Update method, returns modified commands
-    public abstract Commands update(Commands commands);
+    public final boolean execute(Commands commands) {
+        if (mState == RoutineState.INIT) {
+            start();
+            mState = RoutineState.RUNNING;
+        } else if (mState == RoutineState.FINISHED) {
+            throw new IllegalStateException(String.format("Routine %s already finished! Should not be updated.", toString()));
+        }
+        update(commands);
+        if (checkFinished()) {
+            mState = RoutineState.FINISHED;
+            return true;
+        }
+        return false;
+    }
 
-    // Called to stop a routine, should return modified commands if needed
-    public abstract Commands cancel(Commands commands);
+    protected void start() {
 
-    // Notifies routine manager when routine is complete
-    public abstract boolean isFinished();
+    }
+
+    protected void update(Commands commands) {
+
+    }
+
+    public boolean checkFinished() {
+        return true;
+    }
+
+    public final boolean isFinished() {
+        return mState == RoutineState.FINISHED;
+    }
 
     // Store subsystems which are required by this routine, preventing routines from overlapping
-    public abstract Subsystem[] getRequiredSubsystems();
+    public abstract Set<Subsystem> getRequiredSubsystems();
 
-    // Force override of getName()
     public String getName() {
         return getClass().getSimpleName();
     }

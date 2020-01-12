@@ -26,11 +26,11 @@ public class HardwareAdapter {
 
     private static final PortConstants sPortConstants = Configs.get(PortConstants.class);
 
-    private static final HardwareAdapter sInstance = new HardwareAdapter();
-
     static HardwareAdapter getInstance() {
         return sInstance;
     }
+
+    private static final HardwareAdapter sInstance = new HardwareAdapter();
 
     // Wrappers to access hardware groups
     DrivetrainHardware getDrivetrainHardware() {

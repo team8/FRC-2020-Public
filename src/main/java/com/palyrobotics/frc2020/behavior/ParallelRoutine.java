@@ -3,85 +3,38 @@ package com.palyrobotics.frc2020.behavior;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Created by Nihar on 12/27/16.
+ * Runs all routines at the same time.
+ * Finishes when all routines are finished.
  */
-public class ParallelRoutine extends Routine {
+public class ParallelRoutine extends MultipleRoutine {
 
-    private List<Routine> mRoutines;
+    private final LinkedList<Routine> mRunningRoutines = new LinkedList<>(mRoutines);
 
     public ParallelRoutine(Routine... routines) {
-        this(Arrays.asList(routines));
+        super(routines);
     }
 
-    /**
-     * Runs all routines at the same time.
-     * Finishes when all routines finish.
-     */
     public ParallelRoutine(List<Routine> routines) {
-        mRoutines = routines;
+        super(routines);
     }
 
     @Override
-    public void start() {
-        for (Routine routine : mRoutines) {
-            routine.start();
-        }
+    public void update(Commands commands) {
+        mRunningRoutines.removeIf(runningRoutine -> runningRoutine.execute(commands));
     }
 
     @Override
-    public Commands update(Commands commands) {
-        ArrayList<Routine> routinesToRemove = getFinishedAutos();
-        if (!routinesToRemove.isEmpty()) {
-            for (Routine routine : routinesToRemove) {
-                routine.cancel(commands);
-                mRoutines.remove(routine);
-//				routinesToRemove.remove(routine);
-            }
-        }
-
-        for (Routine routine : mRoutines) {
-            commands = routine.update(commands);
-        }
-
-        return commands;
+    public boolean checkFinished() {
+        return mRunningRoutines.isEmpty();
     }
 
     @Override
-    public Commands cancel(Commands commands) {
-        return commands;
-    }
-
-    private ArrayList<Routine> getFinishedAutos() {
-        ArrayList<Routine> routinesToRemove = new ArrayList<>();
-        for (Routine routine : mRoutines) {
-            if (routine.isFinished()) {
-                routinesToRemove.add(routine);
-            }
-        }
-        return routinesToRemove;
-    }
-
-    @Override
-    public boolean isFinished() {
-        return mRoutines.isEmpty();
-    }
-
-    @Override
-    public Subsystem[] getRequiredSubsystems() {
-        return RoutineManager.sharedSubsystems(mRoutines);
-    }
-
-    @Override
-    public String getName() {
-        StringBuilder name = new StringBuilder("ParallelRoutine of (");
-        for (Routine routine : mRoutines) {
-            name.append(routine.getName()).append(" ");
-        }
-        return name + ")";
+    public Set<Subsystem> getRequiredSubsystems() {
+        return RoutineManager.sharedSubsystems(mRunningRoutines);
     }
 }

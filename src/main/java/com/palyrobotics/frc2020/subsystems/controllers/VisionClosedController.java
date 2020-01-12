@@ -39,11 +39,11 @@ public class VisionClosedController extends CheesyDriveController {
             if (angularPower < -MAX_ANGULAR_POWER) angularPower = -MAX_ANGULAR_POWER;
 
             if (Limelight.getInstance().getCorrectedEstimatedDistanceZ() < DrivetrainConstants.kVisionTargetThreshold) {
-                RobotState.getInstance().atVisionTargetThreshold = true;
+                robotState.atVisionTargetThreshold = true;
             }
         } else {
             if (!robotState.atVisionTargetThreshold) {
-                return super.update(Commands.getInstance(), RobotState.getInstance());
+                return super.update(commands, robotState);
             } else {
                 SparkDriveSignal mSignal = new SparkDriveSignal();
                 mSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);

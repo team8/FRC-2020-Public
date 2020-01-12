@@ -59,15 +59,13 @@ public class OperatorInterface {
      */
     Commands updateCommands(Commands commands) {
 
-        commands.cancelCurrentRoutines = false;
+        commands.shouldClearCurrentRoutines = false;
 
         updateDriveCommands(commands);
         updateSpinnerCommands(commands);
         updateIntakeCommands(commands);
 
-        if (mDriveStick.getTriggerPressed()) {
-            commands.cancelCurrentRoutines = true;
-        }
+        commands.shouldClearCurrentRoutines = mDriveStick.getTriggerPressed();
 
         mOperatorXboxController.updateLastInputs();
 

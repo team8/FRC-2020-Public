@@ -17,7 +17,7 @@ public class DrivetrainConstants {
 
     public static final double kMaxVoltage = 12.0;
 
-    static TrajectoryConfig getStandardTrajectoryConfig() {
+    public static TrajectoryConfig getStandardTrajectoryConfig() {
         return new TrajectoryConfig(kDriveConfig.maxPathVelocityMetersPerSecond, kDriveConfig.maxPathAccelerationMetersPerSecondSquared)
                 .setKinematics(kKinematics)
                 .addConstraint(
@@ -41,9 +41,6 @@ public class DrivetrainConstants {
             kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
     public static final DifferentialDriveKinematics kKinematics = new DifferentialDriveKinematics(DrivetrainConstants.kTrackWidthMeters);
     public static final double kS = 0.145, kV = 2.59, kA = 0.484;
-    public static final TrajectoryConfig
-            kTrajectoryConfig = getStandardTrajectoryConfig(),
-            kReverseTrajectoryConfig = getStandardTrajectoryConfig().setReversed(true);
     public static final Pose2d kPathFinishTolerance = new Pose2d(new Translation2d(0.2, 0.2), Rotation2d.fromDegrees(5.0));
 
     /*

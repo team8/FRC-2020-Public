@@ -6,6 +6,8 @@ import com.palyrobotics.frc2020.subsystems.Subsystem;
 import com.palyrobotics.frc2020.util.SparkDriveSignal;
 import edu.wpi.first.wpilibj.Timer;
 
+import java.util.Set;
+
 public class DriveTimeRoutine extends Routine {
 
     private final Timer mTimer = new Timer();
@@ -24,24 +26,17 @@ public class DriveTimeRoutine extends Routine {
     }
 
     @Override
-    public Commands update(Commands commands) {
+    protected void update(Commands commands) {
         commands.setDriveSignal(mOutput);
-        return commands;
     }
 
     @Override
-    public Commands cancel(Commands commands) {
-        commands.setDriveNeutral();
-        return commands;
-    }
-
-    @Override
-    public boolean isFinished() {
+    public boolean checkFinished() {
         return mTimer.get() > mDurationSeconds;
     }
 
     @Override
-    public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[]{mDrive};
+    public Set<Subsystem> getRequiredSubsystems() {
+        return Set.of(mDrive);
     }
 }

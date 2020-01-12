@@ -16,6 +16,10 @@ public class Spinner extends Subsystem {
 
     private static Spinner sInstance = new Spinner();
 
+    public static Spinner getInstance() {
+        return sInstance;
+    }
+
     private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
 
     public static final Color
@@ -25,13 +29,10 @@ public class Spinner extends Subsystem {
             kYellowCPTarget = ColorMatch.makeColor(mConfig.colorSensorYellowRGB.get(0), mConfig.colorSensorYellowRGB.get(1), mConfig.colorSensorYellowRGB.get(2));
 
     private double mOutput;
+
     private String mPreviousColor;
 
     private int mColorPassedCount;
-
-    public static Spinner getInstance() {
-        return sInstance;
-    }
 
     public Spinner() {
         super("spinner");

@@ -7,11 +7,11 @@ public class LiveGraph {
 
     private static LiveGraph sInstance = new LiveGraph();
 
-    private static NetworkTable sLiveTable = NetworkTableInstance.getDefault().getTable("control-center-live");
-
     public static LiveGraph getInstance() {
         return sInstance;
     }
+
+    private static NetworkTable sLiveTable = NetworkTableInstance.getDefault().getTable("control-center-live");
 
     public void add(String key, double value) {
         sLiveTable.getEntry(key).setDouble(value);

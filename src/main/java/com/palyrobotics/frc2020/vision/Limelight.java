@@ -12,11 +12,11 @@ public class Limelight {
 
     private static Limelight sInstance = new Limelight();
 
-    private NetworkTable mTable;
-
     public static Limelight getInstance() {
         return sInstance;
     }
+
+    private NetworkTable mTable;
 
     public Limelight() {
         mTable = NetworkTableInstance.getDefault().getTable("limelight");

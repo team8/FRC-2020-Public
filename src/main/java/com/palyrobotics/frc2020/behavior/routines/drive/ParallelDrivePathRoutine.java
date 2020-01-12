@@ -7,11 +7,12 @@ public class ParallelDrivePathRoutine extends ParallelRoutine { // TODO implemen
 
     private final Routine mRoutine;
     private final DrivePathRoutine mDrivePathRoutine;
-    private final double mPercentageComplete;
+    private final double mDistanceUntilEnd;
 
-    public ParallelDrivePathRoutine(Routine routine, DrivePathRoutine drivePathRoutine, double percentageComplete) {
+    public ParallelDrivePathRoutine(Routine routine, DrivePathRoutine drivePathRoutine, double distanceUntilEnd) {
+        super(routine, drivePathRoutine);
         mRoutine = routine;
         mDrivePathRoutine = drivePathRoutine;
-        mPercentageComplete = percentageComplete;
+        mDistanceUntilEnd = distanceUntilEnd;
     }
 }

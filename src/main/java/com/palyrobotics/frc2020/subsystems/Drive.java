@@ -34,13 +34,13 @@ public class Drive extends Subsystem {
 
     private static Drive sInstance = new Drive();
 
-    private Drive.DriveController mController;
-    private DriveState mState;
-    private SparkDriveSignal mSignal = new SparkDriveSignal();
-
     public static Drive getInstance() {
         return sInstance;
     }
+
+    private Drive.DriveController mController;
+    private DriveState mState;
+    private SparkDriveSignal mSignal = new SparkDriveSignal();
 
     private Drive() {
         super("drive");

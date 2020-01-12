@@ -1,7 +1,6 @@
 package com.palyrobotics.frc2020.behavior;
 
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
 import java.util.*;
@@ -14,153 +13,69 @@ import java.util.*;
 public class RoutineManager {
 
     private static RoutineManager sInstance = new RoutineManager();
-    //Routines that are being run
-    private ArrayList<Routine>
-            mRunningRoutines = new ArrayList<>(),
-            mRoutinesToRemove = new ArrayList<>(),
-            mRoutinesToAdd = new ArrayList<>();
 
     public static RoutineManager getInstance() {
         return sInstance;
     }
 
-    public static Subsystem[] subsystemSuperset(List<Routine> routines) {
-        HashSet<Subsystem> superset = new HashSet<>();
-        for (Routine routine : routines) {
-            superset.addAll(Arrays.asList(routine.getRequiredSubsystems()));
-        }
-        return superset.toArray(new Subsystem[0]);
-    }
+    private List<Routine> mRunningRoutines = new LinkedList<>();
 
-    /**
-     * Finds overlapping subsystems. Not optimized
-     */
-    static Subsystem[] sharedSubsystems(List<Routine> routines) {
-        HashMap<Subsystem, Integer> counter = new HashMap<>();
-        counter.put(null, 0); //for SampleRoutine
-        counter.put(Drive.getInstance(), 0);
-        // Count the number of times each subsystem appears
+    static Set<Subsystem> sharedSubsystems(List<Routine> routines) {
+        Set<Subsystem> sharedSubsystems = new HashSet<>(); // TODO: No allocation on update
         for (Routine routine : routines) {
-            for (Subsystem subsystem : routine.getRequiredSubsystems()) {
-                counter.put(subsystem, counter.get(subsystem) + 1);
-            }
+            sharedSubsystems.addAll(routine.getRequiredSubsystems());
         }
-        // Add all subsystems that appear multiple times to return list
-        HashSet<Subsystem> conflicts = new HashSet<>();
-        for (Map.Entry<Subsystem, Integer> subsystem : counter.entrySet()) {
-            if (subsystem.getValue() > 1 && subsystem.getKey() != null) {
-                conflicts.add(subsystem.getKey());
-            }
-        }
-        return conflicts.toArray(new Subsystem[0]);
-    }
-
-    /**
-     * Stores the new routine to be added in next update cycle <br />
-     * Will automatically cancel any existing routines with the same subsystems
-     */
-    public void addNewRoutine(Routine newRoutine) {
-        mRoutinesToAdd.add(Objects.requireNonNull(newRoutine));
+        return sharedSubsystems;
     }
 
     public List<Routine> getCurrentRoutines() {
         return mRunningRoutines;
     }
 
-    /**
-     * Wipes all current routines <br />
-     * Pass in the commands so that routines can clean up
-     */
-    public Commands reset(Commands commands) {
-        // Cancel all running routines
-        if (!mRunningRoutines.isEmpty()) {
-            for (Routine routine : mRunningRoutines) {
-                commands = routine.cancel(commands);
-            }
-        }
-        // Empty the routine buffers
+    public void clearRunningRoutines() {
         mRunningRoutines.clear();
-        mRoutinesToAdd.clear();
-        mRoutinesToRemove.clear();
-        return commands;
     }
 
     /**
-     * Updates the commands that are passed in based on the running and canceled routines
+     * Updates the commands that are passed in based on the running routines.
      *
      * @param commands Current commands
      * @return Modified commands
      */
-    public Commands update(Commands commands) {
-        mRoutinesToRemove.clear();
-        // Update all running routines
-        for (Routine routine : mRunningRoutines) {
-            if (routine.isFinished()) {
-                commands = routine.cancel(commands);
-                mRoutinesToRemove.add(routine);
-            } else {
-                commands = routine.update(commands);
+    public void update(Commands commands) {
+        mRunningRoutines.removeIf(routine -> {
+            boolean isFinished = routine.execute(commands);
+            if (isFinished) {
+                System.out.printf("Dropping finished routine: %s%n", routine);
             }
+            return isFinished;
+        });
+        if (commands.shouldClearCurrentRoutines) {
+            clearRunningRoutines();
         }
-
-        // Remove routines that finished
-        for (Routine routine : mRoutinesToRemove) {
-            mRunningRoutines.remove(routine);
-        }
-
-        // Add newest routines after current routines may have finished, start them, and update them
-        for (Routine newRoutine : mRoutinesToAdd) {
-            // Combine running routines with new routine to check for shared subsystems
-            ArrayList<Routine> conflicts = conflictingRoutines(mRunningRoutines, newRoutine);
+        for (Routine newRoutine : commands.routinesWanted) {
+            //  Remove any running routines that conflict with new routine
+            List<Routine> conflicts = conflictingRoutines(newRoutine);
             for (Routine routine : conflicts) {
-                commands = routine.cancel(commands);
+                System.out.printf("Dropping conflicting routine: %s%n", routine);
                 mRunningRoutines.remove(routine);
             }
-            newRoutine.start();
-            commands = newRoutine.update(commands);
-            mRunningRoutines.add(newRoutine);
-        }
-
-        mRoutinesToAdd.clear();
-
-        if (commands.cancelCurrentRoutines) {
-            commands = reset(commands);
-        }
-
-        // Add new routines this cycle.
-        // Intentionally runs even if cancelCurrentRoutines is true, as these are new routines requested on the same cycle.
-        for (Routine routine : commands.routinesWanted) {
-            addNewRoutine(routine);
+            if (!newRoutine.execute(commands)) { // If it finishes immediately never add it to running routines
+                mRunningRoutines.add(newRoutine);
+            }
         }
         // Clears the wanted routines every update cycle
         commands.routinesWanted.clear();
-        return commands;
     }
 
     /**
-     * Finds all conflicting routines required by all of the routines
-     *
-     * @param routinesList Existing routines
-     * @param newRoutine   The new routine
-     * @return Array of routines that require subsystems the newRoutine needs
+     * Finds all conflicting routines required by all of the routines.
      */
-    private ArrayList<Routine> conflictingRoutines(ArrayList<Routine> routinesList, Routine newRoutine) {
-        // Get hash sets of required subsystems for existing routines
-        ArrayList<HashSet<Subsystem>> routineSubsystemSets = new ArrayList<>();
-        HashSet<Subsystem> subsystemsRequired = new HashSet<>(Arrays.asList(newRoutine.getRequiredSubsystems()));
-
-        for (Routine routine : routinesList) {
-            routineSubsystemSets.add(new HashSet<>(Arrays.asList(routine.getRequiredSubsystems())));
-        }
-
-        ArrayList<Routine> conflicts = new ArrayList<>();
-        // Any existing routines that require the same subsystem are added to routine
-        for (int j = 0; j < routinesList.size(); j++) {
-            // Find intersection
-            routineSubsystemSets.get(j).retainAll(subsystemsRequired);
-            if (!routineSubsystemSets.get(j).isEmpty()) {
-                conflicts.add(routinesList.get(j));
-                // Move to next routine in the list
+    private List<Routine> conflictingRoutines(Routine newRoutine) {
+        List<Routine> conflicts = new ArrayList<>(); // TODO: No allocation on update
+        for (Routine runningRoutine : mRunningRoutines) {
+            if (!Collections.disjoint(newRoutine.getRequiredSubsystems(), runningRoutine.getRequiredSubsystems())) {
+                conflicts.add(runningRoutine);
             }
         }
         return conflicts;

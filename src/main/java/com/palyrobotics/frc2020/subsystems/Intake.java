@@ -14,13 +14,13 @@ public class Intake extends Subsystem {
 
     private static Intake sInstance = new Intake();
 
-    private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
-
-    private double mOutput;
-
     public static Intake getInstance() {
         return sInstance;
     }
+
+    private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
+
+    private double mOutput;
 
     public Intake() {
         super("intake");

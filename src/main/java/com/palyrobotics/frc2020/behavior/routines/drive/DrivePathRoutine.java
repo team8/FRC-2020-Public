@@ -5,14 +5,12 @@ import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class DrivePathRoutine extends Routine {
 
@@ -31,44 +29,54 @@ public class DrivePathRoutine extends Routine {
     }
 
     public DrivePathRoutine(boolean isReversed, List<Pose2d> waypoints) {
-        List<Pose2d> generatorPoints;
-        TrajectoryConfig trajectoryConfig;
+        mTrajectory = TrajectoryGenerator.generateTrajectory(
+                getGenerationPoints(isReversed, waypoints),
+                getGenerationConfig(isReversed)
+        );
+    }
+
+    public DrivePathRoutine(Pose2d start, List<Translation2d> interiorWaypoints, Pose2d end) {
+        this(false, start, interiorWaypoints, end);
+    }
+
+    public DrivePathRoutine(boolean isReversed, Pose2d start, List<Translation2d> interiorWaypoints, Pose2d end) {
+        mTrajectory = TrajectoryGenerator.generateTrajectory(
+                isReversed ? end : start,
+                getGenerationPoints(isReversed, interiorWaypoints),
+                isReversed ? start : end,
+                getGenerationConfig(isReversed)
+        );
+    }
+
+    private TrajectoryConfig getGenerationConfig(boolean isReversed) {
+        TrajectoryConfig config = DrivetrainConstants.getStandardTrajectoryConfig();
+        return isReversed ? config.setReversed(true) : config;
+    }
+
+    private <T> List<T> getGenerationPoints(boolean isReversed, List<T> waypoints) {
+        List<T> generatorPoints;
         if (isReversed) {
             // We need to clone waypoints since reversing is in-place and we don't want to modify passed in list
             generatorPoints = new ArrayList<>(waypoints);
             Collections.reverse(generatorPoints);
-            trajectoryConfig = DrivetrainConstants.kReverseTrajectoryConfig;
         } else {
             generatorPoints = waypoints;
-            trajectoryConfig = DrivetrainConstants.kTrajectoryConfig;
         }
-        mTrajectory = TrajectoryGenerator.generateTrajectory(generatorPoints, trajectoryConfig);
+        return generatorPoints;
     }
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
-    public Commands update(Commands commands) {
+    public void update(Commands commands) {
         commands.setDriveFollowPath(mTrajectory);
-        return commands;
     }
 
     @Override
-    public Commands cancel(Commands commands) {
-        commands.setDriveNeutral();
-        return commands;
-    }
-
-    @Override
-    public boolean isFinished() {
+    public boolean checkFinished() {
         return mDrive.isOnTarget();
     }
 
     @Override
-    public Subsystem[] getRequiredSubsystems() {
-        return new Subsystem[]{mDrive};
+    public Set<Subsystem> getRequiredSubsystems() {
+        return Set.of(mDrive);
     }
 }

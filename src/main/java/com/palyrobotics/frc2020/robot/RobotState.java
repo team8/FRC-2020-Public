@@ -17,9 +17,13 @@ public class RobotState {
         AUTO, TELEOP, TESTING, DISABLED
     }
 
-    public static final int kUltrasonicBufferSize = 10;
-
     private static RobotState sInstance = new RobotState();
+
+    public static RobotState getInstance() {
+        return sInstance;
+    }
+
+    public static final int kUltrasonicBufferSize = 10;
 
     public GamePeriod gamePeriod = GamePeriod.DISABLED;
 
@@ -55,10 +59,6 @@ public class RobotState {
     //         }
     //     }
     // }
-
-    public static RobotState getInstance() {
-        return sInstance;
-    }
 
     public void resetOdometry() {
         driveOdometry.resetPosition(new Pose2d(), new Rotation2d());

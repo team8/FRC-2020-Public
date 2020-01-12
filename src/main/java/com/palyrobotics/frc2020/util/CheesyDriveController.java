@@ -15,7 +15,7 @@ public class CheesyDriveController extends Drive.DriveController {
 
     private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
     private double
-            mOldWheel,
+            mPreviousWheel,
             mQuickStopAccumulator, mNegativeInertiaAccumulator;
 
     @Override
@@ -30,8 +30,8 @@ public class CheesyDriveController extends Drive.DriveController {
         wheel = MathUtil.handleDeadBand(wheel, DrivetrainConstants.kDeadBand);
         throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadBand);
 
-        double negativeWheelInertia = wheel - mOldWheel;
-        mOldWheel = wheel;
+        double negativeWheelInertia = wheel - mPreviousWheel;
+        mPreviousWheel = wheel;
 
         // Map linear wheel input onto a sin wave, three passes
         for (int i = 0; i < mDriveConfig.nonlinearPasses; i++)

@@ -18,9 +18,18 @@ public class Commands {
 
     private static Commands sInstance = new Commands();
 
+    public static Commands getInstance() {
+        return sInstance;
+    }
+
+    public static Commands resetInstance() {
+        sInstance = new Commands();
+        return sInstance;
+    }
+
     /* Routines */
     public ArrayList<Routine> routinesWanted = new ArrayList<>();
-    public boolean cancelCurrentRoutines;
+    public boolean shouldClearCurrentRoutines;
 
     /* Spinner Commands */
     public Spinner.SpinnerState spinnerWantedState = Spinner.SpinnerState.IDLE;
@@ -38,22 +47,13 @@ public class Commands {
     // Path Following
     private Trajectory driveWantedTrajectory;
 
-    public static Commands getInstance() {
-        return sInstance;
-    }
-
-    public static Commands resetInstance() {
-        sInstance = new Commands();
-        return sInstance;
+    public void addWantedRoutines(Routine... wantedRoutines) {
+        for (Routine wantedRoutine : wantedRoutines) {
+            addWantedRoutine(wantedRoutine);
+        }
     }
 
     public void addWantedRoutine(Routine wantedRoutine) {
-        for (Routine routine : routinesWanted) {
-            if (routine.getClass().equals(wantedRoutine.getClass())) {
-//                Logger.getInstance().logRobotThread(Level.WARNING, "tried to add duplicate routine", routine.getName());
-                return;
-            }
-        }
         routinesWanted.add(wantedRoutine);
     }
 
@@ -116,7 +116,7 @@ public class Commands {
     public void copyTo(Commands other) {
         other.driveWantedState = this.driveWantedState;
         other.intakeWantedState = this.intakeWantedState;
-        other.cancelCurrentRoutines = this.cancelCurrentRoutines;
+        other.shouldClearCurrentRoutines = this.shouldClearCurrentRoutines;
         other.routinesWanted.addAll(this.routinesWanted);
     }
 
@@ -124,7 +124,7 @@ public class Commands {
     public String toString() {
         StringBuilder log = new StringBuilder();
         log.append("Wanted routines: ");
-        for (Routine r : this.routinesWanted) {
+        for (Routine r : routinesWanted) {
             log.append(r.getName()).append(" ");
         }
         return log.append("\n").toString();
