@@ -112,10 +112,25 @@ class HardwareUpdater {
     }
 
     private void configureShooterHardware() {
-        HardwareAdapter.ShooterHardware shooterHardware = HardwareAdapter.getInstance().getShooterHardware();
-        shooterHardware.shooterNeoSlave.follow(shooterHardware.shooterNeo);
+        LazySparkMax shooterNeo = HardwareAdapter.getInstance().getShooterHardware().shooterNeo;
+        LazySparkMax shooterNeoSlave = HardwareAdapter.getInstance().getShooterHardware().shooterNeoSlave;
 
-        HardwareAdapter.ShooterHardware ShooterHardware = HardwareAdapter.getInstance().getShooterHardware();
+        shooterNeo.setInverted(false);
+        shooterNeoSlave.setInverted(false);
+
+        shooterNeo.restoreFactoryDefaults();
+        shooterNeoSlave.restoreFactoryDefaults();
+
+        shooterNeo.enableVoltageCompensation(12.0);
+        shooterNeo.enableVoltageCompensation(12.0);
+
+        shooterNeo.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward,false);
+        shooterNeo.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse,false);
+        shooterNeoSlave.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward,false);
+        shooterNeoSlave.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse,false);
+
+        shooterNeoSlave.follow(shooterNeo);
+
     }
 
     private void configureMiscellaneousHardware() {
