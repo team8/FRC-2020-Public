@@ -7,7 +7,6 @@ import com.esotericsoftware.minlog.*;
 import com.esotericsoftware.minlog.Log.Logger;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.*;
 
 public class RobotLogger extends Logger {
