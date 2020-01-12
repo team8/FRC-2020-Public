@@ -20,5 +20,9 @@ public class PortConstants extends AbstractConfig {
      * Intake
      */
     public int vidarIntakeDeviceID;
+    /**
+     * Intake
+     */
+    public int shooterSparkMaxDeviceID;
 
 }

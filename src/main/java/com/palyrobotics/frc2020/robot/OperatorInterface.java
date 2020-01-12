@@ -146,6 +146,9 @@ public class OperatorInterface {
         if (mOperatorXboxController.getDPadRightPressed()) {
             commands.wantedShooterState = Shooter.ShooterState.SHOOTING;
         }
+        else {
+            commands.wantedShooterState = Shooter.ShooterState.IDLE;
+        }
 
         //TODO: change intake controls maybe
         /**

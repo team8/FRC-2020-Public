@@ -50,6 +50,7 @@ public class HardwareAdapter {
     ShooterHardware getShooterHardware() {
         return ShooterHardware.getInstance();
     }
+
     Joysticks getJoysticks() {
         return Joysticks.getInstance();
     }
@@ -108,7 +109,7 @@ public class HardwareAdapter {
 
     static class ShooterHardware {
         private static ShooterHardware sInstance = new ShooterHardware();
-        final LazySparkMax shooterNeo = new LazySparkMax(-1);
+        final LazySparkMax shooterNeo = new LazySparkMax(sPortConstants.shooterSparkMaxDeviceID);
         private static ShooterHardware getInstance() {
             return sInstance;
         }
