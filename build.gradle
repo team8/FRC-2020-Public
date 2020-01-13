@@ -83,3 +83,7 @@ jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
+
+test {
+    systemProperty "auto", System.getProperty('auto')
+}
