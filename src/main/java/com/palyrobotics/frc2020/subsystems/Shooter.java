@@ -9,6 +9,8 @@ import com.palyrobotics.frc2020.util.control.SmartGains;
 import com.revrobotics.SparkMax;
 import edu.wpi.first.wpilibj.Spark;
 
+import javax.annotation.CheckReturnValue;
+
 public class Shooter extends Subsystem{
     private static Shooter sInstance = new Shooter();
 
@@ -57,18 +59,20 @@ public class Shooter extends Subsystem{
 
 
     public double projectedHeight(double initDistance, double initHeight, double tInterval, double initAngle, double initSpeed , double maxTime){
-        //make sure maxTime is a multiple of tInterval
-        //outputs in feet
-        //todo: create comments explaining each variable
+        /* README
+            input imperial values, program will convert into metric
+            make sure maxTime is a multiple of tInterval
+            Function / measurements taken from Mr. Law's spreadsheet.
+        */
 
         //change everything to metric
-        initSpeed = feetToMeters(initSpeed);
-        initAngle = degreesToRadians(initAngle);
-        initHeight = feetToMeters(initHeight);
-        initDistance = feetToMeters(initDistance);
+        initSpeed = feetToMeters(initSpeed); //change to meters/second
+        initAngle = degreesToRadians(initAngle); // change to radians from degrees
+        initHeight = feetToMeters(initHeight); //change to meters from feet
+        initDistance = feetToMeters(initDistance); // change to meters from feet
 
-        double ballDiameter = feetToMeters(7.0 / 12); // in meters
-        double ballMass = ouncesToKg(5); //in kg
+        double ballDiameter = feetToMeters(7.0 / 12); // in meters, converted from inches
+        double ballMass = ouncesToKg(5); //in kg, converted from oz
         double dragCoef = 0.5;
         double densityAir = 1.2; //kg/m^3
         double gravity = 9.80665; //m/s^2
@@ -89,11 +93,11 @@ public class Shooter extends Subsystem{
         double angle = initAngle;
 
         for(double i = tInterval; i < maxTime; i += tInterval){
-            //starts at 1 b/c already did 1 iteration
+            //starts at tInterval b/c already did 1 iteration
             dX = dX + ((vX * tInterval) + aX * Math.pow(tInterval, 2) / 2);
             dY = dY + ((vY * tInterval) + aY * Math.pow(tInterval, 2) / 2);
-            height = metersToFeet(dY); //feet
-            distance = metersToFeet(dX); //feet
+            height = metersToFeet(dY);
+            distance = metersToFeet(dX);
             vX = vX + aX * tInterval;
             vY = vY + aY * tInterval;
             angle = Math.atan(vY/vX);
