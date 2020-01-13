@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class AutoGrapher {
 
     public static void main(String... args) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, InterruptedException, NoSuchMethodException, InvocationTargetException {
-        String autoClassName = System.getProperty("auto");
+        String autoClassName = System.getenv("AUTO_NAME");
         if (autoClassName != null && !autoClassName.isEmpty()) {
             String autoPath = "com.palyrobotics.frc2020.auto.modes." + autoClassName;
 
