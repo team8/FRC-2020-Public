@@ -7,10 +7,13 @@ import com.palyrobotics.frc2020.util.SparkMaxOutput;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.SmartGains;
 import com.revrobotics.SparkMax;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
 
 import javax.annotation.CheckReturnValue;
 
+//TODO: add in code for other classes and make functional. Also make routine to cause horizontal piston to activate first
 public class Shooter extends Subsystem{
     private static Shooter sInstance = new Shooter();
 
@@ -22,16 +25,85 @@ public class Shooter extends Subsystem{
 
     private SparkMaxOutput mOutput = new SparkMaxOutput();
 
+    private DoubleSolenoid.Value mExtend = DoubleSolenoid.Value.kForward,
+            mRetract = DoubleSolenoid.Value.kReverse,
+            mOff = DoubleSolenoid.Value.kOff;
+
+    private DoubleSolenoid.Value mHorizontalOutput = mRetract;
+
+    private DoubleSolenoid.Value mVerticalOutput = mRetract;
+
+
+
     public enum ShooterState {
         IDLE, SHOOTING
     }
 
+    public enum HoodState {
+        LOW, MEDIUM, HIGH
+    }
+
     private ShooterState mState = ShooterState.IDLE;
+
+    private HoodState mHoodState = HoodState.LOW;
 
     protected Shooter() {
         super("shooter");
     }
 
+
+    @Override
+    public void update(Commands commands, RobotState robotState) {
+        //given a wanted shooter state, set the wantedShooterState to something based on that state using a switch
+        mState = commands.wantedShooterState;
+        mHoodState = commands.wantedHoodState;
+
+        switch(mState){
+            case IDLE:
+                mOutput.setPercentOutput(0);
+                break;
+            case SHOOTING:
+                //sets up motion profile for the shooter in order to reach a speed.
+                mOutput.setTargetSmartVelocity(commands.robotSetPoints.shooterVelocitySetPoint, mConfig.shooterGains);
+                break;
+        }
+
+        switch(mHoodState){
+            case LOW:
+                mVerticalOutput = mRetract;
+                mHorizontalOutput = mRetract;
+                break;
+            case MEDIUM:
+                mVerticalOutput = mExtend;
+                mHorizontalOutput = mExtend;
+                break;
+            case HIGH:
+                mVerticalOutput = mExtend;
+                mHorizontalOutput = mRetract;
+                break;
+        }
+    }
+
+    @Override
+    public void reset() {
+        mOutput.setPercentOutput(0);
+        mState = ShooterState.IDLE;
+        mHoodState = HoodState.LOW;
+        mVerticalOutput = mRetract;
+        mHorizontalOutput = mRetract;
+    }
+
+    public SparkMaxOutput getOutput() {
+        return mOutput;
+    }
+
+    public DoubleSolenoid.Value getHorizontalOutput() {
+        return mHorizontalOutput;
+    }
+
+    public DoubleSolenoid.Value getVerticalOutput() {
+        return mVerticalOutput;
+    }
 
     public double feetToMeters (double feet){
         return feet * 0.3048;
@@ -110,28 +182,4 @@ public class Shooter extends Subsystem{
         return height;
     }
 
-    @Override
-    public void update(Commands commands, RobotState robotState) {
-        //given a wanted shooter state, set the wantedShooterState to something based on that state using a switch
-        mState = commands.wantedShooterState;
-        switch(mState){
-            case IDLE:
-                mOutput.setPercentOutput(0);
-                break;
-            case SHOOTING:
-                //sets up motion profile for the shooter in order to reach a speed.
-                mOutput.setTargetSmartVelocity(commands.robotSetPoints.shooterVelocitySetPoint, mConfig.shooterGains);
-                break;
-        }
-    }
-
-    @Override
-    public void reset() {
-        mOutput.setPercentOutput(0);
-        mState = ShooterState.IDLE;
-    }
-
-    public SparkMaxOutput getOutput() {
-        return mOutput;
-    }
 }

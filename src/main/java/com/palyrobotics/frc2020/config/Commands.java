@@ -25,6 +25,7 @@ public class Commands {
     public Spinner.SpinnerState wantedSpinnerState = Spinner.SpinnerState.IDLE;
     public Intake.IntakeState wantedIntakeState = Intake.IntakeState.IDLE;
     public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
+    public Shooter.HoodState wantedHoodState = Shooter.HoodState.LOW;
     public double driveThrottle, driveWheel;
     public boolean isQuickTurn, isBraking;
     // All robot set points
