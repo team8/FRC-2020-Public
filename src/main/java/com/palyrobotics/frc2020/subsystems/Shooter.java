@@ -59,10 +59,10 @@ public class Shooter extends Subsystem{
     public double projectedHeight(double initDistance, double initHeight, double tInterval, double initAngle, double initSpeed , double maxTime){
         //make sure maxTime is a multiple of tInterval
         //outputs in feet
-        //things that are metric right now: initDist, initHeight, initSpeed
         //todo: create comments explaining each variable
 
         //change everything to metric
+        initSpeed = feetToMeters(initSpeed);
         initAngle = degreesToRadians(initAngle);
         initHeight = feetToMeters(initHeight);
         initDistance = feetToMeters(initDistance);
