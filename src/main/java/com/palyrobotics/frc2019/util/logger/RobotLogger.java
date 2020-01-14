@@ -45,8 +45,8 @@ public class RobotLogger extends Logger {
 
     @Override
     public void log(int level, String category, String message, Throwable ex) {
-        if (category != null && category.equals("kryo")) {
-            // kyro would recursively send logs
+        if (category != null && (category.equals("kryo") || category.equals("kryo.FieldSerializerConfig"))) {
+            // every time a log was sent, kyro would send a log causing an infinite recursive loop
             return;
         }
         LogEntry log = new LogEntry(new Date().getTime() - firstLogTime, level, category, message, ex);
@@ -61,7 +61,6 @@ public class RobotLogger extends Logger {
             System.out.println(log.toString());
         } else {
             while (!oldLogs.isEmpty()) {
-                System.out.printf("stuff was sent boi");
                 server.sendToAllTCP(oldLogs.remove());
             }
         }

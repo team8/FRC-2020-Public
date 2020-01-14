@@ -82,11 +82,13 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         stageInit(RobotState.GamePeriod.AUTO);
+        Log.info("Robot", "AutonomousInit finished");
     }
 
     @Override
     public void autonomousPeriodic() {
         teleopPeriodic();
+        Log.trace("Robot", "Autonomous Periodic loop finished");
     }
 
     @Override
@@ -108,6 +110,8 @@ public class Robot extends TimedRobot {
         mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
 
         CSVWriter.cleanFile();
+
+        Log.info("Robot", "TeleopInit finished");
     }
 
     @Override
@@ -118,6 +122,8 @@ public class Robot extends TimedRobot {
             subsystem.update(sCommands, sRobotState);
         }
         mHardwareUpdater.updateHardware();
+
+        Log.trace("Robot", "Teleop loop finished");
     }
 
     @Override
