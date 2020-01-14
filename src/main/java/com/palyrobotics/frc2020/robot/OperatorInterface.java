@@ -161,8 +161,8 @@ public class OperatorInterface {
         }
 
         ClimberConfig mClimberConfig = Configs.get(ClimberConfig.class);
-        double rightStick = mOperatorXboxController.getY(GenericHID.Hand.kRight);
-        if (rightStick != 0) {
+        double rightStick = -mOperatorXboxController.getY(GenericHID.Hand.kRight);
+        if (Math.abs(rightStick) > 0.1) {
             commands.wantedClimberState = Climber.ClimberState.CUSTOM_VELOCITY;
             commands.robotSetPoints.climberVelocitySetPoint = rightStick; //TODO: find out what to multiply by
         } else {
@@ -172,8 +172,8 @@ public class OperatorInterface {
             commands.addWantedRoutine(new ClimberCustomPositioningRoutine(mClimberConfig.kClimberMaxHeight));
         }
 
-            if (mDriveStick.getTriggerPressed()) {
-                commands.cancelCurrentRoutines = true;
+        if (mDriveStick.getTriggerPressed()) {
+            commands.cancelCurrentRoutines = true;
         }
     }
 
