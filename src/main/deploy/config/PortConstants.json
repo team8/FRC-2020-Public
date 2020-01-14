@@ -7,5 +7,7 @@
     "vidarRightDriveSlave2DeviceID": 2,
     "spinnerTalonDeviceID": 0,
     "shooterSparkMaxMasterDeviceID": -1,
-    "shooterSparkMaxSlaveDeviceID": -1
+    "shooterSparkMaxSlaveDeviceID": -1,
+    "horizontalSolenoidDeviceID":  -1,
+    "verticalSolenoidDeviceID": -1
 }

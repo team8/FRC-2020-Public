@@ -16,9 +16,7 @@ import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANEncoder;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.*;
 
 import java.util.List;
 
@@ -112,9 +110,15 @@ public class HardwareAdapter {
 
         final LazySparkMax shooterNeo, shooterNeoSlave;
 
+        final Solenoid verticalSolenoid;
+
+        final Solenoid horizontalSolenoid;
+
         ShooterHardware () {
             shooterNeo = new LazySparkMax(sPortConstants.shooterSparkMaxMasterDeviceID);
             shooterNeoSlave = new LazySparkMax(sPortConstants.shooterSparkMaxSlaveDeviceID);
+            verticalSolenoid = new Solenoid(sPortConstants.verticalSolenoidDeviceID);
+            horizontalSolenoid = new Solenoid(sPortConstants.horizontalSolenoidDeviceID);
         }
         private static ShooterHardware getInstance() {
             return sInstance;

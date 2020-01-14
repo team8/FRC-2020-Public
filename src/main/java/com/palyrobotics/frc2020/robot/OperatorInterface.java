@@ -135,18 +135,25 @@ public class OperatorInterface {
                 setVision(false);
             }
         }
-        if (mOperatorXboxController.getDPadDownPressed()) {
+        if (mTurnStick.getRawButton(5)) {
                 commands.wantedSpinnerState = Spinner.SpinnerState.TO_COLOR;
         }
 
-        if(mOperatorXboxController.getDPadUpPressed()) {
+        if(mTurnStick.getRawButton(6)) {
             commands.wantedSpinnerState = Spinner.SpinnerState.SPIN;
         }
 
-        if (mOperatorXboxController.getDPadRightPressed()) {
+        if (mOperatorXboxController.getDPadUpPressed()) {
             commands.wantedShooterState = Shooter.ShooterState.SHOOTING;
-        } else {
-            commands.wantedShooterState = Shooter.ShooterState.IDLE;
+        }
+        else if(mOperatorXboxController.getDPadDownPressed()){
+            commands.wantedHoodState = Shooter.HoodState.LOW;
+        }
+        else if (mOperatorXboxController.getDPadLeftPressed()){
+            commands.wantedHoodState = Shooter.HoodState.MEDIUM;
+        }
+        else if (mOperatorXboxController.getDPadRightPressed()){
+            commands.wantedHoodState = Shooter.HoodState.HIGH;
         }
 
         //TODO: change intake controls maybe

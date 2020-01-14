@@ -225,6 +225,7 @@ class HardwareUpdater {
         updateDrivetrain();
         updateSpinner();
         updateIntake();
+        updateShooter();
         updateMiscellaneousHardware();
     }
 
@@ -252,7 +253,11 @@ class HardwareUpdater {
     }
 
     private void updateShooter() {
-        updateSparkMax(HardwareAdapter.getInstance().getShooterHardware().shooterNeo, mShooter.getOutput());
+        HardwareAdapter mHardwareAdapter = HardwareAdapter.getInstance();
+        updateSparkMax(mHardwareAdapter.getShooterHardware().shooterNeo, mShooter.getOutput());
+        //todo: implement routine here instead for when it middle
+        mHardwareAdapter.getShooterHardware().horizontalSolenoid.set(mShooter.getHorizontalOutput());
+        mHardwareAdapter.getShooterHardware().verticalSolenoid.set(mShooter.getHorizontalOutput());
     }
     /**
      * Checks if the compressor should compress and updates it accordingly

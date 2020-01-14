@@ -25,14 +25,7 @@ public class Shooter extends Subsystem{
 
     private SparkMaxOutput mOutput = new SparkMaxOutput();
 
-    private DoubleSolenoid.Value mExtend = DoubleSolenoid.Value.kForward,
-            mRetract = DoubleSolenoid.Value.kReverse,
-            mOff = DoubleSolenoid.Value.kOff;
-
-    private DoubleSolenoid.Value mHorizontalOutput = mRetract;
-
-    private DoubleSolenoid.Value mVerticalOutput = mRetract;
-
+    boolean mHorizontalOutput = false, mVerticalOutput = false;
 
 
     public enum ShooterState {
@@ -70,16 +63,16 @@ public class Shooter extends Subsystem{
 
         switch(mHoodState){
             case LOW:
-                mVerticalOutput = mRetract;
-                mHorizontalOutput = mRetract;
+                mVerticalOutput = false;
+                mHorizontalOutput = false;
                 break;
             case MEDIUM:
-                mVerticalOutput = mExtend;
-                mHorizontalOutput = mExtend;
+                mVerticalOutput = true;
+                mHorizontalOutput = true;
                 break;
             case HIGH:
-                mVerticalOutput = mExtend;
-                mHorizontalOutput = mRetract;
+                mVerticalOutput = false;
+                mHorizontalOutput = true;
                 break;
         }
     }
@@ -89,19 +82,19 @@ public class Shooter extends Subsystem{
         mOutput.setPercentOutput(0);
         mState = ShooterState.IDLE;
         mHoodState = HoodState.LOW;
-        mVerticalOutput = mRetract;
-        mHorizontalOutput = mRetract;
+        mVerticalOutput = false;
+        mHorizontalOutput = false;
     }
 
     public SparkMaxOutput getOutput() {
         return mOutput;
     }
 
-    public DoubleSolenoid.Value getHorizontalOutput() {
+    public boolean getHorizontalOutput() {
         return mHorizontalOutput;
     }
 
-    public DoubleSolenoid.Value getVerticalOutput() {
+    public boolean getVerticalOutput() {
         return mVerticalOutput;
     }
 
@@ -130,7 +123,7 @@ public class Shooter extends Subsystem{
     }
 
 
-    public double projectedHeight(double initDistance, double initHeight, double tInterval, double initAngle, double initSpeed , double maxTime){
+    public double projectedHeight(double initDistanceFeet, double initHeightFeet, double tInterval, double initAngleDegrees, double initSpeedFeet , double maxTime){
         /* README
             input imperial values, program will convert into metric
             make sure maxTime is a multiple of tInterval
@@ -138,31 +131,31 @@ public class Shooter extends Subsystem{
         */
 
         //change everything to metric
-        initSpeed = feetToMeters(initSpeed); //change to meters/second
-        initAngle = degreesToRadians(initAngle); // change to radians from degrees
-        initHeight = feetToMeters(initHeight); //change to meters from feet
-        initDistance = feetToMeters(initDistance); // change to meters from feet
+        initSpeedFeet = feetToMeters(initSpeedFeet); //change to meters/second
+        initAngleDegrees = degreesToRadians(initAngleDegrees); // change to radians from degrees
+        initHeightFeet = feetToMeters(initHeightFeet); //change to meters from feet
+        initDistanceFeet = feetToMeters(initDistanceFeet); // change to meters from feet
 
         double ballDiameter = feetToMeters(7.0 / 12); // in meters, converted from inches
         double ballMass = ouncesToKg(5); //in kg, converted from oz
         double dragCoef = 0.5;
         double densityAir = 1.2; //kg/m^3
         double gravity = 9.80665; //m/s^2
-        double ballTopSpin = (-metersToFeet(initSpeed)) * 2/ (Math.PI * (metersToFeet(ballDiameter)))/ 10;
+        double ballTopSpin = (-metersToFeet(initSpeedFeet)) * 2/ (Math.PI * (metersToFeet(ballDiameter)))/ 10;
         double dragConst = densityAir * dragCoef * Math.PI * ballDiameter * ballDiameter / 8;
 
-        double dX = initDistance; //meters
-        double dY = initHeight; //meters
+        double dX = initDistanceFeet; //meters
+        double dY = initHeightFeet; //meters
         double distance = metersToFeet(dX); //feet
         double height = metersToFeet(dY); //feet
-        double vX = initSpeed * Math.cos(initAngle);
-        double vY = initSpeed * Math.sin(initAngle);
+        double vX = initSpeedFeet * Math.cos(initAngleDegrees);
+        double vY = initSpeedFeet * Math.sin(initAngleDegrees);
         double v2 = Math.pow(vX, 2) + Math.pow(vY, 2);
-        double v2Y = v2 * Math.sin(initAngle);
-        double v2X = v2 * Math.cos(initAngle);
+        double v2Y = v2 * Math.sin(initAngleDegrees);
+        double v2X = v2 * Math.cos(initAngleDegrees);
         double aX = -v2X * (dragConst / ballMass);
         double aY = (-gravity - (dragConst / ballMass * v2Y)) - (densityAir * Math.pow(ballDiameter,3) * ballTopSpin * Math.sqrt(v2) / ballMass);
-        double angle = initAngle;
+        double angle = initAngleDegrees;
 
         for(double i = tInterval; i < maxTime; i += tInterval){
             //starts at tInterval b/c already did 1 iteration
