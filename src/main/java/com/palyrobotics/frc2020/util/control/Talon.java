@@ -89,11 +89,11 @@ public class Talon extends TalonSRX {
         return (int) Math.round(d);
     }
 
-    private final ProfiledControllerBase mController = new TalonController();
-
     public Talon(int deviceNumber) {
         super(deviceNumber);
     }
+
+    private final ProfiledControllerBase mController = new TalonController();
 
     public boolean setOutput(ControllerOutput output) {
         return mController.setOutput(output);

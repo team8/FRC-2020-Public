@@ -12,7 +12,7 @@ public abstract class MultipleRoutine extends Routine {
     }
 
     public MultipleRoutine(List<Routine> routines) {
-        if (routines.size() < 2) {
+        if (routines.size() <= 1) {
             throw new IllegalArgumentException("Multiple routines should have more than one routine!");
         }
         mRoutines = routines;

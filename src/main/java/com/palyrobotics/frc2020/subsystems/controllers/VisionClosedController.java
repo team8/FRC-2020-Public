@@ -44,9 +44,8 @@ public class VisionClosedController extends ChezyDriveController {
             if (!robotState.atVisionTargetThreshold) {
                 super.update(commands, robotState);
             } else {
-                DriveSignal mSignal = new DriveSignal();
-                mSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
-                mSignal.rightOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
+                mDriveSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
+                mDriveSignal.rightOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
             }
             return;
         }
