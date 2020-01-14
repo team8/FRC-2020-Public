@@ -108,17 +108,17 @@ public class HardwareAdapter {
     static class ShooterHardware {
         private static ShooterHardware sInstance = new ShooterHardware();
 
-        final LazySparkMax shooterNeo, shooterNeoSlave;
+        final LazySparkMax masterSpark, slaveSpark;
 
         final Solenoid verticalSolenoid;
 
         final Solenoid horizontalSolenoid;
 
         ShooterHardware () {
-            shooterNeo = new LazySparkMax(sPortConstants.shooterSparkMaxMasterDeviceID);
-            shooterNeoSlave = new LazySparkMax(sPortConstants.shooterSparkMaxSlaveDeviceID);
-            verticalSolenoid = new Solenoid(sPortConstants.verticalSolenoidDeviceID);
-            horizontalSolenoid = new Solenoid(sPortConstants.horizontalSolenoidDeviceID);
+            masterSpark = new LazySparkMax(sPortConstants.shooterSparkMaxMasterDeviceID);
+            slaveSpark = new LazySparkMax(sPortConstants.shooterSparkMaxSlaveDeviceID);
+            verticalSolenoid = new Solenoid(sPortConstants.shooterVerticalSolenoidDeviceID);
+            horizontalSolenoid = new Solenoid(sPortConstants.shooterHorizontalSolenoidDeviceID);
         }
         private static ShooterHardware getInstance() {
             return sInstance;

@@ -112,24 +112,24 @@ class HardwareUpdater {
     }
 
     private void configureShooterHardware() {
-        LazySparkMax shooterNeo = HardwareAdapter.getInstance().getShooterHardware().shooterNeo;
-        LazySparkMax shooterNeoSlave = HardwareAdapter.getInstance().getShooterHardware().shooterNeoSlave;
+        LazySparkMax masterSpark = HardwareAdapter.getInstance().getShooterHardware().masterSpark;
+        LazySparkMax slaveSpark = HardwareAdapter.getInstance().getShooterHardware().slaveSpark;
 
-        shooterNeo.setInverted(false);
-        shooterNeoSlave.setInverted(true);
+        masterSpark.setInverted(false);
+        slaveSpark.setInverted(true);
 
-        shooterNeo.restoreFactoryDefaults();
-        shooterNeoSlave.restoreFactoryDefaults();
+        masterSpark.restoreFactoryDefaults();
+        slaveSpark.restoreFactoryDefaults();
 
-        shooterNeo.enableVoltageCompensation(12.0);
-        shooterNeo.enableVoltageCompensation(12.0);
+        masterSpark.enableVoltageCompensation(12.0);
+        masterSpark.enableVoltageCompensation(12.0);
 
-        shooterNeo.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward,false);
-        shooterNeo.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse,false);
-        shooterNeoSlave.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward,false);
-        shooterNeoSlave.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse,false);
+        masterSpark.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward,false);
+        masterSpark.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse,false);
+        slaveSpark.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward,false);
+        slaveSpark.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse,false);
 
-        shooterNeoSlave.follow(shooterNeo);
+        slaveSpark.follow(masterSpark);
 
     }
 
@@ -254,10 +254,7 @@ class HardwareUpdater {
 
     private void updateShooter() {
         HardwareAdapter mHardwareAdapter = HardwareAdapter.getInstance();
-        updateSparkMax(mHardwareAdapter.getShooterHardware().shooterNeo, mShooter.getOutput());
-        //todo: implement routine here instead for when it middle
-        mHardwareAdapter.getShooterHardware().horizontalSolenoid.set(mShooter.getHorizontalOutput());
-        mHardwareAdapter.getShooterHardware().verticalSolenoid.set(mShooter.getHorizontalOutput());
+        updateSparkMax(mHardwareAdapter.getShooterHardware().slaveSpark, mShooter.getOutput());
     }
     /**
      * Checks if the compressor should compress and updates it accordingly

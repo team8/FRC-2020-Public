@@ -3,6 +3,7 @@ package com.palyrobotics.frc2020.behavior;
 import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Shooter;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
 /**
@@ -15,6 +16,7 @@ public abstract class Routine {
 
     // Keeps access to all subsystems to modify their output and read their status
     protected final Drive mDrive = Drive.getInstance();
+    protected final Shooter mShooter = Shooter.getInstance();
     protected final RobotState mRobotState = RobotState.getInstance();
 
     // Called to start a routine

@@ -8,6 +8,6 @@
     "spinnerTalonDeviceID": 0,
     "shooterSparkMaxMasterDeviceID": -1,
     "shooterSparkMaxSlaveDeviceID": -1,
-    "horizontalSolenoidDeviceID":  -1,
-    "verticalSolenoidDeviceID": -1
+    "shooterHorizontalSolenoidDeviceID":  -1,
+    "shooterVerticalSolenoidDeviceID": -1
 }

@@ -1,5 +1,6 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import com.palyrobotics.frc2020.behavior.routines.shooter.ShooterHoodRoutine;
 import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
@@ -25,7 +26,7 @@ public class Shooter extends Subsystem{
 
     private SparkMaxOutput mOutput = new SparkMaxOutput();
 
-    boolean mHorizontalOutput = false, mVerticalOutput = false;
+    private HoodState mHoodOutput = HoodState.LOW;
 
 
     public enum ShooterState {
@@ -63,16 +64,13 @@ public class Shooter extends Subsystem{
 
         switch(mHoodState){
             case LOW:
-                mVerticalOutput = false;
-                mHorizontalOutput = false;
+                commands.addWantedRoutine(new ShooterHoodRoutine(HoodState.LOW));
                 break;
             case MEDIUM:
-                mVerticalOutput = true;
-                mHorizontalOutput = true;
+                commands.addWantedRoutine(new ShooterHoodRoutine(HoodState.MEDIUM));
                 break;
             case HIGH:
-                mVerticalOutput = false;
-                mHorizontalOutput = true;
+                commands.addWantedRoutine(new ShooterHoodRoutine(HoodState.HIGH));
                 break;
         }
     }
@@ -82,20 +80,15 @@ public class Shooter extends Subsystem{
         mOutput.setPercentOutput(0);
         mState = ShooterState.IDLE;
         mHoodState = HoodState.LOW;
-        mVerticalOutput = false;
-        mHorizontalOutput = false;
+        mHoodOutput = HoodState.LOW;
     }
 
     public SparkMaxOutput getOutput() {
         return mOutput;
     }
 
-    public boolean getHorizontalOutput() {
-        return mHorizontalOutput;
-    }
-
-    public boolean getVerticalOutput() {
-        return mVerticalOutput;
+    public HoodState getHoodOutput(){
+        return mHoodOutput;
     }
 
     public double feetToMeters (double feet){
@@ -124,11 +117,11 @@ public class Shooter extends Subsystem{
 
 
     public double projectedHeight(double initDistanceFeet, double initHeightFeet, double tInterval, double initAngleDegrees, double initSpeedFeet , double maxTime){
-        /* README
-            input imperial values, program will convert into metric
-            make sure maxTime is a multiple of tInterval
-            Function / measurements taken from Mr. Law's spreadsheet.
-        */
+/**
+ * input imperial values, program will convert into metric
+ * make sure maxTime is a multiple of tInterval
+ * Function / measurements taken from Mr. Law's spreadsheet.
+ */
 
         //change everything to metric
         initSpeedFeet = feetToMeters(initSpeedFeet); //change to meters/second

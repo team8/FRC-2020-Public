@@ -29,8 +29,8 @@ public class PortConstants extends AbstractConfig {
      */
     public int shooterSparkMaxMasterDeviceID;
     public int shooterSparkMaxSlaveDeviceID;
-    public int horizontalSolenoidDeviceID;
-    public int verticalSolenoidDeviceID;
+    public int shooterHorizontalSolenoidDeviceID;
+    public int shooterVerticalSolenoidDeviceID;
 
 
 

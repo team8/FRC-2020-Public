@@ -143,16 +143,16 @@ public class OperatorInterface {
             commands.wantedSpinnerState = Spinner.SpinnerState.SPIN;
         }
 
-        if (mOperatorXboxController.getDPadUpPressed()) {
+        if (mOperatorXboxController.getDPadLeftPressed()) {
             commands.wantedShooterState = Shooter.ShooterState.SHOOTING;
         }
         else if(mOperatorXboxController.getDPadDownPressed()){
             commands.wantedHoodState = Shooter.HoodState.LOW;
         }
-        else if (mOperatorXboxController.getDPadLeftPressed()){
+        else if (mOperatorXboxController.getDPadRightPressed()){
             commands.wantedHoodState = Shooter.HoodState.MEDIUM;
         }
-        else if (mOperatorXboxController.getDPadRightPressed()){
+        else if (mOperatorXboxController.getDPadUpPressed()){
             commands.wantedHoodState = Shooter.HoodState.HIGH;
         }
 
