@@ -9,7 +9,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 public class Spinner extends Subsystem {
 
     private static Spinner sInstance = new Spinner();
-    private static final SpinnerConfig mSpinnerConfig = Configs.get(SpinnerConfig.class);
+    private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
 
 
     public static Spinner getInstance() {
@@ -43,11 +43,11 @@ public class Spinner extends Subsystem {
         mCurrentColor = robotState.closestColorString;
         switch (mSpinnerState) {
             case IDLE:
-                mOutput = mSpinnerConfig.idleOutput;
+                mOutput = mConfig.idleOutput;
                 break;
             case SPIN:
-                mOutput = mSpinnerConfig.rotationOutput;
-                if(mColorPassedCount > mSpinnerConfig.rotationControlColorPassedCount) {
+                mOutput = mConfig.rotationOutput;
+                if(mColorPassedCount > mConfig.rotationControlColorPassedCount) {
                     commands.wantedSpinnerState = SpinnerState.IDLE;
                     mColorPassedCount = 0;
                 }
@@ -58,7 +58,7 @@ public class Spinner extends Subsystem {
                 }
                 break;
             case TO_COLOR:
-                mOutput = mSpinnerConfig.positionOutput;
+                mOutput = mConfig.positionOutput;
                 if (mCurrentColor.equals(robotState.gameData)) {
                     commands.wantedSpinnerState = SpinnerState.IDLE;
                 }
