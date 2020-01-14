@@ -3,17 +3,21 @@ package com.palyrobotics.frc2020.subsystems;
 import com.palyrobotics.frc2020.config.Commands;
 import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
+import com.palyrobotics.frc2020.config.subsystem.SpinnerConfig;
+import com.palyrobotics.frc2020.util.config.Configs;
 
 public class Spinner extends Subsystem {
 
     private static Spinner sInstance = new Spinner();
+    private static final SpinnerConfig mSpinnerConfig = Configs.get(SpinnerConfig.class);
+
 
     public static Spinner getInstance() {
         return sInstance;
     }
     
     private SpinnerState mSpinnerState;
-    private double mOutput = 0;
+    private double mOutput;
     private String mCurrentColor;
     private String mPreviousColor;
 
@@ -30,6 +34,7 @@ public class Spinner extends Subsystem {
     @Override
     public void start() {
         mSpinnerState = Spinner.SpinnerState.IDLE;
+        mOutput = 0;
     }
 
     @Override
@@ -38,12 +43,12 @@ public class Spinner extends Subsystem {
         mCurrentColor = robotState.closestColorString;
         switch (mSpinnerState) {
             case IDLE:
-                mOutput = SpinnerConstants.idleOutput;
+                mOutput = mSpinnerConfig.idleOutput;
                 break;
             case SPIN:
-                mOutput = SpinnerConstants.rotationOutput;
-                if(mColorPassedCount > 30) {
-                    mSpinnerState = SpinnerState.IDLE;
+                mOutput = mSpinnerConfig.rotationOutput;
+                if(mColorPassedCount > mSpinnerConfig.rotationControlColorPassedCount) {
+                    commands.wantedSpinnerState = SpinnerState.IDLE;
                     mColorPassedCount = 0;
                 }
                 else {
@@ -53,9 +58,9 @@ public class Spinner extends Subsystem {
                 }
                 break;
             case TO_COLOR:
-                mOutput = SpinnerConstants.positionOutput;
+                mOutput = mSpinnerConfig.positionOutput;
                 if (mCurrentColor.equals(robotState.gameData)) {
-                    mSpinnerState = SpinnerState.IDLE;
+                    commands.wantedSpinnerState = SpinnerState.IDLE;
                 }
                 break;
         }
