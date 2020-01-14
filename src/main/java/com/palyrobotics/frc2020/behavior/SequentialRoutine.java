@@ -71,6 +71,10 @@ public class SequentialRoutine extends Routine {
         return RoutineManager.sharedSubsystems(mRoutines);
     }
 
+    public ArrayList<Routine> getEnclosingSequentialRoutine() {
+        return mRoutines;
+    }
+
     @Override
     public String getName() {
         StringBuilder name = new StringBuilder("SequentialRoutine of (");

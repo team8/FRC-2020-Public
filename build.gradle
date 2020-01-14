@@ -1,4 +1,5 @@
 import edu.wpi.first.gradlerio.GradleRIOPlugin
+import edu.wpi.first.gradlerio.test.JavaSimulationTask
 
 plugins {
     id "java"
@@ -9,6 +10,8 @@ sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 def ROBOT_MAIN_CLASS = "com.palyrobotics.frc2020.robot.RobotStarter"
+
+def AUTO_GRAPHER_MAIN_CLASS = "com.palyrobotics.frc2020.util.AutoGrapher"
 
 compileJava {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
@@ -82,4 +85,14 @@ dependencies {
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+}
+
+task graphAutoJar(type: Jar) {
+    with jar
+    manifest GradleRIOPlugin.javaManifest(AUTO_GRAPHER_MAIN_CLASS)
+}
+
+task graphAuto(type: JavaSimulationTask) {
+    group = "team8"
+    dependsOn(tasks.extractTestJNI, tasks.graphAutoJar)
 }

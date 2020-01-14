@@ -1,5 +1,6 @@
-package com.palyrobotics.frc2020.auto;
+package com.palyrobotics.frc2020.auto.modes;
 
+import com.palyrobotics.frc2020.auto.AutoModeBase;
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import edu.wpi.first.wpilibj.geometry.Pose2d;

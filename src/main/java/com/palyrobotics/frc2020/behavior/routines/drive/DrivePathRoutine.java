@@ -18,6 +18,7 @@ public class DrivePathRoutine extends Routine {
 
     private final Trajectory mTrajectory;
     private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
+    private List<Pose2d> mPoseList;
 
     public DrivePathRoutine(List<Pose2d> waypoints) {
         this(waypoints.toArray(new Pose2d[0]));
@@ -32,6 +33,7 @@ public class DrivePathRoutine extends Routine {
                 Arrays.asList(waypoints),
                 isReversed ? DrivetrainConstants.kReverseTrajectoryConfig : DrivetrainConstants.kTrajectoryConfig
         );
+        mPoseList = Arrays.asList(waypoints);
     }
 
     public DrivePathRoutine(Pose2d... waypoints) {
@@ -64,5 +66,10 @@ public class DrivePathRoutine extends Routine {
     @Override
     public Subsystem[] getRequiredSubsystems() {
         return new Subsystem[]{mDrive};
+    }
+
+    @Override
+    public String toString() {
+        return mPoseList.toString();
     }
 }

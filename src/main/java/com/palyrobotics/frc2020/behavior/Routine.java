@@ -5,6 +5,8 @@ import com.palyrobotics.frc2020.config.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
+import java.util.ArrayList;
+
 /**
  * Abstract superclass for a routine, which specifies an autonomous series of actions <br />
  * Each routine takes in Commands and returns modified set points Requires the specific subsystems
@@ -35,6 +37,11 @@ public abstract class Routine {
     // Force override of getName()
     public String getName() {
         return getClass().getSimpleName();
+    }
+
+    // Get routines inside SequentialRoutine
+    public ArrayList<Routine> getEnclosingSequentialRoutine() {
+        return null;
     }
 
     @Override

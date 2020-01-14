@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pure Pursuit Auto Grapher</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/0.9.1/jquery.tablednd.js" integrity="sha256-d3rtug+Hg1GZPB7Y/yTcRixO/wlI78+2m08tosoRn7A=" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="script.js"></script>
+	<script type="text/javascript" src="draw.js"></script>
+	<script type="text/javascript" src="export.js"></script>
+	<script type="text/javascript" src="import.js"></script>
+	<script type="text/javascript" src="automode.js"></script>
+	<script src="blob.js"></script>
+    <script src="filesaver.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+<body onload="init()">
+	<input id="title" placeholder="Title">
+	<canvas id="field"></canvas>
+	<div class="buttonContainer">
+		<button onclick="update()">Update</button>
+		<button onclick="exportData()">Download</button>
+		<button onclick="showData()">Display Path</button>
+		<button onclick="importData()" id="import">Import</button>
+<!--		<button onclick="flipField()">Flip Field</button>-->
+		<table class="starting" align="right">
+			<thead>
+				<tr>
+					<th id="pos">Starting Position</th>
+					<th>
+						<input id="startingX" placeholder='X' type="number">
+					</th>
+					<th>
+						<input id="startingY" placeholder='Y' type="number">
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<table>
+		<thead>
+			<tr><th>Routines</th></tr>
+		</thead>
+		<tbody id="Routines"></tbody>
+	</table>
+	<div style="text-align: center;">
+		<button id="addDrivePath" onclick="addDrivePathRoutine('', '', '', false)">Add Drive Path Routine</button>
+		<div class="dropdown">
+			<button onclick="Dropdown()" class="dropbutton">Add Other Routine</button>
+			<div id="Dropdown" class="dropdown-content">
+				<p class="misc" id="Intake Routine">Intake</p>
+				<p class="misc" id="Shoot Routine">Shoot</p>
+				<p class="misc" id="Wait Routine">Wait</p>
+			</div>
+		</div>
+	</div>
+	<div class="shade hide behind" onclick="closeModal()"></div>
+	<div class="modal hide behind">
+		<div><span id="modalTitle">UntitledPath.java</span><span class="close" onclick="closeModal()">✕</span></div>
+		<pre>
+			Hello, there
+		</pre>
+	</div>
+
+	<input type="file" id="upl" style="display:none;">
+</body>
+</html>
