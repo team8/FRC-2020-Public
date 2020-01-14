@@ -1,10 +1,10 @@
 package com.palyrobotics.frc2020.config;
 
-import com.palyrobotics.frc2020.util.config.AbstractConfig;
+import com.palyrobotics.frc2020.util.config.ConfigBase;
 
 import java.util.List;
 
-public class RobotConfig extends AbstractConfig {
+public class RobotConfig extends ConfigBase {
 
     public boolean
             coastDriveIfDisabled,

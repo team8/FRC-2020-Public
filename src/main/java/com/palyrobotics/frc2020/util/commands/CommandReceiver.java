@@ -3,7 +3,7 @@ package com.palyrobotics.frc2020.util.commands;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.palyrobotics.frc2020.util.config.AbstractConfig;
+import com.palyrobotics.frc2020.util.config.ConfigBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.service.RobotService;
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -147,9 +147,9 @@ public class CommandReceiver implements RobotService {
                     return String.join(",", Configs.getActiveConfigNames());
                 }
                 try {
-                    Class<? extends AbstractConfig> configClass = Configs.getClassFromName(configName);
+                    Class<? extends ConfigBase> configClass = Configs.getClassFromName(configName);
                     if (configClass == null) throw new ClassNotFoundException();
-                    AbstractConfig configObject = Configs.get(configClass);
+                    ConfigBase configObject = Configs.get(configClass);
                     String allFieldNames = parse.getString("config_field");
                     try {
                         switch (commandName) {

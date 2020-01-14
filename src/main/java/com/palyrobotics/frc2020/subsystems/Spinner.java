@@ -34,10 +34,6 @@ public class Spinner extends Subsystem {
 
     private int mColorPassedCount;
 
-    public Spinner() {
-        super("spinner");
-    }
-
     @Override
     public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
         SpinnerState spinnerState = commands.spinnerWantedState;

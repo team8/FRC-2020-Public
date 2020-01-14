@@ -1,22 +1,17 @@
 package com.palyrobotics.frc2020.util;
 
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
-import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.util.config.Configs;
 
 /**
  * Implements constant curvature driving. Yoinked from 254 code
  */
-public class CheesyDriveController extends Drive.DriveController {
+public class ChezyDriveController extends Drive.DriveController {
 
-    private final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
-    private double
-            mPreviousWheel,
-            mQuickStopAccumulator, mNegativeInertiaAccumulator;
+    private double mLastWheel, mQuickStopAccumulator, mNegativeInertiaAccumulator;
 
     @Override
     public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
@@ -30,8 +25,8 @@ public class CheesyDriveController extends Drive.DriveController {
         wheel = MathUtil.handleDeadBand(wheel, DrivetrainConstants.kDeadBand);
         throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadBand);
 
-        double negativeWheelInertia = wheel - mPreviousWheel;
-        mPreviousWheel = wheel;
+        double negativeWheelInertia = wheel - mLastWheel;
+        mLastWheel = wheel;
 
         // Map linear wheel input onto a sin wave, three passes
         for (int i = 0; i < mDriveConfig.nonlinearPasses; i++)

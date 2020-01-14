@@ -22,10 +22,6 @@ public class Intake extends Subsystem {
 
     private double mOutput;
 
-    public Intake() {
-        super("intake");
-    }
-
     @Override
     public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
         IntakeState mState = commands.intakeWantedState;

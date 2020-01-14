@@ -15,10 +15,6 @@ public class RoutineTests {
 
     private static class MockSubsystem extends Subsystem {
 
-        public MockSubsystem() {
-            super("mock");
-        }
-
         @Override
         public void update(Commands commands, RobotState robotState) {
 
@@ -28,6 +24,7 @@ public class RoutineTests {
     private static MockSubsystem mockSubsystem = new MockSubsystem();
 
     private static class WaitOne extends WaitRoutine {
+
         public WaitOne() {
             super(0.5);
         }
@@ -38,15 +35,8 @@ public class RoutineTests {
         }
     }
 
-    private static class WaitTwo extends WaitRoutine {
-        public WaitTwo() {
-            super(0.5);
-        }
+    private static class WaitTwo extends WaitOne {
 
-        @Override
-        public Set<Subsystem> getRequiredSubsystems() {
-            return Set.of(mockSubsystem);
-        }
     }
 
     @Test

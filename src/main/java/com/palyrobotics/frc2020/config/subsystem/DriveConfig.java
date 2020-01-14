@@ -1,10 +1,10 @@
 package com.palyrobotics.frc2020.config.subsystem;
 
-import com.palyrobotics.frc2020.util.config.AbstractSubsystemConfig;
+import com.palyrobotics.frc2020.util.config.SubsystemConfigBase;
 import com.palyrobotics.frc2020.util.control.Gains;
 import com.palyrobotics.frc2020.util.control.SmartGains;
 
-public class DriveConfig extends AbstractSubsystemConfig {
+public class DriveConfig extends SubsystemConfigBase {
 
     public Gains velocityGains;
     public SmartGains smartVelocityGains, turnGains;

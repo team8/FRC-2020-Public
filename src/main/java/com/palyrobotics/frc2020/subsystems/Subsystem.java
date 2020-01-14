@@ -8,19 +8,20 @@ public abstract class Subsystem {
 
     private final String mName;
 
-    public Subsystem(String name) {
-        mName = name;
+    protected Subsystem() {
+        String className = getClass().getSimpleName();
+        mName = Character.toLowerCase(className.charAt(0)) + className.substring(1); // Make first character lowercase to match JSON conventions
     }
 
     public abstract void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState);
 
-    public String getConfigName() {
+    public String getName() {
         return mName;
     }
 
     @Override
     public String toString() {
-        return mName;
+        return getName();
     }
 
     public String getStatus() {

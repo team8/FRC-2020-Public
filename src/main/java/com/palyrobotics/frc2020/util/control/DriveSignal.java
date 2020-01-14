@@ -1,17 +1,17 @@
-package com.palyrobotics.frc2020.util;
+package com.palyrobotics.frc2020.util.control;
 
 import java.util.Objects;
 
-public class SparkDriveSignal {
+public class DriveSignal {
 
-    public SparkMaxOutput leftOutput, rightOutput;
+    public ControllerOutput leftOutput, rightOutput;
 
-    public SparkDriveSignal() {
-        leftOutput = new SparkMaxOutput();
-        rightOutput = new SparkMaxOutput();
+    public DriveSignal() {
+        leftOutput = new ControllerOutput();
+        rightOutput = new ControllerOutput();
     }
 
-    public SparkDriveSignal(SparkMaxOutput leftOutput, SparkMaxOutput rightOutput) {
+    public DriveSignal(ControllerOutput leftOutput, ControllerOutput rightOutput) {
         this.leftOutput = leftOutput;
         this.rightOutput = rightOutput;
     }
@@ -20,7 +20,7 @@ public class SparkDriveSignal {
     public boolean equals(Object other) {
         if (this == other) return true;
         if (other == null || getClass() != other.getClass()) return false;
-        SparkDriveSignal otherSpark = (SparkDriveSignal) other;
+        DriveSignal otherSpark = (DriveSignal) other;
         return leftOutput.equals(otherSpark.leftOutput) && rightOutput.equals(otherSpark.rightOutput);
     }
 
@@ -29,8 +29,8 @@ public class SparkDriveSignal {
         return Objects.hash(leftOutput, rightOutput);
     }
 
-    @Override
+    @Override // Auto-generated
     public String toString() {
-        return String.format("Left:%s%nRight:%s", leftOutput.toString(), rightOutput.toString());
+        return String.format("SparkDriveSignal{leftOutput=%s, rightOutput=%s}", leftOutput, rightOutput);
     }
 }

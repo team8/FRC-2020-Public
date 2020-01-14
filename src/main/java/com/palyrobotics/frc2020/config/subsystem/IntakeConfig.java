@@ -1,8 +1,8 @@
 package com.palyrobotics.frc2020.config.subsystem;
 
-import com.palyrobotics.frc2020.util.config.AbstractSubsystemConfig;
+import com.palyrobotics.frc2020.util.config.SubsystemConfigBase;
 
-public class IntakeConfig extends AbstractSubsystemConfig {
+public class IntakeConfig extends SubsystemConfigBase {
 
     public double intakingVelocity;
 }

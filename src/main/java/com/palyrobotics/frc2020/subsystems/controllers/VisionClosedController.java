@@ -5,9 +5,9 @@ import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
-import com.palyrobotics.frc2020.util.CheesyDriveController;
-import com.palyrobotics.frc2020.util.SparkDriveSignal;
+import com.palyrobotics.frc2020.util.ChezyDriveController;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.control.DriveSignal;
 import com.palyrobotics.frc2020.util.control.SynchronousPID;
 import com.palyrobotics.frc2020.vision.Limelight;
 
@@ -16,7 +16,7 @@ import com.palyrobotics.frc2020.vision.Limelight;
  *
  * @author Robbie, Nihar
  */
-public class VisionClosedController extends CheesyDriveController {
+public class VisionClosedController extends ChezyDriveController {
 
     private static final double
             MAX_ANGULAR_POWER = 0.4, // 0.6
@@ -44,7 +44,7 @@ public class VisionClosedController extends CheesyDriveController {
             if (!robotState.atVisionTargetThreshold) {
                 super.update(commands, robotState);
             } else {
-                SparkDriveSignal mSignal = new SparkDriveSignal();
+                DriveSignal mSignal = new DriveSignal();
                 mSignal.leftOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
                 mSignal.rightOutput.setPercentOutput(DrivetrainConstants.kVisionLookingForTargetCreepPower);
             }

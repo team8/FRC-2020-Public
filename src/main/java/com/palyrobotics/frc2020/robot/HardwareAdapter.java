@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.control.SparkMax;
+import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.revrobotics.CANEncoder;
@@ -32,57 +32,35 @@ public class HardwareAdapter {
 
     private static final HardwareAdapter sInstance = new HardwareAdapter();
 
-    // Wrappers to access hardware groups
-    DrivetrainHardware getDrivetrainHardware() {
-        return DrivetrainHardware.getInstance();
-    }
-
-    IntakeHardware getIntakeHardware() {
-        return IntakeHardware.getInstance();
-    }
-
-    Joysticks getJoysticks() {
-        return Joysticks.getInstance();
-    }
-
-    MiscellaneousHardware getMiscellaneousHardware() {
-        return MiscellaneousHardware.getInstance();
-    }
-
-    SpinnerHardware getSpinnerHardware() {
-        return SpinnerHardware.getInstance();
+    private HardwareAdapter() {
     }
 
     /**
-     * DRIVETRAIN - 6 CANSparkMax, 1 Gyro via TalonSRX data cable
+     * 6 Spark Maxes, 1 Pigeon Gyro via TalonSRX data cable.
      */
     static class DrivetrainHardware {
 
         private static DrivetrainHardware sInstance = new DrivetrainHardware();
 
-        private static DrivetrainHardware getInstance() {
+        static DrivetrainHardware getInstance() {
             return sInstance;
         }
 
-        final SparkMax
-                leftMasterSpark, leftSlave1Spark, leftSlave2Spark,
-                rightMasterSpark, rightSlave1Spark, rightSlave2Spark;
-        final CANEncoder leftMasterEncoder, rightMasterEncoder;
-        final List<SparkMax> sparks;
+        final Spark
+                leftMasterSpark = new Spark(sPortConstants.vidarLeftDriveMasterDeviceId),
+                leftSlave1Spark = new Spark(sPortConstants.vidarLeftDriveSlave1DeviceId),
+                leftSlave2Spark = new Spark(sPortConstants.vidarLeftDriveSlave2DeviceId),
+                rightMasterSpark = new Spark(sPortConstants.vidarRightDriveMasterDeviceId),
+                rightSlave1Spark = new Spark(sPortConstants.vidarRightDriveSlave1DeviceId),
+                rightSlave2Spark = new Spark(sPortConstants.vidarRightDriveSlave2DeviceId);
+        final CANEncoder
+                leftMasterEncoder = leftMasterSpark.getEncoder(),
+                rightMasterEncoder = rightMasterSpark.getEncoder();
+        final List<Spark> sparks = List.of(leftMasterSpark, leftSlave1Spark, leftSlave2Spark, rightMasterSpark, rightSlave1Spark, rightSlave2Spark);
 
-        final PigeonIMU gyro;
+        final PigeonIMU gyro = new PigeonIMU(new WPI_TalonSRX(8));
 
-        DrivetrainHardware() {
-            leftMasterSpark = new SparkMax(sPortConstants.vidarLeftDriveMasterDeviceId);
-            leftSlave1Spark = new SparkMax(sPortConstants.vidarLeftDriveSlave1DeviceId);
-            leftSlave2Spark = new SparkMax(sPortConstants.vidarLeftDriveSlave2DeviceId);
-            rightMasterSpark = new SparkMax(sPortConstants.vidarRightDriveMasterDeviceId);
-            rightSlave1Spark = new SparkMax(sPortConstants.vidarRightDriveSlave1DeviceId);
-            rightSlave2Spark = new SparkMax(sPortConstants.vidarRightDriveSlave2DeviceId);
-            leftMasterEncoder = leftMasterSpark.getEncoder();
-            rightMasterEncoder = rightMasterSpark.getEncoder();
-            sparks = List.of(leftMasterSpark, leftSlave1Spark, leftSlave2Spark, rightMasterSpark, rightSlave1Spark, rightSlave2Spark);
-            gyro = new PigeonIMU(new WPI_TalonSRX(8));
+        private DrivetrainHardware() {
         }
     }
 
@@ -90,14 +68,13 @@ public class HardwareAdapter {
 
         private static IntakeHardware sInstance = new IntakeHardware();
 
-        private static IntakeHardware getInstance() {
+        static IntakeHardware getInstance() {
             return sInstance;
         }
 
-        final WPI_VictorSPX intakeVictor;
+        final WPI_VictorSPX intakeVictor = new WPI_VictorSPX(sPortConstants.vidarIntakeDeviceId);
 
-        IntakeHardware() {
-            intakeVictor = new WPI_VictorSPX(sPortConstants.vidarIntakeDeviceId);
+        private IntakeHardware() {
         }
     }
 
@@ -105,50 +82,48 @@ public class HardwareAdapter {
 
         private static final Joysticks sInstance = new Joysticks();
 
-        private static Joysticks getInstance() {
+        static Joysticks getInstance() {
             return sInstance;
         }
 
         final Joystick driveStick = new Joystick(0), turnStick = new Joystick(1);
         final XboxController operatorXboxController = new XboxController(2);
+
+        private Joysticks() {
+        }
     }
 
     static class SpinnerHardware {
 
         private static SpinnerHardware sInstance = new SpinnerHardware();
 
-        private static SpinnerHardware getInstance() {
+        static SpinnerHardware getInstance() {
             return sInstance;
         }
 
-        final WPI_TalonSRX spinnerTalon;
-        final ColorSensorV3 colorSensor;
+        final WPI_TalonSRX spinnerTalon = new WPI_TalonSRX(sPortConstants.spinnerTalonDeviceId);
+        final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
-        SpinnerHardware() {
-            colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-            spinnerTalon = new WPI_TalonSRX(sPortConstants.spinnerTalonDeviceId);
+        private SpinnerHardware() {
         }
     }
 
     /**
-     * Miscellaneous Hardware - Compressor sensor(Analog Input), Compressor, PDP
+     * Compressor sensor (Analog Input), Compressor, PDP, Camera.
      */
     static class MiscellaneousHardware {
 
         private static MiscellaneousHardware sInstance = new MiscellaneousHardware();
 
-        private static MiscellaneousHardware getInstance() {
+        static MiscellaneousHardware getInstance() {
             return sInstance;
         }
 
-        final Compressor compressor;
-        final PowerDistributionPanel pdp;
-        // final UsbCamera fisheyeCam;
+        final Compressor compressor = new Compressor();
+        final PowerDistributionPanel pdp = new PowerDistributionPanel();
+//         final UsbCamera fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
 
-        MiscellaneousHardware() {
-            compressor = new Compressor();
-            pdp = new PowerDistributionPanel();
-            // fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
+        private MiscellaneousHardware() {
         }
     }
 }

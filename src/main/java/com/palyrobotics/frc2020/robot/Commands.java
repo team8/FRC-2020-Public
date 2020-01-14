@@ -4,7 +4,7 @@ import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
-import com.palyrobotics.frc2020.util.SparkDriveSignal;
+import com.palyrobotics.frc2020.util.control.DriveSignal;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class Commands {
     private double driveWantedThrottle, driveWantedWheel;
     private boolean driveWantsQuickTurn, driveWantsBrake;
     // Signal
-    private SparkDriveSignal driveWantedSignal;
+    private DriveSignal driveWantedSignal;
     // Path Following
     private Trajectory driveWantedTrajectory;
     // Turning
@@ -87,11 +87,11 @@ public class Commands {
         return driveWantedHeading;
     }
 
-    public SparkDriveSignal getWantedDriveSignal() {
+    public DriveSignal getWantedDriveSignal() {
         return driveWantedSignal;
     }
 
-    public void setDriveSignal(SparkDriveSignal signal) {
+    public void setDriveSignal(DriveSignal signal) {
         driveWantedState = Drive.DriveState.SIGNAL;
         driveWantedSignal = signal;
     }

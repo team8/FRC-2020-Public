@@ -1,8 +1,8 @@
 package com.palyrobotics.frc2020.config;
 
-import com.palyrobotics.frc2020.util.config.AbstractConfig;
+import com.palyrobotics.frc2020.util.config.ConfigBase;
 
-public class PortConstants extends AbstractConfig {
+public class PortConstants extends ConfigBase {
 
     /**
      * Drivetrain

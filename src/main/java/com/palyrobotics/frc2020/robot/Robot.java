@@ -38,7 +38,8 @@ public class Robot extends TimedRobot {
     private List<Subsystem>
             mSubsystems = List.of(mDrive, mSpinner, mIntake),
             mEnabledSubsystems;
-    private final HardwareUpdater mHardwareUpdater = new HardwareUpdater(mDrive, mSpinner, mIntake);
+    private final HardwareReader mHardwareReader = HardwareReader.getInstance();
+    private final HardwareWriter mHardwareWriter = HardwareWriter.getInstance();
     private List<RobotService> mEnabledServices;
 
     private void startStage(RobotState.GamePeriod period) {
@@ -50,7 +51,7 @@ public class Robot extends TimedRobot {
     }
 
     private void setDriveIdleMode(boolean isIdle) {
-        mHardwareUpdater.setDriveIdleMode(isIdle ? IdleMode.kCoast : IdleMode.kBrake);
+        mHardwareWriter.setDriveIdleMode(isIdle ? IdleMode.kCoast : IdleMode.kBrake);
     }
 
     private void resetCommandsAndRoutines() {
@@ -60,23 +61,23 @@ public class Robot extends TimedRobot {
     }
 
     private void resetOdometry() {
-        mHardwareUpdater.resetDriveSensors();
+        mHardwareWriter.resetDriveSensors();
         mRobotState.resetOdometry();
     }
 
     private void updateSubsystemsAndHardware() {
-        mHardwareUpdater.updateState(mRobotState);
+        mHardwareReader.updateState(mRobotState);
         for (Subsystem subsystem : mEnabledSubsystems) {
             subsystem.update(mCommands, mRobotState);
         }
-        mHardwareUpdater.updateHardware();
+        mHardwareWriter.updateHardware();
     }
 
     @Override
     public void robotInit() {
         setupSubsystemsAndServices();
 
-        mHardwareUpdater.initHardware();
+        mHardwareWriter.configureHardware();
 
         mEnabledServices.forEach(RobotService::start);
 
@@ -103,7 +104,7 @@ public class Robot extends TimedRobot {
         mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
         mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
 
-        HardwareAdapter.getInstance().getJoysticks().operatorXboxController.setRumble(false);
+        HardwareAdapter.Joysticks.getInstance().operatorXboxController.setRumble(false);
         setDriveIdleMode(mConfig.coastDriveIfDisabled);
 
         CSVWriter.write();
@@ -158,7 +159,7 @@ public class Robot extends TimedRobot {
                 .map(serviceName -> configToService.get(serviceName).get())
                 .collect(Collectors.toList());
         Map<String, Subsystem> configToSubsystem = mSubsystems.stream()
-                .collect(Collectors.toMap(Subsystem::getConfigName, Function.identity()));
+                .collect(Collectors.toMap(Subsystem::getName, Function.identity()));
         mEnabledSubsystems = mConfig.enabledSubsystems.stream()
                 .map(configToSubsystem::get)
                 .collect(Collectors.toList());

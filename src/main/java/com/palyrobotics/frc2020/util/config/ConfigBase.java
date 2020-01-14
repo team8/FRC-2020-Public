@@ -2,7 +2,7 @@ package com.palyrobotics.frc2020.util.config;
 
 import java.io.IOException;
 
-public abstract class AbstractConfig {
+public abstract class ConfigBase {
 
     @Override
     public String toString() {

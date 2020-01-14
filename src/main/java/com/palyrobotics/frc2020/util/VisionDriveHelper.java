@@ -6,14 +6,15 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.control.DriveSignal;
 import com.palyrobotics.frc2020.util.control.SynchronousPID;
 import com.palyrobotics.frc2020.vision.Limelight;
 
 /**
- * {@link CheesyDriveController} implements operator control.
- * Returns a {@link SparkDriveSignal} for the motor output.
+ * {@link ChezyDriveController} implements operator control.
+ * Returns a {@link DriveSignal} for the motor output.
  */
-public class VisionDriveHelper extends CheesyDriveController {
+public class VisionDriveHelper extends ChezyDriveController {
 
     private static final double kMaxAngularPower = 0.4;
 

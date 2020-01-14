@@ -6,9 +6,9 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.controllers.DriveRamseteController;
 import com.palyrobotics.frc2020.subsystems.controllers.DriveTurnController;
-import com.palyrobotics.frc2020.util.CheesyDriveController;
-import com.palyrobotics.frc2020.util.SparkDriveSignal;
+import com.palyrobotics.frc2020.util.ChezyDriveController;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.control.DriveSignal;
 
 /**
  * Represents the drivetrain.
@@ -24,9 +24,9 @@ public class Drive extends Subsystem {
 
         protected final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
 
-        protected SparkDriveSignal mDriveSignal = new SparkDriveSignal();
+        protected DriveSignal mDriveSignal = new DriveSignal();
 
-        public final SparkDriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+        public final DriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
             updateSignal(commands, state);
             return mDriveSignal;
         }
@@ -49,13 +49,9 @@ public class Drive extends Subsystem {
 
     private Drive.DriveController mController;
     private DriveState mState;
-    private SparkDriveSignal mSignal = new SparkDriveSignal();
+    private DriveSignal mSignal = new DriveSignal();
 
-    private Drive() {
-        super("drive");
-    }
-
-    public SparkDriveSignal getDriveSignal() {
+    public DriveSignal getDriveSignal() {
         return mSignal;
     }
 
@@ -70,7 +66,7 @@ public class Drive extends Subsystem {
                     mController = null;
                     break;
                 case TELEOP:
-                    mController = new CheesyDriveController();
+                    mController = new ChezyDriveController();
                     break;
                 case SIGNAL:
                     mController = new DriveController() {

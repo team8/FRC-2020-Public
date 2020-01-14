@@ -1,4 +1,3 @@
-
 package com.palyrobotics.frc2020.auto.modes;
 
 import com.palyrobotics.frc2020.auto.AutoModeBase;

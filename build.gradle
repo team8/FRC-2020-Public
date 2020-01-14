@@ -65,13 +65,10 @@ dependencies {
 
     implementation 'com.fasterxml:jackson-module-json-org:0.9.1'
     implementation 'net.sourceforge.argparse4j:argparse4j:0.8.1'
-    implementation 'com.google.guava:guava:11.0.2'
-    implementation 'com.googlecode.json-simple:json-simple:1.1'
     implementation 'kryonet:kryonet:2.21'
     implementation 'com.esotericsoftware:kryo:4.0.2'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.hamcrest:hamcrest:2.1'
 
     simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
 }

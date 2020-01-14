@@ -22,7 +22,7 @@ public class DriveTurnController extends Drive.DriveController {
     @Override
     public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
         double targetVelocity = mController.calculate(state.driveHeading, mTargetHeading);
-        mDriveSignal.leftOutput.setTargetSmartVelocity(targetVelocity, mDriveConfig.smartVelocityGains);
-        mDriveSignal.rightOutput.setTargetSmartVelocity(-targetVelocity, mDriveConfig.smartVelocityGains);
+        mDriveSignal.leftOutput.setTargetVelocityProfiled(targetVelocity, mDriveConfig.smartVelocityGains);
+        mDriveSignal.rightOutput.setTargetVelocityProfiled(-targetVelocity, mDriveConfig.smartVelocityGains);
     }
 }

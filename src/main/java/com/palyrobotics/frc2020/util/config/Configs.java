@@ -29,9 +29,9 @@ public class Configs {
     private static final Path CONFIG_FOLDER = (RobotBase.isReal()
             ? Paths.get(Filesystem.getDeployDirectory().toString(), CONFIG_FOLDER_NAME)
             : Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", CONFIG_FOLDER_NAME)).toAbsolutePath();
-    private static final HashMap<String, Class<? extends AbstractConfig>> sNameToClass = new HashMap<>();
-    private static final HashMap<Class<? extends AbstractConfig>, AbstractConfig> sConfigMap = new HashMap<>(16);
-    private static final HashMap<Class<? extends AbstractConfig>, List<Runnable>> sListeners = new HashMap<>();
+    private static final HashMap<String, Class<? extends ConfigBase>> sNameToClass = new HashMap<>();
+    private static final HashMap<Class<? extends ConfigBase>, ConfigBase> sConfigMap = new HashMap<>(16);
+    private static final HashMap<Class<? extends ConfigBase>, List<Runnable>> sListeners = new HashMap<>();
     private static ObjectMapper sMapper = new ObjectMapper();
     private static final Thread sModifiedListener = new Thread(Configs::watchService), sRobotThread = Thread.currentThread();
 
@@ -56,7 +56,7 @@ public class Configs {
      * @return Singleton or null if not found / registered.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends AbstractConfig> T get(Class<T> configClass) {
+    public static <T extends ConfigBase> T get(Class<T> configClass) {
         T config = (T) sConfigMap.get(configClass);
         if (config == null) {
             config = read(configClass);
@@ -66,7 +66,7 @@ public class Configs {
         return config;
     }
 
-    public static <T extends AbstractConfig> T get(Class<T> configClass, String name) {
+    public static <T extends ConfigBase> T get(Class<T> configClass, String name) {
         Path custom = resolveConfigPath(name);
         try {
             T value = sMapper.readValue(custom.toFile(), configClass);
@@ -84,13 +84,13 @@ public class Configs {
      * @param onChanged   Listener which consumes new config instance.
      * @param <T>         Type of the config class. This is usually inferred from the class argument.
      */
-    public static <T extends AbstractConfig> void listen(Class<T> configClass, Consumer<T> onChanged) {
+    public static <T extends ConfigBase> void listen(Class<T> configClass, Consumer<T> onChanged) {
         onChanged.accept(get(configClass));
         var consumers = sListeners.computeIfAbsent(configClass, newValue -> new ArrayList<>(1));
         consumers.add(() -> onChanged.accept(get(configClass))); // TODO kinda whack
     }
 
-    public static <T extends AbstractConfig> boolean save(Class<T> configClass) {
+    public static <T extends ConfigBase> boolean save(Class<T> configClass) {
         try {
             saveOrThrow(configClass);
             return true;
@@ -100,15 +100,15 @@ public class Configs {
         }
     }
 
-    public static void saveOrThrow(Class<? extends AbstractConfig> configClass) throws IOException {
+    public static void saveOrThrow(Class<? extends ConfigBase> configClass) throws IOException {
         writeConfig(sConfigMap.get(configClass));
     }
 
-    public static Class<? extends AbstractConfig> getClassFromName(String name) {
+    public static Class<? extends ConfigBase> getClassFromName(String name) {
         return sNameToClass.get(name);
     }
 
-    public static void set(AbstractConfig config, Object object, Field field, Object value) throws IllegalAccessException {
+    public static void set(ConfigBase config, Object object, Field field, Object value) throws IllegalAccessException {
         field.set(object, value);
         notifyUpdated(config.getClass());
     }
@@ -120,8 +120,8 @@ public class Configs {
      * @param configClass Class of the config.
      * @return Whether or not the config was updated.
      */
-    public static boolean reload(Class<? extends AbstractConfig> configClass) {
-        AbstractConfig existing = sConfigMap.get(configClass), onFile = read(configClass);
+    public static boolean reload(Class<? extends ConfigBase> configClass) {
+        ConfigBase existing = sConfigMap.get(configClass), onFile = read(configClass);
         try {
             if (existing == null || !sMapper.writeValueAsString(existing).equals(sMapper.writeValueAsString(onFile))) {
                 sConfigMap.put(configClass, read(configClass));
@@ -194,12 +194,12 @@ public class Configs {
                             WatchEvent<Path> event = (WatchEvent<Path>) pollEvent;
                             Path context = event.context();
                             String configName = context.getFileName().toString().replace(".json", "");
-                            Class<? extends AbstractConfig> configClass = sNameToClass.get(configName);
+                            Class<? extends ConfigBase> configClass = sNameToClass.get(configName);
                             if (configClass != null) {
                                 if (alreadySeen.contains(configName)) continue;
                                 System.out.printf("Config named %s hot reloaded%n", configName);
                                 try {
-                                    AbstractConfig config = get(configClass);
+                                    ConfigBase config = get(configClass);
                                     sMapper.updatingReader(config).readValue(getFileForConfig(configClass).toFile());
                                     config.onPostUpdate();
                                 } catch (IOException readException) {
@@ -225,7 +225,7 @@ public class Configs {
         }
     }
 
-    private static void notifyUpdated(Class<? extends AbstractConfig> configClass) {
+    private static void notifyUpdated(Class<? extends ConfigBase> configClass) {
         // TODO nasty
         Optional.ofNullable(sListeners.get(configClass)).ifPresent(listeners -> listeners.forEach(Runnable::run));
     }
@@ -236,11 +236,11 @@ public class Configs {
      * a default empty class of the same type is printed to console to show desired format (helpful for debugging).
      *
      * @param configClass Class of the config.
-     * @param <T>         Type of the config. Must extend {@link AbstractConfig}.
+     * @param <T>         Type of the config. Must extend {@link ConfigBase}.
      * @return Instance of given type.
      * @throws RuntimeException when the file cannot be found or it could not be parsed. This is considered a critical error.
      */
-    private static <T extends AbstractConfig> T read(Class<T> configClass) {
+    private static <T extends ConfigBase> T read(Class<T> configClass) {
         Path configFile = getFileForConfig(configClass);
         String configClassName = configClass.getSimpleName();
         if (!Files.exists(configFile)) {
@@ -261,7 +261,7 @@ public class Configs {
         }
     }
 
-    private static String getDefaultJson(Class<? extends AbstractConfig> configClass) {
+    private static String getDefaultJson(Class<? extends ConfigBase> configClass) {
         try {
             return String.format("See here for a default JSON file:%n%s%n",
                     sMapper.defaultPrettyPrintingWriter().writeValueAsString(configClass.getConstructor().newInstance()));
@@ -272,7 +272,7 @@ public class Configs {
         }
     }
 
-    private static RuntimeException handleParseError(IOException readException, Class<? extends AbstractConfig> configClass) {
+    private static RuntimeException handleParseError(IOException readException, Class<? extends ConfigBase> configClass) {
         String errorMessage = String.format(
                 "An error occurred trying to read config for class %s%n%nSee here for default JSON: %s%n",
                 configClass.getSimpleName(), getDefaultJson(configClass)
@@ -284,11 +284,11 @@ public class Configs {
         return CONFIG_FOLDER.resolve(String.format("%s.json", name));
     }
 
-    private static Path getFileForConfig(Class<? extends AbstractConfig> configClass) {
+    private static Path getFileForConfig(Class<? extends ConfigBase> configClass) {
         return resolveConfigPath(configClass.getSimpleName());
     }
 
-    private static <T extends AbstractConfig> void writeConfig(T newConfig) throws IOException {
+    private static <T extends ConfigBase> void writeConfig(T newConfig) throws IOException {
         Path file = getFileForConfig(newConfig.getClass());
         // Creates all folders leading up to target files's parent folder
         Files.createDirectories(file.getParent().getParent());

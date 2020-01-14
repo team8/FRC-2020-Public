@@ -27,8 +27,8 @@ public class OperatorInterface {
     }
 
     private final Limelight mLimelight = Limelight.getInstance();
-    private final Joystick mDriveStick = HardwareAdapter.getInstance().getJoysticks().driveStick, mTurnStick = HardwareAdapter.getInstance().getJoysticks().turnStick;
-    private final XboxController mOperatorXboxController = HardwareAdapter.getInstance().getJoysticks().operatorXboxController;
+    private final Joystick mDriveStick = HardwareAdapter.Joysticks.getInstance().driveStick, mTurnStick = HardwareAdapter.Joysticks.getInstance().turnStick;
+    private final XboxController mOperatorXboxController = HardwareAdapter.Joysticks.getInstance().operatorXboxController;
 
     private final List<Pose2d> kTestWaypoints = List.of(
             new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
