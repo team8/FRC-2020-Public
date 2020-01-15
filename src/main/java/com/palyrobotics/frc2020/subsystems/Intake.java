@@ -8,32 +8,32 @@ import com.palyrobotics.frc2020.util.config.Configs;
 
 public class Intake extends Subsystem {
 
-    public enum IntakeState {
-        IDLE, INTAKE
-    }
+	public enum IntakeState {
+		IDLE, INTAKE
+	}
 
-    private static Intake sInstance = new Intake();
+	private static Intake sInstance = new Intake();
 
-    public static Intake getInstance() {
-        return sInstance;
-    }
+	public static Intake getInstance() {
+		return sInstance;
+	}
 
-    private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
+	private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
 
-    private double mOutput;
+	private double mOutput;
 
-    @Override
-    public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-        IntakeState mState = commands.intakeWantedState;
-        switch (mState) {
-            case IDLE:
-                mOutput = 0.0;
-            case INTAKE:
-                mOutput = mConfig.intakingVelocity;
-        }
-    }
+	@Override
+	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+		IntakeState mState = commands.intakeWantedState;
+		switch (mState) {
+			case IDLE:
+				mOutput = 0.0;
+			case INTAKE:
+				mOutput = mConfig.intakingVelocity;
+		}
+	}
 
-    public double getOutput() {
-        return mOutput;
-    }
+	public double getOutput() {
+		return mOutput;
+	}
 }

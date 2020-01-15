@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.robot;
 
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
@@ -14,116 +16,119 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 
-import java.util.List;
-
 public class HardwareWriter {
 
-    private static HardwareWriter sInstance = new HardwareWriter();
+	private static HardwareWriter sInstance = new HardwareWriter();
 
-    public static HardwareWriter getInstance() {
-        return sInstance;
-    }
+	public static HardwareWriter getInstance() {
+		return sInstance;
+	}
 
-    private HardwareWriter() {
-    }
+	private HardwareWriter() {
+	}
 
-    private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
-    private final Drive mDrive = Drive.getInstance();
-    private final Spinner mSpinner = Spinner.getInstance();
-    private final Intake mIntake = Intake.getInstance();
+	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
+	private final Drive mDrive = Drive.getInstance();
+	private final Spinner mSpinner = Spinner.getInstance();
+	private final Intake mIntake = Intake.getInstance();
 
-    public static final int TIMEOUT_MS = 500;
+	public static final int TIMEOUT_MS = 500;
 
-    void configureHardware() {
-        configureDriveHardware();
-        configureIntakeHardware();
-        configureSpinnerHardware();
-    }
+	void configureHardware() {
+		configureDriveHardware();
+		configureIntakeHardware();
+		configureSpinnerHardware();
+	}
 
-    private void configureDriveHardware() {
-        var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
+	private void configureDriveHardware() {
+		var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
 
-        var driveConfig = Configs.get(DriveConfig.class);
-        for (Spark spark : driveHardware.sparks) {
-            spark.restoreFactoryDefaults();
-            spark.enableVoltageCompensation(DrivetrainConstants.kMaxVoltage);
-            CANEncoder encoder = spark.getEncoder();
-            encoder.setPositionConversionFactor(DrivetrainConstants.kDriveMetersPerRotation);
-            encoder.setVelocityConversionFactor(DrivetrainConstants.kDriveMetersPerSecondPerRpm);
-            CANPIDController controller = spark.getPIDController();
-            controller.setOutputRange(-DrivetrainConstants.kDriveMaxClosedLoopOutput, DrivetrainConstants.kDriveMaxClosedLoopOutput);
-            spark.setSmartCurrentLimit(driveConfig.stallCurrentLimit, driveConfig.freeCurrentLimit, driveConfig.freeRpmLimit);
-            spark.setOpenLoopRampRate(driveConfig.controllerRampRate);
-            spark.setClosedLoopRampRate(driveConfig.controllerRampRate);
-        }
+		var driveConfig = Configs.get(DriveConfig.class);
+		for (Spark spark : driveHardware.sparks) {
+			spark.restoreFactoryDefaults();
+			spark.enableVoltageCompensation(DrivetrainConstants.kMaxVoltage);
+			CANEncoder encoder = spark.getEncoder();
+			encoder.setPositionConversionFactor(DrivetrainConstants.kDriveMetersPerRotation);
+			encoder.setVelocityConversionFactor(DrivetrainConstants.kDriveMetersPerSecondPerRpm);
+			CANPIDController controller = spark.getPIDController();
+			controller.setOutputRange(-DrivetrainConstants.kDriveMaxClosedLoopOutput,
+					DrivetrainConstants.kDriveMaxClosedLoopOutput);
+			spark.setSmartCurrentLimit(driveConfig.stallCurrentLimit, driveConfig.freeCurrentLimit,
+					driveConfig.freeRpmLimit);
+			spark.setOpenLoopRampRate(driveConfig.controllerRampRate);
+			spark.setClosedLoopRampRate(driveConfig.controllerRampRate);
+		}
 
-        /* Left Side */
-        for (Spark spark : List.of(driveHardware.leftMasterSpark, driveHardware.leftSlave1Spark, driveHardware.leftSlave2Spark)) {
-            spark.setInverted(false);
-        }
-        for (Spark spark : List.of(driveHardware.leftSlave1Spark, driveHardware.leftSlave2Spark)) {
-            spark.follow(driveHardware.leftMasterSpark);
-        }
+		/* Left Side */
+		for (Spark spark : List.of(driveHardware.leftMasterSpark, driveHardware.leftSlave1Spark,
+				driveHardware.leftSlave2Spark)) {
+			spark.setInverted(false);
+		}
+		for (Spark spark : List.of(driveHardware.leftSlave1Spark, driveHardware.leftSlave2Spark)) {
+			spark.follow(driveHardware.leftMasterSpark);
+		}
 
-        /* Right Side */
-        for (Spark spark : List.of(driveHardware.rightMasterSpark, driveHardware.rightSlave1Spark, driveHardware.rightSlave2Spark)) {
-            spark.setInverted(true); // Note: Inverted
-        }
-        for (Spark spark : List.of(driveHardware.rightSlave1Spark, driveHardware.rightSlave2Spark)) {
-            spark.follow(driveHardware.rightMasterSpark);
-        }
+		/* Right Side */
+		for (Spark spark : List.of(driveHardware.rightMasterSpark, driveHardware.rightSlave1Spark,
+				driveHardware.rightSlave2Spark)) {
+			spark.setInverted(true); // Note: Inverted
+		}
+		for (Spark spark : List.of(driveHardware.rightSlave1Spark, driveHardware.rightSlave2Spark)) {
+			spark.follow(driveHardware.rightMasterSpark);
+		}
 
-        resetDriveSensors();
-    }
+		resetDriveSensors();
+	}
 
-    private void configureSpinnerHardware() {
+	private void configureSpinnerHardware() {
 
-    }
+	}
 
-    private void configureIntakeHardware() {
-        var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
-        intakeHardware.intakeVictor.setInverted(false);
-    }
+	private void configureIntakeHardware() {
+		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
+		intakeHardware.intakeVictor.setInverted(false);
+	}
 
-    public void resetDriveSensors() {
-        var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-        driveHardware.gyro.setYaw(0, TIMEOUT_MS);
-        driveHardware.gyro.setFusedHeading(0, TIMEOUT_MS);
-        driveHardware.gyro.setAccumZAngle(0, TIMEOUT_MS);
-        driveHardware.sparks.forEach(spark -> spark.getEncoder().setPosition(0.0));
-        System.out.println("Drive Sensors Reset");
-    }
+	public void resetDriveSensors() {
+		var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
+		driveHardware.gyro.setYaw(0, TIMEOUT_MS);
+		driveHardware.gyro.setFusedHeading(0, TIMEOUT_MS);
+		driveHardware.gyro.setAccumZAngle(0, TIMEOUT_MS);
+		driveHardware.sparks.forEach(spark -> spark.getEncoder().setPosition(0.0));
+		System.out.println("Drive Sensors Reset");
+	}
 
-    void setDriveIdleMode(CANSparkMax.IdleMode idleMode) {
-        HardwareAdapter.DrivetrainHardware.getInstance().sparks.forEach(spark -> spark.setIdleMode(idleMode));
-    }
+	void setDriveIdleMode(CANSparkMax.IdleMode idleMode) {
+		HardwareAdapter.DrivetrainHardware.getInstance().sparks.forEach(spark -> spark.setIdleMode(idleMode));
+	}
 
-    /**
-     * Updates the hardware to run with output values of {@link Subsystem}'s.
-     */
-    void updateHardware() {
-        if (!mRobotConfig.disableOutput) {
-            updateDrivetrain();
-            updateSpinner();
-            updateIntake();
-            updateMiscellaneousHardware();
-        }
-    }
+	/**
+	 * Updates the hardware to run with output values of {@link Subsystem}'s.
+	 */
+	void updateHardware() {
+		if (!mRobotConfig.disableOutput) {
+			updateDrivetrain();
+			updateSpinner();
+			updateIntake();
+			updateMiscellaneousHardware();
+		}
+	}
 
-    private void updateDrivetrain() {
-        HardwareAdapter.DrivetrainHardware.getInstance().leftMasterSpark.setOutput(mDrive.getDriveSignal().leftOutput);
-        HardwareAdapter.DrivetrainHardware.getInstance().rightMasterSpark.setOutput(mDrive.getDriveSignal().rightOutput);
-    }
+	private void updateDrivetrain() {
+		HardwareAdapter.DrivetrainHardware.getInstance().leftMasterSpark.setOutput(mDrive.getDriveSignal().leftOutput);
+		HardwareAdapter.DrivetrainHardware.getInstance().rightMasterSpark
+				.setOutput(mDrive.getDriveSignal().rightOutput);
+	}
 
-    private void updateSpinner() {
-        HardwareAdapter.SpinnerHardware.getInstance().spinnerTalon.set(ControlMode.PercentOutput, mSpinner.getOutput());
-    }
+	private void updateSpinner() {
+		HardwareAdapter.SpinnerHardware.getInstance().spinnerTalon.set(ControlMode.PercentOutput, mSpinner.getOutput());
+	}
 
-    private void updateIntake() {
-        HardwareAdapter.IntakeHardware.getInstance().intakeVictor.set(mIntake.getOutput());
-    }
+	private void updateIntake() {
+		HardwareAdapter.IntakeHardware.getInstance().intakeVictor.set(mIntake.getOutput());
+	}
 
-    private void updateMiscellaneousHardware() {
+	private void updateMiscellaneousHardware() {
 
-    }
+	}
 }

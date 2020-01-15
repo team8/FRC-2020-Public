@@ -3,6 +3,7 @@ import edu.wpi.first.gradlerio.GradleRIOPlugin
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2020.1.2"
+    id "com.diffplug.gradle.spotless" version "3.27.1"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -39,6 +40,21 @@ deploy {
             // Deploy to RoboRIO target, into /home/lvuser/deploy
             targets << "roborio"
             directory = '/home/lvuser/deploy'
+        }
+    }
+}
+
+spotless {
+    java {
+        importOrder 'java', 'javax', 'org', 'com', 'edu'
+        removeUnusedImports()
+        eclipse().configFile 'spotless.eclipseformat.xml'
+    }
+    freshmark {
+        target 'README.md', 'CONTRIBUTING.md'
+        propertiesFile('gradle/wrapper/gradle-wrapper.properties')
+        properties {
+            it.put('key', 'value')
         }
     }
 }

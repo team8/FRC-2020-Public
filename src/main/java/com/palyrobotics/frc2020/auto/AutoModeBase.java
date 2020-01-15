@@ -4,5 +4,5 @@ import com.palyrobotics.frc2020.behavior.Routine;
 
 public abstract class AutoModeBase {
 
-    public abstract Routine getRoutine();
+	public abstract Routine getRoutine();
 }

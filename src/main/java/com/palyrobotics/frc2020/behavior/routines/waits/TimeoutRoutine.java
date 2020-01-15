@@ -4,14 +4,14 @@ import com.palyrobotics.frc2020.behavior.routines.WaitRoutine;
 
 public abstract class TimeoutRoutine extends WaitRoutine {
 
-    public TimeoutRoutine(double timeout) {
-        super(timeout);
-    }
+	public TimeoutRoutine(double timeout) {
+		super(timeout);
+	}
 
-    @Override
-    public final boolean checkFinished() {
-        return super.checkFinished() || checkIfFinishedEarly();
-    }
+	@Override
+	public final boolean checkFinished() {
+		return super.checkFinished() || checkIfFinishedEarly();
+	}
 
-    public abstract boolean checkIfFinishedEarly();
+	public abstract boolean checkIfFinishedEarly();
 }

@@ -6,17 +6,12 @@ import com.palyrobotics.frc2020.util.control.SmartGains;
 
 public class DriveConfig extends SubsystemConfigBase {
 
-    public Gains velocityGains;
-    public SmartGains smartVelocityGains, turnGains;
+	public Gains velocityGains;
+	public SmartGains smartVelocityGains, turnGains;
 
-    public double
-            quickStopWeight, quickTurnScalar, quickStopDeadBand, quickStopScalar,
-            turnSensitivity,
-            lowNegativeInertiaThreshold, lowNegativeInertiaFarScalar, lowNegativeInertiaCloseScalar, lowNegativeInertiaTurnScalar,
-            wheelNonLinearity,
-            controllerRampRate;
-    public int
-            stallCurrentLimit, freeCurrentLimit, freeRpmLimit,
-            nonlinearPasses;
-    public double maxPathVelocityMetersPerSecond, maxPathAccelerationMetersPerSecondSquared;
+	public double quickStopWeight, quickTurnScalar, quickStopDeadBand, quickStopScalar, turnSensitivity,
+			lowNegativeInertiaThreshold, lowNegativeInertiaFarScalar, lowNegativeInertiaCloseScalar,
+			lowNegativeInertiaTurnScalar, wheelNonLinearity, controllerRampRate;
+	public int stallCurrentLimit, freeCurrentLimit, freeRpmLimit, nonlinearPasses;
+	public double maxPathVelocityMetersPerSecond, maxPathAccelerationMetersPerSecondSquared;
 }

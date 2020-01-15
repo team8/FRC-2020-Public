@@ -5,15 +5,15 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class LiveGraph {
 
-    private static LiveGraph sInstance = new LiveGraph();
+	private static LiveGraph sInstance = new LiveGraph();
 
-    public static LiveGraph getInstance() {
-        return sInstance;
-    }
+	public static LiveGraph getInstance() {
+		return sInstance;
+	}
 
-    private static NetworkTable sLiveTable = NetworkTableInstance.getDefault().getTable("control-center-live");
+	private static NetworkTable sLiveTable = NetworkTableInstance.getDefault().getTable("control-center-live");
 
-    public void add(String key, double value) {
-        sLiveTable.getEntry(key).setDouble(value);
-    }
+	public void add(String key, double value) {
+		sLiveTable.getEntry(key).setDouble(value);
+	}
 }

@@ -5,5 +5,4 @@ package com.palyrobotics.frc2020.robot;
  */
 public @interface ReadOnly {
 
-
 }

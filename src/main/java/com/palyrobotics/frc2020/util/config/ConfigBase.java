@@ -4,16 +4,16 @@ import java.io.IOException;
 
 public abstract class ConfigBase {
 
-    @Override
-    public String toString() {
-        try {
-            return Configs.getMapper().defaultPrettyPrintingWriter().writeValueAsString(this);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            return super.toString();
-        }
-    }
+	@Override
+	public String toString() {
+		try {
+			return Configs.getMapper().defaultPrettyPrintingWriter().writeValueAsString(this);
+		} catch (IOException exception) {
+			exception.printStackTrace();
+			return super.toString();
+		}
+	}
 
-    void onPostUpdate() {
-    }
+	void onPostUpdate() {
+	}
 }
