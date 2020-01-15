@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
-import com.palyrobotics.frc2020.behavior.routines.WaitRoutine;
+import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
@@ -25,9 +25,9 @@ public class RoutineTests {
 
 	private static MockSubsystem mockSubsystem = new MockSubsystem();
 
-	private static class WaitOne extends WaitRoutine {
+	private static class TimedOne extends TimedRoutine {
 
-		public WaitOne() {
+		public TimedOne() {
 			super(0.1);
 		}
 
@@ -37,7 +37,7 @@ public class RoutineTests {
 		}
 	}
 
-	private static class WaitTwo extends WaitOne {
+	private static class TimedTwo extends TimedOne {
 
 	}
 
@@ -47,7 +47,7 @@ public class RoutineTests {
 		timer.start();
 		Commands commands = Commands.getInstance();
 		RoutineManager routineManager = RoutineManager.getInstance();
-		commands.addWantedRoutine(new SequentialRoutine(new WaitOne(), new WaitTwo()));
+		commands.addWantedRoutine(new SequentialRoutine(new TimedOne(), new TimedTwo()));
 		do {
 			routineManager.update(commands);
 			Timer.delay(0.02);

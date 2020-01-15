@@ -8,7 +8,7 @@ import com.palyrobotics.frc2020.subsystems.Subsystem;
 
 import edu.wpi.first.wpilibj.Timer;
 
-public class WaitRoutine extends Routine {
+public class TimedRoutine extends Routine {
 
 	private double mTimeout;
 	private final Timer mTimer = new Timer();
@@ -16,16 +16,13 @@ public class WaitRoutine extends Routine {
 	/**
 	 * Routine that waits the specified amount of time. Does not require any
 	 * subsystems.
-	 *
-	 * @param waitTime Time to wait in seconds
 	 */
-	public WaitRoutine(double waitTime) {
-		mTimeout = waitTime;
+	public TimedRoutine(double durationSeconds) {
+		mTimeout = durationSeconds;
 	}
 
 	@Override
 	public void start() {
-		mTimer.reset();
 		mTimer.start();
 	}
 

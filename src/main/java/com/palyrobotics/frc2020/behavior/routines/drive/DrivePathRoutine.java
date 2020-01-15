@@ -63,13 +63,13 @@ public class DrivePathRoutine extends Routine {
 	}
 
 	@Override
-	public void update(Commands commands) {
-		commands.setDriveFollowPath(mTrajectory);
+	public boolean checkFinished() {
+		return mDrive.isOnTarget();
 	}
 
 	@Override
-	public boolean checkFinished() {
-		return mDrive.isOnTarget();
+	public void update(Commands commands) {
+		commands.setDriveFollowPath(mTrajectory);
 	}
 
 	@Override

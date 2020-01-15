@@ -24,8 +24,4 @@ public abstract class Subsystem {
 	public String toString() {
 		return getName();
 	}
-
-	public String getStatus() {
-		return null;
-	}
 }

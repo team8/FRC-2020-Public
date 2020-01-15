@@ -24,7 +24,6 @@ public class DriveRamseteController extends Drive.DriveController {
 	public DriveRamseteController(Trajectory trajectory) {
 		mTrajectory = trajectory;
 		mController = new RamseteController(B, ZETA);
-		mTimer.reset();
 		mTimer.start();
 	}
 
@@ -48,7 +47,7 @@ public class DriveRamseteController extends Drive.DriveController {
 	}
 
 	@Override
-	public boolean onTarget() {
+	public boolean isOnTarget() {
 		return mTimer.get() > mTrajectory.getTotalTimeSeconds();
 	}
 }

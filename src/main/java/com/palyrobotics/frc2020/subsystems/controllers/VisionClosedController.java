@@ -72,7 +72,7 @@ public class VisionClosedController extends ChezyDriveController {
 	}
 
 	@Override
-	public boolean onTarget() {
+	public boolean isOnTarget() {
 		// Once the target is out of sight, we are on target (after 3 update cycles of
 		// just creeping forward
 		if (!mLimelight.isTargetFound()) {

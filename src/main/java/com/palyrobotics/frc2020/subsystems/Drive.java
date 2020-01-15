@@ -37,7 +37,7 @@ public class Drive extends Subsystem {
 		 */
 		public abstract void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state);
 
-		public boolean onTarget() {
+		public boolean isOnTarget() {
 			return false;
 		}
 	}
@@ -95,6 +95,6 @@ public class Drive extends Subsystem {
 	}
 
 	public boolean isOnTarget() {
-		return mController == null || mController.onTarget();
+		return mController == null || mController.isOnTarget();
 	}
 }
