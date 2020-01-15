@@ -79,12 +79,13 @@ dependencies {
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 
-    implementation 'com.fasterxml:jackson-module-json-org:0.9.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
     implementation 'net.sourceforge.argparse4j:argparse4j:0.8.1'
     implementation 'kryonet:kryonet:2.21'
     implementation 'com.esotericsoftware:kryo:4.0.2'
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
 
     simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
 }
@@ -95,4 +96,8 @@ dependencies {
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+}
+
+test {
+    useJUnitPlatform()
 }

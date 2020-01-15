@@ -11,9 +11,10 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.introspect.VisibilityChecker;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -34,13 +35,13 @@ public class Configs {
 	private static final HashMap<Class<? extends ConfigBase>, ConfigBase> sConfigMap = new HashMap<>(16);
 	private static final HashMap<Class<? extends ConfigBase>, List<Runnable>> sListeners = new HashMap<>();
 	private static ObjectMapper sMapper = new ObjectMapper();
+	private static ObjectWriter sPrettyWriter = sMapper.writerWithDefaultPrettyPrinter();
 	private static final Thread sModifiedListener = new Thread(Configs::watchService),
 			sRobotThread = Thread.currentThread();
 
 	static {
 		// Allows us to serialize private fields
-		sMapper.setVisibilityChecker(new VisibilityChecker.Std(Visibility.ANY, Visibility.ANY, Visibility.ANY,
-				Visibility.ANY, Visibility.ANY));
+		sMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 	}
 
 	static {
@@ -149,10 +150,10 @@ public class Configs {
 	 */
 	public static String toJson(Object object) {
 		try {
-			return sMapper.defaultPrettyPrintingWriter().writeValueAsString(object);
+			return sPrettyWriter.writeValueAsString(object);
 		} catch (IOException formatException) {
 			formatException.printStackTrace();
-			return "Invalid";
+			return object.toString();
 		}
 	}
 
@@ -217,7 +218,7 @@ public class Configs {
 								System.out.printf("Config named %s hot reloaded%n", configName);
 								try {
 									ConfigBase config = get(configClass);
-									sMapper.updatingReader(config).readValue(getFileForConfig(configClass).toFile());
+									sMapper.readerForUpdating(config).readValue(getFileForConfig(configClass).toFile());
 									config.onPostUpdate();
 								} catch (IOException readException) {
 									handleParseError(readException, configClass).printStackTrace();
@@ -232,7 +233,7 @@ public class Configs {
 						if (!key.reset()) {
 							break;
 						}
-						sRobotThread.notify();
+						sRobotThread.notifyAll();
 					}
 				} catch (InterruptedException ignored) {
 				}
@@ -281,8 +282,8 @@ public class Configs {
 
 	private static String getDefaultJson(Class<? extends ConfigBase> configClass) {
 		try {
-			return String.format("See here for a default JSON file:%n%s%n", sMapper.defaultPrettyPrintingWriter()
-					.writeValueAsString(configClass.getConstructor().newInstance()));
+			return String.format("See here for a default JSON file:%n%s%n",
+					sPrettyWriter.writeValueAsString(configClass.getConstructor().newInstance()));
 		} catch (IOException | NoSuchMethodException | IllegalAccessException | InstantiationException
 				| InvocationTargetException exception) {
 			System.err.println(
@@ -312,6 +313,6 @@ public class Configs {
 		Path file = getFileForConfig(newConfig.getClass());
 		// Creates all folders leading up to target files's parent folder
 		Files.createDirectories(file.getParent().getParent());
-		sMapper.defaultPrettyPrintingWriter().writeValue(file.toFile(), newConfig);
+		sPrettyWriter.writeValue(file.toFile(), newConfig);
 	}
 }

@@ -15,11 +15,10 @@ import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.*;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.palyrobotics.frc2020.util.config.ConfigBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.service.RobotService;
@@ -43,7 +42,7 @@ public class CommandReceiver implements RobotService {
 		Subparser get = subparsers.addParser("get");
 		get.addArgument("config_name");
 		get.addArgument("config_field").nargs("?"); // "?" means this is optional, and will default to null if not
-													// supplied
+		// supplied
 		get.addArgument("--raw").action(Arguments.storeTrue());
 		subparsers.addParser("reload").addArgument("config_name");
 		Subparser run = subparsers.addParser("run");
@@ -175,13 +174,7 @@ public class CommandReceiver implements RobotService {
 								}
 								switch (commandName) {
 									case "get": {
-										String display;
-										try {
-											display = sMapper.defaultPrettyPrintingWriter()
-													.writeValueAsString(fieldValue);
-										} catch (IOException ignored) {
-											display = fieldValue.toString();
-										}
+										String display = Configs.toJson(fieldValue);
 										return parse.getBoolean("raw") ? display
 												: String.format("[%s] %s: %s", configName,
 														allFieldNames == null ? "all" : allFieldNames, display);
