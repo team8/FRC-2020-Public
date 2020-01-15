@@ -10,7 +10,6 @@ public class ControllerOutput {
 
 	private Mode mMode;
 	private Gains mGains;
-
 	private double mReference, mArbitraryDemand;
 
 	public ControllerOutput() {
@@ -21,15 +20,15 @@ public class ControllerOutput {
 		mMode = controlMode;
 	}
 
+	public void setTargetVelocityProfiled(double targetVelocity, SmartGains gains) {
+		setTargetVelocityProfiled(targetVelocity, 0.0, gains);
+	}
+
 	public void setTargetVelocityProfiled(double targetVelocity, double arbitraryDemand, SmartGains gains) {
 		mMode = Mode.PROFILED_VELOCITY;
 		mReference = targetVelocity;
 		mArbitraryDemand = arbitraryDemand;
 		mGains = gains;
-	}
-
-	public void setTargetVelocityProfiled(double targetVelocity, SmartGains gains) {
-		setTargetVelocityProfiled(targetVelocity, 0.0, gains);
 	}
 
 	public void setTargetVelocity(double targetVelocity, Gains gains) {
@@ -93,25 +92,26 @@ public class ControllerOutput {
 	}
 
 	@Override // Auto-generated
+	public int hashCode() {
+		return Objects.hash(mMode, mGains, mReference, mArbitraryDemand);
+	}
+
+	@Override // Auto-generated
 	public boolean equals(Object other) {
 		if (this == other)
 			return true;
 		if (other == null || getClass() != other.getClass())
 			return false;
 		ControllerOutput otherOutput = (ControllerOutput) other;
-		return Double.compare(otherOutput.mReference, mReference) == 0
-				&& Double.compare(otherOutput.mArbitraryDemand, mArbitraryDemand) == 0
-				&& Objects.equals(mMode, otherOutput.mMode) && Objects.equals(mGains, otherOutput.mGains);
-	}
-
-	@Override // Auto-generated
-	public int hashCode() {
-		return Objects.hash(mMode, mGains, mReference, mArbitraryDemand);
+		return Double.compare(otherOutput.mReference, mReference) == 0 && Double.compare(
+				otherOutput.mArbitraryDemand, mArbitraryDemand) == 0 && Objects.equals(mMode, otherOutput.mMode) && Objects.equals(
+				mGains, otherOutput.mGains);
 	}
 
 	@Override // Auto-generated
 	public String toString() {
-		return String.format("Output{mMode=%s, mGains=%s, mReference=%s, mArbitraryDemand=%s}", mMode, mGains,
-				mReference, mArbitraryDemand);
+		return String.format("Output{mMode=%s, mGains=%s, mReference=%s, mArbitraryDemand=%s}", mMode, mGains, mReference,
+							 mArbitraryDemand
+		);
 	}
 }

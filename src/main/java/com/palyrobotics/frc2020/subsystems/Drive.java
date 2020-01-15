@@ -4,15 +4,15 @@ import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.controllers.ChezyDriveController;
 import com.palyrobotics.frc2020.subsystems.controllers.DriveRamseteController;
 import com.palyrobotics.frc2020.subsystems.controllers.DriveTurnController;
-import com.palyrobotics.frc2020.util.ChezyDriveController;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.control.DriveSignal;
+import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
 /**
- * Represents the drivetrain. Uses controllers or cheesy drive
- * helper/proportional drive helper to calculate a drive signal.
+ * Represents the drivetrain. Uses controllers or cheesy drive helper/proportional drive helper to
+ * calculate a drive signal.
  */
 public class Drive extends Subsystem {
 
@@ -24,16 +24,15 @@ public class Drive extends Subsystem {
 
 		protected final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
 
-		protected DriveSignal mDriveSignal = new DriveSignal();
+		protected DriveOutputs mDriveOutputs = new DriveOutputs();
 
-		public final DriveSignal update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+		public final DriveOutputs update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 			updateSignal(commands, state);
-			return mDriveSignal;
+			return mDriveOutputs;
 		}
 
 		/**
-		 * Should set {@link #mDriveSignal} to reflect what is currently wanted by
-		 * {@link Commands}.
+		 * Should set {@link #mDriveOutputs} to reflect what is currently wanted by {@link Commands}.
 		 */
 		public abstract void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state);
 
@@ -43,16 +42,18 @@ public class Drive extends Subsystem {
 	}
 
 	private static Drive sInstance = new Drive();
+	private Drive.DriveController mController;
+	private DriveState mState;
+	private DriveOutputs mSignal = new DriveOutputs();
+
+	private Drive() {
+	}
 
 	public static Drive getInstance() {
 		return sInstance;
 	}
 
-	private Drive.DriveController mController;
-	private DriveState mState;
-	private DriveSignal mSignal = new DriveSignal();
-
-	public DriveSignal getDriveSignal() {
+	public DriveOutputs getDriveSignal() {
 		return mSignal;
 	}
 

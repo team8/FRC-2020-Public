@@ -1,11 +1,11 @@
 package com.palyrobotics.frc2020.behavior;
 
+import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.subsystems.Subsystem;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.subsystems.Subsystem;
 
 /**
  * Runs all routines at the same time. Finishes when all routines are finished.

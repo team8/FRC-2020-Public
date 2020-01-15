@@ -1,34 +1,44 @@
 package com.palyrobotics.frc2020.util.control;
 
-import java.util.Map;
-
 import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANPIDController.ArbFFUnits;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
+import java.util.Map;
+
 /**
- * A wrapper around a Spark Max that only updates inputs when they have changed.
- * This also supports updating gains smartly. Control types are automatically
- * mapped to PID slots on the Spark controller.
+ * A wrapper around a Spark Max that only updates inputs when they have changed. This also supports
+ * updating gains smartly. Control types are automatically mapped to PID slots on the Spark
+ * controller.
  *
  * @author Quintin Dwight
  */
 public class Spark extends CANSparkMax {
 
-	public static final Map<ControllerOutput.Mode, ControlType> MODE_TO_CONTROLLER = Map.of(
-			ControllerOutput.Mode.PERCENT_OUTPUT, ControlType.kDutyCycle, ControllerOutput.Mode.POSITION,
-			ControlType.kPosition, ControllerOutput.Mode.VELOCITY, ControlType.kVelocity,
-			ControllerOutput.Mode.PROFILED_POSITION, ControlType.kSmartMotion, ControllerOutput.Mode.PROFILED_VELOCITY,
-			ControlType.kSmartVelocity);
+	public static final Map<ControllerOutput.Mode, ControlType> MODE_TO_CONTROLLER = Map.of(ControllerOutput.Mode.PERCENT_OUTPUT,
+																							ControlType.kDutyCycle,
+																							ControllerOutput.Mode.POSITION,
+																							ControlType.kPosition,
+																							ControllerOutput.Mode.VELOCITY,
+																							ControlType.kVelocity,
+																							ControllerOutput.Mode.PROFILED_POSITION,
+																							ControlType.kSmartMotion,
+																							ControllerOutput.Mode.PROFILED_VELOCITY,
+																							ControlType.kSmartVelocity
+	);
 
 	private final CANPIDController mHardwareController = getPIDController();
 	private final ProfiledControllerBase mController = new ProfiledControllerBase() {
 
 		@Override
-		void setProfiledCruiseVelocity(int slot, double cruiseVelocity) {
-			mHardwareController.setSmartMotionMaxVelocity(cruiseVelocity, slot);
+		protected void updateGains(boolean isFirstInitialization, int slot, Gains newGains, Gains lastGains) {
+			super.updateGains(isFirstInitialization, slot, newGains, lastGains);
+			if (isFirstInitialization) {
+				mHardwareController.setOutputRange(-1.0, 1.0, slot);
+				mHardwareController.setSmartMotionAccelStrategy(CANPIDController.AccelStrategy.kSCurve, slot);
+			}
 		}
 
 		@Override
@@ -37,8 +47,8 @@ public class Spark extends CANSparkMax {
 		}
 
 		@Override
-		protected void setProfiledMinimumVelocityOutput(int slot, double minimumOutputVelocity) {
-			mHardwareController.setSmartMotionMinOutputVelocity(minimumOutputVelocity, slot);
+		void setProfiledCruiseVelocity(int slot, double cruiseVelocity) {
+			mHardwareController.setSmartMotionMaxVelocity(cruiseVelocity, slot);
 		}
 
 		@Override
@@ -47,15 +57,20 @@ public class Spark extends CANSparkMax {
 		}
 
 		@Override
-		int getId() {
-			return getDeviceId();
+		protected void setProfiledMinimumVelocityOutput(int slot, double minimumOutputVelocity) {
+			mHardwareController.setSmartMotionMinOutputVelocity(minimumOutputVelocity, slot);
 		}
 
 		@Override
 		boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput) {
 			ControlType controllerType = MODE_TO_CONTROLLER.get(mode);
-			return mHardwareController.setReference(reference, controllerType, slot, arbitraryPercentOutput,
-					ArbFFUnits.kPercentOut) == CANError.kOk;
+			return mHardwareController.setReference(
+					reference, controllerType, slot, arbitraryPercentOutput, ArbFFUnits.kPercentOut) == CANError.kOk;
+		}
+
+		@Override
+		int getId() {
+			return getDeviceId();
 		}
 
 		@Override
@@ -69,11 +84,6 @@ public class Spark extends CANSparkMax {
 		}
 
 		@Override
-		void setIZone(int slot, double iZone) {
-			mHardwareController.setIZone(iZone, slot);
-		}
-
-		@Override
 		void setD(int slot, double d) {
 			mHardwareController.setD(d, slot);
 		}
@@ -84,12 +94,8 @@ public class Spark extends CANSparkMax {
 		}
 
 		@Override
-		protected void updateGains(boolean isFirstInitialization, int slot, Gains newGains, Gains lastGains) {
-			super.updateGains(isFirstInitialization, slot, newGains, lastGains);
-			if (isFirstInitialization) {
-				mHardwareController.setOutputRange(-1.0, 1.0, slot);
-				mHardwareController.setSmartMotionAccelStrategy(CANPIDController.AccelStrategy.kSCurve, slot);
-			}
+		void setIZone(int slot, double iZone) {
+			mHardwareController.setIZone(iZone, slot);
 		}
 	};
 

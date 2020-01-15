@@ -1,5 +1,14 @@
 package com.palyrobotics.frc2020.util.config;
 
+import com.esotericsoftware.minlog.Log;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.palyrobotics.frc2020.util.StringUtil;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -11,14 +20,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
-
 /**
  * Configuration storage using JSON
  *
@@ -26,18 +27,17 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public class Configs {
 
-	private static final String CONFIG_FOLDER_NAME = "config";
-	private static final Path CONFIG_FOLDER = (RobotBase.isReal()
-			? Paths.get(Filesystem.getDeployDirectory().toString(), CONFIG_FOLDER_NAME)
-			: Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", CONFIG_FOLDER_NAME))
-					.toAbsolutePath();
+	private static final String CONFIG_FOLDER_NAME = StringUtil.classToJsonName(Configs.class), LOGGER_TAG = "configs";
+	private static final Path CONFIG_FOLDER = (RobotBase.isReal() ? Paths.get(Filesystem.getDeployDirectory().toString(),
+																			  CONFIG_FOLDER_NAME
+	) : Paths.get(
+			Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", CONFIG_FOLDER_NAME)).toAbsolutePath();
 	private static final HashMap<String, Class<? extends ConfigBase>> sNameToClass = new HashMap<>();
 	private static final HashMap<Class<? extends ConfigBase>, ConfigBase> sConfigMap = new HashMap<>(16);
 	private static final HashMap<Class<? extends ConfigBase>, List<Runnable>> sListeners = new HashMap<>();
 	private static ObjectMapper sMapper = new ObjectMapper();
 	private static ObjectWriter sPrettyWriter = sMapper.writerWithDefaultPrettyPrinter();
-	private static final Thread sModifiedListener = new Thread(Configs::watchService),
-			sRobotThread = Thread.currentThread();
+	private static final Thread sModifiedListener = new Thread(Configs::watchService), sRobotThread = Thread.currentThread();
 
 	static {
 		// Allows us to serialize private fields
@@ -48,27 +48,11 @@ public class Configs {
 		sModifiedListener.start();
 	}
 
-	public static ObjectMapper getMapper() {
-		return sMapper;
+	private Configs() {
 	}
 
-	/**
-	 * Retrieve the singleton for this given config class.
-	 *
-	 * @param configClass Class of the config.
-	 * @param <T>         Type of the config class. This is usually inferred from
-	 *                    the class argument.
-	 * @return Singleton or null if not found / registered.
-	 */
-	@SuppressWarnings ("unchecked")
-	public static <T extends ConfigBase> T get(Class<T> configClass) {
-		T config = (T) sConfigMap.get(configClass);
-		if (config == null) {
-			config = read(configClass);
-			sConfigMap.put(configClass, config);
-			sNameToClass.put(configClass.getSimpleName(), configClass);
-		}
-		return config;
+	public static ObjectMapper getMapper() {
+		return sMapper;
 	}
 
 	public static <T extends ConfigBase> T get(Class<T> configClass, String name) {
@@ -82,14 +66,37 @@ public class Configs {
 		}
 	}
 
+	private static Path resolveConfigPath(String name) {
+		return CONFIG_FOLDER.resolve(String.format("%s.json", name));
+	}
+
+	private static RuntimeException handleParseError(IOException readException, Class<? extends ConfigBase> configClass) {
+		String errorMessage = String.format("An error occurred trying to read config for class %s%n%nSee here for default JSON: %s%n",
+											configClass.getSimpleName(), getDefaultJson(configClass)
+		);
+		return new RuntimeException(errorMessage, readException);
+	}
+
+	private static Optional<String> getDefaultJson(Class<? extends ConfigBase> configClass) {
+		try {
+			return Optional.ofNullable(String.format("See here for a default JSON file:%n%s%n",
+													 sPrettyWriter.writeValueAsString(configClass.getConstructor().newInstance())
+			));
+		} catch (IOException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException exception) {
+			Log.error(LOGGER_TAG, "Could not show default JSON representation. Something is wrong with the config class definition.",
+					  exception
+			);
+			return Optional.empty();
+		}
+	}
+
 	/**
-	 * Listen for changes in a configuration file. An on-changed event is fired once
-	 * when this function is invoked for initial setup.
+	 * Listen for changes in a configuration file. An on-changed event is fired once when this
+	 * function is invoked for initial setup.
 	 *
 	 * @param configClass Class of the config.
 	 * @param onChanged   Listener which consumes new config instance.
-	 * @param <T>         Type of the config class. This is usually inferred from
-	 *                    the class argument.
+	 * @param <T>         Type of the config class. This is usually inferred from the class argument.
 	 */
 	public static <T extends ConfigBase> void listen(Class<T> configClass, Consumer<T> onChanged) {
 		onChanged.accept(get(configClass));
@@ -97,18 +104,79 @@ public class Configs {
 		consumers.add(() -> onChanged.accept(get(configClass))); // TODO kinda whack
 	}
 
+	/**
+	 * Retrieve the singleton for this given config class.
+	 *
+	 * @param configClass Class of the config.
+	 * @param <T>         Type of the config class. This is usually inferred from the class argument.
+	 * @return Singleton or null if not found / registered.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends ConfigBase> T get(Class<T> configClass) {
+		T config = (T) sConfigMap.get(configClass);
+		if (config == null) {
+			config = read(configClass);
+			sConfigMap.put(configClass, config);
+			sNameToClass.put(configClass.getSimpleName(), configClass);
+		}
+		return config;
+	}
+
+	/**
+	 * Read the given config from the filesystem. There must be a file and it must be valid mappable
+	 * JSON, desired behavior is to crash if else. In attempt to help the user when there is an
+	 * invalid JSON file, a default empty class of the same type is printed to console to show desired
+	 * format (helpful for debugging).
+	 *
+	 * @param configClass Class of the config.
+	 * @param <T>         Type of the config. Must extend {@link ConfigBase}.
+	 * @return Instance of given type.
+	 * @throws RuntimeException when the file cannot be found or it could not be parsed. This is
+	 *                          considered a critical error.
+	 */
+	private static <T extends ConfigBase> T read(Class<T> configClass) {
+		Path configFile = getFileForConfig(configClass);
+		String configClassName = configClass.getSimpleName();
+		if (!Files.exists(configFile)) {
+			String errorMessage = String.format("A config file was not found for %s. Critical error, aborting.%n%n%s%n", configClassName,
+												getDefaultJson(configClass)
+			);
+			throw new RuntimeException(errorMessage);
+		}
+		try {
+			T value = sMapper.readValue(configFile.toFile(), configClass);
+			value.onPostUpdate();
+			return value;
+		} catch (IOException readException) {
+			RuntimeException exception = handleParseError(readException, configClass);
+			Log.error(LOGGER_TAG, String.format("Error reading config %s", configClassName), readException);
+			throw exception;
+		}
+	}
+
+	private static Path getFileForConfig(Class<? extends ConfigBase> configClass) {
+		return resolveConfigPath(configClass.getSimpleName());
+	}
+
 	public static <T extends ConfigBase> boolean save(Class<T> configClass) {
 		try {
 			saveOrThrow(configClass);
 			return true;
 		} catch (IOException saveException) {
-			saveException.printStackTrace();
+			Log.error(LOGGER_TAG, String.format("Could not save config %s", configClass.getSimpleName()), saveException);
 			return false;
 		}
 	}
 
 	public static void saveOrThrow(Class<? extends ConfigBase> configClass) throws IOException {
 		writeConfig(sConfigMap.get(configClass));
+	}
+
+	private static <T extends ConfigBase> void writeConfig(T newConfig) throws IOException {
+		Path file = getFileForConfig(newConfig.getClass());
+		// Creates all folders leading up to target files's parent folder
+		Files.createDirectories(file.getParent().getParent());
+		sPrettyWriter.writeValue(file.toFile(), newConfig);
 	}
 
 	public static Class<? extends ConfigBase> getClassFromName(String name) {
@@ -120,9 +188,14 @@ public class Configs {
 		notifyUpdated(config.getClass());
 	}
 
+	private static void notifyUpdated(Class<? extends ConfigBase> configClass) {
+		// TODO nasty
+		Optional.ofNullable(sListeners.get(configClass)).ifPresent(listeners -> listeners.forEach(Runnable::run));
+	}
+
 	/**
-	 * If different, replace the working specified config with the one on the
-	 * filesystem. This also updates listeners.
+	 * If different, replace the working specified config with the one on the filesystem. This also
+	 * updates listeners.
 	 *
 	 * @param configClass Class of the config.
 	 * @return Whether or not the config was updated.
@@ -136,23 +209,23 @@ public class Configs {
 				return true;
 			}
 		} catch (IOException exception) {
-			exception.printStackTrace();
+			Log.error(LOGGER_TAG, String.format("Could not reload configs %s", configClass.getSimpleName()), exception);
 		}
 		return false;
 	}
 
 	/**
-	 * Helper method to use the {@link #sMapper} of this class to easily produce a
-	 * JSON string. This handles errors internally.
+	 * Helper method to use the {@link #sMapper} of this class to easily produce a JSON string. This
+	 * handles errors internally.
 	 *
 	 * @param object Any arbitrary object to try and write to JSON.
-	 * @return The object in JSON format if possible or else "Invalid"
+	 * @return The object in JSON format if possible or else the default {@link #toString()}.
 	 */
 	public static String toJson(Object object) {
 		try {
 			return sPrettyWriter.writeValueAsString(object);
 		} catch (IOException formatException) {
-			formatException.printStackTrace();
+			Log.warn(LOGGER_TAG, String.format("Could not format %s as JSON", object.getClass().getSimpleName()), formatException);
 			return object.toString();
 		}
 	}
@@ -162,11 +235,10 @@ public class Configs {
 	}
 
 	/**
-	 * Copy an object by converting it to its JSON representation then reads it into
-	 * a new object. This is slow and creates garbage, so it should not be used
-	 * often.
+	 * Copy an object by converting it to its JSON representation then reads it into a new object.
+	 * This is slow and creates garbage, so it should not be used often.
 	 */
-	@SuppressWarnings ("unchecked")
+	@SuppressWarnings("unchecked")
 	public static <T> T copy(T toCopy) {
 		try {
 			return (T) sMapper.readValue(sMapper.writeValueAsString(toCopy), toCopy.getClass());
@@ -176,10 +248,9 @@ public class Configs {
 	}
 
 	/**
-	 * This should be started in a new thread to watch changes for the folder
-	 * containing the JSON configuration files. It detects when files are modified
-	 * and written in the filesystem, then reloads them calling
-	 * {@link #notifyUpdated(Class)}.
+	 * This should be started in a new thread to watch changes for the folder containing the JSON
+	 * configuration files. It detects when files are modified and written in the filesystem, then
+	 * reloads them calling {@link #notifyUpdated(Class)}.
 	 */
 	private static void watchService() {
 		try {
@@ -191,43 +262,42 @@ public class Configs {
 					/*
 					 * Since there are two times when the listener is notified when a file is saved,
 					 * once for the actual content and another time for the timestamp updated,
-					 * sleeping will capture both into the same poll event list. From there, we can
-					 * filter out what we have already seen to avoid updating more than once.
+					 * sleeping will capture both into the same poll event list.
+					 * From there, we can filter out what we have already seen to avoid updating more than once.
 					 */
-					Thread.sleep(100);
+					Thread.sleep(100L);
 					List<String> alreadySeen = new ArrayList<>();
 					/*
-					 * We are on a different thread, so we must be careful updating variables on the
-					 * main thread. Current model is to force the robot thread to wait for a notify
-					 * once we are done updating variables from our thread.
+					 * We are on a different thread, so we must be careful updating variables on the main thread.
+					 * Current model is to force the robot thread to wait for a notify once we are done updating variables from our thread.
 					 */
 					synchronized (sRobotThread) {
-						sRobotThread.wait(100); // In case something goes horribly wrong we can resume robot thread
-												// execution
+						sRobotThread.wait(100L); // In case something goes horribly wrong we can resume robot thread execution
 						for (WatchEvent<?> pollEvent : key.pollEvents()) {
 							if (pollEvent.kind() == StandardWatchEventKinds.OVERFLOW)
 								continue;
-							@SuppressWarnings ("unchecked")
-							WatchEvent<Path> event = (WatchEvent<Path>) pollEvent;
+							@SuppressWarnings("unchecked") WatchEvent<Path> event = (WatchEvent<Path>) pollEvent;
 							Path context = event.context();
 							String configName = context.getFileName().toString().replace(".json", "");
 							Class<? extends ConfigBase> configClass = sNameToClass.get(configName);
 							if (configClass != null) {
 								if (alreadySeen.contains(configName))
 									continue;
-								System.out.printf("Config named %s hot reloaded%n", configName);
+								Log.info(LOGGER_TAG, String.format("Config named %s hot reloaded%n", configName));
 								try {
 									ConfigBase config = get(configClass);
 									sMapper.readerForUpdating(config).readValue(getFileForConfig(configClass).toFile());
 									config.onPostUpdate();
 								} catch (IOException readException) {
-									handleParseError(readException, configClass).printStackTrace();
-									System.err.printf("Error updating config for %s. Aborting reload.%n", configName);
+									RuntimeException exception = handleParseError(readException, configClass);
+									Log.error(LOGGER_TAG, String.format("Error updating config for %s. Aborting reload.%n", configName),
+											  exception
+									);
 								}
 								notifyUpdated(configClass);
 								alreadySeen.add(configName);
 							} else {
-								System.err.printf("Unknown file %s%n", context);
+								Log.error(LOGGER_TAG, String.format("Unknown file %s%n", context));
 							}
 						}
 						if (!key.reset()) {
@@ -235,84 +305,12 @@ public class Configs {
 						}
 						sRobotThread.notifyAll();
 					}
-				} catch (InterruptedException ignored) {
+				} catch (InterruptedException exception) {
+					Thread.currentThread().interrupt();
 				}
 			}
 		} catch (IOException exception) {
-			exception.printStackTrace();
+			Log.error(LOGGER_TAG, "Failed to watch filesystem for reloads", exception);
 		}
-	}
-
-	private static void notifyUpdated(Class<? extends ConfigBase> configClass) {
-		// TODO nasty
-		Optional.ofNullable(sListeners.get(configClass)).ifPresent(listeners -> listeners.forEach(Runnable::run));
-	}
-
-	/**
-	 * Read the given config from the filesystem. There must be a file and it must
-	 * be valid mappable JSON, desired behavior is to crash if else. In attempt to
-	 * help the user when there is an invalid JSON file, a default empty class of
-	 * the same type is printed to console to show desired format (helpful for
-	 * debugging).
-	 *
-	 * @param configClass Class of the config.
-	 * @param <T>         Type of the config. Must extend {@link ConfigBase}.
-	 * @return Instance of given type.
-	 * @throws RuntimeException when the file cannot be found or it could not be
-	 *                          parsed. This is considered a critical error.
-	 */
-	private static <T extends ConfigBase> T read(Class<T> configClass) {
-		Path configFile = getFileForConfig(configClass);
-		String configClassName = configClass.getSimpleName();
-		if (!Files.exists(configFile)) {
-			String errorMessage = String.format("A config file was not found for %s. Critical error, aborting.%n%n%s%n",
-					configClassName, getDefaultJson(configClass));
-			throw new RuntimeException(errorMessage);
-		}
-		try {
-			T value = sMapper.readValue(configFile.toFile(), configClass);
-			value.onPostUpdate();
-			return value;
-		} catch (IOException readException) {
-			RuntimeException exception = handleParseError(readException, configClass);
-			exception.printStackTrace();
-			throw exception;
-		}
-	}
-
-	private static String getDefaultJson(Class<? extends ConfigBase> configClass) {
-		try {
-			return String.format("See here for a default JSON file:%n%s%n",
-					sPrettyWriter.writeValueAsString(configClass.getConstructor().newInstance()));
-		} catch (IOException | NoSuchMethodException | IllegalAccessException | InstantiationException
-				| InvocationTargetException exception) {
-			System.err.println(
-					"Could not show default JSON representation. Something is wrong with the config class definition.");
-			exception.printStackTrace();
-			return "Invalid";
-		}
-	}
-
-	private static RuntimeException handleParseError(IOException readException,
-			Class<? extends ConfigBase> configClass) {
-		String errorMessage = String.format(
-				"An error occurred trying to read config for class %s%n%nSee here for default JSON: %s%n",
-				configClass.getSimpleName(), getDefaultJson(configClass));
-		return new RuntimeException(errorMessage, readException);
-	}
-
-	private static Path resolveConfigPath(String name) {
-		return CONFIG_FOLDER.resolve(String.format("%s.json", name));
-	}
-
-	private static Path getFileForConfig(Class<? extends ConfigBase> configClass) {
-		return resolveConfigPath(configClass.getSimpleName());
-	}
-
-	private static <T extends ConfigBase> void writeConfig(T newConfig) throws IOException {
-		Path file = getFileForConfig(newConfig.getClass());
-		// Creates all folders leading up to target files's parent folder
-		Files.createDirectories(file.getParent().getParent());
-		sPrettyWriter.writeValue(file.toFile(), newConfig);
 	}
 }

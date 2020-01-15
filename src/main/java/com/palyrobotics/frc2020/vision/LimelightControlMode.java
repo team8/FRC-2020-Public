@@ -6,7 +6,6 @@ import java.util.Map;
 public class LimelightControlMode {
 
 	public enum LedMode {
-
 		CURRENT_PIPELINE_MODE(0), // 0 Use the LED Mode set in the current pipeline
 		FORCE_OFF(1), // 1 Force off
 		FORCE_BLINK(2), // 2 Force blink
@@ -40,7 +39,6 @@ public class LimelightControlMode {
 	}
 
 	public enum CamMode {
-
 		VISION(0), DRIVER(1);
 
 		private static final Map<Double, CamMode> MY_MAP = new HashMap<>();
@@ -71,7 +69,6 @@ public class LimelightControlMode {
 	}
 
 	public enum StreamType {
-
 		kStandard(0), kPiPMain(1), kPiPSecondary(2);
 
 		private static final Map<Double, StreamType> MY_MAP = new HashMap<>();
@@ -102,7 +99,6 @@ public class LimelightControlMode {
 	}
 
 	public enum Snapshot {
-
 		ON(1), OFF(0);
 
 		private static final Map<Double, Snapshot> MY_MAP = new HashMap<>();
@@ -133,7 +129,6 @@ public class LimelightControlMode {
 	}
 
 	public enum AdvancedTarget {
-
 		ONE_TARGET(0), TWO_TARGETS(1), THREE_TARGETS(2);
 
 		private static final Map<Integer, AdvancedTarget> MY_MAP = new HashMap<>();
@@ -164,7 +159,6 @@ public class LimelightControlMode {
 	}
 
 	public enum AdvancedCrosshair {
-
 		ONE(0), TWO(1);
 
 		private static final Map<Integer, AdvancedCrosshair> MY_MAP = new HashMap<>();

@@ -13,54 +13,53 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 		super(port);
 	}
 
-	private boolean isTriggerDown(Hand hand) {
-		return getTriggerAxis(hand) > kTriggerThreshold;
-	}
-
 	public void updateLastInputs() {
 		mLastPOV = getPOV();
 		mLastTriggers.replaceAll((hand, b) -> isTriggerDown(hand));
+	}
+
+	private boolean isTriggerDown(Hand hand) {
+		return getTriggerAxis(hand) > kTriggerThreshold;
 	}
 
 	public boolean getDPadRightPressed() {
 		return getPOV() != mLastPOV && getDPadRight();
 	}
 
-	public boolean getDPadUpPressed() {
-		return getPOV() != mLastPOV && getDPadUp();
-	}
-
-	public boolean getDPadDownPressed() {
-		return getPOV() != mLastPOV && getDPadDown();
-	}
-
-	public boolean getDPadLeftPressed() {
-		return getPOV() != mLastPOV && getDPadLeft();
-	}
-
 	public boolean getDPadRight() {
 		return getPOV() == 90;
+	}
+
+	public boolean getDPadUpPressed() {
+		return getPOV() != mLastPOV && getDPadUp();
 	}
 
 	public boolean getDPadUp() {
 		return getPOV() == 0;
 	}
 
+	public boolean getDPadDownPressed() {
+		return getPOV() != mLastPOV && getDPadDown();
+	}
+
 	public boolean getDPadDown() {
 		return getPOV() == 180;
+	}
+
+	public boolean getDPadLeftPressed() {
+		return getPOV() != mLastPOV && getDPadLeft();
 	}
 
 	public boolean getDPadLeft() {
 		return getPOV() == 270;
 	}
 
-	public boolean getTriggerPressed(Hand hand) {
-		return mLastTriggers.get(hand) != getTriggerAxis(hand) > kTriggerThreshold
-				&& getTriggerAxis(hand) > kTriggerThreshold;
-	}
-
 	public boolean getRightTriggerPressed() {
 		return getTriggerPressed(Hand.kRight);
+	}
+
+	public boolean getTriggerPressed(Hand hand) {
+		return mLastTriggers.get(hand) != getTriggerAxis(hand) > kTriggerThreshold && getTriggerAxis(hand) > kTriggerThreshold;
 	}
 
 	public boolean getLeftTriggerPressed() {

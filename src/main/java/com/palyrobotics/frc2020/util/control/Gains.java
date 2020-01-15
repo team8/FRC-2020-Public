@@ -18,20 +18,19 @@ public class Gains {
 	}
 
 	@Override // Auto-generated
+	public int hashCode() {
+		return Objects.hash(p, i, d, f, iZone);
+	}
+
+	@Override // Auto-generated
 	public boolean equals(Object other) {
 		if (this == other)
 			return true;
 		if (!(other instanceof Gains))
 			return false;
 		Gains otherGains = (Gains) other;
-		return Double.compare(otherGains.p, p) == 0 && Double.compare(otherGains.i, i) == 0
-				&& Double.compare(otherGains.d, d) == 0 && Double.compare(otherGains.f, f) == 0
-				&& Double.compare(otherGains.iZone, iZone) == 0;
-	}
-
-	@Override // Auto-generated
-	public int hashCode() {
-		return Objects.hash(p, i, d, f, iZone);
+		return Double.compare(otherGains.p, p) == 0 && Double.compare(otherGains.i, i) == 0 && Double.compare(
+				otherGains.d, d) == 0 && Double.compare(otherGains.f, f) == 0 && Double.compare(otherGains.iZone, iZone) == 0;
 	}
 
 	@Override // Auto-generated

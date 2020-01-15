@@ -1,14 +1,13 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.util.ArrayList;
-
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
-import com.palyrobotics.frc2020.util.control.DriveSignal;
-
+import com.palyrobotics.frc2020.util.control.DriveOutputs;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+
+import java.util.ArrayList;
 
 /**
  * Commands represent what we want the robot to be doing.
@@ -18,37 +17,36 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 public class Commands {
 
 	private static Commands sInstance = new Commands();
-
-	public static Commands getInstance() {
-		return sInstance;
-	}
-
-	public static Commands resetInstance() {
-		sInstance = new Commands();
-		return sInstance;
-	}
-
 	/* Routines */
 	public ArrayList<Routine> routinesWanted = new ArrayList<>();
 	public boolean shouldClearCurrentRoutines;
-
 	/* Spinner Commands */
 	public Spinner.SpinnerState spinnerWantedState = Spinner.SpinnerState.IDLE;
-
 	/* Intake Commands */
 	public Intake.IntakeState intakeWantedState = Intake.IntakeState.IDLE;
-
 	/* Drive Commands */
 	private Drive.DriveState driveWantedState = Drive.DriveState.NEUTRAL;
 	// Teleop
 	private double driveWantedThrottle, driveWantedWheel;
 	private boolean driveWantsQuickTurn, driveWantsBrake;
 	// Signal
-	private DriveSignal driveWantedSignal;
+	private DriveOutputs driveWantedSignal;
 	// Path Following
 	private Trajectory driveWantedTrajectory;
 	// Turning
 	private double driveWantedHeading;
+
+	private Commands() {
+	}
+
+	public static Commands getInstance() {
+		return sInstance;
+	}
+
+	static Commands resetInstance() {
+		sInstance = new Commands();
+		return sInstance;
+	}
 
 	public void addWantedRoutines(Routine... wantedRoutines) {
 		for (Routine wantedRoutine : wantedRoutines) {
@@ -88,11 +86,11 @@ public class Commands {
 		return driveWantedHeading;
 	}
 
-	public DriveSignal getWantedDriveSignal() {
+	public DriveOutputs getWantedDriveSignal() {
 		return driveWantedSignal;
 	}
 
-	public void setDriveSignal(DriveSignal signal) {
+	public void setDriveSignal(DriveOutputs signal) {
 		driveWantedState = Drive.DriveState.SIGNAL;
 		driveWantedSignal = signal;
 	}
@@ -110,8 +108,7 @@ public class Commands {
 		setDriveTeleop(0.0, 0.0, false, false);
 	}
 
-	public void setDriveTeleop(double driveThrottle, double driveWheel, boolean driveWantsQuickTurn,
-			boolean driveWantsBrake) {
+	public void setDriveTeleop(double driveThrottle, double driveWheel, boolean driveWantsQuickTurn, boolean driveWantsBrake) {
 		driveWantedState = Drive.DriveState.TELEOP;
 		this.driveWantedThrottle = driveThrottle;
 		this.driveWantedWheel = driveWheel;

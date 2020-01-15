@@ -46,16 +46,10 @@ deploy {
 
 spotless {
     java {
-        importOrder 'java', 'javax', 'org', 'com', 'edu'
+        trimTrailingWhitespace()
+        indentWithTabs()
+        endWithNewline()
         removeUnusedImports()
-        eclipse().configFile 'spotless.eclipseformat.xml'
-    }
-    freshmark {
-        target 'README.md', 'CONTRIBUTING.md'
-        propertiesFile('gradle/wrapper/gradle-wrapper.properties')
-        properties {
-            it.put('key', 'value')
-        }
     }
 }
 

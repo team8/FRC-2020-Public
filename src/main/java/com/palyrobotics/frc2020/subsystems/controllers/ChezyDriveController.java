@@ -1,10 +1,11 @@
-package com.palyrobotics.frc2020.util;
+package com.palyrobotics.frc2020.subsystems.controllers;
 
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.util.MathUtil;
 
 /**
  * Implements constant curvature driving. Yoinked from 254 code
@@ -58,14 +59,13 @@ public class ChezyDriveController extends Drive.DriveController {
 			mNegativeInertiaAccumulator = 0.0;
 		}
 
-		// Quick-turn allows us to turn in place without having to be moving forward or
-		// backwards
+		// Quick-turn allows us to turn in place without having to be moving forward or backwards
 		double angularPower, overPower;
 		if (isQuickTurn) {
 			if (absoluteThrottle < mDriveConfig.quickStopDeadBand) {
 				double alpha = mDriveConfig.quickStopWeight;
-				mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator
-						+ alpha * MathUtil.clamp01(wheel) * mDriveConfig.quickStopScalar;
+				mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator + alpha * MathUtil.clamp01(
+						wheel) * mDriveConfig.quickStopScalar;
 			}
 			overPower = 1.0;
 			angularPower = wheel * mDriveConfig.quickTurnScalar;
@@ -102,8 +102,8 @@ public class ChezyDriveController extends Drive.DriveController {
 			rightPower = -1.0;
 		}
 
-		mDriveSignal.leftOutput.setPercentOutput(leftPower);
-		mDriveSignal.rightOutput.setPercentOutput(rightPower);
+		mDriveOutputs.leftOutput.setPercentOutput(leftPower);
+		mDriveOutputs.rightOutput.setPercentOutput(rightPower);
 	}
 
 	private double applyWheelNonLinearPass(double wheel, double wheelNonLinearity) {

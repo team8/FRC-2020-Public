@@ -1,8 +1,5 @@
 package com.palyrobotics.frc2020.auto.modes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.palyrobotics.frc2020.auto.AutoModeBase;
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
@@ -10,16 +7,19 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.intake.IntakeBallRoutine;
 import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
-
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
-@SuppressWarnings ("Duplicates")
+import java.util.ArrayList;
+import java.util.List;
+
+@SuppressWarnings("Duplicates")
 public class EnemyTrenchTwoShootFiveGoToOtherSide extends AutoModeBase {
 
 	@Override
 	public Routine getRoutine() {
-		ArrayList<Routine> routines = new ArrayList<>();
+		List<Routine> routines = new ArrayList<>();
+
 		List<Pose2d> enemyTrench = new ArrayList<>();
 		enemyTrench.add(new Pose2d(120, -190, Rotation2d.fromDegrees(0)));
 		enemyTrench.add(new Pose2d(120, -210, Rotation2d.fromDegrees(0)));
@@ -34,10 +34,10 @@ public class EnemyTrenchTwoShootFiveGoToOtherSide extends AutoModeBase {
 
 		// Shoot ball
 
-		List<Pose2d> otherside = new ArrayList<>();
-		otherside.add(new Pose2d(300, 0, Rotation2d.fromDegrees(0.0)));
+		List<Pose2d> otherSide = new ArrayList<>();
+		otherSide.add(new Pose2d(300, 0, Rotation2d.fromDegrees(0.0)));
 
-		routines.add(new DrivePathRoutine(otherside));
+		routines.add(new DrivePathRoutine(otherSide));
 
 		return new SequentialRoutine(routines);
 	}

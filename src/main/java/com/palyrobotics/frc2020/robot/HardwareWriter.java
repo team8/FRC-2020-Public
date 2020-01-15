@@ -1,8 +1,7 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.util.List;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
@@ -10,29 +9,30 @@ import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.util.StringUtil;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+
+import java.util.List;
 
 public class HardwareWriter {
 
+	public static final int TIMEOUT_MS = 500;
+	private static final String LOGGER_TAG = StringUtil.classToJsonName(HardwareWriter.class);
 	private static HardwareWriter sInstance = new HardwareWriter();
-
-	public static HardwareWriter getInstance() {
-		return sInstance;
-	}
-
-	private HardwareWriter() {
-	}
-
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	private final Drive mDrive = Drive.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
 	private final Intake mIntake = Intake.getInstance();
 
-	public static final int TIMEOUT_MS = 500;
+	private HardwareWriter() {
+	}
+
+	public static HardwareWriter getInstance() {
+		return sInstance;
+	}
 
 	void configureHardware() {
 		configureDriveHardware();
@@ -50,18 +50,13 @@ public class HardwareWriter {
 			CANEncoder encoder = spark.getEncoder();
 			encoder.setPositionConversionFactor(DrivetrainConstants.kDriveMetersPerRotation);
 			encoder.setVelocityConversionFactor(DrivetrainConstants.kDriveMetersPerSecondPerRpm);
-			CANPIDController controller = spark.getPIDController();
-			controller.setOutputRange(-DrivetrainConstants.kDriveMaxClosedLoopOutput,
-					DrivetrainConstants.kDriveMaxClosedLoopOutput);
-			spark.setSmartCurrentLimit(driveConfig.stallCurrentLimit, driveConfig.freeCurrentLimit,
-					driveConfig.freeRpmLimit);
+			spark.setSmartCurrentLimit(driveConfig.stallCurrentLimit, driveConfig.freeCurrentLimit, driveConfig.freeRpmLimit);
 			spark.setOpenLoopRampRate(driveConfig.controllerRampRate);
 			spark.setClosedLoopRampRate(driveConfig.controllerRampRate);
 		}
 
 		/* Left Side */
-		for (Spark spark : List.of(driveHardware.leftMasterSpark, driveHardware.leftSlave1Spark,
-				driveHardware.leftSlave2Spark)) {
+		for (Spark spark : List.of(driveHardware.leftMasterSpark, driveHardware.leftSlave1Spark, driveHardware.leftSlave2Spark)) {
 			spark.setInverted(false);
 		}
 		for (Spark spark : List.of(driveHardware.leftSlave1Spark, driveHardware.leftSlave2Spark)) {
@@ -69,8 +64,7 @@ public class HardwareWriter {
 		}
 
 		/* Right Side */
-		for (Spark spark : List.of(driveHardware.rightMasterSpark, driveHardware.rightSlave1Spark,
-				driveHardware.rightSlave2Spark)) {
+		for (Spark spark : List.of(driveHardware.rightMasterSpark, driveHardware.rightSlave1Spark, driveHardware.rightSlave2Spark)) {
 			spark.setInverted(true); // Note: Inverted
 		}
 		for (Spark spark : List.of(driveHardware.rightSlave1Spark, driveHardware.rightSlave2Spark)) {
@@ -80,13 +74,12 @@ public class HardwareWriter {
 		resetDriveSensors();
 	}
 
-	private void configureSpinnerHardware() {
-
-	}
-
 	private void configureIntakeHardware() {
 		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
 		intakeHardware.intakeVictor.setInverted(false);
+	}
+
+	private void configureSpinnerHardware() {
 	}
 
 	public void resetDriveSensors() {
@@ -95,7 +88,7 @@ public class HardwareWriter {
 		driveHardware.gyro.setFusedHeading(0, TIMEOUT_MS);
 		driveHardware.gyro.setAccumZAngle(0, TIMEOUT_MS);
 		driveHardware.sparks.forEach(spark -> spark.getEncoder().setPosition(0.0));
-		System.out.println("Drive Sensors Reset");
+		Log.info("Drive Sensors Reset");
 	}
 
 	void setDriveIdleMode(CANSparkMax.IdleMode idleMode) {
@@ -116,8 +109,7 @@ public class HardwareWriter {
 
 	private void updateDrivetrain() {
 		HardwareAdapter.DrivetrainHardware.getInstance().leftMasterSpark.setOutput(mDrive.getDriveSignal().leftOutput);
-		HardwareAdapter.DrivetrainHardware.getInstance().rightMasterSpark
-				.setOutput(mDrive.getDriveSignal().rightOutput);
+		HardwareAdapter.DrivetrainHardware.getInstance().rightMasterSpark.setOutput(mDrive.getDriveSignal().rightOutput);
 	}
 
 	private void updateSpinner() {
@@ -129,6 +121,5 @@ public class HardwareWriter {
 	}
 
 	private void updateMiscellaneousHardware() {
-
 	}
 }

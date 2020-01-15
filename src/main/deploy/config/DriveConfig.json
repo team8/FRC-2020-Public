@@ -1,28 +1,27 @@
 {
-    "smartVelocityGains": {
-        "f": 0.0032,
-        "p": 0.0008,
-        "velocity": 400.0,
-        "acceleration": 600.0
-    },
-    "turnGains": {
-
-    },
-    "quickStopWeight": 0.125,
-    "quickTurnScalar": 0.55,
-    "quickStopDeadBand": 0.5,
-    "quickStopScalar": 0.0,
-    "turnSensitivity": 0.95,
-    "lowNegativeInertiaThreshold": 0.65,
-    "lowNegativeInertiaFarScalar": 5.0,
-    "lowNegativeInertiaCloseScalar": 3.0,
-    "lowNegativeInertiaTurnScalar": 2.5,
-    "wheelNonLinearity": 0.5,
-    "controllerRampRate": 0.1,
-    "stallCurrentLimit": 48,
-    "freeCurrentLimit": 48,
-    "freeRpmLimit": 0,
-    "nonlinearPasses": 3,
-    "maxPathVelocityMetersPerSecond": 1.0,
-    "maxPathAccelerationMetersPerSecondSquared": 1.2
+	"smartVelocityGains": {
+		"f": 0.0032,
+		"p": 0.0008,
+		"velocity": 400.0,
+		"acceleration": 600.0
+	},
+	"turnGains": {
+	},
+	"quickStopWeight": 0.125,
+	"quickTurnScalar": 0.55,
+	"quickStopDeadBand": 0.5,
+	"quickStopScalar": 0.0,
+	"turnSensitivity": 0.95,
+	"lowNegativeInertiaThreshold": 0.65,
+	"lowNegativeInertiaFarScalar": 5.0,
+	"lowNegativeInertiaCloseScalar": 3.0,
+	"lowNegativeInertiaTurnScalar": 2.5,
+	"wheelNonLinearity": 0.5,
+	"controllerRampRate": 0.1,
+	"stallCurrentLimit": 48,
+	"freeCurrentLimit": 48,
+	"freeRpmLimit": 0,
+	"nonlinearPasses": 3,
+	"maxPathVelocityMetersPerSecond": 1.0,
+	"maxPathAccelerationMetersPerSecondSquared": 1.2
 }

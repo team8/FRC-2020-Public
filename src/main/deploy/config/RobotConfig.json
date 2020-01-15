@@ -1,13 +1,14 @@
 {
-    "enabledServices": [
-        "commandReceiver"
-    ],
-    "enabledSubsystems": [
-        "drive",
-        "spinner",
-        "intake"
-    ],
-    "coastDriveIfDisabled": false,
-    "disableOutput": false,
-    "smartMotionMultiplier": 0.95
+	"enabledServices": [
+		"commandReceiver",
+		"networkLogger"
+	],
+	"enabledSubsystems": [
+		"drive",
+		"spinner",
+		"intake"
+	],
+	"coastDriveIfDisabled": false,
+	"disableOutput": false,
+	"smartMotionMultiplier": 0.95
 }

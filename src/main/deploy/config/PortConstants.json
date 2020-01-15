@@ -1,9 +1,9 @@
 {
-    "vidarLeftDriveMasterDeviceId": 15,
-    "vidarLeftDriveSlave1DeviceId": 14,
-    "vidarLeftDriveSlave2DeviceId": 13,
-    "vidarRightDriveMasterDeviceId": 20,
-    "vidarRightDriveSlave1DeviceId": 1,
-    "vidarRightDriveSlave2DeviceId": 2,
-    "spinnerTalonDeviceId": 0
+	"vidarLeftDriveMasterDeviceId": 15,
+	"vidarLeftDriveSlave1DeviceId": 14,
+	"vidarLeftDriveSlave2DeviceId": 13,
+	"vidarRightDriveMasterDeviceId": 20,
+	"vidarRightDriveSlave1DeviceId": 1,
+	"vidarRightDriveSlave2DeviceId": 2,
+	"spinnerTalonDeviceId": 0
 }

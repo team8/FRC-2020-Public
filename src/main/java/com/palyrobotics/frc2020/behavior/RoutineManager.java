@@ -1,25 +1,29 @@
 package com.palyrobotics.frc2020.behavior;
 
-import java.util.*;
-
+import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.util.StringUtil;
+
+import java.util.*;
 
 /**
- * Handles the updating of commands by passing them to each running routine.
- * <br />
+ * Handles the updating of commands by passing them to each running routine. <br>
  *
  * @author Nihar, Ailyn
  */
 public class RoutineManager {
 
+	public static final String LOGGER_TAG = StringUtil.classToJsonName(RoutineManager.class);
 	private static RoutineManager sInstance = new RoutineManager();
+	private List<Routine> mRunningRoutines = new LinkedList<>();
+
+	private RoutineManager() {
+	}
 
 	public static RoutineManager getInstance() {
 		return sInstance;
 	}
-
-	private List<Routine> mRunningRoutines = new LinkedList<>();
 
 	static Set<Subsystem> sharedSubsystems(List<Routine> routines) {
 		Set<Subsystem> sharedSubsystems = new HashSet<>(); // TODO: No allocation on update
@@ -33,21 +37,16 @@ public class RoutineManager {
 		return mRunningRoutines;
 	}
 
-	public void clearRunningRoutines() {
-		mRunningRoutines.clear();
-	}
-
 	/**
 	 * Updates the commands that are passed in based on the running routines.
 	 *
 	 * @param commands Current commands
-	 * @return Modified commands
 	 */
 	public void update(Commands commands) {
 		mRunningRoutines.removeIf(routine -> {
 			boolean isFinished = routine.execute(commands);
 			if (isFinished) {
-				System.out.printf("Dropping finished routine: %s%n", routine);
+				Log.debug(LOGGER_TAG, String.format("Dropping finished routine: %s%n", routine));
 			}
 			return isFinished;
 		});
@@ -58,7 +57,7 @@ public class RoutineManager {
 			// Remove any running routines that conflict with new routine
 			List<Routine> conflicts = conflictingRoutines(newRoutine);
 			for (Routine routine : conflicts) {
-				System.out.printf("Dropping conflicting routine: %s%n", routine);
+				Log.warn(LOGGER_TAG, String.format("Dropping conflicting routine: %s%n", routine));
 				mRunningRoutines.remove(routine);
 			}
 			if (!newRoutine.execute(commands)) { // If it finishes immediately never add it to running routines
@@ -67,6 +66,10 @@ public class RoutineManager {
 		}
 		// Clears the wanted routines every update cycle
 		commands.routinesWanted.clear();
+	}
+
+	public void clearRunningRoutines() {
+		mRunningRoutines.clear();
 	}
 
 	/**

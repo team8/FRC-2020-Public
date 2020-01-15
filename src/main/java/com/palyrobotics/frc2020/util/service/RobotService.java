@@ -1,10 +1,16 @@
 package com.palyrobotics.frc2020.util.service;
 
-public interface RobotService {
+import com.palyrobotics.frc2020.util.StringUtil;
 
-	void start();
+public abstract interface RobotService {
 
-	void update();
+	default void start() {
+	}
 
-	String getConfigName();
+	default void update() {
+	}
+
+	default String getConfigName() {
+		return StringUtil.classToJsonName(getClass());
+	}
 }
