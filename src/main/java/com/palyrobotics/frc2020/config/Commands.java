@@ -26,6 +26,9 @@ public class Commands {
     public Intake.IntakeState wantedIntakeState = Intake.IntakeState.IDLE;
     public Shooter.ShooterState wantedShooterState = Shooter.ShooterState.IDLE;
     public Shooter.HoodState wantedHoodState = Shooter.HoodState.LOW;
+
+    public boolean horizontalHoodSolenoidOutput = false;
+    public boolean verticalHoodSolenoidOutput = false;
     public double driveThrottle, driveWheel;
     public boolean isQuickTurn, isBraking;
     // All robot set points

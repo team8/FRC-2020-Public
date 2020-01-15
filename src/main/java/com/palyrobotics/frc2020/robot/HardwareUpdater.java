@@ -255,6 +255,8 @@ class HardwareUpdater {
     private void updateShooter() {
         HardwareAdapter mHardwareAdapter = HardwareAdapter.getInstance();
         updateSparkMax(mHardwareAdapter.getShooterHardware().slaveSpark, mShooter.getOutput());
+        mHardwareAdapter.getShooterHardware().verticalSolenoid.set(mShooter.getVerticalSolenoidOutput());
+        mHardwareAdapter.getShooterHardware().horizontalSolenoid.set(mShooter.getHorizontalSolenoidOutput());
     }
     /**
      * Checks if the compressor should compress and updates it accordingly

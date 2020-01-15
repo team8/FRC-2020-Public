@@ -26,8 +26,9 @@ public class Shooter extends Subsystem{
 
     private SparkMaxOutput mOutput = new SparkMaxOutput();
 
-    private HoodState mHoodOutput = HoodState.LOW;
+    private boolean mVerticalSolenoidOutput = false;
 
+    private boolean mHorizontalSolenoidOutput = false;
 
     public enum ShooterState {
         IDLE, SHOOTING
@@ -51,6 +52,8 @@ public class Shooter extends Subsystem{
         //given a wanted shooter state, set the wantedShooterState to something based on that state using a switch
         mState = commands.wantedShooterState;
         mHoodState = commands.wantedHoodState;
+        mVerticalSolenoidOutput = commands.verticalHoodSolenoidOutput;
+        mHorizontalSolenoidOutput = commands.horizontalHoodSolenoidOutput;
 
         switch(mState){
             case IDLE:
@@ -80,15 +83,24 @@ public class Shooter extends Subsystem{
         mOutput.setPercentOutput(0);
         mState = ShooterState.IDLE;
         mHoodState = HoodState.LOW;
-        mHoodOutput = HoodState.LOW;
+        mHorizontalSolenoidOutput = false;
+        mVerticalSolenoidOutput = false;
     }
 
     public SparkMaxOutput getOutput() {
         return mOutput;
     }
 
-    public HoodState getHoodOutput(){
-        return mHoodOutput;
+    public boolean getHorizontalSolenoidOutput() {
+        return mHorizontalSolenoidOutput;
+    }
+
+    public boolean getVerticalSolenoidOutput() {
+        return mVerticalSolenoidOutput;
+    }
+
+    public HoodState getHoodState(){
+        return mHoodState;
     }
 
     public double feetToMeters (double feet){
