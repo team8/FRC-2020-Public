@@ -1,14 +1,15 @@
 package com.palyrobotics.frc2020.behavior;
 
+import java.util.*;
+
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 import com.palyrobotics.frc2020.util.StringUtil;
 
-import java.util.*;
-
 /**
- * Handles the updating of commands by passing them to each running routine. <br>
+ * Handles the updating of commands by passing them to each running routine.
+ * <br>
  *
  * @author Nihar, Ailyn
  */

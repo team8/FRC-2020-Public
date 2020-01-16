@@ -1,14 +1,14 @@
 package com.palyrobotics.frc2020.behavior;
 
+import java.util.Set;
+
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
-import java.util.Set;
-
 /**
- *
- */
+*
+*/
 public abstract class Routine {
 
 	private enum RoutineState {
@@ -23,7 +23,8 @@ public abstract class Routine {
 			start();
 			mState = RoutineState.RUNNING;
 		} else if (mState == RoutineState.FINISHED) {
-			throw new IllegalStateException(String.format("Routine %s already finished! Should not be updated.", toString()));
+			throw new IllegalStateException(
+					String.format("Routine %s already finished! Should not be updated.", toString()));
 		}
 		update(commands);
 		if (checkFinished()) {
@@ -56,6 +57,7 @@ public abstract class Routine {
 		return mState == RoutineState.FINISHED;
 	}
 
-	// Store subsystems which are required by this routine, preventing routines from overlapping
+	// Store subsystems which are required by this routine, preventing routines from
+	// overlapping
 	public abstract Set<Subsystem> getRequiredSubsystems();
 }

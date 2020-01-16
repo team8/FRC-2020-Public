@@ -22,8 +22,8 @@ public abstract class MultipleRoutine extends Routine {
 	public String getName() {
 		StringBuilder name = new StringBuilder(super.getName()).append(":");
 		for (Routine routine : mRoutines) {
-			name.append("\n").append("    ").append(routine).append(" ").append("[").append(routine.isFinished() ? "Finished" : "Running")
-				.append("]");
+			name.append("\n").append("    ").append(routine).append(" ").append("[")
+					.append(routine.isFinished() ? "Finished" : "Running").append("]");
 		}
 		return name.toString();
 	}

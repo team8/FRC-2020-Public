@@ -1,9 +1,10 @@
 package com.palyrobotics.frc2020.util;
 
-import com.esotericsoftware.minlog.Log;
-import edu.wpi.first.wpilibj.Timer;
-
 import java.util.ArrayList;
+
+import com.esotericsoftware.minlog.Log;
+
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * @author Quintin Dwight

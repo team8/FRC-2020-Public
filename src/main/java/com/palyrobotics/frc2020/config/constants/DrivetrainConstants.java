@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.config.constants;
 
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.util.config.Configs;
+
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -17,17 +18,21 @@ public class DrivetrainConstants {
 	/**
 	 * Path following constants
 	 */
-	public static final double kDriveWheelDiameterInches = 6.0, kDriveWheelDiameterMeters = Units.inchesToMeters(
-			kDriveWheelDiameterInches), kTrackWidthInches = 24.5, kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
+	public static final double kDriveWheelDiameterInches = 6.0,
+			kDriveWheelDiameterMeters = Units.inchesToMeters(kDriveWheelDiameterInches), kTrackWidthInches = 24.5,
+			kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
 
-	public static final DifferentialDriveKinematics kKinematics = new DifferentialDriveKinematics(DrivetrainConstants.kTrackWidthMeters);
+	public static final DifferentialDriveKinematics kKinematics = new DifferentialDriveKinematics(
+			DrivetrainConstants.kTrackWidthMeters);
 	public static final double kS = 0.145, kV = 2.59, kA = 0.484;
-	public static final Pose2d kPathFinishTolerance = new Pose2d(new Translation2d(0.2, 0.2), Rotation2d.fromDegrees(5.0));
+	public static final Pose2d kPathFinishTolerance = new Pose2d(new Translation2d(0.2, 0.2),
+			Rotation2d.fromDegrees(5.0));
 
 	/**
 	 * Unit Conversions
 	 */
-	public static final double kDriveMetersPerRotation = 0.04677268475, kDriveMetersPerSecondPerRpm = kDriveMetersPerRotation;
+	public static final double kDriveMetersPerRotation = 0.04677268475,
+			kDriveMetersPerSecondPerRpm = kDriveMetersPerRotation;
 	/**
 	 * Cheesy Drive Constants
 	 */
@@ -39,11 +44,13 @@ public class DrivetrainConstants {
 	}
 
 	/**
-	 * @return Copy of the standard trajectory configuration. Can be modified safely.
+	 * @return Copy of the standard trajectory configuration. Can be modified
+	 *         safely.
 	 */
 	public static TrajectoryConfig getStandardTrajectoryConfig() {
-		return new TrajectoryConfig(kDriveConfig.maxPathVelocityMetersPerSecond, kDriveConfig.maxPathAccelerationMetersPerSecondSquared)
-				.setKinematics(kKinematics).addConstraint(
-						new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(kS, kV, kA), kKinematics, kMaxVoltage));
+		return new TrajectoryConfig(kDriveConfig.maxPathVelocityMetersPerSecond,
+				kDriveConfig.maxPathAccelerationMetersPerSecondSquared).setKinematics(kKinematics)
+						.addConstraint(new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(kS, kV, kA),
+								kKinematics, kMaxVoltage));
 	}
 }

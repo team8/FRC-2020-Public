@@ -59,7 +59,8 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 	}
 
 	public boolean getTriggerPressed(Hand hand) {
-		return mLastTriggers.get(hand) != getTriggerAxis(hand) > kTriggerThreshold && getTriggerAxis(hand) > kTriggerThreshold;
+		return mLastTriggers.get(hand) != getTriggerAxis(hand) > kTriggerThreshold
+				&& getTriggerAxis(hand) > kTriggerThreshold;
 	}
 
 	public boolean getLeftTriggerPressed() {

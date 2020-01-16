@@ -1,33 +1,27 @@
 package com.palyrobotics.frc2020.util.control;
 
+import java.util.Map;
+
 import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANPIDController.ArbFFUnits;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
-import java.util.Map;
-
 /**
- * A wrapper around a Spark Max that only updates inputs when they have changed. This also supports
- * updating gains smartly. Control types are automatically mapped to PID slots on the Spark
- * controller.
+ * A wrapper around a Spark Max that only updates inputs when they have changed.
+ * This also supports updating gains smartly. Control types are automatically
+ * mapped to PID slots on the Spark controller.
  *
  * @author Quintin Dwight
  */
 public class Spark extends CANSparkMax {
 
-	public static final Map<ControllerOutput.Mode, ControlType> MODE_TO_CONTROLLER = Map.of(ControllerOutput.Mode.PERCENT_OUTPUT,
-																							ControlType.kDutyCycle,
-																							ControllerOutput.Mode.POSITION,
-																							ControlType.kPosition,
-																							ControllerOutput.Mode.VELOCITY,
-																							ControlType.kVelocity,
-																							ControllerOutput.Mode.PROFILED_POSITION,
-																							ControlType.kSmartMotion,
-																							ControllerOutput.Mode.PROFILED_VELOCITY,
-																							ControlType.kSmartVelocity
-	);
+	public static final Map<ControllerOutput.Mode, ControlType> MODE_TO_CONTROLLER = Map.of(
+			ControllerOutput.Mode.PERCENT_OUTPUT, ControlType.kDutyCycle, ControllerOutput.Mode.POSITION,
+			ControlType.kPosition, ControllerOutput.Mode.VELOCITY, ControlType.kVelocity,
+			ControllerOutput.Mode.PROFILED_POSITION, ControlType.kSmartMotion, ControllerOutput.Mode.PROFILED_VELOCITY,
+			ControlType.kSmartVelocity);
 
 	private final CANPIDController mHardwareController = getPIDController();
 	private final ProfiledControllerBase mController = new ProfiledControllerBase() {
@@ -64,8 +58,8 @@ public class Spark extends CANSparkMax {
 		@Override
 		boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput) {
 			ControlType controllerType = MODE_TO_CONTROLLER.get(mode);
-			return mHardwareController.setReference(
-					reference, controllerType, slot, arbitraryPercentOutput, ArbFFUnits.kPercentOut) == CANError.kOk;
+			return mHardwareController.setReference(reference, controllerType, slot, arbitraryPercentOutput,
+					ArbFFUnits.kPercentOut) == CANError.kOk;
 		}
 
 		@Override

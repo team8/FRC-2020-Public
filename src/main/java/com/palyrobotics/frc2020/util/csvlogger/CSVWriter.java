@@ -1,16 +1,17 @@
 package com.palyrobotics.frc2020.util.csvlogger;
 
-import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.util.StringUtil;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.function.UnaryOperator;
+
+import com.esotericsoftware.minlog.Log;
+import com.palyrobotics.frc2020.util.StringUtil;
+
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * @author Jason Liu, Quintin Dwight
@@ -20,8 +21,8 @@ public class CSVWriter {
 	private static final String COMMA_DELIMITER = ",", NEW_LINE_SEPARATOR = "\n", FILE_NAME = "canlog.csv";
 	private static final int ALLOCATE_SIZE = 100000;
 	private static final String LOGGER_TAG = StringUtil.classToJsonName(CSVWriter.class);
-	private static final File sCsvFile = RobotBase.isReal() ? Paths.get("/home/lvuser", FILE_NAME).toFile() : Paths.get(
-			Filesystem.getOperatingDirectory().toString(), FILE_NAME).toFile();
+	private static final File sCsvFile = RobotBase.isReal() ? Paths.get("/home/lvuser", FILE_NAME).toFile()
+			: Paths.get(Filesystem.getOperatingDirectory().toString(), FILE_NAME).toFile();
 	private static final StringBuilder sBuilder = new StringBuilder(ALLOCATE_SIZE);
 	private static double sStartTime;
 

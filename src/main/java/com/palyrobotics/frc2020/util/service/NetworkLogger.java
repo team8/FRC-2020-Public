@@ -1,15 +1,16 @@
 package com.palyrobotics.frc2020.util.service;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.esotericsoftware.minlog.Log.Logger;
-import edu.wpi.first.wpilibj.Timer;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
+import edu.wpi.first.wpilibj.Timer;
 
 public class NetworkLogger extends Logger implements RobotService {
 
@@ -63,7 +64,8 @@ public class NetworkLogger extends Logger implements RobotService {
 		}
 		mLogs.add(log);
 		if (mServer.getConnections().length == 0) {
-			System.out.println(log.toString()); // If we aren't connected, forward to system out which goes to driver station
+			System.out.println(log.toString()); // If we aren't connected, forward to system out which goes to driver
+												// station
 		} else {
 			while (!mLogs.isEmpty()) {
 				mServer.sendToAllTCP(mLogs.remove());

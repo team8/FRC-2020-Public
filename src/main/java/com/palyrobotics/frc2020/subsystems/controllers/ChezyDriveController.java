@@ -59,13 +59,14 @@ public class ChezyDriveController extends Drive.DriveController {
 			mNegativeInertiaAccumulator = 0.0;
 		}
 
-		// Quick-turn allows us to turn in place without having to be moving forward or backwards
+		// Quick-turn allows us to turn in place without having to be moving forward or
+		// backwards
 		double angularPower, overPower;
 		if (isQuickTurn) {
 			if (absoluteThrottle < mDriveConfig.quickStopDeadBand) {
 				double alpha = mDriveConfig.quickStopWeight;
-				mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator + alpha * MathUtil.clamp01(
-						wheel) * mDriveConfig.quickStopScalar;
+				mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator
+						+ alpha * MathUtil.clamp01(wheel) * mDriveConfig.quickStopScalar;
 			}
 			overPower = 1.0;
 			angularPower = wheel * mDriveConfig.quickTurnScalar;

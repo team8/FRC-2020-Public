@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.revrobotics.ColorMatch;
+
 import edu.wpi.first.wpilibj.util.Color;
 
 public class Spinner extends Subsystem {
@@ -15,15 +16,14 @@ public class Spinner extends Subsystem {
 	}
 
 	private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
-	public static final Color kCyanCPTarget = ColorMatch.makeColor(mConfig.colorSensorCyanRGB.get(0), mConfig.colorSensorCyanRGB.get(1),
-																   mConfig.colorSensorCyanRGB.get(2)
-	), kGreenCPTarget = ColorMatch.makeColor(mConfig.colorSensorGreenRGB.get(0), mConfig.colorSensorGreenRGB.get(1),
-											 mConfig.colorSensorGreenRGB.get(2)
-	), kRedCPTarget = ColorMatch.makeColor(mConfig.colorSensorRedRGB.get(0), mConfig.colorSensorRedRGB.get(1),
-										   mConfig.colorSensorRedRGB.get(2)
-	), kYellowCPTarget = ColorMatch.makeColor(mConfig.colorSensorYellowRGB.get(0), mConfig.colorSensorYellowRGB.get(1),
-											  mConfig.colorSensorYellowRGB.get(2)
-	);
+	public static final Color kCyanCPTarget = ColorMatch.makeColor(mConfig.colorSensorCyanRGB.get(0),
+			mConfig.colorSensorCyanRGB.get(1), mConfig.colorSensorCyanRGB.get(2)),
+			kGreenCPTarget = ColorMatch.makeColor(mConfig.colorSensorGreenRGB.get(0),
+					mConfig.colorSensorGreenRGB.get(1), mConfig.colorSensorGreenRGB.get(2)),
+			kRedCPTarget = ColorMatch.makeColor(mConfig.colorSensorRedRGB.get(0), mConfig.colorSensorRedRGB.get(1),
+					mConfig.colorSensorRedRGB.get(2)),
+			kYellowCPTarget = ColorMatch.makeColor(mConfig.colorSensorYellowRGB.get(0),
+					mConfig.colorSensorYellowRGB.get(1), mConfig.colorSensorYellowRGB.get(2));
 	private static Spinner sInstance = new Spinner();
 	private double mOutput;
 	private String mPreviousColor;

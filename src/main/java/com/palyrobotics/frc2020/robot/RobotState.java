@@ -3,6 +3,7 @@ package com.palyrobotics.frc2020.robot;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.util.StringUtil;
 import com.revrobotics.ColorMatchResult;
+
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
@@ -69,6 +70,7 @@ public class RobotState {
 	}
 
 	public void updateOdometry(double headingDegrees, double leftMeters, double rightMeters) {
-		drivePose = driveOdometry.update(Rotation2d.fromDegrees(Math.IEEEremainder(headingDegrees, 360.0)), leftMeters, rightMeters);
+		drivePose = driveOdometry.update(Rotation2d.fromDegrees(Math.IEEEremainder(headingDegrees, 360.0)), leftMeters,
+				rightMeters);
 	}
 }

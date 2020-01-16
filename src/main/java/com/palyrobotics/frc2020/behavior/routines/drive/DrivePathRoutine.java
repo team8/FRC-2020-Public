@@ -1,16 +1,17 @@
 package com.palyrobotics.frc2020.behavior.routines.drive;
 
+import java.util.*;
+
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
+
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-
-import java.util.*;
 
 public class DrivePathRoutine extends Routine {
 
@@ -25,13 +26,15 @@ public class DrivePathRoutine extends Routine {
 	}
 
 	public DrivePathRoutine(boolean isReversed, List<Pose2d> waypoints) {
-		mTrajectory = TrajectoryGenerator.generateTrajectory(getGenerationPoints(isReversed, waypoints), getGenerationConfig(isReversed));
+		mTrajectory = TrajectoryGenerator.generateTrajectory(getGenerationPoints(isReversed, waypoints),
+				getGenerationConfig(isReversed));
 	}
 
 	private <T> List<T> getGenerationPoints(boolean isReversed, List<T> waypoints) {
 		List<T> generatorPoints;
 		if (isReversed) {
-			// We need to clone waypoints since reversing is in-place and we don't want to modify passed in list
+			// We need to clone waypoints since reversing is in-place and we don't want to
+			// modify passed in list
 			generatorPoints = new ArrayList<>(waypoints);
 			Collections.reverse(generatorPoints);
 		} else {
@@ -54,9 +57,9 @@ public class DrivePathRoutine extends Routine {
 	}
 
 	public DrivePathRoutine(boolean isReversed, Pose2d start, List<Translation2d> interiorWaypoints, Pose2d end) {
-		mTrajectory = TrajectoryGenerator.generateTrajectory(isReversed ? end : start, getGenerationPoints(isReversed, interiorWaypoints),
-															 isReversed ? start : end, getGenerationConfig(isReversed)
-		);
+		mTrajectory = TrajectoryGenerator.generateTrajectory(isReversed ? end : start,
+				getGenerationPoints(isReversed, interiorWaypoints), isReversed ? start : end,
+				getGenerationConfig(isReversed));
 	}
 
 	@Override

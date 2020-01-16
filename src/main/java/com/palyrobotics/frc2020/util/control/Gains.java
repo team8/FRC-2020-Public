@@ -29,8 +29,9 @@ public class Gains {
 		if (!(other instanceof Gains))
 			return false;
 		Gains otherGains = (Gains) other;
-		return Double.compare(otherGains.p, p) == 0 && Double.compare(otherGains.i, i) == 0 && Double.compare(
-				otherGains.d, d) == 0 && Double.compare(otherGains.f, f) == 0 && Double.compare(otherGains.iZone, iZone) == 0;
+		return Double.compare(otherGains.p, p) == 0 && Double.compare(otherGains.i, i) == 0
+				&& Double.compare(otherGains.d, d) == 0 && Double.compare(otherGains.f, f) == 0
+				&& Double.compare(otherGains.iZone, iZone) == 0;
 	}
 
 	@Override // Auto-generated

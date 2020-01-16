@@ -1,7 +1,8 @@
 package com.palyrobotics.frc2020.util;
 
 /**
- * This class holds a bunch of static methods and variables needed for mathematics
+ * This class holds a bunch of static methods and variables needed for
+ * mathematics
  */
 public class MathUtil {
 
@@ -32,8 +33,8 @@ public class MathUtil {
 	 *
 	 * @param from The first angle
 	 * @param to   The second angle
-	 * @return The change in angle from the first argument necessary to line up with the second.
-	 * Always between -Pi and Pi
+	 * @return The change in angle from the first argument necessary to line up with
+	 *         the second. Always between -Pi and Pi
 	 */
 	public static double getDifferenceInAngleRadians(double from, double to) {
 		return boundAngleNegPiToPiRadians(to - from);
@@ -55,8 +56,8 @@ public class MathUtil {
 	 *
 	 * @param from The first angle
 	 * @param to   The second angle
-	 * @return The change in angle from the first argument necessary to line up with the second.
-	 * Always between -180 and 180
+	 * @return The change in angle from the first argument necessary to line up with
+	 *         the second. Always between -180 and 180
 	 */
 	public static double getDifferenceInAngleDegrees(double from, double to) {
 		return boundAngleNeg180to180Degrees(to - from);

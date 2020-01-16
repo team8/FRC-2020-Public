@@ -7,15 +7,11 @@ public abstract class ProfiledControllerBase extends SimpleControllerBase {
 		super.updateGains(isFirstInitialization, slot, newGains, lastGains);
 		if (newGains instanceof SmartGains) { // TODO maybe we could set this up such that we do not check type
 			SmartGains lastSmartGains = (SmartGains) lastGains, newSmartGains = (SmartGains) newGains;
-			if (Double.compare(
-					lastSmartGains.acceleration * mRobotConfig.smartMotionMultiplier,
-					newSmartGains.acceleration * mRobotConfig.smartMotionMultiplier
-			) != 0)
+			if (Double.compare(lastSmartGains.acceleration * mRobotConfig.smartMotionMultiplier,
+					newSmartGains.acceleration * mRobotConfig.smartMotionMultiplier) != 0)
 				setProfiledAcceleration(slot, newSmartGains.acceleration * mRobotConfig.smartMotionMultiplier);
-			if (Double.compare(
-					lastSmartGains.velocity * mRobotConfig.smartMotionMultiplier,
-					newSmartGains.velocity * mRobotConfig.smartMotionMultiplier
-			) != 0)
+			if (Double.compare(lastSmartGains.velocity * mRobotConfig.smartMotionMultiplier,
+					newSmartGains.velocity * mRobotConfig.smartMotionMultiplier) != 0)
 				setProfiledCruiseVelocity(slot, newSmartGains.velocity * mRobotConfig.smartMotionMultiplier);
 			if (Double.compare(lastSmartGains.allowableError, newSmartGains.allowableError) != 0)
 				setProfiledAllowableError(slot, newSmartGains.allowableError);

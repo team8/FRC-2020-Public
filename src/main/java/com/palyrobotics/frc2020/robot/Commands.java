@@ -1,13 +1,14 @@
 package com.palyrobotics.frc2020.robot;
 
+import java.util.ArrayList;
+
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
-import java.util.ArrayList;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 /**
  * Commands represent what we want the robot to be doing.
@@ -108,7 +109,8 @@ public class Commands {
 		setDriveTeleop(0.0, 0.0, false, false);
 	}
 
-	public void setDriveTeleop(double driveThrottle, double driveWheel, boolean driveWantsQuickTurn, boolean driveWantsBrake) {
+	public void setDriveTeleop(double driveThrottle, double driveWheel, boolean driveWantsQuickTurn,
+			boolean driveWantsBrake) {
 		driveWantedState = Drive.DriveState.TELEOP;
 		this.driveWantedThrottle = driveThrottle;
 		this.driveWantedWheel = driveWheel;

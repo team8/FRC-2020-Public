@@ -1,5 +1,8 @@
 package com.palyrobotics.frc2020.auto.modes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.palyrobotics.frc2020.auto.AutoModeBase;
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
@@ -7,18 +10,17 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.intake.IntakeBallRoutine;
 import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
+
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@SuppressWarnings("Duplicates")
+@SuppressWarnings ("Duplicates")
 public class Shoot3RendezvousGetShoot3Loading extends AutoModeBase {
 
 	@Override
 	public Routine getRoutine() {
-		// start facing the 3 balls from the leftmost ball if facing the balls from op station
+		// start facing the 3 balls from the leftmost ball if facing the balls from op
+		// station
 		List<Routine> routines = new ArrayList<>();
 
 		List<Pose2d> rendezvous1 = new ArrayList<>();

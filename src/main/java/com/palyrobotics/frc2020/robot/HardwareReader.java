@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.robot;
 
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.revrobotics.ColorMatch;
+
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class HardwareReader {
@@ -9,11 +10,12 @@ public class HardwareReader {
 	private static HardwareReader sInstance = new HardwareReader();
 
 	/**
-	 * A REV Color Match object is used to register and detect known colors. This can be calibrated
-	 * ahead of time or during operation.
+	 * A REV Color Match object is used to register and detect known colors. This
+	 * can be calibrated ahead of time or during operation.
 	 *
-	 * <p>This object uses euclidean distance to estimate the closest match with a given confidence
-	 * range.
+	 * <p>
+	 * This object uses euclidean distance to estimate the closest match with a
+	 * given confidence range.
 	 */
 	public final ColorMatch mColorMatcher = new ColorMatch();
 
@@ -29,8 +31,8 @@ public class HardwareReader {
 	}
 
 	/**
-	 * Takes all of the sensor data from the hardware, and unwraps it into the current {@link
-	 * RobotState}.
+	 * Takes all of the sensor data from the hardware, and unwraps it into the
+	 * current {@link RobotState}.
 	 */
 	void updateState(RobotState robotState) {
 		var drivetrain = HardwareAdapter.DrivetrainHardware.getInstance();

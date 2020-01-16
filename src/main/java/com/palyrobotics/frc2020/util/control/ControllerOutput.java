@@ -103,15 +103,14 @@ public class ControllerOutput {
 		if (other == null || getClass() != other.getClass())
 			return false;
 		ControllerOutput otherOutput = (ControllerOutput) other;
-		return Double.compare(otherOutput.mReference, mReference) == 0 && Double.compare(
-				otherOutput.mArbitraryDemand, mArbitraryDemand) == 0 && Objects.equals(mMode, otherOutput.mMode) && Objects.equals(
-				mGains, otherOutput.mGains);
+		return Double.compare(otherOutput.mReference, mReference) == 0
+				&& Double.compare(otherOutput.mArbitraryDemand, mArbitraryDemand) == 0
+				&& Objects.equals(mMode, otherOutput.mMode) && Objects.equals(mGains, otherOutput.mGains);
 	}
 
 	@Override // Auto-generated
 	public String toString() {
-		return String.format("Output{mMode=%s, mGains=%s, mReference=%s, mArbitraryDemand=%s}", mMode, mGains, mReference,
-							 mArbitraryDemand
-		);
+		return String.format("Output{mMode=%s, mGains=%s, mReference=%s, mArbitraryDemand=%s}", mMode, mGains,
+				mReference, mArbitraryDemand);
 	}
 }

@@ -1,5 +1,10 @@
 package com.palyrobotics.frc2020.robot;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.config.RobotConfig;
@@ -17,12 +22,8 @@ import com.palyrobotics.frc2020.util.service.RobotService;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 import com.revrobotics.CANSparkMax.IdleMode;
-import edu.wpi.first.wpilibj.TimedRobot;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Robot extends TimedRobot {
 
@@ -148,12 +149,15 @@ public class Robot extends TimedRobot {
 	}
 
 	private void setupSubsystemsAndServices() {
-		// TODO hard to read if unfamiliar with streams. maybe change to non-functional style
-		Map<String, RobotService> configToService = mServices.stream().collect(
-				Collectors.toMap(RobotService::getConfigName, Function.identity()));
+		// TODO hard to read if unfamiliar with streams. maybe change to non-functional
+		// style
+		Map<String, RobotService> configToService = mServices.stream()
+				.collect(Collectors.toMap(RobotService::getConfigName, Function.identity()));
 		mEnabledServices = mConfig.enabledServices.stream().map(configToService::get).collect(Collectors.toList());
-		Map<String, Subsystem> configToSubsystem = mSubsystems.stream().collect(Collectors.toMap(Subsystem::getName, Function.identity()));
-		mEnabledSubsystems = mConfig.enabledSubsystems.stream().map(configToSubsystem::get).collect(Collectors.toList());
+		Map<String, Subsystem> configToSubsystem = mSubsystems.stream()
+				.collect(Collectors.toMap(Subsystem::getName, Function.identity()));
+		mEnabledSubsystems = mConfig.enabledSubsystems.stream().map(configToSubsystem::get)
+				.collect(Collectors.toList());
 		var builder = new StringBuilder();
 		builder.append("Enabled subsystems:\n");
 		for (RobotService enabledService : mEnabledServices) {
