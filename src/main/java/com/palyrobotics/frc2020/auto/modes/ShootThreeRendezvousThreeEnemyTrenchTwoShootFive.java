@@ -13,6 +13,7 @@ import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.util.Units;
 
 @SuppressWarnings ("Duplicates")
 public class ShootThreeRendezvousThreeEnemyTrenchTwoShootFive extends AutoModeBase {
@@ -22,21 +23,21 @@ public class ShootThreeRendezvousThreeEnemyTrenchTwoShootFive extends AutoModeBa
 		List<Routine> routines = new ArrayList<>();
 
 		List<Pose2d> enemyTrench = new ArrayList<>();
-		enemyTrench.add(new Pose2d(120, -210, Rotation2d.fromDegrees(0)));
+		enemyTrench.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-210), Rotation2d.fromDegrees(0)));
 		// pick up ball
-		enemyTrench.add(new Pose2d(120, -200, Rotation2d.fromDegrees(0)));
+		enemyTrench.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-200), Rotation2d.fromDegrees(0)));
 		// pick up ball
 
 		List<Pose2d> rendezvous = new ArrayList<>();
-		rendezvous.add(new Pose2d(120, -90, Rotation2d.fromDegrees(0)));
+		rendezvous.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-90), Rotation2d.fromDegrees(0)));
 		// pick up ball
-		rendezvous.add(new Pose2d(110, -70, Rotation2d.fromDegrees(0)));
+		rendezvous.add(new Pose2d(Units.inchesToMeters(110), Units.inchesToMeters(-70), Rotation2d.fromDegrees(0)));
 		// pick up ball
-		rendezvous.add(new Pose2d(100, -60, Rotation2d.fromDegrees(0)));
+		rendezvous.add(new Pose2d(Units.inchesToMeters(100), Units.inchesToMeters(-60), Rotation2d.fromDegrees(0)));
 		// pick up ball
 
 		List<Pose2d> goBackToStart = new ArrayList<>();
-		goBackToStart.add(new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
+		goBackToStart.add(new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
 
 		// shoot 3 balls
 		routines.add(new ShootAllBallsRoutine());

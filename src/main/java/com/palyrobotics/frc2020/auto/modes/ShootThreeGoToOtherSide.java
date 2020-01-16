@@ -11,6 +11,7 @@ import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.util.Units;
 
 @SuppressWarnings ("Duplicates")
 public class ShootThreeGoToOtherSide extends AutoModeBase {
@@ -20,7 +21,7 @@ public class ShootThreeGoToOtherSide extends AutoModeBase {
 		List<Routine> routines = new ArrayList<>();
 
 		List<Pose2d> otherSide = new ArrayList<>();
-		otherSide.add(new Pose2d(350, 0, Rotation2d.fromDegrees(0)));
+		otherSide.add(new Pose2d(Units.inchesToMeters(350), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
 
 		// shoot 3 balls
 		// pick up 2 balls
