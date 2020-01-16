@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public class Configs {
 
-	private static final String CONFIG_FOLDER_NAME = StringUtil.classToJsonName(Configs.class), LOGGER_TAG = "configs";
+	private static final String CONFIG_FOLDER_NAME = "config", LOGGER_TAG = StringUtil.classToJsonName(Configs.class);
 	private static final Path CONFIG_FOLDER = (RobotBase.isReal()
 			? Paths.get(Filesystem.getDeployDirectory().toString(), CONFIG_FOLDER_NAME)
 			: Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", CONFIG_FOLDER_NAME))

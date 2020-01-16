@@ -238,5 +238,7 @@ modules.xml
 
 *.csv
 
+# WPILib simulation configuration for GUI
+imgui.ini
 
 # End of https://www.gitignore.io/api/intellij

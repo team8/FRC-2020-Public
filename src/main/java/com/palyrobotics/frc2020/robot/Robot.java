@@ -159,9 +159,17 @@ public class Robot extends TimedRobot {
 		mEnabledSubsystems = mConfig.enabledSubsystems.stream().map(configToSubsystem::get)
 				.collect(Collectors.toList());
 		var builder = new StringBuilder();
+		builder.append("\n===================\n");
 		builder.append("Enabled subsystems:\n");
+		builder.append("-------------------\n");
+		for (Subsystem enabledSubsystem : mEnabledSubsystems) {
+			builder.append(enabledSubsystem.getName()).append("\n");
+		}
+		builder.append("=================\n");
+		builder.append("Enabled services:\n");
+		builder.append("-----------------\n");
 		for (RobotService enabledService : mEnabledServices) {
-			builder.append(enabledService);
+			builder.append(enabledService.getConfigName()).append("\n");
 		}
 		Log.info(LOGGER_TAG, builder.toString());
 	}

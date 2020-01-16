@@ -20,10 +20,6 @@ public class LogEntry {
 
 	@Override
 	public String toString() {
-		return toString(1, timeStampMilliseconds);
-	}
-
-	public String toString(int amount, long timeStampMilliseconds) {
 		var log = new StringBuilder(256);
 		long minutes = timeStampMilliseconds / (1000 * 60), seconds = timeStampMilliseconds / (1000) % 60;
 		if (minutes <= 9)
@@ -62,9 +58,6 @@ public class LogEntry {
 			var writer = new StringWriter(256);
 			cause.printStackTrace(new PrintWriter(writer));
 			log.append('\n').append(writer.toString().trim());
-		}
-		if (amount > 1) {
-			log.append(" [").append(amount).append(']');
 		}
 		return log.toString();
 	}
