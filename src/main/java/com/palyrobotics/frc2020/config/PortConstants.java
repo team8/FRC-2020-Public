@@ -20,4 +20,10 @@ public class PortConstants extends ConfigBase {
 	 * Intake
 	 */
 	public int vidarIntakeDeviceId;
+
+	/**
+	 * Indexer
+	 */
+	public int vidarIndexerHorizontalDeviceID;
+
 }

@@ -7,10 +7,7 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
-import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.subsystems.Intake;
-import com.palyrobotics.frc2020.subsystems.Spinner;
-import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.StringUtil;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Spark;
@@ -25,6 +22,7 @@ public class HardwareWriter {
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	private final Drive mDrive = Drive.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
+	private final Indexer mIndexer = Indexer.getInstance();
 	private final Intake mIntake = Intake.getInstance();
 
 	private HardwareWriter() {
@@ -37,6 +35,7 @@ public class HardwareWriter {
 	void configureHardware() {
 		configureDriveHardware();
 		configureIntakeHardware();
+		configureIndexerHardware();
 		configureSpinnerHardware();
 	}
 
@@ -82,6 +81,12 @@ public class HardwareWriter {
 		intakeHardware.intakeVictor.setInverted(false);
 	}
 
+	private void configureIndexerHardware() {
+		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
+
+		indexerHardware.indexerHorizontalSpark.setInverted(false);
+	}
+
 	private void configureSpinnerHardware() {
 	}
 
@@ -105,6 +110,7 @@ public class HardwareWriter {
 		if (!mRobotConfig.disableOutput) {
 			updateDrivetrain();
 			updateSpinner();
+			updateIndexer();
 			updateIntake();
 			updateMiscellaneousHardware();
 		}
@@ -118,6 +124,10 @@ public class HardwareWriter {
 
 	private void updateSpinner() {
 		HardwareAdapter.SpinnerHardware.getInstance().spinnerTalon.set(ControlMode.PercentOutput, mSpinner.getOutput());
+	}
+
+	private void updateIndexer() {
+		HardwareAdapter.IndexerHardware.getInstance().indexerHorizontalSpark.setOutput(mIndexer.getOutput());
 	}
 
 	private void updateIntake() {

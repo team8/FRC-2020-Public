@@ -64,6 +64,19 @@ public class HardwareAdapter {
 		}
 	}
 
+	static class IndexerHardware {
+
+		private static IndexerHardware sInstance = new IndexerHardware();
+		final Spark indexerHorizontalSpark = new Spark(sPortConstants.vidarIndexerHorizontalDeviceID);
+
+		private IndexerHardware() {
+		}
+
+		static IndexerHardware getInstance() {
+			return sInstance;
+		}
+	}
+
 	static class Joysticks {
 
 		private static final Joysticks sInstance = new Joysticks();

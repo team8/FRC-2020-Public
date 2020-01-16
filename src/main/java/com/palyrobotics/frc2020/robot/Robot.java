@@ -9,10 +9,7 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.dashboard.LiveGraph;
-import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.subsystems.Intake;
-import com.palyrobotics.frc2020.subsystems.Spinner;
-import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.StringUtil;
 import com.palyrobotics.frc2020.util.commands.CommandReceiver;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -37,11 +34,12 @@ public class Robot extends TimedRobot {
 	/* Subsystems */
 	private final Drive mDrive = Drive.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
+	private final Indexer mIndexer = Indexer.getInstance();
 	private final Intake mIntake = Intake.getInstance();
 	private final HardwareReader mHardwareReader = HardwareReader.getInstance();
 	private final HardwareWriter mHardwareWriter = HardwareWriter.getInstance();
 	private Commands mCommands = Commands.getInstance();
-	private List<Subsystem> mSubsystems = List.of(mDrive, mSpinner, mIntake), mEnabledSubsystems;
+	private List<Subsystem> mSubsystems = List.of(mDrive, mSpinner, mIndexer, mIntake), mEnabledSubsystems;
 	private List<RobotService> mServices = List.of(new CommandReceiver(), new NetworkLogger()), mEnabledServices;
 
 	@Override
