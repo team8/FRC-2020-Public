@@ -16,7 +16,7 @@ import com.revrobotics.CANSparkMax;
 
 public class HardwareWriter {
 
-	public static final int TIMEOUT_MS = 500;
+	public static final int TIMEOUT_MS = 50;
 	private static final String LOGGER_TAG = StringUtil.classToJsonName(HardwareWriter.class);
 	private static HardwareWriter sInstance = new HardwareWriter();
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
@@ -78,17 +78,18 @@ public class HardwareWriter {
 
 	private void configureIntakeHardware() {
 		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
-		intakeHardware.intakeVictor.setInverted(false);
+		intakeHardware.intakeTalon.configFactoryDefault(TIMEOUT_MS);
 	}
 
 	private void configureIndexerHardware() {
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
-
-		indexerHardware.indexerHorizontalSpark.setInverted(false);
-		indexerHardware.indexerVerticalSpark.setInverted(false);
+		indexerHardware.indexerHorizontalSpark.restoreFactoryDefaults();
+		indexerHardware.indexerVerticalSpark.restoreFactoryDefaults();
 	}
 
 	private void configureSpinnerHardware() {
+		var spinnerHardware = HardwareAdapter.SpinnerHardware.getInstance();
+		spinnerHardware.spinnerTalon.configFactoryDefault(TIMEOUT_MS);
 	}
 
 	public void resetDriveSensors() {
@@ -97,7 +98,7 @@ public class HardwareWriter {
 		driveHardware.gyro.setFusedHeading(0, TIMEOUT_MS);
 		driveHardware.gyro.setAccumZAngle(0, TIMEOUT_MS);
 		driveHardware.sparks.forEach(spark -> spark.getEncoder().setPosition(0.0));
-		Log.info("Drive Sensors Reset");
+		Log.info(LOGGER_TAG, "Drive Sensors Reset");
 	}
 
 	void setDriveIdleMode(CANSparkMax.IdleMode idleMode) {
@@ -118,9 +119,9 @@ public class HardwareWriter {
 	}
 
 	private void updateDrivetrain() {
-		HardwareAdapter.DrivetrainHardware.getInstance().leftMasterSpark.setOutput(mDrive.getDriveSignal().leftOutput);
-		HardwareAdapter.DrivetrainHardware.getInstance().rightMasterSpark
-				.setOutput(mDrive.getDriveSignal().rightOutput);
+		var drivetrainHardware = HardwareAdapter.DrivetrainHardware.getInstance();
+		drivetrainHardware.leftMasterSpark.setOutput(mDrive.getDriveSignal().leftOutput);
+		drivetrainHardware.rightMasterSpark.setOutput(mDrive.getDriveSignal().rightOutput);
 	}
 
 	private void updateSpinner() {
@@ -128,12 +129,13 @@ public class HardwareWriter {
 	}
 
 	private void updateIndexer() {
-		HardwareAdapter.IndexerHardware.getInstance().indexerHorizontalSpark.setOutput(mIndexer.getOutput());
-		HardwareAdapter.IndexerHardware.getInstance().indexerVerticalSpark.setOutput(mIndexer.getOutput());
+		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
+		indexerHardware.indexerHorizontalSpark.setOutput(mIndexer.getHorizontalOutput());
+		indexerHardware.indexerVerticalSpark.setOutput(mIndexer.getVerticalOutput());
 	}
 
 	private void updateIntake() {
-		HardwareAdapter.IntakeHardware.getInstance().intakeVictor.set(mIntake.getOutput());
+		HardwareAdapter.IntakeHardware.getInstance().intakeTalon.setOutput(mIntake.getOutput());
 	}
 
 	private void updateMiscellaneousHardware() {

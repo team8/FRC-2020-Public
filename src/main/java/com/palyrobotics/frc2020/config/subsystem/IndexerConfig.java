@@ -5,7 +5,7 @@ import com.palyrobotics.frc2020.util.control.SmartGains;
 
 public class IndexerConfig extends SubsystemConfigBase {
 
-	public double transferVelocity;
+	public double horizontalIntakeVelocity, verticalIntakeVelocity;
 
-	public SmartGains velocityGains;
+	public SmartGains horizontalProfiledVelocityGains, verticalProfiledVelocityGains;
 }

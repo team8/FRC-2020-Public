@@ -10,12 +10,12 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 public class Indexer extends Subsystem {
 
 	public enum IndexerState {
-		IDLE, MOVING
+		IDLE, INDEX
 	}
 
 	private static Indexer sInstance = new Indexer();
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
-	private ControllerOutput mOutput;
+	private ControllerOutput mHorizontalOutput = new ControllerOutput(), mVerticalOutput = new ControllerOutput();
 
 	private Indexer() {
 	}
@@ -29,13 +29,23 @@ public class Indexer extends Subsystem {
 		IndexerState state = commands.indexerWantedState;
 		switch (state) {
 			case IDLE:
-				mOutput.setPercentOutput(0.0);
-			case MOVING:
-				mOutput.setTargetVelocityProfiled(mConfig.transferVelocity, mConfig.velocityGains);
+				mHorizontalOutput.setIdle();
+				mVerticalOutput.setIdle();
+				break;
+			case INDEX:
+				mHorizontalOutput.setTargetVelocityProfiled(mConfig.horizontalIntakeVelocity,
+						mConfig.horizontalProfiledVelocityGains);
+				mVerticalOutput.setTargetVelocityProfiled(mConfig.verticalIntakeVelocity,
+						mConfig.verticalProfiledVelocityGains);
+				break;
 		}
 	}
 
-	public ControllerOutput getOutput() {
-		return mOutput;
+	public ControllerOutput getHorizontalOutput() {
+		return mHorizontalOutput;
+	}
+
+	public ControllerOutput getVerticalOutput() {
+		return mVerticalOutput;
 	}
 }

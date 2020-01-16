@@ -109,7 +109,7 @@ public class OperatorInterface {
 
 	private void updateIndexerCommands(Commands commands) {
 		if (mTurnStick.getRawButtonPressed(3)) {
-			commands.indexerWantedState = Indexer.IndexerState.MOVING;
+			commands.indexerWantedState = Indexer.IndexerState.INDEX;
 		} else {
 			commands.indexerWantedState = Indexer.IndexerState.IDLE;
 		}

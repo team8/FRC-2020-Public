@@ -1,11 +1,17 @@
 {
-    "transferVelocity": 2000.0,
-    "velocityGains": {
+    "horizontalIntakeVelocity": 0.0,
+    "verticalIntakeVelocity": 0.0,
+    "horizontalProfiledVelocityGains": {
         "p": 0.0,
-        "i": 0.0,
         "d": 0.0,
         "f": 0.0,
-        "iZone": 0.0,
+        "acceleration": 0.0,
+        "velocity": 0.0
+    },
+    "verticalProfiledVelocityGains" : {
+        "p": 0.0,
+        "d": 0.0,
+        "f": 0.0,
         "acceleration": 0.0,
         "velocity": 0.0
     }
