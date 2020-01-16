@@ -21,8 +21,6 @@ public class ShootThreeFriendlyTrenchFiveShootFive extends AutoModeBase {
     public Routine getRoutine() {
         List<Routine> routines = new ArrayList<>();
 
-        List<Pose2d> shoot1 = new ArrayList<>();
-        shoot1.add(new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
 
         List<Pose2d> friendlyTrench1 = new ArrayList<>();
         friendlyTrench1.add(new Pose2d(3.5, 2, Rotation2d.fromDegrees(0)));
@@ -36,8 +34,7 @@ public class ShootThreeFriendlyTrenchFiveShootFive extends AutoModeBase {
 
         aroundTrench.add(new Pose2d(7.5, 1.5, Rotation2d.fromDegrees(0)));
 
-
-        routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot1), 0.8));
+        routines.add(new ShootAllBallsRoutine());
 
         routines.add(
                 new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(friendlyTrench1), 0.8));

@@ -26,11 +26,10 @@ public class LeftRendezvousTwoShootFive extends AutoModeBase {
 		rendezvous1.add(new Pose2d(Units.inchesToMeters(140), Units.inchesToMeters(-20), Rotation2d.fromDegrees(0)));
 		rendezvous1.add(new Pose2d(Units.inchesToMeters(130), Units.inchesToMeters(-25), Rotation2d.fromDegrees(0)));
 
-		List<Pose2d> shoot = new ArrayList<>();
-		shoot.add(new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
+
 
 		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous1), 0.8));
-		routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot), 0.8));
+		routines.add(new ShootAllBallsRoutine());
 
 		return new SequentialRoutine(routines);
 	}

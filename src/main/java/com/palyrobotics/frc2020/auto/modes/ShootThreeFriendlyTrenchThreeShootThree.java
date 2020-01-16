@@ -30,14 +30,13 @@ public class ShootThreeFriendlyTrenchThreeShootThree extends AutoModeBase {
 		friendlyTrench.add(new Pose2d(Units.inchesToMeters(140), Units.inchesToMeters(60), Rotation2d.fromDegrees(0)));
 		// pick up ball
 
-		List<Pose2d> shoot = new ArrayList<>();
-		shoot.add(new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
+		routines.add(new ShootAllBallsRoutine());
 
 		// shoot three balls
 		routines.add(
 				new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(friendlyTrench), 0.8));
-		routines.add(new DrivePathRoutine(shoot)); // go back to shoot
-		routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot), 0.8));
+
+		routines.add(new ShootAllBallsRoutine());
 		// shoot three balls
 
 		return new SequentialRoutine(routines);

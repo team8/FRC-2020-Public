@@ -23,8 +23,6 @@ public class ShootThreeGoToOtherSide extends AutoModeBase {
 		List<Pose2d> otherSide = new ArrayList<>();
 		otherSide.add(new Pose2d(Units.inchesToMeters(350), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
 
-		// shoot 3 balls
-		// pick up 2 balls
 		routines.add(new ShootAllBallsRoutine());
 		routines.add(new DrivePathRoutine(otherSide));
 

@@ -34,7 +34,6 @@ public class FriendlyTrenchRunTwoShootFive extends AutoModeBase {
 				new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(friendlyTrench), 0.8));
 		// pick up balls from our trench
 		routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot), 0.8));
-		// shoot ball
 
 		return new SequentialRoutine(routines);
 	}

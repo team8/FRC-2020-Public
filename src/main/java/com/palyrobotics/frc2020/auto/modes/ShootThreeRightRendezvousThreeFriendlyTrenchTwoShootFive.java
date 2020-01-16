@@ -36,8 +36,7 @@ public class ShootThreeRightRendezvousThreeFriendlyTrenchTwoShootFive extends Au
 
         aroundTrench.add(new Pose2d(7.5, 1.5, Rotation2d.fromDegrees(0)));
 
-        List<Pose2d> shoot = new ArrayList<>();
-        shoot.add(new Pose2d(7.5, 1.5, Rotation2d.fromDegrees(0)));
+
 
         routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot1), 0.8));
 
@@ -45,7 +44,7 @@ public class ShootThreeRightRendezvousThreeFriendlyTrenchTwoShootFive extends Au
                 new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous), 0.8));
         routines.add(new DrivePathRoutine(aroundTrench));
 
-        routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot), 0.8));
+        routines.add(new ShootAllBallsRoutine());
 
         return new SequentialRoutine(routines);
     }

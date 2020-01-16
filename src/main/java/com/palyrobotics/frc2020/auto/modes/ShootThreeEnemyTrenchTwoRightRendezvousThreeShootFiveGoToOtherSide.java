@@ -37,6 +37,7 @@ public class ShootThreeEnemyTrenchTwoRightRendezvousThreeShootFiveGoToOtherSide 
         routines.add(new ShootAllBallsRoutine());
         routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(enemyTrench), 0.8));
         routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous), 0.8));
+        routines.add(new ShootAllBallsRoutine());
         routines.add(
                 new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(goToOtherSide), 0.8));
 
