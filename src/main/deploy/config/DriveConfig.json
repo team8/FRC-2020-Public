@@ -1,5 +1,5 @@
 {
-	"smartVelocityGains": {
+	"profiledVelocityGains": {
 		"f": 0.0032,
 		"p": 0.0008,
 		"velocity": 400.0,

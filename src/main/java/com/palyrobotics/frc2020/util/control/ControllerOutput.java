@@ -20,11 +20,11 @@ public class ControllerOutput {
 		mMode = controlMode;
 	}
 
-	public void setTargetVelocityProfiled(double targetVelocity, SmartGains gains) {
+	public void setTargetVelocityProfiled(double targetVelocity, ProfiledGains gains) {
 		setTargetVelocityProfiled(targetVelocity, 0.0, gains);
 	}
 
-	public void setTargetVelocityProfiled(double targetVelocity, double arbitraryDemand, SmartGains gains) {
+	public void setTargetVelocityProfiled(double targetVelocity, double arbitraryDemand, ProfiledGains gains) {
 		mMode = Mode.PROFILED_VELOCITY;
 		mReference = targetVelocity;
 		mArbitraryDemand = arbitraryDemand;
@@ -53,11 +53,11 @@ public class ControllerOutput {
 		mGains = gains;
 	}
 
-	public void setTargetPositionProfiled(double positionSetPoint, SmartGains gains) {
+	public void setTargetPositionProfiled(double positionSetPoint, ProfiledGains gains) {
 		setTargetPositionProfiled(positionSetPoint, 0.0, gains);
 	}
 
-	public void setTargetPositionProfiled(double positionSetPoint, double arbitraryDemand, SmartGains gains) {
+	public void setTargetPositionProfiled(double positionSetPoint, double arbitraryDemand, ProfiledGains gains) {
 		mMode = Mode.PROFILED_POSITION;
 		mReference = positionSetPoint;
 		mArbitraryDemand = arbitraryDemand;

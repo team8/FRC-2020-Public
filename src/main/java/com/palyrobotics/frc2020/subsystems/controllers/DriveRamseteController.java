@@ -33,9 +33,9 @@ public class DriveRamseteController extends Drive.DriveController {
 		ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
 		DifferentialDriveWheelSpeeds wheelSpeeds = DrivetrainConstants.kKinematics.toWheelSpeeds(speeds);
 		mDriveOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond * 60.0,
-				mDriveConfig.smartVelocityGains);
+				mDriveConfig.profiledVelocityGains);
 		mDriveOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond * 60.0,
-				mDriveConfig.smartVelocityGains);
+				mDriveConfig.profiledVelocityGains);
 		CSVWriter.addData("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
 		CSVWriter.addData("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
 		CSVWriter.addData("currentPoseX", state.drivePose.getTranslation().getX());

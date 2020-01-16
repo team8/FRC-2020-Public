@@ -8,9 +8,8 @@ public class RobotConfig extends ConfigBase {
 
 	public boolean coastDriveIfDisabled, disableOutput;
 
-	// Smart motion acceleration and velocity are multiplied by this. Useful for
-	// testing at lower speeds.
-	public double smartMotionMultiplier;
+	// Useful for testing at lower speeds
+	public double motorOutputMultiplier;
 
 	public List<String> enabledServices, enabledSubsystems;
 }

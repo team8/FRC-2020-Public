@@ -24,9 +24,9 @@ public abstract class SimpleControllerBase {
 	public boolean setOutput(ControllerOutput output) {
 		ControllerOutput.Mode mode = output.getControlMode();
 		// Checks to make sure we are using this properly
-		boolean isSmart = mode == ControllerOutput.Mode.PROFILED_POSITION
+		boolean isProfiled = mode == ControllerOutput.Mode.PROFILED_POSITION
 				|| mode == ControllerOutput.Mode.PROFILED_VELOCITY,
-				requiresGains = isSmart || mode == ControllerOutput.Mode.POSITION
+				requiresGains = isProfiled || mode == ControllerOutput.Mode.POSITION
 						|| mode == ControllerOutput.Mode.VELOCITY;
 		Gains gains = output.getGains();
 		// Slot is determined based on control mode
@@ -63,7 +63,8 @@ public abstract class SimpleControllerBase {
 		if (gains != null) {
 			boolean isFirstInitialization = !mLastGains.containsKey(slot);
 			if (isFirstInitialization) { // Empty gains for default value instead of null
-				mLastGains.put(slot, (slot == 1 || slot == 2) ? new SmartGains() : new Gains()); // TODO a little ugly
+				mLastGains.put(slot, (slot == 1 || slot == 2) ? new ProfiledGains() : new Gains()); // TODO a little
+																									// ugly
 			}
 			Gains lastGains = mLastGains.get(slot);
 			updateGains(isFirstInitialization, slot, gains, lastGains);

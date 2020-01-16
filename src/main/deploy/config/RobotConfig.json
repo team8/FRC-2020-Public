@@ -11,5 +11,5 @@
 	],
 	"coastDriveIfDisabled": false,
 	"disableOutput": false,
-	"smartMotionMultiplier": 0.95
+	"motorOutputMultiplier": 1.0
 }

@@ -3,7 +3,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 import com.palyrobotics.frc2020.util.control.Gains;
-import com.palyrobotics.frc2020.util.control.SmartGains;
+import com.palyrobotics.frc2020.util.control.ProfiledGains;
 import com.palyrobotics.frc2020.util.control.Spark;
 
 import org.junit.jupiter.api.Test;
@@ -40,8 +40,8 @@ public class MiscTests {
 			output.setTargetPosition(0.1, 0.1, gains);
 			assertTrue(spark.setOutput(output));
 			assertFalse(spark.setOutput(output));
-			var smartGains = new SmartGains();
-			output.setTargetPositionProfiled(0.1, 0.1, smartGains);
+			var profiledGains = new ProfiledGains();
+			output.setTargetPositionProfiled(0.1, 0.1, profiledGains);
 			assertTrue(spark.setOutput(output));
 			assertFalse(spark.setOutput(output));
 		} else {

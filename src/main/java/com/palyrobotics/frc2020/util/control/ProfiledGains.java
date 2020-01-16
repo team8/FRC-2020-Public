@@ -2,11 +2,11 @@ package com.palyrobotics.frc2020.util.control;
 
 import java.util.Objects;
 
-public class SmartGains extends Gains {
+public class ProfiledGains extends Gains {
 
 	public double acceleration, velocity, allowableError, minimumOutputVelocity;
 
-	public SmartGains() {
+	public ProfiledGains() {
 	}
 
 	@Override // Auto-generated
@@ -18,11 +18,11 @@ public class SmartGains extends Gains {
 	public boolean equals(Object other) {
 		if (this == other)
 			return true;
-		if (!(other instanceof SmartGains))
+		if (!(other instanceof ProfiledGains))
 			return false;
 		if (!super.equals(other))
 			return false;
-		SmartGains otherGains = (SmartGains) other;
+		ProfiledGains otherGains = (ProfiledGains) other;
 		return Double.compare(otherGains.acceleration, acceleration) == 0
 				&& Double.compare(otherGains.velocity, velocity) == 0
 				&& Double.compare(otherGains.allowableError, allowableError) == 0
@@ -32,7 +32,7 @@ public class SmartGains extends Gains {
 	@Override
 	public String toString() { // Auto-generated
 		return String.format(
-				"SmartGains{acceleration=%f, velocity=%f, allowableError=%f, minimumOutputVelocity=%f}%n%s",
+				"ProfiledGains{acceleration=%f, velocity=%f, allowableError=%f, minimumOutputVelocity=%f}%n%s",
 				acceleration, velocity, allowableError, minimumOutputVelocity, super.toString());
 	}
 }
