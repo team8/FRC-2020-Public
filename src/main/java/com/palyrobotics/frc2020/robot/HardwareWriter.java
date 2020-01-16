@@ -85,6 +85,7 @@ public class HardwareWriter {
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
 
 		indexerHardware.indexerHorizontalSpark.setInverted(false);
+		indexerHardware.indexerVerticalSpark.setInverted(false);
 	}
 
 	private void configureSpinnerHardware() {
@@ -128,6 +129,7 @@ public class HardwareWriter {
 
 	private void updateIndexer() {
 		HardwareAdapter.IndexerHardware.getInstance().indexerHorizontalSpark.setOutput(mIndexer.getOutput());
+		HardwareAdapter.IndexerHardware.getInstance().indexerVerticalSpark.setOutput(mIndexer.getOutput());
 	}
 
 	private void updateIntake() {

@@ -25,5 +25,6 @@ public class PortConstants extends ConfigBase {
 	 * Indexer
 	 */
 	public int vidarIndexerHorizontalDeviceID;
+	public int vidarIndexerVerticalDeviceID;
 
 }

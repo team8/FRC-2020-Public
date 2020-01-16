@@ -68,6 +68,7 @@ public class HardwareAdapter {
 
 		private static IndexerHardware sInstance = new IndexerHardware();
 		final Spark indexerHorizontalSpark = new Spark(sPortConstants.vidarIndexerHorizontalDeviceID);
+		final Spark indexerVerticalSpark = new Spark(sPortConstants.vidarIndexerVerticalDeviceID);
 
 		private IndexerHardware() {
 		}
