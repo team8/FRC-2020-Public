@@ -16,16 +16,16 @@ import edu.wpi.first.wpilibj.util.Units;
 @SuppressWarnings ("Duplicates")
 public class ShootThreeGoToFriendlyLoadingStation extends AutoModeBase {
 
-    @Override
-    public Routine getRoutine() {
-        List<Routine> routines = new ArrayList<>();
+	@Override
+	public Routine getRoutine() {
+		List<Routine> routines = new ArrayList<>();
 
-        List<Pose2d> otherSide = new ArrayList<>();
-        otherSide.add(new Pose2d(Units.inchesToMeters(550), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
+		List<Pose2d> otherSide = new ArrayList<>();
+		otherSide.add(new Pose2d(Units.inchesToMeters(550), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
 
-        routines.add(new ShootAllBallsRoutine());
-        routines.add(new DrivePathRoutine(otherSide));
+		routines.add(new ShootAllBallsRoutine());
+		routines.add(new DrivePathRoutine(otherSide));
 
-        return new SequentialRoutine(routines);
-    }
+		return new SequentialRoutine(routines);
+	}
 }

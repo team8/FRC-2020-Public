@@ -17,31 +17,30 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 @SuppressWarnings ("Duplicates")
 public class ShootThreeFriendlyTrenchFiveShootFive extends AutoModeBase {
 
-    @Override
-    public Routine getRoutine() {
-        List<Routine> routines = new ArrayList<>();
+	@Override
+	public Routine getRoutine() {
+		List<Routine> routines = new ArrayList<>();
 
+		List<Pose2d> friendlyTrench1 = new ArrayList<>();
+		friendlyTrench1.add(new Pose2d(3.5, 2, Rotation2d.fromDegrees(0)));
+		friendlyTrench1.add(new Pose2d(4, 2, Rotation2d.fromDegrees(0)));
+		friendlyTrench1.add(new Pose2d(4.5, 2, Rotation2d.fromDegrees(0)));
 
-        List<Pose2d> friendlyTrench1 = new ArrayList<>();
-        friendlyTrench1.add(new Pose2d(3.5, 2, Rotation2d.fromDegrees(0)));
-        friendlyTrench1.add(new Pose2d(4, 2, Rotation2d.fromDegrees(0)));
-        friendlyTrench1.add(new Pose2d(4.5, 2, Rotation2d.fromDegrees(0)));
+		List<Pose2d> aroundTrench = new ArrayList<>();
+		aroundTrench.add(new Pose2d(5, 0, Rotation2d.fromDegrees(0)));
+		aroundTrench.add(new Pose2d(7.5, 0, Rotation2d.fromDegrees(0)));
+		aroundTrench.add(new Pose2d(7.5, 1, Rotation2d.fromDegrees(0)));
 
-        List<Pose2d> aroundTrench = new ArrayList<>();
-        aroundTrench.add(new Pose2d(5, 0, Rotation2d.fromDegrees(0)));
-        aroundTrench.add(new Pose2d(7.5, 0, Rotation2d.fromDegrees(0)));
-        aroundTrench.add(new Pose2d(7.5, 1, Rotation2d.fromDegrees(0)));
+		aroundTrench.add(new Pose2d(7.5, 1.5, Rotation2d.fromDegrees(0)));
 
-        aroundTrench.add(new Pose2d(7.5, 1.5, Rotation2d.fromDegrees(0)));
+		routines.add(new ShootAllBallsRoutine());
 
-        routines.add(new ShootAllBallsRoutine());
+		routines.add(
+				new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(friendlyTrench1), 0.8));
+		routines.add(new DrivePathRoutine(aroundTrench));
 
-        routines.add(
-                new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(friendlyTrench1), 0.8));
-        routines.add(new DrivePathRoutine(aroundTrench));
+		routines.add(new ShootAllBallsRoutine());
 
-        routines.add(new ShootAllBallsRoutine());
-
-        return new SequentialRoutine(routines);
-    }
+		return new SequentialRoutine(routines);
+	}
 }

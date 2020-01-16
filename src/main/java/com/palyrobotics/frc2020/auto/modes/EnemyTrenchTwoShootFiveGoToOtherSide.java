@@ -26,11 +26,9 @@ public class EnemyTrenchTwoShootFiveGoToOtherSide extends AutoModeBase {
 		enemyTrench.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-190), Rotation2d.fromDegrees(0)));
 		enemyTrench.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-210), Rotation2d.fromDegrees(0)));
 
-
 		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(enemyTrench), 0.8));
 
 		routines.add(new ShootAllBallsRoutine());
-
 
 		List<Pose2d> otherSide = new ArrayList<>();
 		otherSide.add(new Pose2d(Units.inchesToMeters(300), Units.inchesToMeters(0), Rotation2d.fromDegrees(0.0)));

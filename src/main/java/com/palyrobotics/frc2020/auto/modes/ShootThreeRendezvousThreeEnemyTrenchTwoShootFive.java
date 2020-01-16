@@ -34,8 +34,6 @@ public class ShootThreeRendezvousThreeEnemyTrenchTwoShootFive extends AutoModeBa
 		rendezvous.add(new Pose2d(Units.inchesToMeters(100), Units.inchesToMeters(-60), Rotation2d.fromDegrees(0)));
 		// pick up ball
 
-
-
 		// shoot 3 balls
 		routines.add(new ShootAllBallsRoutine());
 		// pick up 2 balls

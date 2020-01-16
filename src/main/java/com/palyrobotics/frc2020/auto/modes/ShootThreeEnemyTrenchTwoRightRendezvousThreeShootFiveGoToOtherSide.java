@@ -18,29 +18,29 @@ import edu.wpi.first.wpilibj.util.Units;
 @SuppressWarnings ("Duplicates")
 public class ShootThreeEnemyTrenchTwoRightRendezvousThreeShootFiveGoToOtherSide extends AutoModeBase {
 
-    @Override
-    public Routine getRoutine() {
-        List<Routine> routines = new ArrayList<>();
+	@Override
+	public Routine getRoutine() {
+		List<Routine> routines = new ArrayList<>();
 
-        List<Pose2d> enemyTrench = new ArrayList<>();
-        enemyTrench.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-210), Rotation2d.fromDegrees(0)));
-        enemyTrench.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-200), Rotation2d.fromDegrees(0)));
+		List<Pose2d> enemyTrench = new ArrayList<>();
+		enemyTrench.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-210), Rotation2d.fromDegrees(0)));
+		enemyTrench.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-200), Rotation2d.fromDegrees(0)));
 
-        List<Pose2d> rendezvous = new ArrayList<>();
-        rendezvous.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-90), Rotation2d.fromDegrees(0)));
-        rendezvous.add(new Pose2d(Units.inchesToMeters(110), Units.inchesToMeters(-70), Rotation2d.fromDegrees(0)));
-        rendezvous.add(new Pose2d(Units.inchesToMeters(100), Units.inchesToMeters(-60), Rotation2d.fromDegrees(0)));
+		List<Pose2d> rendezvous = new ArrayList<>();
+		rendezvous.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-90), Rotation2d.fromDegrees(0)));
+		rendezvous.add(new Pose2d(Units.inchesToMeters(110), Units.inchesToMeters(-70), Rotation2d.fromDegrees(0)));
+		rendezvous.add(new Pose2d(Units.inchesToMeters(100), Units.inchesToMeters(-60), Rotation2d.fromDegrees(0)));
 
-        List<Pose2d> goToOtherSide = new ArrayList<>();
-        goToOtherSide.add(new Pose2d(Units.inchesToMeters(350), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
+		List<Pose2d> goToOtherSide = new ArrayList<>();
+		goToOtherSide.add(new Pose2d(Units.inchesToMeters(350), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
 
-        routines.add(new ShootAllBallsRoutine());
-        routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(enemyTrench), 0.8));
-        routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous), 0.8));
-        routines.add(new ShootAllBallsRoutine());
-        routines.add(
-                new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(goToOtherSide), 0.8));
+		routines.add(new ShootAllBallsRoutine());
+		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(enemyTrench), 0.8));
+		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous), 0.8));
+		routines.add(new ShootAllBallsRoutine());
+		routines.add(
+				new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(goToOtherSide), 0.8));
 
-        return new SequentialRoutine(routines);
-    }
+		return new SequentialRoutine(routines);
+	}
 }

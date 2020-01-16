@@ -27,7 +27,6 @@ public class RightRendezvousTwoShootFive extends AutoModeBase {
 		rendezvous1.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-80), Rotation2d.fromDegrees(0)));
 		rendezvous1.add(new Pose2d(Units.inchesToMeters(110), Units.inchesToMeters(-60), Rotation2d.fromDegrees(0)));
 
-
 		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous1), 0.8));
 		routines.add(new ShootAllBallsRoutine());
 		// Shoot ball
