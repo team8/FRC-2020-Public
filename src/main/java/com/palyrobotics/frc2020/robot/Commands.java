@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
@@ -25,6 +26,8 @@ public class Commands {
 	public Spinner.SpinnerState spinnerWantedState = Spinner.SpinnerState.IDLE;
 	/* Intake Commands */
 	public Intake.IntakeState intakeWantedState = Intake.IntakeState.IDLE;
+	/* Indexer Commands */
+	public Indexer.IndexerState indexerWantedState = Indexer.IndexerState.IDLE;
 	/* Drive Commands */
 	private Drive.DriveState driveWantedState = Drive.DriveState.NEUTRAL;
 	// Teleop
@@ -129,6 +132,8 @@ public class Commands {
 
 	public void copyTo(Commands other) {
 		other.driveWantedState = this.driveWantedState;
+		other.indexerWantedState = this.indexerWantedState;
+		other.spinnerWantedState = this.spinnerWantedState;
 		other.intakeWantedState = this.intakeWantedState;
 		other.shouldClearCurrentRoutines = this.shouldClearCurrentRoutines;
 		other.routinesWanted.addAll(this.routinesWanted);

@@ -3,11 +3,11 @@ package com.palyrobotics.frc2020.robot;
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Spark;
+import com.palyrobotics.frc2020.util.control.Talon;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.revrobotics.CANEncoder;
@@ -54,12 +54,26 @@ public class HardwareAdapter {
 	static class IntakeHardware {
 
 		private static IntakeHardware sInstance = new IntakeHardware();
-		final WPI_VictorSPX intakeVictor = new WPI_VictorSPX(sPortConstants.vidarIntakeDeviceId);
+		final Talon intakeTalon = new Talon(sPortConstants.intakeTalonDeviceId);
 
 		private IntakeHardware() {
 		}
 
 		static IntakeHardware getInstance() {
+			return sInstance;
+		}
+	}
+
+	static class IndexerHardware {
+
+		private static IndexerHardware sInstance = new IndexerHardware();
+		final Spark indexerHorizontalSpark = new Spark(sPortConstants.vidarIndexerHorizontalDeviceID),
+				indexerVerticalSpark = new Spark(sPortConstants.vidarIndexerVerticalDeviceID);
+
+		private IndexerHardware() {
+		}
+
+		static IndexerHardware getInstance() {
 			return sInstance;
 		}
 	}
@@ -81,7 +95,7 @@ public class HardwareAdapter {
 	static class SpinnerHardware {
 
 		private static SpinnerHardware sInstance = new SpinnerHardware();
-		final WPI_TalonSRX spinnerTalon = new WPI_TalonSRX(sPortConstants.spinnerTalonDeviceId);
+		final Talon spinnerTalon = new Talon(sPortConstants.spinnerTalonDeviceId);
 		final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
 		private SpinnerHardware() {

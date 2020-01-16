@@ -5,6 +5,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Intake extends Subsystem {
 
@@ -14,7 +15,7 @@ public class Intake extends Subsystem {
 
 	private static Intake sInstance = new Intake();
 	private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
-	private double mOutput;
+	private ControllerOutput mOutput = new ControllerOutput();
 
 	private Intake() {
 	}
@@ -25,16 +26,18 @@ public class Intake extends Subsystem {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		IntakeState mState = commands.intakeWantedState;
-		switch (mState) {
+		IntakeState state = commands.intakeWantedState;
+		switch (state) {
 			case IDLE:
-				mOutput = 0.0;
+				mOutput.setIdle();
+				break;
 			case INTAKE:
-				mOutput = mConfig.intakingVelocity;
+				mOutput.setTargetVelocityProfiled(mConfig.intakingVelocity, mConfig.profiledVelocityGains);
+				break;
 		}
 	}
 
-	public double getOutput() {
+	public ControllerOutput getOutput() {
 		return mOutput;
 	}
 }

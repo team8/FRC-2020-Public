@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.input.Joystick;
@@ -103,6 +104,14 @@ public class OperatorInterface {
 			commands.intakeWantedState = Intake.IntakeState.INTAKE;
 		} else {
 			commands.intakeWantedState = Intake.IntakeState.IDLE;
+		}
+	}
+
+	private void updateIndexerCommands(Commands commands) {
+		if (mTurnStick.getRawButtonPressed(3)) {
+			commands.indexerWantedState = Indexer.IndexerState.INDEX;
+		} else {
+			commands.indexerWantedState = Indexer.IndexerState.IDLE;
 		}
 	}
 

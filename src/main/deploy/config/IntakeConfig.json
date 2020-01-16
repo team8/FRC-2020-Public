@@ -1,3 +1,10 @@
 {
-	"intakingVelocity": 0.8
+	"intakingVelocity": 0.8,
+	"profiledVelocityGains": {
+		"p": 0.0,
+		"d": 0.0,
+		"f": 0.0,
+		"acceleration": 0.0,
+		"velocity": 0.0
+	}
 }
