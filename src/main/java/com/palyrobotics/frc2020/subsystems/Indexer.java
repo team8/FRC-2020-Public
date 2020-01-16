@@ -26,12 +26,12 @@ public class Indexer extends Subsystem {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		IndexerState mState = commands.indexerWantedState;
-		switch (mState) {
+		IndexerState state = commands.indexerWantedState;
+		switch (state) {
 			case IDLE:
 				mOutput.setPercentOutput(0.0);
 			case MOVING:
-				mOutput.setTargetVelocityProfiled(mConfig.transferVelocity, mConfig.gains);
+				mOutput.setTargetVelocityProfiled(mConfig.transferVelocity, mConfig.velocityGains);
 		}
 	}
 

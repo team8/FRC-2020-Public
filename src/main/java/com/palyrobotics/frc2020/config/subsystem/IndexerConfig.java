@@ -7,5 +7,5 @@ public class IndexerConfig extends SubsystemConfigBase {
 
 	public double transferVelocity;
 
-	public SmartGains gains;
+	public SmartGains velocityGains;
 }

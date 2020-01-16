@@ -1,6 +1,6 @@
 {
     "transferVelocity": 2000.0,
-    "gains": {
+    "velocityGains": {
         "p": 0.0,
         "i": 0.0,
         "d": 0.0,
