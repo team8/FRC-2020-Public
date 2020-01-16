@@ -14,14 +14,14 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.util.Units;
 
 @SuppressWarnings ("Duplicates")
-public class ShootThreeGoToOtherSide extends AutoModeBase {
+public class ShootThreeGoToFriendlyLoadingStation extends AutoModeBase {
 
 	@Override
 	public Routine getRoutine() {
 		List<Routine> routines = new ArrayList<>();
 
 		List<Pose2d> otherSide = new ArrayList<>();
-		otherSide.add(new Pose2d(Units.inchesToMeters(350), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
+		otherSide.add(new Pose2d(Units.inchesToMeters(550), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
 
 		routines.add(new ShootAllBallsRoutine());
 		routines.add(new DrivePathRoutine(otherSide));

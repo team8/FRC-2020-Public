@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.util.Units;
 
 @SuppressWarnings ("Duplicates")
-public class ShootThreeRendezvousThreeEnemyTrenchTwoShootFive extends AutoModeBase {
+public class ShootThreeEnemyTrenchTwoRightRendezvousThreeShootFiveGoToOtherSide extends AutoModeBase {
 
 	@Override
 	public Routine getRoutine() {
@@ -28,18 +28,18 @@ public class ShootThreeRendezvousThreeEnemyTrenchTwoShootFive extends AutoModeBa
 
 		List<Pose2d> rendezvous = new ArrayList<>();
 		rendezvous.add(new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-90), Rotation2d.fromDegrees(0)));
-		// pick up ball
 		rendezvous.add(new Pose2d(Units.inchesToMeters(110), Units.inchesToMeters(-70), Rotation2d.fromDegrees(0)));
-		// pick up ball
 		rendezvous.add(new Pose2d(Units.inchesToMeters(100), Units.inchesToMeters(-60), Rotation2d.fromDegrees(0)));
-		// pick up ball
 
-		// shoot 3 balls
+		List<Pose2d> goToOtherSide = new ArrayList<>();
+		goToOtherSide.add(new Pose2d(Units.inchesToMeters(350), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
+
 		routines.add(new ShootAllBallsRoutine());
-		// pick up 2 balls
 		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(enemyTrench), 0.8));
 		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous), 0.8));
 		routines.add(new ShootAllBallsRoutine());
+		routines.add(
+				new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(goToOtherSide), 0.8));
 
 		return new SequentialRoutine(routines);
 	}
