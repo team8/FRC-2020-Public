@@ -2,7 +2,7 @@ import edu.wpi.first.gradlerio.GradleRIOPlugin
 
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2020.1.2"
+    id "edu.wpi.first.GradleRIO" version "2020.2.2"
     id "com.diffplug.gradle.spotless" version "3.27.1"
 }
 
