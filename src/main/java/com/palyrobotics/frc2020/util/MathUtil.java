@@ -1,21 +1,21 @@
 package com.palyrobotics.frc2020.util;
 
 /**
- * This class holds a bunch of static methods and variables needed for
- * mathematics
- */
+* This class holds a bunch of static methods and variables needed for
+* mathematics
+*/
 public class MathUtil {
 
 	private MathUtil() {
 	}
 
 	/**
-	 * Neutralizes a value within a dead band
-	 *
-	 * @param value    Value to control dead band
-	 * @param deadBand Value of dead band
-	 * @return 0 if within dead band, otherwise values
-	 */
+	* Neutralizes a value within a dead band
+	*
+	* @param value    Value to control dead band
+	* @param deadBand Value of dead band
+	* @return 0 if within dead band, otherwise values
+	*/
 	public static double handleDeadBand(double value, double deadBand) {
 		return (Math.abs(value) > Math.abs(deadBand)) ? value : 0.0;
 	}
@@ -29,13 +29,13 @@ public class MathUtil {
 	}
 
 	/**
-	 * Get the difference in angle between two angles.
-	 *
-	 * @param from The first angle
-	 * @param to   The second angle
-	 * @return The change in angle from the first argument necessary to line up with
-	 *         the second. Always between -Pi and Pi
-	 */
+	* Get the difference in angle between two angles.
+	*
+	* @param from The first angle
+	* @param to   The second angle
+	* @return The change in angle from the first argument necessary to line up with
+	*         the second. Always between -Pi and Pi
+	*/
 	public static double getDifferenceInAngleRadians(double from, double to) {
 		return boundAngleNegPiToPiRadians(to - from);
 	}
@@ -52,13 +52,13 @@ public class MathUtil {
 	}
 
 	/**
-	 * Get the difference in angle between two angles.
-	 *
-	 * @param from The first angle
-	 * @param to   The second angle
-	 * @return The change in angle from the first argument necessary to line up with
-	 *         the second. Always between -180 and 180
-	 */
+	* Get the difference in angle between two angles.
+	*
+	* @param from The first angle
+	* @param to   The second angle
+	* @return The change in angle from the first argument necessary to line up with
+	*         the second. Always between -180 and 180
+	*/
 	public static double getDifferenceInAngleDegrees(double from, double to) {
 		return boundAngleNeg180to180Degrees(to - from);
 	}

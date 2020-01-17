@@ -8,8 +8,8 @@ import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.MathUtil;
 
 /**
- * Implements constant curvature driving. Yoinked from 254 code
- */
+* Implements constant curvature driving. Yoinked from 254 code
+*/
 public class ChezyDriveController extends Drive.DriveController {
 
 	private double mLastWheel, mQuickStopAccumulator, mNegativeInertiaAccumulator;
