@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.util.Color;
 
 /**
-* Holds the current physical state of the robot from our sensors.
-*
-* @author Nihar
-*/
+ * Holds the current physical state of the robot from our sensors.
+ *
+ * @author Nihar
+ */
 public class RobotState {
 
 	public enum GamePeriod {

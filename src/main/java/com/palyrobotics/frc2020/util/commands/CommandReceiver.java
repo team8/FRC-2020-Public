@@ -227,8 +227,8 @@ public class CommandReceiver implements RobotService {
 	}
 
 	/**
-	* Allows us to get fields that belong to super-classes as well
-	*/
+	 * Allows us to get fields that belong to super-classes as well
+	 */
 	private Field getField(Class<?> clazz, String name) throws NoSuchFieldException {
 		var fields = new HashMap<String, Field>();
 		for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {

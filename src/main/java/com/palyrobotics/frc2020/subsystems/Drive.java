@@ -11,9 +11,9 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
 /**
-* Represents the drivetrain. Uses controllers or cheesy drive
-* helper/proportional drive helper to calculate a drive signal.
-*/
+ * Represents the drivetrain. Uses controllers or cheesy drive
+ * helper/proportional drive helper to calculate a drive signal.
+ */
 public class Drive extends Subsystem {
 
 	public enum DriveState {
@@ -32,9 +32,9 @@ public class Drive extends Subsystem {
 		}
 
 		/**
-		* Should set {@link #mDriveOutputs} to reflect what is currently wanted by
-		* {@link Commands}.
-		*/
+		 * Should set {@link #mDriveOutputs} to reflect what is currently wanted by
+		 * {@link Commands}.
+		 */
 		public abstract void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state);
 	}
 

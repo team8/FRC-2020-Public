@@ -8,8 +8,8 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
 /**
-* Runs all routines at the same time. Finishes when all routines are finished.
-*/
+ * Runs all routines at the same time. Finishes when all routines are finished.
+ */
 public class ParallelRoutine extends MultipleRoutine {
 
 	private final LinkedList<RoutineBase> mRunningRoutines = new LinkedList<>(mRoutines);
