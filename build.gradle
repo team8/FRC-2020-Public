@@ -51,7 +51,7 @@ spotless {
         indentWithTabs()
         endWithNewline()
         removeUnusedImports()
-//        eclipse().configFile 'spotless.eclipseformat.xml'
+        eclipse().configFile 'spotless.eclipseformat.xml'
     }
     freshmark {
         target 'README.md', 'CONTRIBUTING.md'

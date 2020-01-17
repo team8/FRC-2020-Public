@@ -12,10 +12,10 @@ import com.palyrobotics.frc2020.util.control.DriveOutputs;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 /**
-* Commands represent what we want the robot to be doing.
-*
-* @author Nihar
-*/
+ * Commands represent what we want the robot to be doing.
+ *
+ * @author Nihar
+ */
 public class Commands {
 
 	private static Commands sInstance = new Commands();

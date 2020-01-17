@@ -7,8 +7,8 @@ import com.esotericsoftware.minlog.Log;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
-* @author Quintin Dwight
-*/
+ * @author Quintin Dwight
+ */
 public class LoopOverrunDebugger {
 
 	private static class Measurement {

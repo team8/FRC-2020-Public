@@ -22,10 +22,10 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
-* Configuration storage using JSON
-*
-* @author Quintin Dwight
-*/
+ * Configuration storage using JSON
+ *
+ * @author Quintin Dwight
+ */
 public class Configs {
 
 	private static final String CONFIG_FOLDER_NAME = "config", LOGGER_TAG = StringUtil.classToJsonName(Configs.class);
@@ -94,14 +94,14 @@ public class Configs {
 	}
 
 	/**
-	* Listen for changes in a configuration file. An on-changed event is fired once
-	* when this function is invoked for initial setup.
-	*
-	* @param configClass Class of the config.
-	* @param onChanged   Listener which consumes new config instance.
-	* @param <T>         Type of the config class. This is usually inferred from
-	*                    the class argument.
-	*/
+	 * Listen for changes in a configuration file. An on-changed event is fired once
+	 * when this function is invoked for initial setup.
+	 *
+	 * @param configClass Class of the config.
+	 * @param onChanged   Listener which consumes new config instance.
+	 * @param <T>         Type of the config class. This is usually inferred from
+	 *                    the class argument.
+	 */
 	public static <T extends ConfigBase> void listen(Class<T> configClass, Consumer<T> onChanged) {
 		onChanged.accept(get(configClass));
 		var consumers = sListeners.computeIfAbsent(configClass, newValue -> new ArrayList<>(1));
@@ -109,13 +109,13 @@ public class Configs {
 	}
 
 	/**
-	* Retrieve the singleton for this given config class.
-	*
-	* @param configClass Class of the config.
-	* @param <T>         Type of the config class. This is usually inferred from
-	*                    the class argument.
-	* @return Singleton or null if not found / registered.
-	*/
+	 * Retrieve the singleton for this given config class.
+	 *
+	 * @param configClass Class of the config.
+	 * @param <T>         Type of the config class. This is usually inferred from
+	 *                    the class argument.
+	 * @return Singleton or null if not found / registered.
+	 */
 	@SuppressWarnings ("unchecked")
 	public static <T extends ConfigBase> T get(Class<T> configClass) {
 		T config = (T) sConfigMap.get(configClass);
@@ -128,18 +128,18 @@ public class Configs {
 	}
 
 	/**
-	* Read the given config from the filesystem. There must be a file and it must
-	* be valid mappable JSON, desired behavior is to crash if else. In attempt to
-	* help the user when there is an invalid JSON file, a default empty class of
-	* the same type is printed to console to show desired format (helpful for
-	* debugging).
-	*
-	* @param configClass Class of the config.
-	* @param <T>         Type of the config. Must extend {@link ConfigBase}.
-	* @return Instance of given type.
-	* @throws RuntimeException when the file cannot be found or it could not be
-	*                          parsed. This is considered a critical error.
-	*/
+	 * Read the given config from the filesystem. There must be a file and it must
+	 * be valid mappable JSON, desired behavior is to crash if else. In attempt to
+	 * help the user when there is an invalid JSON file, a default empty class of
+	 * the same type is printed to console to show desired format (helpful for
+	 * debugging).
+	 *
+	 * @param configClass Class of the config.
+	 * @param <T>         Type of the config. Must extend {@link ConfigBase}.
+	 * @return Instance of given type.
+	 * @throws RuntimeException when the file cannot be found or it could not be
+	 *                          parsed. This is considered a critical error.
+	 */
 	private static <T extends ConfigBase> T read(Class<T> configClass) {
 		Path configFile = getFileForConfig(configClass);
 		String configClassName = configClass.getSimpleName();
@@ -200,12 +200,12 @@ public class Configs {
 	}
 
 	/**
-	* If different, replace the working specified config with the one on the
-	* filesystem. This also updates listeners.
-	*
-	* @param configClass Class of the config.
-	* @return Whether or not the config was updated.
-	*/
+	 * If different, replace the working specified config with the one on the
+	 * filesystem. This also updates listeners.
+	 *
+	 * @param configClass Class of the config.
+	 * @return Whether or not the config was updated.
+	 */
 	public static boolean reload(Class<? extends ConfigBase> configClass) {
 		ConfigBase existing = sConfigMap.get(configClass), onFile = read(configClass);
 		try {
@@ -221,13 +221,13 @@ public class Configs {
 	}
 
 	/**
-	* Helper method to use the {@link #sMapper} of this class to easily produce a
-	* JSON string. This handles errors internally.
-	*
-	* @param object Any arbitrary object to try and write to JSON.
-	* @return The object in JSON format if possible or else the default
-	*         {@link #toString()}.
-	*/
+	 * Helper method to use the {@link #sMapper} of this class to easily produce a
+	 * JSON string. This handles errors internally.
+	 *
+	 * @param object Any arbitrary object to try and write to JSON.
+	 * @return The object in JSON format if possible or else the default
+	 *         {@link #toString()}.
+	 */
 	public static String toJson(Object object) {
 		try {
 			return sPrettyWriter.writeValueAsString(object);
@@ -243,10 +243,10 @@ public class Configs {
 	}
 
 	/**
-	* Copy an object by converting it to its JSON representation then reads it into
-	* a new object. This is slow and creates garbage, so it should not be used
-	* often.
-	*/
+	 * Copy an object by converting it to its JSON representation then reads it into
+	 * a new object. This is slow and creates garbage, so it should not be used
+	 * often.
+	 */
 	@SuppressWarnings ("unchecked")
 	public static <T> T copy(T toCopy) {
 		try {
@@ -257,11 +257,11 @@ public class Configs {
 	}
 
 	/**
-	* This should be started in a new thread to watch changes for the folder
-	* containing the JSON configuration files. It detects when files are modified
-	* and written in the filesystem, then reloads them calling
-	* {@link #notifyUpdated(Class)}.
-	*/
+	 * This should be started in a new thread to watch changes for the folder
+	 * containing the JSON configuration files. It detects when files are modified
+	 * and written in the filesystem, then reloads them calling
+	 * {@link #notifyUpdated(Class)}.
+	 */
 	private static void watchService() {
 		try {
 			WatchService watcher = FileSystems.getDefault().newWatchService();
@@ -270,18 +270,18 @@ public class Configs {
 				try {
 					WatchKey key = watcher.take(); // Blocks until an event
 					/*
-					* Since there are two times when the listener is notified when a file is saved,
-					* once for the actual content and another time for the timestamp updated,
-					* sleeping will capture both into the same poll event list. From there, we can
-					* filter out what we have already seen to avoid updating more than once.
-					*/
+					 * Since there are two times when the listener is notified when a file is saved,
+					 * once for the actual content and another time for the timestamp updated,
+					 * sleeping will capture both into the same poll event list. From there, we can
+					 * filter out what we have already seen to avoid updating more than once.
+					 */
 					Thread.sleep(100L);
 					List<String> alreadySeen = new ArrayList<>();
 					/*
-					* We are on a different thread, so we must be careful updating variables on the
-					* main thread. Current model is to force the robot thread to wait for a notify
-					* once we are done updating variables from our thread.
-					*/
+					 * We are on a different thread, so we must be careful updating variables on the
+					 * main thread. Current model is to force the robot thread to wait for a notify
+					 * once we are done updating variables from our thread.
+					 */
 					synchronized (sRobotThread) {
 						sRobotThread.wait(100L); // In case something goes horribly wrong we can resume robot thread
 													// execution

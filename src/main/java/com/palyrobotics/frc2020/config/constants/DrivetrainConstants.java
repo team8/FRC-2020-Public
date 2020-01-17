@@ -16,8 +16,8 @@ public class DrivetrainConstants {
 
 	public static final double kMaxVoltage = 12.0;
 	/**
-	* Path following constants
-	*/
+	 * Path following constants
+	 */
 	public static final double kDriveWheelDiameterInches = 6.0,
 			kDriveWheelDiameterMeters = Units.inchesToMeters(kDriveWheelDiameterInches), kTrackWidthInches = 24.5,
 			kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
@@ -29,13 +29,13 @@ public class DrivetrainConstants {
 			Rotation2d.fromDegrees(5.0));
 
 	/**
-	* Unit Conversions
-	*/
+	 * Unit Conversions
+	 */
 	public static final double kDriveMetersPerRotation = 0.04677268475,
 			kDriveMetersPerSecondPerRpm = kDriveMetersPerRotation;
 	/**
-	* Cheesy Drive Constants
-	*/
+	 * Cheesy Drive Constants
+	 */
 	public static final double kDeadBand = 0.02;
 
 	private static DriveConfig kDriveConfig = Configs.get(DriveConfig.class);
@@ -44,9 +44,9 @@ public class DrivetrainConstants {
 	}
 
 	/**
-	* @return Copy of the standard trajectory configuration. Can be modified
-	*         safely.
-	*/
+	 * @return Copy of the standard trajectory configuration. Can be modified
+	 *         safely.
+	 */
 	public static TrajectoryConfig getStandardTrajectoryConfig() {
 		return new TrajectoryConfig(kDriveConfig.maxPathVelocityMetersPerSecond,
 				kDriveConfig.maxPathAccelerationMetersPerSecondSquared).setKinematics(kKinematics)

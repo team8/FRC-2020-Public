@@ -9,6 +9,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Spinner extends Subsystem {
+
 	public enum SpinnerState {
 		TO_COLOR, SPIN, IDLE
 	}
@@ -31,22 +32,28 @@ public class Spinner extends Subsystem {
 				mOutput.setIdle();
 				break;
 			case SPIN:
-				mOutput.setTargetPositionProfiled(mConfig.rotSetPoint * SpinnerConstants.eighthCPMovementGearRatio, mConfig.profiledRotControlVelocityGains);
+				mOutput.setTargetPositionProfiled(mConfig.rotSetPoint * SpinnerConstants.eighthCPMovementGearRatio,
+						mConfig.profiledRotControlVelocityGains);
 				break;
 			case TO_COLOR:
 				mVectorToColor = vectorToGoalColor(currentColor);
-				mOutput.setTargetPositionProfiled(mVectorToColor[0] * mVectorToColor[1] * SpinnerConstants.eighthCPMovementGearRatio, mConfig.profiledPosControlVelocityGains);
+				mOutput.setTargetPositionProfiled(
+						mVectorToColor[0] * mVectorToColor[1] * SpinnerConstants.eighthCPMovementGearRatio,
+						mConfig.profiledPosControlVelocityGains);
 				break;
 		}
 	}
 
 	/**
-	* Provides 'vector' that signifies direction and magnitude to goal color in most efficient path.
-	*
-	* @param currentColor current color being detected by color string in string format
-	* @return int[0]: positive distance in color change units (number of colors changes till goal color found)
-	* 		   int[1]: spinner movement direction. 1 corresponds to clockwise, -1 corresponds to anticlockwise
-	*/
+	 * Provides 'vector' that signifies direction and magnitude to goal color in
+	 * most efficient path.
+	 *
+	 * @param currentColor current color being detected by color string in string
+	 *                     format
+	 * @return int[0]: positive distance in color change units (number of colors
+	 *         changes till goal color found) int[1]: spinner movement direction. 1
+	 *         corresponds to clockwise, -1 corresponds to anticlockwise
+	 */
 	public int[] vectorToGoalColor(String currentColor) {
 		int gameDataIndex = SpinnerConstants.controlPanelColorOrder.indexOf(RobotState.getInstance().gameData);
 		int currentColorIndex = SpinnerConstants.controlPanelColorOrder.indexOf(currentColor);
@@ -54,13 +61,13 @@ public class Spinner extends Subsystem {
 		if (((gameDataIndex - currentColorIndex) % 4) <= 2) {
 			mVectorToColor[0] = (gameDataIndex - currentColorIndex) % 4;
 			mVectorToColor[1] = -1;
-		}
-		else {
+		} else {
 			mVectorToColor[0] = 4 - ((gameDataIndex - currentColorIndex) % 4);
 			mVectorToColor[1] = 1;
 		}
 		return mVectorToColor;
 	}
+
 	public ControllerOutput getOutput() {
 		return mOutput;
 	}

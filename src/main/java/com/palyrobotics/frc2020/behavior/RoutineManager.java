@@ -8,11 +8,11 @@ import com.palyrobotics.frc2020.subsystems.Subsystem;
 import com.palyrobotics.frc2020.util.StringUtil;
 
 /**
-* Handles the updating of commands by passing them to each running routine.
-* <br>
-*
-* @author Nihar, Ailyn
-*/
+ * Handles the updating of commands by passing them to each running routine.
+ * <br>
+ *
+ * @author Nihar, Ailyn
+ */
 public class RoutineManager {
 
 	public static final String LOGGER_TAG = StringUtil.classToJsonName(RoutineManager.class);
@@ -39,10 +39,10 @@ public class RoutineManager {
 	}
 
 	/**
-	* Updates the commands that are passed in based on the running routines.
-	*
-	* @param commands Current commands
-	*/
+	 * Updates the commands that are passed in based on the running routines.
+	 *
+	 * @param commands Current commands
+	 */
 	public void update(Commands commands) {
 		mRunningRoutines.removeIf(routine -> {
 			boolean isFinished = routine.execute(commands);
@@ -74,8 +74,8 @@ public class RoutineManager {
 	}
 
 	/**
-	* Finds all conflicting routines required by all of the routines.
-	*/
+	 * Finds all conflicting routines required by all of the routines.
+	 */
 	private List<Routine> conflictingRoutines(Routine newRoutine) {
 		List<Routine> conflicts = new ArrayList<>(); // TODO: No allocation on update
 		for (Routine runningRoutine : mRunningRoutines) {
