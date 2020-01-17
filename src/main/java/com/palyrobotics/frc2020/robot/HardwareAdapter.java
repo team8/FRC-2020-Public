@@ -18,16 +18,16 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
- * Represents all hardware components of the robot. Singleton class. Should only
- * be used in robot package. Subdivides hardware into subsystems.
- *
- * @author Nihar
- */
+* Represents all hardware components of the robot. Singleton class. Should only
+* be used in robot package. Subdivides hardware into subsystems.
+*
+* @author Nihar
+*/
 public class HardwareAdapter {
 
 	/**
-	 * 6 Spark Maxes, 1 Pigeon Gyro via TalonSRX data cable.
-	 */
+	* 6 Spark Maxes, 1 Pigeon Gyro via TalonSRX data cable.
+	*/
 	static class DrivetrainHardware {
 
 		private static DrivetrainHardware sInstance = new DrivetrainHardware();
@@ -107,8 +107,8 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * Compressor sensor (Analog Input), Compressor, PDP, Camera.
-	 */
+	* Compressor sensor (Analog Input), Compressor, PDP, Camera.
+	*/
 	static class MiscellaneousHardware {
 
 		private static MiscellaneousHardware sInstance = new MiscellaneousHardware();

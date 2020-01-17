@@ -9,12 +9,12 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
 /**
- * A wrapper around a Spark Max that only updates inputs when they have changed.
- * This also supports updating gains smartly. Control types are automatically
- * mapped to PID slots on the Spark controller.
- *
- * @author Quintin Dwight
- */
+* A wrapper around a Spark Max that only updates inputs when they have changed.
+* This also supports updating gains smartly. Control types are automatically
+* mapped to PID slots on the Spark controller.
+*
+* @author Quintin Dwight
+*/
 public class Spark extends CANSparkMax {
 
 	public static final Map<ControllerOutput.Mode, ControlType> MODE_TO_CONTROLLER = Map.of(

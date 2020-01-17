@@ -1,11 +1,12 @@
 package com.palyrobotics.frc2020.config.subsystem;
 
-import java.util.List;
 
 import com.palyrobotics.frc2020.util.config.SubsystemConfigBase;
+import com.palyrobotics.frc2020.util.control.ProfiledGains;
 
 public class SpinnerConfig extends SubsystemConfigBase {
+	public double rotSetPoint;
+	public ProfiledGains profiledRotControlVelocityGains;
+	public ProfiledGains profiledPosControlVelocityGains;
 
-	public List<Integer> colorSensorRedRGB, colorSensorYellowRGB, colorSensorCyanRGB, colorSensorGreenRGB;
-	public double idleOutput, rotationOutput, positionOutput;
 }

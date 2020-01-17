@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
- * @author Jason Liu, Quintin Dwight
- */
+* @author Jason Liu, Quintin Dwight
+*/
 public class CSVWriter {
 
 	private static final String COMMA_DELIMITER = ",", NEW_LINE_SEPARATOR = "\n", FILE_NAME = "canlog.csv";

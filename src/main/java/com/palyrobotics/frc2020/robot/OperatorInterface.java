@@ -16,11 +16,11 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 /**
- * Used to produce {@link Commands}'s from human input. Should only be used in
- * robot package.
- *
- * @author Nihar
- */
+* Used to produce {@link Commands}'s from human input. Should only be used in
+* robot package.
+*
+* @author Nihar
+*/
 public class OperatorInterface {
 
 	private static OperatorInterface sInstance = new OperatorInterface();
@@ -37,12 +37,12 @@ public class OperatorInterface {
 	}
 
 	/**
-	 * Helper method to only add routines that aren't already in wantedRoutines
-	 *
-	 * @param commands      Current set of commands being modified
-	 * @param wantedRoutine Routine to add to the commands
-	 * @return whether or not wantedRoutine was successfully added
-	 */
+	* Helper method to only add routines that aren't already in wantedRoutines
+	*
+	* @param commands      Current set of commands being modified
+	* @param wantedRoutine Routine to add to the commands
+	* @return whether or not wantedRoutine was successfully added
+	*/
 	private boolean addWantedRoutine(Commands commands, Routine wantedRoutine) {
 		for (Routine routine : commands.routinesWanted) {
 			if (routine.getClass().equals(wantedRoutine.getClass())) {
@@ -54,10 +54,10 @@ public class OperatorInterface {
 	}
 
 	/**
-	 * Returns modified commands
-	 *
-	 * @param commands Last commands
-	 */
+	* Returns modified commands
+	*
+	* @param commands Last commands
+	*/
 	Commands updateCommands(Commands commands) {
 
 		commands.shouldClearCurrentRoutines = false;
@@ -91,6 +91,7 @@ public class OperatorInterface {
 	}
 
 	private void updateSpinnerCommands(Commands commands) {
+		//TODO Find different button to use
 		if (mOperatorXboxController.getDPadDownPressed()) {
 			commands.spinnerWantedState = Spinner.SpinnerState.TO_COLOR;
 		}

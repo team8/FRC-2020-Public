@@ -20,6 +20,7 @@ public class Indexer extends Subsystem {
 	private Indexer() {
 	}
 
+
 	public static Indexer getInstance() {
 		return sInstance;
 	}
