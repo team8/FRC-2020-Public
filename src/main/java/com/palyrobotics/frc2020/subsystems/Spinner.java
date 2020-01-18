@@ -20,11 +20,10 @@ public class Spinner extends Subsystem {
 	ControllerOutput mOutput = new ControllerOutput();
 	private Spinner.SpinnerState mSpinnerState;
 
-
 	@Override
 	public void update(Commands commands, RobotState robotState) {
 		mSpinnerState = commands.spinnerWantedState;
-		switch(mSpinnerState) {
+		switch (mSpinnerState) {
 			case IDLE:
 				mOutput.setIdle();
 			case ROT_CONTROL:

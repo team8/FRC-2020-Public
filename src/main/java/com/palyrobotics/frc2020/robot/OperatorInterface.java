@@ -5,8 +5,6 @@ import java.util.List;
 import com.palyrobotics.frc2020.auto.modes.EnemyTrenchRunTwoShootFive;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.spinner.PositionControlRoutine;
-import com.palyrobotics.frc2020.behavior.routines.spinner.RotationControlRoutine;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
