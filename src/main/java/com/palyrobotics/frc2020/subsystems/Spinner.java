@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import com.palyrobotics.frc2020.behavior.routines.spinner.PositionControlRoutine;
+import com.palyrobotics.frc2020.behavior.routines.spinner.RotationControlRoutine;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.SpinnerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
@@ -9,12 +11,28 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Spinner extends Subsystem {
 
+	public enum SpinnerState {
+		IDLE, ROT_CONTROL, POS_CONTROL
+	}
+
 	private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
 	private static Spinner sInstance = new Spinner();
 	ControllerOutput mOutput = new ControllerOutput();
+	private Spinner.SpinnerState mSpinnerState;
+
 
 	@Override
 	public void update(Commands commands, RobotState robotState) {
+		mSpinnerState = commands.spinnerWantedState;
+		switch(mSpinnerState) {
+			case IDLE:
+				mOutput.setIdle();
+			case ROT_CONTROL:
+				commands.addWantedRoutine(new RotationControlRoutine());
+			case POS_CONTROL:
+				commands.addWantedRoutine(new PositionControlRoutine());
+		}
+
 	}
 
 	public static Spinner getInstance() {

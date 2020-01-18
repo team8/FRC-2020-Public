@@ -9,6 +9,7 @@ import com.palyrobotics.frc2020.behavior.routines.spinner.PositionControlRoutine
 import com.palyrobotics.frc2020.behavior.routines.spinner.RotationControlRoutine;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
+import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
@@ -94,12 +95,12 @@ public class OperatorInterface {
 	}
 
 	private void updateSpinnerCommands(Commands commands) {
-		// TODO Find different button to use
+		// TODO Figure out better button
 		if (mOperatorXboxController.getDPadRightPressed()) {
-			commands.addWantedRoutine(new PositionControlRoutine());
+			commands.spinnerWantedState = Spinner.SpinnerState.POS_CONTROL;
 		}
 		if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.addWantedRoutine(new RotationControlRoutine());
+			commands.spinnerWantedState = Spinner.SpinnerState.ROT_CONTROL;
 		}
 	}
 

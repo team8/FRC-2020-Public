@@ -2,7 +2,6 @@ package com.palyrobotics.frc2020.behavior.routines.spinner;
 
 import java.util.Set;
 
-import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.config.subsystem.SpinnerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
