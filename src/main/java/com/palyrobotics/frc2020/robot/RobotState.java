@@ -1,7 +1,6 @@
 package com.palyrobotics.frc2020.robot;
 
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.config.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.util.StringUtil;
 import com.revrobotics.ColorMatchResult;
 
