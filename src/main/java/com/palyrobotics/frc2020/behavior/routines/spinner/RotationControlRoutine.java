@@ -15,8 +15,9 @@ public class RotationControlRoutine extends Routine {
     private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
     private ControllerOutput mOutput = Spinner.getInstance().getOutput();
     private Spinner mSpinner = new Spinner();
-    private String mCurrentColor = "", mPreviousColor = "";
+    private String mCurrentColor, mPreviousColor;
     public int mColorChangeCounter = 0;
+
     @Override
     public String toString() {
         return getName();
@@ -25,7 +26,7 @@ public class RotationControlRoutine extends Routine {
     protected void update(Commands commands) {
         mOutput.setPercentOutput(mConfig.rotationControlOutput);
         mCurrentColor = RobotState.getInstance().closestColorString;
-        mColorChangeCounter = !mCurrentColor.equals(mPreviousColor) ? mColorChangeCounter + 1 : mColorChangeCounter;
+        mColorChangeCounter = !mCurrentColor.equals(mPreviousColor) ? mColorChangeCounter++ : mColorChangeCounter;
         mPreviousColor = mCurrentColor;
     }
 

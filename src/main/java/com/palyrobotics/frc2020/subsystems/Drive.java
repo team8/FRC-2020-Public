@@ -11,7 +11,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
 /**
- * Represents the drivetrain. Uses controllers or cheesy drive
+ * Represents the drive train. Uses controllers or cheesy drive
  * helper/proportional drive helper to calculate a drive signal.
  */
 public class Drive extends Subsystem {

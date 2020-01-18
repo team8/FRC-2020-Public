@@ -15,8 +15,8 @@ public class PositionControlRoutine extends Routine {
     private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
     private ControllerOutput mOutput = Spinner.getInstance().getOutput();
     private Spinner mSpinner = new Spinner();
-    private String mCurrentColor = "", mTargetColor = "";
-    private int directionToGoalColor = 0;
+    private String mCurrentColor, mTargetColor;
+    private int directionToGoalColor;
 
     protected void start() {
         mTargetColor = RobotState.getInstance().gameData;
@@ -29,8 +29,8 @@ public class PositionControlRoutine extends Routine {
     }
 
     protected void update(Commands commands) {
-        mCurrentColor = RobotState.getInstance().closestColorString;
         mOutput.setPercentOutput(directionToGoalColor * mConfig.positionControlOutput);
+        mCurrentColor = RobotState.getInstance().closestColorString;
     }
 
     public boolean checkFinished() {
