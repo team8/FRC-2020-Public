@@ -136,8 +136,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopPeriodic() {
-		mRoutineManager.update(mCommands);
 		mOperatorInterface.updateCommands(mCommands);
+		mRoutineManager.update(mCommands);
 		updateSubsystemsAndHardware();
 	}
 

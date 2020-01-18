@@ -62,6 +62,7 @@ public class RoutineManager {
 				mRunningRoutines.remove(routine);
 			}
 			if (!newRoutine.execute(commands)) { // If it finishes immediately never add it to running routines
+				Log.debug(LOGGER_TAG, String.format("Adding routine: %s%n", newRoutine));
 				mRunningRoutines.add(newRoutine);
 			}
 		}

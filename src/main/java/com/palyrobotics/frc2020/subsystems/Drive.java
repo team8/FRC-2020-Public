@@ -60,7 +60,7 @@ public class Drive extends Subsystem {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		DriveState wantedState = commands.getDriveState();
+		DriveState wantedState = commands.getDriveWantedState();
 		boolean isNewState = mState != wantedState;
 		mState = wantedState;
 		if (isNewState) {
@@ -76,12 +76,12 @@ public class Drive extends Subsystem {
 
 						@Override
 						public void updateSignal(Commands commands, RobotState state) {
-							mSignal = commands.getWantedDriveSignal();
+							mSignal = commands.getDriveWantedSignal();
 						}
 					};
 					break;
 				case FOLLOW_PATH:
-					mController = new DriveRamseteController(commands.getDriveTrajectory());
+					mController = new DriveRamseteController(commands.getDriveWantedTrajectory());
 					break;
 				case TURN:
 					mController = new DriveTurnController(commands.getDriveWantedHeading());

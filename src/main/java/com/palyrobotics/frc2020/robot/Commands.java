@@ -1,15 +1,14 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.util.ArrayList;
-
 import com.palyrobotics.frc2020.behavior.Routine;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
-
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+
+import java.util.ArrayList;
 
 /**
  * Commands represent what we want the robot to be doing.
@@ -62,7 +61,7 @@ public class Commands {
 		routinesWanted.add(wantedRoutine);
 	}
 
-	public Drive.DriveState getDriveState() {
+	public Drive.DriveState getDriveWantedState() {
 		return driveWantedState;
 	}
 
@@ -82,7 +81,7 @@ public class Commands {
 		return driveWantsBrake;
 	}
 
-	public Trajectory getDriveTrajectory() {
+	public Trajectory getDriveWantedTrajectory() {
 		return driveWantedTrajectory;
 	}
 
@@ -90,7 +89,7 @@ public class Commands {
 		return driveWantedHeading;
 	}
 
-	public DriveOutputs getWantedDriveSignal() {
+	public DriveOutputs getDriveWantedSignal() {
 		return driveWantedSignal;
 	}
 
@@ -112,13 +111,12 @@ public class Commands {
 		setDriveTeleop(0.0, 0.0, false, false);
 	}
 
-	public void setDriveTeleop(double driveThrottle, double driveWheel, boolean driveWantsQuickTurn,
-			boolean driveWantsBrake) {
+	public void setDriveTeleop(double throttle, double wheel, boolean wantsQuickTurn, boolean wantsBrake) {
 		driveWantedState = Drive.DriveState.TELEOP;
-		this.driveWantedThrottle = driveThrottle;
-		this.driveWantedWheel = driveWheel;
-		this.driveWantsQuickTurn = driveWantsQuickTurn;
-		this.driveWantsBrake = driveWantsBrake;
+		driveWantedThrottle = throttle;
+		driveWantedWheel = wheel;
+		driveWantsQuickTurn = wantsQuickTurn;
+		driveWantsBrake = wantsBrake;
 	}
 
 	public void setDriveNeutral() {
@@ -131,12 +129,12 @@ public class Commands {
 	}
 
 	public void copyTo(Commands other) {
-		other.driveWantedState = this.driveWantedState;
-		other.indexerWantedState = this.indexerWantedState;
-		other.spinnerWantedState = this.spinnerWantedState;
-		other.intakeWantedState = this.intakeWantedState;
-		other.shouldClearCurrentRoutines = this.shouldClearCurrentRoutines;
-		other.routinesWanted.addAll(this.routinesWanted);
+		other.driveWantedState = driveWantedState;
+		other.indexerWantedState = indexerWantedState;
+		other.spinnerWantedState = spinnerWantedState;
+		other.intakeWantedState = intakeWantedState;
+		other.shouldClearCurrentRoutines = shouldClearCurrentRoutines;
+		other.routinesWanted.addAll(routinesWanted);
 	}
 
 	@Override
