@@ -1,0 +1,18 @@
+{
+    "kClimberMaxHeight": 0,
+    "kClimberInchesPerRevolution": 0,
+    "kClimberInchesPerMinutePerRpm": 0,
+    "acceptablePositionError": 0,
+    "acceptableVelocityError": 0,
+    "maxVelocity": 0,
+    "adjustingOutput": 0,
+    "gains": {
+        "p": 0,
+        "i": 0,
+        "d": 0,
+        "f": 0,
+        "iZone": 0,
+        "acceleration": 0,
+        "velocity": 0
+    }
+}

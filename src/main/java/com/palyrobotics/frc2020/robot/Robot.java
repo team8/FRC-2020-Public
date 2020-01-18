@@ -34,12 +34,13 @@ public class Robot extends TimedRobot {
 	/* Subsystems */
 	private final Drive mDrive = Drive.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
+	private final Climber mClimber = Climber.getInstance();
 	private final Indexer mIndexer = Indexer.getInstance();
 	private final Intake mIntake = Intake.getInstance();
 	private final HardwareReader mHardwareReader = HardwareReader.getInstance();
 	private final HardwareWriter mHardwareWriter = HardwareWriter.getInstance();
 	private Commands mCommands = Commands.getInstance();
-	private List<Subsystem> mSubsystems = List.of(mDrive, mSpinner, mIndexer, mIntake), mEnabledSubsystems;
+	private List<Subsystem> mSubsystems = List.of(mDrive, mSpinner, mClimber, mIndexer, mIntake), mEnabledSubsystems;
 	private List<RobotService> mServices = List.of(new CommandReceiver(), new NetworkLogger()), mEnabledServices;
 
 	@Override

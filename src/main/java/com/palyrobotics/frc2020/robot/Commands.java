@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
+import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
@@ -29,6 +30,8 @@ public class Commands {
 	public Intake.IntakeState intakeWantedState;
 	/* Indexer Commands */
 	public Indexer.IndexerState indexerWantedState;
+	/* Climber Commands */
+	public Climber.ClimberState climberWantedState;
 	/* Drive Commands */
 	private Drive.DriveState driveWantedState;
 	// Teleop
@@ -41,6 +44,9 @@ public class Commands {
 	private double driveWantedTrajectoryTimeSeconds;
 	// Turning
 	private double driveWantedHeading;
+	// Climbing
+	private double climberWantedVelocity;
+	private double climberWantedPosition;
 
 	private Commands() {
 	}
@@ -95,6 +101,14 @@ public class Commands {
 		return driveWantedSignal;
 	}
 
+	public double getClimberWantedVelocity() {
+		return climberWantedVelocity;
+	}
+
+	public double getClimberWantedPosition() {
+		return climberWantedPosition;
+	}
+
 	public void setDriveSignal(DriveOutputs signal) {
 		driveWantedState = Drive.DriveState.SIGNAL;
 		driveWantedSignal = signal;
@@ -131,11 +145,20 @@ public class Commands {
 		driveWantedHeading = angle;
 	}
 
+	public void setClimberWantedVelocity(double velocity) {
+		climberWantedVelocity = velocity;
+	}
+
+	public void setClimberWantedPosition(double position) {
+		climberWantedPosition = position;
+	}
+
 	public void copyTo(Commands other) {
 		other.driveWantedState = driveWantedState;
 		other.indexerWantedState = indexerWantedState;
 		other.spinnerWantedState = spinnerWantedState;
 		other.intakeWantedState = intakeWantedState;
+		other.climberWantedState = climberWantedState;
 		other.shouldClearCurrentRoutines = shouldClearCurrentRoutines;
 		other.routinesWanted.addAll(routinesWanted);
 	}
