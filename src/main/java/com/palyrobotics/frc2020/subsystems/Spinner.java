@@ -16,8 +16,7 @@ public class Spinner extends Subsystem {
 
 	private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
 	private static Spinner sInstance = new Spinner();
-	private ControllerOutput mOutput = new ControllerOutput();
-	private int[] mVectorToColor = new int[2];
+	ControllerOutput mOutput = new ControllerOutput();
 
 	public static Spinner getInstance() {
 		return sInstance;
@@ -26,22 +25,18 @@ public class Spinner extends Subsystem {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		SpinnerState spinnerState = commands.spinnerWantedState;
-		String currentColor = robotState.closestColorString;
 		switch (spinnerState) {
 			case IDLE:
 				mOutput.setIdle();
 				break;
 			case SPIN:
-				mOutput.setTargetPositionProfiled(mConfig.rotSetPoint * SpinnerConstants.eighthCPMovementGearRatio,
-						mConfig.profiledRotControlVelocityGains);
+
 				break;
 			case TO_COLOR:
-				mVectorToColor = vectorToGoalColor(currentColor);
-				mOutput.setTargetPositionProfiled(
-						mVectorToColor[0] * mVectorToColor[1] * SpinnerConstants.eighthCPMovementGearRatio,
-						mConfig.profiledPosControlVelocityGains);
+
 				break;
 		}
+
 	}
 
 	/**
@@ -54,18 +49,21 @@ public class Spinner extends Subsystem {
 	 *         changes till goal color found) int[1]: spinner movement direction. 1
 	 *         corresponds to clockwise, -1 corresponds to anticlockwise
 	 */
-	public int[] vectorToGoalColor(String currentColor) {
-		int gameDataIndex = SpinnerConstants.controlPanelColorOrder.indexOf(RobotState.getInstance().gameData);
+	public int directionToGoalColor(String currentColor, String gameTargetColor) {
+		int gameDataIndex = SpinnerConstants.controlPanelColorOrder.indexOf(gameTargetColor);
 		int currentColorIndex = SpinnerConstants.controlPanelColorOrder.indexOf(currentColor);
 
 		if (((gameDataIndex - currentColorIndex) % 4) <= 2) {
-			mVectorToColor[0] = (gameDataIndex - currentColorIndex) % 4;
-			mVectorToColor[1] = -1;
+//			mVectorToColor[0] = (gameDataIndex - currentColorIndex) % 4;
+//			mVectorToColor[1] = -1;
+			return -1;
 		} else {
-			mVectorToColor[0] = 4 - ((gameDataIndex - currentColorIndex) % 4);
-			mVectorToColor[1] = 1;
+//			mVectorToColor[0] = 4 - ((gameDataIndex - currentColorIndex) % 4);
+//			mVectorToColor[1] = 1;
+			return 1;
 		}
-		return mVectorToColor;
+//		return mVectorToColor;
+//		return gameDataIndex;
 	}
 
 	public ControllerOutput getOutput() {

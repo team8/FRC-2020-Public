@@ -1,13 +1,5 @@
 {
-	"rotSetPoint" : 35,
-	"profiledRotControlVelocityGains" : {
-		"p" : 0.0 ,
-		"d" : 0.0,
-		"f" : 0.0
-	},
-	"profiledPosControlVelocityGains" : {
-		"p" : 0.0 ,
-		"d" : 0.0,
-		"f" : 0.0
-	}
+	"positionControlOutput" : 0.5,
+	"rotationControlOutput" : 0.7,
+	"rotationControlColorChangeRequirement" : 30
 }
