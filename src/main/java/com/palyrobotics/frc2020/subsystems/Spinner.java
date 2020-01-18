@@ -3,7 +3,6 @@ package com.palyrobotics.frc2020.subsystems;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.SpinnerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
@@ -15,19 +14,21 @@ public class Spinner extends Subsystem {
 	ControllerOutput mOutput = new ControllerOutput();
 
 	@Override
-	public void update(Commands commands, RobotState robotState) { }
+	public void update(Commands commands, RobotState robotState) {
+	}
 
 	public static Spinner getInstance() {
 		return sInstance;
 	}
+
 	/**
 	 * Provides most efficient direction to goal color
 	 *
-	 * @param currentColor current color being detected by color string in string
-	 *                     format
+	 * @param currentColor    current color being detected by color string in string
+	 *                        format
 	 * @param gameTargetColor color to find given by FMS
-	 * @return int denoting direction wheel needs to move. 1
-	 *         corresponds to clockwise, -1 corresponds to anticlockwise
+	 * @return int denoting direction wheel needs to move. 1 corresponds to
+	 *         clockwise, -1 corresponds to anticlockwise
 	 */
 	public int directionToGoalColor(String currentColor, String gameTargetColor) {
 		int gameDataIndex = SpinnerConstants.controlPanelColorOrder.indexOf(gameTargetColor);
