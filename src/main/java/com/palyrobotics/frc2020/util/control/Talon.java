@@ -4,34 +4,39 @@ import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.palyrobotics.frc2020.robot.HardwareWriter;
 
 public class Talon extends TalonSRX {
 
-	class TalonController extends ProfiledControllerBase {
+	static class TalonController extends ProfiledControllerBase<BaseTalon> {
+
+		protected TalonController(BaseTalon talon) {
+			super(talon);
+		}
 
 		@Override
 		protected void updateGains(boolean isFirstInitialization, int slot, Gains newGains, Gains lastGains) {
 			super.updateGains(isFirstInitialization, slot, newGains, lastGains);
 			if (isFirstInitialization) {
-				configMotionSCurveStrength(4, HardwareWriter.TIMEOUT_MS);
+				mController.configMotionSCurveStrength(4, HardwareWriter.TIMEOUT_MS);
 			}
 		}
 
 		@Override
 		void setProfiledAcceleration(int slot, double acceleration) {
-			configMotionAcceleration(round(acceleration), HardwareWriter.TIMEOUT_MS);
+			mController.configMotionAcceleration(round(acceleration), HardwareWriter.TIMEOUT_MS);
 		}
 
 		@Override
 		void setProfiledCruiseVelocity(int slot, double cruiseVelocity) {
-			configMotionCruiseVelocity(round(cruiseVelocity), HardwareWriter.TIMEOUT_MS);
+			mController.configMotionCruiseVelocity(round(cruiseVelocity), HardwareWriter.TIMEOUT_MS);
 		}
 
 		@Override
 		protected void setProfiledAllowableError(int slot, double allowableError) {
-			configAllowableClosedloopError(slot, round(allowableError), HardwareWriter.TIMEOUT_MS);
+			mController.configAllowableClosedloopError(slot, round(allowableError), HardwareWriter.TIMEOUT_MS);
 		}
 
 		@Override
@@ -42,38 +47,38 @@ public class Talon extends TalonSRX {
 		@Override
 		boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput) {
 			ControlMode controllerMode = MODE_TO_CONTROLLER.get(mode);
-			Talon.this.set(controllerMode, reference, DemandType.ArbitraryFeedForward, arbitraryPercentOutput);
+			mController.set(controllerMode, reference, DemandType.ArbitraryFeedForward, arbitraryPercentOutput);
 			return true;
 		}
 
 		@Override
 		int getId() {
-			return getDeviceID();
+			return mController.getDeviceID();
 		}
 
 		@Override
 		void setP(int slot, double p) {
-			config_kP(slot, p, HardwareWriter.TIMEOUT_MS);
+			mController.config_kP(slot, p, HardwareWriter.TIMEOUT_MS);
 		}
 
 		@Override
 		void setI(int slot, double i) {
-			config_kI(slot, i, HardwareWriter.TIMEOUT_MS);
+			mController.config_kI(slot, i, HardwareWriter.TIMEOUT_MS);
 		}
 
 		@Override
 		void setD(int slot, double d) {
-			config_kD(slot, d, HardwareWriter.TIMEOUT_MS);
+			mController.config_kD(slot, d, HardwareWriter.TIMEOUT_MS);
 		}
 
 		@Override
 		void setF(int slot, double f) {
-			config_kF(slot, f, HardwareWriter.TIMEOUT_MS);
+			mController.config_kF(slot, f, HardwareWriter.TIMEOUT_MS);
 		}
 
 		@Override
 		void setIZone(int slot, double iZone) {
-			config_IntegralZone(slot, round(iZone), HardwareWriter.TIMEOUT_MS);
+			mController.config_IntegralZone(slot, round(iZone), HardwareWriter.TIMEOUT_MS);
 		}
 	}
 
@@ -82,7 +87,7 @@ public class Talon extends TalonSRX {
 			ControlMode.Position, ControllerOutput.Mode.VELOCITY, ControlMode.Velocity,
 			ControllerOutput.Mode.PROFILED_POSITION, ControlMode.MotionMagic, ControllerOutput.Mode.PROFILED_VELOCITY,
 			ControlMode.MotionProfile);
-	private final ProfiledControllerBase mController = new TalonController();
+	private final TalonController mController = new TalonController(this);
 
 	public Talon(int deviceNumber) {
 		super(deviceNumber);

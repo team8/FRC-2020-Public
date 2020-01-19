@@ -1,6 +1,10 @@
 package com.palyrobotics.frc2020.util.control;
 
-public abstract class ProfiledControllerBase extends SimpleControllerBase {
+public abstract class ProfiledControllerBase<TController> extends SimpleControllerBase<TController> {
+
+	protected ProfiledControllerBase(TController controller) {
+		super(controller);
+	}
 
 	@Override
 	protected void updateGains(boolean isFirstInitialization, int slot, Gains newGains, Gains lastGains) {

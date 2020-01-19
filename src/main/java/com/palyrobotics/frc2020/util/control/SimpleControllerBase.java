@@ -9,7 +9,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
-public abstract class SimpleControllerBase {
+public abstract class SimpleControllerBase<T> {
 
 	private static Map<ControllerOutput.Mode, Integer> sModeToSlot = Map.of(ControllerOutput.Mode.PROFILED_POSITION, 1,
 			ControllerOutput.Mode.PROFILED_VELOCITY, 2);
@@ -20,6 +20,11 @@ public abstract class SimpleControllerBase {
 	private int mLastSlot;
 	private ControllerOutput.Mode mLastMode;
 	private Map<Integer, Gains> mLastGains = new HashMap<>();
+	protected T mController;
+
+	protected SimpleControllerBase(T controller) {
+		mController = controller;
+	}
 
 	public boolean setOutput(ControllerOutput output) {
 		ControllerOutput.Mode mode = output.getControlMode();

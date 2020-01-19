@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
 import com.palyrobotics.frc2020.util.input.Joystick;
@@ -47,6 +48,22 @@ public class HardwareAdapter {
 		}
 
 		static DrivetrainHardware getInstance() {
+			return sInstance;
+		}
+	}
+
+	static class FalconDrivetrainHardware {
+
+		private static FalconDrivetrainHardware sInstance = new FalconDrivetrainHardware();
+
+		Falcon leftMasterFalcon, leftSlaveFalcon, rightMasterFalcon, rightSlaveFalcon;
+
+		private List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon, rightMasterFalcon, rightSlaveFalcon);
+
+		private FalconDrivetrainHardware() {
+		}
+
+		static FalconDrivetrainHardware getInstance() {
 			return sInstance;
 		}
 	}
