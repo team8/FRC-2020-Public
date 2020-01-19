@@ -18,7 +18,7 @@ public class Spinner extends Subsystem {
 	private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
 	private static Spinner sInstance = new Spinner();
 	ControllerOutput mOutput = new ControllerOutput();
-	private Spinner.SpinnerState mSpinnerState;
+	private SpinnerState mSpinnerState;
 
 	@Override
 	public void update(Commands commands, RobotState robotState) {
