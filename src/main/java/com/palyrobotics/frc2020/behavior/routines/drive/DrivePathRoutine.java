@@ -2,7 +2,7 @@ package com.palyrobotics.frc2020.behavior.routines.drive;
 
 import java.util.*;
 
-import com.palyrobotics.frc2020.behavior.Routine;
+import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutine;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 
-public class DrivePathRoutine extends Routine {
+public class DrivePathRoutine extends TimeoutRoutine {
 
 	private final Trajectory mTrajectory;
 
@@ -28,6 +28,7 @@ public class DrivePathRoutine extends Routine {
 	public DrivePathRoutine(boolean isReversed, List<Pose2d> waypoints) {
 		mTrajectory = TrajectoryGenerator.generateTrajectory(getGenerationPoints(isReversed, waypoints),
 				getGenerationConfig(isReversed));
+		mTimeout = mTrajectory.getTotalTimeSeconds();
 	}
 
 	private <T> List<T> getGenerationPoints(boolean isReversed, List<T> waypoints) {
@@ -60,16 +61,17 @@ public class DrivePathRoutine extends Routine {
 		mTrajectory = TrajectoryGenerator.generateTrajectory(isReversed ? end : start,
 				getGenerationPoints(isReversed, interiorWaypoints), isReversed ? start : end,
 				getGenerationConfig(isReversed));
+		mTimeout = mTrajectory.getTotalTimeSeconds();
 	}
 
 	@Override
 	public void update(Commands commands) {
-		commands.setDriveFollowPath(mTrajectory);
+		commands.setDriveFollowPath(mTrajectory, mTimer.get());
 	}
 
 	@Override
-	public boolean checkFinished() {
-		return mDrive.isOnTarget();
+	public boolean checkIfFinishedEarly() {
+		return false;
 	}
 
 	@Override

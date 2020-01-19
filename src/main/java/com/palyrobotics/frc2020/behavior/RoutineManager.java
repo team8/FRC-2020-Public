@@ -17,7 +17,7 @@ public class RoutineManager {
 
 	public static final String LOGGER_TAG = StringUtil.classToJsonName(RoutineManager.class);
 	private static RoutineManager sInstance = new RoutineManager();
-	private List<Routine> mRunningRoutines = new LinkedList<>();
+	private List<RoutineBase> mRunningRoutines = new LinkedList<>();
 
 	private RoutineManager() {
 	}
@@ -26,15 +26,15 @@ public class RoutineManager {
 		return sInstance;
 	}
 
-	static Set<Subsystem> sharedSubsystems(List<Routine> routines) {
+	static Set<Subsystem> sharedSubsystems(List<RoutineBase> routines) {
 		Set<Subsystem> sharedSubsystems = new HashSet<>(); // TODO: No allocation on update
-		for (Routine routine : routines) {
+		for (RoutineBase routine : routines) {
 			sharedSubsystems.addAll(routine.getRequiredSubsystems());
 		}
 		return sharedSubsystems;
 	}
 
-	public List<Routine> getCurrentRoutines() {
+	public List<RoutineBase> getCurrentRoutines() {
 		return mRunningRoutines;
 	}
 
@@ -54,10 +54,10 @@ public class RoutineManager {
 		if (commands.shouldClearCurrentRoutines) {
 			clearRunningRoutines();
 		}
-		for (Routine newRoutine : commands.routinesWanted) {
+		for (RoutineBase newRoutine : commands.routinesWanted) {
 			// Remove any running routines that conflict with new routine
-			List<Routine> conflicts = conflictingRoutines(newRoutine);
-			for (Routine routine : conflicts) {
+			List<RoutineBase> conflicts = conflictingRoutines(newRoutine);
+			for (RoutineBase routine : conflicts) {
 				Log.warn(LOGGER_TAG, String.format("Dropping conflicting routine: %s%n", routine));
 				mRunningRoutines.remove(routine);
 			}
@@ -77,9 +77,9 @@ public class RoutineManager {
 	/**
 	 * Finds all conflicting routines required by all of the routines.
 	 */
-	private List<Routine> conflictingRoutines(Routine newRoutine) {
-		List<Routine> conflicts = new ArrayList<>(); // TODO: No allocation on update
-		for (Routine runningRoutine : mRunningRoutines) {
+	private List<RoutineBase> conflictingRoutines(RoutineBase newRoutine) {
+		List<RoutineBase> conflicts = new ArrayList<>(); // TODO: No allocation on update
+		for (RoutineBase runningRoutine : mRunningRoutines) {
 			if (!Collections.disjoint(newRoutine.getRequiredSubsystems(), runningRoutine.getRequiredSubsystems())) {
 				conflicts.add(runningRoutine);
 			}

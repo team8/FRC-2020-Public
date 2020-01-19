@@ -7,7 +7,6 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
@@ -18,18 +17,15 @@ public class DriveRamseteController extends Drive.DriveController {
 	public static final double B = 2.0, ZETA = 0.7;
 
 	private final RamseteController mController;
-	private final Trajectory mTrajectory;
-	private final Timer mTimer = new Timer();
 
-	public DriveRamseteController(Trajectory trajectory) {
-		mTrajectory = trajectory;
+	public DriveRamseteController() {
 		mController = new RamseteController(B, ZETA);
-		mTimer.start();
 	}
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		Trajectory.State targetPose = mTrajectory.sample(mTimer.get());
+		Trajectory.State targetPose = commands.getDriveWantedTrajectory()
+				.sample(commands.getDriveWantedTrajectoryTimeSeconds());
 		ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
 		DifferentialDriveWheelSpeeds wheelSpeeds = DrivetrainConstants.kKinematics.toWheelSpeeds(speeds);
 		mDriveOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond * 60.0,
@@ -44,10 +40,5 @@ public class DriveRamseteController extends Drive.DriveController {
 		CSVWriter.addData("rightVelocity", state.driveRightVelocity);
 		CSVWriter.addData("targetPoseX", targetPose.poseMeters.getTranslation().getX());
 		CSVWriter.addData("targetPoseY", targetPose.poseMeters.getTranslation().getY());
-	}
-
-	@Override
-	public boolean isOnTarget() {
-		return mTimer.get() > mTrajectory.getTotalTimeSeconds();
 	}
 }

@@ -10,18 +10,13 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 public class DriveTurnController extends Drive.DriveController {
 
-	private double mTargetHeading;
 	private ProfiledPIDController mController = new ProfiledPIDController(mDriveConfig.turnGains.p,
 			mDriveConfig.turnGains.i, mDriveConfig.turnGains.d,
 			new TrapezoidProfile.Constraints(mDriveConfig.turnGains.velocity, mDriveConfig.turnGains.acceleration));
 
-	public DriveTurnController(double targetHeading) {
-		mTargetHeading = targetHeading;
-	}
-
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		double targetVelocity = mController.calculate(state.driveHeading, mTargetHeading);
+		double targetVelocity = mController.calculate(state.driveHeading, commands.getDriveWantedHeading());
 		mDriveOutputs.leftOutput.setTargetVelocityProfiled(targetVelocity, mDriveConfig.profiledVelocityGains);
 		mDriveOutputs.rightOutput.setTargetVelocityProfiled(-targetVelocity, mDriveConfig.profiledVelocityGains);
 	}

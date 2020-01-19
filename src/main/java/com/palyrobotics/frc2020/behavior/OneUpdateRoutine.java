@@ -2,7 +2,7 @@ package com.palyrobotics.frc2020.behavior;
 
 import com.palyrobotics.frc2020.robot.Commands;
 
-public abstract class OneUpdateRoutine extends Routine {
+public abstract class OneUpdateRoutine extends RoutineBase {
 
 	@Override
 	protected final void update(Commands commands) {

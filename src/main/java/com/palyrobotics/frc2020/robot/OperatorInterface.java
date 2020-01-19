@@ -2,7 +2,8 @@ package com.palyrobotics.frc2020.robot;
 
 import java.util.List;
 
-import com.palyrobotics.frc2020.behavior.Routine;
+import com.palyrobotics.frc2020.auto.modes.EnemyTrenchRunTwoShootFive;
+import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
@@ -44,8 +45,8 @@ public class OperatorInterface {
 	 * @param wantedRoutine Routine to add to the commands
 	 * @return whether or not wantedRoutine was successfully added
 	 */
-	private boolean addWantedRoutine(Commands commands, Routine wantedRoutine) {
-		for (Routine routine : commands.routinesWanted) {
+	private boolean addWantedRoutine(Commands commands, RoutineBase wantedRoutine) {
+		for (RoutineBase routine : commands.routinesWanted) {
 			if (routine.getClass().equals(wantedRoutine.getClass())) {
 				return false;
 			}
@@ -85,7 +86,7 @@ public class OperatorInterface {
 		setVision(wantsAssistedVision);
 		/* Path Following */
 		if (mOperatorXboxController.getDPadUp()) {
-			commands.addWantedRoutine(new DrivePathRoutine(kTestWaypoints));
+			commands.addWantedRoutine(new EnemyTrenchRunTwoShootFive().getRoutine());
 		} else if (mOperatorXboxController.getDPadDown()) {
 			commands.addWantedRoutine(new DrivePathRoutine(true, kTestWaypoints));
 		}

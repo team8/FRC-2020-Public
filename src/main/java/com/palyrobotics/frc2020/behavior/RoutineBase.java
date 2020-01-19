@@ -9,7 +9,7 @@ import com.palyrobotics.frc2020.subsystems.Subsystem;
 /**
 *
 */
-public abstract class Routine {
+public abstract class RoutineBase {
 
 	private enum RoutineState {
 		INIT, RUNNING, FINISHED

@@ -36,7 +36,7 @@ public class DrivetrainConstants {
 	/**
 	 * Cheesy Drive Constants
 	 */
-	public static final double kDeadBand = 0.02;
+	public static final double kDeadBand = 0.04;
 
 	private static DriveConfig kDriveConfig = Configs.get(DriveConfig.class);
 

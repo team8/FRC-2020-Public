@@ -4,6 +4,10 @@ import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 
 public abstract class TimeoutRoutine extends TimedRoutine {
 
+	protected TimeoutRoutine() {
+		this(0.0);
+	}
+
 	public TimeoutRoutine(double timeout) {
 		super(timeout);
 	}

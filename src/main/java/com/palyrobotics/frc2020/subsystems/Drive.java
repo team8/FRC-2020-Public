@@ -36,10 +36,6 @@ public class Drive extends Subsystem {
 		 * {@link Commands}.
 		 */
 		public abstract void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state);
-
-		public boolean isOnTarget() {
-			return false;
-		}
 	}
 
 	private static Drive sInstance = new Drive();
@@ -81,10 +77,10 @@ public class Drive extends Subsystem {
 					};
 					break;
 				case FOLLOW_PATH:
-					mController = new DriveRamseteController(commands.getDriveWantedTrajectory());
+					mController = new DriveRamseteController();
 					break;
 				case TURN:
-					mController = new DriveTurnController(commands.getDriveWantedHeading());
+					mController = new DriveTurnController();
 					break;
 			}
 		}
@@ -94,9 +90,5 @@ public class Drive extends Subsystem {
 		} else {
 			mSignal = mController.update(commands, state);
 		}
-	}
-
-	public boolean isOnTarget() {
-		return mController == null || mController.isOnTarget();
 	}
 }

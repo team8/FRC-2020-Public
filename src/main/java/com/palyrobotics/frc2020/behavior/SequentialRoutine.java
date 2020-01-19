@@ -12,14 +12,14 @@ import com.palyrobotics.frc2020.subsystems.Subsystem;
  */
 public class SequentialRoutine extends MultipleRoutine {
 
-	private final Iterator<Routine> mIterator = mRoutines.iterator();
-	private Routine mRunningRoutine = mIterator.next();
+	private final Iterator<RoutineBase> mIterator = mRoutines.iterator();
+	private RoutineBase mRunningRoutine = mIterator.next();
 
-	public SequentialRoutine(Routine... routines) {
+	public SequentialRoutine(RoutineBase... routines) {
 		super(routines);
 	}
 
-	public SequentialRoutine(List<Routine> routines) {
+	public SequentialRoutine(List<RoutineBase> routines) {
 		super(routines);
 	}
 

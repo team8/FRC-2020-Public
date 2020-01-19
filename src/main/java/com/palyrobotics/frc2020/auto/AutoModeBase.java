@@ -1,8 +1,8 @@
 package com.palyrobotics.frc2020.auto;
 
-import com.palyrobotics.frc2020.behavior.Routine;
+import com.palyrobotics.frc2020.behavior.RoutineBase;
 
 public abstract class AutoModeBase {
 
-	public abstract Routine getRoutine();
+	public abstract RoutineBase getRoutine();
 }

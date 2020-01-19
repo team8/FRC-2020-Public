@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.palyrobotics.frc2020.auto.AutoModeBase;
-import com.palyrobotics.frc2020.behavior.Routine;
+import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 public class ShootThreeFriendlyTrenchFiveShootFive extends AutoModeBase {
 
 	@Override
-	public Routine getRoutine() {
-		List<Routine> routines = new ArrayList<>();
+	public RoutineBase getRoutine() {
+		List<RoutineBase> routines = new ArrayList<>();
 
 		List<Pose2d> friendlyTrench1 = new ArrayList<>();
 		friendlyTrench1.add(new Pose2d(3.5, 2, Rotation2d.fromDegrees(0)));

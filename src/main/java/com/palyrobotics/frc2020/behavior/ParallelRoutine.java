@@ -12,13 +12,13 @@ import com.palyrobotics.frc2020.subsystems.Subsystem;
  */
 public class ParallelRoutine extends MultipleRoutine {
 
-	private final LinkedList<Routine> mRunningRoutines = new LinkedList<>(mRoutines);
+	private final LinkedList<RoutineBase> mRunningRoutines = new LinkedList<>(mRoutines);
 
-	public ParallelRoutine(Routine... routines) {
+	public ParallelRoutine(RoutineBase... routines) {
 		super(routines);
 	}
 
-	public ParallelRoutine(List<Routine> routines) {
+	public ParallelRoutine(List<RoutineBase> routines) {
 		super(routines);
 	}
 

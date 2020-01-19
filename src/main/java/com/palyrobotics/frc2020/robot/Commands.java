@@ -1,8 +1,9 @@
 package com.palyrobotics.frc2020.robot;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import com.palyrobotics.frc2020.behavior.Routine;
+import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
@@ -20,16 +21,16 @@ public class Commands {
 
 	private static Commands sInstance = new Commands();
 	/* Routines */
-	public ArrayList<Routine> routinesWanted = new ArrayList<>();
+	public List<RoutineBase> routinesWanted = new ArrayList<>();
 	public boolean shouldClearCurrentRoutines;
 	/* Spinner Commands */
-	public Spinner.SpinnerState spinnerWantedState = Spinner.SpinnerState.IDLE;
+	public Spinner.SpinnerState spinnerWantedState;
 	/* Intake Commands */
-	public Intake.IntakeState intakeWantedState = Intake.IntakeState.IDLE;
+	public Intake.IntakeState intakeWantedState;
 	/* Indexer Commands */
-	public Indexer.IndexerState indexerWantedState = Indexer.IndexerState.IDLE;
+	public Indexer.IndexerState indexerWantedState;
 	/* Drive Commands */
-	private Drive.DriveState driveWantedState = Drive.DriveState.NEUTRAL;
+	private Drive.DriveState driveWantedState;
 	// Teleop
 	private double driveWantedThrottle, driveWantedWheel;
 	private boolean driveWantsQuickTurn, driveWantsBrake;
@@ -37,6 +38,7 @@ public class Commands {
 	private DriveOutputs driveWantedSignal;
 	// Path Following
 	private Trajectory driveWantedTrajectory;
+	private double driveWantedTrajectoryTimeSeconds;
 	// Turning
 	private double driveWantedHeading;
 
@@ -47,18 +49,13 @@ public class Commands {
 		return sInstance;
 	}
 
-	static Commands resetInstance() {
-		sInstance = new Commands();
-		return sInstance;
-	}
-
-	public void addWantedRoutines(Routine... wantedRoutines) {
-		for (Routine wantedRoutine : wantedRoutines) {
+	public void addWantedRoutines(RoutineBase... wantedRoutines) {
+		for (RoutineBase wantedRoutine : wantedRoutines) {
 			addWantedRoutine(wantedRoutine);
 		}
 	}
 
-	public void addWantedRoutine(Routine wantedRoutine) {
+	public void addWantedRoutine(RoutineBase wantedRoutine) {
 		routinesWanted.add(wantedRoutine);
 	}
 
@@ -86,6 +83,10 @@ public class Commands {
 		return driveWantedTrajectory;
 	}
 
+	public double getDriveWantedTrajectoryTimeSeconds() {
+		return driveWantedTrajectoryTimeSeconds;
+	}
+
 	public double getDriveWantedHeading() {
 		return driveWantedHeading;
 	}
@@ -99,9 +100,10 @@ public class Commands {
 		driveWantedSignal = signal;
 	}
 
-	public void setDriveFollowPath(Trajectory trajectory) {
+	public void setDriveFollowPath(Trajectory trajectory, double trajectoryTimeElapsedSeconds) {
 		driveWantedState = Drive.DriveState.FOLLOW_PATH;
 		driveWantedTrajectory = trajectory;
+		driveWantedTrajectoryTimeSeconds = trajectoryTimeElapsedSeconds;
 	}
 
 	public void setDriveVisionAlign() {
@@ -140,11 +142,18 @@ public class Commands {
 
 	@Override
 	public String toString() {
-		StringBuilder log = new StringBuilder();
+		var log = new StringBuilder();
 		log.append("Wanted routines: ");
-		for (Routine r : routinesWanted) {
+		for (RoutineBase r : routinesWanted) {
 			log.append(r.getName()).append(" ");
 		}
 		return log.append("\n").toString();
+	}
+
+	public void reset() {
+		spinnerWantedState = Spinner.SpinnerState.IDLE;
+		intakeWantedState = Intake.IntakeState.INTAKE;
+		indexerWantedState = Indexer.IndexerState.IDLE;
+		driveWantedState = Drive.DriveState.NEUTRAL;
 	}
 }
