@@ -9,7 +9,6 @@ import com.palyrobotics.frc2020.util.StringUtil;
 
 /**
  * Handles the updating of commands by passing them to each running routine.
- * <br>
  *
  * @author Nihar, Ailyn
  */
@@ -56,12 +55,18 @@ public class RoutineManager {
 		}
 		for (RoutineBase newRoutine : commands.routinesWanted) {
 			// Remove any running routines that conflict with new routine
-			List<RoutineBase> conflicts = conflictingRoutines(newRoutine);
-			for (RoutineBase routine : conflicts) {
-				Log.warn(LOGGER_TAG, String.format("Dropping conflicting routine: %s%n", routine));
-				mRunningRoutines.remove(routine);
+			for (RoutineBase runningRoutine : mRunningRoutines) {
+				// Non-disjoint means both subsystem sets have elements in common, which creates
+				// conflicts
+				if (!Collections.disjoint(newRoutine.getRequiredSubsystems(), runningRoutine.getRequiredSubsystems())) {
+					Log.warn(LOGGER_TAG, String.format("Dropping conflicting routine: %s%n", runningRoutine));
+					mRunningRoutines.remove(runningRoutine);
+				}
 			}
-			if (!newRoutine.execute(commands)) { // If it finishes immediately never add it to running routines
+			// If it finishes immediately never add it to running routines
+			if (newRoutine.execute(commands)) {
+				Log.debug(LOGGER_TAG, String.format("Immediately dropping new routine: %s%n", newRoutine));
+			} else {
 				Log.debug(LOGGER_TAG, String.format("Adding routine: %s%n", newRoutine));
 				mRunningRoutines.add(newRoutine);
 			}
@@ -72,18 +77,5 @@ public class RoutineManager {
 
 	public void clearRunningRoutines() {
 		mRunningRoutines.clear();
-	}
-
-	/**
-	 * Finds all conflicting routines required by all of the routines.
-	 */
-	private List<RoutineBase> conflictingRoutines(RoutineBase newRoutine) {
-		List<RoutineBase> conflicts = new ArrayList<>(); // TODO: No allocation on update
-		for (RoutineBase runningRoutine : mRunningRoutines) {
-			if (!Collections.disjoint(newRoutine.getRequiredSubsystems(), runningRoutine.getRequiredSubsystems())) {
-				conflicts.add(runningRoutine);
-			}
-		}
-		return conflicts;
 	}
 }

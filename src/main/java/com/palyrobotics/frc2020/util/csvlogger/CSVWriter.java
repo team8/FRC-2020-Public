@@ -35,7 +35,7 @@ public class CSVWriter {
 
 	public static void cleanFile() {
 		if (!sCsvFile.delete()) {
-			Log.error(LOGGER_TAG, "Failed to delete existing CSV file!");
+			Log.error(LOGGER_TAG, "Failed to delete existing file!");
 		}
 	}
 
@@ -55,11 +55,11 @@ public class CSVWriter {
 	}
 
 	public static void write() {
-		Log.info(LOGGER_TAG, "Writing CSV...");
+		Log.info(LOGGER_TAG, "Writing...");
 		try (var fileWriter = new FileWriter(sCsvFile, true)) {
 			fileWriter.append(sBuilder.toString());
 		} catch (IOException writeException) {
-			Log.error(LOGGER_TAG, "Failed to write CSV", writeException);
+			Log.error(LOGGER_TAG, "Failed to write", writeException);
 		} finally {
 			sBuilder.setLength(0);
 		}

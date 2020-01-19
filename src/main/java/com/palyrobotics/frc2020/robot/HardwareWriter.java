@@ -97,7 +97,7 @@ public class HardwareWriter {
 		driveHardware.gyro.setFusedHeading(0, TIMEOUT_MS);
 		driveHardware.gyro.setAccumZAngle(0, TIMEOUT_MS);
 		driveHardware.sparks.forEach(spark -> spark.getEncoder().setPosition(0.0));
-		Log.info(LOGGER_TAG, "Drive Sensors Reset");
+		Log.info(LOGGER_TAG, "Drive sensors reset");
 	}
 
 	void setDriveIdleMode(CANSparkMax.IdleMode idleMode) {

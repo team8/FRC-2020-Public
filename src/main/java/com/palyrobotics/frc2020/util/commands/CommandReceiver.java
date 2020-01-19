@@ -51,7 +51,7 @@ public class CommandReceiver implements RobotService {
 		run.addArgument("parameters").nargs("*");
 		subparsers.addParser("save").addArgument("config_name");
 		subparsers.addParser("calibrate").addSubparsers().dest("subsystem").addParser("arm")
-				.help("Resets the Spark encoder so it is " + "in-line with the " + "potentiometer");
+				.help("Resets the Spark encoder so it is in-line with the potentiometer");
 	}
 
 	@Override
@@ -63,12 +63,12 @@ public class CommandReceiver implements RobotService {
 
 				@Override
 				public void connected(Connection connection) {
-					Log.info(getConfigName(), "Command receiver connected!");
+					Log.info(getConfigName(), "Connected!");
 				}
 
 				@Override
 				public void disconnected(Connection connection) {
-					Log.error(getConfigName(), "Command receiver disconnected!");
+					Log.error(getConfigName(), "Disconnected!");
 				}
 
 				@Override
@@ -88,7 +88,7 @@ public class CommandReceiver implements RobotService {
 			});
 			mServer.start();
 			mServer.bind(PORT);
-			Log.info(getConfigName(), "Started command receiver server");
+			Log.info(getConfigName(), "Started server");
 		} catch (IOException exception) {
 			Log.error(getConfigName(), "Failed to start server", exception);
 		}

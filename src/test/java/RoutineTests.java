@@ -39,9 +39,9 @@ public class RoutineTests {
 
 	private static MockSubsystem mockSubsystem = new MockSubsystem();
 
+	// TODO: don't rely on time for test
 	@Test
-	public void testRoutineManager() { // TODO: something better than just time based since that is kinda
-		// sketch
+	public void testRoutineManager() {
 		Timer timer = new Timer();
 		timer.start();
 		Commands commands = Commands.getInstance();

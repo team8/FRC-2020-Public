@@ -2,13 +2,13 @@ package com.palyrobotics.frc2020.behavior.routines.waits;
 
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 
-public abstract class TimeoutRoutine extends TimedRoutine {
+public abstract class TimeoutRoutineBase extends TimedRoutine {
 
-	protected TimeoutRoutine() {
+	protected TimeoutRoutineBase() {
 		this(0.0);
 	}
 
-	public TimeoutRoutine(double timeout) {
+	public TimeoutRoutineBase(double timeout) {
 		super(timeout);
 	}
 

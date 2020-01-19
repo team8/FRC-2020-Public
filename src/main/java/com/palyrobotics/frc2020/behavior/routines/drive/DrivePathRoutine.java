@@ -2,7 +2,7 @@ package com.palyrobotics.frc2020.behavior.routines.drive;
 
 import java.util.*;
 
-import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutine;
+import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 
-public class DrivePathRoutine extends TimeoutRoutine {
+public class DrivePathRoutine extends TimeoutRoutineBase {
 
 	private final Trajectory mTrajectory;
 
