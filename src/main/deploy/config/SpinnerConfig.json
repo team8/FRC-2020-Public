@@ -1,25 +1,5 @@
 {
-	"colorSensorRedRGB": [
-		0.5,
-		0.3,
-		0.1
-	],
-	"colorSensorYellowRGB": [
-		0.3,
-		0.5,
-		0.1
-	],
-	"colorSensorCyanRGB": [
-		0.1,
-		0.4,
-		0.4
-	],
-	"colorSensorGreenRGB": [
-		0.1,
-		0.6,
-		0.25
-	],
-	"idleOutput": 0.0,
-	"rotationOutput": 0.5,
-	"positionOutput": 0.2
+	"positionControlOutput" : 0.5,
+	"rotationControlOutput" : 0.7,
+	"rotationControlColorChangeRequirement" : 30
 }

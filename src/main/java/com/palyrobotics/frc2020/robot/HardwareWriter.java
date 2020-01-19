@@ -2,7 +2,6 @@ package com.palyrobotics.frc2020.robot;
 
 import java.util.List;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
@@ -125,7 +124,8 @@ public class HardwareWriter {
 	}
 
 	private void updateSpinner() {
-		HardwareAdapter.SpinnerHardware.getInstance().spinnerTalon.set(ControlMode.PercentOutput, mSpinner.getOutput());
+		var spinnerHardware = HardwareAdapter.SpinnerHardware.getInstance();
+		spinnerHardware.spinnerTalon.setOutput(mSpinner.getOutput());
 	}
 
 	private void updateIndexer() {

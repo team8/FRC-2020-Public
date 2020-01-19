@@ -93,11 +93,12 @@ public class OperatorInterface {
 	}
 
 	private void updateSpinnerCommands(Commands commands) {
-		if (mOperatorXboxController.getDPadDownPressed()) {
-			commands.spinnerWantedState = Spinner.SpinnerState.TO_COLOR;
+		// TODO Figure out better button
+		if (mOperatorXboxController.getDPadRightPressed()) {
+			commands.spinnerWantedState = Spinner.SpinnerState.POS_CONTROL;
 		}
-		if (mOperatorXboxController.getDPadUpPressed()) {
-			commands.spinnerWantedState = Spinner.SpinnerState.SPIN;
+		if (mOperatorXboxController.getDPadLeftPressed()) {
+			commands.spinnerWantedState = Spinner.SpinnerState.ROT_CONTROL;
 		}
 	}
 

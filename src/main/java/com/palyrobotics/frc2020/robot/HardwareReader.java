@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2020.robot;
 
-import com.palyrobotics.frc2020.subsystems.Spinner;
+import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,10 +20,10 @@ public class HardwareReader {
 	public final ColorMatch mColorMatcher = new ColorMatch();
 
 	private HardwareReader() {
-		mColorMatcher.addColorMatch(Spinner.kCyanCPTarget);
-		mColorMatcher.addColorMatch(Spinner.kGreenCPTarget);
-		mColorMatcher.addColorMatch(Spinner.kRedCPTarget);
-		mColorMatcher.addColorMatch(Spinner.kYellowCPTarget);
+		mColorMatcher.addColorMatch(SpinnerConstants.kCyanCPTarget);
+		mColorMatcher.addColorMatch(SpinnerConstants.kGreenCPTarget);
+		mColorMatcher.addColorMatch(SpinnerConstants.kRedCPTarget);
+		mColorMatcher.addColorMatch(SpinnerConstants.kYellowCPTarget);
 	}
 
 	public static HardwareReader getInstance() {
@@ -47,13 +47,13 @@ public class HardwareReader {
 		// Updating color sensor data
 		robotState.detectedRGBVals = HardwareAdapter.SpinnerHardware.getInstance().colorSensor.getColor();
 		robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBVals);
-		if (robotState.closestColorRGB.color == Spinner.kCyanCPTarget) {
+		if (robotState.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
 			robotState.closestColorString = "Cyan";
-		} else if (robotState.closestColorRGB.color == Spinner.kYellowCPTarget) {
+		} else if (robotState.closestColorRGB.color == SpinnerConstants.kYellowCPTarget) {
 			robotState.closestColorString = "Yellow";
-		} else if (robotState.closestColorRGB.color == Spinner.kGreenCPTarget) {
+		} else if (robotState.closestColorRGB.color == SpinnerConstants.kGreenCPTarget) {
 			robotState.closestColorString = "Green";
-		} else if (robotState.closestColorRGB.color == Spinner.kRedCPTarget) {
+		} else if (robotState.closestColorRGB.color == SpinnerConstants.kRedCPTarget) {
 			robotState.closestColorString = "Red";
 		}
 		robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
