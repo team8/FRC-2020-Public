@@ -10,15 +10,14 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 public class Climber extends Subsystem {
 
 	public enum ClimberState {
-		CUSTOM_VELOCITY, CUSTOM_POSITION, ADJUSTING_LEFT, ADJUSTING_RIGHT, IDLE
+		CLIMBING, ADJUSTING_LEFT, ADJUSTING_RIGHT, IDLE
 	}
 
 	private static Climber sInstance = new Climber();
 	private ControllerOutput mOutput;
 	private ControllerOutput mAdjustingOutput;
 	private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
-	private Double mWantedVelocity;
-	private Double mWantedPosition;
+	private Double mWantedOutput;
 
 	private Climber() {
 	}
@@ -31,21 +30,19 @@ public class Climber extends Subsystem {
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		ClimberState state = commands.climberWantedState;
 		switch (state) {
-			case CUSTOM_VELOCITY:
-				mWantedVelocity = commands.getClimberWantedVelocity();
-				mOutput.setTargetVelocityProfiled(mWantedVelocity, mConfig.gains);
+			case CLIMBING:
+				mWantedOutput = commands.getClimberWantedOutput();
+				mOutput.setPercentOutput(mWantedOutput);
 				mAdjustingOutput.setIdle();
 				break;
-			case CUSTOM_POSITION:
-				mWantedPosition = commands.getClimberWantedPosition();
-				mOutput.setTargetPositionProfiled(mWantedPosition, mConfig.gains);
-				mAdjustingOutput.setIdle();
 			case ADJUSTING_LEFT:
 				mOutput.setIdle();
 				mAdjustingOutput.setPercentOutput(-mConfig.adjustingOutput);
+				break;
 			case ADJUSTING_RIGHT:
 				mOutput.setIdle();
 				mAdjustingOutput.setPercentOutput(mConfig.adjustingOutput);
+				break;
 			case IDLE:
 				mOutput.setIdle();
 				break;

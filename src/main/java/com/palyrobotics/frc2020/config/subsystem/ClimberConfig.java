@@ -12,7 +12,7 @@ public class ClimberConfig extends SubsystemConfigBase {
 	public double acceptablePositionError;
 	public double acceptableVelocityError;
 
-	public double maxVelocity;
+	public double climbingMultiplier;
 
 	public double adjustingOutput;
 

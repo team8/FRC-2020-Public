@@ -45,8 +45,7 @@ public class Commands {
 	// Turning
 	private double driveWantedHeading;
 	// Climbing
-	private double climberWantedVelocity;
-	private double climberWantedPosition;
+	private double climberWantedOutput;
 
 	private Commands() {
 	}
@@ -101,12 +100,8 @@ public class Commands {
 		return driveWantedSignal;
 	}
 
-	public double getClimberWantedVelocity() {
-		return climberWantedVelocity;
-	}
-
-	public double getClimberWantedPosition() {
-		return climberWantedPosition;
+	public double getClimberWantedOutput() {
+		return climberWantedOutput;
 	}
 
 	public void setDriveSignal(DriveOutputs signal) {
@@ -145,12 +140,8 @@ public class Commands {
 		driveWantedHeading = angle;
 	}
 
-	public void setClimberWantedVelocity(double velocity) {
-		climberWantedVelocity = velocity;
-	}
-
-	public void setClimberWantedPosition(double position) {
-		climberWantedPosition = position;
+	public void setClimberWantedOutput(double output) {
+		climberWantedOutput = output;
 	}
 
 	public void copyTo(Commands other) {

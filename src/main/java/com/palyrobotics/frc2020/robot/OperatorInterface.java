@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.palyrobotics.frc2020.auto.modes.EnemyTrenchRunTwoShootFive;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
-import com.palyrobotics.frc2020.behavior.routines.climber.ClimberCustomPositioningRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.subsystems.Climber;
@@ -113,13 +112,10 @@ public class OperatorInterface {
 		ClimberConfig mConfig = Configs.get(ClimberConfig.class);
 		double rightStick = -mOperatorXboxController.getY(GenericHID.Hand.kRight);
 		if (Math.abs(rightStick) > 0.1) {
-			commands.climberWantedState = Climber.ClimberState.CUSTOM_VELOCITY;
-			commands.setClimberWantedVelocity(rightStick * mConfig.maxVelocity);;
+			commands.climberWantedState = Climber.ClimberState.CLIMBING;
+			commands.setClimberWantedOutput(Math.abs(rightStick * mConfig.climbingMultiplier));;
 		} else {
 			commands.climberWantedState = Climber.ClimberState.IDLE;
-		}
-		if (mOperatorXboxController.getAButtonPressed()) {
-			commands.addWantedRoutine(new ClimberCustomPositioningRoutine(mConfig.kClimberMaxHeight));
 		}
 		/* Adjusting */
 		if (mDriveStick.getRawButton(3)) {

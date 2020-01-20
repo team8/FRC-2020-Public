@@ -4,7 +4,7 @@
     "kClimberInchesPerMinutePerRpm": 0,
     "acceptablePositionError": 0,
     "acceptableVelocityError": 0,
-    "maxVelocity": 0,
+    "climbingMultiplier": 0,
     "adjustingOutput": 0,
     "gains": {
         "p": 0,
