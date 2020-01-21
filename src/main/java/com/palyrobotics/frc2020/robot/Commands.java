@@ -110,6 +110,10 @@ public class Commands {
 		driveWantedState = Drive.DriveState.VISION_ALIGN;
 	}
 
+	public void setRamseteVisionAlign() {
+		driveWantedState = Drive.DriveState.VISION_RAMSETE;
+	}
+
 	public void setDriveTeleop() {
 		setDriveTeleop(0.0, 0.0, false, false);
 	}

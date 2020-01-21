@@ -83,6 +83,9 @@ public class OperatorInterface {
 			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),
 					mDriveStick.getTrigger());
 		}
+		if (mTurnStick.getRawButtonPressed(5)) {
+			commands.setRamseteVisionAlign();
+		}
 		setVision(wantsAssistedVision);
 		/* Path Following */
 		if (mOperatorXboxController.getDPadUp()) {
