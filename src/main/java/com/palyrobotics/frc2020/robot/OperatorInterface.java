@@ -84,7 +84,7 @@ public class OperatorInterface {
 					mDriveStick.getTrigger());
 		}
 		if (mTurnStick.getRawButtonPressed(5)) {
-			commands.setRamseteVisionAlign();
+			commands.setPathVisionAlign();
 		}
 		setVision(wantsAssistedVision);
 		/* Path Following */

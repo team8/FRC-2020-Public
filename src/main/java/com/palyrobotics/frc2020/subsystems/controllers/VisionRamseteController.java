@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj.util.Units;
 public class VisionRamseteController extends Drive.DriveController {
 
 	private Limelight mLimelight = Limelight.getInstance();
-	private List<Pose2d> mWaypoints = new ArrayList();
+	private List<Pose2d> mWaypoints = new ArrayList<>();
 	private Pose2d mOrigin = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-	List<RoutineBase> routines = new ArrayList<>();
+	private List<RoutineBase> mRoutines = new ArrayList<>();
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
@@ -31,9 +31,9 @@ public class VisionRamseteController extends Drive.DriveController {
 		mWaypoints.add(new Pose2d(Units.inchesToMeters(mLimelight.getPnPTranslationX()),
 				Units.inchesToMeters(mLimelight.getPnPTranslationY()),
 				Rotation2d.fromDegrees(mLimelight.getYawToTarget())));
-		routines.add(new DrivePathRoutine(mWaypoints));
-		Commands.getInstance().addWantedRoutine(new SequentialRoutine(routines));
+		mRoutines.add(new DrivePathRoutine(mWaypoints));
+		Commands.getInstance().addWantedRoutine(new SequentialRoutine(mRoutines));
 		mWaypoints.clear();
-		routines.clear();
+		mRoutines.clear();
 	}
 }
