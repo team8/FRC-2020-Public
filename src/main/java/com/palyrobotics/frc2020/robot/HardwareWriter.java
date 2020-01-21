@@ -20,6 +20,7 @@ public class HardwareWriter {
 	private static HardwareWriter sInstance = new HardwareWriter();
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	private final Drive mDrive = Drive.getInstance();
+	private final Climber mClimber = Climber.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
 	private final Indexer mIndexer = Indexer.getInstance();
 	private final Intake mIntake = Intake.getInstance();
@@ -33,6 +34,7 @@ public class HardwareWriter {
 
 	void configureHardware() {
 		configureDriveHardware();
+		configureClimberHardware();
 		configureIntakeHardware();
 		configureIndexerHardware();
 		configureSpinnerHardware();
@@ -75,6 +77,12 @@ public class HardwareWriter {
 		resetDriveSensors();
 	}
 
+	private void configureClimberHardware() {
+		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
+		climberHardware.climberMainSpark.restoreFactoryDefaults();
+		climberHardware.climberAdjustingSpark.restoreFactoryDefaults();
+	}
+
 	private void configureIntakeHardware() {
 		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
 		intakeHardware.intakeTalon.configFactoryDefault(TIMEOUT_MS);
@@ -111,6 +119,7 @@ public class HardwareWriter {
 		if (!mRobotConfig.disableOutput) {
 			updateDrivetrain();
 			updateSpinner();
+			updateClimber();
 			updateIndexer();
 			updateIntake();
 			updateMiscellaneousHardware();
@@ -126,6 +135,12 @@ public class HardwareWriter {
 	private void updateSpinner() {
 		var spinnerHardware = HardwareAdapter.SpinnerHardware.getInstance();
 		spinnerHardware.spinnerTalon.setOutput(mSpinner.getOutput());
+	}
+
+	private void updateClimber() {
+		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
+		climberHardware.climberMainSpark.setOutput(mClimber.getOutput());
+		climberHardware.climberAdjustingSpark.setOutput(mClimber.getAdjustingOutput());
 	}
 
 	private void updateIndexer() {

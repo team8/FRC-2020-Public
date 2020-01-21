@@ -95,6 +95,20 @@ public class HardwareAdapter {
 		}
 	}
 
+	static class ClimberHardware {
+
+		private static ClimberHardware sInstance = new ClimberHardware();
+		final Spark climberMainSpark = new Spark(sPortConstants.climberMainDeviceID);
+		final Spark climberAdjustingSpark = new Spark(sPortConstants.climberAdjustingDeviceID);
+
+		ClimberHardware() {
+		}
+
+		static ClimberHardware getInstance() {
+			return sInstance;
+		}
+	}
+
 	static class Joysticks {
 
 		private static final Joysticks sInstance = new Joysticks();

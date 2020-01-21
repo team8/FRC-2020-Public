@@ -3,6 +3,7 @@ package com.palyrobotics.frc2020.behavior;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.subsystems.Subsystem;
 
@@ -16,6 +17,7 @@ public abstract class RoutineBase {
 	}
 
 	protected final Drive mDrive = Drive.getInstance();
+	protected final Climber mClimber = Climber.getInstance();
 	private RoutineState mState = RoutineState.INIT;
 
 	public final boolean execute(Commands commands) {

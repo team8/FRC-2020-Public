@@ -27,4 +27,10 @@ public class PortConstants extends ConfigBase {
 	public int vidarIndexerHorizontalDeviceID;
 	public int vidarIndexerVerticalDeviceID;
 
+	/**
+	 * Climber
+	 */
+	public int climberMainDeviceID;
+	public int climberAdjustingDeviceID;
+
 }

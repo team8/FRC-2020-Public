@@ -5,14 +5,18 @@ import java.util.List;
 import com.palyrobotics.frc2020.auto.modes.EnemyTrenchRunTwoShootFive;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
+import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
+import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.util.Units;
@@ -65,6 +69,8 @@ public class OperatorInterface {
 		commands.shouldClearCurrentRoutines = false;
 
 		updateDriveCommands(commands);
+		updateIndexerCommands(commands);
+		updateClimberCommands(commands);
 		updateSpinnerCommands(commands);
 		updateIntakeCommands(commands);
 
@@ -100,6 +106,26 @@ public class OperatorInterface {
 		if (mOperatorXboxController.getDPadLeftPressed()) {
 			commands.spinnerWantedState = Spinner.SpinnerState.ROT_CONTROL;
 		}
+	}
+
+	private void updateClimberCommands(Commands commands) {
+		ClimberConfig mConfig = Configs.get(ClimberConfig.class);
+		double rightStick = -mOperatorXboxController.getY(GenericHID.Hand.kRight);
+		if (Math.abs(rightStick) > 0.1) {
+			commands.climberWantedState = Climber.ClimberState.CLIMBING;
+			commands.setClimberWantedOutput(Math.abs(rightStick * mConfig.climbingMultiplier));
+		} else {
+			commands.climberWantedState = Climber.ClimberState.IDLE;
+		}
+		/* Adjusting */
+		if (mDriveStick.getRawButton(3)) {
+			commands.climberWantedState = Climber.ClimberState.ADJUSTING_LEFT;
+		} else if (mDriveStick.getRawButton(4)) {
+			commands.climberWantedState = Climber.ClimberState.ADJUSTING_RIGHT;
+		} else {
+			commands.climberWantedState = Climber.ClimberState.IDLE;
+		}
+
 	}
 
 	private void updateIntakeCommands(Commands commands) {
