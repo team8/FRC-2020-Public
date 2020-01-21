@@ -17,7 +17,7 @@ public class Climber extends Subsystem {
 	private ControllerOutput mOutput;
 	private ControllerOutput mAdjustingOutput;
 	private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
-	private Double mWantedOutput;
+	private double mWantedOutput;
 
 	private Climber() {
 	}

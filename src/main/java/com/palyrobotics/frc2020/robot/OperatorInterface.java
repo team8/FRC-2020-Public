@@ -113,7 +113,7 @@ public class OperatorInterface {
 		double rightStick = -mOperatorXboxController.getY(GenericHID.Hand.kRight);
 		if (Math.abs(rightStick) > 0.1) {
 			commands.climberWantedState = Climber.ClimberState.CLIMBING;
-			commands.setClimberWantedOutput(Math.abs(rightStick * mConfig.climbingMultiplier));;
+			commands.setClimberWantedOutput(Math.abs(rightStick * mConfig.climbingMultiplier));
 		} else {
 			commands.climberWantedState = Climber.ClimberState.IDLE;
 		}
