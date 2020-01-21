@@ -7,6 +7,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.controllers.ChezyDriveController;
 import com.palyrobotics.frc2020.subsystems.controllers.DriveRamseteController;
 import com.palyrobotics.frc2020.subsystems.controllers.DriveTurnController;
+import com.palyrobotics.frc2020.subsystems.controllers.VisionRamseteController;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
@@ -17,7 +18,7 @@ import com.palyrobotics.frc2020.util.control.DriveOutputs;
 public class Drive extends Subsystem {
 
 	public enum DriveState {
-		NEUTRAL, TELEOP, SIGNAL, FOLLOW_PATH, VISION_ALIGN, TURN
+		NEUTRAL, TELEOP, SIGNAL, FOLLOW_PATH, VISION_ALIGN, VISION_RAMSETE, TURN
 	}
 
 	public abstract static class DriveController {
@@ -81,6 +82,9 @@ public class Drive extends Subsystem {
 					break;
 				case TURN:
 					mController = new DriveTurnController();
+					break;
+				case VISION_RAMSETE:
+					mController = new VisionRamseteController();
 					break;
 			}
 		}
