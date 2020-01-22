@@ -1,17 +1,15 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.util.List;
-
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
-import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.StringUtil;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.control.Spark;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
+import com.palyrobotics.frc2020.util.control.Falcon;
 
 public class HardwareWriter {
 
@@ -36,59 +34,48 @@ public class HardwareWriter {
 		var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
 
 		var driveConfig = Configs.get(DriveConfig.class);
-		for (Spark spark : driveHardware.sparks) {
-			spark.restoreFactoryDefaults();
-			spark.enableVoltageCompensation(DrivetrainConstants.kMaxVoltage);
-			CANEncoder encoder = spark.getEncoder();
-			encoder.setPositionConversionFactor(DrivetrainConstants.kDriveMetersPerRotation);
-			encoder.setVelocityConversionFactor(DrivetrainConstants.kDriveMetersPerSecondPerRpm);
-			spark.setSmartCurrentLimit(driveConfig.stallCurrentLimit, driveConfig.freeCurrentLimit,
-					driveConfig.freeRpmLimit);
-			spark.setOpenLoopRampRate(driveConfig.controllerRampRate);
-			spark.setClosedLoopRampRate(driveConfig.controllerRampRate);
+		for (Falcon falcon : driveHardware.falcons) {
+			falcon.configFactoryDefault();
+			falcon.enableVoltageCompensation(true);
+			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 50);
+			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero, 50);
+			falcon.configOpenloopRamp(driveConfig.controllerRampRate, 50);
+			falcon.configClosedloopRamp(driveConfig.controllerRampRate, 50);
 		}
 
 		/* Left Side */
-		for (Spark spark : List.of(driveHardware.leftMasterSpark, driveHardware.leftSlave1Spark,
-				driveHardware.leftSlave2Spark)) {
-			spark.setInverted(false);
-		}
-		for (Spark spark : List.of(driveHardware.leftSlave1Spark, driveHardware.leftSlave2Spark)) {
-			spark.follow(driveHardware.leftMasterSpark);
-		}
+		driveHardware.leftMasterFalcon.setInverted(false);
+		driveHardware.leftSlaveFalcon.setInverted(false);
+		driveHardware.leftSlaveFalcon.follow(driveHardware.leftMasterFalcon);
 
 		/* Right Side */
-		for (Spark spark : List.of(driveHardware.rightMasterSpark, driveHardware.rightSlave1Spark,
-				driveHardware.rightSlave2Spark)) {
-			spark.setInverted(true); // Note: Inverted
-		}
-		for (Spark spark : List.of(driveHardware.rightSlave1Spark, driveHardware.rightSlave2Spark)) {
-			spark.follow(driveHardware.rightMasterSpark);
-		}
+		driveHardware.rightMasterFalcon.setInverted(false);
+		driveHardware.rightSlaveFalcon.setInverted(false);
+		driveHardware.rightSlaveFalcon.follow(driveHardware.rightMasterFalcon);
 
 		resetDriveSensors();
 	}
 
 	private void configureClimberHardware() {
 		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
-		climberHardware.climberMainSpark.restoreFactoryDefaults();
-		climberHardware.climberAdjustingSpark.restoreFactoryDefaults();
+		climberHardware.verticalSpark.restoreFactoryDefaults();
+		climberHardware.horizontalSpark.restoreFactoryDefaults();
 	}
 
 	private void configureIntakeHardware() {
 		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
-		intakeHardware.intakeTalon.configFactoryDefault(TIMEOUT_MS);
+		intakeHardware.talon.configFactoryDefault(TIMEOUT_MS);
 	}
 
 	private void configureIndexerHardware() {
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
-		indexerHardware.indexerHorizontalSpark.restoreFactoryDefaults();
-		indexerHardware.indexerVerticalSpark.restoreFactoryDefaults();
+		indexerHardware.horizontalSpark.restoreFactoryDefaults();
+		indexerHardware.verticalSpark.restoreFactoryDefaults();
 	}
 
 	private void configureSpinnerHardware() {
 		var spinnerHardware = HardwareAdapter.SpinnerHardware.getInstance();
-		spinnerHardware.spinnerTalon.configFactoryDefault(TIMEOUT_MS);
+		spinnerHardware.talon.configFactoryDefault(TIMEOUT_MS);
 	}
 
 	public void resetDriveSensors() {
@@ -96,12 +83,12 @@ public class HardwareWriter {
 		driveHardware.gyro.setYaw(0, TIMEOUT_MS);
 		driveHardware.gyro.setFusedHeading(0, TIMEOUT_MS);
 		driveHardware.gyro.setAccumZAngle(0, TIMEOUT_MS);
-		driveHardware.sparks.forEach(spark -> spark.getEncoder().setPosition(0.0));
+		driveHardware.falcons.forEach(spark -> spark.setSelectedSensorPosition(0, 0, 50));
 		Log.info(LOGGER_TAG, "Drive sensors reset");
 	}
 
-	void setDriveIdleMode(CANSparkMax.IdleMode idleMode) {
-		HardwareAdapter.DrivetrainHardware.getInstance().sparks.forEach(spark -> spark.setIdleMode(idleMode));
+	void setDriveNeutralMode(NeutralMode neutralMode) {
+		HardwareAdapter.DrivetrainHardware.getInstance().falcons.forEach(spark -> spark.setNeutralMode(neutralMode));
 	}
 
 	/**
@@ -120,29 +107,29 @@ public class HardwareWriter {
 
 	private void updateDrivetrain() {
 		var drivetrainHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-		drivetrainHardware.leftMasterSpark.setOutput(mDrive.getDriveSignal().leftOutput);
-		drivetrainHardware.rightMasterSpark.setOutput(mDrive.getDriveSignal().rightOutput);
+		drivetrainHardware.leftMasterFalcon.setOutput(mDrive.getDriveSignal().leftOutput);
+		drivetrainHardware.rightMasterFalcon.setOutput(mDrive.getDriveSignal().rightOutput);
 	}
 
 	private void updateSpinner() {
 		var spinnerHardware = HardwareAdapter.SpinnerHardware.getInstance();
-		spinnerHardware.spinnerTalon.setOutput(mSpinner.getOutput());
+		spinnerHardware.talon.setOutput(mSpinner.getOutput());
 	}
 
 	private void updateClimber() {
 		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
-		climberHardware.climberMainSpark.setOutput(mClimber.getOutput());
-		climberHardware.climberAdjustingSpark.setOutput(mClimber.getAdjustingOutput());
+		climberHardware.verticalSpark.setOutput(mClimber.getOutput());
+		climberHardware.horizontalSpark.setOutput(mClimber.getAdjustingOutput());
 	}
 
 	private void updateIndexer() {
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
-		indexerHardware.indexerHorizontalSpark.setOutput(mIndexer.getHorizontalOutput());
-		indexerHardware.indexerVerticalSpark.setOutput(mIndexer.getVerticalOutput());
+		indexerHardware.horizontalSpark.setOutput(mIndexer.getHorizontalOutput());
+		indexerHardware.verticalSpark.setOutput(mIndexer.getVerticalOutput());
 	}
 
 	private void updateIntake() {
-		HardwareAdapter.IntakeHardware.getInstance().intakeTalon.setOutput(mIntake.getOutput());
+		HardwareAdapter.IntakeHardware.getInstance().talon.setOutput(mIntake.getOutput());
 	}
 
 	private void updateMiscellaneousHardware() {

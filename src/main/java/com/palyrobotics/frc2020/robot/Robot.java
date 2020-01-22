@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.config.RobotConfig;
@@ -17,7 +18,6 @@ import com.palyrobotics.frc2020.util.service.NetworkLogger;
 import com.palyrobotics.frc2020.util.service.RobotService;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 
@@ -177,6 +177,6 @@ public class Robot extends TimedRobot {
 	}
 
 	private void setDriveIdleMode(boolean isIdle) {
-		mHardwareWriter.setDriveIdleMode(isIdle ? IdleMode.kCoast : IdleMode.kBrake);
+		mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
 	}
 }

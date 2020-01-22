@@ -11,37 +11,53 @@ import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
-import com.revrobotics.CANEncoder;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Solenoid;
 
 /**
  * Represents all hardware components of the robot. Singleton class. Should only
  * be used in robot package. Subdivides hardware into subsystems.
- *
- * @author Nihar
  */
 public class HardwareAdapter {
 
 	/**
-	 * 6 Spark Maxes, 1 Pigeon Gyro via TalonSRX data cable.
+	 * 1 NEO, 1 NEO 550 (both controlled by Spark MAX) 1 Solenoid
+	 */
+	static class ClimberHardware {
+
+		private static ClimberHardware sInstance = new ClimberHardware();
+		final Spark verticalSpark = new Spark(sPortConstants.vidarClimberVerticalId);
+		final Spark horizontalSpark = new Spark(sPortConstants.vidarClimberHorizontalId);
+		final Solenoid solenoid = new Solenoid(sPortConstants.vidarClimberSolenoidId);
+
+		ClimberHardware() {
+		}
+
+		static ClimberHardware getInstance() {
+			return sInstance;
+		}
+	}
+
+	/**
+	 * 4 Falcon 500s (controlled by Talon FX) 1 Pigeon IMU Gyro connected via Talon
+	 * SRX data cable.
 	 */
 	static class DrivetrainHardware {
 
 		private static DrivetrainHardware sInstance = new DrivetrainHardware();
-		final Spark leftMasterSpark = new Spark(sPortConstants.vidarLeftDriveMasterDeviceId),
-				leftSlave1Spark = new Spark(sPortConstants.vidarLeftDriveSlave1DeviceId),
-				leftSlave2Spark = new Spark(sPortConstants.vidarLeftDriveSlave2DeviceId),
-				rightMasterSpark = new Spark(sPortConstants.vidarRightDriveMasterDeviceId),
-				rightSlave1Spark = new Spark(sPortConstants.vidarRightDriveSlave1DeviceId),
-				rightSlave2Spark = new Spark(sPortConstants.vidarRightDriveSlave2DeviceId);
-		final CANEncoder leftMasterEncoder = leftMasterSpark.getEncoder(),
-				rightMasterEncoder = rightMasterSpark.getEncoder();
-		final List<Spark> sparks = List.of(leftMasterSpark, leftSlave1Spark, leftSlave2Spark, rightMasterSpark,
-				rightSlave1Spark, rightSlave2Spark);
+
+		final Falcon leftMasterFalcon = new Falcon(sPortConstants.vidarDriveLeftMasterId),
+				leftSlaveFalcon = new Falcon(sPortConstants.vidarDriveLeftSlaveId);
+		final Falcon rightMasterFalcon = new Falcon(sPortConstants.vidarDriveRightMasterId),
+				rightSlaveFalcon = new Falcon(sPortConstants.vidarDriveRightSlaveId);
+
+		final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon, rightMasterFalcon, rightSlaveFalcon);
+
+		// TODO: Update this
 		final PigeonIMU gyro = new PigeonIMU(new WPI_TalonSRX(8));
 
 		private DrivetrainHardware() {
@@ -52,40 +68,17 @@ public class HardwareAdapter {
 		}
 	}
 
-	static class FalconDrivetrainHardware {
-
-		private static FalconDrivetrainHardware sInstance = new FalconDrivetrainHardware();
-
-		Falcon leftMasterFalcon, leftSlaveFalcon, rightMasterFalcon, rightSlaveFalcon;
-
-		private List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon, rightMasterFalcon, rightSlaveFalcon);
-
-		private FalconDrivetrainHardware() {
-		}
-
-		static FalconDrivetrainHardware getInstance() {
-			return sInstance;
-		}
-	}
-
-	static class IntakeHardware {
-
-		private static IntakeHardware sInstance = new IntakeHardware();
-		final Talon intakeTalon = new Talon(sPortConstants.intakeTalonDeviceId);
-
-		private IntakeHardware() {
-		}
-
-		static IntakeHardware getInstance() {
-			return sInstance;
-		}
-	}
-
+	/**
+	 * 2 NEOs (controlled by Spark MAX) 3 Solenoids
+	 */
 	static class IndexerHardware {
 
 		private static IndexerHardware sInstance = new IndexerHardware();
-		final Spark indexerHorizontalSpark = new Spark(sPortConstants.vidarIndexerHorizontalDeviceID),
-				indexerVerticalSpark = new Spark(sPortConstants.vidarIndexerVerticalDeviceID);
+		final Spark horizontalSpark = new Spark(sPortConstants.vidarIndexerHorizontalId),
+				verticalSpark = new Spark(sPortConstants.vidarIndexerVerticalId);
+		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.vidarIndexerExtendingSolenoidId),
+				retractingSolenoid = new Solenoid(sPortConstants.vidarIndexerRetractingSolenoidId);
+		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.vidarIndexerBlockingSolenoidId);
 
 		private IndexerHardware() {
 		}
@@ -95,38 +88,51 @@ public class HardwareAdapter {
 		}
 	}
 
-	static class ClimberHardware {
+	/**
+	 * 1 775 (controlled by Talon SRX) 2 Solenoids
+	 */
+	static class IntakeHardware {
 
-		private static ClimberHardware sInstance = new ClimberHardware();
-		final Spark climberMainSpark = new Spark(sPortConstants.climberMainDeviceID);
-		final Spark climberAdjustingSpark = new Spark(sPortConstants.climberAdjustingDeviceID);
+		private static IntakeHardware sInstance = new IntakeHardware();
+		final Talon talon = new Talon(sPortConstants.vidarIntakeId);
+		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.vidarIntakeExtendingSolenoidId),
+				retractingSolenoid = new Solenoid(sPortConstants.vidarIntakeRetractingSolenoidId);
 
-		ClimberHardware() {
+		private IntakeHardware() {
 		}
 
-		static ClimberHardware getInstance() {
+		static IntakeHardware getInstance() {
 			return sInstance;
 		}
 	}
 
-	static class Joysticks {
+	/**
+	 * 2 NEO (controlled by Spark MAX) 3 Solenoids
+	 */
+	static class ShooterHardware {
 
-		private static final Joysticks sInstance = new Joysticks();
-		final Joystick driveStick = new Joystick(0), turnStick = new Joystick(1);
-		final XboxController operatorXboxController = new XboxController(2);
+		private static ShooterHardware sInstance = new ShooterHardware();
+		final Spark masterSpark = new Spark(sPortConstants.vidarShooterMasterId),
+				slaveSpark = new Spark(sPortConstants.vidarShooterSlaveId);
+		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.vidarShooterExtendingSolenoidId),
+				retractingSolenoid = new Solenoid(sPortConstants.vidarShooterRetractingSolenoidId);
+		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.vidarShooterBlockingSolenoidId);
 
-		private Joysticks() {
+		private ShooterHardware() {
 		}
 
-		static Joysticks getInstance() {
+		static ShooterHardware getInstance() {
 			return sInstance;
 		}
 	}
 
+	/**
+	 * 1 775 (controlled by Talon SRX) 1 Color Sensor V3
+	 */
 	static class SpinnerHardware {
 
 		private static SpinnerHardware sInstance = new SpinnerHardware();
-		final Talon spinnerTalon = new Talon(sPortConstants.spinnerTalonDeviceId);
+		final Talon talon = new Talon(sPortConstants.vidarSpinnerId);
 		final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
 		private SpinnerHardware() {
@@ -138,7 +144,7 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * Compressor sensor (Analog Input), Compressor, PDP, Camera.
+	 * 1Compressor 1 PDP
 	 */
 	static class MiscellaneousHardware {
 
@@ -148,10 +154,25 @@ public class HardwareAdapter {
 
 		private MiscellaneousHardware() {
 		}
-		// final UsbCamera fisheyeCam =
-		// CameraServer.getInstance().startAutomaticCapture();
 
 		static MiscellaneousHardware getInstance() {
+			return sInstance;
+		}
+	}
+
+	/**
+	 * 2 Joysticks 1 Xbox Controller
+	 */
+	static class Joysticks {
+
+		private static final Joysticks sInstance = new Joysticks();
+		final Joystick driveStick = new Joystick(0), turnStick = new Joystick(1);
+		final XboxController operatorXboxController = new XboxController(2);
+
+		private Joysticks() {
+		}
+
+		static Joysticks getInstance() {
 			return sInstance;
 		}
 	}
