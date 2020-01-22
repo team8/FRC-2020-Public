@@ -110,7 +110,7 @@ public class Commands {
 		driveWantedState = Drive.DriveState.VISION_ALIGN;
 	}
 
-	public void setPathVisionAlign() {
+	public void setDriveVisionPathAlign() {
 		driveWantedState = Drive.DriveState.VISION_PATH_ALIGN;
 	}
 

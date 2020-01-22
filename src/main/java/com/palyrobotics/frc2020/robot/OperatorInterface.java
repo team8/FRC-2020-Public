@@ -5,6 +5,7 @@ import java.util.List;
 import com.palyrobotics.frc2020.auto.modes.EnemyTrenchRunTwoShootFive;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
@@ -77,14 +78,15 @@ public class OperatorInterface {
 
 	private void updateDriveCommands(Commands commands) {
 		boolean wantsAssistedVision = mTurnStick.getRawButton(3);
+		boolean wantsAssistedVisionPathAlign = mTurnStick.getRawButton(5);
 		if (wantsAssistedVision) {
 			commands.setDriveVisionAlign();
 		} else {
 			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),
 					mDriveStick.getTrigger());
 		}
-		if (mTurnStick.getRawButtonPressed(5)) {
-			commands.setPathVisionAlign();
+		if (wantsAssistedVisionPathAlign) {
+			commands.setDriveVisionPathAlign();
 		}
 		setVision(wantsAssistedVision);
 		/* Path Following */

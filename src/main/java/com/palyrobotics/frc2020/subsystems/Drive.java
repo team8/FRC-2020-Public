@@ -7,7 +7,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.controllers.ChezyDriveController;
 import com.palyrobotics.frc2020.subsystems.controllers.DriveRamseteController;
 import com.palyrobotics.frc2020.subsystems.controllers.DriveTurnController;
-import com.palyrobotics.frc2020.subsystems.controllers.VisionRamseteController;
+import com.palyrobotics.frc2020.subsystems.controllers.VisionPathAlignController;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
@@ -84,7 +84,7 @@ public class Drive extends Subsystem {
 					mController = new DriveTurnController();
 					break;
 				case VISION_PATH_ALIGN:
-					mController = new VisionRamseteController();
+					mController = new VisionPathAlignController();
 					break;
 			}
 		}
