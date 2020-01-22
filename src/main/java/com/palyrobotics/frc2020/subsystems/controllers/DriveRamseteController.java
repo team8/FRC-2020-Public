@@ -5,6 +5,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.util.control.DriveOutputs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -24,20 +25,25 @@ public class DriveRamseteController extends Drive.DriveController {
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		Trajectory.State targetPose = commands.getDriveWantedTrajectory()
-				.sample(commands.getDriveWantedTrajectoryTimeSeconds());
-		ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
+		getDriveOutputFromTrajectory(mDriveOutputs, commands.getDriveWantedTrajectory(),
+				commands.getDriveWantedTrajectoryTimeSeconds());
+	}
+
+	void getDriveOutputFromTrajectory(DriveOutputs driveOutputs, Trajectory trajectory, double sampleTime) {
+		Trajectory.State targetPose = trajectory.sample(sampleTime);
+		ChassisSpeeds speeds = mController.calculate(RobotState.getInstance().drivePose, targetPose);
 		DifferentialDriveWheelSpeeds wheelSpeeds = DrivetrainConstants.kKinematics.toWheelSpeeds(speeds);
-		mDriveOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond * 60.0,
+		driveOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond * 60.0,
 				mDriveConfig.profiledVelocityGains);
-		mDriveOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond * 60.0,
+		driveOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond * 60.0,
 				mDriveConfig.profiledVelocityGains);
+
 		CSVWriter.addData("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
 		CSVWriter.addData("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
-		CSVWriter.addData("currentPoseX", state.drivePose.getTranslation().getX());
-		CSVWriter.addData("currentPoseY", state.drivePose.getTranslation().getY());
-		CSVWriter.addData("leftVelocity", state.driveLeftVelocity);
-		CSVWriter.addData("rightVelocity", state.driveRightVelocity);
+		CSVWriter.addData("currentPoseX", RobotState.getInstance().drivePose.getTranslation().getX());
+		CSVWriter.addData("currentPoseY", RobotState.getInstance().drivePose.getTranslation().getY());
+		CSVWriter.addData("leftVelocity", RobotState.getInstance().driveLeftVelocity);
+		CSVWriter.addData("rightVelocity", RobotState.getInstance().driveRightVelocity);
 		CSVWriter.addData("targetPoseX", targetPose.poseMeters.getTranslation().getX());
 		CSVWriter.addData("targetPoseY", targetPose.poseMeters.getTranslation().getY());
 	}
