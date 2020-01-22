@@ -17,15 +17,7 @@ import com.palyrobotics.frc2020.util.StringUtil;
 public class RoutineManager {
 
 	public static final String LOGGER_TAG = StringUtil.classToJsonName(RoutineManager.class);
-	private static RoutineManager sInstance = new RoutineManager();
 	private List<RoutineBase> mRunningRoutines = new LinkedList<>();
-
-	private RoutineManager() {
-	}
-
-	public static RoutineManager getInstance() {
-		return sInstance;
-	}
 
 	static Set<SubsystemBase> sharedSubsystems(List<RoutineBase> routines) {
 		Set<SubsystemBase> sharedSubsystems = new HashSet<>(); // TODO: No allocation on update

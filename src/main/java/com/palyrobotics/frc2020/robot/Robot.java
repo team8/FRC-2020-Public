@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.config.RobotConfig;
-import com.palyrobotics.frc2020.config.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.StringUtil;
 import com.palyrobotics.frc2020.util.commands.CommandReceiver;
@@ -28,9 +27,8 @@ public class Robot extends TimedRobot {
 	private final RobotState mRobotState = new RobotState();
 	private final Limelight mLimelight = Limelight.getInstance();
 	private final RobotConfig mConfig = Configs.get(RobotConfig.class);
-	private final LiveGraph mLiveGraph = LiveGraph.getInstance();
-	private final OperatorInterface mOperatorInterface = OperatorInterface.getInstance();
-	private final RoutineManager mRoutineManager = RoutineManager.getInstance();
+	private final OperatorInterface mOperatorInterface = new OperatorInterface();
+	private final RoutineManager mRoutineManager = new RoutineManager();
 	/* Subsystems */
 	private final Climber mClimber = Climber.getInstance();
 	private final Drive mDrive = Drive.getInstance();
@@ -38,8 +36,8 @@ public class Robot extends TimedRobot {
 	private final Intake mIntake = Intake.getInstance();
 	// private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
-	private final HardwareReader mHardwareReader = HardwareReader.getInstance();
-	private final HardwareWriter mHardwareWriter = HardwareWriter.getInstance();
+	private final HardwareReader mHardwareReader = new HardwareReader();
+	private final HardwareWriter mHardwareWriter = new HardwareWriter();
 	private Commands mCommands = new Commands();
 	private List<SubsystemBase> mSubsystems = List.of(mDrive, mSpinner, mClimber, mIndexer, mIntake),
 			mEnabledSubsystems;
@@ -84,7 +82,6 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateSubsystemsAndHardware() {
-		mHardwareReader.updateState(mRobotState);
 		for (SubsystemBase subsystem : mEnabledSubsystems) {
 			subsystem.update(mCommands, mRobotState);
 		}
@@ -134,6 +131,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		mCommands.reset();
+		mHardwareReader.updateState(mRobotState);
 		mRoutineManager.update(mCommands, mRobotState);
 		updateSubsystemsAndHardware();
 	}
@@ -141,7 +139,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		mCommands.reset();
-		mOperatorInterface.updateCommands(mCommands);
+		mHardwareReader.updateState(mRobotState);
+		mOperatorInterface.updateCommands(mCommands, mRobotState);
 		mRoutineManager.update(mCommands, mRobotState);
 		updateSubsystemsAndHardware();
 	}

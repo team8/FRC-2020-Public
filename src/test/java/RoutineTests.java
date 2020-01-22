@@ -46,7 +46,7 @@ public class RoutineTests {
 		timer.start();
 		var commands = new Commands();
 		var state = new RobotState();
-		RoutineManager routineManager = RoutineManager.getInstance();
+		var routineManager = new RoutineManager();
 		commands.addWantedRoutine(new SequentialRoutine(new TimedOne(), new TimedTwo()));
 		do {
 			routineManager.update(commands, state);

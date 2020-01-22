@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj.util.Units;
  */
 public class OperatorInterface {
 
-	private static OperatorInterface sInstance = new OperatorInterface();
 	private final Limelight mLimelight = Limelight.getInstance();
 	private final Joystick mDriveStick = HardwareAdapter.Joysticks.getInstance().driveStick,
 			mTurnStick = HardwareAdapter.Joysticks.getInstance().turnStick;
@@ -37,10 +36,6 @@ public class OperatorInterface {
 			.getInstance().operatorXboxController;
 	private final List<Pose2d> kTestWaypoints = List.of(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
 			new Pose2d(Units.inchesToMeters(200.0), 0.0, Rotation2d.fromDegrees(0.0)));
-
-	public static OperatorInterface getInstance() {
-		return sInstance;
-	}
 
 	/**
 	 * Helper method to only add routines that aren't already in wantedRoutines
@@ -63,8 +58,9 @@ public class OperatorInterface {
 	 * Returns modified commands
 	 *
 	 * @param commands Last commands
+	 * @param state
 	 */
-	Commands updateCommands(Commands commands) {
+	Commands updateCommands(Commands commands, @ReadOnly RobotState state) {
 
 		commands.shouldClearCurrentRoutines = false;
 

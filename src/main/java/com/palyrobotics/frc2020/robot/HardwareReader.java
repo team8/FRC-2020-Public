@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class HardwareReader {
 
-	private static HardwareReader sInstance = new HardwareReader();
-
 	/**
 	 * A REV Color Match object is used to register and detect known colors. This
 	 * can be calibrated ahead of time or during operation.
@@ -19,15 +17,11 @@ public class HardwareReader {
 	 */
 	public final ColorMatch mColorMatcher = new ColorMatch();
 
-	private HardwareReader() {
+	public HardwareReader() {
 		mColorMatcher.addColorMatch(SpinnerConstants.kCyanCPTarget);
 		mColorMatcher.addColorMatch(SpinnerConstants.kGreenCPTarget);
 		mColorMatcher.addColorMatch(SpinnerConstants.kRedCPTarget);
 		mColorMatcher.addColorMatch(SpinnerConstants.kYellowCPTarget);
-	}
-
-	public static HardwareReader getInstance() {
-		return sInstance;
 	}
 
 	/**

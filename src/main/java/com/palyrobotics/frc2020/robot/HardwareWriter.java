@@ -17,20 +17,12 @@ public class HardwareWriter {
 
 	public static final int TIMEOUT_MS = 50;
 	private static final String LOGGER_TAG = StringUtil.classToJsonName(HardwareWriter.class);
-	private static HardwareWriter sInstance = new HardwareWriter();
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	private final Drive mDrive = Drive.getInstance();
 	private final Climber mClimber = Climber.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
 	private final Indexer mIndexer = Indexer.getInstance();
 	private final Intake mIntake = Intake.getInstance();
-
-	private HardwareWriter() {
-	}
-
-	public static HardwareWriter getInstance() {
-		return sInstance;
-	}
 
 	void configureHardware() {
 		configureDriveHardware();
