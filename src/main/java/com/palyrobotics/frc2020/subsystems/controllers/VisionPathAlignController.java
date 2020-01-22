@@ -3,11 +3,15 @@ package com.palyrobotics.frc2020.subsystems.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
+import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.util.config.ConfigBase;
+import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -24,6 +28,8 @@ public class VisionPathAlignController extends Drive.DriveController {
 
 	public static final double B = 2.0, ZETA = 0.7;
 	private Limelight mLimelight = Limelight.getInstance();
+	private final DriveConfig mConfig = Configs.get(DriveConfig.class);
+
 	private List<Pose2d> mWaypoints = new ArrayList<>();
 	private Pose2d mOrigin = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 	private final RamseteController mController;
@@ -37,7 +43,7 @@ public class VisionPathAlignController extends Drive.DriveController {
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		if (mCounter > 5) { // every 5 cycles reset trajectory and all related variables to ensure accuracy.
+		if (mCounter++ > mConfig.trajectoryUpdateCycle) { // every 5 cycles reset trajectory and all related variables to ensure accuracy.
 			mWaypoints.add(mOrigin);
 			mWaypoints.add(new Pose2d(Units.inchesToMeters(mLimelight.getPnPTranslationX()),
 					Units.inchesToMeters(mLimelight.getPnPTranslationY()),
@@ -55,6 +61,5 @@ public class VisionPathAlignController extends Drive.DriveController {
 				mDriveConfig.profiledVelocityGains);
 		mDriveOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond * 60.0,
 				mDriveConfig.profiledVelocityGains);
-		mCounter++;
 	}
 }

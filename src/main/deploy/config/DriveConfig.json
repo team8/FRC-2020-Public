@@ -23,5 +23,6 @@
 	"freeRpmLimit": 0,
 	"nonlinearPasses": 3,
 	"maxPathVelocityMetersPerSecond": 1.0,
-	"maxPathAccelerationMetersPerSecondSquared": 1.2
+	"maxPathAccelerationMetersPerSecondSquared": 1.2,
+	"trajectoryUpdateCycle" : 5
 }

@@ -80,14 +80,16 @@ public class OperatorInterface {
 		boolean wantsAssistedVisionPathAlign = mTurnStick.getRawButton(5);
 		if (wantsAssistedVision) {
 			commands.setDriveVisionAlign();
-		} else {
+		}
+		else if (wantsAssistedVisionPathAlign) {
+			commands.setDriveVisionPathAlign();
+		}
+		else {
 			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),
 					mDriveStick.getTrigger());
 		}
-		if (wantsAssistedVisionPathAlign) {
-			commands.setDriveVisionPathAlign();
-		}
-		setVision(wantsAssistedVision);
+
+		setVision(wantsAssistedVision || wantsAssistedVisionPathAlign);
 		/* Path Following */
 		if (mOperatorXboxController.getDPadUp()) {
 			commands.addWantedRoutine(new EnemyTrenchRunTwoShootFive().getRoutine());
