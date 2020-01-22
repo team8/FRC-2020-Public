@@ -5,7 +5,6 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.util.control.DriveOutputs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -17,27 +16,22 @@ public class DriveRamseteController extends Drive.DriveController {
 
 	public static final double B = 2.0, ZETA = 0.7;
 
-	private final RamseteController mController;
-
-	public DriveRamseteController() {
-		mController = new RamseteController(B, ZETA);
-	}
+	private final RamseteController mController = new RamseteController(B, ZETA);
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		getDriveOutputFromTrajectory(mDriveOutputs, commands.getDriveWantedTrajectory(),
+		setDriveOutputFromTrajectory(commands.getDriveWantedTrajectory(),
 				commands.getDriveWantedTrajectoryTimeSeconds());
 	}
 
-	void getDriveOutputFromTrajectory(DriveOutputs driveOutputs, Trajectory trajectory, double sampleTime) {
+	protected void setDriveOutputFromTrajectory(Trajectory trajectory, double sampleTime) {
 		Trajectory.State targetPose = trajectory.sample(sampleTime);
 		ChassisSpeeds speeds = mController.calculate(RobotState.getInstance().drivePose, targetPose);
 		DifferentialDriveWheelSpeeds wheelSpeeds = DrivetrainConstants.kKinematics.toWheelSpeeds(speeds);
-		driveOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond * 60.0,
+		mDriveOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond * 60.0,
 				mDriveConfig.profiledVelocityGains);
-		driveOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond * 60.0,
+		mDriveOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond * 60.0,
 				mDriveConfig.profiledVelocityGains);
-
 		CSVWriter.addData("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
 		CSVWriter.addData("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
 		CSVWriter.addData("currentPoseX", RobotState.getInstance().drivePose.getTranslation().getX());

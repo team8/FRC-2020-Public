@@ -24,14 +24,18 @@ public class VisionPathAlignController extends DriveRamseteController {
 	private final DriveConfig mConfig = Configs.get(DriveConfig.class);
 
 	private List<Pose2d> mWaypoints = new ArrayList<>();
-	private Pose2d mOrigin = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+	private Pose2d mOrigin = new Pose2d();
 	private Timer mTimer = new Timer();
-	private Trajectory mTrajectory = null;
-	private int mCounter = 0;
+	private Trajectory mTrajectory;
+	private int mCounter;
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		if (mCounter++ > mConfig.trajectoryUpdateCycle) { // every 5 cycles reset trajectory to ensure accuracy.
+		// TODO: generation of new trajectory should be based on actual error from
+		// limelight and current pose
+		if (mCounter++ > mConfig.trajectoryUpdateCycle) {
+			// TODO: odometry needs to be reset. add a boolean in commands,
+			// wantsOdometryReset
 			mWaypoints.add(mOrigin);
 			mWaypoints.add(new Pose2d(Units.inchesToMeters(mLimelight.getPnPTranslationX()),
 					Units.inchesToMeters(mLimelight.getPnPTranslationY()),
@@ -42,6 +46,6 @@ public class VisionPathAlignController extends DriveRamseteController {
 			mWaypoints.clear();
 			mTimer.reset();
 		}
-		getDriveOutputFromTrajectory(mDriveOutputs, mTrajectory, mTimer.get());
+		setDriveOutputFromTrajectory(mTrajectory, mTimer.get());
 	}
 }
