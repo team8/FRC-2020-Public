@@ -80,11 +80,9 @@ public class OperatorInterface {
 		boolean wantsAssistedVisionPathAlign = mTurnStick.getRawButton(5);
 		if (wantsAssistedVision) {
 			commands.setDriveVisionAlign();
-		}
-		else if (wantsAssistedVisionPathAlign) {
+		} else if (wantsAssistedVisionPathAlign) {
 			commands.setDriveVisionPathAlign();
-		}
-		else {
+		} else {
 			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),
 					mDriveStick.getTrigger());
 		}
