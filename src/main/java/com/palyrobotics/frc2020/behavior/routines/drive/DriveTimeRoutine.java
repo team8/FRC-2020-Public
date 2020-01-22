@@ -4,7 +4,8 @@ import java.util.Set;
 
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
 public class DriveTimeRoutine extends TimedRoutine {
@@ -17,12 +18,12 @@ public class DriveTimeRoutine extends TimedRoutine {
 	}
 
 	@Override
-	protected void update(Commands commands) {
+	protected void update(Commands commands, RobotState state) {
 		commands.setDriveSignal(mOutput);
 	}
 
 	@Override
-	public Set<Subsystem> getRequiredSubsystems() {
+	public Set<SubsystemBase> getRequiredSubsystems() {
 		return Set.of(mDrive);
 	}
 }

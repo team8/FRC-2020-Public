@@ -5,11 +5,11 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.StringUtil;
 
-public abstract class Subsystem {
+public abstract class SubsystemBase {
 
 	private final String mName;
 
-	protected Subsystem() {
+	protected SubsystemBase() {
 		mName = StringUtil.classToJsonName(getClass());
 	}
 

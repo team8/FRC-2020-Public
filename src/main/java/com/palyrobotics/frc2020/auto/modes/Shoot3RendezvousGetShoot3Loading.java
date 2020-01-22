@@ -6,8 +6,8 @@ import java.util.List;
 import com.palyrobotics.frc2020.auto.AutoModeBase;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveParallelPathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.intake.IntakeBallRoutine;
 import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
 
@@ -37,9 +37,9 @@ public class Shoot3RendezvousGetShoot3Loading extends AutoModeBase {
 		goSupply.add(new Pose2d(Units.inchesToMeters(328), Units.inchesToMeters(10), Rotation2d.fromDegrees(0)));
 		routines.add(new DrivePathRoutine(rendezvous1));
 		routines.add(new DrivePathRoutine(rendezvous2));
-		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous2), 0.8));
+		routines.add(new DriveParallelPathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous2), 0.8));
 		// get 3 balls from the rendezvous
-		routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot), 0.8));
+		routines.add(new DriveParallelPathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot), 0.8));
 		// shoot ball
 
 		return new SequentialRoutine(routines);

@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
 /**
  * Runs routines one at a time. Finishes when the last one is finished.
@@ -29,8 +31,8 @@ public class SequentialRoutine extends MultipleRoutine {
 	}
 
 	@Override
-	public void update(Commands commands) {
-		while (mRunningRoutine.execute(commands)) {
+	public void update(Commands commands, @ReadOnly RobotState state) {
+		while (mRunningRoutine.execute(commands, state)) {
 			if (!mIterator.hasNext()) {
 				mRunningRoutine = null;
 				break;
@@ -45,7 +47,7 @@ public class SequentialRoutine extends MultipleRoutine {
 	}
 
 	@Override
-	public Set<Subsystem> getRequiredSubsystems() {
+	public Set<SubsystemBase> getRequiredSubsystems() {
 		return RoutineManager.sharedSubsystems(mRoutines);
 	}
 }

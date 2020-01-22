@@ -113,7 +113,7 @@ public class HardwareWriter {
 	}
 
 	/**
-	 * Updates the hardware to run with output values of {@link Subsystem}'s.
+	 * Updates the hardware to run with output values of {@link SubsystemBase}'s.
 	 */
 	void updateHardware() {
 		if (!mRobotConfig.disableOutput) {

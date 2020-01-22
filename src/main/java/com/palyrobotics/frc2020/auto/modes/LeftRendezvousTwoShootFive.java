@@ -6,8 +6,8 @@ import java.util.List;
 import com.palyrobotics.frc2020.auto.AutoModeBase;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveParallelPathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.intake.IntakeBallRoutine;
 import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
 
@@ -26,7 +26,7 @@ public class LeftRendezvousTwoShootFive extends AutoModeBase {
 		rendezvous1.add(new Pose2d(Units.inchesToMeters(140), Units.inchesToMeters(-20), Rotation2d.fromDegrees(0)));
 		rendezvous1.add(new Pose2d(Units.inchesToMeters(130), Units.inchesToMeters(-25), Rotation2d.fromDegrees(0)));
 
-		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous1), 0.8));
+		routines.add(new DriveParallelPathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous1), 0.8));
 		routines.add(new ShootAllBallsRoutine());
 
 		return new SequentialRoutine(routines);

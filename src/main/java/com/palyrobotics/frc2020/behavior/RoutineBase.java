@@ -3,9 +3,9 @@ package com.palyrobotics.frc2020.behavior;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.subsystems.Climber;
-import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.*;
 
 /**
 *
@@ -17,10 +17,13 @@ public abstract class RoutineBase {
 	}
 
 	protected final Drive mDrive = Drive.getInstance();
+	protected final Intake mIntake = Intake.getInstance();
 	protected final Climber mClimber = Climber.getInstance();
+	protected final Indexer mIndexer = Indexer.getInstance();
+	protected final Spinner mSpinner = Spinner.getInstance();
 	private RoutineState mState = RoutineState.INIT;
 
-	public final boolean execute(Commands commands) {
+	public final boolean execute(Commands commands, RobotState state) {
 		if (mState == RoutineState.INIT) {
 			start();
 			mState = RoutineState.RUNNING;
@@ -28,7 +31,7 @@ public abstract class RoutineBase {
 			throw new IllegalStateException(
 					String.format("Routine %s already finished! Should not be updated.", toString()));
 		}
-		update(commands);
+		update(commands, state);
 		if (checkFinished()) {
 			mState = RoutineState.FINISHED;
 			return true;
@@ -44,7 +47,7 @@ public abstract class RoutineBase {
 		return getName();
 	}
 
-	protected void update(Commands commands) {
+	protected void update(Commands commands, @ReadOnly RobotState state) {
 	}
 
 	public boolean checkFinished() {
@@ -61,5 +64,5 @@ public abstract class RoutineBase {
 
 	// Store subsystems which are required by this routine, preventing routines from
 	// overlapping
-	public abstract Set<Subsystem> getRequiredSubsystems();
+	public abstract Set<SubsystemBase> getRequiredSubsystems();
 }

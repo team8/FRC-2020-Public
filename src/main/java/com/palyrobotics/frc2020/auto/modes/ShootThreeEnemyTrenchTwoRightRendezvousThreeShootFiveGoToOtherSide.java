@@ -6,8 +6,8 @@ import java.util.List;
 import com.palyrobotics.frc2020.auto.AutoModeBase;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveParallelPathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.intake.IntakeBallRoutine;
 import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
 
@@ -35,11 +35,11 @@ public class ShootThreeEnemyTrenchTwoRightRendezvousThreeShootFiveGoToOtherSide 
 		goToOtherSide.add(new Pose2d(Units.inchesToMeters(350), Units.inchesToMeters(0), Rotation2d.fromDegrees(0)));
 
 		routines.add(new ShootAllBallsRoutine());
-		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(enemyTrench), 0.8));
-		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous), 0.8));
+		routines.add(new DriveParallelPathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(enemyTrench), 0.8));
+		routines.add(new DriveParallelPathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous), 0.8));
 		routines.add(new ShootAllBallsRoutine());
 		routines.add(
-				new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(goToOtherSide), 0.8));
+				new DriveParallelPathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(goToOtherSide), 0.8));
 
 		return new SequentialRoutine(routines);
 	}

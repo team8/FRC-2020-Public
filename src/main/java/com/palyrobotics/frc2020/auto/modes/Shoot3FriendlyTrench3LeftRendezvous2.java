@@ -6,8 +6,8 @@ import java.util.List;
 import com.palyrobotics.frc2020.auto.AutoModeBase;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveParallelPathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.ParallelDrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.intake.IntakeBallRoutine;
 import com.palyrobotics.frc2020.behavior.routines.shooter.ShootAllBallsRoutine;
 
@@ -39,10 +39,10 @@ public class Shoot3FriendlyTrench3LeftRendezvous2 extends AutoModeBase {
 
 		routines.add(new DrivePathRoutine(friendlyTrench));
 		// pick up balls from our trench
-		routines.add(new ParallelDrivePathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous1), 0.8));
+		routines.add(new DriveParallelPathRoutine(new IntakeBallRoutine(0.0), new DrivePathRoutine(rendezvous1), 0.8));
 
 		// collect two balls
-		routines.add(new ParallelDrivePathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot), 0.8));
+		routines.add(new DriveParallelPathRoutine(new ShootAllBallsRoutine(), new DrivePathRoutine(shoot), 0.8));
 		// shoot ball
 
 		return new SequentialRoutine(routines);

@@ -4,7 +4,9 @@ import java.util.*;
 
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.StringUtil;
 
 /**
@@ -25,8 +27,8 @@ public class RoutineManager {
 		return sInstance;
 	}
 
-	static Set<Subsystem> sharedSubsystems(List<RoutineBase> routines) {
-		Set<Subsystem> sharedSubsystems = new HashSet<>(); // TODO: No allocation on update
+	static Set<SubsystemBase> sharedSubsystems(List<RoutineBase> routines) {
+		Set<SubsystemBase> sharedSubsystems = new HashSet<>(); // TODO: No allocation on update
 		for (RoutineBase routine : routines) {
 			sharedSubsystems.addAll(routine.getRequiredSubsystems());
 		}
@@ -41,10 +43,11 @@ public class RoutineManager {
 	 * Updates the commands that are passed in based on the running routines.
 	 *
 	 * @param commands Current commands
+	 * @param state
 	 */
-	public void update(Commands commands) {
+	public void update(Commands commands, @ReadOnly RobotState state) {
 		mRunningRoutines.removeIf(routine -> {
-			boolean isFinished = routine.execute(commands);
+			boolean isFinished = routine.execute(commands, state);
 			if (isFinished) {
 				Log.debug(LOGGER_TAG, String.format("Dropping finished routine: %s%n", routine));
 			}
@@ -64,7 +67,7 @@ public class RoutineManager {
 				}
 			}
 			// If it finishes immediately never add it to running routines
-			if (newRoutine.execute(commands)) {
+			if (newRoutine.execute(commands, state)) {
 				Log.debug(LOGGER_TAG, String.format("Immediately dropping new routine: %s%n", newRoutine));
 			} else {
 				Log.debug(LOGGER_TAG, String.format("Adding routine: %s%n", newRoutine));

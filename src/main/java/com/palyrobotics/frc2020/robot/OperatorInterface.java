@@ -98,13 +98,11 @@ public class OperatorInterface {
 		}
 	}
 
-	private void updateSpinnerCommands(Commands commands) {
-		// TODO Figure out better button
-		if (mOperatorXboxController.getDPadRightPressed()) {
-			commands.spinnerWantedState = Spinner.SpinnerState.POS_CONTROL;
-		}
-		if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.spinnerWantedState = Spinner.SpinnerState.ROT_CONTROL;
+	private void updateIndexerCommands(Commands commands) {
+		if (mTurnStick.getRawButtonPressed(3)) {
+			commands.indexerWantedState = Indexer.IndexerState.INDEX;
+		} else {
+			commands.indexerWantedState = Indexer.IndexerState.IDLE;
 		}
 	}
 
@@ -128,19 +126,21 @@ public class OperatorInterface {
 
 	}
 
+	private void updateSpinnerCommands(Commands commands) {
+		// TODO Figure out better button
+		if (mOperatorXboxController.getDPadRightPressed()) {
+			commands.spinnerWantedState = Spinner.SpinnerState.POSITION_CONTROL;
+		}
+		if (mOperatorXboxController.getDPadLeftPressed()) {
+			commands.spinnerWantedState = Spinner.SpinnerState.ROTATION_CONTROL;
+		}
+	}
+
 	private void updateIntakeCommands(Commands commands) {
 		if (mOperatorXboxController.getRightBumperPressed()) {
 			commands.intakeWantedState = Intake.IntakeState.INTAKE;
 		} else {
 			commands.intakeWantedState = Intake.IntakeState.IDLE;
-		}
-	}
-
-	private void updateIndexerCommands(Commands commands) {
-		if (mTurnStick.getRawButtonPressed(3)) {
-			commands.indexerWantedState = Indexer.IndexerState.INDEX;
-		} else {
-			commands.indexerWantedState = Indexer.IndexerState.IDLE;
 		}
 	}
 

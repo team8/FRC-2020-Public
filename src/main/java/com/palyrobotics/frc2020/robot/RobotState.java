@@ -37,11 +37,7 @@ public class RobotState {
 	public Color detectedRGBVals;
 	public ColorMatchResult closestColorRGB;
 
-	private RobotState() {
-	}
-
-	public static RobotState getInstance() {
-		return sInstance;
+	public RobotState() {
 	}
 
 	// TODO: ultrasonics

@@ -47,13 +47,6 @@ public class Commands {
 	// Climbing
 	private double climberWantedOutput;
 
-	private Commands() {
-	}
-
-	public static Commands getInstance() {
-		return sInstance;
-	}
-
 	public void addWantedRoutines(RoutineBase... wantedRoutines) {
 		for (RoutineBase wantedRoutine : wantedRoutines) {
 			addWantedRoutine(wantedRoutine);
@@ -104,6 +97,10 @@ public class Commands {
 		return climberWantedOutput;
 	}
 
+	public void setClimberWantedOutput(double output) {
+		climberWantedOutput = output;
+	}
+
 	public void setDriveSignal(DriveOutputs signal) {
 		driveWantedState = Drive.DriveState.SIGNAL;
 		driveWantedSignal = signal;
@@ -138,10 +135,6 @@ public class Commands {
 	public void setDriveTurn(double angle) {
 		driveWantedState = Drive.DriveState.TURN;
 		driveWantedHeading = angle;
-	}
-
-	public void setClimberWantedOutput(double output) {
-		climberWantedOutput = output;
 	}
 
 	public void copyTo(Commands other) {

@@ -15,12 +15,11 @@ public abstract class SimpleControllerBase<TController> {
 			ControllerOutput.Mode.PROFILED_VELOCITY, 2);
 
 	protected RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
-
+	protected TController mController;
 	private double mLastReference, mLastArbitraryPercentOutput;
 	private int mLastSlot;
 	private ControllerOutput.Mode mLastMode;
 	private Map<Integer, Gains> mLastGains = new HashMap<>();
-	protected TController mController;
 
 	protected SimpleControllerBase(TController controller) {
 		mController = controller;
@@ -69,7 +68,7 @@ public abstract class SimpleControllerBase<TController> {
 			boolean isFirstInitialization = !mLastGains.containsKey(slot);
 			if (isFirstInitialization) { // Empty gains for default value instead of null
 				mLastGains.put(slot, (slot == 1 || slot == 2) ? new ProfiledGains() : new Gains()); // TODO a little
-																									// ugly
+				// ugly
 			}
 			Gains lastGains = mLastGains.get(slot);
 			updateGains(isFirstInitialization, slot, gains, lastGains);

@@ -7,7 +7,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
-public class Climber extends Subsystem {
+public class Climber extends SubsystemBase {
 
 	public enum ClimberState {
 		CLIMBING, ADJUSTING_LEFT, ADJUSTING_RIGHT, IDLE

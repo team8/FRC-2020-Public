@@ -25,22 +25,24 @@ import edu.wpi.first.wpilibj.TimedRobot;
 public class Robot extends TimedRobot {
 
 	private static final String LOGGER_TAG = StringUtil.classToJsonName(Robot.class);
-	private final RobotState mRobotState = RobotState.getInstance();
+	private final RobotState mRobotState = new RobotState();
 	private final Limelight mLimelight = Limelight.getInstance();
 	private final RobotConfig mConfig = Configs.get(RobotConfig.class);
 	private final LiveGraph mLiveGraph = LiveGraph.getInstance();
 	private final OperatorInterface mOperatorInterface = OperatorInterface.getInstance();
 	private final RoutineManager mRoutineManager = RoutineManager.getInstance();
 	/* Subsystems */
-	private final Drive mDrive = Drive.getInstance();
-	private final Spinner mSpinner = Spinner.getInstance();
 	private final Climber mClimber = Climber.getInstance();
+	private final Drive mDrive = Drive.getInstance();
 	private final Indexer mIndexer = Indexer.getInstance();
 	private final Intake mIntake = Intake.getInstance();
+	// private final Shooter mShooter = Shooter.getInstance();
+	private final Spinner mSpinner = Spinner.getInstance();
 	private final HardwareReader mHardwareReader = HardwareReader.getInstance();
 	private final HardwareWriter mHardwareWriter = HardwareWriter.getInstance();
-	private Commands mCommands = Commands.getInstance();
-	private List<Subsystem> mSubsystems = List.of(mDrive, mSpinner, mClimber, mIndexer, mIntake), mEnabledSubsystems;
+	private Commands mCommands = new Commands();
+	private List<SubsystemBase> mSubsystems = List.of(mDrive, mSpinner, mClimber, mIndexer, mIntake),
+			mEnabledSubsystems;
 	private List<RobotService> mServices = List.of(new CommandReceiver(), new NetworkLogger()), mEnabledServices;
 
 	@Override
@@ -83,7 +85,7 @@ public class Robot extends TimedRobot {
 
 	private void updateSubsystemsAndHardware() {
 		mHardwareReader.updateState(mRobotState);
-		for (Subsystem subsystem : mEnabledSubsystems) {
+		for (SubsystemBase subsystem : mEnabledSubsystems) {
 			subsystem.update(mCommands, mRobotState);
 		}
 		mHardwareWriter.updateHardware();
@@ -132,7 +134,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		mCommands.reset();
-		mRoutineManager.update(mCommands);
+		mRoutineManager.update(mCommands, mRobotState);
 		updateSubsystemsAndHardware();
 	}
 
@@ -140,7 +142,7 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		mCommands.reset();
 		mOperatorInterface.updateCommands(mCommands);
-		mRoutineManager.update(mCommands);
+		mRoutineManager.update(mCommands, mRobotState);
 		updateSubsystemsAndHardware();
 	}
 
@@ -155,15 +157,15 @@ public class Robot extends TimedRobot {
 		Map<String, RobotService> configToService = mServices.stream()
 				.collect(Collectors.toMap(RobotService::getConfigName, Function.identity()));
 		mEnabledServices = mConfig.enabledServices.stream().map(configToService::get).collect(Collectors.toList());
-		Map<String, Subsystem> configToSubsystem = mSubsystems.stream()
-				.collect(Collectors.toMap(Subsystem::getName, Function.identity()));
+		Map<String, SubsystemBase> configToSubsystem = mSubsystems.stream()
+				.collect(Collectors.toMap(SubsystemBase::getName, Function.identity()));
 		mEnabledSubsystems = mConfig.enabledSubsystems.stream().map(configToSubsystem::get)
 				.collect(Collectors.toList());
 		var builder = new StringBuilder();
 		builder.append("\n===================\n");
 		builder.append("Enabled subsystems:\n");
 		builder.append("-------------------\n");
-		for (Subsystem enabledSubsystem : mEnabledSubsystems) {
+		for (SubsystemBase enabledSubsystem : mEnabledSubsystems) {
 			builder.append(enabledSubsystem.getName()).append("\n");
 		}
 		builder.append("=================\n");

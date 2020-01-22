@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
 /**
  * Runs all routines at the same time. Finishes when all routines are finished.
@@ -23,8 +25,8 @@ public class ParallelRoutine extends MultipleRoutine {
 	}
 
 	@Override
-	public void update(Commands commands) {
-		mRunningRoutines.removeIf(runningRoutine -> runningRoutine.execute(commands));
+	public void update(Commands commands, @ReadOnly RobotState state) {
+		mRunningRoutines.removeIf(runningRoutine -> runningRoutine.execute(commands, state));
 	}
 
 	@Override
@@ -33,7 +35,7 @@ public class ParallelRoutine extends MultipleRoutine {
 	}
 
 	@Override
-	public Set<Subsystem> getRequiredSubsystems() {
+	public Set<SubsystemBase> getRequiredSubsystems() {
 		return RoutineManager.sharedSubsystems(mRunningRoutines);
 	}
 }

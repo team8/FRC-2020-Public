@@ -43,7 +43,7 @@ public class CommandReceiver implements RobotService {
 		Subparser get = subparsers.addParser("get");
 		get.addArgument("config_name");
 		get.addArgument("config_field").nargs("?"); // "?" means this is optional, and will default to null if not
-													// supplied
+		// supplied
 		get.addArgument("--raw").action(Arguments.storeTrue());
 		subparsers.addParser("reload").addArgument("config_name");
 		Subparser run = subparsers.addParser("run");

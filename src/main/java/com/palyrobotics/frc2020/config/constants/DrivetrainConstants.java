@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 import edu.wpi.first.wpilibj.util.Units;
 
 public class DrivetrainConstants {
@@ -50,7 +51,10 @@ public class DrivetrainConstants {
 	public static TrajectoryConfig getStandardTrajectoryConfig() {
 		return new TrajectoryConfig(kDriveConfig.maxPathVelocityMetersPerSecond,
 				kDriveConfig.maxPathAccelerationMetersPerSecondSquared).setKinematics(kKinematics)
-						.addConstraint(new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(kS, kV, kA),
-								kKinematics, kMaxVoltage));
+						.addConstraint(getDriveConstraints());
+	}
+
+	public static TrajectoryConstraint getDriveConstraints() {
+		return new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(kS, kV, kA), kKinematics, kMaxVoltage);
 	}
 }

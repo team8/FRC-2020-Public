@@ -284,7 +284,7 @@ public class Configs {
 					 */
 					synchronized (sRobotThread) {
 						sRobotThread.wait(100L); // In case something goes horribly wrong we can resume robot thread
-													// execution
+						// execution
 						for (WatchEvent<?> pollEvent : key.pollEvents()) {
 							if (pollEvent.kind() == StandardWatchEventKinds.OVERFLOW)
 								continue;

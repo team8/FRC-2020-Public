@@ -5,7 +5,9 @@ import java.util.*;
 import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.subsystems.Subsystem;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -65,7 +67,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	}
 
 	@Override
-	public void update(Commands commands) {
+	public void update(Commands commands, @ReadOnly RobotState state) {
 		commands.setDriveFollowPath(mTrajectory, mTimer.get());
 	}
 
@@ -75,7 +77,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	}
 
 	@Override
-	public Set<Subsystem> getRequiredSubsystems() {
+	public Set<SubsystemBase> getRequiredSubsystems() {
 		return Set.of(mDrive);
 	}
 }

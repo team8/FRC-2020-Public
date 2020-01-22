@@ -14,7 +14,7 @@ import com.palyrobotics.frc2020.util.control.DriveOutputs;
  * Represents the drivetrain. Uses controllers or cheesy drive
  * helper/proportional drive helper to calculate a drive signal.
  */
-public class Drive extends Subsystem {
+public class Drive extends SubsystemBase {
 
 	public enum DriveState {
 		NEUTRAL, TELEOP, SIGNAL, FOLLOW_PATH, VISION_ALIGN, TURN

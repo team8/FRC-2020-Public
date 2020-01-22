@@ -12,11 +12,11 @@ public class Falcon extends WPI_TalonFX {
 		}
 	}
 
+	private final FalconController mController = new FalconController(this);
+
 	public Falcon(int deviceNumber) {
 		super(deviceNumber);
 	}
-
-	private final FalconController mController = new FalconController(this);
 
 	public boolean setOutput(ControllerOutput output) {
 		return mController.setOutput(output);
