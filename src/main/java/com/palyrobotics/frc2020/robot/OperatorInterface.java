@@ -76,12 +76,13 @@ public class OperatorInterface {
 	}
 
 	private void updateDriveCommands(Commands commands) {
-		boolean wantsAssistedVision = mTurnStick.getRawButton(3);
-		boolean wantsAssistedVisionPathAlign = mTurnStick.getRawButton(5);
+		boolean wantsAssistedVision = mTurnStick.getRawButton(5);
+		boolean wantsAssistedVisionPathAlign = mTurnStick.getRawButton(3);
+
 		if (wantsAssistedVision) {
-			commands.setDriveVisionAlign();
-		} else if (wantsAssistedVisionPathAlign) {
 			commands.setDriveVisionPathAlign();
+		} else if (wantsAssistedVisionPathAlign) {
+			commands.setDriveVisionAlign();
 		} else {
 			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),
 					mDriveStick.getTrigger());
