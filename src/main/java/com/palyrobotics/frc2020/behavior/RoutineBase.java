@@ -7,19 +7,16 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.*;
 
-/**
-*
-*/
 public abstract class RoutineBase {
 
 	private enum RoutineState {
 		INIT, RUNNING, FINISHED
 	}
 
-	protected final Drive mDrive = Drive.getInstance();
-	protected final Intake mIntake = Intake.getInstance();
 	protected final Climber mClimber = Climber.getInstance();
+	protected final Drive mDrive = Drive.getInstance();
 	protected final Indexer mIndexer = Indexer.getInstance();
+	protected final Intake mIntake = Intake.getInstance();
 	protected final Spinner mSpinner = Spinner.getInstance();
 	private RoutineState mState = RoutineState.INIT;
 

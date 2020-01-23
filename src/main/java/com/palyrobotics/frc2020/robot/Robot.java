@@ -62,8 +62,6 @@ public class Robot extends TimedRobot {
 	public void disabledInit() {
 		mRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
 
-		// TODO: ultrasonics
-
 		resetCommandsAndRoutines();
 
 		mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);

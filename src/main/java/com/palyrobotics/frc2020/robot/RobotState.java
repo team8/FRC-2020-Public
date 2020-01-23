@@ -21,12 +21,10 @@ public class RobotState {
 	}
 
 	public static final String LOGGER_TAB = StringUtil.classToJsonName(RobotState.class);
-	public static final int kUltrasonicBufferSize = 10;
 	private static RobotState sInstance = new RobotState();
 	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;
 	public double driveHeading;
-	/* Drive */
 	public boolean driveIsQuickTurning;
 	public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;
 	public Pose2d drivePose = new Pose2d();
@@ -39,26 +37,6 @@ public class RobotState {
 
 	public RobotState() {
 	}
-
-	// TODO: ultrasonics
-	// public CircularBuffer
-	// leftIntakeReadings = new CircularBuffer(kUltrasonicBufferSize),
-	// rightIntakeReadings = new CircularBuffer(kUltrasonicBufferSize);
-	// // Pusher
-	// public boolean hasPusherCargo, hasPusherCargoFar;
-	// public double cargoPusherDistance;
-	// public CircularBuffer pusherReadings = new
-	// CircularBuffer(kUltrasonicBufferSize);
-	//
-	// TODO: ultrasonics
-	// public void resetUltrasonics() {
-	// for (CircularBuffer buffer : List.of(leftIntakeReadings, rightIntakeReadings,
-	// pusherReadings)) {
-	// for (int i = 0; i < kUltrasonicBufferSize; i++) {
-	// buffer.addFirst(Double.MAX_VALUE);
-	// }
-	// }
-	// }
 
 	public void resetOdometry() {
 		driveOdometry.resetPosition(new Pose2d(), new Rotation2d());

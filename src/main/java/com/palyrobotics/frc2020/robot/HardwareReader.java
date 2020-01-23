@@ -53,17 +53,7 @@ public class HardwareReader {
 		}
 		robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
 
-		// For testing purposes
-		// System.out.println(robotState.closestColorString + " with confidence level of
-		// " + (robotState.closestColorConfidence * 100));
-		// System.out.println(robotState.detectedRGBVals.red + ", " +
-		// robotState.detectedRGBVals.green + ", " + robotState.detectedRGBVals.blue);
-
 		robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();
-		// if (robotState.gameData.length() > 0) {
-		// System.out.printf("Game data has been found, color is: %s%n",
-		// robotState.gameData);
-		// }
 
 		robotState.updateOdometry(robotState.driveHeading, robotState.driveLeftPosition, robotState.driveRightPosition);
 	}
