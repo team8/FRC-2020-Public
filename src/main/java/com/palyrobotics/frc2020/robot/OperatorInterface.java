@@ -1,6 +1,10 @@
 package com.palyrobotics.frc2020.robot;
 
+import java.util.List;
+
+import com.palyrobotics.frc2020.auto.modes.EnemyTrenchRunTwoShootFive;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
+import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Indexer;
@@ -13,6 +17,9 @@ import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.util.Units;
 
 /**
  * Used to produce {@link Commands}'s from human input. Should only be used in
@@ -27,6 +34,8 @@ public class OperatorInterface {
 			mTurnStick = HardwareAdapter.Joysticks.getInstance().turnStick;
 	private final XboxController mOperatorXboxController = HardwareAdapter.Joysticks
 			.getInstance().operatorXboxController;
+	private final List<Pose2d> kTestWaypoints = List.of(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+			new Pose2d(Units.inchesToMeters(200.0), 0.0, Rotation2d.fromDegrees(0.0)));
 
 	/**
 	 * Helper method to only add routines that aren't already in wantedRoutines
@@ -97,6 +106,12 @@ public class OperatorInterface {
 					mDriveStick.getTrigger());
 		}
 		setVision(wantsAssistedVision);
+		/* Path Following */
+		if (mOperatorXboxController.getDPadUp()) {
+			commands.addWantedRoutine(new EnemyTrenchRunTwoShootFive().getRoutine());
+		} else if (mOperatorXboxController.getDPadDown()) {
+			commands.addWantedRoutine(new DrivePathRoutine(true, kTestWaypoints));
+		}
 	}
 
 	private void updateIndexerCommands(Commands commands) {

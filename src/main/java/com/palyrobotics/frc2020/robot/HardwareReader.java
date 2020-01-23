@@ -1,9 +1,13 @@
 package com.palyrobotics.frc2020.robot;
 
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
+import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
+import com.palyrobotics.frc2020.util.config.Configs;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpiutil.CircularBuffer;
 
 public class HardwareReader {
 
@@ -53,8 +57,29 @@ public class HardwareReader {
 		}
 		robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
 
+		// Updating ultrasonics
+		IndexerConfig indexerConfig = Configs.get(IndexerConfig.class);
+		Ultrasonic backUltrasonic = HardwareAdapter.IndexerHardware.getInstance().backUltrasonic,
+				frontUltrasonic = HardwareAdapter.IndexerHardware.getInstance().frontUltrasonic;
+		robotState.backIndexerUltrasonicReadings.addFirst(backUltrasonic.getRangeInches());
+		robotState.frontIndexerUltrasonicReadings.addFirst(frontUltrasonic.getRangeInches());
+		robotState.hasBackUltrasonicBall = hasBallFromReadings(robotState.backIndexerUltrasonicReadings,
+				indexerConfig.ballInchTolerance, indexerConfig.ballCountRequired);
+		robotState.hasFrontUltrasonicBall = hasBallFromReadings(robotState.frontIndexerUltrasonicReadings,
+				indexerConfig.ballInchTolerance, indexerConfig.ballCountRequired);
+
 		robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();
 
 		robotState.updateOdometry(robotState.driveHeading, robotState.driveLeftPosition, robotState.driveRightPosition);
 	}
+
+	private boolean hasBallFromReadings(CircularBuffer readings, double tolerance, int requiredCount) {
+		int count = 0;
+		for (int i = 0; i < RobotState.kUltrasonicBufferSize; i++) {
+			if (readings.get(i) <= tolerance)
+				count++;
+		}
+		return count >= requiredCount;
+	}
+
 }

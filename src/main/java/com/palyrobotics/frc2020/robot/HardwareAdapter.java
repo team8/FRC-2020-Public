@@ -13,10 +13,7 @@ import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.revrobotics.ColorSensorV3;
 
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.*;
 
 /**
  * Represents all hardware components of the robot. Singleton class. Should only
@@ -25,7 +22,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class HardwareAdapter {
 
 	/**
-	 * 1 NEO, 1 NEO 550 (both controlled by Spark MAX) 1 Solenoid
+	 * 1 NEO, 1 NEO 550 (both controlled by Spark MAX), 1 Solenoid
 	 */
 	static class ClimberHardware {
 
@@ -43,7 +40,7 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * 4 Falcon 500s (controlled by Talon FX) 1 Pigeon IMU Gyro connected via Talon
+	 * 4 Falcon 500s (controlled by Talon FX), 1 Pigeon IMU Gyro connected via Talon
 	 * SRX data cable.
 	 */
 	static class DrivetrainHardware {
@@ -69,7 +66,7 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * 2 NEOs (controlled by Spark MAX) 3 Solenoids
+	 * 2 NEOs (controlled by Spark MAX), 3 Solenoids, 2 Ultrasonics
 	 */
 	static class IndexerHardware {
 
@@ -79,6 +76,10 @@ public class HardwareAdapter {
 		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.vidarIndexerExtendingSolenoidId),
 				retractingSolenoid = new Solenoid(sPortConstants.vidarIndexerRetractingSolenoidId);
 		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.vidarIndexerBlockingSolenoidId);
+		final Ultrasonic backUltrasonic = new Ultrasonic(sPortConstants.vidarIndexerBackUltrasonicPing,
+				sPortConstants.vidarIndexerBackUltrasonicEcho),
+				frontUltrasonic = new Ultrasonic(sPortConstants.vidarIndexerFrontUltrasonicPing,
+						sPortConstants.vidarIndexerFrontUltrasonicEcho);
 
 		private IndexerHardware() {
 		}
@@ -89,7 +90,7 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * 1 775 (controlled by Talon SRX) 2 Solenoids
+	 * 1 775 (controlled by Talon SRX), 2 Solenoids
 	 */
 	static class IntakeHardware {
 
@@ -107,7 +108,7 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * 2 NEO (controlled by Spark MAX) 3 Solenoids
+	 * 2 NEO (controlled by Spark MAX), 3 Solenoids
 	 */
 	static class ShooterHardware {
 
@@ -127,7 +128,7 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * 1 775 (controlled by Talon SRX) 1 Color Sensor V3
+	 * 1 775 (controlled by Talon SRX), 1 Color Sensor V3
 	 */
 	static class SpinnerHardware {
 
@@ -144,7 +145,7 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * 1Compressor 1 PDP
+	 * 1Compressor, 1 PDP
 	 */
 	static class MiscellaneousHardware {
 
@@ -161,7 +162,7 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * 2 Joysticks 1 Xbox Controller
+	 * 2 Joysticks, 1 Xbox Controller
 	 */
 	static class Joysticks {
 

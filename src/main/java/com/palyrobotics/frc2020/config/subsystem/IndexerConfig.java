@@ -8,4 +8,7 @@ public class IndexerConfig extends SubsystemConfigBase {
 	public double horizontalIntakeVelocity, verticalIntakeVelocity;
 
 	public ProfiledGains horizontalProfiledVelocityGains, verticalProfiledVelocityGains;
+
+	public double ballInchTolerance;
+	public int ballCountRequired;
 }

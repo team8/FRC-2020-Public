@@ -24,6 +24,8 @@ public class PortConstants extends ConfigBase {
 	public int vidarIndexerVerticalId;
 	public int vidarIndexerExtendingSolenoidId, vidarIndexerRetractingSolenoidId;
 	public int vidarIndexerBlockingSolenoidId;
+	public int vidarIndexerBackUltrasonicEcho, vidarIndexerBackUltrasonicPing;
+	public int vidarIndexerFrontUltrasonicEcho, vidarIndexerFrontUltrasonicPing;
 
 	/**
 	 * Intake
