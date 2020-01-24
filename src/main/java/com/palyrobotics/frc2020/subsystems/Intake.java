@@ -16,6 +16,7 @@ public class Intake extends SubsystemBase {
 	private static Intake sInstance = new Intake();
 	private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
+	private boolean mSolenoidOutput = false;
 
 	private Intake() {
 	}
@@ -30,14 +31,20 @@ public class Intake extends SubsystemBase {
 		switch (state) {
 			case IDLE:
 				mOutput.setIdle();
+				mSolenoidOutput = false;
 				break;
 			case INTAKE:
 				mOutput.setTargetVelocityProfiled(mConfig.intakingVelocity, mConfig.profiledVelocityGains);
+				mSolenoidOutput = true;
 				break;
 		}
 	}
 
 	public ControllerOutput getOutput() {
 		return mOutput;
+	}
+
+	public boolean getSolenoidOutput() {
+		return mSolenoidOutput;
 	}
 }
