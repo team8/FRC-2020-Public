@@ -45,11 +45,13 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
-		setupSubsystemsAndServices();
+		String result = setupSubsystemsAndServices();
 
 		mHardwareWriter.configureHardware();
 
 		mEnabledServices.forEach(RobotService::start);
+
+		Log.info(LOGGER_TAG, result);
 
 		Configs.listen(RobotConfig.class, config -> {
 			if (isDisabled()) {
@@ -149,7 +151,7 @@ public class Robot extends TimedRobot {
 		teleopPeriodic();
 	}
 
-	private void setupSubsystemsAndServices() {
+	private String setupSubsystemsAndServices() {
 		// TODO hard to read if unfamiliar with streams. maybe change to non-functional
 		// style
 		Map<String, RobotService> configToService = mServices.stream()
@@ -172,7 +174,7 @@ public class Robot extends TimedRobot {
 		for (RobotService enabledService : mEnabledServices) {
 			builder.append(enabledService.getConfigName()).append("\n");
 		}
-		Log.info(LOGGER_TAG, builder.toString());
+		return builder.toString();
 	}
 
 	private void setDriveIdleMode(boolean isIdle) {

@@ -12,6 +12,8 @@ public class Talon extends TalonSRX {
 
 	static class TalonController extends ProfiledControllerBase<BaseTalon> {
 
+		protected double mPositionConversion, mVelocityConversion;
+
 		protected TalonController(BaseTalon talon) {
 			super(talon);
 		}
@@ -47,7 +49,22 @@ public class Talon extends TalonSRX {
 		@Override
 		boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput) {
 			ControlMode controllerMode = MODE_TO_CONTROLLER.get(mode);
-			mController.set(controllerMode, reference, DemandType.ArbitraryFeedForward, arbitraryPercentOutput);
+			double convertedReference;
+			switch (mode) {
+				case VELOCITY:
+				case PROFILED_VELOCITY:
+					convertedReference = reference * mVelocityConversion;
+					break;
+				case POSITION:
+				case PROFILED_POSITION:
+					convertedReference = reference * mPositionConversion;
+					break;
+				default:
+					convertedReference = reference;
+					break;
+			}
+			mController.set(controllerMode, convertedReference, DemandType.ArbitraryFeedForward,
+					arbitraryPercentOutput);
 			return true;
 		}
 
@@ -82,15 +99,16 @@ public class Talon extends TalonSRX {
 		}
 	}
 
-	public static final Map<ControllerOutput.Mode, ControlMode> MODE_TO_CONTROLLER = Map.of(
-			ControllerOutput.Mode.PERCENT_OUTPUT, ControlMode.PercentOutput, ControllerOutput.Mode.POSITION,
-			ControlMode.Position, ControllerOutput.Mode.VELOCITY, ControlMode.Velocity,
-			ControllerOutput.Mode.PROFILED_POSITION, ControlMode.MotionMagic, ControllerOutput.Mode.PROFILED_VELOCITY,
-			ControlMode.MotionProfile);
+	protected static final Map<ControllerOutput.Mode, ControlMode> MODE_TO_CONTROLLER = Map.ofEntries(
+			Map.entry(ControllerOutput.Mode.PERCENT_OUTPUT, ControlMode.PercentOutput),
+			Map.entry(ControllerOutput.Mode.POSITION, ControlMode.Position),
+			Map.entry(ControllerOutput.Mode.VELOCITY, ControlMode.Velocity),
+			Map.entry(ControllerOutput.Mode.PROFILED_POSITION, ControlMode.MotionMagic),
+			Map.entry(ControllerOutput.Mode.PROFILED_VELOCITY, ControlMode.MotionProfile));
 	private final TalonController mController = new TalonController(this);
 
-	public Talon(int deviceNumber) {
-		super(deviceNumber);
+	public Talon(int deviceId) {
+		super(deviceId);
 	}
 
 	public static int round(double d) {

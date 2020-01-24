@@ -37,11 +37,10 @@ public class HardwareReader {
 
 		robotState.driveHeading = drivetrain.gyro.getFusedHeading();
 
-		// TODO: Update with position/velocity conversions
-		robotState.driveLeftVelocity = drivetrain.leftMasterFalcon.getSelectedSensorVelocity() / 60.0;
-		robotState.driveRightVelocity = drivetrain.rightMasterFalcon.getSelectedSensorVelocity() / 60.0;
-		robotState.driveLeftPosition = drivetrain.leftMasterFalcon.getSelectedSensorPosition();
-		robotState.driveRightPosition = drivetrain.rightMasterFalcon.getSelectedSensorPosition();
+		robotState.driveLeftVelocity = drivetrain.leftMasterFalcon.getConvertedVelocity();
+		robotState.driveRightVelocity = drivetrain.rightMasterFalcon.getConvertedVelocity();
+		robotState.driveLeftPosition = drivetrain.leftMasterFalcon.getConvertedPosition();
+		robotState.driveRightPosition = drivetrain.rightMasterFalcon.getConvertedPosition();
 
 		// Updating color sensor data
 		robotState.detectedRGBVals = HardwareAdapter.SpinnerHardware.getInstance().colorSensor.getColor();

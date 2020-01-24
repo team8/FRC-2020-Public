@@ -21,4 +21,21 @@ public class Falcon extends WPI_TalonFX {
 	public boolean setOutput(ControllerOutput output) {
 		return mController.setOutput(output);
 	}
+
+	/**
+	 * @param positionConversion Units per native encoder ticks
+	 * @param velocityConversion Velocity units per native encoder ticks per 100ms
+	 */
+	public void configSensorConversions(double positionConversion, double velocityConversion) {
+		mController.mPositionConversion = positionConversion;
+		mController.mVelocityConversion = velocityConversion;
+	}
+
+	public double getConvertedPosition() {
+		return getSelectedSensorPosition() * mController.mPositionConversion;
+	}
+
+	public double getConvertedVelocity() {
+		return getSelectedSensorVelocity() * mController.mVelocityConversion;
+	}
 }

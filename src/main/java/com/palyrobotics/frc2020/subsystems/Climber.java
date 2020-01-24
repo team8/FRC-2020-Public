@@ -14,10 +14,8 @@ public class Climber extends SubsystemBase {
 	}
 
 	private static Climber sInstance = new Climber();
-	private ControllerOutput mOutput;
-	private ControllerOutput mAdjustingOutput;
+	private ControllerOutput mClimbingOutput = new ControllerOutput(), mAdjustingOutput = new ControllerOutput();
 	private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
-	private double mWantedOutput;
 
 	private Climber() {
 	}
@@ -31,26 +29,27 @@ public class Climber extends SubsystemBase {
 		ClimberState state = commands.climberWantedState;
 		switch (state) {
 			case CLIMBING:
-				mWantedOutput = commands.getClimberWantedOutput();
-				mOutput.setPercentOutput(mWantedOutput);
+				double wantedOutput = commands.getClimberWantedOutput();
+				mClimbingOutput.setPercentOutput(wantedOutput);
 				mAdjustingOutput.setIdle();
 				break;
 			case ADJUSTING_LEFT:
-				mOutput.setIdle();
+				mClimbingOutput.setIdle();
 				mAdjustingOutput.setPercentOutput(-mConfig.adjustingOutput);
 				break;
 			case ADJUSTING_RIGHT:
-				mOutput.setIdle();
+				mClimbingOutput.setIdle();
 				mAdjustingOutput.setPercentOutput(mConfig.adjustingOutput);
 				break;
 			case IDLE:
-				mOutput.setIdle();
+				mClimbingOutput.setIdle();
+				mAdjustingOutput.setIdle();
 				break;
 		}
 	}
 
-	public ControllerOutput getOutput() {
-		return mOutput;
+	public ControllerOutput getClimbingOutput() {
+		return mClimbingOutput;
 	}
 
 	public ControllerOutput getAdjustingOutput() {

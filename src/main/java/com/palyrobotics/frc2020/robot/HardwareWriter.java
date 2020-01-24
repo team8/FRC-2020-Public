@@ -13,7 +13,10 @@ import com.palyrobotics.frc2020.util.control.Falcon;
 
 public class HardwareWriter {
 
-	public static final int TIMEOUT_MS = 50;
+	public static final int TIMEOUT_MS = 50,
+			// Different from slot index.
+			// 0 for Primary closed-loop. 1 for auxiliary closed-loop.
+			PID_IDX = 0;
 	private static final String LOGGER_TAG = StringUtil.classToJsonName(HardwareWriter.class);
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	private final Drive mDrive = Drive.getInstance();
@@ -42,10 +45,11 @@ public class HardwareWriter {
 		for (Falcon falcon : driveHardware.falcons) {
 			falcon.configFactoryDefault();
 			falcon.enableVoltageCompensation(true);
-			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 50);
-			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero, 50);
-			falcon.configOpenloopRamp(driveConfig.controllerRampRate, 50);
-			falcon.configClosedloopRamp(driveConfig.controllerRampRate, 50);
+			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, PID_IDX, TIMEOUT_MS);
+			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero, TIMEOUT_MS);
+			falcon.configOpenloopRamp(driveConfig.controllerRampRate, TIMEOUT_MS);
+			falcon.configClosedloopRamp(driveConfig.controllerRampRate, TIMEOUT_MS);
+			falcon.configSensorConversions(driveConfig.positionConversion, driveConfig.velocityConversion);
 		}
 
 		/* Left Side */
@@ -88,7 +92,7 @@ public class HardwareWriter {
 		driveHardware.gyro.setYaw(0, TIMEOUT_MS);
 		driveHardware.gyro.setFusedHeading(0, TIMEOUT_MS);
 		driveHardware.gyro.setAccumZAngle(0, TIMEOUT_MS);
-		driveHardware.falcons.forEach(spark -> spark.setSelectedSensorPosition(0, 0, 50));
+		driveHardware.falcons.forEach(spark -> spark.setSelectedSensorPosition(0, PID_IDX, TIMEOUT_MS));
 		Log.info(LOGGER_TAG, "Drive sensors reset");
 	}
 
@@ -112,7 +116,7 @@ public class HardwareWriter {
 
 	private void updateClimber() {
 		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
-		climberHardware.verticalSpark.setOutput(mClimber.getOutput());
+		climberHardware.verticalSpark.setOutput(mClimber.getClimbingOutput());
 		climberHardware.horizontalSpark.setOutput(mClimber.getAdjustingOutput());
 	}
 

@@ -94,7 +94,6 @@ public class OperatorInterface {
 		} else {
 			commands.climberWantedState = Climber.ClimberState.IDLE;
 		}
-
 	}
 
 	private void updateDriveCommands(Commands commands) {

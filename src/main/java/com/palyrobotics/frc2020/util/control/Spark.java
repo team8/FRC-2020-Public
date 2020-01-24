@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
+import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANPIDController.ArbFFUnits;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -30,7 +31,7 @@ public class Spark extends CANSparkMax {
 		protected void updateGains(boolean isFirstInitialization, int slot, Gains newGains, Gains lastGains) {
 			super.updateGains(isFirstInitialization, slot, newGains, lastGains);
 			if (isFirstInitialization) {
-				mPidController.setSmartMotionAccelStrategy(CANPIDController.AccelStrategy.kSCurve, slot);
+				mPidController.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, slot);
 			}
 		}
 
@@ -92,11 +93,12 @@ public class Spark extends CANSparkMax {
 		}
 	}
 
-	public static final Map<ControllerOutput.Mode, ControlType> MODE_TO_CONTROLLER = Map.of(
-			ControllerOutput.Mode.PERCENT_OUTPUT, ControlType.kDutyCycle, ControllerOutput.Mode.POSITION,
-			ControlType.kPosition, ControllerOutput.Mode.VELOCITY, ControlType.kVelocity,
-			ControllerOutput.Mode.PROFILED_POSITION, ControlType.kSmartMotion, ControllerOutput.Mode.PROFILED_VELOCITY,
-			ControlType.kSmartVelocity);
+	protected static final Map<ControllerOutput.Mode, ControlType> MODE_TO_CONTROLLER = Map.ofEntries(
+			Map.entry(ControllerOutput.Mode.PERCENT_OUTPUT, ControlType.kDutyCycle),
+			Map.entry(ControllerOutput.Mode.POSITION, ControlType.kPosition),
+			Map.entry(ControllerOutput.Mode.VELOCITY, ControlType.kVelocity),
+			Map.entry(ControllerOutput.Mode.PROFILED_POSITION, ControlType.kSmartMotion),
+			Map.entry(ControllerOutput.Mode.PROFILED_VELOCITY, ControlType.kSmartVelocity));
 
 	private final SparkController mController = new SparkController(this);
 
