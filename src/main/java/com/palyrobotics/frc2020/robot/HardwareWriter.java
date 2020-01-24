@@ -19,17 +19,19 @@ public class HardwareWriter {
 			PID_IDX = 0;
 	private static final String LOGGER_TAG = StringUtil.classToJsonName(HardwareWriter.class);
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
-	private final Drive mDrive = Drive.getInstance();
 	private final Climber mClimber = Climber.getInstance();
-	private final Spinner mSpinner = Spinner.getInstance();
+	private final Drive mDrive = Drive.getInstance();
 	private final Indexer mIndexer = Indexer.getInstance();
 	private final Intake mIntake = Intake.getInstance();
+	private final Shooter mShooter = Shooter.getInstance();
+	private final Spinner mSpinner = Spinner.getInstance();
 
 	void configureHardware() {
-		configureDriveHardware();
 		configureClimberHardware();
-		configureIntakeHardware();
+		configureDriveHardware();
 		configureIndexerHardware();
+		configureIntakeHardware();
+		configureShooterHardware();
 		configureSpinnerHardware();
 	}
 
@@ -82,6 +84,13 @@ public class HardwareWriter {
 		intakeHardware.talon.configFactoryDefault(TIMEOUT_MS);
 	}
 
+	private void configureShooterHardware() {
+		var shooterHardware = HardwareAdapter.ShooterHardware.getInstance();
+		shooterHardware.masterSpark.restoreFactoryDefaults();
+		shooterHardware.slaveSpark.follow(shooterHardware.masterSpark);
+		// TODO: Add velocity conversions and other configs
+	}
+
 	private void configureSpinnerHardware() {
 		var spinnerHardware = HardwareAdapter.SpinnerHardware.getInstance();
 		spinnerHardware.talon.configFactoryDefault(TIMEOUT_MS);
@@ -109,6 +118,7 @@ public class HardwareWriter {
 			updateDrivetrain();
 			updateIndexer();
 			updateIntake();
+			updateShooter();
 			updateSpinner();
 			updateMiscellaneousHardware();
 		}
@@ -134,6 +144,12 @@ public class HardwareWriter {
 
 	private void updateIntake() {
 		HardwareAdapter.IntakeHardware.getInstance().talon.setOutput(mIntake.getOutput());
+	}
+
+	private void updateShooter() {
+		var shooterHardware = HardwareAdapter.ShooterHardware.getInstance();
+		shooterHardware.masterSpark.setOutput(mShooter.getControllerOutput());
+		// TODO: solenoid output
 	}
 
 	private void updateSpinner() {

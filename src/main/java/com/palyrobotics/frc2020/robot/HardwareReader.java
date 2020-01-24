@@ -56,6 +56,9 @@ public class HardwareReader {
 		}
 		robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
 
+		robotState.shooterVelocity = HardwareAdapter.ShooterHardware.getInstance().masterSpark.getEncoder()
+				.getVelocity();
+
 		// Updating ultrasonics
 		IndexerConfig indexerConfig = Configs.get(IndexerConfig.class);
 		Ultrasonic backUltrasonic = HardwareAdapter.IndexerHardware.getInstance().backUltrasonic,

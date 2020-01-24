@@ -41,6 +41,8 @@ public class RobotState {
 	public Color detectedRGBVals;
 	public ColorMatchResult closestColorRGB;
 
+	public double shooterVelocity;
+
 	public CircularBuffer backIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
 			frontIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize);
 	public boolean hasBackUltrasonicBall, hasFrontUltrasonicBall;
