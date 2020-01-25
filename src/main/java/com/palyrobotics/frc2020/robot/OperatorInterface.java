@@ -106,9 +106,9 @@ public class OperatorInterface {
 		}
 		setVision(wantsAssistedVision);
 		/* Path Following */
-		if (mOperatorXboxController.getDPadUp()) {
+		if (mOperatorXboxController.getDPadUpPressed()) {
 			commands.addWantedRoutine(new EnemyTrenchRunTwoShootFive().getRoutine());
-		} else if (mOperatorXboxController.getDPadDown()) {
+		} else if (mOperatorXboxController.getDPadDownPressed()) {
 			commands.addWantedRoutine(new DrivePathRoutine(true, kTestWaypoints));
 		}
 	}

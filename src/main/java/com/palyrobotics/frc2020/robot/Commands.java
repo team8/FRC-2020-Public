@@ -41,7 +41,7 @@ public class Commands {
 	private Trajectory driveWantedTrajectory;
 	private double driveWantedTrajectoryTimeSeconds;
 	// Turning
-	private double driveWantedHeading;
+	private double driveWantedHeadingDegrees;
 	// Climbing
 	private double climberWantedOutput;
 
@@ -83,8 +83,8 @@ public class Commands {
 		return driveWantedTrajectoryTimeSeconds;
 	}
 
-	public double getDriveWantedHeading() {
-		return driveWantedHeading;
+	public double getDriveWantedHeadingDegrees() {
+		return driveWantedHeadingDegrees;
 	}
 
 	public DriveOutputs getDriveWantedSignal() {
@@ -130,9 +130,9 @@ public class Commands {
 		driveWantedState = Drive.DriveState.NEUTRAL;
 	}
 
-	public void setDriveTurn(double angle) {
+	public void setDriveTurn(double headingDegrees) {
 		driveWantedState = Drive.DriveState.TURN;
-		driveWantedHeading = angle;
+		driveWantedHeadingDegrees = headingDegrees;
 	}
 
 	public void copyTo(Commands other) {

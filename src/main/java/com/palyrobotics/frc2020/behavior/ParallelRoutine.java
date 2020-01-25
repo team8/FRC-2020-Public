@@ -30,7 +30,7 @@ public class ParallelRoutine extends MultipleRoutine {
 	}
 
 	@Override
-	public boolean checkFinished() {
+	public boolean checkFinished(@ReadOnly RobotState state) {
 		return mRunningRoutines.isEmpty();
 	}
 

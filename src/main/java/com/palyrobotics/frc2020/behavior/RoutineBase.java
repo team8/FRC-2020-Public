@@ -20,23 +20,23 @@ public abstract class RoutineBase {
 	protected final Spinner mSpinner = Spinner.getInstance();
 	private RoutineState mState = RoutineState.INIT;
 
-	public final boolean execute(Commands commands, RobotState state) {
+	public final boolean execute(Commands commands, @ReadOnly RobotState state) {
 		if (mState == RoutineState.INIT) {
-			start();
+			start(state);
 			mState = RoutineState.RUNNING;
 		} else if (mState == RoutineState.FINISHED) {
 			throw new IllegalStateException(
 					String.format("Routine %s already finished! Should not be updated.", toString()));
 		}
 		update(commands, state);
-		if (checkFinished()) {
+		if (checkFinished(state)) {
 			mState = RoutineState.FINISHED;
 			return true;
 		}
 		return false;
 	}
 
-	protected void start() {
+	protected void start(@ReadOnly RobotState state) {
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public abstract class RoutineBase {
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 	}
 
-	public boolean checkFinished() {
+	public boolean checkFinished(@ReadOnly RobotState state) {
 		return true;
 	}
 

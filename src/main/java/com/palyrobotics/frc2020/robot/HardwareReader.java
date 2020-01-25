@@ -35,7 +35,7 @@ public class HardwareReader {
 	void updateState(RobotState robotState) {
 		var drivetrain = HardwareAdapter.DrivetrainHardware.getInstance();
 
-		robotState.driveHeading = drivetrain.gyro.getFusedHeading();
+		robotState.driveHeadingDegrees = Math.IEEEremainder(drivetrain.gyro.getFusedHeading(), 360.0);
 
 		robotState.driveLeftVelocity = drivetrain.leftMasterFalcon.getConvertedVelocity();
 		robotState.driveRightVelocity = drivetrain.rightMasterFalcon.getConvertedVelocity();
@@ -56,8 +56,7 @@ public class HardwareReader {
 		}
 		robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
 
-		robotState.shooterVelocity = HardwareAdapter.ShooterHardware.getInstance().masterSpark.getEncoder()
-				.getVelocity();
+		robotState.shooterVelocity = HardwareAdapter.ShooterHardware.getInstance().masterEncoder.getVelocity();
 
 		// Updating ultrasonics
 		IndexerConfig indexerConfig = Configs.get(IndexerConfig.class);
@@ -72,7 +71,8 @@ public class HardwareReader {
 
 		robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();
 
-		robotState.updateOdometry(robotState.driveHeading, robotState.driveLeftPosition, robotState.driveRightPosition);
+		robotState.updateOdometry(robotState.driveHeadingDegrees, robotState.driveLeftPosition,
+				robotState.driveRightPosition);
 	}
 
 	private boolean hasBallFromReadings(CircularBuffer readings, double tolerance, int requiredCount) {

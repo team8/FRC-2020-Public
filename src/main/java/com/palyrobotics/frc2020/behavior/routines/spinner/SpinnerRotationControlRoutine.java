@@ -19,7 +19,7 @@ public class SpinnerRotationControlRoutine extends SpinnerRoutineBase {
 	}
 
 	@Override
-	public boolean checkFinished() {
+	public boolean checkFinished(@ReadOnly RobotState state) {
 		return mColorChangeCounter > mConfig.rotationControlColorChangeRequirementCount;
 	}
 }

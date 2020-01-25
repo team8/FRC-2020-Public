@@ -3,7 +3,7 @@ package com.palyrobotics.frc2020.behavior.routines.drive;
 import java.util.*;
 
 import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
-import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
+import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -47,7 +47,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	}
 
 	private TrajectoryConfig getGenerationConfig(boolean isReversed) {
-		TrajectoryConfig config = DrivetrainConstants.getStandardTrajectoryConfig();
+		TrajectoryConfig config = DriveConstants.getStandardTrajectoryConfig();
 		return isReversed ? config.setReversed(true) : config;
 	}
 
@@ -72,7 +72,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	}
 
 	@Override
-	public boolean checkIfFinishedEarly() {
+	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
 		return false;
 	}
 

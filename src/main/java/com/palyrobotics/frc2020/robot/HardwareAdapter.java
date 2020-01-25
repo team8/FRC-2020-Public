@@ -11,6 +11,7 @@ import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.*;
@@ -115,6 +116,7 @@ public class HardwareAdapter {
 		private static ShooterHardware sInstance = new ShooterHardware();
 		final Spark masterSpark = new Spark(sPortConstants.vidarShooterMasterId),
 				slaveSpark = new Spark(sPortConstants.vidarShooterSlaveId);
+		final CANEncoder masterEncoder = masterSpark.getEncoder();
 		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.vidarShooterExtendingSolenoidId),
 				retractingSolenoid = new Solenoid(sPortConstants.vidarShooterRetractingSolenoidId);
 		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.vidarShooterBlockingSolenoidId);

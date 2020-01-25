@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2020.subsystems.controllers;
 
-import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
+import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -23,8 +23,8 @@ public class ChezyDriveController extends Drive.DriveController {
 
 		double absoluteThrottle = Math.abs(throttle), absoluteWheel = Math.abs(wheel);
 
-		wheel = MathUtil.handleDeadBand(wheel, DrivetrainConstants.kDeadBand);
-		throttle = MathUtil.handleDeadBand(throttle, DrivetrainConstants.kDeadBand);
+		wheel = MathUtil.handleDeadBand(wheel, DriveConstants.kDeadBand);
+		throttle = MathUtil.handleDeadBand(throttle, DriveConstants.kDeadBand);
 
 		double negativeWheelInertia = wheel - mLastWheel;
 		mLastWheel = wheel;

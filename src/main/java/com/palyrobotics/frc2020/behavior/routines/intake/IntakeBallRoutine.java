@@ -1,6 +1,8 @@
 package com.palyrobotics.frc2020.behavior.routines.intake;
 
 import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
 
 public class IntakeBallRoutine extends TimeoutRoutineBase { // TODO implement class
 
@@ -13,7 +15,7 @@ public class IntakeBallRoutine extends TimeoutRoutineBase { // TODO implement cl
 	}
 
 	@Override
-	public boolean checkIfFinishedEarly() {
+	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
 		return false;
 	}
 }

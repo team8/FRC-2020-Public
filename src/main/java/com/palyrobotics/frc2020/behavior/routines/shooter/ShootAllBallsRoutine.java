@@ -1,6 +1,8 @@
 package com.palyrobotics.frc2020.behavior.routines.shooter;
 
 import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
 
 public class ShootAllBallsRoutine extends TimeoutRoutineBase {
 
@@ -13,7 +15,7 @@ public class ShootAllBallsRoutine extends TimeoutRoutineBase {
 	}
 
 	@Override
-	public boolean checkIfFinishedEarly() {
+	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
 		return false;
 	}
 }

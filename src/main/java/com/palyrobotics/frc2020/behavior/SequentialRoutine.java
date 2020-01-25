@@ -26,11 +26,6 @@ public class SequentialRoutine extends MultipleRoutine {
 	}
 
 	@Override
-	public void start() {
-		mRunningRoutine.start();
-	}
-
-	@Override
 	public void update(Commands commands, @ReadOnly RobotState state) {
 		while (mRunningRoutine.execute(commands, state)) {
 			if (!mIterator.hasNext()) {
@@ -42,7 +37,7 @@ public class SequentialRoutine extends MultipleRoutine {
 	}
 
 	@Override
-	public boolean checkFinished() {
+	public boolean checkFinished(@ReadOnly RobotState state) {
 		return mRunningRoutine == null;
 	}
 

@@ -30,7 +30,7 @@ public class RobotState {
 	private static RobotState sInstance = new RobotState();
 	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;
-	public double driveHeading;
+	public double driveHeadingDegrees;
 	public boolean driveIsQuickTurning;
 	public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;
 	public Pose2d drivePose = new Pose2d();
@@ -65,7 +65,6 @@ public class RobotState {
 	}
 
 	public void updateOdometry(double headingDegrees, double leftMeters, double rightMeters) {
-		drivePose = driveOdometry.update(Rotation2d.fromDegrees(Math.IEEEremainder(headingDegrees, 360.0)), leftMeters,
-				rightMeters);
+		drivePose = driveOdometry.update(Rotation2d.fromDegrees(headingDegrees), leftMeters, rightMeters);
 	}
 }

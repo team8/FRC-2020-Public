@@ -11,7 +11,7 @@ public class SpinnerPositionControlRoutine extends SpinnerRoutineBase {
 	private int mDirectionToGoalColor;
 
 	@Override
-	protected void start() {
+	protected void start(@ReadOnly RobotState state) {
 		mDirectionToGoalColor = mSpinner.directionToGoalColor(mCurrentColor, mTargetColor);
 	}
 
@@ -28,7 +28,7 @@ public class SpinnerPositionControlRoutine extends SpinnerRoutineBase {
 	}
 
 	@Override
-	public boolean checkFinished() {
+	public boolean checkFinished(@ReadOnly RobotState state) {
 		return mTargetColor.equals(mCurrentColor);
 	}
 }

@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -22,12 +24,12 @@ public class TimedRoutine extends RoutineBase {
 	}
 
 	@Override
-	public void start() {
+	public void start(@ReadOnly RobotState state) {
 		mTimer.start();
 	}
 
 	@Override
-	public boolean checkFinished() {
+	public boolean checkFinished(@ReadOnly RobotState state) {
 		return mTimer.get() > mTimeout;
 	}
 

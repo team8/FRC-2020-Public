@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2020.subsystems.controllers;
 
-import com.palyrobotics.frc2020.config.constants.DrivetrainConstants;
+import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -14,12 +14,12 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 public class DriveRamseteController extends Drive.DriveController {
 
-	public static final double B = 2.0, ZETA = 0.7;
+	public static final double kB = 2.0, kZeta = 0.7;
 
 	private final RamseteController mController;
 
 	public DriveRamseteController() {
-		mController = new RamseteController(B, ZETA);
+		mController = new RamseteController(kB, kZeta);
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class DriveRamseteController extends Drive.DriveController {
 		Trajectory.State targetPose = commands.getDriveWantedTrajectory()
 				.sample(commands.getDriveWantedTrajectoryTimeSeconds());
 		ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
-		DifferentialDriveWheelSpeeds wheelSpeeds = DrivetrainConstants.kKinematics.toWheelSpeeds(speeds);
+		DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kKinematics.toWheelSpeeds(speeds);
 		mDriveOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond,
 				mDriveConfig.profiledVelocityGains);
 		mDriveOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond,
