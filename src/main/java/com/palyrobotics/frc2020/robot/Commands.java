@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
-import com.palyrobotics.frc2020.subsystems.Climber;
-import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.subsystems.Indexer;
-import com.palyrobotics.frc2020.subsystems.Intake;
-import com.palyrobotics.frc2020.subsystems.Spinner;
+import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
@@ -24,16 +20,18 @@ public class Commands {
 	/* Routines */
 	public List<RoutineBase> routinesWanted = new ArrayList<>();
 	public boolean shouldClearCurrentRoutines;
-	/* Spinner Commands */
-	public Spinner.SpinnerState spinnerWantedState;
-	/* Intake Commands */
-	public Intake.IntakeState intakeWantedState;
-	/* Indexer Commands */
-	public Indexer.IndexerState indexerWantedState;
 	/* Climber Commands */
 	public Climber.ClimberState climberWantedState;
 	/* Drive Commands */
 	private Drive.DriveState driveWantedState;
+	/* Indexer Commands */
+	public Indexer.IndexerState indexerWantedState;
+	/* Intake Commands */
+	public Intake.IntakeState intakeWantedState;
+	/* Shooter Commands */
+	public Shooter.ShooterState shooterWantedState;
+	/* Spinner Commands */
+	public Spinner.SpinnerState spinnerWantedState;
 	// Teleop
 	private double driveWantedThrottle, driveWantedWheel;
 	private boolean driveWantsQuickTurn, driveWantsBrake;

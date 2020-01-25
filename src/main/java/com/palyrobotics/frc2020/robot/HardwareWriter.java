@@ -148,8 +148,10 @@ public class HardwareWriter {
 
 	private void updateShooter() {
 		var shooterHardware = HardwareAdapter.ShooterHardware.getInstance();
-		shooterHardware.masterSpark.setOutput(mShooter.getControllerOutput());
-		// TODO: solenoid output
+		shooterHardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
+		shooterHardware.blockingSolenoid.set(mShooter.getBlockingOutput());
+		shooterHardware.extendingSolenoid.set(mShooter.getExtendingOutput());
+		shooterHardware.retractingSolenoid.set(mShooter.getRetractingOutput());
 	}
 
 	private void updateSpinner() {

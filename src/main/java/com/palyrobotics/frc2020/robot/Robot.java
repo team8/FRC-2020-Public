@@ -47,13 +47,13 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
-		String result = setupSubsystemsAndServices();
+		String setupSummary = setupSubsystemsAndServices();
 
 		mHardwareWriter.configureHardware();
 
 		mEnabledServices.forEach(RobotService::start);
 
-		Log.info(LOGGER_TAG, result);
+		Log.info(LOGGER_TAG, setupSummary);
 
 		Configs.listen(RobotConfig.class, config -> {
 			if (isDisabled()) {
@@ -163,20 +163,20 @@ public class Robot extends TimedRobot {
 				.collect(Collectors.toMap(SubsystemBase::getName, Function.identity()));
 		mEnabledSubsystems = mConfig.enabledSubsystems.stream().map(configToSubsystem::get)
 				.collect(Collectors.toList());
-		var builder = new StringBuilder();
-		builder.append("\n===================\n");
-		builder.append("Enabled subsystems:\n");
-		builder.append("-------------------\n");
+		var summaryBuilder = new StringBuilder();
+		summaryBuilder.append("\n===================\n");
+		summaryBuilder.append("Enabled subsystems:\n");
+		summaryBuilder.append("-------------------\n");
 		for (SubsystemBase enabledSubsystem : mEnabledSubsystems) {
-			builder.append(enabledSubsystem.getName()).append("\n");
+			summaryBuilder.append(enabledSubsystem.getName()).append("\n");
 		}
-		builder.append("=================\n");
-		builder.append("Enabled services:\n");
-		builder.append("-----------------\n");
+		summaryBuilder.append("=================\n");
+		summaryBuilder.append("Enabled services:\n");
+		summaryBuilder.append("-----------------\n");
 		for (RobotService enabledService : mEnabledServices) {
-			builder.append(enabledService.getConfigName()).append("\n");
+			summaryBuilder.append(enabledService.getConfigName()).append("\n");
 		}
-		return builder.toString();
+		return summaryBuilder.toString();
 	}
 
 	private void setDriveIdleMode(boolean isIdle) {

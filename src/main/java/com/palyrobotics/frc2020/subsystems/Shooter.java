@@ -19,8 +19,8 @@ public class Shooter extends SubsystemBase {
 
 	private static Shooter sInstance = new Shooter();
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
-	private ControllerOutput mOutput = new ControllerOutput();
-	private boolean mExtendingOutput = false, mRetractingOutput = false, mBlockingOutput = false;
+	private ControllerOutput mFlywheelOutput = new ControllerOutput();
+	private boolean mExtendingOutput, mRetractingOutput, mBlockingOutput;
 
 	private Shooter() {
 	}
@@ -31,11 +31,19 @@ public class Shooter extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-
+		// TODO hood state machine, set solenoid outputs, target velocity of shooter
+		switch (commands.shooterWantedState) {
+			case IDLE:
+				mFlywheelOutput.setIdle();
+				break;
+			case VELOCITY:
+				mFlywheelOutput.setTargetVelocity(0.0, mConfig.velocityGains);
+				break;
+		}
 	}
 
-	public ControllerOutput getControllerOutput() {
-		return mOutput;
+	public ControllerOutput getFlywheelOutput() {
+		return mFlywheelOutput;
 	}
 
 	public boolean getExtendingOutput() {
