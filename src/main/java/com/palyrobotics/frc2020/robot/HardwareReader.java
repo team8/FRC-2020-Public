@@ -61,12 +61,16 @@ public class HardwareReader {
 		// Updating ultrasonics
 		IndexerConfig indexerConfig = Configs.get(IndexerConfig.class);
 		Ultrasonic backUltrasonic = HardwareAdapter.IndexerHardware.getInstance().backUltrasonic,
-				frontUltrasonic = HardwareAdapter.IndexerHardware.getInstance().frontUltrasonic;
+				frontUltrasonic = HardwareAdapter.IndexerHardware.getInstance().frontUltrasonic,
+				topUltrasonic = HardwareAdapter.IndexerHardware.getInstance().topUltrasonic;
 		robotState.backIndexerUltrasonicReadings.addFirst(backUltrasonic.getRangeInches());
 		robotState.frontIndexerUltrasonicReadings.addFirst(frontUltrasonic.getRangeInches());
+		robotState.topIndexerUltrasonicReadings.addFirst(topUltrasonic.getRangeInches());
 		robotState.hasBackUltrasonicBall = hasBallFromReadings(robotState.backIndexerUltrasonicReadings,
 				indexerConfig.ballInchTolerance, indexerConfig.ballCountRequired);
 		robotState.hasFrontUltrasonicBall = hasBallFromReadings(robotState.frontIndexerUltrasonicReadings,
+				indexerConfig.ballInchTolerance, indexerConfig.ballCountRequired);
+		robotState.hasTopUltrasonicBall = hasBallFromReadings(robotState.topIndexerUltrasonicReadings,
 				indexerConfig.ballInchTolerance, indexerConfig.ballCountRequired);
 
 		robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();

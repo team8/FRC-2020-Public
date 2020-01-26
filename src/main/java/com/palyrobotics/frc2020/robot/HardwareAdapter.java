@@ -28,9 +28,9 @@ public class HardwareAdapter {
 	static class ClimberHardware {
 
 		private static ClimberHardware sInstance = new ClimberHardware();
-		final Spark verticalSpark = new Spark(sPortConstants.vidarClimberVerticalId);
-		final Spark horizontalSpark = new Spark(sPortConstants.vidarClimberHorizontalId);
-		final Solenoid solenoid = new Solenoid(sPortConstants.vidarClimberSolenoidId);
+		final Spark verticalSpark = new Spark(sPortConstants.nariClimberVerticalId);
+		final Spark horizontalSpark = new Spark(sPortConstants.nariClimberHorizontalId);
+		final Solenoid solenoid = new Solenoid(sPortConstants.nariClimberSolenoidId);
 
 		ClimberHardware() {
 		}
@@ -48,10 +48,10 @@ public class HardwareAdapter {
 
 		private static DrivetrainHardware sInstance = new DrivetrainHardware();
 
-		final Falcon leftMasterFalcon = new Falcon(sPortConstants.vidarDriveLeftMasterId),
-				leftSlaveFalcon = new Falcon(sPortConstants.vidarDriveLeftSlaveId);
-		final Falcon rightMasterFalcon = new Falcon(sPortConstants.vidarDriveRightMasterId),
-				rightSlaveFalcon = new Falcon(sPortConstants.vidarDriveRightSlaveId);
+		final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId),
+				leftSlaveFalcon = new Falcon(sPortConstants.nariDriveLeftSlaveId);
+		final Falcon rightMasterFalcon = new Falcon(sPortConstants.nariDriveRightMasterId),
+				rightSlaveFalcon = new Falcon(sPortConstants.nariDriveRightSlaveId);
 
 		final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon, rightMasterFalcon, rightSlaveFalcon);
 
@@ -67,20 +67,22 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * 2 NEOs (controlled by Spark MAX), 3 Solenoids, 2 Ultrasonics
+	 * 2 NEOs (controlled by Spark MAX), 3 Solenoids, 3 Ultrasonics
 	 */
 	static class IndexerHardware {
 
 		private static IndexerHardware sInstance = new IndexerHardware();
-		final Spark horizontalSpark = new Spark(sPortConstants.vidarIndexerHorizontalId),
-				verticalSpark = new Spark(sPortConstants.vidarIndexerVerticalId);
-		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.vidarIndexerExtendingSolenoidId),
-				retractingSolenoid = new Solenoid(sPortConstants.vidarIndexerRetractingSolenoidId);
-		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.vidarIndexerBlockingSolenoidId);
-		final Ultrasonic backUltrasonic = new Ultrasonic(sPortConstants.vidarIndexerBackUltrasonicPing,
-				sPortConstants.vidarIndexerBackUltrasonicEcho),
-				frontUltrasonic = new Ultrasonic(sPortConstants.vidarIndexerFrontUltrasonicPing,
-						sPortConstants.vidarIndexerFrontUltrasonicEcho);
+		final Spark horizontalSpark = new Spark(sPortConstants.nariIndexerHorizontalId),
+				verticalSpark = new Spark(sPortConstants.nariIndexerVerticalId);
+		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.nariIndexerExtendingSolenoidId),
+				retractingSolenoid = new Solenoid(sPortConstants.nariIndexerRetractingSolenoidId);
+		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.nariIndexerBlockingSolenoidId);
+		final Ultrasonic backUltrasonic = new Ultrasonic(sPortConstants.nariIndexerBackUltrasonicPing,
+				sPortConstants.nariIndexerBackUltrasonicEcho),
+				frontUltrasonic = new Ultrasonic(sPortConstants.nariIndexerFrontUltrasonicPing,
+						sPortConstants.nariIndexerFrontUltrasonicEcho),
+				topUltrasonic = new Ultrasonic(sPortConstants.nariIndexerTopUltrasonicPing,
+						sPortConstants.nariIndexerTopUltrasonicEcho);
 
 		private IndexerHardware() {
 		}
@@ -96,9 +98,9 @@ public class HardwareAdapter {
 	static class IntakeHardware {
 
 		private static IntakeHardware sInstance = new IntakeHardware();
-		final Talon talon = new Talon(sPortConstants.vidarIntakeId);
-		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.vidarIntakeExtendingSolenoidId),
-				retractingSolenoid = new Solenoid(sPortConstants.vidarIntakeRetractingSolenoidId);
+		final Talon talon = new Talon(sPortConstants.nariIntakeId);
+		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.nariIntakeExtendingSolenoidId),
+				retractingSolenoid = new Solenoid(sPortConstants.nariIntakeRetractingSolenoidId);
 
 		private IntakeHardware() {
 		}
@@ -114,12 +116,12 @@ public class HardwareAdapter {
 	static class ShooterHardware {
 
 		private static ShooterHardware sInstance = new ShooterHardware();
-		final Spark masterSpark = new Spark(sPortConstants.vidarShooterMasterId),
-				slaveSpark = new Spark(sPortConstants.vidarShooterSlaveId);
+		final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId),
+				slaveSpark = new Spark(sPortConstants.nariShooterSlaveId);
 		final CANEncoder masterEncoder = masterSpark.getEncoder();
-		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.vidarShooterExtendingSolenoidId),
-				retractingSolenoid = new Solenoid(sPortConstants.vidarShooterRetractingSolenoidId);
-		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.vidarShooterBlockingSolenoidId);
+		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.nariShooterExtendingSolenoidId),
+				retractingSolenoid = new Solenoid(sPortConstants.nariShooterRetractingSolenoidId);
+		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.nariShooterBlockingSolenoidId);
 
 		private ShooterHardware() {
 		}
@@ -135,7 +137,7 @@ public class HardwareAdapter {
 	static class SpinnerHardware {
 
 		private static SpinnerHardware sInstance = new SpinnerHardware();
-		final Talon talon = new Talon(sPortConstants.vidarSpinnerId);
+		final Talon talon = new Talon(sPortConstants.nariSpinnerId);
 		final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
 		private SpinnerHardware() {

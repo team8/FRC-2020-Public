@@ -44,9 +44,9 @@ public class RobotState {
 	public double shooterVelocity;
 
 	public CircularBuffer backIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
-			frontIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize);
-	public boolean hasBackUltrasonicBall, hasFrontUltrasonicBall;
-	public double backUltrasonicDistance, frontUltrasonicDistance;
+			frontIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
+			topIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize);
+	public boolean hasBackUltrasonicBall, hasFrontUltrasonicBall, hasTopUltrasonicBall;
 
 	public void resetUltrasonics() {
 		for (CircularBuffer buffer : List.of(backIndexerUltrasonicReadings, frontIndexerUltrasonicReadings)) {

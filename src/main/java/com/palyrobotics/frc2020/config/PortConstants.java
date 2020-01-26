@@ -7,42 +7,43 @@ public class PortConstants extends ConfigBase {
 	/**
 	 * Climber
 	 */
-	public int vidarClimberHorizontalId;
-	public int vidarClimberVerticalId;
-	public int vidarClimberSolenoidId;
+	public int nariClimberHorizontalId;
+	public int nariClimberVerticalId;
+	public int nariClimberSolenoidId;
 
 	/**
 	 * Drivetrain
 	 */
-	public int vidarDriveLeftMasterId, vidarDriveLeftSlaveId;
-	public int vidarDriveRightMasterId, vidarDriveRightSlaveId;
+	public int nariDriveLeftMasterId, nariDriveLeftSlaveId;
+	public int nariDriveRightMasterId, nariDriveRightSlaveId;
 
 	/**
 	 * Indexer
 	 */
-	public int vidarIndexerHorizontalId;
-	public int vidarIndexerVerticalId;
-	public int vidarIndexerExtendingSolenoidId, vidarIndexerRetractingSolenoidId;
-	public int vidarIndexerBlockingSolenoidId;
-	public int vidarIndexerBackUltrasonicEcho, vidarIndexerBackUltrasonicPing;
-	public int vidarIndexerFrontUltrasonicEcho, vidarIndexerFrontUltrasonicPing;
+	public int nariIndexerHorizontalId;
+	public int nariIndexerVerticalId;
+	public int nariIndexerExtendingSolenoidId, nariIndexerRetractingSolenoidId;
+	public int nariIndexerBlockingSolenoidId;
+	public int nariIndexerBackUltrasonicEcho, nariIndexerBackUltrasonicPing;
+	public int nariIndexerFrontUltrasonicEcho, nariIndexerFrontUltrasonicPing;
+	public int nariIndexerTopUltrasonicEcho, nariIndexerTopUltrasonicPing;
 
 	/**
 	 * Intake
 	 */
-	public int vidarIntakeId;
-	public int vidarIntakeExtendingSolenoidId, vidarIntakeRetractingSolenoidId;
+	public int nariIntakeId;
+	public int nariIntakeExtendingSolenoidId, nariIntakeRetractingSolenoidId;
 
 	/**
 	 * Shooter
 	 */
-	public int vidarShooterMasterId, vidarShooterSlaveId;
-	public int vidarShooterExtendingSolenoidId, vidarShooterRetractingSolenoidId;
-	public int vidarShooterBlockingSolenoidId;
+	public int nariShooterMasterId, nariShooterSlaveId;
+	public int nariShooterExtendingSolenoidId, nariShooterRetractingSolenoidId;
+	public int nariShooterBlockingSolenoidId;
 
 	/**
 	 * Spinner
 	 */
-	public int vidarSpinnerId;
+	public int nariSpinnerId;
 
 }
