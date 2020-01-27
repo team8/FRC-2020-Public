@@ -10,12 +10,13 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 public class Intake extends SubsystemBase {
 
 	public enum IntakeState {
-		IDLE, INTAKE
+		IDLE, RAISE, INTAKE
 	}
 
 	private static Intake sInstance = new Intake();
 	private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
+	private boolean mSolenoidOutput = false;
 
 	private Intake() {
 	}
@@ -31,13 +32,21 @@ public class Intake extends SubsystemBase {
 			case IDLE:
 				mOutput.setIdle();
 				break;
+			case RAISE:
+				mOutput.setIdle();
+				mSolenoidOutput = false;
 			case INTAKE:
 				mOutput.setTargetVelocityProfiled(mConfig.intakingVelocity, mConfig.profiledVelocityGains);
+				mSolenoidOutput = true;
 				break;
 		}
 	}
 
 	public ControllerOutput getOutput() {
 		return mOutput;
+	}
+
+	public boolean getSolenoidOutput() {
+		return mSolenoidOutput;
 	}
 }

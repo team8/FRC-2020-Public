@@ -124,6 +124,8 @@ public class OperatorInterface {
 	private void updateIntakeCommands(Commands commands) {
 		if (mOperatorXboxController.getRightBumperPressed()) {
 			commands.intakeWantedState = Intake.IntakeState.INTAKE;
+		} else if (mOperatorXboxController.getLeftBumperPressed()) {
+			commands.intakeWantedState = Intake.IntakeState.RAISE;
 		} else {
 			commands.intakeWantedState = Intake.IntakeState.IDLE;
 		}
