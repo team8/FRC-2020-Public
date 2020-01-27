@@ -5,23 +5,25 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 
 /**
- * Completes after one update cycle, not immediately. It is possible that
- * {@link Commands} can indend to modify {@link RobotState}. However, we
+ * Completes after one update cycle has fully elapsed, not immediately. It is
+ * possible that {@link Commands} can intend to modify {@link RobotState}, so if
+ * our routine finished immediately, it may not update {@link RobotState}
+ * properly.
  */
 public abstract class OneUpdateRoutine extends RoutineBase {
 
-	private int mCounter;
+	private int mUpdateCount;
 
 	@Override
-	protected final void update(Commands commands, RobotState state) {
-		mCounter++;
-		updateOnce(commands);
+	protected final void update(Commands commands, @ReadOnly RobotState state) {
+		mUpdateCount++;
+		updateOnce(commands, state);
 	}
 
-	protected abstract void updateOnce(Commands commands);
+	protected abstract void updateOnce(Commands commands, @ReadOnly RobotState state);
 
 	@Override
 	public final boolean checkFinished(@ReadOnly RobotState state) {
-		return mCounter > 1;
+		return mUpdateCount > 1;
 	}
 }

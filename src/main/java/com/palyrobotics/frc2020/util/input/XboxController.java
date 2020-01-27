@@ -54,8 +54,12 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 		return getPOV() == 270;
 	}
 
-	public boolean getRightTriggerPressed() {
-		return getTriggerPressed(Hand.kRight);
+	public boolean getRightBumper() {
+		return getBumper(Hand.kRight);
+	}
+
+	public boolean getLeftBumper() {
+		return getBumper(Hand.kLeft);
 	}
 
 	public boolean getTriggerPressed(Hand hand) {
@@ -63,16 +67,20 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 				&& getTriggerAxis(hand) > kTriggerThreshold;
 	}
 
+	public boolean getRightTriggerPressed() {
+		return getTriggerPressed(Hand.kRight);
+	}
+
 	public boolean getLeftTriggerPressed() {
 		return getTriggerPressed(Hand.kLeft);
 	}
 
-	public boolean getLeftBumperPressed() {
-		return getBumperPressed(Hand.kLeft);
-	}
-
 	public boolean getRightBumperPressed() {
 		return getBumperPressed(Hand.kRight);
+	}
+
+	public boolean getLeftBumperPressed() {
+		return getBumperPressed(Hand.kLeft);
 	}
 
 	public void setRumble(boolean on) {

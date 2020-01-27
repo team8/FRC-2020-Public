@@ -20,6 +20,7 @@ import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class Robot extends TimedRobot {
 
@@ -31,7 +32,7 @@ public class Robot extends TimedRobot {
 	private final RoutineManager mRoutineManager = new RoutineManager();
 	private final HardwareReader mHardwareReader = new HardwareReader();
 	private final HardwareWriter mHardwareWriter = new HardwareWriter();
-	private Commands mCommands = new Commands();
+	private final Commands mCommands = new Commands();
 
 	/* Subsystems */
 	private final Climber mClimber = Climber.getInstance();
@@ -94,7 +95,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
-		resetOdometry();
 	}
 
 	private void startStage(RobotState.GamePeriod period) {
@@ -103,11 +103,6 @@ public class Robot extends TimedRobot {
 		setDriveIdleMode(false);
 		CSVWriter.cleanFile();
 		CSVWriter.resetTimer();
-	}
-
-	private void resetOdometry() {
-		mHardwareWriter.resetDriveSensors();
-		mRobotState.resetOdometry();
 	}
 
 	@Override
@@ -119,7 +114,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testInit() {
 		startStage(RobotState.GamePeriod.TESTING);
-		resetOdometry();
 	}
 
 	@Override
@@ -136,6 +130,7 @@ public class Robot extends TimedRobot {
 		mCommands.reset();
 		mHardwareReader.updateState(mRobotState);
 		mRoutineManager.update(mCommands, mRobotState);
+		resetOdometryIfWanted();
 		updateSubsystemsAndHardware();
 	}
 
@@ -145,12 +140,29 @@ public class Robot extends TimedRobot {
 		mHardwareReader.updateState(mRobotState);
 		mOperatorInterface.updateCommands(mCommands, mRobotState);
 		mRoutineManager.update(mCommands, mRobotState);
+		resetOdometryIfWanted();
 		updateSubsystemsAndHardware();
 	}
 
 	@Override
 	public void testPeriodic() {
 		teleopPeriodic();
+	}
+
+	/**
+	 * Resets the pose held by the odometry from {@link #mCommands}.
+	 *
+	 * Must happen before updating {@link #mRobotState} or routines using odometry
+	 * ({@link com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine})
+	 * since odometry is assumed to be in a correct state there.
+	 */
+	private void resetOdometryIfWanted() {
+		Pose2d wantedPose = mCommands.driveWantedOdometryPose;
+		if (wantedPose != null) {
+			mRobotState.resetOdometry(wantedPose);
+			mHardwareWriter.resetDriveSensors(wantedPose);
+			mCommands.driveWantedOdometryPose = null;
+		}
 	}
 
 	private String setupSubsystemsAndServices() {

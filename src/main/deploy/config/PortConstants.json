@@ -1,6 +1,6 @@
 {
-	"nariClimberHorizontalId": 0,
-	"nariClimberVerticalId": 1,
+	"nariClimberHorizontalId": 1,
+	"nariClimberVerticalId": 2,
 	"nariClimberSolenoidId": 0,
 	"nariDriveLeftMasterId": 3,
 	"nariDriveLeftSlaveId": 4,
@@ -17,13 +17,13 @@
 	"nariIndexerFrontUltrasonicPing": 3,
 	"nariIndexerTopUltrasonicEcho": 4,
 	"nariIndexerTopUltrasonicPing": 5,
-	"nariIntakeId": 17,
+	"nariIntakeId": 9,
 	"nariIntakeExtendingSolenoidId": 4,
 	"nariIntakeRetractingSolenoidId": 5,
-	"nariShooterMasterId": 20,
-	"nariShooterSlaveId": 21,
+	"nariShooterMasterId": 10,
+	"nariShooterSlaveId": 11,
 	"nariShooterExtendingSolenoidId": 6,
 	"nariShooterRetractingSolenoidId": 7,
 	"nariShooterBlockingSolenoidId": 0,
-	"nariSpinnerId": 25
+	"nariSpinnerId": 12
 }

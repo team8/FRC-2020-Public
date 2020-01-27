@@ -19,6 +19,10 @@ public class DriveHeadingRoutine extends TimeoutRoutineBase {
 	public DriveHeadingRoutine() {
 	}
 
+	/**
+	 * Heading is relative to absolute odometry rotation, not relative to current
+	 * rotation.
+	 */
 	public DriveHeadingRoutine(double headingDegrees) {
 		mTargetHeadingDegrees = headingDegrees;
 	}
@@ -35,6 +39,7 @@ public class DriveHeadingRoutine extends TimeoutRoutineBase {
 
 	@Override
 	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
+		// TODO: check velocity as well
 		return Math.abs(state.driveHeadingDegrees - mTargetHeadingDegrees) < mDriveConfig.allowableHeadingErrorDegrees;
 	}
 
