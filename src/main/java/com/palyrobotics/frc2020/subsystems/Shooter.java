@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import static com.palyrobotics.frc2020.config.constants.ShooterConstants.kTargetDistanceToVelocity;
+
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
@@ -39,7 +41,8 @@ public class Shooter extends SubsystemBase {
 				mFlywheelOutput.setIdle();
 				break;
 			case MANUAL_VELOCITY:
-				mFlywheelOutput.setTargetVelocity(0.0, mConfig.velocityGains);
+				double targetVelocity = kTargetDistanceToVelocity.getInterpolated(robotState.distanceToTarget);
+				mFlywheelOutput.setTargetVelocity(targetVelocity, mConfig.velocityGains);
 				break;
 		}
 	}
