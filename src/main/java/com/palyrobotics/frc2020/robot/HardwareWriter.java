@@ -11,12 +11,14 @@ import com.palyrobotics.frc2020.util.StringUtil;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+
 public class HardwareWriter {
 
 	public static final int TIMEOUT_MS = 50,
 			// Different from slot index.
 			// 0 for Primary closed-loop. 1 for auxiliary closed-loop.
-			PID_IDX = 0;
+			PID_INDEX = 0;
 	private static final String LOGGER_TAG = StringUtil.classToJsonName(HardwareWriter.class);
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	private final Climber mClimber = Climber.getInstance();
@@ -47,7 +49,7 @@ public class HardwareWriter {
 		for (Falcon falcon : driveHardware.falcons) {
 			falcon.configFactoryDefault();
 			falcon.enableVoltageCompensation(true);
-			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, PID_IDX, TIMEOUT_MS);
+			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, PID_INDEX, TIMEOUT_MS);
 			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero, TIMEOUT_MS);
 			falcon.configOpenloopRamp(driveConfig.controllerRampRate, TIMEOUT_MS);
 			falcon.configClosedloopRamp(driveConfig.controllerRampRate, TIMEOUT_MS);
@@ -64,7 +66,7 @@ public class HardwareWriter {
 		driveHardware.rightSlaveFalcon.setInverted(false);
 		driveHardware.rightSlaveFalcon.follow(driveHardware.rightMasterFalcon);
 
-		resetDriveSensors();
+		resetDriveSensors(new Pose2d());
 	}
 
 	private void configureIndexerHardware() {
@@ -96,12 +98,12 @@ public class HardwareWriter {
 		spinnerHardware.talon.configFactoryDefault(TIMEOUT_MS);
 	}
 
-	public void resetDriveSensors() {
+	public void resetDriveSensors(Pose2d pose) {
 		var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-		driveHardware.gyro.setYaw(0, TIMEOUT_MS);
-		driveHardware.gyro.setFusedHeading(0, TIMEOUT_MS);
-		driveHardware.gyro.setAccumZAngle(0, TIMEOUT_MS);
-		driveHardware.falcons.forEach(spark -> spark.setSelectedSensorPosition(0, PID_IDX, TIMEOUT_MS));
+		driveHardware.gyro.setYaw(0.0, TIMEOUT_MS);
+		driveHardware.gyro.setFusedHeading(pose.getRotation().getDegrees(), TIMEOUT_MS);
+		driveHardware.gyro.setAccumZAngle(0.0, TIMEOUT_MS);
+		driveHardware.falcons.forEach(spark -> spark.setSelectedSensorPosition(0, PID_INDEX, TIMEOUT_MS));
 		Log.info(LOGGER_TAG, "Drive sensors reset");
 	}
 

@@ -32,10 +32,12 @@ public class Intake extends SubsystemBase {
 		switch (state) {
 			case IDLE:
 				mOutput.setIdle();
+				mUpDownOutput = DualSolenoid.State.OFF;
 				break;
 			case RAISE:
 				mOutput.setIdle();
 				mUpDownOutput = DualSolenoid.State.REVERSE;
+				break;
 			case INTAKE:
 				mOutput.setTargetVelocityProfiled(mConfig.intakingVelocity, mConfig.profiledVelocityGains);
 				mUpDownOutput = DualSolenoid.State.FORWARD;

@@ -55,12 +55,9 @@ public class OperatorInterface {
 	}
 
 	/**
-	 * Returns modified commands
-	 *
-	 * @param commands Last commands
-	 * @param state
+	 * Modifies commands based on operator input devices.
 	 */
-	Commands updateCommands(Commands commands, @ReadOnly RobotState state) {
+	void updateCommands(Commands commands, @ReadOnly RobotState state) {
 
 		commands.shouldClearCurrentRoutines = false;
 
@@ -73,8 +70,6 @@ public class OperatorInterface {
 		commands.shouldClearCurrentRoutines = mDriveStick.getTriggerPressed();
 
 		mOperatorXboxController.updateLastInputs();
-
-		return commands;
 	}
 
 	private void updateClimberCommands(Commands commands) {
@@ -108,8 +103,10 @@ public class OperatorInterface {
 		/* Path Following */
 		if (mOperatorXboxController.getDPadUpPressed()) {
 			commands.addWantedRoutine(new ShootThreeFriendlyTrenchThreeShootThree().getRoutine());
-		} else if (mOperatorXboxController.getDPadDownPressed()) {
-			commands.addWantedRoutine(new DrivePathRoutine(true, kTestWaypoints));
+		} else if (mOperatorXboxController.getDPadRightPressed()) {
+			commands.addWantedRoutine(new DrivePathRoutine(kTestWaypoints));
+		} else if (mOperatorXboxController.getDPadLeftPressed()) {
+			commands.addWantedRoutine(new DrivePathRoutine(kTestWaypoints).reverse());
 		}
 	}
 
@@ -126,8 +123,6 @@ public class OperatorInterface {
 			commands.intakeWantedState = Intake.IntakeState.INTAKE;
 		} else if (mOperatorXboxController.getLeftBumperPressed()) {
 			commands.intakeWantedState = Intake.IntakeState.RAISE;
-		} else {
-			commands.intakeWantedState = Intake.IntakeState.IDLE;
 		}
 	}
 
@@ -135,8 +130,7 @@ public class OperatorInterface {
 		// TODO Figure out better button
 		if (mOperatorXboxController.getDPadRightPressed()) {
 			commands.spinnerWantedState = Spinner.SpinnerState.POSITION_CONTROL;
-		}
-		if (mOperatorXboxController.getDPadLeftPressed()) {
+		} else if (mOperatorXboxController.getDPadLeftPressed()) {
 			commands.spinnerWantedState = Spinner.SpinnerState.ROTATION_CONTROL;
 		}
 	}

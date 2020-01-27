@@ -1,12 +1,21 @@
 package com.palyrobotics.frc2020.util;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.util.Units;
+
 /**
  * This class holds a bunch of static methods and variables needed for
  * mathematics
  */
-public class MathUtil {
+public class Util {
 
-	private MathUtil() {
+	private Util() {
+	}
+
+	public static Pose2d newPose(double xInches, double yInches, double headingDegrees) {
+		return new Pose2d(Units.inchesToMeters(xInches), Units.inchesToMeters(yInches),
+				Rotation2d.fromDegrees(headingDegrees));
 	}
 
 	/**
@@ -94,5 +103,9 @@ public class MathUtil {
 			angle += 2.0 * Math.PI;
 		}
 		return angle;
+	}
+
+	public static boolean approximatelyEqual(double d1, double d2) {
+		return Math.abs(d1 - d2) < 1e-4;
 	}
 }

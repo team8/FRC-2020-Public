@@ -7,6 +7,7 @@ import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 /**
@@ -39,7 +40,7 @@ public class Commands {
 	private DriveOutputs driveWantedSignal;
 	// Path Following
 	private Trajectory driveWantedTrajectory;
-	private double driveWantedTrajectoryTimeSeconds;
+	public Pose2d driveWantedOdometryPose;
 	// Turning
 	private double driveWantedHeadingDegrees;
 	// Climbing
@@ -79,10 +80,6 @@ public class Commands {
 		return driveWantedTrajectory;
 	}
 
-	public double getDriveWantedTrajectoryTimeSeconds() {
-		return driveWantedTrajectoryTimeSeconds;
-	}
-
 	public double getDriveWantedHeadingDegrees() {
 		return driveWantedHeadingDegrees;
 	}
@@ -104,10 +101,9 @@ public class Commands {
 		driveWantedSignal = signal;
 	}
 
-	public void setDriveFollowPath(Trajectory trajectory, double trajectoryTimeElapsedSeconds) {
+	public void setDriveFollowPath(Trajectory trajectory) {
 		driveWantedState = Drive.DriveState.FOLLOW_PATH;
 		driveWantedTrajectory = trajectory;
-		driveWantedTrajectoryTimeSeconds = trajectoryTimeElapsedSeconds;
 	}
 
 	public void setDriveVisionAlign() {

@@ -35,7 +35,7 @@ public class HardwareReader {
 	void updateState(RobotState robotState) {
 		var drivetrain = HardwareAdapter.DrivetrainHardware.getInstance();
 
-		robotState.driveHeadingDegrees = Math.IEEEremainder(drivetrain.gyro.getFusedHeading(), 360.0);
+		robotState.driveHeadingDegrees = drivetrain.gyro.getFusedHeading();
 
 		robotState.driveLeftVelocity = drivetrain.leftMasterFalcon.getConvertedVelocity();
 		robotState.driveRightVelocity = drivetrain.rightMasterFalcon.getConvertedVelocity();
@@ -59,10 +59,10 @@ public class HardwareReader {
 		robotState.shooterVelocity = HardwareAdapter.ShooterHardware.getInstance().masterEncoder.getVelocity();
 
 		// Updating ultrasonics
-		IndexerConfig indexerConfig = Configs.get(IndexerConfig.class);
-		Ultrasonic backUltrasonic = HardwareAdapter.IndexerHardware.getInstance().backUltrasonic,
-				frontUltrasonic = HardwareAdapter.IndexerHardware.getInstance().frontUltrasonic,
-				topUltrasonic = HardwareAdapter.IndexerHardware.getInstance().topUltrasonic;
+		var indexerConfig = Configs.get(IndexerConfig.class);
+		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
+		Ultrasonic backUltrasonic = indexerHardware.backUltrasonic, frontUltrasonic = indexerHardware.frontUltrasonic,
+				topUltrasonic = indexerHardware.topUltrasonic;
 		robotState.backIndexerUltrasonicReadings.addFirst(backUltrasonic.getRangeInches());
 		robotState.frontIndexerUltrasonicReadings.addFirst(frontUltrasonic.getRangeInches());
 		robotState.topIndexerUltrasonicReadings.addFirst(topUltrasonic.getRangeInches());
@@ -87,5 +87,4 @@ public class HardwareReader {
 		}
 		return count >= requiredCount;
 	}
-
 }

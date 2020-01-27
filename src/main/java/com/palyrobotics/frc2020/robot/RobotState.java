@@ -27,7 +27,6 @@ public class RobotState {
 	// (logger, misc, etc.)
 	public static final String LOGGER_TAB = StringUtil.classToJsonName(RobotState.class);
 	public static final int kUltrasonicBufferSize = 10;
-	private static RobotState sInstance = new RobotState();
 	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;
 	public double driveHeadingDegrees;
@@ -40,9 +39,7 @@ public class RobotState {
 	public double closestColorConfidence;
 	public Color detectedRGBVals;
 	public ColorMatchResult closestColorRGB;
-
 	public double shooterVelocity;
-
 	public CircularBuffer backIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
 			frontIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
 			topIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize);
@@ -56,11 +53,8 @@ public class RobotState {
 		}
 	}
 
-	public RobotState() {
-	}
-
-	public void resetOdometry() {
-		driveOdometry.resetPosition(new Pose2d(), new Rotation2d());
+	public void resetOdometry(Pose2d pose) {
+		driveOdometry.resetPosition(pose, new Rotation2d());
 		Log.info(LOGGER_TAB, "Odometry reset!");
 	}
 

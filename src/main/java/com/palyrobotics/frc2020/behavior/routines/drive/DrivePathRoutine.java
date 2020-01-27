@@ -10,59 +10,85 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 
 public class DrivePathRoutine extends TimeoutRoutineBase {
 
-	private final Trajectory mTrajectory;
+	private static final double TIMEOUT_MULTIPLIER = 1.1;
+	private final List<Pose2d> mWaypoints;
+	private final TrajectoryConfig mTrajectoryConfig = DriveConstants.getStandardTrajectoryConfig();
+	private boolean mShouldReversePath;
+	private Trajectory mTrajectory;
 
+	/**
+	 * @param waypoints Points to move towards from current pose. No initial pose
+	 *                  needs to be supplied.
+	 */
 	public DrivePathRoutine(Pose2d... waypoints) {
 		this(Arrays.asList(waypoints));
 	}
 
+	/**
+	 * @see #DrivePathRoutine(Pose2d...)
+	 */
 	public DrivePathRoutine(List<Pose2d> waypoints) {
-		this(false, waypoints);
+		mWaypoints = waypoints;
 	}
 
-	public DrivePathRoutine(boolean isReversed, List<Pose2d> waypoints) {
-		mTrajectory = TrajectoryGenerator.generateTrajectory(waypoints, getGenerationConfig(isReversed));
-		mTimeout = mTrajectory.getTotalTimeSeconds();
+	/**
+	 * Robot will try to drive in reverse while traversing the path. Does not
+	 * reverse the path itself.
+	 */
+	public DrivePathRoutine driveInReverse() {
+		mTrajectoryConfig.setReversed(true);
+		return this;
 	}
 
-	private TrajectoryConfig getGenerationConfig(boolean isReversed) {
-		TrajectoryConfig config = DriveConstants.getStandardTrajectoryConfig();
-		return isReversed ? config.setReversed(true) : config;
+	/**
+	 * Reverse points in the path. Does not make the robot drive in reverse.
+	 */
+	public DrivePathRoutine reversePath() {
+		mShouldReversePath = true;
+		return this;
 	}
 
-	public DrivePathRoutine(boolean isReversed, Pose2d... waypoints) {
-		this(isReversed, Arrays.asList(waypoints));
-	}
-
-	public DrivePathRoutine(Pose2d start, List<Translation2d> interiorWaypoints, Pose2d end) {
-		this(false, start, interiorWaypoints, end);
-	}
-
-	public DrivePathRoutine(boolean isReversed, Pose2d start, List<Translation2d> interiorWaypoints, Pose2d end) {
-		mTrajectory = TrajectoryGenerator.generateTrajectory(start, interiorWaypoints, end,
-				getGenerationConfig(isReversed));
-		mTimeout = mTrajectory.getTotalTimeSeconds();
+	/**
+	 * Reverses the path and attempts to drive it backwards. Useful for getting a
+	 * robot back to its starting position after running a path.
+	 */
+	public DrivePathRoutine reverse() {
+		driveInReverse();
+		reversePath();
+		return this;
 	}
 
 	@Override
-	public void update(Commands commands, @ReadOnly RobotState state) {
-		commands.setDriveFollowPath(mTrajectory, mTimer.get());
-	}
-
-	@Override
-	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
-		return false;
+	public void start(@ReadOnly RobotState state) {
+		super.start(state);
+		var waypointsWithStart = new LinkedList<>(mWaypoints);
+		if (mShouldReversePath) {
+			Collections.reverse(waypointsWithStart);
+		}
+		waypointsWithStart.addFirst(state.drivePose);
+		mTrajectory = TrajectoryGenerator.generateTrajectory(waypointsWithStart, mTrajectoryConfig);
+		mTimeout = mTrajectory.getTotalTimeSeconds() * TIMEOUT_MULTIPLIER;
 	}
 
 	@Override
 	public Set<SubsystemBase> getRequiredSubsystems() {
 		return Set.of(mDrive);
+	}
+
+	@Override
+	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+		commands.setDriveFollowPath(mTrajectory);
+	}
+
+	@Override
+	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
+		// TODO: possibly implement to see if we are within a tolerance of the end early
+		return false;
 	}
 }

@@ -5,7 +5,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.util.MathUtil;
+import com.palyrobotics.frc2020.util.Util;
 
 /**
  * Implements constant curvature driving. Yoinked from 254 code
@@ -23,8 +23,8 @@ public class ChezyDriveController extends Drive.DriveController {
 
 		double absoluteThrottle = Math.abs(throttle), absoluteWheel = Math.abs(wheel);
 
-		wheel = MathUtil.handleDeadBand(wheel, DriveConstants.kDeadBand);
-		throttle = MathUtil.handleDeadBand(throttle, DriveConstants.kDeadBand);
+		wheel = Util.handleDeadBand(wheel, DriveConstants.kDeadBand);
+		throttle = Util.handleDeadBand(throttle, DriveConstants.kDeadBand);
 
 		double negativeWheelInertia = wheel - mLastWheel;
 		mLastWheel = wheel;
@@ -66,7 +66,7 @@ public class ChezyDriveController extends Drive.DriveController {
 			if (absoluteThrottle < mDriveConfig.quickStopDeadBand) {
 				double alpha = mDriveConfig.quickStopWeight;
 				mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator
-						+ alpha * MathUtil.clamp01(wheel) * mDriveConfig.quickStopScalar;
+						+ alpha * Util.clamp01(wheel) * mDriveConfig.quickStopScalar;
 			}
 			overPower = 1.0;
 			angularPower = wheel * mDriveConfig.quickTurnScalar;
