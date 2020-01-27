@@ -7,7 +7,7 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
-public class DriveTurnVisionAlignRoutine extends DriveTurnRoutine {
+public class DriveTurnVisionAlignRoutine extends DriveHeadingRoutine {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {

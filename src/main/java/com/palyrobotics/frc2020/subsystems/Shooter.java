@@ -11,7 +11,7 @@ import com.palyrobotics.frc2020.util.control.DualSolenoid;
 public class Shooter extends SubsystemBase {
 
 	public enum ShooterState {
-		IDLE, VELOCITY
+		IDLE, MANUAL_VELOCITY, VISION_VELOCITY
 	}
 
 	public enum HoodState {
@@ -38,7 +38,7 @@ public class Shooter extends SubsystemBase {
 			case IDLE:
 				mFlywheelOutput.setIdle();
 				break;
-			case VELOCITY:
+			case MANUAL_VELOCITY:
 				mFlywheelOutput.setTargetVelocity(0.0, mConfig.velocityGains);
 				break;
 		}

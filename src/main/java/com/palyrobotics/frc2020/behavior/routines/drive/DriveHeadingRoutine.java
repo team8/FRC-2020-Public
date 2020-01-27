@@ -11,15 +11,15 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 
-public class DriveTurnRoutine extends TimeoutRoutineBase {
+public class DriveHeadingRoutine extends TimeoutRoutineBase {
 
 	protected double mTargetHeadingDegrees;
 	private DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
 
-	public DriveTurnRoutine() {
+	public DriveHeadingRoutine() {
 	}
 
-	public DriveTurnRoutine(double headingDegrees) {
+	public DriveHeadingRoutine(double headingDegrees) {
 		mTargetHeadingDegrees = headingDegrees;
 	}
 

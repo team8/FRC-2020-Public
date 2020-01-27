@@ -2,7 +2,7 @@ package com.palyrobotics.frc2020.robot;
 
 import java.util.List;
 
-import com.palyrobotics.frc2020.auto.modes.EnemyTrenchRunTwoShootFive;
+import com.palyrobotics.frc2020.auto.ShootThreeFriendlyTrenchThreeShootThree;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
@@ -107,7 +107,7 @@ public class OperatorInterface {
 		setVision(wantsAssistedVision);
 		/* Path Following */
 		if (mOperatorXboxController.getDPadUpPressed()) {
-			commands.addWantedRoutine(new EnemyTrenchRunTwoShootFive().getRoutine());
+			commands.addWantedRoutine(new ShootThreeFriendlyTrenchThreeShootThree().getRoutine());
 		} else if (mOperatorXboxController.getDPadDownPressed()) {
 			commands.addWantedRoutine(new DrivePathRoutine(true, kTestWaypoints));
 		}

@@ -28,22 +28,8 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	}
 
 	public DrivePathRoutine(boolean isReversed, List<Pose2d> waypoints) {
-		mTrajectory = TrajectoryGenerator.generateTrajectory(getGenerationPoints(isReversed, waypoints),
-				getGenerationConfig(isReversed));
+		mTrajectory = TrajectoryGenerator.generateTrajectory(waypoints, getGenerationConfig(isReversed));
 		mTimeout = mTrajectory.getTotalTimeSeconds();
-	}
-
-	private <T> List<T> getGenerationPoints(boolean isReversed, List<T> waypoints) {
-		List<T> generatorPoints;
-		if (isReversed) {
-			// We need to clone waypoints since reversing is in-place and we don't want to
-			// modify passed in list
-			generatorPoints = new ArrayList<>(waypoints);
-			Collections.reverse(generatorPoints);
-		} else {
-			generatorPoints = waypoints;
-		}
-		return generatorPoints;
 	}
 
 	private TrajectoryConfig getGenerationConfig(boolean isReversed) {
@@ -60,8 +46,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	}
 
 	public DrivePathRoutine(boolean isReversed, Pose2d start, List<Translation2d> interiorWaypoints, Pose2d end) {
-		mTrajectory = TrajectoryGenerator.generateTrajectory(isReversed ? end : start,
-				getGenerationPoints(isReversed, interiorWaypoints), isReversed ? start : end,
+		mTrajectory = TrajectoryGenerator.generateTrajectory(start, interiorWaypoints, end,
 				getGenerationConfig(isReversed));
 		mTimeout = mTrajectory.getTotalTimeSeconds();
 	}
