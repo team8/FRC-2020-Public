@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.control.DualSolenoid;
 import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
@@ -74,8 +75,8 @@ public class HardwareAdapter {
 		private static IndexerHardware sInstance = new IndexerHardware();
 		final Spark horizontalSpark = new Spark(sPortConstants.nariIndexerHorizontalId),
 				verticalSpark = new Spark(sPortConstants.nariIndexerVerticalId);
-		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.nariIndexerExtendingSolenoidId),
-				retractingSolenoid = new Solenoid(sPortConstants.nariIndexerRetractingSolenoidId);
+		final DualSolenoid hopperSolenoid = new DualSolenoid(sPortConstants.nariIndexerExtendingSolenoidId,
+				sPortConstants.nariIndexerRetractingSolenoidId);
 		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.nariIndexerBlockingSolenoidId);
 		final Ultrasonic backUltrasonic = new Ultrasonic(sPortConstants.nariIndexerBackUltrasonicPing,
 				sPortConstants.nariIndexerBackUltrasonicEcho),
@@ -99,8 +100,8 @@ public class HardwareAdapter {
 
 		private static IntakeHardware sInstance = new IntakeHardware();
 		final Talon talon = new Talon(sPortConstants.nariIntakeId);
-		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.nariIntakeExtendingSolenoidId),
-				retractingSolenoid = new Solenoid(sPortConstants.nariIntakeRetractingSolenoidId);
+		final DualSolenoid upDownSolenoid = new DualSolenoid(sPortConstants.nariIntakeExtendingSolenoidId,
+				sPortConstants.nariIntakeRetractingSolenoidId);
 
 		private IntakeHardware() {
 		}
@@ -119,8 +120,8 @@ public class HardwareAdapter {
 		final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId),
 				slaveSpark = new Spark(sPortConstants.nariShooterSlaveId);
 		final CANEncoder masterEncoder = masterSpark.getEncoder();
-		final Solenoid extendingSolenoid = new Solenoid(sPortConstants.nariShooterExtendingSolenoidId),
-				retractingSolenoid = new Solenoid(sPortConstants.nariShooterRetractingSolenoidId);
+		final DualSolenoid upDownSolenoid = new DualSolenoid(sPortConstants.nariShooterExtendingSolenoidId,
+				sPortConstants.nariShooterRetractingSolenoidId);
 		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.nariShooterBlockingSolenoidId);
 
 		private ShooterHardware() {

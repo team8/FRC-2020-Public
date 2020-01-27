@@ -145,16 +145,14 @@ public class HardwareWriter {
 	private void updateIntake() {
 		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
 		intakeHardware.talon.setOutput(mIntake.getOutput());
-		intakeHardware.extendingSolenoid.set(mIntake.getSolenoidOutput());
-		intakeHardware.retractingSolenoid.set(!mIntake.getSolenoidOutput());
+		intakeHardware.upDownSolenoid.set(mIntake.getUpDownOutput());
 	}
 
 	private void updateShooter() {
 		var shooterHardware = HardwareAdapter.ShooterHardware.getInstance();
 		shooterHardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
 		shooterHardware.blockingSolenoid.set(mShooter.getBlockingOutput());
-		shooterHardware.extendingSolenoid.set(mShooter.getExtendingOutput());
-		shooterHardware.retractingSolenoid.set(mShooter.getRetractingOutput());
+		shooterHardware.upDownSolenoid.set(mShooter.getUpDownOutput());
 	}
 
 	private void updateSpinner() {

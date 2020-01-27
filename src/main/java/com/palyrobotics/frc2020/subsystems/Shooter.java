@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.control.DualSolenoid;
 
 public class Shooter extends SubsystemBase {
 
@@ -20,7 +21,8 @@ public class Shooter extends SubsystemBase {
 	private static Shooter sInstance = new Shooter();
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
 	private ControllerOutput mFlywheelOutput = new ControllerOutput();
-	private boolean mExtendingOutput, mRetractingOutput, mBlockingOutput;
+	private DualSolenoid.State mUpDownOutput;
+	private boolean mBlockingOutput;
 
 	private Shooter() {
 	}
@@ -46,12 +48,8 @@ public class Shooter extends SubsystemBase {
 		return mFlywheelOutput;
 	}
 
-	public boolean getExtendingOutput() {
-		return mExtendingOutput;
-	}
-
-	public boolean getRetractingOutput() {
-		return mRetractingOutput;
+	public DualSolenoid.State getUpDownOutput() {
+		return mUpDownOutput;
 	}
 
 	public boolean getBlockingOutput() {
