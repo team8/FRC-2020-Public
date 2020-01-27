@@ -21,7 +21,7 @@ public class Shooter extends SubsystemBase {
 	private static Shooter sInstance = new Shooter();
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
 	private ControllerOutput mFlywheelOutput = new ControllerOutput();
-	private DualSolenoid.State mUpDownOutput;
+	private DualSolenoid.State mUpDownOutput = DualSolenoid.State.REVERSE;
 	private boolean mBlockingOutput;
 
 	private Shooter() {
