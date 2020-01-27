@@ -20,7 +20,7 @@ public class SetOdometryRoutine extends OneUpdateRoutine {
 	}
 
 	public SetOdometryRoutine(double xInches, double yInches, double headingDegrees) {
-		mPose = Util.newPose(xInches, yInches, headingDegrees);
+		mPose = Util.newWaypoint(xInches, yInches, headingDegrees);
 	}
 
 	@Override

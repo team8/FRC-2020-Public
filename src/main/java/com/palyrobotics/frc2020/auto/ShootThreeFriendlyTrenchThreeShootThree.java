@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2020.auto;
 
-import static com.palyrobotics.frc2020.util.Util.newPose;
+import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
@@ -13,11 +13,11 @@ public class ShootThreeFriendlyTrenchThreeShootThree extends AutoModeBase {
 	@Override
 	public RoutineBase getRoutine() {
 
-		var getTrenchBalls = new DrivePathRoutine(newPose(40, 55, 0), newPose(170, 55, 0));
-
-		var turnAroundToShoot = new DrivePathRoutine(newPose(165, 60, 180));
-
 		var initialOdometry = new SetOdometryRoutine(0, 0, 180);
+
+		var getTrenchBalls = new DrivePathRoutine(newWaypoint(40, 55, 0), newWaypoint(170, 55, 0));
+
+		var turnAroundToShoot = new DrivePathRoutine(newWaypoint(165, 60, 180));
 
 		return new SequentialRoutine(initialOdometry, getTrenchBalls, turnAroundToShoot);
 	}

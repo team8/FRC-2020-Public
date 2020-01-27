@@ -1,11 +1,13 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import static com.palyrobotics.frc2020.config.constants.ShooterConstants.kTargetDistanceToHoodState;
 import static com.palyrobotics.frc2020.config.constants.ShooterConstants.kTargetDistanceToVelocity;
 
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 import com.palyrobotics.frc2020.util.control.DualSolenoid;
@@ -36,15 +38,32 @@ public class Shooter extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		// TODO hood state machine, set solenoid outputs, target velocity of shooter
+		double targetVelocity;
 		switch (commands.shooterWantedState) {
-			case IDLE:
-				mFlywheelOutput.setIdle();
+			default:
+				targetVelocity = 0.0;
 				break;
 			case MANUAL_VELOCITY:
-				double targetVelocity = kTargetDistanceToVelocity.getInterpolated(robotState.distanceToTarget);
-				mFlywheelOutput.setTargetVelocity(targetVelocity, mConfig.velocityGains);
+				// TODO: implement
+				targetVelocity = 0.0;
+				break;
+			case VISION_VELOCITY:
+				targetVelocity = kTargetDistanceToVelocity.getInterpolated(robotState.visionDistanceToTarget);
 				break;
 		}
+		targetVelocity = Util.clamp(targetVelocity, 0.0, mConfig.maxVelocity);
+		HoodState hoodState = kTargetDistanceToHoodState.floorEntry(targetVelocity).getValue();
+		switch (hoodState) {
+			case LOW:
+				mUpDownOutput = DualSolenoid.State.REVERSE;
+				mBlockingOutput = false;
+				break;
+			case MIDDLE:
+				break;
+			case HIGH:
+				break;
+		}
+		mFlywheelOutput.setTargetVelocity(targetVelocity, mConfig.velocityGains);
 	}
 
 	public ControllerOutput getFlywheelOutput() {

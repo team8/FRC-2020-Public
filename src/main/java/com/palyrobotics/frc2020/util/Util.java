@@ -13,7 +13,7 @@ public class Util {
 	private Util() {
 	}
 
-	public static Pose2d newPose(double xInches, double yInches, double headingDegrees) {
+	public static Pose2d newWaypoint(double xInches, double yInches, double headingDegrees) {
 		return new Pose2d(Units.inchesToMeters(xInches), Units.inchesToMeters(yInches),
 				Rotation2d.fromDegrees(headingDegrees));
 	}
