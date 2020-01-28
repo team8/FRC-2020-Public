@@ -37,7 +37,6 @@ public class Shooter extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		// TODO hood state machine, set solenoid outputs, target velocity of shooter
 		double targetVelocity;
 		switch (commands.getShooterWantedState()) {
 			case MANUAL_VELOCITY:
@@ -52,23 +51,19 @@ public class Shooter extends SubsystemBase {
 		}
 		targetVelocity = Util.clamp(targetVelocity, 0.0, mConfig.maxVelocity);
 		HoodState targetHoodState = kTargetDistanceToHoodState.floorEntry(targetVelocity).getValue();
+		boolean isHoodExtended = robotState.shooterHoodSolenoidState.isExtended();
 		switch (targetHoodState) {
 			case LOW:
 				mHoodOutput = DualSolenoid.Output.REVERSE;
 				mBlockingOutput = false;
 				break;
 			case MIDDLE:
-				if (robotState.shooterHoodSolenoidState.isExtended()) {
-					mHoodOutput = DualSolenoid.Output.REVERSE;
-					mBlockingOutput = true;
-				} else {
-					mBlockingOutput = false;
-					mHoodOutput = DualSolenoid.Output.FORWARD;
-				}
+				mBlockingOutput = isHoodExtended;
+				mHoodOutput = isHoodExtended ? DualSolenoid.Output.REVERSE : DualSolenoid.Output.FORWARD;
 				break;
 			case HIGH:
 				mHoodOutput = DualSolenoid.Output.FORWARD;
-				mBlockingOutput = false;
+				mBlockingOutput = isHoodExtended;
 				break;
 		}
 		mFlywheelOutput.setTargetVelocity(targetVelocity, mConfig.velocityGains);

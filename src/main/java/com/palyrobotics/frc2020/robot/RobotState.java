@@ -40,7 +40,8 @@ public class RobotState {
 	public Pose2d drivePose = new Pose2d();
 	/* Shooter */
 	public double shooterVelocity;
-	public SolenoidState shooterHoodSolenoidState, shooterBlockingSolenoidState;
+	public SolenoidState shooterHoodSolenoidState = new SolenoidState(),
+			shooterBlockingSolenoidState = new SolenoidState();
 	// TODO: Reorder this and add comments to separate by subsystem and function
 	public CircularBuffer backIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
 			frontIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
