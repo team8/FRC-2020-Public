@@ -1,5 +1,9 @@
 {
-    "kClimberMaxHeight": 0,
-    "climbingMultiplier": 1,
-    "adjustingOutput": 0.5
+    "climberTopHeight": 0,
+    "loweringPercentOutput": -0.25,
+    "climbingPercentOutput": -0.8,
+    "raisingArbitraryDemand": 0,
+    "raisingGains": {
+
+    }
 }

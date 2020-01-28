@@ -10,11 +10,13 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 public class Climber extends SubsystemBase {
 
 	public enum ClimberState {
-		CLIMBING, ADJUSTING_LEFT, ADJUSTING_RIGHT, IDLE
+		RAISING, LOWERING_TO_BAR, CLIMBING, ADJUSTING, IDLE
 	}
 
 	private static Climber sInstance = new Climber();
 	private ControllerOutput mClimbingOutput = new ControllerOutput(), mAdjustingOutput = new ControllerOutput();
+	private boolean mSolenoidOutput = false;
+	private ClimberState mState = ClimberState.IDLE;
 	private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
 
 	private Climber() {
@@ -26,24 +28,33 @@ public class Climber extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		ClimberState state = commands.climberWantedState;
-		switch (state) {
-			case CLIMBING:
-				double wantedOutput = commands.getClimberWantedOutput();
-				mClimbingOutput.setPercentOutput(wantedOutput);
+		mState = commands.climberWantedState;
+		switch (mState) {
+			case RAISING:
+				mClimbingOutput.setTargetPositionProfiled(mConfig.climberTopHeight, mConfig.raisingArbitraryDemand,
+						mConfig.raisingGains);
 				mAdjustingOutput.setIdle();
+				mSolenoidOutput = true;
 				break;
-			case ADJUSTING_LEFT:
-				mClimbingOutput.setIdle();
-				mAdjustingOutput.setPercentOutput(-mConfig.adjustingOutput);
+			case LOWERING_TO_BAR:
+				mClimbingOutput.setPercentOutput(mConfig.loweringPercentOutput);
+				mAdjustingOutput.setIdle();
+				mSolenoidOutput = true;
 				break;
-			case ADJUSTING_RIGHT:
+			case CLIMBING:
+				mClimbingOutput.setPercentOutput(mConfig.climbingPercentOutput);
+				mAdjustingOutput.setIdle();
+				mSolenoidOutput = true;
+				break;
+			case ADJUSTING:
 				mClimbingOutput.setIdle();
-				mAdjustingOutput.setPercentOutput(mConfig.adjustingOutput);
+				mAdjustingOutput.setPercentOutput(commands.climberWantedAdjustingPercentOutput);
+				mSolenoidOutput = false;
 				break;
 			case IDLE:
 				mClimbingOutput.setIdle();
 				mAdjustingOutput.setIdle();
+				mSolenoidOutput = false;
 				break;
 		}
 	}

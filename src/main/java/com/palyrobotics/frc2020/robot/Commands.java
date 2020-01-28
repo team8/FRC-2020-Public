@@ -44,6 +44,10 @@ public class Commands {
 	private double shooterManualWantedFlywheelVelocity;
 	/* Spinner */
 	public Spinner.SpinnerState spinnerWantedState;
+	private double driveWantedHeadingDegrees;
+	// Climbing
+	public double climberWantedVelocity;
+	public double climberWantedAdjustingPercentOutput;
 
 	public void addWantedRoutines(RoutineBase... wantedRoutines) {
 		for (RoutineBase wantedRoutine : wantedRoutines) {
@@ -61,11 +65,15 @@ public class Commands {
 		climberWantedOutput = output;
 	}
 
-	public double getClimberWantedOutput() {
-		return climberWantedOutput;
+	public void setClimberWantedVelocity(double velocity) {
+		climberWantedVelocity = velocity;
 	}
 
 	/* Drive */
+	public void setClimberWantedAdjustingPercentOutput(double percentOutput) {
+		climberWantedAdjustingPercentOutput = percentOutput;
+	}
+
 	public void setDriveSignal(DriveOutputs signal) {
 		driveWantedState = Drive.DriveState.SIGNAL;
 		driveWantedSignal = signal;

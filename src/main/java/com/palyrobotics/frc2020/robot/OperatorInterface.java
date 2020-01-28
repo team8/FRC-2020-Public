@@ -8,12 +8,12 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
-import com.palyrobotics.frc2020.subsystems.*;
+import com.palyrobotics.frc2020.subsystems.Indexer;
+import com.palyrobotics.frc2020.subsystems.Intake;
+import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
-
-import edu.wpi.first.wpilibj.GenericHID;
 
 // TODO: refactor buttons for controlling into well-named constants
 /**
@@ -49,21 +49,6 @@ public class OperatorInterface {
 
 	private void updateClimberCommands(Commands commands) {
 		ClimberConfig mConfig = Configs.get(ClimberConfig.class);
-		double rightStick = -mOperatorXboxController.getY(GenericHID.Hand.kRight);
-		if (Math.abs(rightStick) > 0.1) {
-			commands.climberWantedState = Climber.ClimberState.CLIMBING;
-			commands.setClimberWantedOutput(Math.abs(rightStick * mConfig.climbingMultiplier));
-		} else {
-			commands.climberWantedState = Climber.ClimberState.IDLE;
-		}
-		/* Adjusting */
-		if (mDriveStick.getRawButton(3)) {
-			commands.climberWantedState = Climber.ClimberState.ADJUSTING_LEFT;
-		} else if (mDriveStick.getRawButton(4)) {
-			commands.climberWantedState = Climber.ClimberState.ADJUSTING_RIGHT;
-		} else {
-			commands.climberWantedState = Climber.ClimberState.IDLE;
-		}
 	}
 
 	private void updateDriveCommands(Commands commands) {
