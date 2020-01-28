@@ -25,7 +25,7 @@ import com.palyrobotics.frc2020.util.service.RobotService;
 
 public class CommandReceiver implements RobotService {
 
-	private static final int PORT = 5808;
+	private static final int kPort = 5808;
 
 	private static ObjectMapper sMapper = Configs.getMapper();
 
@@ -87,7 +87,7 @@ public class CommandReceiver implements RobotService {
 				}
 			});
 			mServer.start();
-			mServer.bind(PORT);
+			mServer.bind(kPort);
 			Log.info(getConfigName(), "Started server");
 		} catch (IOException exception) {
 			Log.error(getConfigName(), "Failed to start server", exception);

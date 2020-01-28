@@ -51,4 +51,9 @@ public class MiscTests {
 		assertEquals(9.0, map.getInterpolated(100.0));
 		assertEquals(0.0, map.getInterpolated(-100.0));
 	}
+
+	@Test
+	public void testSolenoidState() {
+
+	}
 }

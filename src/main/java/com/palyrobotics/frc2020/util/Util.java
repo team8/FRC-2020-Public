@@ -108,4 +108,10 @@ public class Util {
 	public static boolean approximatelyEqual(double d1, double d2) {
 		return Math.abs(d1 - d2) < 1e-4;
 	}
+
+	public static String classToJsonName(Class<?> clazz) {
+		String className = clazz.getSimpleName();
+		// Make first character lowercase to match JSON conventions
+		return Character.toLowerCase(className.charAt(0)) + className.substring(1);
+	}
 }

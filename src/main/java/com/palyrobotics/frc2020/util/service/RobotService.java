@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2020.util.service;
 
-import com.palyrobotics.frc2020.util.StringUtil;
+import com.palyrobotics.frc2020.util.Util;
 
 public abstract interface RobotService {
 
@@ -11,6 +11,6 @@ public abstract interface RobotService {
 	}
 
 	default String getConfigName() {
-		return StringUtil.classToJsonName(getClass());
+		return Util.classToJsonName(getClass());
 	}
 }

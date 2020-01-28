@@ -25,7 +25,7 @@ public class Shooter extends SubsystemBase {
 	private static Shooter sInstance = new Shooter();
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
 	private ControllerOutput mFlywheelOutput = new ControllerOutput();
-	private DualSolenoid.State mUpDownOutput = DualSolenoid.State.REVERSE;
+	private DualSolenoid.Output mHoodOutput = DualSolenoid.Output.REVERSE;
 	private boolean mBlockingOutput;
 
 	private Shooter() {
@@ -39,28 +39,36 @@ public class Shooter extends SubsystemBase {
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		// TODO hood state machine, set solenoid outputs, target velocity of shooter
 		double targetVelocity;
-		switch (commands.shooterWantedState) {
-			default:
-				targetVelocity = 0.0;
-				break;
+		switch (commands.getShooterWantedState()) {
 			case MANUAL_VELOCITY:
-				// TODO: implement
-				targetVelocity = 0.0;
+				targetVelocity = commands.getShooterManualWantedFlywheelVelocity();
 				break;
 			case VISION_VELOCITY:
 				targetVelocity = kTargetDistanceToVelocity.getInterpolated(robotState.visionDistanceToTarget);
 				break;
+			default:
+				targetVelocity = 0.0;
+				break;
 		}
 		targetVelocity = Util.clamp(targetVelocity, 0.0, mConfig.maxVelocity);
-		HoodState hoodState = kTargetDistanceToHoodState.floorEntry(targetVelocity).getValue();
-		switch (hoodState) {
+		HoodState targetHoodState = kTargetDistanceToHoodState.floorEntry(targetVelocity).getValue();
+		switch (targetHoodState) {
 			case LOW:
-				mUpDownOutput = DualSolenoid.State.REVERSE;
+				mHoodOutput = DualSolenoid.Output.REVERSE;
 				mBlockingOutput = false;
 				break;
 			case MIDDLE:
+				if (robotState.shooterHoodSolenoidState.isExtended()) {
+					mHoodOutput = DualSolenoid.Output.REVERSE;
+					mBlockingOutput = true;
+				} else {
+					mBlockingOutput = false;
+					mHoodOutput = DualSolenoid.Output.FORWARD;
+				}
 				break;
 			case HIGH:
+				mHoodOutput = DualSolenoid.Output.FORWARD;
+				mBlockingOutput = false;
 				break;
 		}
 		mFlywheelOutput.setTargetVelocity(targetVelocity, mConfig.velocityGains);
@@ -70,8 +78,8 @@ public class Shooter extends SubsystemBase {
 		return mFlywheelOutput;
 	}
 
-	public DualSolenoid.State getUpDownOutput() {
-		return mUpDownOutput;
+	public DualSolenoid.Output getHoodOutput() {
+		return mHoodOutput;
 	}
 
 	public boolean getBlockingOutput() {

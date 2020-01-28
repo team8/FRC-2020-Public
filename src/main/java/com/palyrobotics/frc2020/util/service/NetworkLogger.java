@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class NetworkLogger extends Logger implements RobotService {
 
-	private static final String LOGGER_CATEGORY = "logger";
+	private static final String kLoggerTag = "logger";
 
-	private static final int PORT = 5802;
+	private static final int kPort = 5802;
 
 	private Server mServer;
 	private Queue<LogEntry> mLogs = new LinkedList<>();
@@ -30,20 +30,20 @@ public class NetworkLogger extends Logger implements RobotService {
 
 			@Override
 			public void connected(Connection connection) {
-				Log.info(LOGGER_CATEGORY, "Logger connected!");
+				Log.info(kLoggerTag, "Logger connected!");
 			}
 
 			@Override
 			public void disconnected(Connection connection) {
-				Log.warn(LOGGER_CATEGORY, "Logger disconnected!");
+				Log.warn(kLoggerTag, "Logger disconnected!");
 			}
 		});
 		mServer.start();
 		try {
-			mServer.bind(PORT, PORT);
-			Log.info(LOGGER_CATEGORY, "Started server", null);
+			mServer.bind(kPort, kPort);
+			Log.info(kLoggerTag, "Started server", null);
 		} catch (IOException exception) {
-			Log.error(LOGGER_CATEGORY, "Server failed to start", exception);
+			Log.error(kLoggerTag, "Server failed to start", exception);
 		}
 		Log.setLogger(this);
 		Log.set(Log.LEVEL_TRACE);

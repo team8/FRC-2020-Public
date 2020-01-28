@@ -3,7 +3,8 @@ package com.palyrobotics.frc2020.robot;
 import java.util.List;
 
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.util.StringUtil;
+import com.palyrobotics.frc2020.util.SolenoidState;
+import com.palyrobotics.frc2020.util.Util;
 import com.revrobotics.ColorMatchResult;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -23,23 +24,24 @@ public class RobotState {
 		AUTO, TELEOP, TESTING, DISABLED
 	}
 
-	// TODO: Reorder this and add comments to separate by subsystem and function
-	// (logger, misc, etc.)
-	public static final String LOGGER_TAB = StringUtil.classToJsonName(RobotState.class);
+	public static final String kLoggerTag = Util.classToJsonName(RobotState.class);
 	public static final int kUltrasonicBufferSize = 10;
-	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());
+	/* Game and Field */
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;
+	public String gameData, closestColorString;
+	public double closestColorConfidence;
+	public Color detectedRGBValues;
+	public ColorMatchResult closestColorRGB;
+	/* Drive */
+	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());
 	public double driveHeadingDegrees;
 	public boolean driveIsQuickTurning;
 	public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;
 	public Pose2d drivePose = new Pose2d();
-	public String gameData;
-	public boolean atVisionTargetThreshold;
-	public String closestColorString;
-	public double closestColorConfidence;
-	public Color detectedRGBVals;
-	public ColorMatchResult closestColorRGB;
+	/* Shooter */
 	public double shooterVelocity;
+	public SolenoidState shooterHoodSolenoidState, shooterBlockingSolenoidState;
+	// TODO: Reorder this and add comments to separate by subsystem and function
 	public CircularBuffer backIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
 			frontIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
 			topIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize);
@@ -56,7 +58,7 @@ public class RobotState {
 
 	public void resetOdometry(Pose2d pose) {
 		driveOdometry.resetPosition(pose, new Rotation2d());
-		Log.info(LOGGER_TAB, "Odometry reset!");
+		Log.info(kLoggerTag, "Odometry reset!");
 	}
 
 	public void updateOdometry(double headingDegrees, double leftMeters, double rightMeters) {

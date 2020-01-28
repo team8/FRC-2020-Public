@@ -17,22 +17,14 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
  */
 public class Commands {
 
-	private static Commands sInstance = new Commands();
 	/* Routines */
 	public List<RoutineBase> routinesWanted = new ArrayList<>();
 	public boolean shouldClearCurrentRoutines;
-	/* Climber Commands */
+	/* Climber */
 	public Climber.ClimberState climberWantedState;
-	/* Drive Commands */
+	private double climberWantedOutput;
+	/* Drive */
 	private Drive.DriveState driveWantedState;
-	/* Indexer Commands */
-	public Indexer.IndexerState indexerWantedState;
-	/* Intake Commands */
-	public Intake.IntakeState intakeWantedState;
-	/* Shooter Commands */
-	public Shooter.ShooterState shooterWantedState;
-	/* Spinner Commands */
-	public Spinner.SpinnerState spinnerWantedState;
 	// Teleop
 	private double driveWantedThrottle, driveWantedWheel;
 	private boolean driveWantsQuickTurn, driveWantsBrake;
@@ -43,8 +35,15 @@ public class Commands {
 	public Pose2d driveWantedOdometryPose;
 	// Turning
 	private double driveWantedHeadingDegrees;
-	// Climbing
-	private double climberWantedOutput;
+	/* Indexer */
+	public Indexer.IndexerState indexerWantedState;
+	/* Intake */
+	public Intake.IntakeState intakeWantedState;
+	/* Shooter */
+	private Shooter.ShooterState shooterWantedState;
+	private double shooterManualWantedFlywheelVelocity;
+	/* Spinner */
+	public Spinner.SpinnerState spinnerWantedState;
 
 	public void addWantedRoutines(RoutineBase... wantedRoutines) {
 		for (RoutineBase wantedRoutine : wantedRoutines) {
@@ -52,50 +51,21 @@ public class Commands {
 		}
 	}
 
+	/* Routines */
 	public void addWantedRoutine(RoutineBase wantedRoutine) {
 		routinesWanted.add(wantedRoutine);
 	}
 
-	public Drive.DriveState getDriveWantedState() {
-		return driveWantedState;
-	}
-
-	public boolean getDriveWantsQuickTurn() {
-		return driveWantsQuickTurn;
-	}
-
-	public double getDriveWantedThrottle() {
-		return driveWantedThrottle;
-	}
-
-	public double getDriveWantedWheel() {
-		return driveWantedWheel;
-	}
-
-	public boolean getDriveWantsBreak() {
-		return driveWantsBrake;
-	}
-
-	public Trajectory getDriveWantedTrajectory() {
-		return driveWantedTrajectory;
-	}
-
-	public double getDriveWantedHeadingDegrees() {
-		return driveWantedHeadingDegrees;
-	}
-
-	public DriveOutputs getDriveWantedSignal() {
-		return driveWantedSignal;
+	/* Climber */
+	public void setClimberWantedOutput(double output) {
+		climberWantedOutput = output;
 	}
 
 	public double getClimberWantedOutput() {
 		return climberWantedOutput;
 	}
 
-	public void setClimberWantedOutput(double output) {
-		climberWantedOutput = output;
-	}
-
+	/* Drive */
 	public void setDriveSignal(DriveOutputs signal) {
 		driveWantedState = Drive.DriveState.SIGNAL;
 		driveWantedSignal = signal;
@@ -131,30 +101,75 @@ public class Commands {
 		driveWantedHeadingDegrees = headingDegrees;
 	}
 
-	public void copyTo(Commands other) {
-		other.driveWantedState = driveWantedState;
-		other.indexerWantedState = indexerWantedState;
-		other.spinnerWantedState = spinnerWantedState;
-		other.intakeWantedState = intakeWantedState;
-		other.climberWantedState = climberWantedState;
-		other.shouldClearCurrentRoutines = shouldClearCurrentRoutines;
-		other.routinesWanted.addAll(routinesWanted);
+	public Drive.DriveState getDriveWantedState() {
+		return driveWantedState;
 	}
+
+	public boolean getDriveWantsQuickTurn() {
+		return driveWantsQuickTurn;
+	}
+
+	public double getDriveWantedThrottle() {
+		return driveWantedThrottle;
+	}
+
+	public double getDriveWantedWheel() {
+		return driveWantedWheel;
+	}
+
+	public boolean getDriveWantsBreak() {
+		return driveWantsBrake;
+	}
+
+	public Trajectory getDriveWantedTrajectory() {
+		return driveWantedTrajectory;
+	}
+
+	public double getDriveWantedHeadingDegrees() {
+		return driveWantedHeadingDegrees;
+	}
+
+	public DriveOutputs getDriveWantedSignal() {
+		return driveWantedSignal;
+	}
+
+	/* Shooter */
+	public void setShooterManualFlywheelVelocity(double wantedVelocity) {
+		shooterWantedState = Shooter.ShooterState.MANUAL_VELOCITY;
+		shooterManualWantedFlywheelVelocity = wantedVelocity;
+	}
+
+	public void setShooterVisionAssisted() {
+		shooterWantedState = Shooter.ShooterState.VISION_VELOCITY;
+	}
+
+	public Shooter.ShooterState getShooterWantedState() {
+		return shooterWantedState;
+	}
+
+	public double getShooterManualWantedFlywheelVelocity() {
+		return shooterManualWantedFlywheelVelocity;
+	}
+
+	// public void copyTo(Commands other) {
+	// }
 
 	@Override
 	public String toString() {
 		var log = new StringBuilder();
 		log.append("Wanted routines: ");
-		for (RoutineBase r : routinesWanted) {
-			log.append(r.getName()).append(" ");
+		for (RoutineBase routine : routinesWanted) {
+			log.append(routine).append(" ");
 		}
 		return log.append("\n").toString();
 	}
 
 	public void reset() {
-		spinnerWantedState = Spinner.SpinnerState.IDLE;
-		intakeWantedState = Intake.IntakeState.INTAKE;
-		indexerWantedState = Indexer.IndexerState.IDLE;
+		climberWantedState = Climber.ClimberState.IDLE;
 		driveWantedState = Drive.DriveState.NEUTRAL;
+		indexerWantedState = Indexer.IndexerState.IDLE;
+		intakeWantedState = Intake.IntakeState.INTAKE;
+		shooterWantedState = Shooter.ShooterState.IDLE;
+		spinnerWantedState = Spinner.SpinnerState.IDLE;
 	}
 }

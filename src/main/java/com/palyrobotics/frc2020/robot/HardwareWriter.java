@@ -7,7 +7,7 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.*;
-import com.palyrobotics.frc2020.util.StringUtil;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
 
@@ -15,11 +15,11 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class HardwareWriter {
 
-	public static final int TIMEOUT_MS = 50,
+	public static final int kTimeoutMs = 50,
 			// Different from slot index.
 			// 0 for Primary closed-loop. 1 for auxiliary closed-loop.
-			PID_INDEX = 0;
-	private static final String LOGGER_TAG = StringUtil.classToJsonName(HardwareWriter.class);
+			kPidIndex = 0;
+	private static final String kLoggerTag = Util.classToJsonName(HardwareWriter.class);
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	private final Climber mClimber = Climber.getInstance();
 	private final Drive mDrive = Drive.getInstance();
@@ -49,10 +49,10 @@ public class HardwareWriter {
 		for (Falcon falcon : driveHardware.falcons) {
 			falcon.configFactoryDefault();
 			falcon.enableVoltageCompensation(true);
-			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, PID_INDEX, TIMEOUT_MS);
-			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero, TIMEOUT_MS);
-			falcon.configOpenloopRamp(driveConfig.controllerRampRate, TIMEOUT_MS);
-			falcon.configClosedloopRamp(driveConfig.controllerRampRate, TIMEOUT_MS);
+			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPidIndex, kTimeoutMs);
+			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero, kTimeoutMs);
+			falcon.configOpenloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
+			falcon.configClosedloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
 			falcon.configSensorConversions(driveConfig.positionConversion, driveConfig.velocityConversion);
 		}
 
@@ -83,7 +83,7 @@ public class HardwareWriter {
 
 	private void configureIntakeHardware() {
 		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
-		intakeHardware.talon.configFactoryDefault(TIMEOUT_MS);
+		intakeHardware.talon.configFactoryDefault(kTimeoutMs);
 	}
 
 	private void configureShooterHardware() {
@@ -95,16 +95,16 @@ public class HardwareWriter {
 
 	private void configureSpinnerHardware() {
 		var spinnerHardware = HardwareAdapter.SpinnerHardware.getInstance();
-		spinnerHardware.talon.configFactoryDefault(TIMEOUT_MS);
+		spinnerHardware.talon.configFactoryDefault(kTimeoutMs);
 	}
 
 	public void resetDriveSensors(Pose2d pose) {
 		var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-		driveHardware.gyro.setYaw(0.0, TIMEOUT_MS);
-		driveHardware.gyro.setFusedHeading(pose.getRotation().getDegrees(), TIMEOUT_MS);
-		driveHardware.gyro.setAccumZAngle(0.0, TIMEOUT_MS);
-		driveHardware.falcons.forEach(spark -> spark.setSelectedSensorPosition(0, PID_INDEX, TIMEOUT_MS));
-		Log.info(LOGGER_TAG, "Drive sensors reset");
+		driveHardware.gyro.setYaw(0.0, kTimeoutMs);
+		driveHardware.gyro.setFusedHeading(pose.getRotation().getDegrees(), kTimeoutMs);
+		driveHardware.gyro.setAccumZAngle(0.0, kTimeoutMs);
+		driveHardware.falcons.forEach(spark -> spark.setSelectedSensorPosition(0, kPidIndex, kTimeoutMs));
+		Log.info(kLoggerTag, "Drive sensors reset");
 	}
 
 	void setDriveNeutralMode(NeutralMode neutralMode) {
@@ -154,7 +154,7 @@ public class HardwareWriter {
 		var shooterHardware = HardwareAdapter.ShooterHardware.getInstance();
 		shooterHardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
 		shooterHardware.blockingSolenoid.set(mShooter.getBlockingOutput());
-		shooterHardware.upDownSolenoid.set(mShooter.getUpDownOutput());
+		shooterHardware.hoodSolenoid.set(mShooter.getHoodOutput());
 	}
 
 	private void updateSpinner() {

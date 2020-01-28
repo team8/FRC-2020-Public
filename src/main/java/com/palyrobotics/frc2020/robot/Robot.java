@@ -10,7 +10,7 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.subsystems.*;
-import com.palyrobotics.frc2020.util.StringUtil;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.commands.CommandReceiver;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class Robot extends TimedRobot {
 
-	private static final String LOGGER_TAG = StringUtil.classToJsonName(Robot.class);
+	private static final String kLoggerTag = Util.classToJsonName(Robot.class);
 	private final RobotState mRobotState = new RobotState();
 	private final Limelight mLimelight = Limelight.getInstance();
 	private final RobotConfig mConfig = Configs.get(RobotConfig.class);
@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
 
 		mEnabledServices.forEach(RobotService::start);
 
-		Log.info(LOGGER_TAG, setupSummary);
+		Log.info(kLoggerTag, setupSummary);
 
 		Configs.listen(RobotConfig.class, config -> {
 			if (isDisabled()) {

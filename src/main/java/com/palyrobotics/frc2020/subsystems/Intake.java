@@ -17,7 +17,7 @@ public class Intake extends SubsystemBase {
 	private static Intake sInstance = new Intake();
 	private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
-	private DualSolenoid.State mUpDownOutput = DualSolenoid.State.REVERSE;
+	private DualSolenoid.Output mUpDownOutput = DualSolenoid.Output.REVERSE;
 
 	private Intake() {
 	}
@@ -32,15 +32,15 @@ public class Intake extends SubsystemBase {
 		switch (state) {
 			case IDLE:
 				mOutput.setIdle();
-				mUpDownOutput = DualSolenoid.State.OFF;
+				mUpDownOutput = DualSolenoid.Output.OFF;
 				break;
 			case RAISE:
 				mOutput.setIdle();
-				mUpDownOutput = DualSolenoid.State.REVERSE;
+				mUpDownOutput = DualSolenoid.Output.REVERSE;
 				break;
 			case INTAKE:
 				mOutput.setTargetVelocityProfiled(mConfig.intakingVelocity, mConfig.profiledVelocityGains);
-				mUpDownOutput = DualSolenoid.State.FORWARD;
+				mUpDownOutput = DualSolenoid.Output.FORWARD;
 				break;
 		}
 	}
@@ -49,7 +49,7 @@ public class Intake extends SubsystemBase {
 		return mOutput;
 	}
 
-	public DualSolenoid.State getUpDownOutput() {
+	public DualSolenoid.Output getUpDownOutput() {
 		return mUpDownOutput;
 	}
 }

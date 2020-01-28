@@ -13,8 +13,8 @@ public class SpinnerConstants {
 			kGreenCPTarget = ColorMatch.makeColor(0.1, 0.6, 0.25), kRedCPTarget = ColorMatch.makeColor(0.5, 0.3, 0.1),
 			kYellowCPTarget = ColorMatch.makeColor(0.3, 0.5, 0.1);
 	// scale ratio to allow for control panel 1/eighth rotation
-	public static final double eighthCPMovementGearRatio = 1.5;
-	public static final List<String> controlPanelColorOrder = List.of("yellow", "blue", "green", "red");
+	public static final double kEighthCPMovementGearRatio = 1.5;
+	public static final List<String> kControlPanelColorOrder = List.of("yellow", "blue", "green", "red");
 
 	private SpinnerConstants() {
 	}

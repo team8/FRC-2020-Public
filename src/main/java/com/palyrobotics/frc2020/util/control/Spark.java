@@ -57,7 +57,7 @@ public class Spark extends CANSparkMax {
 
 		@Override
 		boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput) {
-			ControlType controllerType = MODE_TO_CONTROLLER.get(mode);
+			ControlType controllerType = kModeToController.get(mode);
 			return mPidController.setReference(reference, controllerType, slot, arbitraryPercentOutput,
 					ArbFFUnits.kPercentOut) == CANError.kOk;
 		}
@@ -93,7 +93,7 @@ public class Spark extends CANSparkMax {
 		}
 	}
 
-	protected static final Map<ControllerOutput.Mode, ControlType> MODE_TO_CONTROLLER = Map.ofEntries(
+	protected static final Map<ControllerOutput.Mode, ControlType> kModeToController = Map.ofEntries(
 			Map.entry(ControllerOutput.Mode.PERCENT_OUTPUT, ControlType.kDutyCycle),
 			Map.entry(ControllerOutput.Mode.POSITION, ControlType.kPosition),
 			Map.entry(ControllerOutput.Mode.VELOCITY, ControlType.kVelocity),

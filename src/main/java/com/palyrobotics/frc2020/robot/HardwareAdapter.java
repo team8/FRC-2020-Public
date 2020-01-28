@@ -120,7 +120,7 @@ public class HardwareAdapter {
 		final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId),
 				slaveSpark = new Spark(sPortConstants.nariShooterSlaveId);
 		final CANEncoder masterEncoder = masterSpark.getEncoder();
-		final DualSolenoid upDownSolenoid = new DualSolenoid(sPortConstants.nariShooterExtendingSolenoidId,
+		final DualSolenoid hoodSolenoid = new DualSolenoid(sPortConstants.nariShooterExtendingSolenoidId,
 				sPortConstants.nariShooterRetractingSolenoidId);
 		// TODO: add proper second PCM CAN ID
 		final Solenoid blockingSolenoid = new Solenoid(1, sPortConstants.nariShooterBlockingSolenoidId);

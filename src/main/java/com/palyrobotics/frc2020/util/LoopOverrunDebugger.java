@@ -52,7 +52,7 @@ public class LoopOverrunDebugger {
 		for (Measurement measurement : mMeasurements) {
 			builder.append(String.format("    <%s> %f seconds%n", measurement.name, measurement.durationSeconds));
 		}
-		Log.info(StringUtil.classToJsonName(getClass()), builder.toString());
+		Log.info(Util.classToJsonName(getClass()), builder.toString());
 	}
 
 	public void reset() {

@@ -22,23 +22,23 @@ public class Talon extends TalonSRX {
 		protected void updateGains(boolean isFirstInitialization, int slot, Gains newGains, Gains lastGains) {
 			super.updateGains(isFirstInitialization, slot, newGains, lastGains);
 			if (isFirstInitialization) {
-				mController.configMotionSCurveStrength(4, HardwareWriter.TIMEOUT_MS);
+				mController.configMotionSCurveStrength(4, HardwareWriter.kTimeoutMs);
 			}
 		}
 
 		@Override
 		void setProfiledAcceleration(int slot, double acceleration) {
-			mController.configMotionAcceleration(round(acceleration), HardwareWriter.TIMEOUT_MS);
+			mController.configMotionAcceleration(round(acceleration), HardwareWriter.kTimeoutMs);
 		}
 
 		@Override
 		void setProfiledCruiseVelocity(int slot, double cruiseVelocity) {
-			mController.configMotionCruiseVelocity(round(cruiseVelocity), HardwareWriter.TIMEOUT_MS);
+			mController.configMotionCruiseVelocity(round(cruiseVelocity), HardwareWriter.kTimeoutMs);
 		}
 
 		@Override
 		protected void setProfiledAllowableError(int slot, double allowableError) {
-			mController.configAllowableClosedloopError(slot, round(allowableError), HardwareWriter.TIMEOUT_MS);
+			mController.configAllowableClosedloopError(slot, round(allowableError), HardwareWriter.kTimeoutMs);
 		}
 
 		@Override
@@ -48,7 +48,7 @@ public class Talon extends TalonSRX {
 
 		@Override
 		boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput) {
-			ControlMode controllerMode = MODE_TO_CONTROLLER.get(mode);
+			ControlMode controllerMode = kModeToController.get(mode);
 			double convertedReference;
 			switch (mode) {
 				case VELOCITY:
@@ -75,31 +75,31 @@ public class Talon extends TalonSRX {
 
 		@Override
 		void setP(int slot, double p) {
-			mController.config_kP(slot, p, HardwareWriter.TIMEOUT_MS);
+			mController.config_kP(slot, p, HardwareWriter.kTimeoutMs);
 		}
 
 		@Override
 		void setI(int slot, double i) {
-			mController.config_kI(slot, i, HardwareWriter.TIMEOUT_MS);
+			mController.config_kI(slot, i, HardwareWriter.kTimeoutMs);
 		}
 
 		@Override
 		void setD(int slot, double d) {
-			mController.config_kD(slot, d, HardwareWriter.TIMEOUT_MS);
+			mController.config_kD(slot, d, HardwareWriter.kTimeoutMs);
 		}
 
 		@Override
 		void setF(int slot, double f) {
-			mController.config_kF(slot, f, HardwareWriter.TIMEOUT_MS);
+			mController.config_kF(slot, f, HardwareWriter.kTimeoutMs);
 		}
 
 		@Override
 		void setIZone(int slot, double iZone) {
-			mController.config_IntegralZone(slot, round(iZone), HardwareWriter.TIMEOUT_MS);
+			mController.config_IntegralZone(slot, round(iZone), HardwareWriter.kTimeoutMs);
 		}
 	}
 
-	protected static final Map<ControllerOutput.Mode, ControlMode> MODE_TO_CONTROLLER = Map.ofEntries(
+	protected static final Map<ControllerOutput.Mode, ControlMode> kModeToController = Map.ofEntries(
 			Map.entry(ControllerOutput.Mode.PERCENT_OUTPUT, ControlMode.PercentOutput),
 			Map.entry(ControllerOutput.Mode.POSITION, ControlMode.Position),
 			Map.entry(ControllerOutput.Mode.VELOCITY, ControlMode.Velocity),

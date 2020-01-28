@@ -135,10 +135,10 @@ public class Limelight {
 	}
 
 	/**
-	 * @param stream {@link StreamType#kStandard} - Side-by-side streams if a
-	 *               web-cam is attached to Limelight {@link StreamType#kPiPMain} -
-	 *               The secondary camera stream is placed in the lower-right corner
-	 *               of the primary camera stream {@link StreamType#kPiPSecondary} -
+	 * @param stream {@link StreamType#STANDARD} - Side-by-side streams if a web-cam
+	 *               is attached to Limelight {@link StreamType#kPipMain} - The
+	 *               secondary camera stream is placed in the lower-right corner of
+	 *               the primary camera stream {@link StreamType#kPiPSecondary} -
 	 *               The primary camera stream is placed in the lower-right corner
 	 *               of the secondary camera stream
 	 */

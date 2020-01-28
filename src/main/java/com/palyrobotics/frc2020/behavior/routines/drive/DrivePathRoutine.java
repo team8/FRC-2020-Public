@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 
 public class DrivePathRoutine extends TimeoutRoutineBase {
 
-	private static final double TIMEOUT_MULTIPLIER = 1.1;
+	private static final double kTimeoutMultiplier = 1.1;
 	private final List<Pose2d> mWaypoints;
 	private final TrajectoryConfig mTrajectoryConfig = DriveConstants.getStandardTrajectoryConfig();
 	private boolean mShouldReversePath;
@@ -73,7 +73,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		}
 		waypointsWithStart.addFirst(state.drivePose);
 		mTrajectory = TrajectoryGenerator.generateTrajectory(waypointsWithStart, mTrajectoryConfig);
-		mTimeout = mTrajectory.getTotalTimeSeconds() * TIMEOUT_MULTIPLIER;
+		mTimeout = mTrajectory.getTotalTimeSeconds() * kTimeoutMultiplier;
 	}
 
 	@Override

@@ -49,8 +49,8 @@ public class Spinner extends SubsystemBase {
 	 *         clockwise, -1 corresponds to anticlockwise
 	 */
 	public int directionToGoalColor(String currentColor, String gameTargetColor) {
-		int gameDataIndex = SpinnerConstants.controlPanelColorOrder.indexOf(gameTargetColor),
-				currentColorIndex = SpinnerConstants.controlPanelColorOrder.indexOf(currentColor);
+		int gameDataIndex = SpinnerConstants.kControlPanelColorOrder.indexOf(gameTargetColor),
+				currentColorIndex = SpinnerConstants.kControlPanelColorOrder.indexOf(currentColor);
 
 		return (gameDataIndex - currentColorIndex) % 4 <= 2 ? -1 : 1;
 	}

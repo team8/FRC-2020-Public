@@ -7,7 +7,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
-import com.palyrobotics.frc2020.util.StringUtil;
+import com.palyrobotics.frc2020.util.Util;
 
 /**
  * Handles the updating of commands by passing them to each running routine.
@@ -16,7 +16,7 @@ import com.palyrobotics.frc2020.util.StringUtil;
  */
 public class RoutineManager {
 
-	public static final String LOGGER_TAG = StringUtil.classToJsonName(RoutineManager.class);
+	public static final String kLoggerTag = Util.classToJsonName(RoutineManager.class);
 	private List<RoutineBase> mRunningRoutines = new LinkedList<>();
 
 	static Set<SubsystemBase> sharedSubsystems(List<RoutineBase> routines) {
@@ -45,7 +45,7 @@ public class RoutineManager {
 		mRunningRoutines.removeIf(routine -> {
 			boolean isFinished = routine.execute(commands, state);
 			if (isFinished) {
-				Log.debug(LOGGER_TAG, String.format("Dropping finished routine: %s%n", routine));
+				Log.debug(kLoggerTag, String.format("Dropping finished routine: %s%n", routine));
 			}
 			return isFinished;
 		});
@@ -58,15 +58,15 @@ public class RoutineManager {
 				// Non-disjoint means both subsystem sets have elements in common, which creates
 				// conflicts
 				if (!Collections.disjoint(newRoutine.getRequiredSubsystems(), runningRoutine.getRequiredSubsystems())) {
-					Log.warn(LOGGER_TAG, String.format("Dropping conflicting routine: %s%n", runningRoutine));
+					Log.warn(kLoggerTag, String.format("Dropping conflicting routine: %s%n", runningRoutine));
 					mRunningRoutines.remove(runningRoutine);
 				}
 			}
 			// If it finishes immediately never add it to running routines
 			if (newRoutine.execute(commands, state)) {
-				Log.debug(LOGGER_TAG, String.format("Immediately dropping new routine: %s%n", newRoutine));
+				Log.debug(kLoggerTag, String.format("Immediately dropping new routine: %s%n", newRoutine));
 			} else {
-				Log.debug(LOGGER_TAG, String.format("Adding routine: %s%n", newRoutine));
+				Log.debug(kLoggerTag, String.format("Adding routine: %s%n", newRoutine));
 				mRunningRoutines.add(newRoutine);
 			}
 		}

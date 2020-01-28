@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.palyrobotics.frc2020.util.StringUtil;
+import com.palyrobotics.frc2020.util.Util;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -28,10 +28,10 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public class Configs {
 
-	private static final String CONFIG_FOLDER_NAME = "config", LOGGER_TAG = StringUtil.classToJsonName(Configs.class);
-	private static final Path CONFIG_FOLDER = (RobotBase.isReal()
-			? Paths.get(Filesystem.getDeployDirectory().toString(), CONFIG_FOLDER_NAME)
-			: Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", CONFIG_FOLDER_NAME))
+	private static final String kConfigFolderName = "config", kLoggerTag = Util.classToJsonName(Configs.class);
+	private static final Path kConfigFolder = (RobotBase.isReal()
+			? Paths.get(Filesystem.getDeployDirectory().toString(), kConfigFolderName)
+			: Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", kConfigFolderName))
 					.toAbsolutePath();
 	private static final HashMap<String, Class<? extends ConfigBase>> sNameToClass = new HashMap<>();
 	private static final HashMap<Class<? extends ConfigBase>, ConfigBase> sConfigMap = new HashMap<>(16);
@@ -69,7 +69,7 @@ public class Configs {
 	}
 
 	private static Path resolveConfigPath(String name) {
-		return CONFIG_FOLDER.resolve(String.format("%s.json", name));
+		return kConfigFolder.resolve(String.format("%s.json", name));
 	}
 
 	private static RuntimeException handleParseError(IOException readException,
@@ -86,7 +86,7 @@ public class Configs {
 					sPrettyWriter.writeValueAsString(configClass.getConstructor().newInstance())));
 		} catch (IOException | NoSuchMethodException | IllegalAccessException | InstantiationException
 				| InvocationTargetException exception) {
-			Log.error(LOGGER_TAG,
+			Log.error(kLoggerTag,
 					"Could not show default JSON representation. Something is wrong with the config class definition.",
 					exception);
 			return Optional.empty();
@@ -154,7 +154,7 @@ public class Configs {
 			return value;
 		} catch (IOException readException) {
 			RuntimeException exception = handleParseError(readException, configClass);
-			Log.error(LOGGER_TAG, String.format("Error reading config %s", configClassName), readException);
+			Log.error(kLoggerTag, String.format("Error reading config %s", configClassName), readException);
 			throw exception;
 		}
 	}
@@ -168,7 +168,7 @@ public class Configs {
 			saveOrThrow(configClass);
 			return true;
 		} catch (IOException saveException) {
-			Log.error(LOGGER_TAG, String.format("Could not save config %s", configClass.getSimpleName()),
+			Log.error(kLoggerTag, String.format("Could not save config %s", configClass.getSimpleName()),
 					saveException);
 			return false;
 		}
@@ -215,7 +215,7 @@ public class Configs {
 				return true;
 			}
 		} catch (IOException exception) {
-			Log.error(LOGGER_TAG, String.format("Could not reload configs %s", configClass.getSimpleName()), exception);
+			Log.error(kLoggerTag, String.format("Could not reload configs %s", configClass.getSimpleName()), exception);
 		}
 		return false;
 	}
@@ -232,7 +232,7 @@ public class Configs {
 		try {
 			return sPrettyWriter.writeValueAsString(object);
 		} catch (IOException formatException) {
-			Log.warn(LOGGER_TAG, String.format("Could not format %s as JSON", object.getClass().getSimpleName()),
+			Log.warn(kLoggerTag, String.format("Could not format %s as JSON", object.getClass().getSimpleName()),
 					formatException);
 			return object.toString();
 		}
@@ -265,7 +265,7 @@ public class Configs {
 	private static void watchService() {
 		try {
 			WatchService watcher = FileSystems.getDefault().newWatchService();
-			CONFIG_FOLDER.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
+			kConfigFolder.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
 			while (!Thread.interrupted()) {
 				try {
 					WatchKey key = watcher.take(); // Blocks until an event
@@ -296,20 +296,20 @@ public class Configs {
 							if (configClass != null) {
 								if (alreadySeen.contains(configName))
 									continue;
-								Log.info(LOGGER_TAG, String.format("Config named %s hot reloaded%n", configName));
+								Log.info(kLoggerTag, String.format("Config named %s hot reloaded%n", configName));
 								try {
 									ConfigBase config = get(configClass);
 									sMapper.readerForUpdating(config).readValue(getFileForConfig(configClass).toFile());
 									config.onPostUpdate();
 								} catch (IOException readException) {
 									RuntimeException exception = handleParseError(readException, configClass);
-									Log.error(LOGGER_TAG, String.format(
+									Log.error(kLoggerTag, String.format(
 											"Error updating config for %s. Aborting reload.%n", configName), exception);
 								}
 								notifyUpdated(configClass);
 								alreadySeen.add(configName);
 							} else {
-								Log.error(LOGGER_TAG, String.format("Unknown file %s%n", context));
+								Log.error(kLoggerTag, String.format("Unknown file %s%n", context));
 							}
 						}
 						if (!key.reset()) {
@@ -322,7 +322,7 @@ public class Configs {
 				}
 			}
 		} catch (IOException exception) {
-			Log.error(LOGGER_TAG, "Failed to watch filesystem for reloads", exception);
+			Log.error(kLoggerTag, "Failed to watch filesystem for reloads", exception);
 		}
 	}
 }
