@@ -6,16 +6,23 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.control.DualSolenoid;
 
 public class Indexer extends SubsystemBase {
 
 	public enum IndexerState {
-		IDLE, INDEX
+		IDLE, INDEX, WAITING_TO_FEED, FEED
+	}
+
+	public enum IndexerUpDownState {
+		DOWN, UP
 	}
 
 	private static Indexer sInstance = new Indexer();
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
-	private ControllerOutput mHorizontalOutput = new ControllerOutput(), mVerticalOutput = new ControllerOutput();
+	private ControllerOutput mOutput = new ControllerOutput();
+	private DualSolenoid.State mUpDownOutput = DualSolenoid.State.FORWARD;
+	private boolean mBlockOutput = false;
 
 	private Indexer() {
 	}
@@ -27,25 +34,43 @@ public class Indexer extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		IndexerState state = commands.indexerWantedState;
+		IndexerUpDownState upDownState = commands.indexerWantedUpDownState;
 		switch (state) {
 			case IDLE:
-				mHorizontalOutput.setIdle();
-				mVerticalOutput.setIdle();
+				mOutput.setIdle();
+				mBlockOutput = false;
 				break;
 			case INDEX:
-				mHorizontalOutput.setTargetVelocityProfiled(mConfig.horizontalIntakeVelocity,
-						mConfig.horizontalProfiledVelocityGains);
-				mVerticalOutput.setTargetVelocityProfiled(mConfig.verticalIntakeVelocity,
-						mConfig.verticalProfiledVelocityGains);
+				mOutput.setPercentOutput(mConfig.indexingOutput);
+				mBlockOutput = false;
+				break;
+			case WAITING_TO_FEED:
+				mOutput.setIdle();
+				mBlockOutput = true;
+			case FEED:
+				mOutput.setPercentOutput(mConfig.feedingOutput);
+				mBlockOutput = true;
+		}
+
+		switch (upDownState) {
+			case DOWN:
+				mUpDownOutput = DualSolenoid.State.FORWARD;
+				break;
+			case UP:
+				mUpDownOutput = DualSolenoid.State.REVERSE;
 				break;
 		}
 	}
 
 	public ControllerOutput getHorizontalOutput() {
-		return mHorizontalOutput;
+		return mOutput;
 	}
 
-	public ControllerOutput getVerticalOutput() {
-		return mVerticalOutput;
+	public DualSolenoid.State getUpDownOutput() {
+		return mUpDownOutput;
+	}
+
+	public boolean getBlockOutput() {
+		return mBlockOutput;
 	}
 }

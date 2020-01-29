@@ -5,11 +5,9 @@ import java.util.List;
 import com.palyrobotics.frc2020.auto.ShootThreeFriendlyTrenchThreeShootThree;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
-import com.palyrobotics.frc2020.subsystems.Climber;
-import com.palyrobotics.frc2020.subsystems.Indexer;
-import com.palyrobotics.frc2020.subsystems.Intake;
-import com.palyrobotics.frc2020.subsystems.Spinner;
+import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
@@ -63,7 +61,7 @@ public class OperatorInterface {
 
 		updateClimberCommands(commands);
 		updateDriveCommands(commands);
-		updateIndexerCommands(commands);
+		updateIndexerCommands(commands, state);
 		updateIntakeCommands(commands);
 		updateSpinnerCommands(commands);
 
@@ -110,11 +108,25 @@ public class OperatorInterface {
 		}
 	}
 
-	private void updateIndexerCommands(Commands commands) {
-		if (mTurnStick.getRawButtonPressed(3)) {
+	private void updateIndexerCommands(Commands commands, @ReadOnly RobotState state) {
+		if (mTurnStick.getRawButtonPressed(1)
+				&& !(state.hasBackUltrasonicBall && state.hasFrontUltrasonicBall && state.hasTopUltrasonicBall)) {
 			commands.indexerWantedState = Indexer.IndexerState.INDEX;
+			commands.intakeWantedState = Intake.IntakeState.INTAKE;
+		} else if (commands.shooterWantedState != Shooter.ShooterState.IDLE) {
+			commands.indexerWantedState = Indexer.IndexerState.WAITING_TO_FEED;
+			commands.intakeWantedState = Intake.IntakeState.IDLE;
+		} else if (mTurnStick.getRawButtonPressed(2) && commands.shooterWantedState != Shooter.ShooterState.IDLE) {
+			commands.addWantedRoutine(new IndexerFeedRoutine());
 		} else {
 			commands.indexerWantedState = Indexer.IndexerState.IDLE;
+			commands.intakeWantedState = Intake.IntakeState.IDLE;
+		}
+
+		if (mTurnStick.getRawButtonPressed(4)) {
+			commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.UP;
+		} else {
+			commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.DOWN;
 		}
 	}
 

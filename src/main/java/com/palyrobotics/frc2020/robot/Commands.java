@@ -27,6 +27,7 @@ public class Commands {
 	private Drive.DriveState driveWantedState;
 	/* Indexer Commands */
 	public Indexer.IndexerState indexerWantedState;
+	public Indexer.IndexerUpDownState indexerWantedUpDownState;
 	/* Intake Commands */
 	public Intake.IntakeState intakeWantedState;
 	/* Shooter Commands */
