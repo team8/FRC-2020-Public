@@ -10,12 +10,18 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 public class Indexer extends SubsystemBase {
 
 	public enum IndexerState {
-		IDLE, INDEX
+		IDLE, INDEX, WAITING_TO_FEED, FEED, FEED_ALL
+	}
+
+	public enum IndexerUpDownState {
+		UP, DOWN
 	}
 
 	private static Indexer sInstance = new Indexer();
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
-	private ControllerOutput mHorizontalOutput = new ControllerOutput(), mVerticalOutput = new ControllerOutput();
+	private ControllerOutput mOutput = new ControllerOutput();
+	private boolean mUpDownOutput = true;
+	private boolean mBlockOutput = false;
 
 	private Indexer() {
 	}
@@ -27,25 +33,49 @@ public class Indexer extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		IndexerState state = commands.indexerWantedState;
+		IndexerUpDownState upDownState = commands.indexerWantedUpDownState;
 		switch (state) {
 			case IDLE:
-				mHorizontalOutput.setIdle();
-				mVerticalOutput.setIdle();
+				mOutput.setIdle();
+				mBlockOutput = false;
 				break;
 			case INDEX:
-				mHorizontalOutput.setTargetVelocityProfiled(mConfig.horizontalIntakeVelocity,
-						mConfig.horizontalProfiledVelocityGains);
-				mVerticalOutput.setTargetVelocityProfiled(mConfig.verticalIntakeVelocity,
-						mConfig.verticalProfiledVelocityGains);
+				mOutput.setPercentOutput(mConfig.indexingOutput);
+				mBlockOutput = false;
+				break;
+			case WAITING_TO_FEED:
+				mOutput.setIdle();
+				mBlockOutput = true;
+				break;
+			case FEED:
+				mOutput.setPercentOutput(mConfig.feedingOutput);
+				mBlockOutput = true;
+				break;
+			case FEED_ALL:
+				mOutput.setPercentOutput(mConfig.indexingOutput);
+				mBlockOutput = true;
+				break;
+		}
+
+		switch (upDownState) {
+			case UP:
+				mUpDownOutput = false;
+				break;
+			case DOWN:
+				mUpDownOutput = true;
 				break;
 		}
 	}
 
-	public ControllerOutput getHorizontalOutput() {
-		return mHorizontalOutput;
+	public ControllerOutput getOutput() {
+		return mOutput;
 	}
 
-	public ControllerOutput getVerticalOutput() {
-		return mVerticalOutput;
+	public boolean getUpDownOutput() {
+		return mUpDownOutput;
+	}
+
+	public boolean getBlockOutput() {
+		return mBlockOutput;
 	}
 }

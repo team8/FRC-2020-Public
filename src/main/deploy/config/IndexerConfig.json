@@ -1,20 +1,6 @@
 {
-    "horizontalIntakeVelocity": 0.0,
-    "verticalIntakeVelocity": 0.0,
-    "horizontalProfiledVelocityGains": {
-        "p": 0.0,
-        "d": 0.0,
-        "f": 0.0,
-        "acceleration": 0.0,
-        "velocity": 0.0
-    },
-    "verticalProfiledVelocityGains" : {
-        "p": 0.0,
-        "d": 0.0,
-        "f": 0.0,
-        "acceleration": 0.0,
-        "velocity": 0.0
-    },
+    "indexingOutput": 0.6,
+    "feedingOutput": 0.3,
     "ballInchTolerance": 0.0,
     "ballCountRequired": 0
 }

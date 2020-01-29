@@ -8,12 +8,11 @@ import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
+import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedRoutine;
+import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.VibrateXboxRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
-import com.palyrobotics.frc2020.subsystems.Climber;
-import com.palyrobotics.frc2020.subsystems.Indexer;
-import com.palyrobotics.frc2020.subsystems.Intake;
-import com.palyrobotics.frc2020.subsystems.Spinner;
+import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
@@ -50,8 +49,8 @@ public class OperatorInterface {
 
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
-		updateIndexerCommands(commands);
-		updateIntakeCommands(commands);
+		updateIndexerCommands(commands, state);
+		updateIntakeCommands(commands, state);
 		updateShooterCommands(commands);
 		updateSpinnerCommands(commands);
 
@@ -132,19 +131,56 @@ public class OperatorInterface {
 		}
 	}
 
-	private void updateIndexerCommands(Commands commands) {
-		if (mTurnStick.getRawButtonPressed(3)) {
+	private void updateIndexerCommands(Commands commands, @ReadOnly RobotState state) {
+		if (state.hasBackUltrasonicBall && state.hasFrontUltrasonicBall) { // TODO: replace with ball detection
+			commands.indexerWantedState = Indexer.IndexerState.WAITING_TO_FEED;
+		} else if (mOperatorXboxController.getDPadRightPressed()) {
+			if (Indexer.getInstance().getUpDownOutput()) {
+				commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.UP;
+			} else {
+				commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.DOWN;
+				commands.addWantedRoutine(new IndexerTimeRoutine(1));
+			}
+		} else if (mOperatorXboxController.getDPadLeftPressed()) {
 			commands.indexerWantedState = Indexer.IndexerState.INDEX;
-		} else {
-			commands.indexerWantedState = Indexer.IndexerState.IDLE;
+			commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.DOWN;
 		}
+
+		if (mOperatorXboxController.getDPadLeftReleased()) {
+			commands.addWantedRoutine(new IndexerTimeRoutine(1));
+		}
+
+		if (mOperatorXboxController.getLeftBumperPressed()
+				&& commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new
+																					// boolean
+			// in robot state
+			commands.addWantedRoutine(new IndexerFeedRoutine());
+		} else if (mOperatorXboxController.getRightBumperPressed()
+				&& commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new
+																					// boolean
+			// in robot state
+			commands.indexerWantedState = Indexer.IndexerState.FEED_ALL;
+		}
+
 	}
 
-	private void updateIntakeCommands(Commands commands) {
-		if (mOperatorXboxController.getRightBumperPressed()) {
-			commands.intakeWantedState = Intake.IntakeState.INTAKE;
-		} else if (mOperatorXboxController.getLeftBumperPressed()) {
+	private void updateIntakeCommands(Commands commands, @ReadOnly RobotState state) {
+		if (state.hasBackUltrasonicBall && state.hasFrontUltrasonicBall) { // TODO: replace with ball detection
 			commands.intakeWantedState = Intake.IntakeState.RAISE;
+		} else if (mOperatorXboxController.getDPadRightPressed()) {
+			if (Indexer.getInstance().getUpDownOutput()) {
+				commands.intakeWantedState = Intake.IntakeState.RAISE;
+			} else {
+				commands.intakeWantedState = Intake.IntakeState.INTAKE;
+			}
+		} else if (mOperatorXboxController.getDPadDownPressed()) {
+			if (Intake.getInstance().getUpDownOutput()) {
+				commands.intakeWantedState = Intake.IntakeState.RAISE;
+			} else {
+				commands.intakeWantedState = Intake.IntakeState.LOWER;
+			}
+		} else if (mOperatorXboxController.getDPadLeftPressed()) {
+			commands.intakeWantedState = Intake.IntakeState.INTAKE;
 		}
 	}
 

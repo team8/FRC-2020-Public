@@ -10,7 +10,7 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 public class Intake extends SubsystemBase {
 
 	public enum IntakeState {
-		IDLE, RAISE, INTAKE
+		IDLE, RAISE, LOWER, INTAKE
 	}
 
 	private static Intake sInstance = new Intake();
@@ -30,12 +30,18 @@ public class Intake extends SubsystemBase {
 		IntakeState state = commands.intakeWantedState;
 		switch (state) {
 			case IDLE:
+				mOutput.setIdle();
+				break;
 			case RAISE:
 				mOutput.setIdle();
 				mUpDownOutput = false;
 				break;
+			case LOWER:
+				mOutput.setIdle();
+				mUpDownOutput = true;
+				break;
 			case INTAKE:
-				mOutput.setTargetVelocityProfiled(mConfig.intakingVelocity, mConfig.profiledVelocityGains);
+				mOutput.setPercentOutput(mConfig.intakingOutput);
 				mUpDownOutput = true;
 				break;
 		}
