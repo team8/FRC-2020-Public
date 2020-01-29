@@ -8,8 +8,7 @@
 	"nariDriveRightSlaveId": 6,
 	"nariIndexerHorizontalId": 7,
 	"nariIndexerVerticalId": 8,
-	"nariIndexerExtendingSolenoidId": 1,
-	"nariIndexerRetractingSolenoidId": 2,
+	"nariIndexerHopperSolenoidId": 1,
 	"nariIndexerBlockingSolenoidId": 3,
 	"nariIndexerBackUltrasonicEcho": 0,
 	"nariIndexerBackUltrasonicPing": 1,
@@ -18,12 +17,10 @@
 	"nariIndexerTopUltrasonicEcho": 4,
 	"nariIndexerTopUltrasonicPing": 5,
 	"nariIntakeId": 9,
-	"nariIntakeExtendingSolenoidId": 4,
-	"nariIntakeRetractingSolenoidId": 5,
+	"nariIntakeSolenoidId": 4,
 	"nariShooterMasterId": 10,
 	"nariShooterSlaveId": 11,
 	"nariShooterExtendingSolenoidId": 6,
-	"nariShooterRetractingSolenoidId": 7,
 	"nariShooterBlockingSolenoidId": 0,
 	"nariSpinnerId": 12
 }

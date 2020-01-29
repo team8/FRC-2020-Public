@@ -127,6 +127,8 @@ public class HardwareWriter {
 		indexerHardware.horizontalSpark.restoreFactoryDefaults();
 		indexerHardware.verticalSpark.restoreFactoryDefaults();
 
+		indexerHardware.verticalSpark.follow(indexerHardware.horizontalSpark);
+
 		indexerHardware.backUltrasonic.setAutomaticMode(true);
 		indexerHardware.frontUltrasonic.setAutomaticMode(true);
 
@@ -217,8 +219,9 @@ public class HardwareWriter {
 
 	private void updateIndexer() {
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
-		indexerHardware.horizontalSpark.setOutput(mIndexer.getHorizontalOutput());
-		indexerHardware.verticalSpark.setOutput(mIndexer.getVerticalOutput());
+		indexerHardware.horizontalSpark.setOutput(mIndexer.getOutput());
+		indexerHardware.hopperSolenoid.set(mIndexer.getUpDownOutput());
+		indexerHardware.blockingSolenoid.set(mIndexer.getBlockOutput());
 	}
 
 	private void updateIntake() {

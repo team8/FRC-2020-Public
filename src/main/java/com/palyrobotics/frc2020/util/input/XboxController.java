@@ -26,12 +26,20 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 		return getPOV() != mLastPOV && getDPadRight();
 	}
 
+	public boolean getDPadRightReleased() {
+		return mLastPOV == 90;
+	}
+
 	public boolean getDPadRight() {
 		return getPOV() == 90;
 	}
 
 	public boolean getDPadUpPressed() {
 		return getPOV() != mLastPOV && getDPadUp();
+	}
+
+	public boolean getDPadUPReleased() {
+		return mLastPOV == 0;
 	}
 
 	public boolean getDPadUp() {
@@ -42,12 +50,20 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 		return getPOV() != mLastPOV && getDPadDown();
 	}
 
+	public boolean getDPadDownReleased() {
+		return mLastPOV == 180;
+	}
+
 	public boolean getDPadDown() {
 		return getPOV() == 180;
 	}
 
 	public boolean getDPadLeftPressed() {
 		return getPOV() != mLastPOV && getDPadLeft();
+	}
+
+	public boolean getDPadLeftReleased() {
+		return mLastPOV == 270;
 	}
 
 	public boolean getDPadLeft() {
@@ -67,6 +83,10 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 				&& getTriggerAxis(hand) > kTriggerThreshold;
 	}
 
+	public boolean getTriggerReleased(Hand hand) {
+		return mLastTriggers.get(hand);
+	}
+
 	public boolean getWindowButtonPressed() {
 		return getRawButtonPressed(7);
 	}
@@ -79,16 +99,32 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 		return getTriggerPressed(Hand.kRight);
 	}
 
+	public boolean getRightTriggerReleased() {
+		return getTriggerReleased(Hand.kRight);
+	}
+
 	public boolean getLeftTriggerPressed() {
 		return getTriggerPressed(Hand.kLeft);
+	}
+
+	public boolean getLeftTriggerReleased() {
+		return getTriggerReleased(Hand.kLeft);
 	}
 
 	public boolean getRightBumperPressed() {
 		return getBumperPressed(Hand.kRight);
 	}
 
+	public boolean getRightBumperReleased() {
+		return getBumperReleased(Hand.kRight);
+	}
+
 	public boolean getLeftBumperPressed() {
 		return getBumperPressed(Hand.kLeft);
+	}
+
+	public boolean getLeftBumperReleased() {
+		return getBumperReleased(Hand.kLeft);
 	}
 
 	public void setRumble(boolean on) {

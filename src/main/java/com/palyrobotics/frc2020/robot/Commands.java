@@ -39,6 +39,7 @@ public class Commands {
 	private double driveWantedYawDegrees;
 	/* Indexer */
 	public Indexer.IndexerState indexerWantedState;
+	public Indexer.IndexerUpDownState indexerWantedUpDownState;
 	/* Intake */
 	public Intake.IntakeState intakeWantedState;
 	/* Shooter */
