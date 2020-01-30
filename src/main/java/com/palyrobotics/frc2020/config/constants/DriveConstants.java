@@ -51,11 +51,11 @@ public class DriveConstants {
 						.addConstraint(kVoltageConstraints);
 	}
 
-	public static double calculateTimeToFinishTurn(double currentHeadingDegrees, double targetHeadingDegrees) {
+	public static double calculateTimeToFinishTurn(double currentYawDegrees, double targetYawDegrees) {
 		return new TrapezoidProfile(
 				new TrapezoidProfile.Constraints(kConfig.maxPathVelocityMetersPerSecond,
 						kConfig.maxPathAccelerationMetersPerSecondSquared),
-				new TrapezoidProfile.State(targetHeadingDegrees, 0.0),
-				new TrapezoidProfile.State(currentHeadingDegrees, 0.0)).totalTime();
+				new TrapezoidProfile.State(targetYawDegrees, 0.0), new TrapezoidProfile.State(currentYawDegrees, 0.0))
+						.totalTime();
 	}
 }

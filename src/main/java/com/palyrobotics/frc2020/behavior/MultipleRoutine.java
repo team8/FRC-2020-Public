@@ -19,7 +19,7 @@ public abstract class MultipleRoutine extends RoutineBase {
 	}
 
 	@Override
-	public String getName() {
+	public String toString() {
 		StringBuilder name = new StringBuilder(super.getName()).append(":");
 		for (RoutineBase routine : mRoutines) {
 			name.append("\n").append("    ").append(routine).append(" ").append("[")

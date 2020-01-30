@@ -12,7 +12,7 @@ public class SolenoidState {
 		return mIsExtended;
 	}
 
-	public void setExtended(boolean isExtended) {
+	public void updateExtended(boolean isExtended) {
 		if (mIsExtended != isExtended && Util.approximatelyEqual(mTimer.get(), 0)) {
 			mTimer.start();
 		}

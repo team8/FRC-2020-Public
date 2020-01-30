@@ -65,8 +65,8 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	}
 
 	@Override
-	public void start(@ReadOnly RobotState state) {
-		super.start(state);
+	public void start(Commands commands, @ReadOnly RobotState state) {
+		super.start(commands, state);
 		var waypointsWithStart = new LinkedList<>(mWaypoints);
 		if (mShouldReversePath) {
 			Collections.reverse(waypointsWithStart);

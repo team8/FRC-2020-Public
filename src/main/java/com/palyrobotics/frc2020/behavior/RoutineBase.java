@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.*;
+import com.palyrobotics.frc2020.util.Util;
 
 public abstract class RoutineBase {
 
@@ -13,6 +14,7 @@ public abstract class RoutineBase {
 		INIT, RUNNING, FINISHED
 	}
 
+	/** Only should be used for {@link #getRequiredSubsystems()} */
 	protected final Climber mClimber = Climber.getInstance();
 	protected final Drive mDrive = Drive.getInstance();
 	protected final Indexer mIndexer = Indexer.getInstance();
@@ -20,10 +22,27 @@ public abstract class RoutineBase {
 	protected final Spinner mSpinner = Spinner.getInstance();
 	private RoutineState mState = RoutineState.INIT;
 
+	/**
+	 * Handles changing the {@link #mState}.
+	 *
+	 * @param commands Routines can only modify desired {@link Commands}.
+	 * @param state    Should only read {@link RobotState}.
+	 * @return Is the routine finished.
+	 * @see #start(Commands, RobotState)
+	 * @see #update(Commands, RobotState)
+	 */
 	public final boolean execute(Commands commands, @ReadOnly RobotState state) {
 		if (mState == RoutineState.INIT) {
-			start(state);
-			mState = RoutineState.RUNNING;
+			// Check if a routine is finished before even starting it.
+			// This avoids calling any sort of update that would modify Commands when not
+			// required.
+			if (checkFinished(state)) {
+				mState = RoutineState.FINISHED;
+				return true;
+			} else {
+				start(commands, state);
+				mState = RoutineState.RUNNING;
+			}
 		} else if (mState == RoutineState.FINISHED) {
 			throw new IllegalStateException(
 					String.format("Routine %s already finished! Should not be updated.", toString()));
@@ -36,7 +55,19 @@ public abstract class RoutineBase {
 		return false;
 	}
 
-	protected void start(@ReadOnly RobotState state) {
+	/**
+	 * Check with {@link RobotState} to see if we are done and should no longer be
+	 * updated.
+	 */
+	public abstract boolean checkFinished(@ReadOnly RobotState state);
+
+	/**
+	 * Called on the first update cycle before
+	 * {@link #update(Commands, RobotState)}, unless we are already finished.
+	 *
+	 * @see #checkFinished(RobotState)
+	 */
+	protected void start(Commands commands, @ReadOnly RobotState state) {
 	}
 
 	@Override
@@ -44,22 +75,28 @@ public abstract class RoutineBase {
 		return getName();
 	}
 
+	/**
+	 * Called every update until we are finished.
+	 *
+	 * @see #checkFinished(RobotState)
+	 */
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 	}
 
-	public boolean checkFinished(@ReadOnly RobotState state) {
-		return true;
-	}
-
 	public String getName() {
-		return getClass().getSimpleName();
+		return Util.classToJsonName(getClass());
 	}
 
+	/**
+	 * @see #checkFinished(RobotState)
+	 */
 	public final boolean isFinished() {
 		return mState == RoutineState.FINISHED;
 	}
 
-	// Store subsystems which are required by this routine, preventing routines from
-	// overlapping
+	/**
+	 * Store subsystems which are required by this routine, preventing routines from
+	 * overlapping
+	 */
 	public abstract Set<SubsystemBase> getRequiredSubsystems();
 }

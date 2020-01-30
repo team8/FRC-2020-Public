@@ -1,7 +1,13 @@
 package com.palyrobotics.frc2020.robot;
 
+import java.util.Set;
+
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
+import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.subsystems.Indexer;
+import com.palyrobotics.frc2020.subsystems.Shooter;
+import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.DualSolenoid;
 import com.revrobotics.ColorMatch;
@@ -20,6 +26,7 @@ public class HardwareReader {
 	 * given confidence range.
 	 */
 	public final ColorMatch mColorMatcher = new ColorMatch();
+	private final double[] mGyroValues = new double[3];
 
 	public HardwareReader() {
 		mColorMatcher.addColorMatch(SpinnerConstants.kCyanCPTarget);
@@ -32,8 +39,21 @@ public class HardwareReader {
 	 * Takes all of the sensor data from the hardware, and unwraps it into the
 	 * current {@link RobotState}.
 	 */
-	void updateState(RobotState robotState) {
-		/* Game and Field */
+	void updateState(Set<SubsystemBase> enabledSubsystems, RobotState robotState) {
+		readGameAndFieldState(robotState);
+		if (enabledSubsystems.contains(Drive.getInstance())) {
+			readDriveState(robotState);
+		}
+		if (enabledSubsystems.contains(Indexer.getInstance())) {
+			readIndexerState(robotState);
+		}
+		if (enabledSubsystems.contains(Shooter.getInstance())) {
+			readShooterState(robotState);
+		}
+		readShooterState(robotState);
+	}
+
+	private void readGameAndFieldState(RobotState robotState) {
 		robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();
 		robotState.detectedRGBValues = HardwareAdapter.SpinnerHardware.getInstance().colorSensor.getColor();
 		robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBValues);
@@ -47,16 +67,21 @@ public class HardwareReader {
 			robotState.closestColorString = "Red";
 		}
 		robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
-		/* Drive */
+	}
+
+	private void readDriveState(RobotState robotState) {
 		var drivetrain = HardwareAdapter.DrivetrainHardware.getInstance();
-		robotState.driveHeadingDegrees = drivetrain.gyro.getFusedHeading();
+		drivetrain.gyro.getYawPitchRoll(mGyroValues);
+		robotState.driveYawDegrees = mGyroValues[0];
 		robotState.driveLeftVelocity = drivetrain.leftMasterFalcon.getConvertedVelocity();
 		robotState.driveRightVelocity = drivetrain.rightMasterFalcon.getConvertedVelocity();
 		robotState.driveLeftPosition = drivetrain.leftMasterFalcon.getConvertedPosition();
 		robotState.driveRightPosition = drivetrain.rightMasterFalcon.getConvertedPosition();
-		robotState.updateOdometry(robotState.driveHeadingDegrees, robotState.driveLeftPosition,
+		robotState.updateOdometry(robotState.driveYawDegrees, robotState.driveLeftPosition,
 				robotState.driveRightPosition);
-		/* Indexer */
+	}
+
+	private void readIndexerState(RobotState robotState) {
 		var indexerConfig = Configs.get(IndexerConfig.class);
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
 		Ultrasonic backUltrasonic = indexerHardware.backUltrasonic, frontUltrasonic = indexerHardware.frontUltrasonic,
@@ -70,12 +95,14 @@ public class HardwareReader {
 				indexerConfig.ballInchTolerance, indexerConfig.ballCountRequired);
 		robotState.hasTopUltrasonicBall = hasBallFromReadings(robotState.topIndexerUltrasonicReadings,
 				indexerConfig.ballInchTolerance, indexerConfig.ballCountRequired);
-		/* Shooter */
+	}
+
+	private void readShooterState(RobotState robotState) {
 		var shooterHardware = HardwareAdapter.ShooterHardware.getInstance();
 		robotState.shooterVelocity = shooterHardware.masterEncoder.getVelocity();
 		robotState.shooterHoodSolenoidState
-				.setExtended(shooterHardware.hoodSolenoid.get() == DualSolenoid.Output.FORWARD);
-		robotState.shooterBlockingSolenoidState.setExtended(shooterHardware.blockingSolenoid.get());
+				.updateExtended(shooterHardware.hoodSolenoid.get() == DualSolenoid.Output.FORWARD);
+		robotState.shooterBlockingSolenoidState.updateExtended(shooterHardware.blockingSolenoid.get());
 	}
 
 	private boolean hasBallFromReadings(CircularBuffer readings, double tolerance, int requiredCount) {

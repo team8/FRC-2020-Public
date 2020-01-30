@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -42,15 +42,15 @@ public class Robot extends TimedRobot {
 	private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
 
-	private List<SubsystemBase> mSubsystems = List.of(mClimber, mDrive, mIndexer, mIntake, mShooter, mSpinner),
+	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mShooter, mSpinner),
 			mEnabledSubsystems;
-	private List<RobotService> mServices = List.of(new CommandReceiver(), new NetworkLogger()), mEnabledServices;
+	private Set<RobotService> mServices = Set.of(new CommandReceiver(), new NetworkLogger()), mEnabledServices;
 
 	@Override
 	public void robotInit() {
 		String setupSummary = setupSubsystemsAndServices();
 
-		mHardwareWriter.configureHardware();
+		mHardwareWriter.configureHardware(mEnabledSubsystems);
 
 		mEnabledServices.forEach(RobotService::start);
 
@@ -86,10 +86,11 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateSubsystemsAndHardware() {
+		resetOdometryIfWanted();
 		for (SubsystemBase subsystem : mEnabledSubsystems) {
 			subsystem.update(mCommands, mRobotState);
 		}
-		mHardwareWriter.updateHardware();
+		mHardwareWriter.updateHardware(mEnabledSubsystems);
 	}
 
 	@Override
@@ -128,19 +129,17 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		mCommands.reset();
-		mHardwareReader.updateState(mRobotState);
+		mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
 		mRoutineManager.update(mCommands, mRobotState);
-		resetOdometryIfWanted();
 		updateSubsystemsAndHardware();
 	}
 
 	@Override
 	public void teleopPeriodic() {
 		mCommands.reset();
-		mHardwareReader.updateState(mRobotState);
+		mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
 		mOperatorInterface.updateCommands(mCommands, mRobotState);
 		mRoutineManager.update(mCommands, mRobotState);
-		resetOdometryIfWanted();
 		updateSubsystemsAndHardware();
 	}
 
@@ -150,11 +149,8 @@ public class Robot extends TimedRobot {
 	}
 
 	/**
-	 * Resets the pose held by the odometry from {@link #mCommands}.
-	 *
-	 * Must happen before updating {@link #mRobotState} or routines using odometry
-	 * ({@link com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine})
-	 * since odometry is assumed to be in a correct state there.
+	 * Resets the pose based on {@link Commands#driveWantedOdometryPose}. Sets it to
+	 * null afterwards to avoid writing multiple updates to the controllers.
 	 */
 	private void resetOdometryIfWanted() {
 		Pose2d wantedPose = mCommands.driveWantedOdometryPose;
@@ -166,15 +162,15 @@ public class Robot extends TimedRobot {
 	}
 
 	private String setupSubsystemsAndServices() {
-		// TODO hard to read if unfamiliar with streams. maybe change to non-functional
-		// style
+		// TODO: same logic twice in a row
 		Map<String, RobotService> configToService = mServices.stream()
-				.collect(Collectors.toMap(RobotService::getConfigName, Function.identity()));
-		mEnabledServices = mConfig.enabledServices.stream().map(configToService::get).collect(Collectors.toList());
+				.collect(Collectors.toUnmodifiableMap(RobotService::getConfigName, Function.identity()));
+		mEnabledServices = mConfig.enabledServices.stream().map(configToService::get)
+				.collect(Collectors.toUnmodifiableSet());
 		Map<String, SubsystemBase> configToSubsystem = mSubsystems.stream()
-				.collect(Collectors.toMap(SubsystemBase::getName, Function.identity()));
+				.collect(Collectors.toUnmodifiableMap(SubsystemBase::getName, Function.identity()));
 		mEnabledSubsystems = mConfig.enabledSubsystems.stream().map(configToSubsystem::get)
-				.collect(Collectors.toList());
+				.collect(Collectors.toUnmodifiableSet());
 		var summaryBuilder = new StringBuilder();
 		summaryBuilder.append("\n===================\n");
 		summaryBuilder.append("Enabled subsystems:\n");
@@ -192,6 +188,8 @@ public class Robot extends TimedRobot {
 	}
 
 	private void setDriveIdleMode(boolean isIdle) {
-		mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
+		// TODO: drive disabled neutral state should probably be in commands
+		if (mEnabledSubsystems.contains(mDrive))
+			mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
 	}
 }

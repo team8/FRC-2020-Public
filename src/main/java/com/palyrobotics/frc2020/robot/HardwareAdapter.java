@@ -47,7 +47,7 @@ public class HardwareAdapter {
 	 */
 	static class DrivetrainHardware {
 
-		private static DrivetrainHardware sInstance = new DrivetrainHardware();
+		private static DrivetrainHardware sInstance;
 
 		final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId),
 				leftSlaveFalcon = new Falcon(sPortConstants.nariDriveLeftSlaveId);
@@ -63,6 +63,8 @@ public class HardwareAdapter {
 		}
 
 		static DrivetrainHardware getInstance() {
+			if (sInstance == null)
+				sInstance = new DrivetrainHardware();
 			return sInstance;
 		}
 	}
@@ -72,7 +74,7 @@ public class HardwareAdapter {
 	 */
 	static class IndexerHardware {
 
-		private static IndexerHardware sInstance = new IndexerHardware();
+		private static IndexerHardware sInstance;
 		final Spark horizontalSpark = new Spark(sPortConstants.nariIndexerHorizontalId),
 				verticalSpark = new Spark(sPortConstants.nariIndexerVerticalId);
 		final DualSolenoid hopperSolenoid = new DualSolenoid(sPortConstants.nariIndexerExtendingSolenoidId,
@@ -89,6 +91,8 @@ public class HardwareAdapter {
 		}
 
 		static IndexerHardware getInstance() {
+			if (sInstance == null)
+				sInstance = new IndexerHardware();
 			return sInstance;
 		}
 	}
@@ -98,7 +102,7 @@ public class HardwareAdapter {
 	 */
 	static class IntakeHardware {
 
-		private static IntakeHardware sInstance = new IntakeHardware();
+		private static IntakeHardware sInstance;
 		final Talon talon = new Talon(sPortConstants.nariIntakeId);
 		final DualSolenoid upDownSolenoid = new DualSolenoid(sPortConstants.nariIntakeExtendingSolenoidId,
 				sPortConstants.nariIntakeRetractingSolenoidId);
@@ -107,6 +111,8 @@ public class HardwareAdapter {
 		}
 
 		static IntakeHardware getInstance() {
+			if (sInstance == null)
+				sInstance = new IntakeHardware();
 			return sInstance;
 		}
 	}
@@ -116,7 +122,7 @@ public class HardwareAdapter {
 	 */
 	static class ShooterHardware {
 
-		private static ShooterHardware sInstance = new ShooterHardware();
+		private static ShooterHardware sInstance;
 		final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId),
 				slaveSpark = new Spark(sPortConstants.nariShooterSlaveId);
 		final CANEncoder masterEncoder = masterSpark.getEncoder();
@@ -129,6 +135,8 @@ public class HardwareAdapter {
 		}
 
 		static ShooterHardware getInstance() {
+			if (sInstance == null)
+				sInstance = new ShooterHardware();
 			return sInstance;
 		}
 	}
@@ -146,6 +154,8 @@ public class HardwareAdapter {
 		}
 
 		static SpinnerHardware getInstance() {
+			if (sInstance == null)
+				sInstance = new SpinnerHardware();
 			return sInstance;
 		}
 	}
@@ -153,16 +163,18 @@ public class HardwareAdapter {
 	/**
 	 * 1Compressor, 1 PDP
 	 */
-	static class MiscellaneousHardware {
+	static class CompressorHardware {
 
-		private static MiscellaneousHardware sInstance = new MiscellaneousHardware();
+		private static CompressorHardware sInstance;
 		final Compressor compressor = new Compressor();
 		final PowerDistributionPanel pdp = new PowerDistributionPanel();
 
-		private MiscellaneousHardware() {
+		private CompressorHardware() {
 		}
 
-		static MiscellaneousHardware getInstance() {
+		static CompressorHardware getInstance() {
+			if (sInstance == null)
+				sInstance = new CompressorHardware();
 			return sInstance;
 		}
 	}

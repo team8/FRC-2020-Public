@@ -1,31 +1,61 @@
 package com.palyrobotics.frc2020.behavior.routines.drive;
 
+import static com.palyrobotics.frc2020.util.Util.newWaypoint;
+
 import java.util.Set;
 
-import com.palyrobotics.frc2020.behavior.OneUpdateRoutine;
+import com.esotericsoftware.minlog.Log;
+import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
-import com.palyrobotics.frc2020.util.Util;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
-public class SetOdometryRoutine extends OneUpdateRoutine {
+/**
+ * Sets {@link Commands#driveWantedOdometryPose} and waits in neutral until the
+ * requests are seen within {@link RobotState}.
+ *
+ * Note: As of 1/13/20, setting encoder positions on a Spark does not happen
+ * immediately. CTRE controllers have a timeout value so it blocks until they
+ * are set properly.
+ *
+ * Has a timeout just in case there is a controller set fault.
+ */
+// TODO: remove timeout? If we fail, we should not continue with our auto.
+public class SetOdometryRoutine extends TimeoutRoutineBase {
 
-	private Pose2d mPose;
+	public static final double kTimeout = 0.5;
+	private Pose2d mTargetPose;
 
 	public SetOdometryRoutine() {
 		this(0.0, 0.0, 0.0);
 	}
 
-	public SetOdometryRoutine(double xInches, double yInches, double headingDegrees) {
-		mPose = Util.newWaypoint(xInches, yInches, headingDegrees);
+	public SetOdometryRoutine(double xInches, double yInches, double yawDegrees) {
+		super(kTimeout);
+		mTargetPose = newWaypoint(xInches, yInches, yawDegrees);
 	}
 
 	@Override
-	protected void updateOnce(Commands commands, @ReadOnly RobotState state) {
-		commands.driveWantedOdometryPose = mPose;
+	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
+		return state.drivePose.equals(mTargetPose);
+	}
+
+	@Override
+	public void onTimeout() {
+		Log.error(getName(),
+				"Timed out! This means the controllers internal state was not updated properly and indicates a controller fault.");
+	}
+
+	@Override
+	public void start(Commands commands, @ReadOnly RobotState state) {
+		commands.driveWantedOdometryPose = mTargetPose;
+		// This is required since an existing controller which depends on robot state
+		// will not be notified when sensors are updated.
+		// So, we break out and get into a neutral state.
+		commands.setDriveNeutral();
 	}
 
 	@Override

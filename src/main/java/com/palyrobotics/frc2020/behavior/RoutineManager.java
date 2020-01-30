@@ -12,7 +12,7 @@ import com.palyrobotics.frc2020.util.Util;
 /**
  * Handles the updating of commands by passing them to each running routine.
  *
- * @author Nihar, Ailyn
+ * @author Quintin
  */
 public class RoutineManager {
 

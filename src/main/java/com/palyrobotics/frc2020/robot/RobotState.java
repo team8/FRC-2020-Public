@@ -34,7 +34,7 @@ public class RobotState {
 	public ColorMatchResult closestColorRGB;
 	/* Drive */
 	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());
-	public double driveHeadingDegrees;
+	public double driveYawDegrees;
 	public boolean driveIsQuickTurning;
 	public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;
 	public Pose2d drivePose = new Pose2d();
@@ -62,7 +62,7 @@ public class RobotState {
 		Log.info(kLoggerTag, "Odometry reset!");
 	}
 
-	public void updateOdometry(double headingDegrees, double leftMeters, double rightMeters) {
-		drivePose = driveOdometry.update(Rotation2d.fromDegrees(headingDegrees), leftMeters, rightMeters);
+	public void updateOdometry(double yawDegrees, double leftMeters, double rightMeters) {
+		drivePose = driveOdometry.update(Rotation2d.fromDegrees(yawDegrees), leftMeters, rightMeters);
 	}
 }

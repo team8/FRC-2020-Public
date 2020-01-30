@@ -6,7 +6,7 @@ import com.palyrobotics.frc2020.util.config.ConfigBase;
 
 public class RobotConfig extends ConfigBase {
 
-	public boolean coastDriveIfDisabled, disableOutput;
+	public boolean coastDriveIfDisabled, disableHardwareUpdates;
 
 	// Useful for testing at lower speeds
 	public double motorOutputMultiplier;

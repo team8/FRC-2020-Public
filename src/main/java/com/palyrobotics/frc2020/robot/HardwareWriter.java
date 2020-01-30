@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.robot;
 
+import java.util.Set;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
@@ -28,13 +30,19 @@ public class HardwareWriter {
 	private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
 
-	void configureHardware() {
-		configureClimberHardware();
-		configureDriveHardware();
-		configureIndexerHardware();
-		configureIntakeHardware();
-		configureShooterHardware();
-		configureSpinnerHardware();
+	void configureHardware(Set<SubsystemBase> enabledSubsystems) {
+		if (enabledSubsystems.contains(mClimber))
+			configureClimberHardware();
+		if (enabledSubsystems.contains(mDrive))
+			configureDriveHardware();
+		if (enabledSubsystems.contains(mIndexer))
+			configureIndexerHardware();
+		if (enabledSubsystems.contains(mIntake))
+			configureIntakeHardware();
+		if (enabledSubsystems.contains(mShooter))
+			configureShooterHardware();
+		if (enabledSubsystems.contains(mSpinner))
+			configureSpinnerHardware();
 	}
 
 	private void configureClimberHardware() {
@@ -100,11 +108,9 @@ public class HardwareWriter {
 
 	public void resetDriveSensors(Pose2d pose) {
 		var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-		driveHardware.gyro.setYaw(0.0, kTimeoutMs);
-		driveHardware.gyro.setFusedHeading(pose.getRotation().getDegrees(), kTimeoutMs);
-		driveHardware.gyro.setAccumZAngle(0.0, kTimeoutMs);
-		driveHardware.falcons.forEach(spark -> spark.setSelectedSensorPosition(0, kPidIndex, kTimeoutMs));
-		Log.info(kLoggerTag, "Drive sensors reset");
+		driveHardware.gyro.setYaw(pose.getRotation().getDegrees(), kTimeoutMs);
+		driveHardware.falcons.forEach(falcon -> falcon.setSelectedSensorPosition(0, kPidIndex, kTimeoutMs));
+		Log.info(kLoggerTag, String.format("Drive sensors reset to %s", pose));
 	}
 
 	void setDriveNeutralMode(NeutralMode neutralMode) {
@@ -114,15 +120,20 @@ public class HardwareWriter {
 	/**
 	 * Updates the hardware to run with output values of {@link SubsystemBase}'s.
 	 */
-	void updateHardware() {
-		if (!mRobotConfig.disableOutput) {
-			updateClimber();
-			updateDrivetrain();
-			updateIndexer();
-			updateIntake();
-			updateShooter();
-			updateSpinner();
-			updateMiscellaneousHardware();
+	void updateHardware(Set<SubsystemBase> enabledSubsystems) {
+		if (!mRobotConfig.disableHardwareUpdates) {
+			if (enabledSubsystems.contains(mClimber))
+				updateClimber();
+			if (enabledSubsystems.contains(mDrive))
+				updateDrivetrain();
+			if (enabledSubsystems.contains(mIndexer))
+				updateIndexer();
+			if (enabledSubsystems.contains(mClimber))
+				updateIntake();
+			if (enabledSubsystems.contains(mShooter))
+				updateShooter();
+			if (enabledSubsystems.contains(mSpinner))
+				updateSpinner();
 		}
 	}
 
@@ -160,8 +171,5 @@ public class HardwareWriter {
 	private void updateSpinner() {
 		var spinnerHardware = HardwareAdapter.SpinnerHardware.getInstance();
 		spinnerHardware.talon.setOutput(mSpinner.getOutput());
-	}
-
-	private void updateMiscellaneousHardware() {
 	}
 }

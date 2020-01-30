@@ -14,5 +14,5 @@ public class DriveConfig extends SubsystemConfigBase {
 	public int stallCurrentLimit, freeCurrentLimit, freeRpmLimit, nonlinearPasses;
 	public double maxPathVelocityMetersPerSecond, maxPathAccelerationMetersPerSecondSquared;
 	public double positionConversion = 1.0, velocityConversion = 1.0;
-	public double allowableHeadingErrorDegrees;
+	public double allowableYawErrorDegrees;
 }

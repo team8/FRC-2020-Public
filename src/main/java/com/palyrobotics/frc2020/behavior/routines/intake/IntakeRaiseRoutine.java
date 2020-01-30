@@ -15,6 +15,11 @@ public class IntakeRaiseRoutine extends RoutineBase {
 	}
 
 	@Override
+	public boolean checkFinished(@ReadOnly RobotState state) {
+		return false;
+	}
+
+	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		commands.intakeWantedState = Intake.IntakeState.RAISE;
 	}

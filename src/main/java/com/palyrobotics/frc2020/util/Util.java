@@ -13,9 +13,9 @@ public class Util {
 	private Util() {
 	}
 
-	public static Pose2d newWaypoint(double xInches, double yInches, double headingDegrees) {
+	public static Pose2d newWaypoint(double xInches, double yInches, double yawDegrees) {
 		return new Pose2d(Units.inchesToMeters(xInches), Units.inchesToMeters(yInches),
-				Rotation2d.fromDegrees(headingDegrees));
+				Rotation2d.fromDegrees(yawDegrees));
 	}
 
 	/**
@@ -106,7 +106,11 @@ public class Util {
 	}
 
 	public static boolean approximatelyEqual(double d1, double d2) {
-		return Math.abs(d1 - d2) < 1e-4;
+		return approximatelyEqual(d1, d2, 1e-4);
+	}
+
+	public static boolean approximatelyEqual(double d1, double d2, double tolerance) {
+		return Math.abs(d1 - d2) < tolerance;
 	}
 
 	public static String classToJsonName(Class<?> clazz) {

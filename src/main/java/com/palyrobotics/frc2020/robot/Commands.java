@@ -34,7 +34,7 @@ public class Commands {
 	private Trajectory driveWantedTrajectory;
 	public Pose2d driveWantedOdometryPose;
 	// Turning
-	private double driveWantedHeadingDegrees;
+	private double driveWantedYawDegrees;
 	/* Indexer */
 	public Indexer.IndexerState indexerWantedState;
 	/* Intake */
@@ -96,9 +96,9 @@ public class Commands {
 		driveWantedState = Drive.DriveState.NEUTRAL;
 	}
 
-	public void setDriveTurn(double headingDegrees) {
+	public void setDriveYaw(double yawDegrees) {
 		driveWantedState = Drive.DriveState.TURN;
-		driveWantedHeadingDegrees = headingDegrees;
+		driveWantedYawDegrees = yawDegrees;
 	}
 
 	public Drive.DriveState getDriveWantedState() {
@@ -125,8 +125,8 @@ public class Commands {
 		return driveWantedTrajectory;
 	}
 
-	public double getDriveWantedHeadingDegrees() {
-		return driveWantedHeadingDegrees;
+	public double getDriveWantedYawDegrees() {
+		return driveWantedYawDegrees;
 	}
 
 	public DriveOutputs getDriveWantedSignal() {

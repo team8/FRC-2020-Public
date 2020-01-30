@@ -16,8 +16,15 @@ public abstract class TimeoutRoutineBase extends TimedRoutine {
 
 	@Override
 	public final boolean checkFinished(@ReadOnly RobotState state) {
-		return super.checkFinished(state) || checkIfFinishedEarly(state);
+		boolean timeoutFinished = super.checkFinished(state);
+		if (timeoutFinished) {
+			onTimeout();
+		}
+		return timeoutFinished || checkIfFinishedEarly(state);
 	}
 
 	public abstract boolean checkIfFinishedEarly(@ReadOnly RobotState state);
+
+	public void onTimeout() {
+	}
 }
