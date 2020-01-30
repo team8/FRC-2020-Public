@@ -4,10 +4,7 @@ import java.util.Set;
 
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
-import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.subsystems.Indexer;
-import com.palyrobotics.frc2020.subsystems.Shooter;
-import com.palyrobotics.frc2020.subsystems.SubsystemBase;
+import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.revrobotics.ColorMatch;
 
@@ -40,12 +37,18 @@ public class HardwareReader {
 	 */
 	void updateState(Set<SubsystemBase> enabledSubsystems, RobotState robotState) {
 		readGameAndFieldState(robotState);
-		if (enabledSubsystems.contains(Drive.getInstance()))
+		if (enabledSubsystems.contains(Climber.getInstance())) {
+			readClimberState(robotState);
+		}
+		if (enabledSubsystems.contains(Drive.getInstance())) {
 			readDriveState(robotState);
-		if (enabledSubsystems.contains(Indexer.getInstance()))
+		}
+		if (enabledSubsystems.contains(Indexer.getInstance())) {
 			readIndexerState(robotState);
-		if (enabledSubsystems.contains(Shooter.getInstance()))
+		}
+		if (enabledSubsystems.contains(Shooter.getInstance())) {
 			readShooterState(robotState);
+		}
 	}
 
 	private void readGameAndFieldState(RobotState robotState) {
@@ -62,6 +65,13 @@ public class HardwareReader {
 			robotState.closestColorString = "Red";
 		}
 		robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
+	}
+
+	private void readClimberState(RobotState robotState) {
+		var climber = HardwareAdapter.ClimberHardware.getInstance();
+		robotState.climberPosition = climber.verticalSpark.getEncoder().getPosition();
+		robotState.climberMedianVelocity = robotState.climberVelocityFilter
+				.calculate(climber.verticalSpark.getEncoder().getVelocity());
 	}
 
 	private void readDriveState(RobotState robotState) {

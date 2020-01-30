@@ -1,9 +1,16 @@
 {
-    "climberTopHeight": 0,
+    "climberTopHeight": 0.0,
     "loweringPercentOutput": -0.25,
-    "climbingPercentOutput": -0.8,
-    "raisingArbitraryDemand": 0,
+    "allowablePositionError": 0.5,
+    "velocityChangeThreshold": 0.0,
+    "raisingArbitraryDemand": 0.0,
+    "climbingArbitraryDemand": 0.0,
+    "positionConversionFactor": 0.0,
+    "velocityConversionFactor": 0.0,
     "raisingGains": {
+
+    },
+    "climbingGains": {
 
     }
 }

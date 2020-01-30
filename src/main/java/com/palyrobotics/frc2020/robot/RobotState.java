@@ -7,6 +7,7 @@ import com.palyrobotics.frc2020.util.SolenoidState;
 import com.palyrobotics.frc2020.util.Util;
 import com.revrobotics.ColorMatchResult;
 
+import edu.wpi.first.wpilibj.MedianFilter;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
@@ -49,7 +50,10 @@ public class RobotState {
 	public boolean hasBackUltrasonicBall, hasFrontUltrasonicBall, hasTopUltrasonicBall;
 	public double visionDistanceToTarget;
 
-	public boolean contactedBar;
+	// Climber
+	public double climberPosition;
+	public MedianFilter climberVelocityFilter = new MedianFilter(10);
+	public double climberMedianVelocity;
 
 	public void resetUltrasonics() {
 		for (CircularBuffer buffer : List.of(backIndexerUltrasonicReadings, frontIndexerUltrasonicReadings)) {

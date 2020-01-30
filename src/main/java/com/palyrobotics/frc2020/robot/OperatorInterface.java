@@ -8,14 +8,17 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
+import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.Spinner;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 
-// TODO: refactor buttons for controlling into well-named constants
+import edu.wpi.first.wpilibj.GenericHID;
+
 /**
  * Used to produce {@link Commands}'s from human input. Should only be used in
  * robot package.
@@ -29,6 +32,8 @@ public class OperatorInterface {
 	private final XboxController mOperatorXboxController = HardwareAdapter.Joysticks
 			.getInstance().operatorXboxController;
 
+	double climberOldVelocity;
+
 	/**
 	 * Modifies commands based on operator input devices.
 	 */
@@ -36,7 +41,7 @@ public class OperatorInterface {
 
 		commands.shouldClearCurrentRoutines = false;
 
-		updateClimberCommands(commands);
+		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateIndexerCommands(commands);
 		updateIntakeCommands(commands);
@@ -47,8 +52,35 @@ public class OperatorInterface {
 		mOperatorXboxController.updateLastInputs();
 	}
 
-	private void updateClimberCommands(Commands commands) {
+	private void updateClimberCommands(Commands commands, @ReadOnly RobotState state) {
 		ClimberConfig mConfig = Configs.get(ClimberConfig.class);
+		double velocityDiff = state.climberMedianVelocity - climberOldVelocity;
+
+		if (mOperatorXboxController.getRawButtonPressed(7)) {
+			commands.climberWantedState = Climber.ClimberState.RAISING;
+		} else if (mOperatorXboxController.getRawButtonPressed(8)
+				&& commands.climberWantedState == Climber.ClimberState.RAISING
+				&& Math.abs(state.climberPosition - mConfig.climberTopHeight) < mConfig.allowablePositionError) {
+			commands.climberWantedState = Climber.ClimberState.LOWERING_TO_BAR;
+		} else if (commands.climberWantedState == Climber.ClimberState.LOWERING_TO_BAR
+				&& velocityDiff > mConfig.velocityChangeThreshold) {
+			commands.climberWantedState = Climber.ClimberState.CLIMBING;
+		} else if (commands.climberWantedState == Climber.ClimberState.CLIMBING) {
+			commands.climberWantedVelocity = Util.handleDeadBand(mOperatorXboxController.getY(GenericHID.Hand.kLeft),
+					0.05);
+			commands.climberWantedAdjustingPercentOutput = Util
+					.handleDeadBand(mOperatorXboxController.getX(GenericHID.Hand.kRight), 0.05);
+		} else if (mOperatorXboxController.getDPadUpPressed()) {
+			if (commands.climberWantedState != Climber.ClimberState.LOCKED) {
+				commands.preLockClimberWantedState = commands.climberWantedState;
+				commands.climberWantedState = Climber.ClimberState.LOCKED;
+			} else {
+				commands.climberWantedState = commands.preLockClimberWantedState;
+			}
+		} else {
+			commands.climberWantedState = Climber.ClimberState.IDLE;
+		}
+		climberOldVelocity = state.climberMedianVelocity;
 	}
 
 	private void updateDriveCommands(Commands commands) {

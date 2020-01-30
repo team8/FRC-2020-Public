@@ -22,8 +22,10 @@ public class Commands {
 	public boolean shouldClearCurrentRoutines;
 	/* Climber */
 	public Climber.ClimberState climberWantedState;
+	public Climber.ClimberState preLockClimberWantedState;
 	private double climberWantedOutput;
 	/* Drive */
+	/* Drive Commands */
 	private Drive.DriveState driveWantedState;
 	// Teleop
 	private double driveWantedThrottle, driveWantedWheel;
@@ -174,5 +176,27 @@ public class Commands {
 			log.append(routine).append(" ");
 		}
 		return log.append("\n").toString();
+	}
+
+	public void copyTo(Commands other) {
+		other.driveWantedState = driveWantedState;
+		other.indexerWantedState = indexerWantedState;
+		other.spinnerWantedState = spinnerWantedState;
+		other.intakeWantedState = intakeWantedState;
+		other.shouldClearCurrentRoutines = shouldClearCurrentRoutines;
+		other.routinesWanted.addAll(routinesWanted);
+		other.climberWantedState = climberWantedState;
+		other.preLockClimberWantedState = preLockClimberWantedState;
+		other.climberWantedAdjustingPercentOutput = climberWantedAdjustingPercentOutput;
+		other.climberWantedVelocity = climberWantedVelocity;
+	}
+
+	public void reset() {
+		climberWantedState = Climber.ClimberState.IDLE;
+		driveWantedState = Drive.DriveState.NEUTRAL;
+		indexerWantedState = Indexer.IndexerState.IDLE;
+		intakeWantedState = Intake.IntakeState.INTAKE;
+		shooterWantedState = Shooter.ShooterState.IDLE;
+		spinnerWantedState = Spinner.SpinnerState.IDLE;
 	}
 }

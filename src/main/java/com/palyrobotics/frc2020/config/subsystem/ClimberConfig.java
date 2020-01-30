@@ -7,8 +7,10 @@ public class ClimberConfig extends SubsystemConfigBase {
 
 	public double climberTopHeight;
 	public double loweringPercentOutput;
-	public double climbingPercentOutput;
+	public double allowablePositionError;
+	public double velocityChangeThreshold;
 
-	public double raisingArbitraryDemand;
-	public ProfiledGains raisingGains;
+	public double raisingArbitraryDemand, climbingArbitraryDemand;
+	public double positionConversionFactor, velocityConversionFactor;
+	public ProfiledGains raisingGains, climbingGains;
 }
