@@ -50,7 +50,6 @@ public class HardwareReader {
 		if (enabledSubsystems.contains(Shooter.getInstance())) {
 			readShooterState(robotState);
 		}
-		readShooterState(robotState);
 	}
 
 	private void readGameAndFieldState(RobotState robotState) {
@@ -71,15 +70,33 @@ public class HardwareReader {
 
 	private void readDriveState(RobotState robotState) {
 		var drivetrain = HardwareAdapter.DrivetrainHardware.getInstance();
-		drivetrain.gyro.getYawPitchRoll(mGyroValues);
-		robotState.driveYawDegrees = mGyroValues[0];
-		robotState.driveLeftVelocity = drivetrain.leftMasterFalcon.getConvertedVelocity();
-		robotState.driveRightVelocity = drivetrain.rightMasterFalcon.getConvertedVelocity();
-		robotState.driveLeftPosition = drivetrain.leftMasterFalcon.getConvertedPosition();
-		robotState.driveRightPosition = drivetrain.rightMasterFalcon.getConvertedPosition();
+		var gyroAngles = new double[3];
+		drivetrain.gyro.getYawPitchRoll(gyroAngles);
+		robotState.driveYawDegrees = gyroAngles[0];
+		robotState.driveLeftVelocity = drivetrain.leftMasterEncoder.getVelocity() / 60.0;
+		robotState.driveRightVelocity = drivetrain.rightMasterEncoder.getVelocity() / 60.0;
+		robotState.driveLeftPosition = drivetrain.leftMasterEncoder.getPosition();
+		robotState.driveRightPosition = drivetrain.rightMasterEncoder.getPosition();
 		robotState.updateOdometry(robotState.driveYawDegrees, robotState.driveLeftPosition,
 				robotState.driveRightPosition);
 	}
+
+	// private void readDriveState(RobotState robotState) {
+	// var drivetrain = HardwareAdapter.DrivetrainHardware.getInstance();
+	// drivetrain.gyro.getYawPitchRoll(mGyroValues);
+	// robotState.driveYawDegrees = mGyroValues[0];
+	// robotState.driveLeftVelocity =
+	// drivetrain.leftMasterFalcon.getConvertedVelocity();
+	// robotState.driveRightVelocity =
+	// drivetrain.rightMasterFalcon.getConvertedVelocity();
+	// robotState.driveLeftPosition =
+	// drivetrain.leftMasterFalcon.getConvertedPosition();
+	// robotState.driveRightPosition =
+	// drivetrain.rightMasterFalcon.getConvertedPosition();
+	// robotState.updateOdometry(robotState.driveYawDegrees,
+	// robotState.driveLeftPosition,
+	// robotState.driveRightPosition);
+	// }
 
 	private void readIndexerState(RobotState robotState) {
 		var indexerConfig = Configs.get(IndexerConfig.class);

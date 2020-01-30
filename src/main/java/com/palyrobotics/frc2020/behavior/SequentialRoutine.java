@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -33,6 +34,7 @@ public class SequentialRoutine extends MultipleRoutine {
 				break;
 			}
 			mRunningRoutine = mIterator.next();
+			Log.info(String.format("Moving onto next routine: %s", mRunningRoutine));
 		}
 	}
 

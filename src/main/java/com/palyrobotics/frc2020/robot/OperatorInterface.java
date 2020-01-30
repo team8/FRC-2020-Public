@@ -107,9 +107,9 @@ public class OperatorInterface {
 					new SequentialRoutine(new SetOdometryRoutine(0.0, 0.0, 0.0), new DriveYawRoutine(180.0)));
 		} else if (mOperatorXboxController.getDPadLeftPressed()) {
 			commands.addWantedRoutine(new SequentialRoutine(new SetOdometryRoutine(0.0, 0.0, 0.0),
-					new DrivePathRoutine(newWaypoint(2.0, 0.0, 0.0))));
+					new DrivePathRoutine(newWaypoint(100.0, 0.0, 0.0))));
 		} else if (mOperatorXboxController.getDPadDownPressed()) {
-			commands.addWantedRoutine(new DrivePathRoutine());
+			commands.addWantedRoutine(new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
 		}
 	}
 

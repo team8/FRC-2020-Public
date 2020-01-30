@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 public class DriveRamseteController extends Drive.DriveController {
 
-	public static final double kB = 2.1, kZeta = 0.7;
+	public static final double kB = 2.1, kZeta = 0.8;
 
 	private final Timer mTimer = new Timer();
 	private RamseteController mController;
@@ -39,9 +39,10 @@ public class DriveRamseteController extends Drive.DriveController {
 		Trajectory.State targetPose = wantedTrajectory.sample(mTimer.get());
 		ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
 		DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kKinematics.toWheelSpeeds(speeds);
-		mDriveOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond,
+		// TODO: remove 60
+		mDriveOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond * 60.0,
 				mDriveConfig.profiledVelocityGains);
-		mDriveOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond,
+		mDriveOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond * 60.0,
 				mDriveConfig.profiledVelocityGains);
 		CSVWriter.addData("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
 		CSVWriter.addData("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);

@@ -58,8 +58,9 @@ public class RobotState {
 	}
 
 	public void resetOdometry(Pose2d pose) {
-		driveOdometry.resetPosition(pose, new Rotation2d());
-		Log.info(kLoggerTag, "Odometry reset!");
+		driveOdometry.resetPosition(pose, pose.getRotation());
+		drivePose = driveOdometry.getPoseMeters();
+		Log.info(kLoggerTag, String.format("Odometry reset to: %s", pose));
 	}
 
 	public void updateOdometry(double yawDegrees, double leftMeters, double rightMeters) {
