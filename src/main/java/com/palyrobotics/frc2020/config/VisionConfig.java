@@ -6,4 +6,5 @@ import com.palyrobotics.frc2020.util.control.Gains;
 public class VisionConfig extends ConfigBase {
 
 	public Gains gains;
+	public double acceptableError;
 }
