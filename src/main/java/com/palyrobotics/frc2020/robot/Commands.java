@@ -51,6 +51,8 @@ public class Commands {
 	public double climberWantedVelocity;
 	public double climberWantedAdjustingPercentOutput;
 
+	public boolean wantedRumble;
+
 	public void addWantedRoutines(RoutineBase... wantedRoutines) {
 		for (RoutineBase wantedRoutine : wantedRoutines) {
 			addWantedRoutine(wantedRoutine);
@@ -198,5 +200,6 @@ public class Commands {
 		intakeWantedState = Intake.IntakeState.INTAKE;
 		shooterWantedState = Shooter.ShooterState.IDLE;
 		spinnerWantedState = Spinner.SpinnerState.IDLE;
+		wantedRumble = false;
 	}
 }

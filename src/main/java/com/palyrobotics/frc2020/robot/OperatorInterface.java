@@ -7,6 +7,7 @@ import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
+import com.palyrobotics.frc2020.behavior.routines.miscellaneous.VibrateXboxRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Indexer;
@@ -65,6 +66,7 @@ public class OperatorInterface {
 		} else if (commands.climberWantedState == Climber.ClimberState.LOWERING_TO_BAR
 				&& velocityDiff > mConfig.velocityChangeThreshold) {
 			commands.climberWantedState = Climber.ClimberState.CLIMBING;
+			commands.addWantedRoutine(new VibrateXboxRoutine(2.0));
 		} else if (commands.climberWantedState == Climber.ClimberState.CLIMBING) {
 			commands.climberWantedVelocity = Util.handleDeadBand(mOperatorXboxController.getY(GenericHID.Hand.kLeft),
 					0.05);

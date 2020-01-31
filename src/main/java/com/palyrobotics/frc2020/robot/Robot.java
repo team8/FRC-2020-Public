@@ -154,6 +154,8 @@ public class Robot extends TimedRobot {
 		mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
 		mOperatorInterface.updateCommands(mCommands, mRobotState);
 		mRoutineManager.update(mCommands, mRobotState);
+		HardwareAdapter.Joysticks.getInstance().operatorXboxController.setRumble(mCommands.wantedRumble);
+		resetOdometryIfWanted();
 		updateSubsystemsAndHardware();
 	}
 
