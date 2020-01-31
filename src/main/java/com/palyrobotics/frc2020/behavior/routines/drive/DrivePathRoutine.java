@@ -64,16 +64,25 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		return this;
 	}
 
+	public void generateTrajectory(Pose2d startingPose) {
+		if (mTrajectory == null) {
+			var waypointsWithStart = new LinkedList<>(mWaypoints);
+			if (mShouldReversePath) {
+				Collections.reverse(waypointsWithStart);
+			}
+			waypointsWithStart.addFirst(startingPose);
+			mTrajectory = TrajectoryGenerator.generateTrajectory(waypointsWithStart, mTrajectoryConfig);
+			mTimeout = mTrajectory.getTotalTimeSeconds() * kTimeoutMultiplier;
+		} else {
+			throw new IllegalStateException("Trajectory already generated!");
+		}
+	}
+
 	@Override
 	public void start(Commands commands, @ReadOnly RobotState state) {
+		// Required to start the timeout timer
 		super.start(commands, state);
-		var waypointsWithStart = new LinkedList<>(mWaypoints);
-		if (mShouldReversePath) {
-			Collections.reverse(waypointsWithStart);
-		}
-		waypointsWithStart.addFirst(state.drivePose);
-		mTrajectory = TrajectoryGenerator.generateTrajectory(waypointsWithStart, mTrajectoryConfig);
-		mTimeout = mTrajectory.getTotalTimeSeconds() * kTimeoutMultiplier;
+		generateTrajectory(state.drivePose);
 	}
 
 	@Override

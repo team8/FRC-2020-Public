@@ -6,9 +6,8 @@ import com.palyrobotics.frc2020.auto.*;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.SetOdometryRoutine;
-import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.subsystems.Climber;
 import com.palyrobotics.frc2020.subsystems.Indexer;
@@ -99,17 +98,18 @@ public class OperatorInterface {
 			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),
 					mDriveStick.getTrigger());
 		}
-//		setVision(wantsAssistedVision);
+		// setVision(wantsAssistedVision);
 		/* Path Following */
 		if (mOperatorXboxController.getDPadUpPressed()) {
-//			commands.addWantedRoutine(new StartRightTrenchStealTwoShootFive().getRoutine());
-//			commands.addWantedRoutine(new VisionAlignRoutine());
+			// commands.addWantedRoutine(new
+			// StartRightTrenchStealTwoShootFive().getRoutine());
+			// commands.addWantedRoutine(new VisionAlignRoutine());
 			commands.addWantedRoutine(new StartLeftInitial180TrenchThree().getRoutine());
 		} else if (mOperatorXboxController.getDPadRightPressed()) {
 			commands.addWantedRoutine(
-					new SequentialRoutine(new SetOdometryRoutine(0.0, 0.0, 0.0), new DriveYawRoutine(180.0)));
+					new SequentialRoutine(new DriveSetOdometryRoutine(0.0, 0.0, 0.0), new DriveYawRoutine(180.0)));
 		} else if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.addWantedRoutine(new SequentialRoutine(new SetOdometryRoutine(0.0, 0.0, 0.0),
+			commands.addWantedRoutine(new SequentialRoutine(new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
 					new DrivePathRoutine(newWaypoint(100.0, 0.0, 0.0))));
 		} else if (mOperatorXboxController.getDPadDownPressed()) {
 			commands.addWantedRoutine(new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));

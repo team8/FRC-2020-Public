@@ -1,27 +1,27 @@
 package com.palyrobotics.frc2020.behavior.routines.vision;
 
+import java.util.Set;
+
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
-import java.util.Set;
-
 public class VisionAlignRoutine extends RoutineBase {
 
-    @Override
-    public boolean checkFinished(RobotState state) {
-        return false;
-//        return Math.abs(mLimelight.getYawToTarget()) <= mConfig.acceptableError;
-    }
+	@Override
+	public boolean checkFinished(RobotState state) {
+		return false;
+		// return Math.abs(mLimelight.getYawToTarget()) <= mConfig.acceptableError;
+	}
 
-    @Override
-    protected void update(Commands commands, RobotState state) {
-        commands.setDriveVisionAlign();
-    }
+	@Override
+	protected void update(Commands commands, RobotState state) {
+		commands.setDriveVisionAlign();
+	}
 
-    @Override
-    public Set<SubsystemBase> getRequiredSubsystems() {
-        return Set.of(mDrive);
-    }
+	@Override
+	public Set<SubsystemBase> getRequiredSubsystems() {
+		return Set.of(mDrive);
+	}
 }

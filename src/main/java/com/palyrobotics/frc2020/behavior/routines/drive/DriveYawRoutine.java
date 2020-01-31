@@ -14,6 +14,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 
 public class DriveYawRoutine extends TimeoutRoutineBase {
 
+	private static final double kTimeoutMultiplier = 1.1;
 	protected double mTargetYawDegrees;
 	private DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
 
@@ -30,7 +31,8 @@ public class DriveYawRoutine extends TimeoutRoutineBase {
 
 	@Override
 	public void start(Commands commands, @ReadOnly RobotState state) {
-		mTimeout = DriveConstants.calculateTimeToFinishTurn(state.driveYawDegrees, mTargetYawDegrees);
+		mTimeout = DriveConstants.calculateTimeToFinishTurn(state.driveYawDegrees, mTargetYawDegrees)
+				* kTimeoutMultiplier;
 	}
 
 	@Override

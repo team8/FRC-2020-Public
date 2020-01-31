@@ -24,16 +24,16 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
  * Has a timeout just in case there is a controller set fault.
  */
 // TODO: remove timeout? If we fail, we should not continue with our auto.
-public class SetOdometryRoutine extends TimeoutRoutineBase {
+public class DriveSetOdometryRoutine extends TimeoutRoutineBase {
 
 	public static final double kTimeout = 0.5;
 	private Pose2d mTargetPose;
 
-	public SetOdometryRoutine() {
+	public DriveSetOdometryRoutine() {
 		this(0.0, 0.0, 0.0);
 	}
 
-	public SetOdometryRoutine(double xInches, double yInches, double yawDegrees) {
+	public DriveSetOdometryRoutine(double xInches, double yInches, double yawDegrees) {
 		super(kTimeout);
 		mTargetPose = newWaypoint(xInches, yInches, yawDegrees);
 	}
@@ -54,7 +54,8 @@ public class SetOdometryRoutine extends TimeoutRoutineBase {
 		commands.driveWantedOdometryPose = mTargetPose;
 		// This is required since an existing controller which depends on robot state
 		// will not be notified when sensors are updated.
-		// So, we break out and get into a neutral state.
+		// So, we break out and get into a neutral state. This way, controllers that
+		// depend on robot state odometry or yaw are recreated after they are reset.
 		commands.setDriveNeutral();
 	}
 
