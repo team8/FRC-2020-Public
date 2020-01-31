@@ -16,15 +16,15 @@ public class StartCenterReverseRight90Degrees extends AutoModeBase {
 
 		var initialOdometry = new SetOdometryRoutine(0, 0, 180);
 
-		var reverse = new DrivePathRoutine(newWaypoint(30, 55, 0));
+						var reverse = new DrivePathRoutine(newWaypoint(40, 55, 0));
 
-		var turn90Degrees = new DriveYawRoutine(0.0);
+
 
 		var getTrenchBalls = new DrivePathRoutine(newWaypoint(170, 55, 0));
 
 		var turnAroundToShoot = new DriveYawRoutine(180.0);
 
-		return new SequentialRoutine(initialOdometry, reverse.driveInReverse(), turn90Degrees, getTrenchBalls,
+		return new SequentialRoutine(initialOdometry, reverse.driveInReverse(),  getTrenchBalls,
 				turnAroundToShoot);
 	}
 }

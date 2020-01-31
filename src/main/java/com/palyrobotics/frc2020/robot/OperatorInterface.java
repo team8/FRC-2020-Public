@@ -2,6 +2,9 @@ package com.palyrobotics.frc2020.robot;
 
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
+import com.palyrobotics.frc2020.auto.ShootThreeFriendlyTrenchThreeShootThree;
+import com.palyrobotics.frc2020.auto.StartCenterReverseRight90Degrees;
+import com.palyrobotics.frc2020.auto.StartCenterTwoPointTurnFriendlyTrenchThree;
 import com.palyrobotics.frc2020.auto.StartRightTrenchStealTwoShootFive;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
