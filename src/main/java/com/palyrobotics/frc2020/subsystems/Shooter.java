@@ -49,19 +49,36 @@ public class Shooter extends SubsystemBase {
 		}
 		targetVelocity = Util.clamp(targetVelocity, 0.0, mConfig.maxVelocity);
 		HoodState targetHoodState = kTargetDistanceToHoodState.floorEntry(targetVelocity).getValue();
-		boolean isHoodExtended = robotState.shooterHoodSolenoidState.isExtended();
+		boolean isHoodExtended = robotState.shooterHoodSolenoidState.isExtended(),
+				isBlockingExtended = robotState.shooterBlockingSolenoidState.isExtended();
 		switch (targetHoodState) {
 			case LOW:
-				mHoodOutput = robotState.shooterBlockingSolenoidState.isExtended();
-				mBlockingOutput = false;
+				// TODO: are we even ble to release lock and go down at the same time?
+				// mHoodOutput = isBlockingExtended;
+				// When we are down, always make sure our locking piston is set to unblocking.
+				// This is how we tell if we are down instead of just resting on top of the
+				// lock. Since our hood piston can be in a retracted state, but we don't know if
+				// we are all the way at the bottom or just resting on the hood.
+				mHoodOutput = mBlockingOutput = false;
 				break;
 			case MIDDLE:
-				mBlockingOutput = isHoodExtended;
-				mHoodOutput = !isHoodExtended;
+				if (isBlockingExtended) {
+					// We are at the top hood position.
+					mHoodOutput = false;
+					mBlockingOutput = true;
+				} else {
+					// We are at the low hood position.
+					mHoodOutput = true;
+					// Unblock until we reach the top.
+					// Then block, which moves to first if condition and moves hood down to rest on
+					// top of lock.
+					mBlockingOutput = isHoodExtended;
+				}
 				break;
 			case HIGH:
-				mHoodOutput = true;
-				mBlockingOutput = isHoodExtended;
+				// Assuming we will never bee in the state where our blocking is extended and
+				// our hood is retracted.
+				mHoodOutput = mBlockingOutput = true;
 				break;
 		}
 		mFlywheelOutput.setTargetVelocity(targetVelocity, mConfig.velocityGains);
