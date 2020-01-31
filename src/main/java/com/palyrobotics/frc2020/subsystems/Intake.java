@@ -11,7 +11,7 @@ import com.palyrobotics.frc2020.util.control.DualSolenoid;
 public class Intake extends SubsystemBase {
 
 	public enum IntakeState {
-		IDLE, RAISE, INTAKE
+		IDLE, RAISE, LOWER, INTAKE
 	}
 
 	private static Intake sInstance = new Intake();
@@ -37,6 +37,10 @@ public class Intake extends SubsystemBase {
 			case RAISE:
 				mOutput.setIdle();
 				mUpDownOutput = DualSolenoid.State.REVERSE;
+				break;
+			case LOWER:
+				mOutput.setIdle();
+				mUpDownOutput = DualSolenoid.State.FORWARD;
 				break;
 			case INTAKE:
 				mOutput.setTargetVelocityProfiled(mConfig.intakingVelocity, mConfig.profiledVelocityGains);

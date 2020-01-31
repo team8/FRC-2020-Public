@@ -11,11 +11,7 @@ import com.palyrobotics.frc2020.util.control.DualSolenoid;
 public class Indexer extends SubsystemBase {
 
 	public enum IndexerState {
-		IDLE, INDEX, WAITING_TO_FEED, FEED
-	}
-
-	public enum IndexerUpDownState {
-		DOWN, UP
+		IDLE, HOPPER_OPEN, HOPPER_CLOSED, WAITING_TO_FEED, FEED
 	}
 
 	private static Indexer sInstance = new Indexer();
@@ -34,30 +30,28 @@ public class Indexer extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		IndexerState state = commands.indexerWantedState;
-		IndexerUpDownState upDownState = commands.indexerWantedUpDownState;
 		switch (state) {
 			case IDLE:
 				mOutput.setIdle();
 				mBlockOutput = false;
 				break;
-			case INDEX:
+			case HOPPER_CLOSED:
 				mOutput.setPercentOutput(mConfig.indexingOutput);
+				mUpDownOutput = DualSolenoid.State.FORWARD;
+				mBlockOutput = false;
+				break;
+			case HOPPER_OPEN:
+				mOutput.setIdle();
+				mUpDownOutput = DualSolenoid.State.REVERSE;
 				mBlockOutput = false;
 				break;
 			case WAITING_TO_FEED:
 				mOutput.setIdle();
 				mBlockOutput = true;
+				break;
 			case FEED:
 				mOutput.setPercentOutput(mConfig.feedingOutput);
 				mBlockOutput = true;
-		}
-
-		switch (upDownState) {
-			case DOWN:
-				mUpDownOutput = DualSolenoid.State.FORWARD;
-				break;
-			case UP:
-				mUpDownOutput = DualSolenoid.State.REVERSE;
 				break;
 		}
 	}
