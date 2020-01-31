@@ -22,7 +22,7 @@ public class PortConstants extends ConfigBase {
 	 */
 	public int nariIndexerHorizontalId;
 	public int nariIndexerVerticalId;
-	public int nariIndexerExtendingSolenoidId, nariIndexerRetractingSolenoidId;
+	public int nariIndexerSolenoidId;
 	public int nariIndexerBlockingSolenoidId;
 	public int nariIndexerBackUltrasonicEcho, nariIndexerBackUltrasonicPing;
 	public int nariIndexerFrontUltrasonicEcho, nariIndexerFrontUltrasonicPing;
@@ -32,18 +32,17 @@ public class PortConstants extends ConfigBase {
 	 * Intake
 	 */
 	public int nariIntakeId;
-	public int nariIntakeExtendingSolenoidId, nariIntakeRetractingSolenoidId;
+	public int nariIntakeSolenoidId;
 
 	/**
 	 * Shooter
 	 */
 	public int nariShooterMasterId, nariShooterSlaveId;
-	public int nariShooterExtendingSolenoidId, nariShooterRetractingSolenoidId;
+	public int nariShooterHoodSolenoid;
 	public int nariShooterBlockingSolenoidId;
 
 	/**
 	 * Spinner
 	 */
 	public int nariSpinnerId;
-
 }

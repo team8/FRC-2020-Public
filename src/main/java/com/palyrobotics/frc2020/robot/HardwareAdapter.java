@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.control.DualSolenoid;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
 import com.palyrobotics.frc2020.util.input.Joystick;
@@ -105,8 +104,8 @@ public class HardwareAdapter {
 		private static IndexerHardware sInstance;
 		final Spark horizontalSpark = new Spark(sPortConstants.nariIndexerHorizontalId),
 				verticalSpark = new Spark(sPortConstants.nariIndexerVerticalId);
-		final DualSolenoid hopperSolenoid = new DualSolenoid(sPortConstants.nariIndexerExtendingSolenoidId,
-				sPortConstants.nariIndexerRetractingSolenoidId);
+		final Solenoid hopperSolenoid = new Solenoid(sPortConstants.nariIndexerSolenoidId);
+
 		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.nariIndexerBlockingSolenoidId);
 		final Ultrasonic backUltrasonic = new Ultrasonic(sPortConstants.nariIndexerBackUltrasonicPing,
 				sPortConstants.nariIndexerBackUltrasonicEcho),
@@ -132,8 +131,7 @@ public class HardwareAdapter {
 
 		private static IntakeHardware sInstance;
 		final Talon talon = new Talon(sPortConstants.nariIntakeId);
-		final DualSolenoid upDownSolenoid = new DualSolenoid(sPortConstants.nariIntakeExtendingSolenoidId,
-				sPortConstants.nariIntakeRetractingSolenoidId);
+		final Solenoid upDownSolenoid = new Solenoid(sPortConstants.nariIntakeSolenoidId);
 
 		private IntakeHardware() {
 		}
@@ -154,8 +152,7 @@ public class HardwareAdapter {
 		final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId),
 				slaveSpark = new Spark(sPortConstants.nariShooterSlaveId);
 		final CANEncoder masterEncoder = masterSpark.getEncoder();
-		final DualSolenoid hoodSolenoid = new DualSolenoid(sPortConstants.nariShooterExtendingSolenoidId,
-				sPortConstants.nariShooterRetractingSolenoidId);
+		final Solenoid hoodSolenoid = new Solenoid(sPortConstants.nariShooterHoodSolenoid);
 		// TODO: add proper second PCM CAN ID
 		final Solenoid blockingSolenoid = new Solenoid(1, sPortConstants.nariShooterBlockingSolenoidId);
 

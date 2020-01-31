@@ -10,7 +10,6 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
-import com.palyrobotics.frc2020.util.control.DualSolenoid;
 
 public class Shooter extends SubsystemBase {
 
@@ -25,8 +24,7 @@ public class Shooter extends SubsystemBase {
 	private static Shooter sInstance = new Shooter();
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
 	private ControllerOutput mFlywheelOutput = new ControllerOutput();
-	private DualSolenoid.Output mHoodOutput = DualSolenoid.Output.REVERSE;
-	private boolean mBlockingOutput;
+	private boolean mHoodOutput, mBlockingOutput;
 
 	private Shooter() {
 	}
@@ -54,15 +52,15 @@ public class Shooter extends SubsystemBase {
 		boolean isHoodExtended = robotState.shooterHoodSolenoidState.isExtended();
 		switch (targetHoodState) {
 			case LOW:
-				mHoodOutput = DualSolenoid.Output.REVERSE;
+				mHoodOutput = robotState.shooterBlockingSolenoidState.isExtended();
 				mBlockingOutput = false;
 				break;
 			case MIDDLE:
 				mBlockingOutput = isHoodExtended;
-				mHoodOutput = isHoodExtended ? DualSolenoid.Output.REVERSE : DualSolenoid.Output.FORWARD;
+				mHoodOutput = !isHoodExtended;
 				break;
 			case HIGH:
-				mHoodOutput = DualSolenoid.Output.FORWARD;
+				mHoodOutput = true;
 				mBlockingOutput = isHoodExtended;
 				break;
 		}
@@ -73,7 +71,7 @@ public class Shooter extends SubsystemBase {
 		return mFlywheelOutput;
 	}
 
-	public DualSolenoid.Output getHoodOutput() {
+	public boolean getHoodOutput() {
 		return mHoodOutput;
 	}
 

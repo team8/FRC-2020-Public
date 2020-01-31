@@ -13,7 +13,6 @@ public class StartCenterReverseRight90Degrees extends AutoModeBase {
 
 	@Override
 	public RoutineBase getRoutine() {
-
 		var initialOdometry = new DriveSetOdometryRoutine(0, 0, 180);
 
 		var reverse = new DrivePathRoutine(newWaypoint(40, 55, 0));

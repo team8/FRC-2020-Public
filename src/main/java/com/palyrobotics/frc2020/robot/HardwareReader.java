@@ -9,7 +9,6 @@ import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Shooter;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.control.DualSolenoid;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -117,8 +116,7 @@ public class HardwareReader {
 	private void readShooterState(RobotState robotState) {
 		var shooterHardware = HardwareAdapter.ShooterHardware.getInstance();
 		robotState.shooterVelocity = shooterHardware.masterEncoder.getVelocity();
-		robotState.shooterHoodSolenoidState
-				.updateExtended(shooterHardware.hoodSolenoid.get() == DualSolenoid.Output.FORWARD);
+		robotState.shooterHoodSolenoidState.updateExtended(shooterHardware.hoodSolenoid.get());
 		robotState.shooterBlockingSolenoidState.updateExtended(shooterHardware.blockingSolenoid.get());
 	}
 

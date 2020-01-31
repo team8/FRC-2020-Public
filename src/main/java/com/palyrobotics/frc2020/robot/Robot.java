@@ -63,6 +63,20 @@ public class Robot extends TimedRobot {
 		});
 	}
 
+	// private void pathToCsv() {
+	// var drivePath = new ShootThreeFriendlyTrenchThreeShootThree().getRoutine();
+	// try (var writer = new PrintWriter(new BufferedWriter(new
+	// FileWriter("auto.csv")))) {
+	// writer.write("x,y");
+	// for (Trajectory.State state : drivePath.getTrajectory().getStates()) {
+	// var point = state.poseMeters.getTranslation();
+	// writer.write(String.format("%f,%f%n", point.getX(), point.getY()));
+	// }
+	// } catch (IOException writeException) {
+	// writeException.printStackTrace();
+	// }
+	// }
+
 	@Override
 	public void disabledInit() {
 		mRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;

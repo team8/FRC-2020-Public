@@ -14,7 +14,6 @@ public class StartLeftInitial180TrenchThree extends AutoModeBase {
 
 	@Override
 	public RoutineBase getRoutine() {
-
 		var initialOdometry = new DriveSetOdometryRoutine(0, 0, 180);
 
 		var turnAround = new DriveYawRoutine(0);
