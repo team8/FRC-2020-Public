@@ -8,8 +8,8 @@
 	"turnGains": {
 		"f": 0.0021,
 		"p": 0.0045,
-		"velocity": 180.0,
-		"acceleration": 180.0
+		"velocity": 140.0,
+		"acceleration": 140.0
 	},
 	"quickStopWeight": 0.125,
 	"quickTurnScalar": 0.55,
@@ -26,7 +26,7 @@
 	"freeCurrentLimit": 48,
 	"freeRpmLimit": 0,
 	"nonlinearPasses": 3,
-	"maxPathVelocityMetersPerSecond": 1.9,
-	"maxPathAccelerationMetersPerSecondSquared": 1.7,
+	"maxPathVelocityMetersPerSecond": 1.5,
+	"maxPathAccelerationMetersPerSecondSquared": 1.5,
 	"allowableYawErrorDegrees": 2.0
 }

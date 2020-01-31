@@ -14,6 +14,7 @@ public class DriveYawController extends Drive.DriveController {
 
 	private ProfiledPIDController mController = new ProfiledPIDController(0.0, 0.0, 0.0,
 			new TrapezoidProfile.Constraints());
+	private Double mTargetYaw;
 
 	public DriveYawController() {
 		mController.enableContinuousInput(-180.0, 180.0);
@@ -30,8 +31,9 @@ public class DriveYawController extends Drive.DriveController {
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		double wantedYawDegrees = commands.getDriveWantedYawDegrees(),
 				currentYawDegrees = Util.boundAngleNeg180to180Degrees(state.driveYawDegrees);
-		if (!Util.approximatelyEqual(mController.getGoal().position, wantedYawDegrees)) {
+		if (mTargetYaw == null || !Util.approximatelyEqual(mTargetYaw, wantedYawDegrees)) {
 			mController.reset(currentYawDegrees);
+			mTargetYaw = wantedYawDegrees;
 		}
 		mController.setPID(mDriveConfig.turnGains.p, mDriveConfig.turnGains.i, mDriveConfig.turnGains.d);
 		mController.setConstraints(

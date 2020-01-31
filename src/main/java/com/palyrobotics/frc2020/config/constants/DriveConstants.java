@@ -53,8 +53,7 @@ public class DriveConstants {
 
 	public static double calculateTimeToFinishTurn(double currentYawDegrees, double targetYawDegrees) {
 		return new TrapezoidProfile(
-				new TrapezoidProfile.Constraints(kConfig.maxPathVelocityMetersPerSecond,
-						kConfig.maxPathAccelerationMetersPerSecondSquared),
+				new TrapezoidProfile.Constraints(kConfig.turnGains.velocity, kConfig.turnGains.acceleration),
 				new TrapezoidProfile.State(targetYawDegrees, 0.0), new TrapezoidProfile.State(currentYawDegrees, 0.0))
 						.totalTime();
 	}
