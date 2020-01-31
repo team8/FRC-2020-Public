@@ -14,10 +14,17 @@ public class StartLeftInitial180TrenchThree extends AutoModeBase {
 
 	@Override
 	public RoutineBase getRoutine() {
+
+
+
 		var initialOdometry = new DriveSetOdometryRoutine(0, 0, 180);
+
+
 
 		var turnAround = new DriveYawRoutine(0);
 
+
+		
 		var getTrenchBalls = new DrivePathRoutine(newWaypoint(170, 0, 0));
 
 		var turnAroundToShoot = new DriveYawRoutine(180.0);
