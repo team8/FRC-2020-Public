@@ -48,7 +48,7 @@ public class Climber extends SubsystemBase {
 				mSolenoidOutput = true;
 				break;
 			case LOCKED:
-				mVerticalOutput.setPercentOutput(0);
+				mVerticalOutput.setIdle();
 				mAdjustingOutput.setPercentOutput(commands.climberWantedAdjustingPercentOutput);
 				mSolenoidOutput = false;
 			case IDLE:

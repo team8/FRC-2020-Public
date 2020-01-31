@@ -17,6 +17,7 @@ import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
+import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.GenericHID;
 
@@ -28,6 +29,8 @@ import edu.wpi.first.wpilibj.GenericHID;
  */
 public class OperatorInterface {
 
+	public static final double kDeadBand = 0.05;
+	private final Limelight mLimelight = Limelight.getInstance();
 	private final Joystick mDriveStick = HardwareAdapter.Joysticks.getInstance().driveStick,
 			mTurnStick = HardwareAdapter.Joysticks.getInstance().turnStick;
 	private final XboxController mOperatorXboxController = HardwareAdapter.Joysticks
@@ -57,31 +60,41 @@ public class OperatorInterface {
 		ClimberConfig mConfig = Configs.get(ClimberConfig.class);
 		double velocityDiff = state.climberMedianVelocity - climberOldVelocity;
 
-		if (mOperatorXboxController.getRawButtonPressed(7)) {
-			commands.climberWantedState = Climber.ClimberState.RAISING;
-		} else if (mOperatorXboxController.getRawButtonPressed(8)
-				&& commands.climberWantedState == Climber.ClimberState.RAISING
-				&& Math.abs(state.climberPosition - mConfig.climberTopHeight) < mConfig.allowablePositionError) {
-			commands.climberWantedState = Climber.ClimberState.LOWERING_TO_BAR;
-		} else if (commands.climberWantedState == Climber.ClimberState.LOWERING_TO_BAR
-				&& velocityDiff > mConfig.velocityChangeThreshold) {
-			commands.climberWantedState = Climber.ClimberState.CLIMBING;
-			commands.addWantedRoutine(new VibrateXboxRoutine(2.0));
-		} else if (commands.climberWantedState == Climber.ClimberState.CLIMBING) {
-			commands.climberWantedVelocity = Util.handleDeadBand(mOperatorXboxController.getY(GenericHID.Hand.kLeft),
-					0.05);
-			commands.climberWantedAdjustingPercentOutput = Util
-					.handleDeadBand(mOperatorXboxController.getX(GenericHID.Hand.kRight), 0.05);
-		} else if (mOperatorXboxController.getDPadUpPressed()) {
-			if (commands.climberWantedState != Climber.ClimberState.LOCKED) {
-				commands.preLockClimberWantedState = commands.climberWantedState;
-				commands.climberWantedState = Climber.ClimberState.LOCKED;
-			} else {
-				commands.climberWantedState = commands.preLockClimberWantedState;
-			}
-		} else {
-			commands.climberWantedState = Climber.ClimberState.IDLE;
+		switch (commands.climberWantedState) {
+			case RAISING:
+				if (Math.abs(state.climberPosition - mConfig.climberTopHeight) < mConfig.allowablePositionError
+						&& mOperatorXboxController.getMenuButtonPressed()) {
+					commands.climberWantedState = Climber.ClimberState.LOWERING_TO_BAR;
+				}
+				break;
+			case LOWERING_TO_BAR:
+				if (velocityDiff > mConfig.velocityChangeThreshold) {
+					commands.climberWantedState = Climber.ClimberState.CLIMBING;
+					commands.addWantedRoutine(new VibrateXboxRoutine(2.0));
+				}
+				break;
+			case CLIMBING:
+				commands.climberWantedVelocity = Util
+						.handleDeadBand(mOperatorXboxController.getY(GenericHID.Hand.kLeft), kDeadBand);
+				commands.climberWantedAdjustingPercentOutput = Util
+						.handleDeadBand(mOperatorXboxController.getX(GenericHID.Hand.kRight), kDeadBand);
+				break;
+			default:
+				if (mOperatorXboxController.getWindowButtonPressed()) {
+					commands.climberWantedState = Climber.ClimberState.RAISING;
+				} else if (mOperatorXboxController.getDPadUpPressed()) {
+					if (commands.climberWantedState != Climber.ClimberState.LOCKED) {
+						commands.preLockClimberWantedState = commands.climberWantedState;
+						commands.climberWantedState = Climber.ClimberState.LOCKED;
+					} else {
+						commands.climberWantedState = commands.preLockClimberWantedState;
+					}
+				} else {
+					commands.climberWantedState = Climber.ClimberState.IDLE;
+				}
+				break;
 		}
+
 		climberOldVelocity = state.climberMedianVelocity;
 	}
 

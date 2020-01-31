@@ -197,6 +197,7 @@ public class Commands {
 		spinnerWantedState = Spinner.SpinnerState.IDLE;
 		intakeWantedState = Intake.IntakeState.INTAKE;
 		indexerWantedState = Indexer.IndexerState.IDLE;
+		shooterWantedState = Shooter.ShooterState.IDLE;
 		driveWantedState = Drive.DriveState.NEUTRAL;
 		wantedRumble = false;
 	}
