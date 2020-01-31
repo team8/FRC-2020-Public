@@ -194,12 +194,10 @@ public class Commands {
 	}
 
 	public void reset() {
-		climberWantedState = Climber.ClimberState.IDLE;
-		driveWantedState = Drive.DriveState.NEUTRAL;
-		indexerWantedState = Indexer.IndexerState.IDLE;
-		intakeWantedState = Intake.IntakeState.INTAKE;
-		shooterWantedState = Shooter.ShooterState.IDLE;
 		spinnerWantedState = Spinner.SpinnerState.IDLE;
+		intakeWantedState = Intake.IntakeState.INTAKE;
+		indexerWantedState = Indexer.IndexerState.IDLE;
+		driveWantedState = Drive.DriveState.NEUTRAL;
 		wantedRumble = false;
 	}
 }
