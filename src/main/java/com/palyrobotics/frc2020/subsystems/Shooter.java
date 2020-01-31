@@ -56,14 +56,14 @@ public class Shooter extends SubsystemBase {
 				// TODO: are we even ble to release lock and go down at the same time?
 				// mHoodOutput = isBlockingExtended;
 				// When we are down, always make sure our locking piston is set to unblocking.
-				// This is how we tell if we are down instead of just resting on top of the
-				// lock. Since our hood piston can be in a retracted state, but we don't know if
-				// we are all the way at the bottom or just resting on the hood.
+				// This is how other states tell if we are down instead of just resting on top
+				// of the block, since the hood piston is retracted in those two cases
+				// meaning its extension state can't be used to determine physical position.
 				mHoodOutput = mBlockingOutput = false;
 				break;
 			case MIDDLE:
 				if (isBlockingExtended) {
-					// We are at the top hood position.
+					// We are at the top hood position. See low case for how we can determine this.
 					mHoodOutput = false;
 					mBlockingOutput = true;
 				} else {
@@ -71,13 +71,13 @@ public class Shooter extends SubsystemBase {
 					mHoodOutput = true;
 					// Unblock until we reach the top.
 					// Then block, which moves to first if condition and moves hood down to rest on
-					// top of lock.
+					// top of blocking piston.
 					mBlockingOutput = isHoodExtended;
 				}
 				break;
 			case HIGH:
 				// Assuming we will never bee in the state where our blocking is extended and
-				// our hood is retracted.
+				// our hood is pushing upwards against it.
 				mHoodOutput = mBlockingOutput = true;
 				break;
 		}

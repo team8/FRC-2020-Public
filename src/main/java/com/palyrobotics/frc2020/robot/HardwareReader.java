@@ -40,15 +40,12 @@ public class HardwareReader {
 	 */
 	void updateState(Set<SubsystemBase> enabledSubsystems, RobotState robotState) {
 		readGameAndFieldState(robotState);
-		if (enabledSubsystems.contains(Drive.getInstance())) {
+		if (enabledSubsystems.contains(Drive.getInstance()))
 			readDriveState(robotState);
-		}
-		if (enabledSubsystems.contains(Indexer.getInstance())) {
+		if (enabledSubsystems.contains(Indexer.getInstance()))
 			readIndexerState(robotState);
-		}
-		if (enabledSubsystems.contains(Shooter.getInstance())) {
+		if (enabledSubsystems.contains(Shooter.getInstance()))
 			readShooterState(robotState);
-		}
 	}
 
 	private void readGameAndFieldState(RobotState robotState) {
