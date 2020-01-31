@@ -9,15 +9,14 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.SetOdometryRoutine;
 
 @SuppressWarnings ("Duplicates")
-public class ShootThreeFriendlyTrenchThreeShootThree extends AutoModeBase {
+public class StartLeftInitial180TrenchThree extends AutoModeBase {
 
-	// starts center, initial 180
 	@Override
 	public RoutineBase getRoutine() {
 
 		var initialOdometry = new SetOdometryRoutine(0, 0, 180);
 
-		var getTrenchBalls = new DrivePathRoutine(newWaypoint(40, 55, 0), newWaypoint(170, 55, 0));
+		var getTrenchBalls = new DrivePathRoutine(newWaypoint(170, 0, 0));
 
 		var turnAroundToShoot = new DriveYawRoutine(180.0);
 
