@@ -4,7 +4,6 @@
 		"networkLogger"
 	],
 	"enabledSubsystems": [
-		"drive"
 	],
 	"coastDriveIfDisabled": false,
 	"motorOutputMultiplier": 1.0,

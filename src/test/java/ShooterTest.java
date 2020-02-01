@@ -11,7 +11,7 @@ public class ShooterTest {
 	public void testShooter() {
 		var shooter = Shooter.getInstance();
 		var commands = new Commands();
-		commands.reset();
+		commands.setShooterIdle();
 		var state = new RobotState();
 		shooter.update(commands, state);
 		// TODO: finish off shooter

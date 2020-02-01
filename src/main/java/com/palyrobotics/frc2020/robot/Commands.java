@@ -134,6 +134,10 @@ public class Commands {
 	}
 
 	/* Shooter */
+	public void setShooterIdle() {
+		shooterWantedState = Shooter.ShooterState.IDLE;
+	}
+
 	public void setShooterManualFlywheelVelocity(double wantedVelocity) {
 		shooterWantedState = Shooter.ShooterState.MANUAL_VELOCITY;
 		shooterManualWantedFlywheelVelocity = wantedVelocity;
@@ -162,14 +166,5 @@ public class Commands {
 			log.append(routine).append(" ");
 		}
 		return log.append("\n").toString();
-	}
-
-	public void reset() {
-		climberWantedState = Climber.ClimberState.IDLE;
-		driveWantedState = Drive.DriveState.NEUTRAL;
-		indexerWantedState = Indexer.IndexerState.IDLE;
-		intakeWantedState = Intake.IntakeState.INTAKE;
-		shooterWantedState = Shooter.ShooterState.IDLE;
-		spinnerWantedState = Spinner.SpinnerState.IDLE;
 	}
 }

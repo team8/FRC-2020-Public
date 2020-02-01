@@ -2,22 +2,16 @@ package com.palyrobotics.frc2020.robot;
 
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
-import com.palyrobotics.frc2020.auto.*;
-import com.palyrobotics.frc2020.behavior.RoutineBase;
+import com.palyrobotics.frc2020.auto.StartLeftInitial180TrenchThree;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
-import com.palyrobotics.frc2020.subsystems.Climber;
-import com.palyrobotics.frc2020.subsystems.Indexer;
-import com.palyrobotics.frc2020.subsystems.Intake;
-import com.palyrobotics.frc2020.subsystems.Spinner;
+import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
-import com.palyrobotics.frc2020.vision.Limelight;
-import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
 import edu.wpi.first.wpilibj.GenericHID;
 
@@ -30,28 +24,10 @@ import edu.wpi.first.wpilibj.GenericHID;
  */
 public class OperatorInterface {
 
-	private final Limelight mLimelight = Limelight.getInstance();
 	private final Joystick mDriveStick = HardwareAdapter.Joysticks.getInstance().driveStick,
 			mTurnStick = HardwareAdapter.Joysticks.getInstance().turnStick;
 	private final XboxController mOperatorXboxController = HardwareAdapter.Joysticks
 			.getInstance().operatorXboxController;
-
-	/**
-	 * Helper method to only add routines that aren't already in wantedRoutines
-	 *
-	 * @param commands      Current set of commands being modified
-	 * @param wantedRoutine Routine to add to the commands
-	 * @return whether or not wantedRoutine was successfully added
-	 */
-	private boolean addWantedRoutine(Commands commands, RoutineBase wantedRoutine) {
-		for (RoutineBase routine : commands.routinesWanted) {
-			if (routine.getClass().equals(wantedRoutine.getClass())) {
-				return false;
-			}
-		}
-		commands.routinesWanted.add(wantedRoutine);
-		return true;
-	}
 
 	/**
 	 * Modifies commands based on operator input devices.
@@ -141,8 +117,15 @@ public class OperatorInterface {
 		}
 	}
 
-	private void setVision(boolean on) {
-		mLimelight.setCamMode(on ? LimelightControlMode.CamMode.VISION : LimelightControlMode.CamMode.DRIVER);
-		mLimelight.setLEDMode(on ? LimelightControlMode.LedMode.FORCE_ON : LimelightControlMode.LedMode.FORCE_OFF);
+	public void defaults(Commands commands) {
+		commands.indexerWantedState = Indexer.IndexerState.IDLE;
+		commands.setDriveNeutral();
+		commands.intakeWantedState = Intake.IntakeState.INTAKE;
+		commands.setShooterIdle();
+		commands.spinnerWantedState = Spinner.SpinnerState.IDLE;
+	}
+
+	public void reset(Commands commands) {
+
 	}
 }

@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
 	}
 
 	private void resetCommandsAndRoutines() {
-		mCommands.reset();
+		mOperatorInterface.reset(mCommands);
 		mRoutineManager.clearRunningRoutines();
 		updateSubsystemsAndHardware();
 	}
@@ -142,7 +142,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-		mCommands.reset();
+		mOperatorInterface.defaults(mCommands);
 		mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
 		mRoutineManager.update(mCommands, mRobotState);
 		updateSubsystemsAndHardware();
@@ -150,7 +150,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopPeriodic() {
-		mCommands.reset();
+		mOperatorInterface.defaults(mCommands);
 		mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
 		mOperatorInterface.updateCommands(mCommands, mRobotState);
 		mRoutineManager.update(mCommands, mRobotState);
