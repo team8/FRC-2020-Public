@@ -13,7 +13,7 @@ public class ShootThreeTrenchThreeRendezvousTwo extends AutoModeBase {
 
 	@Override
 	public RoutineBase getRoutine() {
-	    var init = new DriveSetOdometryRoutine(0, 0,180 );
+		var init = new DriveSetOdometryRoutine(0, 0, 180);
 		var getTrenchBalls = new DrivePathRoutine(newWaypoint(40, 55, 0), newWaypoint(170, 55, 0));
 		var turnRoutine = new DriveYawRoutine(180);
 		var getRendezvous = new DrivePathRoutine(newWaypoint(135, 55, 180), newWaypoint(170 - 95, -5, 95));
@@ -21,6 +21,7 @@ public class ShootThreeTrenchThreeRendezvousTwo extends AutoModeBase {
 
 		// var turnAroundToShoot = new DriveYawRoutine(180.0);
 
-		return new SequentialRoutine(init, getTrenchBalls, turnRoutine, getRendezvous, reverse, new VisionAlignRoutine());
+		return new SequentialRoutine(init, getTrenchBalls, turnRoutine, getRendezvous, reverse,
+				new VisionAlignRoutine());
 	}
 }

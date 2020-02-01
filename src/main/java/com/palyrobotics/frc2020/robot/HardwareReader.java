@@ -11,13 +11,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class HardwareReader {
 
+	public static final int kYawIndex = 0;
 	/**
 	 * A REV Color Match object is used to register and detect known colors. This can be calibrated
 	 * ahead of time or during operation. This object uses euclidean distance to estimate the closest
 	 * match with a given confidence range.
 	 */
 	public final ColorMatch mColorMatcher = new ColorMatch();
-	private final double[] mGyroValues = new double[3];
+	private final double[] mGyroAngles = new double[3];
 
 	public HardwareReader() {
 		mColorMatcher.addColorMatch(SpinnerConstants.kCyanCPTarget);
@@ -62,14 +63,13 @@ public class HardwareReader {
 	}
 
 	private void readDriveState(RobotState robotState) {
-		var hardware = DrivetrainHardware.getInstance();
-		var gyroAngles = new double[3];
-		hardware.gyro.getYawPitchRoll(gyroAngles);
-		robotState.driveYawDegrees = gyroAngles[0];
-		robotState.driveLeftVelocity = hardware.leftMasterEncoder.getVelocity() / 60.0;
-		robotState.driveRightVelocity = hardware.rightMasterEncoder.getVelocity() / 60.0;
-		robotState.driveLeftPosition = hardware.leftMasterEncoder.getPosition();
-		robotState.driveRightPosition = hardware.rightMasterEncoder.getPosition();
+		var drivetrain = DrivetrainHardware.getInstance();
+		drivetrain.gyro.getYawPitchRoll(mGyroAngles);
+		robotState.driveYawDegrees = mGyroAngles[kYawIndex];
+		robotState.driveLeftVelocity = drivetrain.leftMasterEncoder.getVelocity() / 60.0;
+		robotState.driveRightVelocity = drivetrain.rightMasterEncoder.getVelocity() / 60.0;
+		robotState.driveLeftPosition = drivetrain.leftMasterEncoder.getPosition();
+		robotState.driveRightPosition = drivetrain.rightMasterEncoder.getPosition();
 		robotState.updateOdometry(robotState.driveYawDegrees, robotState.driveLeftPosition,
 				robotState.driveRightPosition);
 	}
