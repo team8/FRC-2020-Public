@@ -106,10 +106,10 @@ public class Util {
 	}
 
 	public static boolean approximatelyEqual(double d1, double d2) {
-		return approximatelyEqual(d1, d2, 1e-4);
+		return withinRange(d1, d2, 1e-4);
 	}
 
-	public static boolean approximatelyEqual(double d1, double d2, double tolerance) {
+	public static boolean withinRange(double d1, double d2, double tolerance) {
 		return Math.abs(d1 - d2) < tolerance;
 	}
 

@@ -56,6 +56,9 @@ public class HardwareWriter {
 		climberHardware.verticalSpark.enableVoltageCompensation(12);
 		climberHardware.verticalSpark.getEncoder().setPositionConversionFactor(config.positionConversionFactor);
 		climberHardware.verticalSpark.getEncoder().setVelocityConversionFactor(config.velocityConversionFactor);
+		climberHardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		climberHardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
+
 	}
 
 	private void configureDriveHardware() {

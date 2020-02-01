@@ -16,7 +16,6 @@ public class Climber extends SubsystemBase {
 	private static Climber sInstance = new Climber();
 	private ControllerOutput mVerticalOutput = new ControllerOutput(), mAdjustingOutput = new ControllerOutput();
 	private boolean mSolenoidOutput = true;
-	private ClimberState mState = ClimberState.IDLE;
 	private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
 
 	private Climber() {
@@ -28,8 +27,7 @@ public class Climber extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		mState = commands.climberWantedState;
-		switch (mState) {
+		switch (commands.climberWantedState) {
 			case RAISING:
 				mVerticalOutput.setTargetPositionProfiled(mConfig.climberTopHeight, mConfig.raisingArbitraryDemand,
 						mConfig.raisingGains);
@@ -51,6 +49,7 @@ public class Climber extends SubsystemBase {
 				mVerticalOutput.setIdle();
 				mAdjustingOutput.setPercentOutput(commands.climberWantedAdjustingPercentOutput);
 				mSolenoidOutput = false;
+				break;
 			case IDLE:
 				mVerticalOutput.setIdle();
 				mAdjustingOutput.setIdle();

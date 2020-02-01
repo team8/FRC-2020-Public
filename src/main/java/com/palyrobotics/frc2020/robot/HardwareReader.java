@@ -37,18 +37,14 @@ public class HardwareReader {
 	 */
 	void updateState(Set<SubsystemBase> enabledSubsystems, RobotState robotState) {
 		readGameAndFieldState(robotState);
-		if (enabledSubsystems.contains(Climber.getInstance())) {
+		if (enabledSubsystems.contains(Climber.getInstance()))
 			readClimberState(robotState);
-		}
-		if (enabledSubsystems.contains(Drive.getInstance())) {
+		if (enabledSubsystems.contains(Drive.getInstance()))
 			readDriveState(robotState);
-		}
-		if (enabledSubsystems.contains(Indexer.getInstance())) {
+		if (enabledSubsystems.contains(Indexer.getInstance()))
 			readIndexerState(robotState);
-		}
-		if (enabledSubsystems.contains(Shooter.getInstance())) {
+		if (enabledSubsystems.contains(Shooter.getInstance()))
 			readShooterState(robotState);
-		}
 	}
 
 	private void readGameAndFieldState(RobotState robotState) {
@@ -69,9 +65,8 @@ public class HardwareReader {
 
 	private void readClimberState(RobotState robotState) {
 		var climber = HardwareAdapter.ClimberHardware.getInstance();
-		robotState.climberPosition = climber.verticalSpark.getEncoder().getPosition();
-		robotState.climberMedianVelocity = robotState.climberVelocityFilter
-				.calculate(climber.verticalSpark.getEncoder().getVelocity());
+		robotState.climberPosition = climber.verticalSparkEncoder.getPosition();
+		robotState.climberVelocity = climber.verticalSparkEncoder.getVelocity();
 	}
 
 	private void readDriveState(RobotState robotState) {
