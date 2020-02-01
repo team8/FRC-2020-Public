@@ -12,36 +12,37 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
 /**
- * Represents the drivetrain. Uses controllers or cheesy drive helper/proportional drive helper to
- * calculate a drive signal.
+ * Represents the drivetrain. Uses {@link #mController} to generate
+ * {@link #mOutputs}.
  */
 public class Drive extends SubsystemBase {
 
-	public enum DriveState {
-		NEUTRAL, TELEOP, SIGNAL, FOLLOW_PATH, VISION_ALIGN, TURN
+	public enum State {
+		NEUTRAL, TELEOP, OUTPUTS, FOLLOW_PATH, VISION_ALIGN, TURN
 	}
 
 	public abstract static class DriveController {
 
-		protected final DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
+		protected final DriveConfig mConfig = Configs.get(DriveConfig.class);
 
-		protected DriveOutputs mDriveOutputs = new DriveOutputs();
+		protected DriveOutputs mOutputs = new DriveOutputs();
 
 		public final DriveOutputs update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 			updateSignal(commands, state);
-			return mDriveOutputs;
+			return mOutputs;
 		}
 
 		/**
-		 * Should set {@link #mDriveOutputs} to reflect what is currently wanted by {@link Commands}.
+		 * Should set {@link #mOutputs} to reflect what is currently wanted by
+		 * {@link Commands}.
 		 */
 		public abstract void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state);
 	}
 
 	private static Drive sInstance = new Drive();
 	private Drive.DriveController mController;
-	private DriveState mState;
-	private DriveOutputs mSignal = new DriveOutputs();
+	private State mState;
+	private DriveOutputs mOutputs = new DriveOutputs();
 
 	private Drive() {
 	}
@@ -51,12 +52,12 @@ public class Drive extends SubsystemBase {
 	}
 
 	public DriveOutputs getDriveSignal() {
-		return mSignal;
+		return mOutputs;
 	}
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		DriveState wantedState = commands.getDriveWantedState();
+		State wantedState = commands.getDriveWantedState();
 		boolean isNewState = mState != wantedState;
 		mState = wantedState;
 		if (isNewState) {
@@ -67,12 +68,12 @@ public class Drive extends SubsystemBase {
 				case TELEOP:
 					mController = new ChezyDriveController();
 					break;
-				case SIGNAL:
+				case OUTPUTS:
 					mController = new DriveController() {
 
 						@Override
 						public void updateSignal(Commands commands, RobotState state) {
-							mSignal = commands.getDriveWantedSignal();
+							Drive.this.mOutputs = commands.getDriveWantedSignal();
 						}
 					};
 					break;
@@ -87,10 +88,10 @@ public class Drive extends SubsystemBase {
 			}
 		}
 		if (mController == null) {
-			mSignal.leftOutput.setIdle();
-			mSignal.rightOutput.setIdle();
+			mOutputs.leftOutput.setIdle();
+			mOutputs.rightOutput.setIdle();
 		} else {
-			mSignal = mController.update(commands, state);
+			mOutputs = mController.update(commands, state);
 		}
 	}
 }

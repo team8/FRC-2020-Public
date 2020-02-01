@@ -19,7 +19,7 @@ public class DriveTimeRoutine extends TimedRoutine {
 
 	@Override
 	protected void update(Commands commands, RobotState state) {
-		commands.setDriveSignal(mOutput);
+		commands.setDriveOutputs(mOutput);
 	}
 
 	@Override

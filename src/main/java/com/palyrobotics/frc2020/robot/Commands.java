@@ -26,7 +26,7 @@ public class Commands {
 	public Climber.ClimberState preLockClimberWantedState;
 	/* Drive */
 	/* Drive Commands */
-	private Drive.DriveState driveWantedState;
+	private Drive.State driveWantedState;
 	// Teleop
 	private double driveWantedThrottle, driveWantedWheel;
 	private boolean driveWantsQuickTurn, driveWantsBrake;
@@ -76,18 +76,18 @@ public class Commands {
 		climberWantedAdjustingPercentOutput = percentOutput;
 	}
 
-	public void setDriveSignal(DriveOutputs signal) {
-		driveWantedState = Drive.DriveState.SIGNAL;
-		driveWantedSignal = signal;
+	public void setDriveOutputs(DriveOutputs outputs) {
+		driveWantedState = Drive.State.OUTPUTS;
+		driveWantedSignal = outputs;
 	}
 
 	public void setDriveFollowPath(Trajectory trajectory) {
-		driveWantedState = Drive.DriveState.FOLLOW_PATH;
+		driveWantedState = Drive.State.FOLLOW_PATH;
 		driveWantedTrajectory = trajectory;
 	}
 
 	public void setDriveVisionAlign() {
-		driveWantedState = Drive.DriveState.VISION_ALIGN;
+		driveWantedState = Drive.State.VISION_ALIGN;
 	}
 
 	public void setDriveTeleop() {
@@ -95,7 +95,7 @@ public class Commands {
 	}
 
 	public void setDriveTeleop(double throttle, double wheel, boolean wantsQuickTurn, boolean wantsBrake) {
-		driveWantedState = Drive.DriveState.TELEOP;
+		driveWantedState = Drive.State.TELEOP;
 		driveWantedThrottle = throttle;
 		driveWantedWheel = wheel;
 		driveWantsQuickTurn = wantsQuickTurn;
@@ -103,15 +103,15 @@ public class Commands {
 	}
 
 	public void setDriveNeutral() {
-		driveWantedState = Drive.DriveState.NEUTRAL;
+		driveWantedState = Drive.State.NEUTRAL;
 	}
 
 	public void setDriveYaw(double yawDegrees) {
-		driveWantedState = Drive.DriveState.TURN;
+		driveWantedState = Drive.State.TURN;
 		driveWantedYawDegrees = yawDegrees;
 	}
 
-	public Drive.DriveState getDriveWantedState() {
+	public Drive.State getDriveWantedState() {
 		return driveWantedState;
 	}
 
@@ -189,5 +189,15 @@ public class Commands {
 		other.preLockClimberWantedState = preLockClimberWantedState;
 		other.climberWantedAdjustingPercentOutput = climberWantedAdjustingPercentOutput;
 		other.climberWantedVelocity = climberWantedVelocity;
+	}
+
+	public void reset() {
+		spinnerWantedState = Spinner.State.IDLE;
+		intakeWantedState = Intake.State.INTAKE;
+		indexerWantedBeltState = Indexer.BeltState.INDEX;
+		indexerWantedHopperState = Indexer.HopperState.CLOSED;
+		shooterWantedState = Shooter.ShooterState.IDLE;
+		driveWantedState = Drive.State.NEUTRAL;
+		wantedRumble = false;
 	}
 }

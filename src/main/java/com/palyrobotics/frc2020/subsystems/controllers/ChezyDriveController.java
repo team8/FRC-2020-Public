@@ -15,9 +15,9 @@ public class ChezyDriveController extends Drive.DriveController {
 	private double mLastWheel, mQuickStopAccumulator, mNegativeInertiaAccumulator;
 
 	@Override
-	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		// Quick-turn if right trigger is pressed
-		boolean isQuickTurn = robotState.driveIsQuickTurning = commands.getDriveWantsQuickTurn();
+		boolean isQuickTurn = state.driveIsQuickTurning = commands.getDriveWantsQuickTurn();
 
 		double throttle = commands.getDriveWantedThrottle(), wheel = commands.getDriveWantedWheel();
 
@@ -30,20 +30,20 @@ public class ChezyDriveController extends Drive.DriveController {
 		mLastWheel = wheel;
 
 		// Map linear wheel input onto a sin wave, three passes
-		for (int i = 0; i < mDriveConfig.nonlinearPasses; i++) wheel = applyWheelNonLinearPass(wheel,
-				mDriveConfig.wheelNonLinearity);
+		for (int i = 0; i < mConfig.nonlinearPasses; i++)
+			wheel = applyWheelNonLinearPass(wheel, mConfig.wheelNonLinearity);
 
 		// Negative inertia
 		double negativeInertiaScalar;
 		if (wheel * negativeWheelInertia > 0) {
 			// If we are moving away from zero - trying to get more wheel
-			negativeInertiaScalar = mDriveConfig.lowNegativeInertiaTurnScalar;
+			negativeInertiaScalar = mConfig.lowNegativeInertiaTurnScalar;
 		} else {
 			// Going back to zero
-			if (absoluteWheel > mDriveConfig.lowNegativeInertiaThreshold) {
-				negativeInertiaScalar = mDriveConfig.lowNegativeInertiaFarScalar;
+			if (absoluteWheel > mConfig.lowNegativeInertiaThreshold) {
+				negativeInertiaScalar = mConfig.lowNegativeInertiaFarScalar;
 			} else {
-				negativeInertiaScalar = mDriveConfig.lowNegativeInertiaCloseScalar;
+				negativeInertiaScalar = mConfig.lowNegativeInertiaCloseScalar;
 			}
 		}
 
@@ -63,16 +63,16 @@ public class ChezyDriveController extends Drive.DriveController {
 		// backwards
 		double angularPower, overPower;
 		if (isQuickTurn) {
-			if (absoluteThrottle < mDriveConfig.quickStopDeadBand) {
-				double alpha = mDriveConfig.quickStopWeight;
-				mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator +
-						alpha * Util.clamp01(wheel) * mDriveConfig.quickStopScalar;
+			if (absoluteThrottle < mConfig.quickStopDeadBand) {
+				double alpha = mConfig.quickStopWeight;
+				mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator
+						+ alpha * Util.clamp01(wheel) * mConfig.quickStopScalar;
 			}
 			overPower = 1.0;
-			angularPower = wheel * mDriveConfig.quickTurnScalar;
+			angularPower = wheel * mConfig.quickTurnScalar;
 		} else {
 			overPower = 0.0;
-			angularPower = absoluteThrottle * wheel * mDriveConfig.turnSensitivity - mQuickStopAccumulator;
+			angularPower = absoluteThrottle * wheel * mConfig.turnSensitivity - mQuickStopAccumulator;
 			if (mQuickStopAccumulator > 1.0) {
 				mQuickStopAccumulator -= 1.0;
 			} else if (mQuickStopAccumulator < -1.0) {
@@ -103,8 +103,8 @@ public class ChezyDriveController extends Drive.DriveController {
 			rightPower = -1.0;
 		}
 
-		mDriveOutputs.leftOutput.setPercentOutput(leftPower);
-		mDriveOutputs.rightOutput.setPercentOutput(rightPower);
+		mOutputs.leftOutput.setPercentOutput(leftPower);
+		mOutputs.rightOutput.setPercentOutput(rightPower);
 	}
 
 	private double applyWheelNonLinearPass(double wheel, double wheelNonLinearity) {

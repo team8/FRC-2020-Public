@@ -26,7 +26,7 @@ public class VisionYawAlignDriveController extends ChezyDriveController {
 	}
 
 	@Override
-	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		boolean targetFound = mLimelight.isTargetFound();
 		double angleToTarget = mLimelight.getYawToTarget();
 
@@ -36,9 +36,9 @@ public class VisionYawAlignDriveController extends ChezyDriveController {
 			Util.clamp(angularPower, -kMaxAngularPower, kMaxAngularPower);
 			// if (Math.abs(angularPower) > kMaxAngularPower)
 			// angularPower = angularPower > 0 ? kMaxAngularPower : -kMaxAngularPower;
-			double rightOutput = angularPower, leftOutput = -angularPower;
-			mDriveOutputs.leftOutput.setPercentOutput(leftOutput);
-			mDriveOutputs.rightOutput.setPercentOutput(rightOutput);
+			double rightPercentOutput = angularPower, leftPercentOutput = -angularPower;
+			mOutputs.leftOutput.setPercentOutput(leftPercentOutput);
+			mOutputs.rightOutput.setPercentOutput(rightPercentOutput);
 		} else {
 			/*
 			* alternates every cycle target not found (pipeline 0 for normal, pipeline 1
@@ -47,7 +47,7 @@ public class VisionYawAlignDriveController extends ChezyDriveController {
 			*/
 			// mPipelineBeingUsed = mPipelineBeingUsed == 1 ? 0 : 1;
 			// mLimelight.setPipeline(mPipelineBeingUsed);
-			super.updateSignal(commands, robotState);
+			super.updateSignal(commands, state);
 		}
 	}
 }

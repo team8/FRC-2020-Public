@@ -34,14 +34,14 @@ public class YawDriveController extends Drive.DriveController {
 			mController.reset(currentYawDegrees);
 			mTargetYaw = wantedYawDegrees;
 		}
-		mController.setPID(mDriveConfig.turnGains.p, mDriveConfig.turnGains.i, mDriveConfig.turnGains.d);
+		mController.setPID(mConfig.turnGains.p, mConfig.turnGains.i, mConfig.turnGains.d);
 		mController.setConstraints(
-				new TrapezoidProfile.Constraints(mDriveConfig.turnGains.velocity, mDriveConfig.turnGains.acceleration));
-		var feedForwardCalculator = new SimpleMotorFeedforward(0.0, mDriveConfig.turnGains.f, 0.0);
-		double drivePercentOutput = mController.calculate(currentYawDegrees, wantedYawDegrees);
-		drivePercentOutput += feedForwardCalculator.calculate(mController.getSetpoint().velocity);
-		mDriveOutputs.leftOutput.setPercentOutput(-drivePercentOutput);
-		mDriveOutputs.rightOutput.setPercentOutput(drivePercentOutput);
+				new TrapezoidProfile.Constraints(mConfig.turnGains.velocity, mConfig.turnGains.acceleration));
+		var feedForwardCalculator = new SimpleMotorFeedforward(0.0, mConfig.turnGains.f, 0.0);
+		double percentOutput = mController.calculate(currentYawDegrees, wantedYawDegrees);
+		percentOutput += feedForwardCalculator.calculate(mController.getSetpoint().velocity);
+		mOutputs.leftOutput.setPercentOutput(-percentOutput);
+		mOutputs.rightOutput.setPercentOutput(percentOutput);
 	}
 
 }
