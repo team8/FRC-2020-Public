@@ -52,6 +52,7 @@ public class OperatorInterface {
 		updateDriveCommands(commands);
 		updateIndexerCommands(commands);
 		updateIntakeCommands(commands);
+		updateShooterCommands(commands);
 		updateSpinnerCommands(commands);
 
 		commands.shouldClearCurrentRoutines = mDriveStick.getTriggerPressed();
@@ -147,6 +148,14 @@ public class OperatorInterface {
 		}
 	}
 
+	private void updateShooterCommands(Commands commands) {
+		if (mOperatorXboxController.getRightTriggerPressed()) {
+			commands.setShooterVisionAssisted();
+		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
+			commands.setShooterIdle();
+		}
+	}
+
 	private void updateSpinnerCommands(Commands commands) {
 		// TODO Figure out better button
 		if (mOperatorXboxController.getDPadRightPressed()) {
@@ -160,11 +169,11 @@ public class OperatorInterface {
 		commands.indexerWantedState = Indexer.IndexerState.IDLE;
 		commands.setDriveNeutral();
 		commands.intakeWantedState = Intake.IntakeState.INTAKE;
-		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.SpinnerState.IDLE;
 	}
 
 	public void reset(Commands commands) {
 		commands.climberWantedState = Climber.ClimberState.IDLE;
+		commands.setShooterIdle();
 	}
 }

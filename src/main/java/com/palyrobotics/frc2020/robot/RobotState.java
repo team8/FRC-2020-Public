@@ -47,7 +47,6 @@ public class RobotState {
 			frontIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
 			topIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize);
 	public boolean hasBackUltrasonicBall, hasFrontUltrasonicBall, hasTopUltrasonicBall;
-	public double visionDistanceToTarget;
 
 	// Climber
 	public double climberPosition;

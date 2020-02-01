@@ -10,6 +10,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.vision.Limelight;
 
 public class Shooter extends SubsystemBase {
 
@@ -22,6 +23,7 @@ public class Shooter extends SubsystemBase {
 	}
 
 	private static Shooter sInstance = new Shooter();
+	private Limelight mLimelight = Limelight.getInstance();
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
 	private ControllerOutput mFlywheelOutput = new ControllerOutput();
 	private boolean mHoodOutput, mBlockingOutput;
@@ -41,7 +43,7 @@ public class Shooter extends SubsystemBase {
 				targetVelocity = commands.getShooterManualWantedFlywheelVelocity();
 				break;
 			case VISION_VELOCITY:
-				targetVelocity = kTargetDistanceToVelocity.getInterpolated(robotState.visionDistanceToTarget);
+				targetVelocity = kTargetDistanceToVelocity.getInterpolated(mLimelight.getCorrectedEstimatedDistanceZ());
 				break;
 			default:
 				targetVelocity = 0.0;
