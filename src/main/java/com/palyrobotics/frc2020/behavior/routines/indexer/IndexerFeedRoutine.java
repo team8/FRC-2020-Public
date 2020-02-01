@@ -26,7 +26,7 @@ public class IndexerFeedRoutine extends TimeoutRoutineBase {
 
 	@Override
 	public boolean checkIfFinishedEarly(RobotState state) {
-		return !state.hasTopUltrasonicBall;
+		return !state.hasTopBall;
 	}
 
 	@Override

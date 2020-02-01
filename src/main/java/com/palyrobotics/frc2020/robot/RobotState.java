@@ -1,7 +1,5 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.util.List;
-
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.util.SolenoidState;
 import com.palyrobotics.frc2020.util.Util;
@@ -11,7 +9,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpiutil.CircularBuffer;
 
 /**
  * Holds the current physical state of the robot from our sensors.
@@ -43,23 +40,12 @@ public class RobotState {
 	public SolenoidState shooterHoodSolenoidState = new SolenoidState(),
 			shooterBlockingSolenoidState = new SolenoidState();
 	// TODO: Reorder this and add comments to separate by subsystem and function
-	public CircularBuffer backIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
-			frontIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize),
-			topIndexerUltrasonicReadings = new CircularBuffer(kUltrasonicBufferSize);
-	public boolean hasBackUltrasonicBall, hasFrontUltrasonicBall, hasTopUltrasonicBall;
+	public boolean hasBackBall, hasFrontBall, hasTopBall;
 	public double visionDistanceToTarget;
 
 	// Climber
 	public double climberPosition;
 	public double climberVelocity;
-
-	public void resetUltrasonics() {
-		for (CircularBuffer buffer : List.of(backIndexerUltrasonicReadings, frontIndexerUltrasonicReadings)) {
-			for (int i = 0; i < kUltrasonicBufferSize; i++) {
-				buffer.addFirst(Double.MAX_VALUE);
-			}
-		}
-	}
 
 	public void resetOdometry(Pose2d pose) {
 		driveOdometry.resetPosition(pose, pose.getRotation());

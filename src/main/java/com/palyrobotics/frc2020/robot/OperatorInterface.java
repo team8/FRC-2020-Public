@@ -131,7 +131,7 @@ public class OperatorInterface {
 	}
 
 	private void updateIndexerCommands(Commands commands, @ReadOnly RobotState state) {
-		if (state.hasBackUltrasonicBall && state.hasFrontUltrasonicBall) { // TODO: replace with ball detection
+		if (state.hasBackBall && state.hasFrontBall) { // TODO: replace with ball detection
 			commands.indexerWantedState = Indexer.IndexerState.WAITING_TO_FEED;
 		} else if (mOperatorXboxController.getDPadRightPressed()) {
 			if (Indexer.getInstance().getUpDownOutput()) {
@@ -164,7 +164,7 @@ public class OperatorInterface {
 	}
 
 	private void updateIntakeCommands(Commands commands, @ReadOnly RobotState state) {
-		if (state.hasBackUltrasonicBall && state.hasFrontUltrasonicBall) { // TODO: replace with ball detection
+		if (state.hasBackBall && state.hasFrontBall) { // TODO: replace with ball detection
 			commands.intakeWantedState = Intake.IntakeState.RAISE;
 		} else if (mOperatorXboxController.getDPadRightPressed()) {
 			if (Indexer.getInstance().getUpDownOutput()) {
