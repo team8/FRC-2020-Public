@@ -1,7 +1,9 @@
 package com.palyrobotics.frc2020.robot;
 
 import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
+import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
+import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedSingleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
@@ -110,25 +112,10 @@ public class OperatorInterface {
 					mDriveStick.getTrigger());
 		}
 		/* Path Following */
-//		if (mOperatorXboxController.getDPadUpPressed()) {
-//			// commands.addWantedRoutine(new
-//			// StartRightTrenchStealTwoShootFive().getRoutine());
-//			// commands.addWantedRoutine(new VisionAlignRoutine());
-//			commands.addWantedRoutine(new StartLeftInitial180TrenchThree().getRoutine());
-//		} else if (mOperatorXboxController.getDPadRightPressed()) {
-//			commands.addWantedRoutine(
-//					new SequentialRoutine(
-//							new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
-//							new DriveYawRoutine(180.0)));
-//		} else if (mOperatorXboxController.getDPadLeftPressed()) {
-//			commands.addWantedRoutine(
-//					new SequentialRoutine(
-//							new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
-//							new DrivePathRoutine(newWaypoint(100.0, 0.0, 0.0))));
-//		} else if (mOperatorXboxController.getDPadDownPressed()) {
-//			commands.addWantedRoutine(
-//					new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
-//		}
+		if (mOperatorXboxController.getDPadDownPressed()) {
+			commands.addWantedRoutine(
+					new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
+		}
 	}
 
 	private void updateBallSuperstructure(Commands commands, @ReadOnly RobotState state) {

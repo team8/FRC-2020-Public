@@ -1,6 +1,6 @@
 {
 	"gains": {
-		"p": 0.02,
+		"p": 0.01,
 		"d": 0.001
 	},
 	"acceptableError" : 3

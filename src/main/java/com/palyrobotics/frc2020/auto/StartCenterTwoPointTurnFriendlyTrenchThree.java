@@ -18,13 +18,11 @@ public class StartCenterTwoPointTurnFriendlyTrenchThree extends AutoModeBase {
 
 		var point1 = new DrivePathRoutine(newWaypoint(25, -35, 90));
 
-		var point2 = new DrivePathRoutine(newWaypoint(80, 45, 0));
-
-		var getTrenchBalls = new DrivePathRoutine(newWaypoint(170, 45, 0));
+		var point2 = new DrivePathRoutine(newWaypoint(80, 45, 0), newWaypoint(170, 45, 0));
 
 		var turnAroundToShoot = new DriveYawRoutine(180.0);
 
-		return new SequentialRoutine(initialOdometry, point1.driveInReverse(), point2, getTrenchBalls,
+		return new SequentialRoutine(initialOdometry, point1.driveInReverse(), point2,
 				turnAroundToShoot);
 	}
 }
