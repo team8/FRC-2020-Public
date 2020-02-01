@@ -5,9 +5,7 @@
 		"telemetryService"
 	],
 	"enabledSubsystems": [
-		"shooter",
-		"indexer",
-		"intake"
+		"drive"
 	],
 	"coastDriveIfDisabled": false,
 	"motorOutputMultiplier": 1.0,

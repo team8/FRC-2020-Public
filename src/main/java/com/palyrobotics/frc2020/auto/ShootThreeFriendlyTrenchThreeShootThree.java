@@ -10,7 +10,7 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
 @SuppressWarnings ("Duplicates")
-public class ShootThreeFriendlyTrenchThreeShootThree extends AutoModeBase {
+public class ShootThreeFriendlyTrenchThreeShootThree extends AutoBase {
 
 	// Starts center, initial 180
 	@Override

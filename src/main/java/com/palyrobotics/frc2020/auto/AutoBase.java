@@ -6,7 +6,7 @@ import com.palyrobotics.frc2020.behavior.RoutineBase;
 
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
-public abstract class AutoModeBase {
+public abstract class AutoBase {
 
 	public abstract RoutineBase getRoutine();
 

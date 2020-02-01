@@ -10,7 +10,7 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
 @SuppressWarnings ("Duplicates")
-public class StartRightTrenchStealTwoShootFive extends AutoModeBase {
+public class StartRightTrenchStealTwoShootFive extends AutoBase {
 
 	@Override
 	public RoutineBase getRoutine() {

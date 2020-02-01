@@ -9,7 +9,7 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 
 @SuppressWarnings ("Duplicates")
-public class StartCenterTwoPointTurnFriendlyTrenchThree extends AutoModeBase {
+public class StartCenterTwoPointTurnFriendlyTrenchThree extends AutoBase {
 
 	@Override
 	public RoutineBase getRoutine() {
