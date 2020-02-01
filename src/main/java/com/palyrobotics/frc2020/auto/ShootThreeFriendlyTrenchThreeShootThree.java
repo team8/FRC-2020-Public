@@ -12,10 +12,9 @@ import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 @SuppressWarnings ("Duplicates")
 public class ShootThreeFriendlyTrenchThreeShootThree extends AutoModeBase {
 
-	// starts center, initial 180
+	// Starts center, initial 180
 	@Override
 	public RoutineBase getRoutine() {
-
 		var initialOdometry = new DriveSetOdometryRoutine(0, 0, 180);
 
 		var getTrenchBalls = new DrivePathRoutine(newWaypoint(40, 55, 0), newWaypoint(170, 55, 0));

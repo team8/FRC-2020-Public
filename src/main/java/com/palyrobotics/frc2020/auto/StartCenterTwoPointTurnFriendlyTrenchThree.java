@@ -13,7 +13,6 @@ public class StartCenterTwoPointTurnFriendlyTrenchThree extends AutoModeBase {
 
 	@Override
 	public RoutineBase getRoutine() {
-
 		var initialOdometry = new DriveSetOdometryRoutine(0, 0, 180);
 
 		var point1 = new DrivePathRoutine(newWaypoint(25, -35, 90));
@@ -22,7 +21,6 @@ public class StartCenterTwoPointTurnFriendlyTrenchThree extends AutoModeBase {
 
 		var turnAroundToShoot = new DriveYawRoutine(180.0);
 
-		return new SequentialRoutine(initialOdometry, point1.driveInReverse(), point2,
-				turnAroundToShoot);
+		return new SequentialRoutine(initialOdometry, point1.driveInReverse(), point2, turnAroundToShoot);
 	}
 }
