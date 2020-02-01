@@ -5,9 +5,9 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.controllers.ChezyDriveController;
-import com.palyrobotics.frc2020.subsystems.controllers.DriveRamseteController;
-import com.palyrobotics.frc2020.subsystems.controllers.DriveVisionYawAlignController;
-import com.palyrobotics.frc2020.subsystems.controllers.DriveYawController;
+import com.palyrobotics.frc2020.subsystems.controllers.RamseteDriveController;
+import com.palyrobotics.frc2020.subsystems.controllers.VisionYawAlignDriveController;
+import com.palyrobotics.frc2020.subsystems.controllers.YawDriveController;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
@@ -78,13 +78,13 @@ public class Drive extends SubsystemBase {
 					};
 					break;
 				case FOLLOW_PATH:
-					mController = new DriveRamseteController();
+					mController = new RamseteDriveController();
 					break;
 				case TURN:
-					mController = new DriveYawController();
+					mController = new YawDriveController();
 					break;
 				case VISION_ALIGN:
-					mController = new DriveVisionYawAlignController();
+					mController = new VisionYawAlignDriveController();
 			}
 		}
 		if (mController == null) {

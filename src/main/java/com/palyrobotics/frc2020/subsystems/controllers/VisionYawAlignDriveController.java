@@ -11,7 +11,7 @@ import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 
-public class DriveVisionYawAlignController extends ChezyDriveController {
+public class VisionYawAlignDriveController extends ChezyDriveController {
 
 	private static final double kMaxAngularPower = 0.4;
 	private final Limelight mLimelight = Limelight.getInstance();
@@ -19,7 +19,7 @@ public class DriveVisionYawAlignController extends ChezyDriveController {
 	private int mPipelineBeingUsed = 0;
 	private final PIDController mPidController = new PIDController(0.0, 0.0, 0.0);
 
-	public DriveVisionYawAlignController() {
+	public VisionYawAlignDriveController() {
 		mLimelight.setPipeline(0);
 		mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
 		mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);

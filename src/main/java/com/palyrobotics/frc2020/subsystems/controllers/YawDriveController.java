@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
-public class DriveYawController extends Drive.DriveController {
+public class YawDriveController extends Drive.DriveController {
 
 	private ProfiledPIDController mController = new ProfiledPIDController(0.0, 0.0, 0.0,
 			new TrapezoidProfile.Constraints());
 	private Double mTargetYaw;
 
-	public DriveYawController() {
+	public YawDriveController() {
 		mController.enableContinuousInput(-180.0, 180.0);
 	}
 

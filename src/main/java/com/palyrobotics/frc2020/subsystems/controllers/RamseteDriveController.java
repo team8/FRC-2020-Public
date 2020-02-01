@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
-public class DriveRamseteController extends Drive.DriveController {
+public class RamseteDriveController extends Drive.DriveController {
 
 	public static final double kB = 2.1, kZeta = 0.8;
 
@@ -21,7 +21,7 @@ public class DriveRamseteController extends Drive.DriveController {
 	private RamseteController mController;
 	private Trajectory mTrajectory;
 
-	public DriveRamseteController() {
+	public RamseteDriveController() {
 		mTimer.start();
 	}
 
