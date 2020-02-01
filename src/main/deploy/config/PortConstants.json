@@ -9,6 +9,7 @@
 	"nariIndexerHorizontalId": 7,
 	"nariIndexerVerticalId": 8,
 	"nariIndexerHopperSolenoidId": 1,
+	"nariIndexerSolenoidId": 2,
 	"nariIndexerBlockingSolenoidId": 3,
 	"nariIndexerBackInfraredDIO": 0,
 	"nariIndexerFrontInfraredDIO": 1,

@@ -10,7 +10,7 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
 @SuppressWarnings ("Duplicates")
-public class StartCenterRendezvousThree extends AutoBase {
+public class StartCenterRendezvousFive extends AutoModeBase {
 
 	@Override
 	public RoutineBase getRoutine() {
@@ -18,10 +18,13 @@ public class StartCenterRendezvousThree extends AutoBase {
 
 		var turn = new DriveYawRoutine(0);
 
-		var getTrenchBalls1 = new DrivePathRoutine(newWaypoint(70, -40, 0));
-		var backup1 = new DrivePathRoutine(newWaypoint(50, -0, 0));
+		var getTrenchBalls1 = new DrivePathRoutine(newWaypoint(90, -40, 0));
+		var backup1 = new DrivePathRoutine(newWaypoint(70, -50, 0));
 
-		var getTrenchBalls2 = new DrivePathRoutine(newWaypoint(80, -60, 0));
+		var getTrenchBalls2 = new DrivePathRoutine(newWaypoint(100, -60, 0));
+		var backup2 = new DrivePathRoutine(newWaypoint(130, -70, 0));
+
+		var getTrenchBalls3 = new DrivePathRoutine(newWaypoint(110, -80, 0));
 
 		var turn2 = new DriveYawRoutine(180);
 
@@ -30,6 +33,6 @@ public class StartCenterRendezvousThree extends AutoBase {
 		// var turnAroundToShoot = new DriveYawRoutine(180.0);
 
 		return new SequentialRoutine(initialOdometry, turn, getTrenchBalls1, backup1.driveInReverse(), getTrenchBalls2,
-				turn2, goToShoot, new VisionAlignRoutine());
+				backup2.driveInReverse(), getTrenchBalls3, turn2, goToShoot, new VisionAlignRoutine());
 	}
 }
