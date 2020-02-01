@@ -73,7 +73,7 @@ public class Drive extends SubsystemBase {
 
 						@Override
 						public void updateSignal(Commands commands, RobotState state) {
-							Drive.this.mOutputs = commands.getDriveWantedSignal();
+							mOutputs = commands.getDriveWantedSignal();
 						}
 					};
 					break;
