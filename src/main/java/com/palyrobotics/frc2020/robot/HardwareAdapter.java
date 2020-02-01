@@ -26,15 +26,19 @@ public class HardwareAdapter {
 	 */
 	static class ClimberHardware {
 
-		private static ClimberHardware sInstance = new ClimberHardware();
-		final Spark verticalSpark = new Spark(sPortConstants.nariClimberVerticalId);
-		final Spark horizontalSpark = new Spark(sPortConstants.nariClimberHorizontalId);
+		private static ClimberHardware sInstance;
+		final Spark verticalSpark = new Spark(sPortConstants.nariClimberVerticalId),
+				horizontalSpark = new Spark(sPortConstants.nariClimberHorizontalId);
+		final CANEncoder verticalSparkEncoder = verticalSpark.getEncoder(),
+				horizontalSparkEncoder = horizontalSpark.getEncoder();
 		final Solenoid solenoid = new Solenoid(sPortConstants.nariClimberSolenoidId);
 
 		ClimberHardware() {
 		}
 
 		static ClimberHardware getInstance() {
+			if (sInstance == null)
+				sInstance = new ClimberHardware();
 			return sInstance;
 		}
 	}

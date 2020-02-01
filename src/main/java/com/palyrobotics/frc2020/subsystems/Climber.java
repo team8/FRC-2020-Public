@@ -10,11 +10,12 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 public class Climber extends SubsystemBase {
 
 	public enum ClimberState {
-		CLIMBING, ADJUSTING_LEFT, ADJUSTING_RIGHT, IDLE
+		RAISING, LOWERING_TO_BAR, CLIMBING, LOCKED, IDLE
 	}
 
 	private static Climber sInstance = new Climber();
-	private ControllerOutput mClimbingOutput = new ControllerOutput(), mAdjustingOutput = new ControllerOutput();
+	private ControllerOutput mVerticalOutput = new ControllerOutput(), mAdjustingOutput = new ControllerOutput();
+	private boolean mSolenoidOutput = true;
 	private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
 
 	private Climber() {
@@ -26,33 +27,46 @@ public class Climber extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		ClimberState state = commands.climberWantedState;
-		switch (state) {
-			case CLIMBING:
-				double wantedOutput = commands.getClimberWantedOutput();
-				mClimbingOutput.setPercentOutput(wantedOutput);
+		switch (commands.climberWantedState) {
+			case RAISING:
+				mVerticalOutput.setTargetPositionProfiled(mConfig.climberTopHeight, mConfig.raisingArbitraryDemand,
+						mConfig.raisingGains);
 				mAdjustingOutput.setIdle();
+				mSolenoidOutput = true;
 				break;
-			case ADJUSTING_LEFT:
-				mClimbingOutput.setIdle();
-				mAdjustingOutput.setPercentOutput(-mConfig.adjustingOutput);
+			case LOWERING_TO_BAR:
+				mVerticalOutput.setPercentOutput(mConfig.loweringPercentOutput);
+				mAdjustingOutput.setIdle();
+				mSolenoidOutput = true;
 				break;
-			case ADJUSTING_RIGHT:
-				mClimbingOutput.setIdle();
-				mAdjustingOutput.setPercentOutput(mConfig.adjustingOutput);
+			case CLIMBING:
+				mVerticalOutput.setTargetVelocityProfiled(commands.climberWantedVelocity,
+						mConfig.climbingArbitraryDemand, mConfig.climbingGains);
+				mAdjustingOutput.setPercentOutput(commands.climberWantedAdjustingPercentOutput);
+				mSolenoidOutput = true;
+				break;
+			case LOCKED:
+				mVerticalOutput.setIdle();
+				mAdjustingOutput.setPercentOutput(commands.climberWantedAdjustingPercentOutput);
+				mSolenoidOutput = false;
 				break;
 			case IDLE:
-				mClimbingOutput.setIdle();
+				mVerticalOutput.setIdle();
 				mAdjustingOutput.setIdle();
+				mSolenoidOutput = true;
 				break;
 		}
 	}
 
-	public ControllerOutput getClimbingOutput() {
-		return mClimbingOutput;
+	public ControllerOutput getVerticalOutput() {
+		return mVerticalOutput;
 	}
 
 	public ControllerOutput getAdjustingOutput() {
 		return mAdjustingOutput;
+	}
+
+	public boolean getSolenoidOutput() {
+		return mSolenoidOutput;
 	}
 }

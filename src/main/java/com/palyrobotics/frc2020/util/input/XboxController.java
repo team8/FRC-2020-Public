@@ -67,6 +67,14 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 				&& getTriggerAxis(hand) > kTriggerThreshold;
 	}
 
+	public boolean getWindowButtonPressed() {
+		return getRawButtonPressed(7);
+	}
+
+	public boolean getMenuButtonPressed() {
+		return getRawButtonPressed(8);
+	}
+
 	public boolean getRightTriggerPressed() {
 		return getTriggerPressed(Hand.kRight);
 	}

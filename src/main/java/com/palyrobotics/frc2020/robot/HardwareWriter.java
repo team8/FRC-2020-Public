@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
+import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
@@ -49,8 +50,15 @@ public class HardwareWriter {
 
 	private void configureClimberHardware() {
 		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
+		var config = Configs.get(ClimberConfig.class);
 		climberHardware.verticalSpark.restoreFactoryDefaults();
 		climberHardware.horizontalSpark.restoreFactoryDefaults();
+		climberHardware.verticalSpark.enableVoltageCompensation(12);
+		climberHardware.verticalSpark.getEncoder().setPositionConversionFactor(config.positionConversionFactor);
+		climberHardware.verticalSpark.getEncoder().setVelocityConversionFactor(config.velocityConversionFactor);
+		climberHardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		climberHardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
+
 	}
 
 	private void configureDriveHardware() {
@@ -190,8 +198,9 @@ public class HardwareWriter {
 
 	private void updateClimber() {
 		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
-		climberHardware.verticalSpark.setOutput(mClimber.getClimbingOutput());
+		climberHardware.verticalSpark.setOutput(mClimber.getVerticalOutput());
 		climberHardware.horizontalSpark.setOutput(mClimber.getAdjustingOutput());
+		climberHardware.solenoid.set(mClimber.getSolenoidOutput());
 	}
 
 	// private void updateDrivetrain() {

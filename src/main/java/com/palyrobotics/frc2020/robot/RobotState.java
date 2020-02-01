@@ -49,6 +49,10 @@ public class RobotState {
 	public boolean hasBackUltrasonicBall, hasFrontUltrasonicBall, hasTopUltrasonicBall;
 	public double visionDistanceToTarget;
 
+	// Climber
+	public double climberPosition;
+	public double climberVelocity;
+
 	public void resetUltrasonics() {
 		for (CircularBuffer buffer : List.of(backIndexerUltrasonicReadings, frontIndexerUltrasonicReadings)) {
 			for (int i = 0; i < kUltrasonicBufferSize; i++) {

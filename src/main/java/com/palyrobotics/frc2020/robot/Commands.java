@@ -22,8 +22,10 @@ public class Commands {
 	public boolean shouldClearCurrentRoutines;
 	/* Climber */
 	public Climber.ClimberState climberWantedState;
+	public Climber.ClimberState preLockClimberWantedState;
 	private double climberWantedOutput;
 	/* Drive */
+	/* Drive Commands */
 	private Drive.DriveState driveWantedState;
 	// Teleop
 	private double driveWantedThrottle, driveWantedWheel;
@@ -44,6 +46,12 @@ public class Commands {
 	private double shooterManualWantedFlywheelVelocity;
 	/* Spinner */
 	public Spinner.SpinnerState spinnerWantedState;
+	private double driveWantedHeadingDegrees;
+	// Climbing
+	public double climberWantedVelocity;
+	public double climberWantedAdjustingPercentOutput;
+
+	public boolean wantedRumble;
 
 	public void addWantedRoutines(RoutineBase... wantedRoutines) {
 		for (RoutineBase wantedRoutine : wantedRoutines) {
@@ -61,11 +69,15 @@ public class Commands {
 		climberWantedOutput = output;
 	}
 
-	public double getClimberWantedOutput() {
-		return climberWantedOutput;
+	public void setClimberWantedVelocity(double velocity) {
+		climberWantedVelocity = velocity;
 	}
 
 	/* Drive */
+	public void setClimberWantedAdjustingPercentOutput(double percentOutput) {
+		climberWantedAdjustingPercentOutput = percentOutput;
+	}
+
 	public void setDriveSignal(DriveOutputs signal) {
 		driveWantedState = Drive.DriveState.SIGNAL;
 		driveWantedSignal = signal;
@@ -166,5 +178,27 @@ public class Commands {
 			log.append(routine).append(" ");
 		}
 		return log.append("\n").toString();
+	}
+
+	public void copyTo(Commands other) {
+		other.driveWantedState = driveWantedState;
+		other.indexerWantedState = indexerWantedState;
+		other.spinnerWantedState = spinnerWantedState;
+		other.intakeWantedState = intakeWantedState;
+		other.shouldClearCurrentRoutines = shouldClearCurrentRoutines;
+		other.routinesWanted.addAll(routinesWanted);
+		other.climberWantedState = climberWantedState;
+		other.preLockClimberWantedState = preLockClimberWantedState;
+		other.climberWantedAdjustingPercentOutput = climberWantedAdjustingPercentOutput;
+		other.climberWantedVelocity = climberWantedVelocity;
+	}
+
+	public void reset() {
+		spinnerWantedState = Spinner.SpinnerState.IDLE;
+		intakeWantedState = Intake.IntakeState.INTAKE;
+		indexerWantedState = Indexer.IndexerState.IDLE;
+		shooterWantedState = Shooter.ShooterState.IDLE;
+		driveWantedState = Drive.DriveState.NEUTRAL;
+		wantedRumble = false;
 	}
 }
