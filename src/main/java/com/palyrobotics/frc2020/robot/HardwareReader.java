@@ -3,13 +3,10 @@ package com.palyrobotics.frc2020.robot;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
-import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.subsystems.*;
-import com.palyrobotics.frc2020.util.config.Configs;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpiutil.CircularBuffer;
 
 public class HardwareReader {
@@ -100,19 +97,10 @@ public class HardwareReader {
 	// }
 
 	private void readIndexerState(RobotState robotState) {
-		var indexerConfig = Configs.get(IndexerConfig.class);
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
-		Ultrasonic backUltrasonic = indexerHardware.backUltrasonic, frontUltrasonic = indexerHardware.frontUltrasonic,
-				topUltrasonic = indexerHardware.topUltrasonic;
-		robotState.backIndexerUltrasonicReadings.addFirst(backUltrasonic.getRangeInches());
-		robotState.frontIndexerUltrasonicReadings.addFirst(frontUltrasonic.getRangeInches());
-		robotState.topIndexerUltrasonicReadings.addFirst(topUltrasonic.getRangeInches());
-		robotState.hasBackUltrasonicBall = hasBallFromReadings(robotState.backIndexerUltrasonicReadings,
-				indexerConfig.ballInchTolerance, indexerConfig.ballCountRequired);
-		robotState.hasFrontUltrasonicBall = hasBallFromReadings(robotState.frontIndexerUltrasonicReadings,
-				indexerConfig.ballInchTolerance, indexerConfig.ballCountRequired);
-		robotState.hasTopUltrasonicBall = hasBallFromReadings(robotState.topIndexerUltrasonicReadings,
-				indexerConfig.ballInchTolerance, indexerConfig.ballCountRequired);
+		robotState.hasBackBall = indexerHardware.backInfrared.get();
+		robotState.hasFrontBall = indexerHardware.frontInfrared.get();
+		robotState.hasTopBall = indexerHardware.topInfrared.get();
 	}
 
 	private void readShooterState(RobotState robotState) {

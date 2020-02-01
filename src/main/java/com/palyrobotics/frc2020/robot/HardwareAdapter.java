@@ -111,12 +111,9 @@ public class HardwareAdapter {
 
 		final Solenoid hopperSolenoid = new Solenoid(sPortConstants.nariIndexerHopperSolenoidId);
 		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.nariIndexerBlockingSolenoidId);
-		final Ultrasonic backUltrasonic = new Ultrasonic(sPortConstants.nariIndexerBackUltrasonicPing,
-				sPortConstants.nariIndexerBackUltrasonicEcho),
-				frontUltrasonic = new Ultrasonic(sPortConstants.nariIndexerFrontUltrasonicPing,
-						sPortConstants.nariIndexerFrontUltrasonicEcho),
-				topUltrasonic = new Ultrasonic(sPortConstants.nariIndexerTopUltrasonicPing,
-						sPortConstants.nariIndexerTopUltrasonicEcho);
+		final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDIO),
+				frontInfrared = new DigitalInput(sPortConstants.nariIndexerFrontInfraredDIO),
+				topInfrared = new DigitalInput(sPortConstants.nariIndexerTopInfraredDIO);
 
 		private IndexerHardware() {
 		}

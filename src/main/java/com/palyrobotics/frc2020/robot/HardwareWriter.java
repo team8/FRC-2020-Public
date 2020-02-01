@@ -127,14 +127,7 @@ public class HardwareWriter {
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
 		indexerHardware.horizontalSpark.restoreFactoryDefaults();
 		indexerHardware.verticalSpark.restoreFactoryDefaults();
-
 		indexerHardware.verticalSpark.follow(indexerHardware.horizontalSpark);
-
-		indexerHardware.backUltrasonic.setAutomaticMode(true);
-		indexerHardware.frontUltrasonic.setAutomaticMode(true);
-
-		indexerHardware.backUltrasonic.setEnabled(true);
-		indexerHardware.frontUltrasonic.setEnabled(true);
 	}
 
 	private void configureIntakeHardware() {
