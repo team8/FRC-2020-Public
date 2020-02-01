@@ -27,6 +27,7 @@ public class Commands {
 	private Drive.DriveState driveWantedState;
 	/* Indexer Commands */
 	public Indexer.IndexerState indexerWantedState;
+	public Indexer.IndexerUpDownState indexerWantedUpDownState;
 	/* Intake Commands */
 	public Intake.IntakeState intakeWantedState;
 	/* Shooter Commands */
@@ -46,8 +47,7 @@ public class Commands {
 	// Climbing
 	private double climberWantedOutput;
 	// Operator Controls
-	private boolean intakeToggleReleased, indexerToggleReleased;
-	private double indexerRunning;
+	public double indexerRunning;
 
 	public void addWantedRoutines(RoutineBase... wantedRoutines) {
 		for (RoutineBase wantedRoutine : wantedRoutines) {
@@ -93,30 +93,6 @@ public class Commands {
 
 	public double getClimberWantedOutput() {
 		return climberWantedOutput;
-	}
-
-	public boolean getIndexerToggleReleased() {
-		return indexerToggleReleased;
-	}
-
-	public boolean getIntakeToggleReleased() {
-		return intakeToggleReleased;
-	}
-
-	public double getIndexerRunning() {
-		return indexerRunning;
-	}
-
-	public void setIndexerToggleReleased(boolean released) {
-		indexerToggleReleased = released;
-	}
-
-	public void setIntakeToggleReleased(boolean released) {
-		intakeToggleReleased = released;
-	}
-
-	public void setIndexerRunning(double time) {
-		indexerRunning = time;
 	}
 
 	public void setClimberWantedOutput(double output) {

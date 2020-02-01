@@ -6,7 +6,6 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
-import com.palyrobotics.frc2020.util.control.DualSolenoid;
 
 public class Intake extends SubsystemBase {
 
@@ -17,7 +16,7 @@ public class Intake extends SubsystemBase {
 	private static Intake sInstance = new Intake();
 	private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
-	private DualSolenoid.State mUpDownOutput = DualSolenoid.State.REVERSE;
+	private boolean mUpDownOutput = false;
 
 	private Intake() {
 	}
@@ -32,19 +31,18 @@ public class Intake extends SubsystemBase {
 		switch (state) {
 			case IDLE:
 				mOutput.setIdle();
-				mUpDownOutput = DualSolenoid.State.OFF;
 				break;
 			case RAISE:
 				mOutput.setIdle();
-				mUpDownOutput = DualSolenoid.State.REVERSE;
+				mUpDownOutput = false;
 				break;
 			case LOWER:
 				mOutput.setIdle();
-				mUpDownOutput = DualSolenoid.State.FORWARD;
+				mUpDownOutput = true;
 				break;
 			case INTAKE:
 				mOutput.setTargetVelocityProfiled(mConfig.intakingVelocity, mConfig.profiledVelocityGains);
-				mUpDownOutput = DualSolenoid.State.FORWARD;
+				mUpDownOutput = true;
 				break;
 		}
 	}
@@ -53,7 +51,7 @@ public class Intake extends SubsystemBase {
 		return mOutput;
 	}
 
-	public DualSolenoid.State getUpDownOutput() {
+	public boolean getUpDownOutput() {
 		return mUpDownOutput;
 	}
 }

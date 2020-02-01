@@ -75,8 +75,7 @@ public class HardwareAdapter {
 		private static IndexerHardware sInstance = new IndexerHardware();
 		final Spark horizontalSpark = new Spark(sPortConstants.nariIndexerHorizontalId),
 				verticalSpark = new Spark(sPortConstants.nariIndexerVerticalId);
-		final DualSolenoid hopperSolenoid = new DualSolenoid(sPortConstants.nariIndexerExtendingSolenoidId,
-				sPortConstants.nariIndexerRetractingSolenoidId);
+		final Solenoid hopperSolenoid = new Solenoid(sPortConstants.nariIndexerHopperSolenoidId);
 		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.nariIndexerBlockingSolenoidId);
 		final Ultrasonic backUltrasonic = new Ultrasonic(sPortConstants.nariIndexerBackUltrasonicPing,
 				sPortConstants.nariIndexerBackUltrasonicEcho),
@@ -100,8 +99,7 @@ public class HardwareAdapter {
 
 		private static IntakeHardware sInstance = new IntakeHardware();
 		final Talon talon = new Talon(sPortConstants.nariIntakeId);
-		final DualSolenoid upDownSolenoid = new DualSolenoid(sPortConstants.nariIntakeExtendingSolenoidId,
-				sPortConstants.nariIntakeRetractingSolenoidId);
+		final Solenoid upDownSolenoid = new Solenoid(sPortConstants.nariIntakeSolenoidId);
 
 		private IntakeHardware() {
 		}

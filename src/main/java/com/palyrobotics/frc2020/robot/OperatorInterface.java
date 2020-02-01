@@ -9,7 +9,6 @@ import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.control.DualSolenoid;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
@@ -110,18 +109,20 @@ public class OperatorInterface {
 	}
 
 	private void updateIndexerCommands(Commands commands, @ReadOnly RobotState state) {
-		if (state.hasBackUltrasonicBall && state.hasFrontUltrasonicBall && state.hasTopUltrasonicBall) {
+		if (state.hasBackUltrasonicBall && state.hasFrontUltrasonicBall) { // TODO: replace with ball detection?
 			commands.indexerWantedState = Indexer.IndexerState.WAITING_TO_FEED;
-		} else if (mOperatorXboxController.getDPadRightPressed() && commands.getIndexerToggleReleased()) {
-			if (Indexer.getInstance().getUpDownOutput() != DualSolenoid.State.REVERSE) {
-				commands.indexerWantedState = Indexer.IndexerState.HOPPER_OPEN;
-			} else {
-				commands.indexerWantedState = Indexer.IndexerState.HOPPER_CLOSED;
+		} else if (mOperatorXboxController.getDPadRightPressed() || commands.indexerRunning < 50) {
+			if (commands.indexerRunning < 50) {
+				commands.indexerWantedState = Indexer.IndexerState.INDEX;
+				if (Indexer.getInstance().getUpDownOutput()) {
+					commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.UP;
+				} else {
+					commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.DOWN;
+				}
 			}
-			commands.setIndexerToggleReleased(false);
-		} else if ((mOperatorXboxController.getDPadLeftPressed() || commands.getIndexerRunning() < 50)) {
-			commands.indexerWantedState = Indexer.IndexerState.HOPPER_CLOSED;
-			commands.setIndexerRunning(0);
+		} else if ((mOperatorXboxController.getDPadLeftPressed() || commands.indexerRunning < 50)) {
+			commands.indexerWantedState = Indexer.IndexerState.INDEX;
+			commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.DOWN;
 		}
 
 		if (mOperatorXboxController.getLeftBumperPressed()
@@ -133,34 +134,28 @@ public class OperatorInterface {
 					new IndexerFeedRoutine(), new IndexerFeedRoutine());
 		}
 
-		commands.setIndexerRunning(commands.getIndexerRunning() + 1);
-		if (!mOperatorXboxController.getDPadRightPressed()) {
-			commands.setIndexerToggleReleased(true);
+		if (!mOperatorXboxController.getDPadLeft() && !mOperatorXboxController.getDPadRight()) {
+			commands.indexerRunning++;
 		}
 	}
 
 	private void updateIntakeCommands(Commands commands, @ReadOnly RobotState state) {
-		if (state.hasBackUltrasonicBall && state.hasFrontUltrasonicBall && state.hasTopUltrasonicBall) {
+		if (state.hasBackUltrasonicBall && state.hasFrontUltrasonicBall) { // TODO: replace with ball detection?
 			commands.intakeWantedState = Intake.IntakeState.RAISE;
 		} else if (mOperatorXboxController.getDPadRightPressed()) {
-			if (Indexer.getInstance().getUpDownOutput() == DualSolenoid.State.REVERSE) {
+			if (Indexer.getInstance().getUpDownOutput()) {
 				commands.intakeWantedState = Intake.IntakeState.RAISE;
 			} else {
 				commands.intakeWantedState = Intake.IntakeState.INTAKE;
 			}
-		} else if (mOperatorXboxController.getDPadDownPressed() && commands.getIntakeToggleReleased()) {
-			if (Intake.getInstance().getUpDownOutput() == DualSolenoid.State.FORWARD) {
+		} else if (mOperatorXboxController.getDPadDownPressed()) {
+			if (Intake.getInstance().getUpDownOutput()) {
 				commands.intakeWantedState = Intake.IntakeState.RAISE;
 			} else {
 				commands.intakeWantedState = Intake.IntakeState.LOWER;
 			}
-			commands.setIntakeToggleReleased(false);
 		} else if (mOperatorXboxController.getDPadLeftPressed()) {
 			commands.intakeWantedState = Intake.IntakeState.INTAKE;
-		}
-
-		if (!mOperatorXboxController.getDPadDownPressed()) {
-			commands.setIntakeToggleReleased(true);
 		}
 	}
 
