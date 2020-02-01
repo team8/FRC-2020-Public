@@ -9,8 +9,8 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Intake extends SubsystemBase {
 
-	public enum IntakeState {
-		IDLE, RAISE, LOWER, INTAKE
+	public enum State {
+		RAISE, LOWER, INTAKE
 	}
 
 	private static Intake sInstance = new Intake();
@@ -27,11 +27,7 @@ public class Intake extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		IntakeState state = commands.intakeWantedState;
-		switch (state) {
-			case IDLE:
-				mOutput.setIdle();
-				break;
+		switch (commands.intakeWantedState) {
 			case RAISE:
 				mOutput.setIdle();
 				mUpDownOutput = false;

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.util.Color;
  *
  * @author Nihar
  */
+@SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class RobotState {
 
 	public enum GamePeriod {
@@ -22,7 +23,6 @@ public class RobotState {
 	}
 
 	public static final String kLoggerTag = Util.classToJsonName(RobotState.class);
-	public static final int kUltrasonicBufferSize = 10;
 	/* Game and Field */
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;
 	public String gameData, closestColorString;
@@ -42,10 +42,10 @@ public class RobotState {
 	// TODO: Reorder this and add comments to separate by subsystem and function
 	public boolean hasBackBall, hasFrontBall, hasTopBall;
 	public double visionDistanceToTarget;
+	public SolenoidState intakeUpDownSolenoidState = new SolenoidState();
 
 	// Climber
-	public double climberPosition;
-	public double climberVelocity;
+	public double climberPosition, climberVelocity;
 
 	public void resetOdometry(Pose2d pose) {
 		driveOdometry.resetPosition(pose, pose.getRotation());

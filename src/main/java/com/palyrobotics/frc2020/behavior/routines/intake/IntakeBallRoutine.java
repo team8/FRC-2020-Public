@@ -21,7 +21,7 @@ public class IntakeBallRoutine extends TimedRoutine {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		commands.intakeWantedState = Intake.IntakeState.INTAKE;
+		commands.intakeWantedState = Intake.State.INTAKE;
 	}
 
 	@Override

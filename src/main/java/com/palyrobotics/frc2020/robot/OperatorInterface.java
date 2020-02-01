@@ -133,7 +133,7 @@ public class OperatorInterface {
 
 	private void updateIndexerCommands(Commands commands, @ReadOnly RobotState state) {
 		if (state.hasBackBall && state.hasFrontBall) { // TODO: replace with ball detection
-			commands.indexerWantedState = Indexer.IndexerState.WAITING_TO_FEED;
+			commands.indexerWantedState = Indexer.State.WAITING_TO_FEED;
 		} else if (mOperatorXboxController.getDPadRightPressed()) {
 			if (Indexer.getInstance().getUpDownOutput()) {
 				commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.UP;
@@ -142,7 +142,7 @@ public class OperatorInterface {
 				commands.addWantedRoutine(new IndexerTimeRoutine(1));
 			}
 		} else if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.indexerWantedState = Indexer.IndexerState.INDEX;
+			commands.indexerWantedState = Indexer.State.INDEX;
 			commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.DOWN;
 		}
 
@@ -159,28 +159,28 @@ public class OperatorInterface {
 				&& commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new
 																					// boolean
 			// in robot state
-			commands.indexerWantedState = Indexer.IndexerState.FEED_ALL;
+			commands.indexerWantedState = Indexer.State.FEED_ALL;
 		}
 
 	}
 
 	private void updateIntakeCommands(Commands commands, @ReadOnly RobotState state) {
 		if (state.hasBackBall && state.hasFrontBall) { // TODO: replace with ball detection
-			commands.intakeWantedState = Intake.IntakeState.RAISE;
+			commands.intakeWantedState = Intake.State.RAISE;
 		} else if (mOperatorXboxController.getDPadRightPressed()) {
 			if (Indexer.getInstance().getUpDownOutput()) {
-				commands.intakeWantedState = Intake.IntakeState.RAISE;
+				commands.intakeWantedState = Intake.State.RAISE;
 			} else {
-				commands.intakeWantedState = Intake.IntakeState.INTAKE;
+				commands.intakeWantedState = Intake.State.INTAKE;
 			}
 		} else if (mOperatorXboxController.getDPadDownPressed()) {
 			if (Intake.getInstance().getUpDownOutput()) {
-				commands.intakeWantedState = Intake.IntakeState.RAISE;
+				commands.intakeWantedState = Intake.State.RAISE;
 			} else {
-				commands.intakeWantedState = Intake.IntakeState.LOWER;
+				commands.intakeWantedState = Intake.State.LOWER;
 			}
 		} else if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.intakeWantedState = Intake.IntakeState.INTAKE;
+			commands.intakeWantedState = Intake.State.INTAKE;
 		}
 	}
 
@@ -202,9 +202,10 @@ public class OperatorInterface {
 	}
 
 	public void defaults(Commands commands) {
-		commands.indexerWantedState = Indexer.IndexerState.IDLE;
+		commands.indexerWantedState = Indexer.State.IDLE;
 		commands.setDriveNeutral();
-		commands.intakeWantedState = Intake.IntakeState.INTAKE;
+		commands.intakeWantedState = Intake.State.INTAKE;
+		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.SpinnerState.IDLE;
 	}
 

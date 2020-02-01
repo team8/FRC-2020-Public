@@ -21,7 +21,7 @@ public class IntakeRaiseRoutine extends RoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		commands.intakeWantedState = Intake.IntakeState.RAISE;
+		commands.intakeWantedState = Intake.State.RAISE;
 	}
 
 	@Override
