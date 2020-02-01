@@ -3,11 +3,11 @@ package com.palyrobotics.frc2020.robot;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
+import com.palyrobotics.frc2020.robot.HardwareAdapter.*;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpiutil.CircularBuffer;
 
 public class HardwareReader {
 
@@ -40,13 +40,15 @@ public class HardwareReader {
 			readDriveState(robotState);
 		if (enabledSubsystems.contains(Indexer.getInstance()))
 			readIndexerState(robotState);
+		if (enabledSubsystems.contains(Intake.getInstance()))
+			readIntakeState(robotState);
 		if (enabledSubsystems.contains(Shooter.getInstance()))
 			readShooterState(robotState);
 	}
 
 	private void readGameAndFieldState(RobotState robotState) {
 		robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();
-		robotState.detectedRGBValues = HardwareAdapter.SpinnerHardware.getInstance().colorSensor.getColor();
+		robotState.detectedRGBValues = SpinnerHardware.getInstance().colorSensor.getColor();
 		robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBValues);
 		if (robotState.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
 			robotState.closestColorString = "Cyan";
@@ -61,13 +63,13 @@ public class HardwareReader {
 	}
 
 	private void readClimberState(RobotState robotState) {
-		var climber = HardwareAdapter.ClimberHardware.getInstance();
+		var climber = ClimberHardware.getInstance();
 		robotState.climberPosition = climber.verticalSparkEncoder.getPosition();
 		robotState.climberVelocity = climber.verticalSparkEncoder.getVelocity();
 	}
 
 	private void readDriveState(RobotState robotState) {
-		var drivetrain = HardwareAdapter.DrivetrainHardware.getInstance();
+		var drivetrain = DrivetrainHardware.getInstance();
 		var gyroAngles = new double[3];
 		drivetrain.gyro.getYawPitchRoll(gyroAngles);
 		robotState.driveYawDegrees = gyroAngles[0];
@@ -97,25 +99,21 @@ public class HardwareReader {
 	// }
 
 	private void readIndexerState(RobotState robotState) {
-		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
+		var indexerHardware = IndexerHardware.getInstance();
 		robotState.hasBackBall = indexerHardware.backInfrared.get();
 		robotState.hasFrontBall = indexerHardware.frontInfrared.get();
 		robotState.hasTopBall = indexerHardware.topInfrared.get();
 	}
 
+	private void readIntakeState(RobotState robotState) {
+		var hardware = IntakeHardware.getInstance();
+		robotState.intakeUpDownSolenoidState.updateExtended(hardware.upDownSolenoid.get());
+	}
+
 	private void readShooterState(RobotState robotState) {
-		var shooterHardware = HardwareAdapter.ShooterHardware.getInstance();
+		var shooterHardware = ShooterHardware.getInstance();
 		robotState.shooterVelocity = shooterHardware.masterEncoder.getVelocity();
 		robotState.shooterHoodSolenoidState.updateExtended(shooterHardware.hoodSolenoid.get());
 		robotState.shooterBlockingSolenoidState.updateExtended(shooterHardware.blockingSolenoid.get());
-	}
-
-	private boolean hasBallFromReadings(CircularBuffer readings, double tolerance, int requiredCount) {
-		int count = 0;
-		for (int i = 0; i < RobotState.kUltrasonicBufferSize; i++) {
-			if (readings.get(i) <= tolerance)
-				count++;
-		}
-		return count >= requiredCount;
 	}
 }

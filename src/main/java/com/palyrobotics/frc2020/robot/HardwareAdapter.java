@@ -101,7 +101,7 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * 2 NEOs (controlled by Spark MAX), 3 Solenoids, 3 Ultrasonics
+	 * 2 NEOs (controlled by Spark MAX), 3 Single Solenoids, 3 Infrared Sensors
 	 */
 	static class IndexerHardware {
 

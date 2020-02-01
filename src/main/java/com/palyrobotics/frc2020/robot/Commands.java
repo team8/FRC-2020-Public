@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
  *
  * @author Nihar
  */
+@SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class Commands {
 
 	/* Routines */
@@ -38,10 +39,10 @@ public class Commands {
 	// Turning
 	private double driveWantedYawDegrees;
 	/* Indexer */
-	public Indexer.IndexerState indexerWantedState;
+	public Indexer.State indexerWantedState;
 	public Indexer.IndexerUpDownState indexerWantedUpDownState;
 	/* Intake */
-	public Intake.IntakeState intakeWantedState;
+	public Intake.State intakeWantedState;
 	/* Shooter */
 	private Shooter.ShooterState shooterWantedState;
 	private double shooterManualWantedFlywheelVelocity;
@@ -196,8 +197,8 @@ public class Commands {
 
 	public void reset() {
 		spinnerWantedState = Spinner.SpinnerState.IDLE;
-		intakeWantedState = Intake.IntakeState.INTAKE;
-		indexerWantedState = Indexer.IndexerState.IDLE;
+		intakeWantedState = Intake.State.INTAKE;
+		indexerWantedState = Indexer.State.IDLE;
 		shooterWantedState = Shooter.ShooterState.IDLE;
 		driveWantedState = Drive.DriveState.NEUTRAL;
 		wantedRumble = false;

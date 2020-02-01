@@ -9,7 +9,7 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Indexer extends SubsystemBase {
 
-	public enum IndexerState {
+	public enum State {
 		IDLE, INDEX, WAITING_TO_FEED, FEED, FEED_ALL
 	}
 
@@ -32,9 +32,7 @@ public class Indexer extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		IndexerState state = commands.indexerWantedState;
-		IndexerUpDownState upDownState = commands.indexerWantedUpDownState;
-		switch (state) {
+		switch (commands.indexerWantedState) {
 			case IDLE:
 				mOutput.setIdle();
 				mBlockOutput = false;
@@ -56,8 +54,7 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = true;
 				break;
 		}
-
-		switch (upDownState) {
+		switch (commands.indexerWantedUpDownState) {
 			case UP:
 				mUpDownOutput = false;
 				break;

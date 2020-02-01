@@ -1,5 +1,6 @@
 package com.palyrobotics.frc2020.behavior;
 
+import java.util.Map;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.robot.Commands;
@@ -10,7 +11,7 @@ import com.palyrobotics.frc2020.util.Util;
 
 public abstract class RoutineBase {
 
-	private enum RoutineState {
+	private enum State {
 		INIT, RUNNING, FINISHED
 	}
 
@@ -20,7 +21,7 @@ public abstract class RoutineBase {
 	protected final Indexer mIndexer = Indexer.getInstance();
 	protected final Intake mIntake = Intake.getInstance();
 	protected final Spinner mSpinner = Spinner.getInstance();
-	private RoutineState mState = RoutineState.INIT;
+	private State mState = State.INIT;
 
 	/**
 	 * Handles changing the {@link #mState}.
@@ -32,24 +33,24 @@ public abstract class RoutineBase {
 	 * @see #update(Commands, RobotState)
 	 */
 	public final boolean execute(Commands commands, @ReadOnly RobotState state) {
-		if (mState == RoutineState.INIT) {
+		if (mState == State.INIT) {
 			// Check if a routine is finished before even starting it.
 			// This avoids calling any sort of update that would modify Commands when not
 			// required.
 			if (checkFinished(state)) {
-				mState = RoutineState.FINISHED;
+				mState = State.FINISHED;
 				return true;
 			} else {
 				start(commands, state);
-				mState = RoutineState.RUNNING;
+				mState = State.RUNNING;
 			}
-		} else if (mState == RoutineState.FINISHED) {
+		} else if (mState == State.FINISHED) {
 			throw new IllegalStateException(
 					String.format("Routine %s already finished! Should not be updated.", toString()));
 		}
 		update(commands, state);
 		if (checkFinished(state)) {
-			mState = RoutineState.FINISHED;
+			mState = State.FINISHED;
 			return true;
 		}
 		return false;
@@ -87,11 +88,16 @@ public abstract class RoutineBase {
 		return Util.classToJsonName(getClass());
 	}
 
+	public String getStatus() {
+		return Map.ofEntries(Map.entry(State.INIT, "Not Started"), Map.entry(State.RUNNING, "Running"),
+				Map.entry(State.FINISHED, "Finished")).get(mState);
+	}
+
 	/**
 	 * @see #checkFinished(RobotState)
 	 */
 	public final boolean isFinished() {
-		return mState == RoutineState.FINISHED;
+		return mState == State.FINISHED;
 	}
 
 	/**
