@@ -36,13 +36,11 @@ public class RobotState {
 	public Pose2d drivePose = new Pose2d();
 	/* Shooter */
 	public double shooterVelocity;
-	public SolenoidState shooterHoodSolenoidState = new SolenoidState(),
-			shooterBlockingSolenoidState = new SolenoidState();
+	public boolean shooterIsHoodExtended, shooterIsBlockingExtended;
 	// TODO: Reorder this and add comments to separate by subsystem and function
 	public boolean hasBackBall, hasFrontBall, hasTopBall;
-	public double visionDistanceToTarget;
-	public SolenoidState intakeUpDownSolenoidState = new SolenoidState();
-	public SolenoidState indexerHopperSolenoidState = new SolenoidState();
+	public boolean intakeIsExtended;
+	public boolean indexerIsHoppedExtended;
 	// Climber
 	public double climberPosition, climberVelocity;
 

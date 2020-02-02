@@ -7,32 +7,10 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class TimedSolenoid extends Solenoid {
 
-	public static class TimedSolenoidState {
-
-		public static final double kChangeDurationSeconds = 0.1;
-		private Timer mTimer = new Timer();
-		private boolean mIsExtended;
-
-		public boolean isExtended() {
-			return mIsExtended;
-		}
-
-		public void updateExtended(boolean isExtended) {
-			if (mIsExtended != isExtended && Util.approximatelyEqual(mTimer.get(), 0)) {
-				mTimer.start();
-			}
-			if (mTimer.get() > kChangeDurationSeconds) {
-				mIsExtended = isExtended;
-				mTimer.reset();
-				mTimer.stop();
-			}
-		}
-	}
-
 	private final double mExtensionDurationSeconds;
 	private final boolean mIsExtendedByDefault;
-
-	private final TimedSolenoidState mState = new TimedSolenoidState();
+	private Timer mTimer = new Timer();
+	private boolean mIsExtended;
 
 	public TimedSolenoid(int channel, double extensionDurationSeconds, boolean isExtendedByDefault) {
 		super(channel);
@@ -40,11 +18,20 @@ public class TimedSolenoid extends Solenoid {
 		mIsExtendedByDefault = isExtendedByDefault;
 	}
 
-	public void updateExtended(boolean isExtended) {
-		mState.updateExtended(isExtended);
+	public void updateExtended(boolean isOn) {
+		// Account for default state of piston given solenoid state
+		boolean shouldBeExtended = mIsExtendedByDefault == isOn;
+		if (mIsExtended != shouldBeExtended && Util.approximatelyEqual(mTimer.get(), 0)) {
+			mTimer.start();
+		}
+		if (mTimer.get() > mExtensionDurationSeconds) {
+			mIsExtended = shouldBeExtended;
+			mTimer.reset();
+			mTimer.stop();
+		}
 	}
 
 	public boolean isExtended() {
-		return mState.isExtended();
+		return mIsExtended;
 	}
 }

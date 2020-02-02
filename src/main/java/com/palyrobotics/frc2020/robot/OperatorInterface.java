@@ -129,7 +129,7 @@ public class OperatorInterface {
 
 	private void updateBallSuperstructure(Commands commands, @ReadOnly RobotState state) {
 		if (mOperatorXboxController.getDPadRightPressed()) {
-			if (state.indexerHopperSolenoidState.isExtended()) {
+			if (state.indexerIsHoppedExtended) {
 				commands.indexerWantedUpDownState = Indexer.HopperState.OPEN;
 			} else {
 				commands.indexerWantedUpDownState = Indexer.HopperState.CLOSED;
@@ -159,7 +159,7 @@ public class OperatorInterface {
 				commands.intakeWantedState = Intake.State.INTAKE;
 			}
 		} else if (mOperatorXboxController.getDPadDownPressed()) {
-			if (state.intakeUpDownSolenoidState.isExtended()) {
+			if (state.intakeIsExtended) {
 				commands.intakeWantedState = Intake.State.RAISE;
 			} else {
 				commands.intakeWantedState = Intake.State.LOWER;

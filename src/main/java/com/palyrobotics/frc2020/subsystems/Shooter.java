@@ -60,8 +60,8 @@ public class Shooter extends SubsystemBase {
 		targetVelocity = Util.clamp(targetVelocity, 0.0, mConfig.maxVelocity);
 		/* Hood */
 		HoodState targetHoodState = kTargetDistanceToHoodState.floorEntry(targetVelocity).getValue();
-		boolean isHoodExtended = robotState.shooterHoodSolenoidState.isExtended(),
-				isBlockingExtended = robotState.shooterBlockingSolenoidState.isExtended();
+		boolean isHoodExtended = robotState.shooterIsHoodExtended,
+				isBlockingExtended = robotState.shooterIsBlockingExtended;
 		switch (targetHoodState) {
 			case LOW:
 				// TODO: are we even ble to release lock and go down at the same time?

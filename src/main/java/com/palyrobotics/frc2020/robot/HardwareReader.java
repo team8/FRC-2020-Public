@@ -56,20 +56,20 @@ public class HardwareReader {
 	}
 
 	private void readClimberState(RobotState robotState) {
-		var climber = ClimberHardware.getInstance();
-		robotState.climberPosition = climber.verticalSparkEncoder.getPosition();
-		robotState.climberVelocity = climber.verticalSparkEncoder.getVelocity();
+		var hardware = ClimberHardware.getInstance();
+		robotState.climberPosition = hardware.verticalSparkEncoder.getPosition();
+		robotState.climberVelocity = hardware.verticalSparkEncoder.getVelocity();
 	}
 
 	private void readDriveState(RobotState robotState) {
-		var drivetrain = DrivetrainHardware.getInstance();
+		var hardware = DrivetrainHardware.getInstance();
 		var gyroAngles = new double[3];
-		drivetrain.gyro.getYawPitchRoll(gyroAngles);
+		hardware.gyro.getYawPitchRoll(gyroAngles);
 		robotState.driveYawDegrees = gyroAngles[0];
-		robotState.driveLeftVelocity = drivetrain.leftMasterEncoder.getVelocity() / 60.0;
-		robotState.driveRightVelocity = drivetrain.rightMasterEncoder.getVelocity() / 60.0;
-		robotState.driveLeftPosition = drivetrain.leftMasterEncoder.getPosition();
-		robotState.driveRightPosition = drivetrain.rightMasterEncoder.getPosition();
+		robotState.driveLeftVelocity = hardware.leftMasterEncoder.getVelocity() / 60.0;
+		robotState.driveRightVelocity = hardware.rightMasterEncoder.getVelocity() / 60.0;
+		robotState.driveLeftPosition = hardware.leftMasterEncoder.getPosition();
+		robotState.driveRightPosition = hardware.rightMasterEncoder.getPosition();
 		robotState.updateOdometry(robotState.driveYawDegrees, robotState.driveLeftPosition,
 				robotState.driveRightPosition);
 	}
@@ -96,18 +96,18 @@ public class HardwareReader {
 		robotState.hasBackBall = hardware.backInfrared.get();
 		robotState.hasFrontBall = hardware.frontInfrared.get();
 		robotState.hasTopBall = hardware.topInfrared.get();
-		robotState.indexerHopperSolenoidState.updateExtended(hardware.hopperSolenoid.get());
+		robotState.indexerIsHoppedExtended = hardware.hopperSolenoid.isExtended();
 	}
 
 	private void readIntakeState(RobotState robotState) {
 		var hardware = IntakeHardware.getInstance();
-		robotState.intakeUpDownSolenoidState.updateExtended(hardware.upDownSolenoid.get());
+		robotState.intakeIsExtended = hardware.solenoid.isExtended();
 	}
 
 	private void readShooterState(RobotState robotState) {
-		var shooterHardware = ShooterHardware.getInstance();
-		robotState.shooterVelocity = shooterHardware.masterEncoder.getVelocity();
-		robotState.shooterHoodSolenoidState.updateExtended(shooterHardware.hoodSolenoid.get());
-		robotState.shooterBlockingSolenoidState.updateExtended(shooterHardware.blockingSolenoid.get());
+		var hardware = ShooterHardware.getInstance();
+		robotState.shooterVelocity = hardware.masterEncoder.getVelocity();
+		robotState.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
+		robotState.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();
 	}
 }

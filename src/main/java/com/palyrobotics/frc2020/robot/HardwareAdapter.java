@@ -8,6 +8,7 @@ import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
+import com.palyrobotics.frc2020.util.control.TimedSolenoid;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.revrobotics.CANEncoder;
@@ -31,7 +32,7 @@ public class HardwareAdapter {
 				horizontalSpark = new Spark(sPortConstants.nariClimberHorizontalId);
 		final CANEncoder verticalSparkEncoder = verticalSpark.getEncoder(),
 				horizontalSparkEncoder = horizontalSpark.getEncoder();
-		final Solenoid solenoid = new Solenoid(sPortConstants.nariClimberSolenoidId);
+		final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariClimberSolenoidId, 0.2, true);
 
 		ClimberHardware() {
 		}
@@ -107,8 +108,8 @@ public class HardwareAdapter {
 		final Spark horizontalSpark = new Spark(sPortConstants.nariIndexerHorizontalId),
 				verticalSpark = new Spark(sPortConstants.nariIndexerVerticalId);
 
-		final Solenoid hopperSolenoid = new Solenoid(sPortConstants.nariIndexerHopperSolenoidId);
-		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.nariIndexerBlockingSolenoidId);
+		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.2, true),
+				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);
 		final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDIO),
 				frontInfrared = new DigitalInput(sPortConstants.nariIndexerFrontInfraredDIO),
 				topInfrared = new DigitalInput(sPortConstants.nariIndexerTopInfraredDIO);
@@ -129,7 +130,7 @@ public class HardwareAdapter {
 
 		private static IntakeHardware sInstance;
 		final Talon talon = new Talon(sPortConstants.nariIntakeId);
-		final Solenoid upDownSolenoid = new Solenoid(sPortConstants.nariIntakeSolenoidId);
+		final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariIntakeSolenoidId, 0.2, false);
 
 		private IntakeHardware() {
 		}
@@ -149,9 +150,8 @@ public class HardwareAdapter {
 		final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId),
 				slaveSpark = new Spark(sPortConstants.nariShooterSlaveId);
 		final CANEncoder masterEncoder = masterSpark.getEncoder();
-		final Solenoid hoodSolenoid = new Solenoid(sPortConstants.nariShooterHoodSolenoid);
-		// TODO: add proper second PCM CAN ID
-		final Solenoid blockingSolenoid = new Solenoid(1, sPortConstants.nariShooterBlockingSolenoidId);
+		final TimedSolenoid hoodSolenoid = new TimedSolenoid(sPortConstants.nariShooterHoodSolenoid, 0.3, true),
+				blockingSolenoid = new TimedSolenoid(sPortConstants.nariShooterBlockingSolenoidId, 0.1, false);
 
 		private ShooterHardware() {
 		}
