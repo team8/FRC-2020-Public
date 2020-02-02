@@ -36,10 +36,6 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		mWaypoints = waypoints;
 	}
 
-	public List<Pose2d> getWaypoints() {
-		return mWaypoints;
-	}
-
 	/**
 	 * Robot will try to drive in reverse while traversing the path. Does not reverse the path itself.
 	 */
@@ -78,6 +74,10 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		} else {
 			throw new IllegalStateException("Trajectory already generated!");
 		}
+	}
+
+	public Trajectory getTrajectory() {
+		return mTrajectory;
 	}
 
 	@Override

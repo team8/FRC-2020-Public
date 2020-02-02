@@ -7,7 +7,6 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 =======
 import com.palyrobotics.frc2020.auto.ShootThreeFriendlyTrenchThreeShootThree;
-import com.palyrobotics.frc2020.auto.ShootThreeTrenchThreeRendezvousTwo;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;

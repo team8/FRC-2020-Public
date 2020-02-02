@@ -75,27 +75,28 @@ public class Robot extends TimedRobot {
 				setDriveIdleMode(config.coastDriveIfDisabled);
 			}
 		});
+		pathToCsv();
 	}
 
 	private void pathToCsv() {
 		var drivePath = new ShootThreeFriendlyTrenchThreeShootThree().getRoutine();
 		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
-			writer.write("x,y");
+			writer.write("x,y" + '\n');
 			var seq = (SequentialRoutine) drivePath;
 			List<RoutineBase> routines = seq.getRoutines();
 			Pose2d lastPoint = new Pose2d();
 			for (RoutineBase routine : routines) {
 				if (routine instanceof DriveSetOdometryRoutine) {
-					var point = ((DriveSetOdometryRoutine) routine).getTargetPose();
-					lastPoint = point;
-					writer.write(
-							String.format("%f,%f%n", point.getTranslation().getX(), point.getTranslation().getY()));
+					lastPoint = ((DriveSetOdometryRoutine) routine).getTargetPose();
 				} else if (routine instanceof DrivePathRoutine) {
-					var path = ((DrivePathRoutine) routine).getWaypoints();
-					var point = (path.get(path.size() - 1));
-					lastPoint = point;
-					writer.write(
-							String.format("%f,%f%n", point.getTranslation().getX(), point.getTranslation().getY()));
+					var drivePathRoutine = (DrivePathRoutine) routine;
+					drivePathRoutine.generateTrajectory(lastPoint);
+					var path = drivePathRoutine.getTrajectory().getStates();
+					for (var point : path) {
+						lastPoint = point.poseMeters;
+						writer.write(String.format("%f,%f%n", point.poseMeters.getTranslation().getX(),
+								point.poseMeters.getTranslation().getY()));
+					}
 				} else if (routine instanceof DriveYawRoutine) {
 					// do nothing
 				}
@@ -127,7 +128,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
-		pathToCsv();
 	}
 
 	private void startStage(RobotState.GamePeriod period) {
