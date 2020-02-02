@@ -22,15 +22,15 @@ public class StartCenterRendezvousThree extends AutoBase {
 
 		var turn = new DriveYawRoutine(-45);
 
-		var getRendezvousBall1 = new DrivePathRoutine(newWaypoint(80, -70, 0));
-		var backup1 = new DrivePathRoutine(newWaypoint(60, -70, 0));
+		var getTrenchBalls1 = new DrivePathRoutine(newWaypoint(70, -70, 0));
+		var backup1 = new DrivePathRoutine(newWaypoint(30, -70, 0));
 
-		var getRendezvousBall2 = new DrivePathRoutine(newWaypoint(85, -90, 0));
+		var getTrenchBalls2 = new DrivePathRoutine(newWaypoint(80, -90, 0));
+		var backup2 = new DrivePathRoutine(newWaypoint(60, -90, 0));
 
 		var turn2 = new DriveYawRoutine(180);
 
-		return new SequentialRoutine(initialOdometry, turn, getBallsRoutine, getRendezvousBall1,
-				backup1.driveInReverse(), getRendezvousBall2, stowRoutine,
-				turn2, new VisionAlignRoutine(), shootBallsRoutine);
+		return new SequentialRoutine(initialOdometry, turn, getTrenchBalls1, backup1.driveInReverse(), getTrenchBalls2,
+				backup2.driveInReverse(), turn2, new VisionAlignRoutine());
 	}
 }
