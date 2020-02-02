@@ -41,10 +41,10 @@ public class VisionYawAlignDriveController extends ChezyDriveController {
 			mDriveOutputs.rightOutput.setPercentOutput(rightOutput);
 		} else {
 			/*
-			 * alternates every cycle target not found (pipeline 0 for normal, pipeline 1
-			 * for 2x hardware zoom Ensures distance is not reason target is not being
-			 * seen...
-			 */
+			* alternates every cycle target not found (pipeline 0 for normal, pipeline 1
+			* for 2x hardware zoom Ensures distance is not reason target is not being
+			* seen...
+			*/
 			// mPipelineBeingUsed = mPipelineBeingUsed == 1 ? 0 : 1;
 			// mLimelight.setPipeline(mPipelineBeingUsed);
 			super.updateSignal(commands, robotState);

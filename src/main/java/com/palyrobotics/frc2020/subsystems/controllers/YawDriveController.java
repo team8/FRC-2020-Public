@@ -21,11 +21,10 @@ public class YawDriveController extends Drive.DriveController {
 	}
 
 	/**
-	 * Signals should change only based on {@link Commands}. However, our
-	 * {@link #mController} has internal states. We have to do our best to manage
-	 * these solely based on commands. So, when our goal changes, we have to notify
-	 * our controller. This ensures we can still remain in this controller and have
-	 * different targets.
+	 * Signals should change only based on {@link Commands}. However, our {@link #mController} has
+	 * internal states. We have to do our best to manage these solely based on commands. So, when our
+	 * goal changes, we have to notify our controller. This ensures we can still remain in this
+	 * controller and have different targets.
 	 */
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {

@@ -22,12 +22,10 @@ public class LogEntry {
 	public String toString() {
 		var log = new StringBuilder(256);
 		long minutes = timeStampMilliseconds / (1000 * 60), seconds = timeStampMilliseconds / (1000) % 60;
-		if (minutes <= 9)
-			log.append('0');
+		if (minutes <= 9) log.append('0');
 		log.append(minutes);
 		log.append(':');
-		if (seconds <= 9)
-			log.append('0');
+		if (seconds <= 9) log.append('0');
 		log.append(seconds);
 		switch (level) {
 			case 5:

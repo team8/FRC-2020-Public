@@ -42,11 +42,10 @@ public class Spinner extends SubsystemBase {
 	/**
 	 * Provides most efficient direction to goal color.
 	 *
-	 * @param currentColor    Current color being detected by color string in string
-	 *                        format
-	 * @param gameTargetColor Color to find given by FMS
-	 * @return int denoting direction wheel needs to move. 1 corresponds to
-	 *         clockwise, -1 corresponds to anticlockwise
+	 * @param  currentColor    Current color being detected by color string in string format
+	 * @param  gameTargetColor Color to find given by FMS
+	 * @return                 int denoting direction wheel needs to move. 1 corresponds to clockwise,
+	 *                         -1 corresponds to anticlockwise
 	 */
 	public int directionToGoalColor(String currentColor, String gameTargetColor) {
 		int gameDataIndex = SpinnerConstants.kControlPanelColorOrder.indexOf(gameTargetColor),

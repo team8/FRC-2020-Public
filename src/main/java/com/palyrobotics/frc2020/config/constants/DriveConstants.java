@@ -42,8 +42,7 @@ public class DriveConstants {
 	}
 
 	/**
-	 * @return Copy of the standard trajectory configuration. Can be modified
-	 *         safely.
+	 * @return Copy of the standard trajectory configuration. Can be modified safely.
 	 */
 	public static TrajectoryConfig getStandardTrajectoryConfig() {
 		return new TrajectoryConfig(kConfig.maxPathVelocityMetersPerSecond,

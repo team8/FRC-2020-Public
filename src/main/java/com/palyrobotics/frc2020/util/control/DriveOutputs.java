@@ -23,10 +23,8 @@ public class DriveOutputs {
 
 	@Override // Auto-generated
 	public boolean equals(Object other) {
-		if (this == other)
-			return true;
-		if (other == null || getClass() != other.getClass())
-			return false;
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
 		DriveOutputs otherSpark = (DriveOutputs) other;
 		return leftOutput.equals(otherSpark.leftOutput) && rightOutput.equals(otherSpark.rightOutput);
 	}
