@@ -15,8 +15,8 @@ public class IndexerFeedRoutine extends TimeoutRoutineBase {
 		super(3.0);
 	}
 
-	public IndexerFeedRoutine(double timeout) {
-		super(timeout);
+	public IndexerFeedRoutine(double timeoutSeconds) {
+		super(timeoutSeconds);
 	}
 
 	@Override
@@ -25,8 +25,13 @@ public class IndexerFeedRoutine extends TimeoutRoutineBase {
 	}
 
 	@Override
+	protected void stop(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
+	}
+
+	@Override
 	public boolean checkIfFinishedEarly(RobotState state) {
-		return !state.hasTopBall;
+		return state.hasTopBall;
 	}
 
 	@Override

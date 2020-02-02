@@ -5,9 +5,9 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 
-public class VibrateXboxRoutine extends TimedRoutine {
+public class XboxVibrateRoutine extends TimedRoutine {
 
-	public VibrateXboxRoutine(double durationSeconds) {
+	public XboxVibrateRoutine(double durationSeconds) {
 		super(durationSeconds);
 	}
 

@@ -15,8 +15,8 @@ public class IntakeBallRoutine extends TimedRoutine {
 		super(3.0);
 	}
 
-	public IntakeBallRoutine(double duration) {
-		super(duration);
+	public IntakeBallRoutine(double durationSeconds) {
+		super(durationSeconds);
 	}
 
 	@Override

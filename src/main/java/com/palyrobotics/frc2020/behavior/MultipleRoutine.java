@@ -19,11 +19,11 @@ public abstract class MultipleRoutine extends RoutineBase {
 
 	@Override
 	public String toString() {
-		StringBuilder name = new StringBuilder(super.getName()).append(":");
+		var status = new StringBuilder(super.getName()).append(":");
 		for (RoutineBase routine : mRoutines) {
-			name.append("\n").append("    ").append(routine).append(" ").append("[").append(routine.getStatus())
-					.append("]");
+			status.append("\n").append("    ").append(routine)
+					.append(" ").append("[").append(routine.getStatus()).append("]");
 		}
-		return name.toString();
+		return status.toString();
 	}
 }

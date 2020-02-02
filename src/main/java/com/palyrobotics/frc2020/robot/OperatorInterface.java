@@ -10,7 +10,7 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerTimeRoutine;
-import com.palyrobotics.frc2020.behavior.routines.miscellaneous.VibrateXboxRoutine;
+import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
@@ -71,7 +71,7 @@ public class OperatorInterface {
 				case LOWERING_TO_BAR:
 					if (velocityDelta > mConfig.velocityChangeThreshold) {
 						commands.climberWantedState = Climber.ClimberState.CLIMBING;
-						commands.addWantedRoutine(new VibrateXboxRoutine(2.0));
+						commands.addWantedRoutine(new XboxVibrateRoutine(2.0));
 					}
 					break;
 				case CLIMBING:
@@ -160,20 +160,14 @@ public class OperatorInterface {
 			commands.setShooterVisionAssisted();
 		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
 			commands.setShooterIdle();
+		}
+		// Feeding
+		if (state.shooterInVelocityRange) {
 			if (mOperatorXboxController.getLeftBumperPressed()) {
 				// Shoot one ball
-				if (state.shooterInVelocityRange) {
-					commands.addWantedRoutine(new IndexerFeedRoutine());
-				} else if (mOperatorXboxController.getRightBumperPressed()) {
-					if (state.shooterInVelocityRange) {
-						commands.indexerWantedBeltState = Indexer.BeltState.FEED_SINGLE;
-					}
-				}
+				commands.addWantedRoutine(new IndexerFeedRoutine());
 			} else if (mOperatorXboxController.getRightBumperPressed()) {
-				// Shoot all balls
-				if (state.shooterInVelocityRange) {
-					commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
-				}
+				commands.indexerWantedBeltState = Indexer.BeltState.FEED_SINGLE;
 			}
 		}
 	}

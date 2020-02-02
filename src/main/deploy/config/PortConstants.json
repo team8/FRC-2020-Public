@@ -17,7 +17,7 @@
 	"nariIntakeSolenoidId": 4,
 	"nariShooterMasterId": 10,
 	"nariShooterSlaveId": 11,
-	"nariShooterExtendingSolenoidId": 6,
+	"nariShooterHoodSolenoid": 6,
 	"nariShooterBlockingSolenoidId": 0,
 	"nariSpinnerId": 12
 }

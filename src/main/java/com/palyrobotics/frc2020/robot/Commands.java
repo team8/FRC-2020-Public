@@ -24,7 +24,6 @@ public class Commands {
 	/* Climber */
 	public Climber.ClimberState climberWantedState;
 	public Climber.ClimberState preLockClimberWantedState;
-	private double climberWantedOutput;
 	/* Drive */
 	/* Drive Commands */
 	private Drive.DriveState driveWantedState;
@@ -48,7 +47,6 @@ public class Commands {
 	private double shooterManualWantedFlywheelVelocity;
 	/* Spinner */
 	public Spinner.State spinnerWantedState;
-	private double driveWantedHeadingDegrees;
 	// Climbing
 	public double climberWantedVelocity;
 	public double climberWantedAdjustingPercentOutput;
@@ -61,14 +59,12 @@ public class Commands {
 		}
 	}
 
-	/* Routines */
 	public void addWantedRoutine(RoutineBase wantedRoutine) {
 		routinesWanted.add(wantedRoutine);
 	}
 
 	/* Climber */
 	public void setClimberWantedOutput(double output) {
-		climberWantedOutput = output;
 	}
 
 	public void setClimberWantedVelocity(double velocity) {

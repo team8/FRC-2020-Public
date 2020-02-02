@@ -10,8 +10,8 @@ public abstract class TimeoutRoutineBase extends TimedRoutine {
 		this(0.0);
 	}
 
-	public TimeoutRoutineBase(double timeout) {
-		super(timeout);
+	public TimeoutRoutineBase(double timeoutSeconds) {
+		super(timeoutSeconds);
 	}
 
 	@Override
