@@ -2,6 +2,8 @@ package com.palyrobotics.frc2020.subsystems;
 
 import static com.palyrobotics.frc2020.config.constants.ShooterConstants.kTargetDistanceToHoodState;
 import static com.palyrobotics.frc2020.config.constants.ShooterConstants.kTargetDistanceToVelocity;
+import static com.palyrobotics.frc2020.util.Util.kEpsilon;
+import static com.palyrobotics.frc2020.util.Util.withinRange;
 
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.Commands;
@@ -11,6 +13,8 @@ import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 import com.palyrobotics.frc2020.vision.Limelight;
+
+import edu.wpi.first.wpilibj.Timer;
 
 public class Shooter extends SubsystemBase {
 
@@ -26,7 +30,9 @@ public class Shooter extends SubsystemBase {
 	private Limelight mLimelight = Limelight.getInstance();
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
 	private ControllerOutput mFlywheelOutput = new ControllerOutput();
-	private boolean mHoodOutput, mBlockingOutput;
+	private boolean mHoodOutput, mBlockingOutput, mRumbleOutput;
+	private Timer mRumbleTimer = new Timer();
+	private boolean mInVelocityRange;
 
 	private Shooter() {
 	}
@@ -37,8 +43,10 @@ public class Shooter extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+		/* Flywheel Velocity */
 		double targetVelocity;
-		switch (commands.getShooterWantedState()) {
+		ShooterState wantedState = commands.getShooterWantedState();
+		switch (wantedState) {
 			case MANUAL_VELOCITY:
 				targetVelocity = commands.getShooterManualWantedFlywheelVelocity();
 				break;
@@ -50,6 +58,7 @@ public class Shooter extends SubsystemBase {
 				break;
 		}
 		targetVelocity = Util.clamp(targetVelocity, 0.0, mConfig.maxVelocity);
+		/* Hood */
 		HoodState targetHoodState = kTargetDistanceToHoodState.floorEntry(targetVelocity).getValue();
 		boolean isHoodExtended = robotState.shooterHoodSolenoidState.isExtended(),
 				isBlockingExtended = robotState.shooterBlockingSolenoidState.isExtended();
@@ -84,6 +93,28 @@ public class Shooter extends SubsystemBase {
 				break;
 		}
 		mFlywheelOutput.setTargetVelocity(targetVelocity, mConfig.velocityGains);
+		/* Rumble */
+		boolean inVelocityRange = withinRange(targetVelocity, robotState.shooterVelocity, mConfig.velocityTolerance);
+		boolean inRangeStateChanged = mInVelocityRange != inVelocityRange;
+		mInVelocityRange = inVelocityRange;
+		switch (wantedState) {
+			case MANUAL_VELOCITY:
+			case VISION_VELOCITY:
+				boolean justEnteredRange = inRangeStateChanged && inVelocityRange,
+						justExitedRange = inRangeStateChanged && !inVelocityRange;
+				if (targetVelocity > kEpsilon && justEnteredRange) {
+					// Just entered into acceptable velocity change
+					mRumbleOutput = true;
+					mRumbleTimer.reset();
+					mRumbleTimer.start();
+				} else if (mRumbleTimer.get() > mConfig.rumbleDurationSeconds || justExitedRange) {
+					mRumbleTimer.stop();
+					mRumbleOutput = false;
+				}
+				break;
+			default:
+				mRumbleOutput = false;
+		}
 	}
 
 	public ControllerOutput getFlywheelOutput() {
@@ -96,5 +127,9 @@ public class Shooter extends SubsystemBase {
 
 	public boolean getBlockingOutput() {
 		return mBlockingOutput;
+	}
+
+	public boolean getRumbleOutput() {
+		return mRumbleOutput;
 	}
 }

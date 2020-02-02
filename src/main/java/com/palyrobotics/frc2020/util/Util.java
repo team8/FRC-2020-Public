@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.util.Units;
  */
 public class Util {
 
+	public static final double kEpsilon = 1e-4;
+
 	private Util() {
 	}
 
@@ -106,7 +108,7 @@ public class Util {
 	}
 
 	public static boolean approximatelyEqual(double d1, double d2) {
-		return withinRange(d1, d2, 1e-4);
+		return withinRange(d1, d2, kEpsilon);
 	}
 
 	public static boolean withinRange(double d1, double d2, double tolerance) {

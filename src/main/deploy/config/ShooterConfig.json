@@ -1,5 +1,8 @@
 {
     "velocityGains": {
 
-    }
+    },
+    "maxVelocity": 0.0,
+    "rumbleDurationSeconds": 0.1,
+    "velocityTolerance": 0.0
 }

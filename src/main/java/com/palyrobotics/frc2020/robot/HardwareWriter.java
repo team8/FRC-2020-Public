@@ -32,6 +32,7 @@ public class HardwareWriter {
 	private final Intake mIntake = Intake.getInstance();
 	private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
+	private boolean mRumbleOutput;
 
 	void configureHardware(Set<SubsystemBase> enabledSubsystems) {
 		if (enabledSubsystems.contains(mClimber))
@@ -179,6 +180,7 @@ public class HardwareWriter {
 	 * Updates the hardware to run with output values of {@link SubsystemBase}'s.
 	 */
 	void updateHardware(Set<SubsystemBase> enabledSubsystems) {
+		mRumbleOutput = false;
 		if (!mRobotConfig.disableHardwareUpdates) {
 			if (enabledSubsystems.contains(mClimber))
 				updateClimber();
@@ -194,6 +196,8 @@ public class HardwareWriter {
 				updateSpinner();
 			updateMiscellaneousHardware();
 		}
+		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
+		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
 	}
 
 	private void updateClimber() {
@@ -228,10 +232,11 @@ public class HardwareWriter {
 	}
 
 	private void updateShooter() {
-		var shooterHardware = HardwareAdapter.ShooterHardware.getInstance();
-		shooterHardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
-		shooterHardware.blockingSolenoid.set(mShooter.getBlockingOutput());
-		shooterHardware.hoodSolenoid.set(mShooter.getHoodOutput());
+		var hardware = HardwareAdapter.ShooterHardware.getInstance();
+		hardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
+		hardware.blockingSolenoid.set(mShooter.getBlockingOutput());
+		hardware.hoodSolenoid.set(mShooter.getHoodOutput());
+		mRumbleOutput |= mShooter.getRumbleOutput();
 	}
 
 	private void updateSpinner() {
