@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
 	private ControllerOutput mFlywheelOutput = new ControllerOutput();
 	private boolean mHoodOutput, mBlockingOutput, mRumbleOutput;
 	private Timer mRumbleTimer = new Timer();
-	private boolean mInVelocityRange;
+	private boolean mIsReadyToShoot;
 
 	private Shooter() {
 	}
@@ -44,22 +44,23 @@ public class Shooter extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		/* Flywheel Velocity */
-		double targetVelocity;
 		ShooterState wantedState = commands.getShooterWantedState();
+		double targetFlywheelVelocity;
 		switch (wantedState) {
 			case MANUAL_VELOCITY:
-				targetVelocity = commands.getShooterManualWantedFlywheelVelocity();
+				targetFlywheelVelocity = commands.getShooterManualWantedFlywheelVelocity();
 				break;
 			case VISION_VELOCITY:
-				targetVelocity = kTargetDistanceToVelocity.getInterpolated(mLimelight.getCorrectedEstimatedDistanceZ());
+				targetFlywheelVelocity = kTargetDistanceToVelocity
+						.getInterpolated(mLimelight.getCorrectedEstimatedDistanceZ());
 				break;
 			default:
-				targetVelocity = 0.0;
+				targetFlywheelVelocity = 0.0;
 				break;
 		}
-		targetVelocity = Util.clamp(targetVelocity, 0.0, mConfig.maxVelocity);
+		targetFlywheelVelocity = Util.clamp(targetFlywheelVelocity, 0.0, mConfig.maxVelocity);
 		/* Hood */
-		HoodState targetHoodState = kTargetDistanceToHoodState.floorEntry(targetVelocity).getValue();
+		HoodState targetHoodState = kTargetDistanceToHoodState.floorEntry(targetFlywheelVelocity).getValue();
 		boolean isHoodExtended = robotState.shooterIsHoodExtended,
 				isBlockingExtended = robotState.shooterIsBlockingExtended;
 		switch (targetHoodState) {
@@ -92,22 +93,23 @@ public class Shooter extends SubsystemBase {
 				mHoodOutput = mBlockingOutput = true;
 				break;
 		}
-		mFlywheelOutput.setTargetVelocity(targetVelocity, mConfig.velocityGains);
+		mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);
 		/* Rumble */
-		boolean inVelocityRange = withinRange(targetVelocity, robotState.shooterVelocity, mConfig.velocityTolerance);
-		boolean inRangeStateChanged = mInVelocityRange != inVelocityRange;
-		mInVelocityRange = inVelocityRange;
+		boolean inShootingVelocityRange = targetFlywheelVelocity > kEpsilon &&
+				withinRange(targetFlywheelVelocity, robotState.shooterFlywheelVelocity, mConfig.velocityTolerance),
+				justChangedReadyToShoot = mIsReadyToShoot != inShootingVelocityRange;
+		mIsReadyToShoot = inShootingVelocityRange;
 		switch (wantedState) {
 			case MANUAL_VELOCITY:
 			case VISION_VELOCITY:
-				boolean justEnteredRange = inRangeStateChanged && inVelocityRange,
-						justExitedRange = inRangeStateChanged && !inVelocityRange;
-				if (targetVelocity > kEpsilon && justEnteredRange) {
-					// Just entered into acceptable velocity change
+				boolean justEnteredReadyToShoot = justChangedReadyToShoot && inShootingVelocityRange,
+						justExitedReadyToShoot = justChangedReadyToShoot && !inShootingVelocityRange;
+				if (justEnteredReadyToShoot) {
+					// Just entered into acceptable velocity target range
 					mRumbleOutput = true;
 					mRumbleTimer.reset();
 					mRumbleTimer.start();
-				} else if (mRumbleTimer.get() > mConfig.rumbleDurationSeconds || justExitedRange) {
+				} else if (mRumbleTimer.get() > mConfig.rumbleDurationSeconds || justExitedReadyToShoot) {
 					mRumbleTimer.stop();
 					mRumbleOutput = false;
 				}
@@ -131,5 +133,9 @@ public class Shooter extends SubsystemBase {
 
 	public boolean getRumbleOutput() {
 		return mRumbleOutput;
+	}
+
+	public boolean isReadyToShoot() {
+		return mIsReadyToShoot;
 	}
 }

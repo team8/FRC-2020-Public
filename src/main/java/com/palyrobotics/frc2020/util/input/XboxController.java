@@ -1,13 +1,13 @@
 package com.palyrobotics.frc2020.util.input;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 
 	private static final double kTriggerThreshold = 0.8;
 	private int mLastPOV = -1;
-	private Map<Hand, Boolean> mLastTriggers = new HashMap<>(Map.of(Hand.kLeft, false, Hand.kRight, false));
+	private Map<Hand, Boolean> mLastTriggers = new EnumMap<>(Map.of(Hand.kLeft, false, Hand.kRight, false));
 
 	public XboxController(int port) {
 		super(port);

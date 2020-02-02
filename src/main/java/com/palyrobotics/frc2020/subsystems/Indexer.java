@@ -54,7 +54,7 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = true;
 				break;
 		}
-		mHopperOutput = commands.indexerWantedUpDownState == HopperState.CLOSED;
+		mHopperOutput = commands.indexerWantedHopperState == HopperState.CLOSED;
 	}
 
 	public ControllerOutput getOutput() {

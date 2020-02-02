@@ -96,7 +96,7 @@ public class HardwareReader {
 		robotState.hasBackBall = hardware.backInfrared.get();
 		robotState.hasFrontBall = hardware.frontInfrared.get();
 		robotState.hasTopBall = hardware.topInfrared.get();
-		robotState.indexerIsHoppedExtended = hardware.hopperSolenoid.isExtended();
+		robotState.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
 	}
 
 	private void readIntakeState(RobotState robotState) {
@@ -106,7 +106,7 @@ public class HardwareReader {
 
 	private void readShooterState(RobotState robotState) {
 		var hardware = ShooterHardware.getInstance();
-		robotState.shooterVelocity = hardware.masterEncoder.getVelocity();
+		robotState.shooterFlywheelVelocity = hardware.masterEncoder.getVelocity();
 		robotState.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
 		robotState.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();
 	}

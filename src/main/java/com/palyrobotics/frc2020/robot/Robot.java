@@ -104,7 +104,7 @@ public class Robot extends TimedRobot {
 			subsystem.update(mCommands, mRobotState);
 		}
 		mHardwareWriter.updateHardware(mEnabledSubsystems);
-		HardwareAdapter.Joysticks.getInstance().operatorXboxController.setRumble(mCommands.wantedRumble);
+		mRobotState.shooterInVelocityRange = mShooter.isReadyToShoot();
 	}
 
 	@Override
@@ -186,8 +186,8 @@ public class Robot extends TimedRobot {
 				.collect(Collectors.toUnmodifiableMap(SubsystemBase::getName, Function.identity()));
 		mEnabledSubsystems = mConfig.enabledSubsystems.stream().map(configToSubsystem::get)
 				.collect(Collectors.toUnmodifiableSet());
-		var summaryBuilder = new StringBuilder();
-		summaryBuilder.append("\n===================\n");
+		var summaryBuilder = new StringBuilder("\n");
+		summaryBuilder.append("===================\n");
 		summaryBuilder.append("Enabled subsystems:\n");
 		summaryBuilder.append("-------------------\n");
 		for (SubsystemBase enabledSubsystem : mEnabledSubsystems) {

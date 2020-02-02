@@ -212,7 +212,7 @@ public class HardwareWriter {
 	private void updateIntake() {
 		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
 		intakeHardware.talon.setOutput(mIntake.getOutput());
-		intakeHardware.solenoid.set(mIntake.getUpDownOutput());
+		intakeHardware.solenoid.set(mIntake.getExtendedOutput());
 	}
 
 	private void updateShooter() {

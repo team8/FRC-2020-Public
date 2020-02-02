@@ -10,13 +10,13 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 public class Intake extends SubsystemBase {
 
 	public enum State {
-		RAISE, LOWER, INTAKE
+		STOW, LOWER, INTAKE
 	}
 
 	private static Intake sInstance = new Intake();
 	private IntakeConfig mConfig = Configs.get(IntakeConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
-	private boolean mUpDownOutput;
+	private boolean mExtendedOutput;
 
 	private Intake() {
 	}
@@ -28,17 +28,17 @@ public class Intake extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		switch (commands.intakeWantedState) {
-			case RAISE:
+			case STOW:
 				mOutput.setIdle();
-				mUpDownOutput = false;
+				mExtendedOutput = false;
 				break;
 			case LOWER:
 				mOutput.setIdle();
-				mUpDownOutput = true;
+				mExtendedOutput = true;
 				break;
 			case INTAKE:
 				mOutput.setPercentOutput(mConfig.intakingOutput);
-				mUpDownOutput = true;
+				mExtendedOutput = true;
 				break;
 		}
 	}
@@ -47,7 +47,7 @@ public class Intake extends SubsystemBase {
 		return mOutput;
 	}
 
-	public boolean getUpDownOutput() {
-		return mUpDownOutput;
+	public boolean getExtendedOutput() {
+		return mExtendedOutput;
 	}
 }

@@ -14,12 +14,12 @@ import com.palyrobotics.frc2020.behavior.routines.miscellaneous.VibrateXboxRouti
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
+import com.palyrobotics.frc2020.robot.HardwareAdapter.Joysticks;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
-import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -33,11 +33,9 @@ public class OperatorInterface {
 
 	public static final double kDeadBand = 0.05;
 	public static final int kClimberEnableControlTimeSeconds = 30;
-	private final Limelight mLimelight = Limelight.getInstance();
-	private final Joystick mDriveStick = HardwareAdapter.Joysticks.getInstance().driveStick,
-			mTurnStick = HardwareAdapter.Joysticks.getInstance().turnStick;
-	private final XboxController mOperatorXboxController = HardwareAdapter.Joysticks
-			.getInstance().operatorXboxController;
+	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
+			mTurnStick = Joysticks.getInstance().turnStick;
+	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
 
 	double climberLastVelocity;
 
@@ -131,49 +129,52 @@ public class OperatorInterface {
 	}
 
 	private void updateBallSuperstructure(Commands commands, @ReadOnly RobotState state) {
+		/* Indexer */
 		if (mOperatorXboxController.getDPadRightPressed()) {
-			if (state.indexerIsHoppedExtended) {
-				commands.indexerWantedUpDownState = Indexer.HopperState.OPEN;
+			// Toggle hopper control
+			if (state.indexerIsHopperExtended) {
+				// Open hopper, stow intake, and advance balls
+				commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
+				commands.intakeWantedState = Intake.State.STOW;
+				commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
 			} else {
-				commands.indexerWantedUpDownState = Indexer.HopperState.CLOSED;
-				commands.addWantedRoutine(new IndexerTimeRoutine(1));
-			}
-		} else if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
-			commands.indexerWantedUpDownState = Indexer.HopperState.CLOSED;
-		}
-
-		if (mOperatorXboxController.getDPadLeftReleased()) {
-			commands.addWantedRoutine(new IndexerTimeRoutine(1));
-		}
-
-		if (mOperatorXboxController.getLeftBumperPressed() &&
-				commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new boolean in robot state
-			commands.addWantedRoutine(new IndexerFeedRoutine());
-		} else if (mOperatorXboxController.getRightBumperPressed() &&
-				commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new boolean in robot state
-					commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
-				}
-
-		if (mOperatorXboxController.getDPadRightPressed()) {
-			if (Indexer.getInstance().getHopperOutput()) {
-				commands.intakeWantedState = Intake.State.RAISE;
-			} else {
-				commands.intakeWantedState = Intake.State.INTAKE;
-			}
-		} else if (mOperatorXboxController.getDPadDownPressed()) {
-			if (state.intakeIsExtended) {
-				commands.intakeWantedState = Intake.State.RAISE;
-			} else {
+				// Close hopper, lower intake, and advance balls a bit
+				commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 				commands.intakeWantedState = Intake.State.LOWER;
+				commands.addWantedRoutine(new IndexerTimeRoutine(1.0));
 			}
-		} else if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.intakeWantedState = Intake.State.INTAKE;
 		}
+		if (mOperatorXboxController.getDPadLeft()) {
+			// Main ball intake control
+			commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
+			commands.intakeWantedState = Intake.State.INTAKE;
+			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
+		}
+		if (mOperatorXboxController.getDPadLeftReleased()) {
+			commands.intakeWantedState = Intake.State.LOWER;
+			commands.addWantedRoutine(new IndexerTimeRoutine(1.0));
+		}
+		/* Shooter */
+		// Handle flywheel velocity
 		if (mOperatorXboxController.getRightTriggerPressed()) {
 			commands.setShooterVisionAssisted();
 		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
 			commands.setShooterIdle();
+			if (mOperatorXboxController.getLeftBumperPressed()) {
+				// Shoot one ball
+				if (state.shooterInVelocityRange) {
+					commands.addWantedRoutine(new IndexerFeedRoutine());
+				} else if (mOperatorXboxController.getRightBumperPressed()) {
+					if (state.shooterInVelocityRange) {
+						commands.indexerWantedBeltState = Indexer.BeltState.FEED_SINGLE;
+					}
+				}
+			} else if (mOperatorXboxController.getRightBumperPressed()) {
+				// Shoot all balls
+				if (state.shooterInVelocityRange) {
+					commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
+				}
+			}
 		}
 	}
 
