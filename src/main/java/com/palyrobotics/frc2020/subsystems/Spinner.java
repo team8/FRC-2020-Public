@@ -10,7 +10,7 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Spinner extends SubsystemBase {
 
-	public enum SpinnerState {
+	public enum State {
 		IDLE, ROTATION_CONTROL, POSITION_CONTROL
 	}
 
@@ -24,7 +24,7 @@ public class Spinner extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		SpinnerState spinnerState = commands.spinnerWantedState;
+		State spinnerState = commands.spinnerWantedState;
 		switch (spinnerState) {
 			case IDLE:
 				mOutput.setIdle();

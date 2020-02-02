@@ -1,7 +1,6 @@
 package com.palyrobotics.frc2020.robot;
 
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.util.SolenoidState;
 import com.palyrobotics.frc2020.util.Util;
 import com.revrobotics.ColorMatchResult;
 
@@ -43,7 +42,7 @@ public class RobotState {
 	public boolean hasBackBall, hasFrontBall, hasTopBall;
 	public double visionDistanceToTarget;
 	public SolenoidState intakeUpDownSolenoidState = new SolenoidState();
-
+	public SolenoidState indexerHopperSolenoidState = new SolenoidState();
 	// Climber
 	public double climberPosition, climberVelocity;
 

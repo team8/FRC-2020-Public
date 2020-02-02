@@ -48,10 +48,7 @@ public class OperatorInterface {
 
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
-		updateIndexerCommands(commands, state);
-		updateIntakeCommands(commands, state);
-		updateShooterCommands(commands);
-		updateSpinnerCommands(commands);
+		updateBallSuperstructure(commands, state);
 
 		commands.shouldClearCurrentRoutines = mDriveStick.getTriggerPressed();
 
@@ -130,19 +127,17 @@ public class OperatorInterface {
 		}
 	}
 
-	private void updateIndexerCommands(Commands commands, @ReadOnly RobotState state) {
-		if (state.hasBackBall && state.hasFrontBall) { // TODO: replace with ball detection
-			commands.indexerWantedState = Indexer.State.WAITING_TO_FEED;
-		} else if (mOperatorXboxController.getDPadRightPressed()) {
-			if (Indexer.getInstance().getUpDownOutput()) {
-				commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.UP;
+	private void updateBallSuperstructure(Commands commands, @ReadOnly RobotState state) {
+		if (mOperatorXboxController.getDPadRightPressed()) {
+			if (state.indexerHopperSolenoidState.isExtended()) {
+				commands.indexerWantedUpDownState = Indexer.HopperState.OPEN;
 			} else {
-				commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.DOWN;
+				commands.indexerWantedUpDownState = Indexer.HopperState.CLOSED;
 				commands.addWantedRoutine(new IndexerTimeRoutine(1));
 			}
 		} else if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.indexerWantedState = Indexer.State.INDEX;
-			commands.indexerWantedUpDownState = Indexer.IndexerUpDownState.DOWN;
+			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
+			commands.indexerWantedUpDownState = Indexer.HopperState.CLOSED;
 		}
 
 		if (mOperatorXboxController.getDPadLeftReleased()) {
@@ -150,30 +145,21 @@ public class OperatorInterface {
 		}
 
 		if (mOperatorXboxController.getLeftBumperPressed() &&
-				commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new
-																																		// boolean
-																																		// in robot state
+				commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new boolean in robot state
 			commands.addWantedRoutine(new IndexerFeedRoutine());
 		} else if (mOperatorXboxController.getRightBumperPressed() &&
-				commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new
-																																				// boolean
-																																				// in robot state
-					commands.indexerWantedState = Indexer.State.FEED_ALL;
+				commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new boolean in robot state
+					commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
 				}
 
-	}
-
-	private void updateIntakeCommands(Commands commands, @ReadOnly RobotState state) {
-		if (state.hasBackBall && state.hasFrontBall) { // TODO: replace with ball detection
-			commands.intakeWantedState = Intake.State.RAISE;
-		} else if (mOperatorXboxController.getDPadRightPressed()) {
-			if (Indexer.getInstance().getUpDownOutput()) {
+		if (mOperatorXboxController.getDPadRightPressed()) {
+			if (Indexer.getInstance().getHopperOutput()) {
 				commands.intakeWantedState = Intake.State.RAISE;
 			} else {
 				commands.intakeWantedState = Intake.State.INTAKE;
 			}
 		} else if (mOperatorXboxController.getDPadDownPressed()) {
-			if (Intake.getInstance().getUpDownOutput()) {
+			if (state.intakeUpDownSolenoidState.isExtended()) {
 				commands.intakeWantedState = Intake.State.RAISE;
 			} else {
 				commands.intakeWantedState = Intake.State.LOWER;
@@ -181,35 +167,25 @@ public class OperatorInterface {
 		} else if (mOperatorXboxController.getDPadLeftPressed()) {
 			commands.intakeWantedState = Intake.State.INTAKE;
 		}
-	}
-
-	private void updateShooterCommands(Commands commands) {
 		if (mOperatorXboxController.getRightTriggerPressed()) {
 			commands.setShooterVisionAssisted();
 		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
 			commands.setShooterIdle();
 		}
-	}
-
-	private void updateSpinnerCommands(Commands commands) {
 		// TODO Figure out better button
 		if (mOperatorXboxController.getDPadRightPressed()) {
-			commands.spinnerWantedState = Spinner.SpinnerState.POSITION_CONTROL;
+			commands.spinnerWantedState = Spinner.State.POSITION_CONTROL;
 		} else if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.spinnerWantedState = Spinner.SpinnerState.ROTATION_CONTROL;
+			commands.spinnerWantedState = Spinner.State.ROTATION_CONTROL;
 		}
-	}
-
-	public void defaults(Commands commands) {
-		commands.indexerWantedState = Indexer.State.IDLE;
-		commands.setDriveNeutral();
-		commands.intakeWantedState = Intake.State.INTAKE;
-		commands.setShooterIdle();
-		commands.spinnerWantedState = Spinner.SpinnerState.IDLE;
 	}
 
 	public void reset(Commands commands) {
 		commands.climberWantedState = Climber.ClimberState.IDLE;
+		commands.setDriveNeutral();
+		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
+		commands.intakeWantedState = Intake.State.INTAKE;
 		commands.setShooterIdle();
+		commands.spinnerWantedState = Spinner.State.IDLE;
 	}
 }

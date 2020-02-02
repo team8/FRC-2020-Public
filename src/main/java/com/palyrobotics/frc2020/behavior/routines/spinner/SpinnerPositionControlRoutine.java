@@ -19,7 +19,7 @@ public class SpinnerPositionControlRoutine extends SpinnerRoutineBase {
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		mTargetColor = state.gameData;
 		mCurrentColor = state.closestColorString;
-		commands.spinnerWantedState = Spinner.SpinnerState.POSITION_CONTROL;
+		commands.spinnerWantedState = Spinner.State.POSITION_CONTROL;
 	}
 
 	@Override

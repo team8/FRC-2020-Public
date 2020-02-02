@@ -38,6 +38,7 @@ public abstract class RoutineBase {
 			// This avoids calling any sort of update that would modify Commands when not
 			// required.
 			if (checkFinished(state)) {
+				stop(commands, state);
 				mState = State.FINISHED;
 				return true;
 			} else {
@@ -50,10 +51,14 @@ public abstract class RoutineBase {
 		}
 		update(commands, state);
 		if (checkFinished(state)) {
+			stop(commands, state);
 			mState = State.FINISHED;
 			return true;
 		}
 		return false;
+	}
+
+	protected void stop(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 	}
 
 	/**

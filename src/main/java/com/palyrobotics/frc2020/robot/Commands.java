@@ -39,15 +39,15 @@ public class Commands {
 	// Turning
 	private double driveWantedYawDegrees;
 	/* Indexer */
-	public Indexer.State indexerWantedState;
-	public Indexer.IndexerUpDownState indexerWantedUpDownState;
+	public Indexer.BeltState indexerWantedBeltState;
+	public Indexer.HopperState indexerWantedUpDownState;
 	/* Intake */
 	public Intake.State intakeWantedState;
 	/* Shooter */
 	private Shooter.ShooterState shooterWantedState;
 	private double shooterManualWantedFlywheelVelocity;
 	/* Spinner */
-	public Spinner.SpinnerState spinnerWantedState;
+	public Spinner.State spinnerWantedState;
 	private double driveWantedHeadingDegrees;
 	// Climbing
 	public double climberWantedVelocity;
@@ -184,7 +184,7 @@ public class Commands {
 
 	public void copyTo(Commands other) {
 		other.driveWantedState = driveWantedState;
-		other.indexerWantedState = indexerWantedState;
+		other.indexerWantedBeltState = indexerWantedBeltState;
 		other.spinnerWantedState = spinnerWantedState;
 		other.intakeWantedState = intakeWantedState;
 		other.shouldClearCurrentRoutines = shouldClearCurrentRoutines;
@@ -193,14 +193,5 @@ public class Commands {
 		other.preLockClimberWantedState = preLockClimberWantedState;
 		other.climberWantedAdjustingPercentOutput = climberWantedAdjustingPercentOutput;
 		other.climberWantedVelocity = climberWantedVelocity;
-	}
-
-	public void reset() {
-		spinnerWantedState = Spinner.SpinnerState.IDLE;
-		intakeWantedState = Intake.State.INTAKE;
-		indexerWantedState = Indexer.State.IDLE;
-		shooterWantedState = Shooter.ShooterState.IDLE;
-		driveWantedState = Drive.DriveState.NEUTRAL;
-		wantedRumble = false;
 	}
 }

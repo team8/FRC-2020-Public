@@ -9,18 +9,18 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Indexer extends SubsystemBase {
 
-	public enum State {
-		IDLE, INDEX, WAITING_TO_FEED, FEED, FEED_ALL
+	public enum BeltState {
+		IDLE, INDEX, WAITING_TO_FEED, FEED_SINGLE, FEED_ALL
 	}
 
-	public enum IndexerUpDownState {
-		UP, DOWN
+	public enum HopperState {
+		OPEN, CLOSED
 	}
 
 	private static Indexer sInstance = new Indexer();
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
-	private boolean mUpDownOutput = true;
+	private boolean mHopperOutput = true;
 	private boolean mBlockOutput = false;
 
 	private Indexer() {
@@ -32,7 +32,7 @@ public class Indexer extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		switch (commands.indexerWantedState) {
+		switch (commands.indexerWantedBeltState) {
 			case IDLE:
 				mOutput.setIdle();
 				mBlockOutput = false;
@@ -45,7 +45,7 @@ public class Indexer extends SubsystemBase {
 				mOutput.setIdle();
 				mBlockOutput = true;
 				break;
-			case FEED:
+			case FEED_SINGLE:
 				mOutput.setPercentOutput(mConfig.feedingOutput);
 				mBlockOutput = true;
 				break;
@@ -54,22 +54,15 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = true;
 				break;
 		}
-		switch (commands.indexerWantedUpDownState) {
-			case UP:
-				mUpDownOutput = false;
-				break;
-			case DOWN:
-				mUpDownOutput = true;
-				break;
-		}
+		mHopperOutput = commands.indexerWantedUpDownState == HopperState.CLOSED;
 	}
 
 	public ControllerOutput getOutput() {
 		return mOutput;
 	}
 
-	public boolean getUpDownOutput() {
-		return mUpDownOutput;
+	public boolean getHopperOutput() {
+		return mHopperOutput;
 	}
 
 	public boolean getBlockOutput() {

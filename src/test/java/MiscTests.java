@@ -1,11 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.palyrobotics.frc2020.util.InterpolatingDoubleTreeMap;
-import com.palyrobotics.frc2020.util.SolenoidState;
-import com.palyrobotics.frc2020.util.control.ControllerOutput;
-import com.palyrobotics.frc2020.util.control.Gains;
-import com.palyrobotics.frc2020.util.control.ProfiledGains;
-import com.palyrobotics.frc2020.util.control.Spark;
+import com.palyrobotics.frc2020.util.control.*;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -57,15 +53,15 @@ public class MiscTests {
 
 	@Test
 	public void testSolenoidState() {
-		var state = new SolenoidState();
+		var state = new TimedSolenoid(0, 0.1, true);
 		state.updateExtended(true);
 		assertFalse(state.isExtended());
-		Timer.delay(SolenoidState.kChangeDurationSeconds * 2);
+		Timer.delay(0.11);
 		state.updateExtended(true);
 		assertTrue(state.isExtended());
 		state.updateExtended(false);
 		assertTrue(state.isExtended());
-		Timer.delay(SolenoidState.kChangeDurationSeconds * 2);
+		Timer.delay(0.11);
 		state.updateExtended(false);
 		assertFalse(state.isExtended());
 	}

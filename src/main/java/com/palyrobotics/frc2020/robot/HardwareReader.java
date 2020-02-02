@@ -92,10 +92,11 @@ public class HardwareReader {
 	// }
 
 	private void readIndexerState(RobotState robotState) {
-		var indexerHardware = IndexerHardware.getInstance();
-		robotState.hasBackBall = indexerHardware.backInfrared.get();
-		robotState.hasFrontBall = indexerHardware.frontInfrared.get();
-		robotState.hasTopBall = indexerHardware.topInfrared.get();
+		var hardware = IndexerHardware.getInstance();
+		robotState.hasBackBall = hardware.backInfrared.get();
+		robotState.hasFrontBall = hardware.frontInfrared.get();
+		robotState.hasTopBall = hardware.topInfrared.get();
+		robotState.indexerHopperSolenoidState.updateExtended(hardware.hopperSolenoid.get());
 	}
 
 	private void readIntakeState(RobotState robotState) {

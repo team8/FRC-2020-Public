@@ -205,7 +205,7 @@ public class HardwareWriter {
 	private void updateIndexer() {
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
 		indexerHardware.horizontalSpark.setOutput(mIndexer.getOutput());
-		indexerHardware.hopperSolenoid.set(mIndexer.getUpDownOutput());
+		indexerHardware.hopperSolenoid.set(mIndexer.getHopperOutput());
 		indexerHardware.blockingSolenoid.set(mIndexer.getBlockOutput());
 	}
 

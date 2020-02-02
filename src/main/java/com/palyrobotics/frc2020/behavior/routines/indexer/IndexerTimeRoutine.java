@@ -21,7 +21,7 @@ public class IndexerTimeRoutine extends TimedRoutine {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		commands.indexerWantedState = Indexer.State.INDEX;
+		commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class IndexerFeedRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState robotState) {
-		commands.indexerWantedState = Indexer.State.FEED;
+		commands.indexerWantedBeltState = Indexer.BeltState.FEED_SINGLE;
 	}
 
 	@Override
