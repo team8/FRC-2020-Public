@@ -3,7 +3,6 @@ package com.palyrobotics.frc2020.vision;
 import com.palyrobotics.frc2020.vision.LimelightControlMode.*;
 
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
@@ -42,8 +41,7 @@ public class Limelight {
 	 *         degrees)
 	 */
 	public double getPitchToTarget() {
-		NetworkTableEntry ty = mTable.getEntry("ty");
-		return ty.getDouble(0.0);
+		return mTable.getEntry("ty").getDouble(0.0);
 	}
 
 	/**
@@ -80,10 +78,6 @@ public class Limelight {
 	 */
 	public double getPipelineLatency() {
 		return mTable.getEntry("tl").getDouble(0.0);
-	}
-
-	private void resetPipelineLatency() {
-		mTable.getEntry("tl").setValue(0.0);
 	}
 
 	public LedMode getLEDMode() {
@@ -191,7 +185,7 @@ public class Limelight {
 	}
 
 	public double[] getRawCrosshair(AdvancedCrosshair raw) {
-		double[] crosshairs = new double[2];
+		var crosshairs = new double[2];
 		crosshairs[0] = getRawCrosshairX(raw);
 		crosshairs[1] = getRawCrosshairY(raw);
 		return crosshairs;
@@ -247,7 +241,8 @@ public class Limelight {
 	 * data
 	 */
 	public double getRegressionDistanceZ() {
-		return 24.6 * Math.pow(this.getTargetArea(), -0.64);
+		// TODO: implement or remove
+		return 24.6 * Math.pow(getTargetArea(), -0.64);
 	}
 
 	/**
