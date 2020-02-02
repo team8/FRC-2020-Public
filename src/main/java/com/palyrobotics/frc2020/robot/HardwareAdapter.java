@@ -16,8 +16,8 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.*;
 
 /**
- * Represents all hardware components of the robot. Singleton class. Should only
- * be used in robot package. Subdivides hardware into subsystems.
+ * Represents all hardware components of the robot. Singleton class. Should only be used in robot
+ * package. Subdivides hardware into subsystems.
  */
 public class HardwareAdapter {
 
@@ -37,8 +37,7 @@ public class HardwareAdapter {
 		}
 
 		static ClimberHardware getInstance() {
-			if (sInstance == null)
-				sInstance = new ClimberHardware();
+			if (sInstance == null) sInstance = new ClimberHardware();
 			return sInstance;
 		}
 	}
@@ -94,8 +93,7 @@ public class HardwareAdapter {
 		}
 
 		static DrivetrainHardware getInstance() {
-			if (sInstance == null)
-				sInstance = new DrivetrainHardware();
+			if (sInstance == null) sInstance = new DrivetrainHardware();
 			return sInstance;
 		}
 	}
@@ -119,8 +117,7 @@ public class HardwareAdapter {
 		}
 
 		static IndexerHardware getInstance() {
-			if (sInstance == null)
-				sInstance = new IndexerHardware();
+			if (sInstance == null) sInstance = new IndexerHardware();
 			return sInstance;
 		}
 	}
@@ -138,8 +135,7 @@ public class HardwareAdapter {
 		}
 
 		static IntakeHardware getInstance() {
-			if (sInstance == null)
-				sInstance = new IntakeHardware();
+			if (sInstance == null) sInstance = new IntakeHardware();
 			return sInstance;
 		}
 	}
@@ -161,8 +157,7 @@ public class HardwareAdapter {
 		}
 
 		static ShooterHardware getInstance() {
-			if (sInstance == null)
-				sInstance = new ShooterHardware();
+			if (sInstance == null) sInstance = new ShooterHardware();
 			return sInstance;
 		}
 	}
@@ -180,8 +175,7 @@ public class HardwareAdapter {
 		}
 
 		static SpinnerHardware getInstance() {
-			if (sInstance == null)
-				sInstance = new SpinnerHardware();
+			if (sInstance == null) sInstance = new SpinnerHardware();
 			return sInstance;
 		}
 	}
@@ -200,8 +194,7 @@ public class HardwareAdapter {
 		}
 
 		static MiscellaneousHardware getInstance() {
-			if (sInstance == null)
-				sInstance = new MiscellaneousHardware();
+			if (sInstance == null) sInstance = new MiscellaneousHardware();
 			return sInstance;
 		}
 	}

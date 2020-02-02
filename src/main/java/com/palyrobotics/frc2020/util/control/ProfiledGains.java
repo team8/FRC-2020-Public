@@ -16,17 +16,14 @@ public class ProfiledGains extends Gains {
 
 	@Override // Auto-generated
 	public boolean equals(Object other) {
-		if (this == other)
-			return true;
-		if (!(other instanceof ProfiledGains))
-			return false;
-		if (!super.equals(other))
-			return false;
+		if (this == other) return true;
+		if (!(other instanceof ProfiledGains)) return false;
+		if (!super.equals(other)) return false;
 		ProfiledGains otherGains = (ProfiledGains) other;
-		return Double.compare(otherGains.acceleration, acceleration) == 0
-				&& Double.compare(otherGains.velocity, velocity) == 0
-				&& Double.compare(otherGains.allowableError, allowableError) == 0
-				&& Double.compare(otherGains.minimumOutputVelocity, minimumOutputVelocity) == 0;
+		return Double.compare(otherGains.acceleration, acceleration) == 0 &&
+				Double.compare(otherGains.velocity, velocity) == 0 &&
+				Double.compare(otherGains.allowableError, allowableError) == 0 &&
+				Double.compare(otherGains.minimumOutputVelocity, minimumOutputVelocity) == 0;
 	}
 
 	@Override

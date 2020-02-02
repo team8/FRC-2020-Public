@@ -26,11 +26,11 @@ public abstract class RoutineBase {
 	/**
 	 * Handles changing the {@link #mState}.
 	 *
-	 * @param commands Routines can only modify desired {@link Commands}.
-	 * @param state    Should only read {@link RobotState}.
-	 * @return Is the routine finished.
-	 * @see #start(Commands, RobotState)
-	 * @see #update(Commands, RobotState)
+	 * @param  commands Routines can only modify desired {@link Commands}.
+	 * @param  state    Should only read {@link RobotState}.
+	 * @return          Is the routine finished.
+	 * @see             #start(Commands, RobotState)
+	 * @see             #update(Commands, RobotState)
 	 */
 	public final boolean execute(Commands commands, @ReadOnly RobotState state) {
 		if (mState == State.INIT) {
@@ -57,14 +57,13 @@ public abstract class RoutineBase {
 	}
 
 	/**
-	 * Check with {@link RobotState} to see if we are done and should no longer be
-	 * updated.
+	 * Check with {@link RobotState} to see if we are done and should no longer be updated.
 	 */
 	public abstract boolean checkFinished(@ReadOnly RobotState state);
 
 	/**
-	 * Called on the first update cycle before
-	 * {@link #update(Commands, RobotState)}, unless we are already finished.
+	 * Called on the first update cycle before {@link #update(Commands, RobotState)}, unless we are
+	 * already finished.
 	 *
 	 * @see #checkFinished(RobotState)
 	 */
@@ -101,8 +100,7 @@ public abstract class RoutineBase {
 	}
 
 	/**
-	 * Store subsystems which are required by this routine, preventing routines from
-	 * overlapping
+	 * Store subsystems which are required by this routine, preventing routines from overlapping
 	 */
 	public abstract Set<SubsystemBase> getRequiredSubsystems();
 }

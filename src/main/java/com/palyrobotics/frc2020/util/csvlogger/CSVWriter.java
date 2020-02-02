@@ -22,8 +22,8 @@ public class CSVWriter {
 	private static final String kCommaDeliminator = ",", kNewLine = "\n", kFileName = "canlog.csv";
 	private static final int kMaxSizeBeforeWrite = 100000;
 	private static final String kLoggerTag = Util.classToJsonName(CSVWriter.class);
-	private static final Path sCsvFile = RobotBase.isReal() ? Paths.get("/home/lvuser", kFileName)
-			: Paths.get(Filesystem.getOperatingDirectory().toString(), kFileName);
+	private static final Path sCsvFile = RobotBase.isReal() ? Paths.get("/home/lvuser", kFileName) :
+			Paths.get(Filesystem.getOperatingDirectory().toString(), kFileName);
 	private static final StringBuilder sBuilder = new StringBuilder(kMaxSizeBeforeWrite);
 	private static double sStartTime;
 
@@ -53,8 +53,7 @@ public class CSVWriter {
 	private static void addData(String key, Object secondValue, UnaryOperator<StringBuilder> valueCellWriter) {
 		sBuilder.append(key).append(kCommaDeliminator).append(secondValue).append(kCommaDeliminator);
 		valueCellWriter.apply(sBuilder).append(kNewLine);
-		if (sBuilder.length() > kMaxSizeBeforeWrite)
-			write();
+		if (sBuilder.length() > kMaxSizeBeforeWrite) write();
 	}
 
 	public static void write() {

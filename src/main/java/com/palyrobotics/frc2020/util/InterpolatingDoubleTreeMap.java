@@ -3,8 +3,8 @@ package com.palyrobotics.frc2020.util;
 import java.util.TreeMap;
 
 /**
- * Interpolating tree maps are used to get values at points that are not defined
- * by making a guess from points that are defined using linear interpolation.
+ * Interpolating tree maps are used to get values at points that are not defined by making a guess
+ * from points that are defined using linear interpolation.
  */
 public class InterpolatingDoubleTreeMap extends TreeMap<Double, Double> {
 
@@ -29,8 +29,8 @@ public class InterpolatingDoubleTreeMap extends TreeMap<Double, Double> {
 	}
 
 	/**
-	 * @param key Lookup for a key (does not have to exist)
-	 * @return Interpolated value or null
+	 * @param  key Lookup for a key (does not have to exist)
+	 * @return     Interpolated value or null
 	 */
 	public Double getInterpolated(double key) {
 		Double retrievedValue = get(key);

@@ -23,8 +23,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 /**
- * Used to produce {@link Commands}'s from human input. Should only be used in
- * robot package.
+ * Used to produce {@link Commands}'s from human input. Should only be used in robot package.
  *
  * @author Nihar
  */
@@ -86,8 +85,8 @@ public class OperatorInterface {
 
 			// Raise from anywhere if you're not climbing or locked
 			if (mOperatorXboxController.getWindowButtonPressed()) {
-				if (commands.climberWantedState == Climber.ClimberState.LOWERING_TO_BAR
-						|| commands.climberWantedState == Climber.ClimberState.IDLE) {
+				if (commands.climberWantedState == Climber.ClimberState.LOWERING_TO_BAR ||
+						commands.climberWantedState == Climber.ClimberState.IDLE) {
 					commands.climberWantedState = Climber.ClimberState.RAISING;
 				}
 			} else if (mOperatorXboxController.getDPadUpPressed()) {
@@ -149,17 +148,17 @@ public class OperatorInterface {
 			commands.addWantedRoutine(new IndexerTimeRoutine(1));
 		}
 
-		if (mOperatorXboxController.getLeftBumperPressed()
-				&& commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new
-																					// boolean
-			// in robot state
+		if (mOperatorXboxController.getLeftBumperPressed() &&
+				commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new
+																																		// boolean
+																																		// in robot state
 			commands.addWantedRoutine(new IndexerFeedRoutine());
-		} else if (mOperatorXboxController.getRightBumperPressed()
-				&& commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new
-																					// boolean
-			// in robot state
-			commands.indexerWantedState = Indexer.State.FEED_ALL;
-		}
+		} else if (mOperatorXboxController.getRightBumperPressed() &&
+				commands.getShooterWantedState() != Shooter.ShooterState.IDLE) { // TODO: Check speed with a new
+																																				// boolean
+																																				// in robot state
+					commands.indexerWantedState = Indexer.State.FEED_ALL;
+				}
 
 	}
 

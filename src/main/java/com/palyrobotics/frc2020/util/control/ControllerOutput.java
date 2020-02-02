@@ -98,14 +98,12 @@ public class ControllerOutput {
 
 	@Override // Auto-generated
 	public boolean equals(Object other) {
-		if (this == other)
-			return true;
-		if (other == null || getClass() != other.getClass())
-			return false;
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
 		ControllerOutput otherOutput = (ControllerOutput) other;
-		return Double.compare(otherOutput.mReference, mReference) == 0
-				&& Double.compare(otherOutput.mArbitraryDemand, mArbitraryDemand) == 0
-				&& Objects.equals(mMode, otherOutput.mMode) && Objects.equals(mGains, otherOutput.mGains);
+		return Double.compare(otherOutput.mReference, mReference) == 0 &&
+				Double.compare(otherOutput.mArbitraryDemand, mArbitraryDemand) == 0 &&
+				Objects.equals(mMode, otherOutput.mMode) && Objects.equals(mGains, otherOutput.mGains);
 	}
 
 	@Override // Auto-generated

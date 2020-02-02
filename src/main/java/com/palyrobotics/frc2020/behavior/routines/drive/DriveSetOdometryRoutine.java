@@ -14,14 +14,10 @@ import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 /**
- * Sets {@link Commands#driveWantedOdometryPose} and waits in neutral until the
- * requests are seen within {@link RobotState}.
- *
- * Note: As of 1/13/20, setting encoder positions on a Spark does not happen
- * immediately. CTRE controllers have a timeout value so it blocks until they
- * are set properly.
- *
- * Has a timeout just in case there is a controller set fault.
+ * Sets {@link Commands#driveWantedOdometryPose} and waits in neutral until the requests are seen
+ * within {@link RobotState}. Note: As of 1/13/20, setting encoder positions on a Spark does not
+ * happen immediately. CTRE controllers have a timeout value so it blocks until they are set
+ * properly. Has a timeout just in case there is a controller set fault.
  */
 // TODO: remove timeout? If we fail, we should not continue with our auto.
 public class DriveSetOdometryRoutine extends TimeoutRoutineBase {

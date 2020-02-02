@@ -97,16 +97,14 @@ public class CommandReceiver implements RobotService {
 	@Override
 	public void update() {
 		mCommand.tryGetAndReset(command -> {
-			if (command == null)
-				return;
+			if (command == null) return;
 			String result = executeCommand(command);
 			mResult.setAndNotify(result);
 		});
 	}
 
 	public String executeCommand(String command) {
-		if (command == null)
-			throw new IllegalArgumentException("Command can not be null!");
+		if (command == null) throw new IllegalArgumentException("Command can not be null!");
 		String result;
 		try {
 			Namespace parse = mParser.parseArgs(command.trim().split("\\s+"));
@@ -134,8 +132,7 @@ public class CommandReceiver implements RobotService {
 				}
 				try {
 					Class<? extends ConfigBase> configClass = Configs.getClassFromName(configName);
-					if (configClass == null)
-						throw new ClassNotFoundException();
+					if (configClass == null) throw new ClassNotFoundException();
 					ConfigBase configObject = Configs.get(configClass);
 					var allFieldNames = parse.getString("config_field");
 					try {
@@ -155,16 +152,14 @@ public class CommandReceiver implements RobotService {
 								switch (commandName) {
 									case "get": {
 										String display = Configs.toJson(fieldValue);
-										return parse.getBoolean("raw") ? display
-												: String.format("[%s] %s: %s", configName,
+										return parse.getBoolean("raw") ? display :
+												String.format("[%s] %s: %s", configName,
 														allFieldNames == null ? "all" : allFieldNames, display);
 									}
 									case "set": {
-										if (field == null)
-											return "Can't set entire config file yet!";
+										if (field == null) return "Can't set entire config file yet!";
 										String stringValue = parse.getString("config_value");
-										if (stringValue == null)
-											return "Must provide a value to set!";
+										if (stringValue == null) return "Must provide a value to set!";
 										try {
 											Object newFieldValue = sMapper.readValue(stringValue, field.getType());
 											Configs.set(configObject, fieldParentValue, field, newFieldValue);

@@ -12,11 +12,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class HardwareReader {
 
 	/**
-	 * A REV Color Match object is used to register and detect known colors. This
-	 * can be calibrated ahead of time or during operation.
-	 *
-	 * This object uses euclidean distance to estimate the closest match with a
-	 * given confidence range.
+	 * A REV Color Match object is used to register and detect known colors. This can be calibrated
+	 * ahead of time or during operation. This object uses euclidean distance to estimate the closest
+	 * match with a given confidence range.
 	 */
 	public final ColorMatch mColorMatcher = new ColorMatch();
 	private final double[] mGyroValues = new double[3];
@@ -29,21 +27,16 @@ public class HardwareReader {
 	}
 
 	/**
-	 * Takes all of the sensor data from the hardware, and unwraps it into the
-	 * current {@link RobotState}.
+	 * Takes all of the sensor data from the hardware, and unwraps it into the current
+	 * {@link RobotState}.
 	 */
 	void updateState(Set<SubsystemBase> enabledSubsystems, RobotState robotState) {
 		readGameAndFieldState(robotState);
-		if (enabledSubsystems.contains(Climber.getInstance()))
-			readClimberState(robotState);
-		if (enabledSubsystems.contains(Drive.getInstance()))
-			readDriveState(robotState);
-		if (enabledSubsystems.contains(Indexer.getInstance()))
-			readIndexerState(robotState);
-		if (enabledSubsystems.contains(Intake.getInstance()))
-			readIntakeState(robotState);
-		if (enabledSubsystems.contains(Shooter.getInstance()))
-			readShooterState(robotState);
+		if (enabledSubsystems.contains(Climber.getInstance())) readClimberState(robotState);
+		if (enabledSubsystems.contains(Drive.getInstance())) readDriveState(robotState);
+		if (enabledSubsystems.contains(Indexer.getInstance())) readIndexerState(robotState);
+		if (enabledSubsystems.contains(Intake.getInstance())) readIntakeState(robotState);
+		if (enabledSubsystems.contains(Shooter.getInstance())) readShooterState(robotState);
 	}
 
 	private void readGameAndFieldState(RobotState robotState) {

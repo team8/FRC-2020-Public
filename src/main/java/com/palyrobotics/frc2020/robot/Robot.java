@@ -164,8 +164,8 @@ public class Robot extends TimedRobot {
 	}
 
 	/**
-	 * Resets the pose based on {@link Commands#driveWantedOdometryPose}. Sets it to
-	 * null afterwards to avoid writing multiple updates to the controllers.
+	 * Resets the pose based on {@link Commands#driveWantedOdometryPose}. Sets it to null afterwards to
+	 * avoid writing multiple updates to the controllers.
 	 */
 	private void resetOdometryIfWanted() {
 		Pose2d wantedPose = mCommands.driveWantedOdometryPose;
@@ -204,7 +204,7 @@ public class Robot extends TimedRobot {
 
 	private void setDriveIdleMode(boolean isIdle) {
 		// TODO: drive disabled neutral state should probably be in commands
-		if (mEnabledSubsystems.contains(mDrive))
-			mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
+		if (mEnabledSubsystems
+				.contains(mDrive)) mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
 	}
 }

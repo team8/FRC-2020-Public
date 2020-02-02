@@ -23,8 +23,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	private Trajectory mTrajectory;
 
 	/**
-	 * @param waypoints Points to move towards from current pose. No initial pose
-	 *                  needs to be supplied.
+	 * @param waypoints Points to move towards from current pose. No initial pose needs to be supplied.
 	 */
 	public DrivePathRoutine(Pose2d... waypoints) {
 		this(Arrays.asList(waypoints));
@@ -38,8 +37,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	}
 
 	/**
-	 * Robot will try to drive in reverse while traversing the path. Does not
-	 * reverse the path itself.
+	 * Robot will try to drive in reverse while traversing the path. Does not reverse the path itself.
 	 */
 	public DrivePathRoutine driveInReverse() {
 		mTrajectoryConfig.setReversed(true);
@@ -55,8 +53,8 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	}
 
 	/**
-	 * Reverses the path and attempts to drive it backwards. Useful for getting a
-	 * robot back to its starting position after running a path.
+	 * Reverses the path and attempts to drive it backwards. Useful for getting a robot back to its
+	 * starting position after running a path.
 	 */
 	public DrivePathRoutine reverse() {
 		driveInReverse();

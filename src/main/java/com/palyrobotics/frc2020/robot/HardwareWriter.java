@@ -34,18 +34,12 @@ public class HardwareWriter {
 	private final Spinner mSpinner = Spinner.getInstance();
 
 	void configureHardware(Set<SubsystemBase> enabledSubsystems) {
-		if (enabledSubsystems.contains(mClimber))
-			configureClimberHardware();
-		if (enabledSubsystems.contains(mDrive))
-			configureDriveHardware();
-		if (enabledSubsystems.contains(mIndexer))
-			configureIndexerHardware();
-		if (enabledSubsystems.contains(mIntake))
-			configureIntakeHardware();
-		if (enabledSubsystems.contains(mShooter))
-			configureShooterHardware();
-		if (enabledSubsystems.contains(mSpinner))
-			configureSpinnerHardware();
+		if (enabledSubsystems.contains(mClimber)) configureClimberHardware();
+		if (enabledSubsystems.contains(mDrive)) configureDriveHardware();
+		if (enabledSubsystems.contains(mIndexer)) configureIndexerHardware();
+		if (enabledSubsystems.contains(mIntake)) configureIntakeHardware();
+		if (enabledSubsystems.contains(mShooter)) configureShooterHardware();
+		if (enabledSubsystems.contains(mSpinner)) configureSpinnerHardware();
 	}
 
 	private void configureClimberHardware() {
@@ -175,18 +169,12 @@ public class HardwareWriter {
 	 */
 	void updateHardware(Set<SubsystemBase> enabledSubsystems) {
 		if (!mRobotConfig.disableHardwareUpdates) {
-			if (enabledSubsystems.contains(mClimber))
-				updateClimber();
-			if (enabledSubsystems.contains(mDrive))
-				updateDrivetrain();
-			if (enabledSubsystems.contains(mIndexer))
-				updateIndexer();
-			if (enabledSubsystems.contains(mClimber))
-				updateIntake();
-			if (enabledSubsystems.contains(mShooter))
-				updateShooter();
-			if (enabledSubsystems.contains(mSpinner))
-				updateSpinner();
+			if (enabledSubsystems.contains(mClimber)) updateClimber();
+			if (enabledSubsystems.contains(mDrive)) updateDrivetrain();
+			if (enabledSubsystems.contains(mIndexer)) updateIndexer();
+			if (enabledSubsystems.contains(mClimber)) updateIntake();
+			if (enabledSubsystems.contains(mShooter)) updateShooter();
+			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
 			updateMiscellaneousHardware();
 		}
 	}

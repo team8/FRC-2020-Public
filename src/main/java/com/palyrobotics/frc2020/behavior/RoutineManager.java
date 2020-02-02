@@ -32,9 +32,8 @@ public class RoutineManager {
 	}
 
 	/**
-	 * Updates the commands that are passed in based on the running routines.
-	 * Removes routines that have finished. Adds wanted routines. Drops current
-	 * running ones that have conflicting subsystems.
+	 * Updates the commands that are passed in based on the running routines. Removes routines that have
+	 * finished. Adds wanted routines. Drops current running ones that have conflicting subsystems.
 	 */
 	public void update(Commands commands, @ReadOnly RobotState state) {
 		mRunningRoutines.removeIf(routine -> {

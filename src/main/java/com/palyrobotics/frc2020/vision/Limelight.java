@@ -30,16 +30,14 @@ public class Limelight {
 	}
 
 	/**
-	 * @return Horizontal Offset From Crosshair To Target (-27 degrees to 27
-	 *         degrees)
+	 * @return Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees)
 	 */
 	public double getYawToTarget() {
 		return mTable.getEntry("tx").getDouble(0.0);
 	}
 
 	/**
-	 * @return Vertical Offset From Crosshair To Target (-20.5 degrees to 20.5
-	 *         degrees)
+	 * @return Vertical Offset From Crosshair To Target (-20.5 degrees to 20.5 degrees)
 	 */
 	public double getPitchToTarget() {
 		NetworkTableEntry ty = mTable.getEntry("ty");
@@ -75,8 +73,7 @@ public class Limelight {
 	}
 
 	/**
-	 * @return The pipeline’s latency contribution (ms) Add at least 11ms for image
-	 *         capture latency.
+	 * @return The pipeline’s latency contribution (ms) Add at least 11ms for image capture latency.
 	 */
 	public double getPipelineLatency() {
 		return mTable.getEntry("tl").getDouble(0.0);
@@ -102,9 +99,8 @@ public class Limelight {
 	}
 
 	/**
-	 * @param camMode {@link CamMode#VISION} Run vision processing, decrease
-	 *                exposure, only shows targets {@link CamMode#DRIVER} Clear
-	 *                video for streaming to drivers
+	 * @param camMode {@link CamMode#VISION} Run vision processing, decrease exposure, only shows
+	 *                targets {@link CamMode#DRIVER} Clear video for streaming to drivers
 	 */
 	public void setCamMode(CamMode camMode) {
 		mTable.getEntry("camMode").setValue(camMode.getValue());
@@ -118,8 +114,8 @@ public class Limelight {
 	}
 
 	/**
-	 * @param pipeline Pipeline index 0-9. Note that this does nothing if the
-	 *                 limelight is set to override
+	 * @param pipeline Pipeline index 0-9. Note that this does nothing if the limelight is set to
+	 *                 override
 	 */
 	public void setPipeline(int pipeline) {
 		if (pipeline < 0) {
@@ -135,12 +131,11 @@ public class Limelight {
 	}
 
 	/**
-	 * @param stream {@link StreamType#STANDARD} - Side-by-side streams if a web-cam
-	 *               is attached to Limelight {@link StreamType#kPipMain} - The
-	 *               secondary camera stream is placed in the lower-right corner of
-	 *               the primary camera stream {@link StreamType#kPiPSecondary} -
-	 *               The primary camera stream is placed in the lower-right corner
-	 *               of the secondary camera stream
+	 * @param stream {@link StreamType#STANDARD} - Side-by-side streams if a web-cam is attached to
+	 *               Limelight {@link StreamType#kPipMain} - The secondary camera stream is placed in
+	 *               the lower-right corner of the primary camera stream
+	 *               {@link StreamType#kPiPSecondary} - The primary camera stream is placed in the
+	 *               lower-right corner of the secondary camera stream
 	 */
 	public void setStream(StreamType stream) {
 		mTable.getEntry("stream").setValue(stream.getValue());
@@ -151,18 +146,17 @@ public class Limelight {
 	}
 
 	/**
-	 * @param snapshot {@link Snapshot#ON} - Stop taking snapshots
-	 *                 {@link Snapshot#OFF} - Take two snapshots per second
+	 * @param snapshot {@link Snapshot#ON} - Stop taking snapshots {@link Snapshot#OFF} - Take two
+	 *                 snapshots per second
 	 */
 	public void setSnapshot(Snapshot snapshot) {
 		mTable.getEntry("snapshot").setValue(snapshot.getValue());
 	}
 
 	/**
-	 * Limelight posts three raw contours to NetworkTables that are not influenced
-	 * by your grouping mode. That is, they are filtered with your pipeline
-	 * parameters, but never grouped. X and Y are returned in normalized screen
-	 * space (-1 to 1) rather than degrees.
+	 * Limelight posts three raw contours to NetworkTables that are not influenced by your grouping
+	 * mode. That is, they are filtered with your pipeline parameters, but never grouped. X and Y are
+	 * returned in normalized screen space (-1 to 1) rather than degrees.
 	 */
 	public double getYawToTargetAdvanced(AdvancedTarget raw) {
 		return mTable.getEntry("tx" + raw.getValue()).getDouble(0.0);
@@ -224,9 +218,8 @@ public class Limelight {
 
 	/**
 	 * Estimate z distance from camera to distance as seen at
-	 * http://docs.limelightvision.io/en/latest/cs_estimating_distance.html but with
-	 * divide by cos(tx) to make up for difference in the distance prediction when
-	 * the robot is rotated (Experimental)
+	 * http://docs.limelightvision.io/en/latest/cs_estimating_distance.html but with divide by cos(tx)
+	 * to make up for difference in the distance prediction when the robot is rotated (Experimental)
 	 *
 	 * @return dist - the estimated distance
 	 */
@@ -243,8 +236,7 @@ public class Limelight {
 	}
 
 	/**
-	 * Estimate z distance using a rational function determined with experimental
-	 * data
+	 * Estimate z distance using a rational function determined with experimental data
 	 */
 	public double getRegressionDistanceZ() {
 		return 24.6 * Math.pow(this.getTargetArea(), -0.64);

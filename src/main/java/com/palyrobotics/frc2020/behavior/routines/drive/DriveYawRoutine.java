@@ -22,8 +22,7 @@ public class DriveYawRoutine extends TimeoutRoutineBase {
 	}
 
 	/**
-	 * Yaw is relative to absolute odometry rotation, not relative to current
-	 * rotation.
+	 * Yaw is relative to absolute odometry rotation, not relative to current rotation.
 	 */
 	public DriveYawRoutine(double yawDegrees) {
 		mTargetYawDegrees = yawDegrees;
@@ -31,8 +30,8 @@ public class DriveYawRoutine extends TimeoutRoutineBase {
 
 	@Override
 	public void start(Commands commands, @ReadOnly RobotState state) {
-		mTimeout = DriveConstants.calculateTimeToFinishTurn(state.driveYawDegrees, mTargetYawDegrees)
-				* kTimeoutMultiplier;
+		mTimeout = DriveConstants.calculateTimeToFinishTurn(state.driveYawDegrees, mTargetYawDegrees) *
+				kTimeoutMultiplier;
 	}
 
 	@Override
