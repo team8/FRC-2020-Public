@@ -17,6 +17,10 @@ public abstract class MultipleRoutine extends RoutineBase {
 		mRoutines = routines;
 	}
 
+	public List<RoutineBase> getRoutines() {
+		return mRoutines;
+	}
+
 	@Override
 	public String toString() {
 		var status = new StringBuilder(super.getName()).append(":");

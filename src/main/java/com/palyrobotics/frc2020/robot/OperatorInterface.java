@@ -3,7 +3,17 @@ package com.palyrobotics.frc2020.robot;
 import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
+<<<<<<< HEAD
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+=======
+import com.palyrobotics.frc2020.auto.ShootThreeFriendlyTrenchThreeShootThree;
+import com.palyrobotics.frc2020.auto.ShootThreeTrenchThreeRendezvousTwo;
+import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawAlignRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
+>>>>>>> Still testing Aditya's auto align features, and am also attempting to make the CSV writer functional
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedSingleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
@@ -106,6 +116,10 @@ public class OperatorInterface {
 			commands.setDriveVisionAlign();
 		} else if (mTurnStick.getRawButton(4)) {
 			mLimelight.setPipeline(kOneTimesZoomPipelineId);
+			commands.setDriveVisionAlign();
+		}
+		boolean wantsAssistedVision = mTurnStick.getRawButton(3);
+		if (wantsAssistedVision) {
 			commands.setDriveVisionAlign();
 		} else {
 			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),

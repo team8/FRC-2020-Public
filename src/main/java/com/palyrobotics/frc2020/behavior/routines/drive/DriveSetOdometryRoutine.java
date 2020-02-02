@@ -34,6 +34,10 @@ public class DriveSetOdometryRoutine extends TimeoutRoutineBase {
 		mTargetPose = newWaypoint(xInches, yInches, yawDegrees);
 	}
 
+	public Pose2d getTargetPose() {
+		return mTargetPose;
+	}
+
 	@Override
 	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
 		return state.drivePose.equals(mTargetPose);
