@@ -11,6 +11,8 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.VibrateXboxRoutine;
+import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
+import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
@@ -49,6 +51,7 @@ public class OperatorInterface {
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateBallSuperstructure(commands, state);
+		updateSpinnerCommands(commands);
 
 		commands.shouldClearCurrentRoutines = mDriveStick.getTriggerPressed();
 
@@ -172,11 +175,13 @@ public class OperatorInterface {
 		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
 			commands.setShooterIdle();
 		}
-		// TODO Figure out better button
-		if (mOperatorXboxController.getDPadRightPressed()) {
-			commands.spinnerWantedState = Spinner.State.POSITION_CONTROL;
-		} else if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.spinnerWantedState = Spinner.State.ROTATION_CONTROL;
+	}
+
+	private void updateSpinnerCommands(Commands commands) {
+		if (mOperatorXboxController.getAButtonPressed()) {
+			commands.addWantedRoutine(new SpinnerRotationControlRoutine());
+		} else if (mOperatorXboxController.getYButtonPressed()) {
+			commands.addWantedRoutine(new SpinnerPositionControlRoutine());
 		}
 	}
 
