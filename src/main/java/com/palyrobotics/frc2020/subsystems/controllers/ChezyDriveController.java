@@ -30,8 +30,8 @@ public class ChezyDriveController extends Drive.DriveController {
 		mLastWheel = wheel;
 
 		// Map linear wheel input onto a sin wave, three passes
-		for (int i = 0; i < mConfig.nonlinearPasses; i++)
-			wheel = applyWheelNonLinearPass(wheel, mConfig.wheelNonLinearity);
+		for (int i = 0; i < mConfig.nonlinearPasses; i++) wheel = applyWheelNonLinearPass(wheel,
+				mConfig.wheelNonLinearity);
 
 		// Negative inertia
 		double negativeInertiaScalar;
@@ -65,8 +65,8 @@ public class ChezyDriveController extends Drive.DriveController {
 		if (isQuickTurn) {
 			if (absoluteThrottle < mConfig.quickStopDeadBand) {
 				double alpha = mConfig.quickStopWeight;
-				mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator
-						+ alpha * Util.clamp01(wheel) * mConfig.quickStopScalar;
+				mQuickStopAccumulator = (1 - alpha) * mQuickStopAccumulator +
+						alpha * Util.clamp01(wheel) * mConfig.quickStopScalar;
 			}
 			overPower = 1.0;
 			angularPower = wheel * mConfig.quickTurnScalar;

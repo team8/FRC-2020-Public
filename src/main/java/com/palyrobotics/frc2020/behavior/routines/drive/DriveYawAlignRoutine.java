@@ -22,8 +22,7 @@ public class DriveYawAlignRoutine extends DriveYawRoutine {
 	private Limelight mLimelight = Limelight.getInstance();
 
 	/**
-	 * Yaw is relative to absolute odometry rotation, not relative to current
-	 * rotation.
+	 * Yaw is relative to absolute odometry rotation, not relative to current rotation.
 	 */
 	public DriveYawAlignRoutine(double yawDegrees) {
 		mTargetYawDegrees = yawDegrees;
@@ -31,8 +30,8 @@ public class DriveYawAlignRoutine extends DriveYawRoutine {
 
 	@Override
 	public void start(Commands commands, @ReadOnly RobotState state) {
-		mTimeout = DriveConstants.calculateTimeToFinishTurn(state.driveYawDegrees, mTargetYawDegrees)
-				* kTimeoutMultiplier;
+		mTimeout = DriveConstants.calculateTimeToFinishTurn(state.driveYawDegrees, mTargetYawDegrees) *
+				kTimeoutMultiplier;
 	}
 
 	@Override

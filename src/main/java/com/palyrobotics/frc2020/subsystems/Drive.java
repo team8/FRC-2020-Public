@@ -12,8 +12,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
 /**
- * Represents the drivetrain. Uses {@link #mController} to generate
- * {@link #mOutputs}.
+ * Represents the drivetrain. Uses {@link #mController} to generate {@link #mOutputs}.
  */
 public class Drive extends SubsystemBase {
 
@@ -33,8 +32,7 @@ public class Drive extends SubsystemBase {
 		}
 
 		/**
-		 * Should set {@link #mOutputs} to reflect what is currently wanted by
-		 * {@link Commands}.
+		 * Should set {@link #mOutputs} to reflect what is currently wanted by {@link Commands}.
 		 */
 		public abstract void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state);
 	}

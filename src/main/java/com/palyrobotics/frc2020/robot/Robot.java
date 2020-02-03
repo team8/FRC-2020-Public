@@ -76,7 +76,7 @@ public class Robot extends TimedRobot {
 				setDriveIdleMode(config.coastDriveIfDisabled);
 			}
 		});
-		if(RobotBase.isSimulation()){
+		if (RobotBase.isSimulation()) {
 			pathToCsv();
 		}
 	}
