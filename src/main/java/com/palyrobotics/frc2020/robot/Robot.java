@@ -31,6 +31,7 @@ import com.palyrobotics.frc2020.util.service.TelemetryService;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
@@ -75,7 +76,9 @@ public class Robot extends TimedRobot {
 				setDriveIdleMode(config.coastDriveIfDisabled);
 			}
 		});
-		pathToCsv();
+		if(RobotBase.isSimulation()){
+			pathToCsv();
+		}
 	}
 
 	private void pathToCsv() {
@@ -124,7 +127,7 @@ public class Robot extends TimedRobot {
 
 		CSVWriter.write();
 	}
-	
+
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
