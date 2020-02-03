@@ -177,7 +177,7 @@ public class HardwareWriter {
 			if (enabledSubsystems.contains(mClimber)) updateIntake();
 			if (enabledSubsystems.contains(mShooter)) updateShooter();
 			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
-			updateMiscellaneousHardware();
+			updateMiscellaneous();
 		}
 		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
 		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
@@ -228,7 +228,7 @@ public class HardwareWriter {
 		spinnerHardware.talon.setOutput(mSpinner.getOutput());
 	}
 
-	private void updateMiscellaneousHardware() {
+	private void updateMiscellaneous() {
 		HardwareAdapter.MiscellaneousHardware.getInstance();
 	}
 }

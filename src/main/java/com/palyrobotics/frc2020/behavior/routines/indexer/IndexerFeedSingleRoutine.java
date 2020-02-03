@@ -9,13 +9,13 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
-public class IndexerFeedRoutine extends TimeoutRoutineBase {
+public class IndexerFeedSingleRoutine extends TimeoutRoutineBase {
 
-	public IndexerFeedRoutine() {
+	public IndexerFeedSingleRoutine() {
 		super(3.0);
 	}
 
-	public IndexerFeedRoutine(double timeoutSeconds) {
+	public IndexerFeedSingleRoutine(double timeoutSeconds) {
 		super(timeoutSeconds);
 	}
 
@@ -31,7 +31,7 @@ public class IndexerFeedRoutine extends TimeoutRoutineBase {
 
 	@Override
 	public boolean checkIfFinishedEarly(RobotState state) {
-		return state.hasTopBall;
+		return state.indexerHasTopBall;
 	}
 
 	@Override

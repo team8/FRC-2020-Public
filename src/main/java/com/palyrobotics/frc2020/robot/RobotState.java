@@ -36,9 +36,9 @@ public class RobotState {
 	public Pose2d drivePose = new Pose2d();
 	/* Shooter */
 	public double shooterFlywheelVelocity;
-	public boolean shooterInVelocityRange, shooterIsHoodExtended, shooterIsBlockingExtended;
+	public boolean shooterIsReadyToShoot, shooterIsHoodExtended, shooterIsBlockingExtended;
 	// TODO: Reorder this and add comments to separate by subsystem and function
-	public boolean hasBackBall, hasFrontBall, hasTopBall;
+	public boolean indexerHasBackBall, indexerHasFrontBall, indexerHasTopBall;
 	public boolean intakeIsExtended;
 	public boolean indexerIsHopperExtended;
 	// Climber

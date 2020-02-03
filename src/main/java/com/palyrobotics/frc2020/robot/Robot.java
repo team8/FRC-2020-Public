@@ -63,20 +63,6 @@ public class Robot extends TimedRobot {
 		});
 	}
 
-	// private void pathToCsv() {
-	// var drivePath = new ShootThreeFriendlyTrenchThreeShootThree().getRoutine();
-	// try (var writer = new PrintWriter(new BufferedWriter(new
-	// FileWriter("auto.csv")))) {
-	// writer.write("x,y");
-	// for (Trajectory.State state : drivePath.getTrajectory().getStates()) {
-	// var point = state.poseMeters.getTranslation();
-	// writer.write(String.format("%f,%f%n", point.getX(), point.getY()));
-	// }
-	// } catch (IOException writeException) {
-	// writeException.printStackTrace();
-	// }
-	// }
-
 	@Override
 	public void disabledInit() {
 		mRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
@@ -90,21 +76,6 @@ public class Robot extends TimedRobot {
 		setDriveIdleMode(mConfig.coastDriveIfDisabled);
 
 		CSVWriter.write();
-	}
-
-	private void resetCommandsAndRoutines() {
-		mOperatorInterface.reset(mCommands);
-		mRoutineManager.clearRunningRoutines();
-		updateSubsystemsAndHardware();
-	}
-
-	private void updateSubsystemsAndHardware() {
-		resetOdometryIfWanted();
-		for (SubsystemBase subsystem : mEnabledSubsystems) {
-			subsystem.update(mCommands, mRobotState);
-		}
-		mHardwareWriter.updateHardware(mEnabledSubsystems);
-		mRobotState.shooterInVelocityRange = mShooter.isReadyToShoot();
 	}
 
 	@Override
@@ -143,24 +114,35 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 //		mOperatorInterface.defaults(mCommands);
-		mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
+		updateRobotState();
 		mRoutineManager.update(mCommands, mRobotState);
-		updateSubsystemsAndHardware();
+		updateSubsystemsAndApplyOutputs();
 	}
 
 	@Override
 	public void teleopPeriodic() {
 //		mOperatorInterface.defaults(mCommands);
-		mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
+		updateRobotState();
 		mOperatorInterface.updateCommands(mCommands, mRobotState);
 		mRoutineManager.update(mCommands, mRobotState);
 		resetOdometryIfWanted();
-		updateSubsystemsAndHardware();
+		updateSubsystemsAndApplyOutputs();
 	}
 
 	@Override
 	public void testPeriodic() {
 		teleopPeriodic();
+	}
+
+	private void resetCommandsAndRoutines() {
+		mOperatorInterface.reset(mCommands);
+		mRoutineManager.clearRunningRoutines();
+		updateSubsystemsAndApplyOutputs();
+	}
+
+	private void updateRobotState() {
+		mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
+		mRobotState.shooterIsReadyToShoot = mShooter.isReadyToShoot();
 	}
 
 	/**
@@ -174,6 +156,14 @@ public class Robot extends TimedRobot {
 			mHardwareWriter.resetDriveSensors(wantedPose);
 			mCommands.driveWantedOdometryPose = null;
 		}
+	}
+
+	private void updateSubsystemsAndApplyOutputs() {
+		resetOdometryIfWanted();
+		for (SubsystemBase subsystem : mEnabledSubsystems) {
+			subsystem.update(mCommands, mRobotState);
+		}
+		mHardwareWriter.updateHardware(mEnabledSubsystems);
 	}
 
 	private String setupSubsystemsAndServices() {

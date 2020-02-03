@@ -93,9 +93,9 @@ public class HardwareReader {
 
 	private void readIndexerState(RobotState robotState) {
 		var hardware = IndexerHardware.getInstance();
-		robotState.hasBackBall = hardware.backInfrared.get();
-		robotState.hasFrontBall = hardware.frontInfrared.get();
-		robotState.hasTopBall = hardware.topInfrared.get();
+		robotState.indexerHasBackBall = hardware.backInfrared.get();
+		robotState.indexerHasFrontBall = hardware.frontInfrared.get();
+		robotState.indexerHasTopBall = hardware.topInfrared.get();
 		robotState.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
 	}
 
