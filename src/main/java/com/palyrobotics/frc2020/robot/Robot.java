@@ -104,7 +104,9 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		mEnabledServices.forEach(RobotService::update);
+		for (RobotService robotService : mEnabledServices) {
+			robotService.update(mRobotState);
+		}
 	}
 
 	@Override

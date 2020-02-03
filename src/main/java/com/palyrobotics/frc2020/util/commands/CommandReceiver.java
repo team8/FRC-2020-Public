@@ -19,6 +19,8 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.ConfigBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.service.RobotService;
@@ -95,7 +97,7 @@ public class CommandReceiver implements RobotService {
 	}
 
 	@Override
-	public void update() {
+	public void update(@ReadOnly RobotState state) {
 		mCommand.tryGetAndReset(command -> {
 			if (command == null) return;
 			String result = executeCommand(command);
