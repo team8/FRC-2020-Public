@@ -11,7 +11,7 @@ import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
 public class IntakeStowRoutine extends TimeoutRoutineBase {
 
-	protected IntakeStowRoutine() {
+	public IntakeStowRoutine() {
 		super(2.0);
 	}
 
