@@ -1,13 +1,7 @@
 package com.palyrobotics.frc2020.robot;
 
 import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
-import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
-import com.palyrobotics.frc2020.auto.StartLeftInitial180TrenchThree;
-import com.palyrobotics.frc2020.behavior.SequentialRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedSingleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
@@ -111,27 +105,26 @@ public class OperatorInterface {
 			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),
 					mDriveStick.getTrigger());
 		}
-		// setVision(wantsAssistedVision);
 		/* Path Following */
-		if (mOperatorXboxController.getDPadUpPressed()) {
-			// commands.addWantedRoutine(new
-			// StartRightTrenchStealTwoShootFive().getRoutine());
-			// commands.addWantedRoutine(new VisionAlignRoutine());
-			commands.addWantedRoutine(new StartLeftInitial180TrenchThree().getRoutine());
-		} else if (mOperatorXboxController.getDPadRightPressed()) {
-			commands.addWantedRoutine(
-					new SequentialRoutine(
-							new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
-							new DriveYawRoutine(180.0)));
-		} else if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.addWantedRoutine(
-					new SequentialRoutine(
-							new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
-							new DrivePathRoutine(newWaypoint(100.0, 0.0, 0.0))));
-		} else if (mOperatorXboxController.getDPadDownPressed()) {
-			commands.addWantedRoutine(
-					new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
-		}
+//		if (mOperatorXboxController.getDPadUpPressed()) {
+//			// commands.addWantedRoutine(new
+//			// StartRightTrenchStealTwoShootFive().getRoutine());
+//			// commands.addWantedRoutine(new VisionAlignRoutine());
+//			commands.addWantedRoutine(new StartLeftInitial180TrenchThree().getRoutine());
+//		} else if (mOperatorXboxController.getDPadRightPressed()) {
+//			commands.addWantedRoutine(
+//					new SequentialRoutine(
+//							new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
+//							new DriveYawRoutine(180.0)));
+//		} else if (mOperatorXboxController.getDPadLeftPressed()) {
+//			commands.addWantedRoutine(
+//					new SequentialRoutine(
+//							new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
+//							new DrivePathRoutine(newWaypoint(100.0, 0.0, 0.0))));
+//		} else if (mOperatorXboxController.getDPadDownPressed()) {
+//			commands.addWantedRoutine(
+//					new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
+//		}
 	}
 
 	private void updateBallSuperstructure(Commands commands, @ReadOnly RobotState state) {
@@ -193,6 +186,7 @@ public class OperatorInterface {
 		commands.setDriveNeutral();
 		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		commands.intakeWantedState = Intake.State.INTAKE;
+		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
 	}

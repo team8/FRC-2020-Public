@@ -26,6 +26,11 @@ public class IndexerTimeRoutine extends TimeoutRoutineBase {
 	}
 
 	@Override
+	protected void stop(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+		commands.indexerWantedBeltState = BeltState.IDLE;
+	}
+
+	@Override
 	public Set<SubsystemBase> getRequiredSubsystems() {
 		return Set.of(mIndexer);
 	}
