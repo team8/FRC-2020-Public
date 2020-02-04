@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.auto.ShootThreeFriendlyTrenchThreeShootThree;
+import com.palyrobotics.frc2020.auto.StartCenterRendezvousThree;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
@@ -77,12 +78,13 @@ public class Robot extends TimedRobot {
 			}
 		});
 		if (RobotBase.isSimulation()) {
+			System.out.println("Writing CSV file...");
 			pathToCsv();
 		}
 	}
 
 	private void pathToCsv() {
-		var drivePath = new ShootThreeFriendlyTrenchThreeShootThree().getRoutine();
+		var drivePath = new StartCenterRendezvousThree().getRoutine();
 		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
 			writer.write("x,y" + '\n');
 			var seq = (SequentialRoutine) drivePath;
