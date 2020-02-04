@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.auto.ShootThreeFriendlyTrenchThreeShootThree;
 import com.palyrobotics.frc2020.auto.StartCenterRendezvousThree;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
