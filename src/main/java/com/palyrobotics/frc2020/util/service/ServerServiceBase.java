@@ -9,14 +9,14 @@ import com.esotericsoftware.minlog.Log;
 
 public abstract class ServerServiceBase extends Listener implements RobotService {
 
+	private static final int kDefaultBufferSize = 100000;
 	protected Server mServer;
 	protected String mLoggerTag = getConfigName();
 
 	@Override
 	public void start() {
-		int port = getPort();
-		mServer = new Server(100000, 100000);
-		mServer.getKryo().register(LogEntry.class);
+		int port = getPort(), bufferSize = getBufferSize();
+		mServer = new Server(bufferSize, bufferSize);
 		mServer.addListener(this);
 		mServer.start();
 		try {
@@ -29,6 +29,10 @@ public abstract class ServerServiceBase extends Listener implements RobotService
 
 	abstract int getPort();
 
+	protected int getBufferSize() {
+		return kDefaultBufferSize;
+	}
+
 	@Override
 	public void connected(Connection connection) {
 		Log.info(mLoggerTag, "Connected!");
@@ -36,6 +40,6 @@ public abstract class ServerServiceBase extends Listener implements RobotService
 
 	@Override
 	public void disconnected(Connection connection) {
-		Log.info(mLoggerTag, "Logger connected!");
+		Log.info(mLoggerTag, "Disconnected!");
 	}
 }

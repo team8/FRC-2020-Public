@@ -3,6 +3,7 @@ package com.palyrobotics.frc2020.util.service;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+@SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class LogEntry {
 
 	public long timeStampMilliseconds;

@@ -51,6 +51,7 @@ public class NetworkLoggerService extends ServerServiceBase implements RobotServ
 	@Override
 	public void start() {
 		super.start();
+		mServer.getKryo().register(LogEntry.class);
 		Log.setLogger(mLogger);
 		Log.set(Log.LEVEL_TRACE);
 		mTimer.start();
