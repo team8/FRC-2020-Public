@@ -6,8 +6,11 @@ import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
+import com.palyrobotics.frc2020.vision.Limelight;
 
 public class DriveAlignYawAssistedRoutine extends RoutineBase {
+
+	private final Limelight mLimelight = Limelight.getInstance();
 
 	@Override
 	public boolean checkFinished(RobotState state) {
