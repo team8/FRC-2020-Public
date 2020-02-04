@@ -11,11 +11,12 @@ import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
-import com.palyrobotics.frc2020.util.commands.CommandReceiver;
+import com.palyrobotics.frc2020.util.commands.CommandReceiverService;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
-import com.palyrobotics.frc2020.util.service.NetworkLogger;
+import com.palyrobotics.frc2020.util.service.NetworkLoggerService;
 import com.palyrobotics.frc2020.util.service.RobotService;
+import com.palyrobotics.frc2020.util.service.TelemetryService;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
@@ -44,7 +45,9 @@ public class Robot extends TimedRobot {
 
 	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mShooter, mSpinner),
 			mEnabledSubsystems;
-	private Set<RobotService> mServices = Set.of(new CommandReceiver(), new NetworkLogger()), mEnabledServices;
+	private Set<RobotService> mServices = Set.of(new CommandReceiverService(), new NetworkLoggerService(),
+			new TelemetryService()),
+			mEnabledServices;
 
 	@Override
 	public void robotInit() {
@@ -105,7 +108,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		for (RobotService robotService : mEnabledServices) {
-			robotService.update(mRobotState);
+			robotService.update(mRobotState, mCommands);
 		}
 	}
 

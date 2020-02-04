@@ -1,7 +1,8 @@
 {
 	"enabledServices": [
-		"commandReceiver",
-		"networkLogger"
+		"commandReceiverService",
+		"networkLoggerService",
+		"telemetryService"
 	],
 	"enabledSubsystems": [
 	],

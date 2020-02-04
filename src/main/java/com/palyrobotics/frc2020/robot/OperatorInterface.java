@@ -149,7 +149,6 @@ public class OperatorInterface {
 			} else {
 				// Close hopper, lower intake, and advance balls a bit
 				commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
-				commands.intakeWantedState = Intake.State.LOWER;
 				commands.addWantedRoutine(new IndexerTimeRoutine(1.0));
 			}
 		}

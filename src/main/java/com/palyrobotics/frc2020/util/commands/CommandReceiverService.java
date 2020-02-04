@@ -19,13 +19,14 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.ConfigBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.service.RobotService;
 
-public class CommandReceiver implements RobotService {
+public class CommandReceiverService implements RobotService {
 
 	private static final int kPort = 5808;
 
@@ -35,7 +36,7 @@ public class CommandReceiver implements RobotService {
 	private Server mServer;
 	private AtomicString mResult = new AtomicString(), mCommand = new AtomicString();
 
-	public CommandReceiver() {
+	public CommandReceiverService() {
 		mParser = ArgumentParsers.newFor("rio-terminal").build();
 		Subparsers subparsers = mParser.addSubparsers().dest("command");
 		Subparser set = subparsers.addParser("set");
@@ -97,7 +98,7 @@ public class CommandReceiver implements RobotService {
 	}
 
 	@Override
-	public void update(@ReadOnly RobotState state) {
+	public void update(@ReadOnly RobotState state, @ReadOnly Commands commands) {
 		mCommand.tryGetAndReset(command -> {
 			if (command == null) return;
 			String result = executeCommand(command);
@@ -233,11 +234,6 @@ public class CommandReceiver implements RobotService {
 					.collect(Collectors.toMap(Field::getName, Function.identity())));
 		}
 		return Optional.ofNullable(fields.get(name)).orElseThrow(NoSuchFieldException::new);
-	}
-
-	@Override
-	public String getConfigName() {
-		return "commandReceiver";
 	}
 
 	public void stop() {
