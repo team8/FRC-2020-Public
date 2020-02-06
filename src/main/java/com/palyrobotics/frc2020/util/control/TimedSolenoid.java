@@ -1,7 +1,5 @@
 package com.palyrobotics.frc2020.util.control;
 
-import com.palyrobotics.frc2020.util.Util;
-
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -15,7 +13,7 @@ public class TimedSolenoid extends Solenoid {
 	private final double mExtensionDurationSeconds;
 	private final boolean mIsExtendedByDefault;
 	private Timer mTimer = new Timer();
-	private boolean mIsExtended;
+	private boolean mIsExtended, mIsInTransition;
 
 	/**
 	 * @param channel                  PCM channel 0-7.
@@ -41,20 +39,23 @@ public class TimedSolenoid extends Solenoid {
 	 */
 	protected void updateExtended(boolean shouldBeExtended) {
 		// Account for default state of piston(s) given solenoid state
-		if (mIsExtended != shouldBeExtended && Util.approximatelyEqual(mTimer.get(), 0)) {
+		if (mIsExtended != shouldBeExtended && !mIsInTransition) {
+			mIsInTransition = true;
 			mTimer.start();
 		}
 		if (mTimer.get() > mExtensionDurationSeconds) {
 			mIsExtended = shouldBeExtended;
-			mTimer.reset();
+			mIsInTransition = false;
 			mTimer.stop();
+			mTimer.reset();
 		}
 	}
 
-	/**
-	 * @return Whether or not the piston(s) controlled by this solenoid are extended.
-	 */
 	public boolean isExtended() {
 		return mIsExtended;
+	}
+
+	public boolean isInTransition() {
+		return mIsInTransition;
 	}
 }
