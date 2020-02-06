@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 /**
  * Configuration storage using JSON
  *
- * @author Quintin Dwight
+ * @author Quintin
  */
 public class Configs {
 

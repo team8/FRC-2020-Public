@@ -17,6 +17,7 @@ public class RendezvousTwoShootFive extends AutoBase {
 	public RoutineBase getRoutine() {
 		var initialOdometry = new DriveSetOdometryRoutine(0, 0, 0);
 
+		// TODO: possibly more clear naming?
 		var turn1 = new DriveYawRoutine(-45);
 
 		var getTrenchBalls1 = new DrivePathRoutine(newWaypoint(70, -70, 0));

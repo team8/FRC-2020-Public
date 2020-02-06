@@ -9,8 +9,9 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
-/* Author: Alexis */
-
+/**
+ * @author Alexis
+ */
 @SuppressWarnings ("Duplicates")
 public class StartCenterRendezvousThree extends AutoBase {
 

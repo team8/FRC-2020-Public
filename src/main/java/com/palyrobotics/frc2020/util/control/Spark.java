@@ -14,7 +14,7 @@ import com.revrobotics.ControlType;
  * updating gains smartly. Control types are automatically mapped to PID slots on the Spark
  * controller.
  *
- * @author Quintin Dwight
+ * @author Quintin
  */
 public class Spark extends CANSparkMax {
 

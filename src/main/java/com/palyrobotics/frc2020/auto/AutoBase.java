@@ -23,10 +23,17 @@ public abstract class AutoBase {
 
 	/* Routines that are just combinations of other routines */
 
-	ParallelRoutine getBallsRoutine = new ParallelRoutine(new TimedRoutine(1), new IntakeBallRoutine());
+	ParallelRoutine getBallsRoutine = new ParallelRoutine(
+			new TimedRoutine(1),
+			new IntakeBallRoutine());
 
-	ParallelRoutine stowRoutine = new ParallelRoutine(new TimedRoutine(1), new IndexerFeedAllRoutine(),
+	ParallelRoutine stowRoutine = new ParallelRoutine(
+			new TimedRoutine(1),
+			new IndexerFeedAllRoutine(),
 			new IntakeStowRoutine());
 
-	ParallelRoutine shootBallsRoutine = new ParallelRoutine(new TimedRoutine(0.3), new TimedRoutine(0.0));//TODO: add in a shooter routine here
+	// TODO: add in a shooter routine here
+	ParallelRoutine shootBallsRoutine = new ParallelRoutine(
+			new TimedRoutine(0.3),
+			new TimedRoutine(0.0));
 }

@@ -9,18 +9,22 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
-/* Author: Nolan */
-
+/**
+ * @author Nolan
+ */
 public class ShootThreeTrenchThreeRendezvousTwo extends AutoBase {
 
 	@Override
 	public RoutineBase getRoutine() {
-		var init = new DriveSetOdometryRoutine(0, 0, 180);
-		var getTrenchBalls = new DrivePathRoutine(newWaypoint(40, 55, 0), newWaypoint(170, 55, 0));
+		var initialOdometry = new DriveSetOdometryRoutine(0, 0, 180);
+		var getTrenchBalls = new DrivePathRoutine(
+				newWaypoint(40, 55, 0),
+				newWaypoint(170, 55, 0));
 		var turnRoutine = new DriveYawRoutine(180);
-		var getRendezvous1 = new DrivePathRoutine(newWaypoint(100, -3, 155));
+		var getRendezvous1 = new DrivePathRoutine(
+				newWaypoint(100, -3, 155));
 
-		return new SequentialRoutine(init, getBallsRoutine, getTrenchBalls, turnRoutine, getRendezvous1,
+		return new SequentialRoutine(initialOdometry, getBallsRoutine, getTrenchBalls, turnRoutine, getRendezvous1,
 				new DriveYawRoutine(180),
 				new VisionAlignRoutine());
 	}

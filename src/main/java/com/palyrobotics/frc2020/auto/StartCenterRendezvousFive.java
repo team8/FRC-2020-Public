@@ -9,14 +9,15 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
-/*
- * Author: Alexis Start it similar to the friendly trench runs.
+/**
+ * Start it similar to the friendly trench runs.
+ *
+ * @author Alexis
  */
-
 @SuppressWarnings ("Duplicates")
 public class StartCenterRendezvousFive extends AutoBase {
 
-//TODO: fix pathing, add in start pos comment, and rename paths.
+	//TODO: fix pathing, add in start pos comment, and rename paths.
 	@Override
 	public RoutineBase getRoutine() {
 		var initialOdometry = new DriveSetOdometryRoutine(0, 0, 180);

@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.behavior.routines.drive;
 
+import static com.palyrobotics.frc2020.util.Util.getDifferenceInAngleDegrees;
+
 import java.util.Set;
 
 import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
@@ -9,7 +11,6 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
-import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 
 public class DriveYawRoutine extends TimeoutRoutineBase {
@@ -42,8 +43,8 @@ public class DriveYawRoutine extends TimeoutRoutineBase {
 	@Override
 	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
 		// TODO: check velocity as well
-		return Math.abs(Util.getDifferenceInAngleDegrees(state.driveYawDegrees,
-				mTargetYawDegrees)) < mDriveConfig.allowableYawErrorDegrees;
+		double yawErrorDegrees = getDifferenceInAngleDegrees(state.driveYawDegrees, mTargetYawDegrees);
+		return Math.abs(yawErrorDegrees) < mDriveConfig.allowableYawErrorDegrees;
 	}
 
 	@Override

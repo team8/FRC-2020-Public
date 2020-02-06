@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
- * @author Jason Liu, Quintin Dwight
+ * @author Jason Liu, Quintin
  */
 public class CSVWriter {
 

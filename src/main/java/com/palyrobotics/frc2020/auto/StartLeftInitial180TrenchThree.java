@@ -9,8 +9,9 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
-/* Author: Alexis */
-
+/**
+ * @author Alexis
+ */
 @SuppressWarnings ("Duplicates")
 public class StartLeftInitial180TrenchThree extends AutoBase {
 
@@ -23,7 +24,7 @@ public class StartLeftInitial180TrenchThree extends AutoBase {
 
 		var getTrenchBalls = new DrivePathRoutine(newWaypoint(170, 0, 0));
 
-		var turnAroundToShoot = new DriveYawRoutine(180.0);
+		var turnAroundToShoot = new DriveYawRoutine(180);
 
 		return new SequentialRoutine(initialOdometry, turnAround, getBallsRoutine, getTrenchBalls, stowRoutine,
 				turnAroundToShoot,

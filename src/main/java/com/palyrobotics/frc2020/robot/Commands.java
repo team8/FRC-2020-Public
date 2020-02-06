@@ -190,14 +190,4 @@ public class Commands {
 		other.climberWantedAdjustingPercentOutput = climberWantedAdjustingPercentOutput;
 		other.climberWantedVelocity = climberWantedVelocity;
 	}
-
-	public void reset() {
-		spinnerWantedState = Spinner.State.IDLE;
-		intakeWantedState = Intake.State.INTAKE;
-		indexerWantedBeltState = Indexer.BeltState.INDEX;
-		indexerWantedHopperState = Indexer.HopperState.CLOSED;
-		shooterWantedState = Shooter.ShooterState.IDLE;
-		driveWantedState = Drive.State.NEUTRAL;
-		wantedRumble = false;
-	}
 }
