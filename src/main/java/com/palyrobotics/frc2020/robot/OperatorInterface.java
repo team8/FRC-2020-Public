@@ -15,6 +15,7 @@ import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
+import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -28,6 +29,8 @@ public class OperatorInterface {
 
 	public static final double kDeadBand = 0.05;
 	public static final int kClimberEnableControlTimeSeconds = 30;
+	public static final int kOneTimesZoomPipelineId = 0;
+	public static final int kTwoTimesZoomPipelineId = 1;
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
@@ -98,9 +101,13 @@ public class OperatorInterface {
 	}
 
 	private void updateDriveCommands(Commands commands) {
-		boolean wantsAssistedVision = mTurnStick.getRawButton(3);
-		if (wantsAssistedVision) {
+		// Both buttons align, button 3: 2x zoom, button 4: 1x zoom
+		if (mTurnStick.getRawButton(3)) {
+			Limelight.getInstance().setPipeline(kTwoTimesZoomPipelineId);
 			commands.setDriveVisionAlign();
+		} else if (mTurnStick.getRawButton(4)) {
+			commands.setDriveVisionAlign();
+			Limelight.getInstance().setPipeline(kOneTimesZoomPipelineId);
 		} else {
 			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),
 					mDriveStick.getTrigger());
