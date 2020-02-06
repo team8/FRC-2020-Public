@@ -105,14 +105,14 @@ public class HardwareAdapter {
 	static class IndexerHardware {
 
 		private static IndexerHardware sInstance;
-		final Spark horizontalSpark = new Spark(sPortConstants.nariIndexerHorizontalId),
-				verticalSpark = new Spark(sPortConstants.nariIndexerVerticalId);
+		final Spark horizontalSpark = new Spark(sPortConstants.nariIndexerMasterId),
+				verticalSpark = new Spark(sPortConstants.nariIndexerSlaveId);
 
 		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.2, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);
-		final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDIO),
-				frontInfrared = new DigitalInput(sPortConstants.nariIndexerFrontInfraredDIO),
-				topInfrared = new DigitalInput(sPortConstants.nariIndexerTopInfraredDIO);
+		final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDio),
+				frontInfrared = new DigitalInput(sPortConstants.nariIndexerFrontInfraredDio),
+				topInfrared = new DigitalInput(sPortConstants.nariIndexerTopInfraredDio);
 
 		private IndexerHardware() {
 		}
