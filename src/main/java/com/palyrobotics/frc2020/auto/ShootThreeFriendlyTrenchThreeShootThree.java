@@ -7,6 +7,14 @@ import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
+<<<<<<< HEAD
+=======
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawAlignRoutine;
+/*
+ * Author: Alexis Start by aligning to the tower target, then backing up slowly and also make sure
+ * that just the front bumper extends past the white line.
+ */
+>>>>>>> added DriveYawAlignRoutine which switches to limelight aligning if target seen during a rotation
 
 /**
  * Start by aligning to the tower target, then backing up slowly and also make sure that just the
