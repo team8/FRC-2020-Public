@@ -174,7 +174,7 @@ public class HardwareWriter {
 			if (enabledSubsystems.contains(mClimber)) updateClimber();
 			if (enabledSubsystems.contains(mDrive)) updateDrivetrain();
 			if (enabledSubsystems.contains(mIndexer)) updateIndexer();
-			if (enabledSubsystems.contains(mClimber)) updateIntake();
+			if (enabledSubsystems.contains(mIntake)) updateIntake();
 			if (enabledSubsystems.contains(mShooter)) updateShooter();
 			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
 			updateMiscellaneous();
@@ -187,7 +187,7 @@ public class HardwareWriter {
 		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
 		climberHardware.verticalSpark.setOutput(mClimber.getVerticalOutput());
 		climberHardware.horizontalSpark.setOutput(mClimber.getAdjustingOutput());
-		climberHardware.solenoid.set(mClimber.getSolenoidOutput());
+		climberHardware.solenoid.setExtended(mClimber.getSolenoidOutput());
 	}
 
 	// private void updateDrivetrain() {
@@ -205,21 +205,21 @@ public class HardwareWriter {
 	private void updateIndexer() {
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
 		indexerHardware.horizontalSpark.setOutput(mIndexer.getOutput());
-		indexerHardware.hopperSolenoid.set(mIndexer.getHopperOutput());
-		indexerHardware.blockingSolenoid.set(mIndexer.getBlockOutput());
+		indexerHardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
+		indexerHardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 	}
 
 	private void updateIntake() {
 		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
 		intakeHardware.talon.setOutput(mIntake.getOutput());
-		intakeHardware.solenoid.set(mIntake.getExtendedOutput());
+		intakeHardware.solenoid.setExtended(mIntake.getExtendedOutput());
 	}
 
 	private void updateShooter() {
 		var hardware = HardwareAdapter.ShooterHardware.getInstance();
 		hardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
-		hardware.blockingSolenoid.set(mShooter.getBlockingOutput());
-		hardware.hoodSolenoid.set(mShooter.getHoodOutput());
+		hardware.blockingSolenoid.setExtended(mShooter.getBlockingOutput());
+		hardware.hoodSolenoid.setExtended(mShooter.getHoodOutput());
 		mRumbleOutput |= mShooter.getRumbleOutput();
 	}
 

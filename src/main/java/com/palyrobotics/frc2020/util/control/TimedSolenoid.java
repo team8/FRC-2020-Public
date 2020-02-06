@@ -30,15 +30,17 @@ public class TimedSolenoid extends Solenoid {
 		mIsExtendedByDefault = isExtendedByDefault;
 	}
 
+	public void setExtended(boolean isExtended) {
+		boolean isOn = mIsExtendedByDefault == isExtended;
+		set(isOn);
+		updateExtended(isExtended);
+	}
+
 	/**
-	 * Updates piston(s) extension state based on how long our solenoid has been in a specific on/off
-	 * state.
-	 *
-	 * @param isOn Solenoid on/off state
+	 * Updates piston(s) extension state based on time elapsed since previous extension state.
 	 */
-	public void updateExtended(boolean isOn) {
+	protected void updateExtended(boolean shouldBeExtended) {
 		// Account for default state of piston(s) given solenoid state
-		boolean shouldBeExtended = mIsExtendedByDefault == isOn;
 		if (mIsExtended != shouldBeExtended && Util.approximatelyEqual(mTimer.get(), 0)) {
 			mTimer.start();
 		}

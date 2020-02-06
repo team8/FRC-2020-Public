@@ -22,20 +22,17 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 /**
  * Used to produce {@link Commands}'s from human input. Should only be used in robot package.
- *
- * @author Nihar
  */
 public class OperatorInterface {
 
 	public static final double kDeadBand = 0.05;
-	public static final int kClimberEnableControlTimeSeconds = 30;
-	public static final int kOneTimesZoomPipelineId = 0;
-	public static final int kTwoTimesZoomPipelineId = 1;
+	public static final double kClimberEnableControlTimeSeconds = 30;
+	public static final int kOneTimesZoomPipelineId = 0, kTwoTimesZoomPipelineId = 1;
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
-
-	double climberLastVelocity;
+	private final Limelight mLimelight = Limelight.getInstance();
+	private double mClimberLastVelocity;
 
 	/**
 	 * Modifies commands based on operator input devices.
@@ -57,7 +54,7 @@ public class OperatorInterface {
 	private void updateClimberCommands(Commands commands, @ReadOnly RobotState state) {
 		if (DriverStation.getInstance().getMatchTime() < kClimberEnableControlTimeSeconds) {
 			var mConfig = Configs.get(ClimberConfig.class);
-			double velocityDelta = state.climberVelocity - climberLastVelocity;
+			double velocityDelta = state.climberVelocity - mClimberLastVelocity;
 
 			switch (commands.climberWantedState) {
 				case RAISING:
@@ -96,18 +93,18 @@ public class OperatorInterface {
 				}
 			}
 
-			climberLastVelocity = state.climberVelocity;
+			mClimberLastVelocity = state.climberVelocity;
 		}
 	}
 
 	private void updateDriveCommands(Commands commands) {
 		// Both buttons align, button 3: 2x zoom, button 4: 1x zoom
 		if (mTurnStick.getRawButton(3)) {
-			Limelight.getInstance().setPipeline(kTwoTimesZoomPipelineId);
+			mLimelight.setPipeline(kTwoTimesZoomPipelineId);
 			commands.setDriveVisionAlign();
 		} else if (mTurnStick.getRawButton(4)) {
+			mLimelight.setPipeline(kOneTimesZoomPipelineId);
 			commands.setDriveVisionAlign();
-			Limelight.getInstance().setPipeline(kOneTimesZoomPipelineId);
 		} else {
 			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),
 					mDriveStick.getTrigger());
@@ -192,7 +189,7 @@ public class OperatorInterface {
 		commands.climberWantedState = Climber.ClimberState.IDLE;
 		commands.setDriveNeutral();
 		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
-		commands.intakeWantedState = Intake.State.INTAKE;
+		commands.intakeWantedState = Intake.State.STOW;
 		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
