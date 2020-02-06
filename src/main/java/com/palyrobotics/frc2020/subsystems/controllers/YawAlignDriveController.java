@@ -11,42 +11,29 @@ import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 
-public class VisionYawAlignDriveController extends ChezyDriveController {
+public class YawAlignDriveController extends ChezyDriveController {
 
 	private static final double kMaxAngularPower = 0.4;
 	private final Limelight mLimelight = Limelight.getInstance();
-	private VisionConfig mConfig = Configs.get(VisionConfig.class);
-	private int mPipelineBeingUsed = 0;
+	private VisionConfig mVisionConfig = Configs.get(VisionConfig.class);
 	private final PIDController mPidController = new PIDController(0.0, 0.0, 0.0);
 
-	public VisionYawAlignDriveController() {
-//		mLimelight.setPipeline(0);
+	public YawAlignDriveController() {
+		mLimelight.setPipeline(0);
 		mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
 		mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
 	}
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		boolean targetFound = mLimelight.isTargetFound();
-		double angleToTarget = mLimelight.getYawToTarget();
-
-		if (targetFound) {
-			mPidController.setPID(mConfig.gains.p, mConfig.gains.i, mConfig.gains.d);
-			double angularPower = mPidController.calculate(angleToTarget);
-			Util.clamp(angularPower, -kMaxAngularPower, kMaxAngularPower);
-			// if (Math.abs(angularPower) > kMaxAngularPower)
-			// angularPower = angularPower > 0 ? kMaxAngularPower : -kMaxAngularPower;
-			double rightPercentOutput = angularPower, leftPercentOutput = -angularPower;
+		if (mLimelight.isTargetFound()) {
+			mPidController.setPID(mVisionConfig.gains.p, mVisionConfig.gains.i, mVisionConfig.gains.d);
+			double percentOutput = mPidController.calculate(mLimelight.getYawToTarget());
+			percentOutput = Util.clamp(percentOutput, -kMaxAngularPower, kMaxAngularPower);
+			double rightPercentOutput = percentOutput, leftPercentOutput = -percentOutput;
 			mOutputs.leftOutput.setPercentOutput(leftPercentOutput);
 			mOutputs.rightOutput.setPercentOutput(rightPercentOutput);
 		} else {
-			/*
-			* alternates every cycle target not found (pipeline 0 for normal, pipeline 1
-			* for 2x hardware zoom Ensures distance is not reason target is not being
-			* seen...
-			*/
-			// mPipelineBeingUsed = mPipelineBeingUsed == 1 ? 0 : 1;
-			// mLimelight.setPipeline(mPipelineBeingUsed);
 			super.updateSignal(commands, state);
 		}
 	}
