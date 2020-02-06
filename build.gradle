@@ -64,7 +64,7 @@ spotless {
 
 task spotlessBuild {
     dependsOn(tasks.spotlessApply, tasks.build)
-    tasks.findByName('build').mustRunAfter 'spotlessApply'
+    tasks.build.mustRunAfter(tasks.spotlessApply)
 }
 
 // Set this to true to enable desktop support.
