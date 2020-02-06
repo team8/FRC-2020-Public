@@ -120,9 +120,6 @@ public class Robot extends TimedRobot {
 
 		resetCommandsAndRoutines();
 
-		mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
-		mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
-
 		HardwareAdapter.Joysticks.getInstance().operatorXboxController.setRumble(false);
 		setDriveIdleMode(mConfig.coastDriveIfDisabled);
 
@@ -217,6 +214,14 @@ public class Robot extends TimedRobot {
 			subsystem.update(mCommands, mRobotState);
 		}
 		mHardwareWriter.updateHardware(mEnabledSubsystems);
+		if (mCommands.visionWanted) {
+			mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
+			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+		} else {
+			mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
+			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+		}
+		mLimelight.setPipeline(mCommands.visionWantedPipeline);
 	}
 
 	private String setupSubsystemsAndServices() {

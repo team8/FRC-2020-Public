@@ -2,6 +2,8 @@ package com.palyrobotics.frc2020.robot;
 
 import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
+import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
+import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedSingleRoutine;
@@ -29,7 +31,6 @@ public class OperatorInterface {
 
 	public static final double kDeadBand = 0.05;
 	public static final double kClimberEnableControlTimeSeconds = 30;
-	public static final int kOneTimesZoomPipelineId = 0, kTwoTimesZoomPipelineId = 1;
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
@@ -101,19 +102,19 @@ public class OperatorInterface {
 
 	private void updateDriveCommands(Commands commands) {
 		// Both buttons align, button 3: 2x zoom, button 4: 1x zoom
-		if (mTurnStick.getRawButton(3)) {
-			mLimelight.setPipeline(kTwoTimesZoomPipelineId);
-			commands.setDriveVisionAlign();
-		} else if (mTurnStick.getRawButton(4)) {
-			mLimelight.setPipeline(kOneTimesZoomPipelineId);
-			commands.setDriveVisionAlign();
+		boolean wantsOneTimesAlign = mTurnStick.getRawButton(3), wantsTwoTimesAlign = mTurnStick.getRawButton(4);
+		commands.visionWanted = wantsOneTimesAlign || wantsTwoTimesAlign;
+		if (wantsOneTimesAlign) {
+			commands.visionWantedPipeline = kTwoTimesZoomPipelineId;
+		} else if (wantsTwoTimesAlign) {
+			commands.visionWantedPipeline = kOneTimesZoomPipelineId;
 		}
-		boolean wantsAssistedVision = mTurnStick.getRawButton(3);
-		if (wantsAssistedVision) {
+		if (commands.visionWanted) {
 			commands.setDriveVisionAlign();
 		} else {
-			commands.setDriveTeleop(-mDriveStick.getY(), mTurnStick.getX(), mTurnStick.getTrigger(),
-					mDriveStick.getTrigger());
+			commands.setDriveTeleop(
+					-mDriveStick.getY(), mTurnStick.getX(),
+					mTurnStick.getTrigger(), mDriveStick.getTrigger());
 		}
 		/* Path Following */
 		if (mOperatorXboxController.getDPadDownPressed()) {
@@ -184,5 +185,7 @@ public class OperatorInterface {
 		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
+		commands.visionWantedPipeline = kOneTimesZoomPipelineId;
+		commands.visionWanted = false;
 	}
 }

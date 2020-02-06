@@ -1,53 +1,46 @@
 package com.palyrobotics.frc2020.behavior.routines.drive;
 
-import static com.palyrobotics.frc2020.util.Util.getDifferenceInAngleDegrees;
-
 import java.util.Set;
 
+import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.config.VisionConfig;
-import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.vision.Limelight;
-import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
-public class DriveAlignRoutine extends DriveYawRoutine {
+public class DriveAlignRoutine extends TimeoutRoutineBase {
 
-	private static final double kTimeoutMultiplier = 2.0;
-	private VisionConfig mVisionConfig = Configs.get(VisionConfig.class);
-	private Limelight mLimelight = Limelight.getInstance();
+	private final Limelight mLimelight = Limelight.getInstance();
+	private final VisionConfig mVisionConfig = Configs.get(VisionConfig.class);
+	private final int mVisionPipeline;
 
-	// TODO: aditya add a parameter for limelight pipeline id
-	public DriveAlignRoutine(double yawDegrees) {
-		super(yawDegrees);
+	protected DriveAlignRoutine(int visionPipeline) {
+		super(3.0);
+		mVisionPipeline = visionPipeline;
 	}
 
 	@Override
 	public void start(Commands commands, @ReadOnly RobotState state) {
-		mTimeout = DriveConstants.calculateTimeToFinishTurn(state.driveYawDegrees, mTargetYawDegrees) *
-				kTimeoutMultiplier;
-		mLimelight.setPipeline(0);
-		mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
-		mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
-	}
-
-	@Override
-	protected void update(Commands commands, @ReadOnly RobotState state) {
-		double yawErrorDegrees = getDifferenceInAngleDegrees(state.driveYawDegrees, mTargetYawDegrees);
-		if (mLimelight.isTargetFound() && Math.abs(yawErrorDegrees) < mVisionConfig.alignSwitchYawAngleMin) {
-			commands.setDriveVisionAlign();
-		} else {
-			commands.setDriveYaw(mTargetYawDegrees);
-		}
+		commands.visionWanted = true;
+		commands.visionWantedPipeline = mVisionPipeline;
 	}
 
 	@Override
 	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
-		// TODO: aditya check tx
-		return false;
+		return Math.abs(mLimelight.getYawToTarget()) < mVisionConfig.acceptableYawError;
+	}
+
+	@Override
+	protected void stop(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+		commands.visionWanted = false;
+	}
+
+	@Override
+	protected void update(Commands commands, RobotState state) {
+		commands.setDriveVisionAlign();
 	}
 
 	@Override

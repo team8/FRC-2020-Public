@@ -24,6 +24,8 @@ public class Commands {
 	/* Climber */
 	public Climber.ClimberState climberWantedState;
 	public Climber.ClimberState preLockClimberWantedState;
+	public double climberWantedVelocity;
+	public double climberWantedAdjustingPercentOutput;
 	/* Drive */
 	/* Drive Commands */
 	private Drive.State driveWantedState;
@@ -47,9 +49,9 @@ public class Commands {
 	private double shooterManualWantedFlywheelVelocity;
 	/* Spinner */
 	public Spinner.State spinnerWantedState;
-	// Climbing
-	public double climberWantedVelocity;
-	public double climberWantedAdjustingPercentOutput;
+	/* Vision */
+	public int visionWantedPipeline;
+	public boolean visionWanted;
 
 	public boolean wantedRumble;
 

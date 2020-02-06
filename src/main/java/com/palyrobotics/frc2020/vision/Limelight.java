@@ -10,6 +10,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  */
 public class Limelight {
 
+	public static final int kOneTimesZoomPipelineId = 0, kTwoTimesZoomPipelineId = 1;
+
 	private static Limelight sInstance = new Limelight();
 	private NetworkTable mTable;
 

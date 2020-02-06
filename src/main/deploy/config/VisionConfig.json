@@ -3,6 +3,6 @@
 		"p": 0.01,
 		"d": 0.001
 	},
-	"acceptableError": 3,
+	"acceptableYawError": 1,
 	"alignSwitchYawAngleMin": 40
 }
