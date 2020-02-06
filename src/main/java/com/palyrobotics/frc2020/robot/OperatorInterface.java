@@ -3,6 +3,12 @@ package com.palyrobotics.frc2020.robot;
 import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
+<<<<<<< HEAD
+=======
+import com.palyrobotics.frc2020.auto.ShootThreeFriendlyTrenchThreeShootThree;
+import com.palyrobotics.frc2020.auto.Turn180AlignTest;
+import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+>>>>>>> added in auto for testing Drive Yaw Align, adjusted opinterface accordingly
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedSingleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerTimeRoutine;
