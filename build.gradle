@@ -63,6 +63,7 @@ spotless {
 }
 
 task spotlessBuild {
+    group = "team8"
     dependsOn(tasks.spotlessApply, tasks.build)
     tasks.build.mustRunAfter(tasks.spotlessApply)
 }
