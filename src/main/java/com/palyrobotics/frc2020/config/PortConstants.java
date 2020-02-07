@@ -43,4 +43,9 @@ public class PortConstants extends ConfigBase {
 	 * Spinner
 	 */
 	public int nariSpinnerId;
+
+	/**
+	 * Lighting
+	 */
+	public int nariLightingPWMPort;
 }

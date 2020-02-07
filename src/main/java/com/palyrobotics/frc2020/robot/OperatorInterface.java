@@ -49,6 +49,7 @@ public class OperatorInterface {
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
 //		updateSpinnerCommands(commands);
+		updateLightingCommands(commands);
 
 		// TODO: remove
 		if (mOperatorXboxController.getAButtonPressed()) {
@@ -112,6 +113,23 @@ public class OperatorInterface {
 			}
 
 			mClimberLastVelocity = state.climberVelocity;
+		}
+	}
+
+	private void updateLightingCommands(Commands commands) {
+		// commands.lightingWantedState = Lighting.LightingState.IDLE;
+		if (mTurnStick.getRawButtonPressed(6)) {
+			commands.lightingWantedState = Lighting.LightingState.TARGET_FOUND;
+		}
+		if (mTurnStick.getRawButtonPressed(5)) {
+			commands.lightingWantedState = Lighting.LightingState.INIT;
+		}
+		if (mTurnStick.getRawButtonPressed(4)) {
+			commands.lightingWantedState = Lighting.LightingState.CLIMB_TIME;
+			//Lighting.getInstance().tempBallCount += 1;
+		}
+		if(mTurnStick.getRawButtonPressed(3)){
+			commands.lightingWantedState = Lighting.LightingState.DISABLE;
 		}
 	}
 
