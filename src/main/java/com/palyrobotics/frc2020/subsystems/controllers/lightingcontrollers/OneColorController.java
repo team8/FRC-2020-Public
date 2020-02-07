@@ -5,11 +5,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class OneColorController extends Lighting.LEDController {
-
-	private Timer mTimer = new Timer();
 	private Color.HSV mColor;
 
 	public OneColorController(int initIndex, int lastIndex, Color.HSV color) {
