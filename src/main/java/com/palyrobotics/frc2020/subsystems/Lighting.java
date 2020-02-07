@@ -10,6 +10,7 @@ import com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers.Conve
 import com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers.DisabledSequenceController;
 import com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers.FlashingLightsController;
 import com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers.InitSequenceController;
+import com.palyrobotics.frc2020.util.Color;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LightingOutputs;
 
@@ -24,8 +25,8 @@ public class Lighting extends SubsystemBase {
 	private static Lighting sInstance = new Lighting();
 	private LightingConfig mConfig = Configs.get(LightingConfig.class);
 	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
-	private Lighting.LightingState mState = LightingState.INIT; // used to compare with new lighting states
-	private ArrayList<LEDController> mLEDControllers = new ArrayList<>(3);
+	private Lighting.LightingState mState = LightingState.IDLE; // used to compare with new lighting states
+	private ArrayList<LEDController> mLEDControllers = new ArrayList<>();
 
 	public abstract static class LEDController {
 
@@ -56,19 +57,21 @@ public class Lighting extends SubsystemBase {
 		    mLEDControllers.clear();
             switch (mState) {
                 case OFF:
+					resetLedStrip();
+					break;
                 case IDLE:
-                    resetLedStrip();
+
                     break;
                 case INIT:
                     resetLedStrip();
                     mLEDControllers.add(new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex));
-                    mLEDControllers.add(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex, mConfig.limelightSegmentBackIndex, 0, 75, 50, 100, 150, 150, 3));
+                    mLEDControllers.add(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex, mConfig.limelightSegmentBackIndex, Color.HSV.getNewInstance(0, 75, 50), Color.HSV.getNewInstance(100, 150, 150), 3));
                     break;
                 case DISABLE:
                     mLEDControllers.add(new DisabledSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex));
                     break;
                 case TARGET_FOUND:
-                    mLEDControllers.add(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex, mConfig.limelightSegmentBackIndex, 0, 75, 50, 100, 150, 150, 3));
+                    mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex, mConfig.limelightSegmentBackIndex, 60, 255, 40, 3));
                     break;
                 case INDEXER_COUNT:
                     break;
