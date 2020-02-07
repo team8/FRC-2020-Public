@@ -29,8 +29,8 @@ public class Lighting extends SubsystemBase {
 
 	public abstract static class LEDController {
 
-		public int mInitIndex;
-		public int mLastIndex;
+		protected int mInitIndex;
+		protected int mLastIndex;
 		protected LightingOutputs mLightingOutputs = new LightingOutputs();
 
 		public final LightingOutputs update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
@@ -51,7 +51,8 @@ public class Lighting extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		Lighting.LightingState wantedState = commands.lightingWantedState;
-		if (wantedState != mState) {
+        boolean isNewState = mState != wantedState;
+		if (isNewState) {
 		    mLEDControllers.clear();
             switch (mState) {
                 case OFF:
@@ -60,19 +61,19 @@ public class Lighting extends SubsystemBase {
                     break;
                 case INIT:
                     resetLedStrip();
-                    mLEDControllers.add(new InitSequenceController(0, (mConfig.ledCount - 1)));
-                    mLEDControllers.add(new ConvergingBandsController(30, 46, 0, 75, 50, 100, 150, 150, 3));
+                    mLEDControllers.add(new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex));
+                    mLEDControllers.add(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex, mConfig.limelightSegmentBackIndex, 0, 75, 50, 100, 150, 150, 3));
                     break;
                 case DISABLE:
-                    mLEDControllers.add(new DisabledSequenceController(0, mConfig.ledCount - 1));
+                    mLEDControllers.add(new DisabledSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex));
                     break;
                 case TARGET_FOUND:
-                    mLEDControllers.add(new ConvergingBandsController(30, 46, 0, 75, 50, 100, 150, 150, 3));
+                    mLEDControllers.add(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex, mConfig.limelightSegmentBackIndex, 0, 75, 50, 100, 150, 150, 3));
                     break;
                 case INDEXER_COUNT:
                     break;
                 case SHOOTER_FULLRPM:
-                    mLEDControllers.add(new FlashingLightsController(0, 20, 60, 255, 40, 3));
+                    mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex, mConfig.limelightSegmentBackIndex, 60, 255, 40, 3));
                     break;
                 default:
                     break;
