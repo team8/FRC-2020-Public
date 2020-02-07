@@ -40,6 +40,11 @@ public class PortConstants extends ConfigBase {
 	public int nariShooterBlockingSolenoidId;
 
 	/**
+	 * Turret
+	 */
+	public int nariTurretId;
+
+	/**
 	 * Spinner
 	 */
 	public int nariSpinnerId;

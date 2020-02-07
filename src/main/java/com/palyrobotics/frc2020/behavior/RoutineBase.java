@@ -29,6 +29,7 @@ public abstract class RoutineBase {
 	protected final Intake mIntake = Intake.getInstance();
 	protected final Shooter mShooter = Shooter.getInstance();
 	protected final Spinner mSpinner = Spinner.getInstance();
+	protected final Turret mTurret = Turret.getInstance();
 	private State mState = State.INIT;
 
 	/**
@@ -82,7 +83,7 @@ public abstract class RoutineBase {
 	 *
 	 * @see #checkFinished(RobotState)
 	 */
-	protected void start(Commands commands, @ReadOnly RobotState state) {
+	protected void start(Commands csommands, @ReadOnly RobotState state) {
 	}
 
 	@Override

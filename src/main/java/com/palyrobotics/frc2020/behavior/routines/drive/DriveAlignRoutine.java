@@ -27,6 +27,7 @@ public class DriveAlignRoutine extends TimeoutRoutineBase {
 		super.start(commands, state);
 		commands.visionWanted = true;
 		commands.visionWantedPipeline = mVisionPipeline;
+		mTimer.start();
 	}
 
 	@Override

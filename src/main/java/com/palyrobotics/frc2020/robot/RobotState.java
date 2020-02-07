@@ -50,6 +50,9 @@ public class RobotState {
 	public Color detectedRGBValues;
 	public ColorMatchResult closestColorRGB;
 
+	/* Turret */
+	public double turretYawDegrees;
+
 	/* Game and Field */
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;
 	public String gameData;

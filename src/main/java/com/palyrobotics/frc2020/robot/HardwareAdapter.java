@@ -152,6 +152,23 @@ public class HardwareAdapter {
 	}
 
 	/**
+	 * 1 775
+	 */
+	static class TurretHardware {
+
+		private static TurretHardware sInstance = new TurretHardware();
+		final Talon talon = new Talon(sPortConstants.nariTurretId);
+
+		private TurretHardware() {
+		}
+
+		static TurretHardware getInstance() {
+			if (sInstance == null) sInstance = new TurretHardware();
+			return sInstance;
+		}
+	}
+
+	/**
 	 * 1Compressor, 1 PDP
 	 */
 	static class MiscellaneousHardware {

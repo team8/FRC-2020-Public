@@ -38,6 +38,7 @@ public class HardwareReader {
 		if (enabledSubsystems.contains(Indexer.getInstance())) readIndexerState(robotState);
 		if (enabledSubsystems.contains(Intake.getInstance())) readIntakeState(robotState);
 		if (enabledSubsystems.contains(Shooter.getInstance())) readShooterState(robotState);
+		if (enabledSubsystems.contains(Turret.getInstance())) readTurretState(robotState);
 	}
 
 	private void readGameAndFieldState(RobotState robotState) {
@@ -109,5 +110,10 @@ public class HardwareReader {
 		robotState.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
 		robotState.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();
 		robotState.shooterHoodIsInTransition = hardware.hoodSolenoid.isInTransition() || hardware.blockingSolenoid.isInTransition();
+	}
+
+	private void readTurretState(RobotState robotState) {
+		var hardware = TurretHardware.getInstance();
+		robotState.turretYawDegrees = hardware.talon.getSelectedSensorPosition();
 	}
 }

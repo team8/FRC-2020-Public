@@ -10,6 +10,7 @@ import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControl
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedSingleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerTimeRoutine;
+import com.palyrobotics.frc2020.behavior.routines.turret.TurretRotateRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.Joysticks;
@@ -170,6 +171,12 @@ public class OperatorInterface {
 			commands.addWantedRoutine(new IndexerTimeRoutine(1.0));
 		}
 		/* Shooting */
+		// Aiming turret
+		if (mOperatorXboxController.getXButtonPressed()) {
+			commands.addWantedRoutine(new TurretRotateRoutine(true, kTwoTimesZoomPipelineId));
+		} else if (mOperatorXboxController.getBButtonPressed()) {
+			commands.addWantedRoutine(new TurretRotateRoutine(false, kTwoTimesZoomPipelineId));
+		}
 		// Handle flywheel velocity
 		if (mOperatorXboxController.getRightTriggerPressed()) {
 			commands.setShooterVisionAssisted(commands.visionWantedPipeline);

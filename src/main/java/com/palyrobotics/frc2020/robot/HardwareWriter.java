@@ -33,6 +33,7 @@ public class HardwareWriter {
 	private final Intake mIntake = Intake.getInstance();
 	private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
+	private final Turret mTurret = Turret.getInstance();
 	private boolean mRumbleOutput;
 
 	void configureHardware(Set<SubsystemBase> enabledSubsystems) {
@@ -42,6 +43,7 @@ public class HardwareWriter {
 		if (enabledSubsystems.contains(mIntake)) configureIntakeHardware();
 		if (enabledSubsystems.contains(mShooter)) configureShooterHardware();
 		if (enabledSubsystems.contains(mSpinner)) configureSpinnerHardware();
+		if (enabledSubsystems.contains(mTurret)) configureTurretHardware();
 	}
 
 	private void configureClimberHardware() {
@@ -132,6 +134,13 @@ public class HardwareWriter {
 		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 	}
 
+	private void configureTurretHardware() {
+		//TODO: reset encoder based on hitting hard stop on left or right
+		var turretHardware = HardwareAdapter.TurretHardware.getInstance();
+		turretHardware.talon.configFactoryDefault(kTimeoutMs);
+		turretHardware.talon.setSelectedSensorPosition(0);
+	}
+
 	// public void resetDriveSensors(Pose2d pose) {
 	// var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
 	// driveHardware.gyro.setYaw(pose.getRotation().getDegrees(), kTimeoutMs);
@@ -165,6 +174,7 @@ public class HardwareWriter {
 			if (enabledSubsystems.contains(mIntake)) updateIntake();
 			if (enabledSubsystems.contains(mShooter)) updateShooter();
 			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
+			if (enabledSubsystems.contains(mTurret)) updateTurret();
 		}
 		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
 		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
@@ -217,5 +227,10 @@ public class HardwareWriter {
 	private void updateSpinner() {
 		var hardware = HardwareAdapter.SpinnerHardware.getInstance();
 		hardware.talon.setOutput(mSpinner.getOutput());
+	}
+
+	private void updateTurret() {
+		var turretHardware = HardwareAdapter.TurretHardware.getInstance();
+		turretHardware.talon.setOutput(mTurret.getOutput());
 	}
 }

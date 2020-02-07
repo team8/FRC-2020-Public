@@ -47,6 +47,8 @@ public class Commands {
 	/* Shooter */
 	private Shooter.ShooterState shooterWantedState;
 	private double shooterWantedCustomFlywheelVelocity;
+	/* Turret */
+	public Turret.TurretState turretWantedState;
 	/* Spinner */
 	public Spinner.State spinnerWantedState;
 	/* Vision */
