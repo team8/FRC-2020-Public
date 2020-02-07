@@ -116,8 +116,8 @@ public class HardwareAdapter {
 	 */
 	static class LightingHardware {
 
-		final AddressableLED LEDStrip = new AddressableLED(7);
 		private static LightingHardware sInstance = new LightingHardware();
+		final AddressableLED LEDStrip = new AddressableLED(7);
 
 		private LightingHardware() {
 		}
