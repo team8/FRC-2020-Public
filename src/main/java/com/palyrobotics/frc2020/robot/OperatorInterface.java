@@ -107,10 +107,10 @@ public class OperatorInterface {
 			commands.lightingWantedState = Lighting.LightingState.INIT;
 		}
 		if (mTurnStick.getRawButtonPressed(4)) {
-			commands.lightingWantedState = Lighting.LightingState.CLIMB_TIME;
+			commands.lightingWantedState = Lighting.LightingState.SHOOTER_FULLRPM;
 			//Lighting.getInstance().tempBallCount += 1;
 		}
-		if(mTurnStick.getRawButtonPressed(3)){
+		if (mTurnStick.getRawButtonPressed(3)) {
 			commands.lightingWantedState = Lighting.LightingState.DISABLE;
 		}
 	}

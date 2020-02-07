@@ -6,28 +6,26 @@ import java.util.Objects;
 
 public class LightingOutputs {
 
-    public List<int[]> lightingOutput; // array of ints for rgb values
+	public List<int[]> lightingOutput; // array of ints for rgb values
 
-    public LightingOutputs() {
-        lightingOutput = new ArrayList<>();
-    }
+	public LightingOutputs() {
+		lightingOutput = new ArrayList<>();
+	}
 
-    public LightingOutputs(List<int[]> input) {
-        lightingOutput = input;
-    }
+	public LightingOutputs(List<int[]> input) {
+		lightingOutput = input;
+	}
 
-    @Override // Auto-generated
-    public int hashCode() {
-        return Objects.hash(lightingOutput);
-    }
+	@Override // Auto-generated
+	public int hashCode() {
+		return Objects.hash(lightingOutput);
+	}
 
-    @Override // Auto-generated
-    public boolean equals(Object other) {
-        if (this == other)
-            return true;
-        if (other == null || getClass() != other.getClass())
-            return false;
-        LightingOutputs otherOutput = (LightingOutputs) other;
-        return lightingOutput.equals(otherOutput.lightingOutput);
-    }
+	@Override // Auto-generated
+	public boolean equals(Object other) {
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
+		LightingOutputs otherOutput = (LightingOutputs) other;
+		return lightingOutput.equals(otherOutput.lightingOutput);
+	}
 }
