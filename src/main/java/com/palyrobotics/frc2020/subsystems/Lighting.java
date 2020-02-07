@@ -52,44 +52,50 @@ public class Lighting extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		Lighting.LightingState wantedState = commands.lightingWantedState;
-        boolean isNewState = mState != wantedState;
+		boolean isNewState = mState != wantedState;
 		if (isNewState) {
-		    mLEDControllers.clear();
-            switch (mState) {
-                case OFF:
+			mLEDControllers.clear();
+			switch (mState) {
+				case OFF:
 					resetLedStrip();
 					break;
-                case IDLE:
+				case IDLE:
 
-                    break;
-                case INIT:
-                    resetLedStrip();
-                    mLEDControllers.add(new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex));
-                    mLEDControllers.add(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex, mConfig.limelightSegmentBackIndex, Color.HSV.getNewInstance(0, 75, 50), Color.HSV.getNewInstance(100, 150, 150), 3));
-                    break;
-                case DISABLE:
-                    mLEDControllers.add(new DisabledSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex));
-                    break;
-                case TARGET_FOUND:
-                    mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex, mConfig.limelightSegmentBackIndex, 60, 255, 40, 3));
-                    break;
-                case INDEXER_COUNT:
-                    break;
-                case SHOOTER_FULLRPM:
-                    mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex, mConfig.limelightSegmentBackIndex, 60, 255, 40, 3));
-                    break;
-                default:
-                    break;
-            }
-            mState = wantedState;
-        }
-			for (LEDController ledController : mLEDControllers) {
-				LightingOutputs currentOutput = ledController.update(commands, robotState);
-				for (var i = 0; i < currentOutput.lightingOutput.size(); i++) {
-					int[] rgbValue = currentOutput.lightingOutput.get(i);
-					mOutputBuffer.setHSV(i + ledController.mInitIndex, rgbValue[0], rgbValue[1], rgbValue[2]);
-				}
+					break;
+				case INIT:
+					resetLedStrip();
+					mLEDControllers.add(
+							new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex));
+					mLEDControllers.add(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex,
+							mConfig.limelightSegmentBackIndex, Color.HSV.getNewInstance(0, 75, 50),
+							Color.HSV.getNewInstance(100, 150, 150), 3));
+					break;
+				case DISABLE:
+					mLEDControllers.add(new DisabledSequenceController(mConfig.backSegmentFirstIndex,
+							mConfig.backSegmentBackIndex));
+					break;
+				case TARGET_FOUND:
+					mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
+							mConfig.limelightSegmentBackIndex, 60, 255, 40, 3));
+					break;
+				case INDEXER_COUNT:
+					break;
+				case SHOOTER_FULLRPM:
+					mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
+							mConfig.limelightSegmentBackIndex, 60, 255, 40, 3));
+					break;
+				default:
+					break;
 			}
+			mState = wantedState;
+		}
+		for (LEDController ledController : mLEDControllers) {
+			LightingOutputs currentOutput = ledController.update(commands, robotState);
+			for (var i = 0; i < currentOutput.lightingOutput.size(); i++) {
+				int[] rgbValue = currentOutput.lightingOutput.get(i);
+				mOutputBuffer.setHSV(i + ledController.mInitIndex, rgbValue[0], rgbValue[1], rgbValue[2]);
+			}
+		}
 	}
 
 	private void resetLedStrip() {
