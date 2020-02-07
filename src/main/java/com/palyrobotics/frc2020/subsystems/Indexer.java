@@ -31,7 +31,7 @@ public class Indexer extends SubsystemBase {
 	}
 
 	@Override
-	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		switch (commands.indexerWantedBeltState) {
 			case IDLE:
 				mOutput.setIdle();

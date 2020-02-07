@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase {
 	}
 
 	@Override
-	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		switch (commands.intakeWantedState) {
 			case STOW:
 				mOutput.setIdle();

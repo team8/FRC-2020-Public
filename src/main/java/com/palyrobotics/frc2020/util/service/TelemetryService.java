@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.util.service;
 
+import java.util.HashMap;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
@@ -12,6 +14,7 @@ public class TelemetryService extends ServerServiceBase {
 
 		RobotState state;
 		Commands commands;
+		HashMap<String, Object> arbitrary;
 	}
 
 	@Override

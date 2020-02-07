@@ -26,7 +26,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	@Override
-	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		switch (commands.climberWantedState) {
 			case RAISING:
 				mVerticalOutput.setTargetPositionProfiled(mConfig.climberTopHeight, mConfig.raisingArbitraryDemand,

@@ -18,7 +18,7 @@ public class RoutineTests {
 	private static class MockSubsystem extends SubsystemBase {
 
 		@Override
-		public void update(Commands commands, RobotState robotState) {
+		public void update(Commands commands, RobotState state) {
 		}
 	}
 

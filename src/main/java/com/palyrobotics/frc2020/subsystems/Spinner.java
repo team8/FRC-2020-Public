@@ -23,7 +23,7 @@ public class Spinner extends SubsystemBase {
 	}
 
 	@Override
-	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		State spinnerState = commands.spinnerWantedState;
 		switch (spinnerState) {
 			case IDLE:
@@ -33,7 +33,6 @@ public class Spinner extends SubsystemBase {
 				mOutput.setPercentOutput(mConfig.percentOutput);
 				break;
 		}
-
 	}
 
 	/**

@@ -13,7 +13,7 @@ public abstract class SubsystemBase {
 		mName = Util.classToJsonName(getClass());
 	}
 
-	public abstract void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState);
+	public abstract void update(@ReadOnly Commands commands, @ReadOnly RobotState state);
 
 	@Override
 	public String toString() {

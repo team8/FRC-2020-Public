@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import static com.palyrobotics.frc2020.config.constants.ShooterConstants.kTargetDistanceToHoodState;
 import static com.palyrobotics.frc2020.config.constants.ShooterConstants.kTargetDistanceToVelocity;
-import static com.palyrobotics.frc2020.config.constants.ShooterConstants.kTargetVelocityToHoodState;
 import static com.palyrobotics.frc2020.util.Util.kEpsilon;
 import static com.palyrobotics.frc2020.util.Util.withinRange;
 
@@ -47,37 +47,48 @@ public class Shooter extends SubsystemBase {
 	}
 
 	@Override
-	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		/* Flywheel Velocity */
 		ShooterState wantedState = commands.getShooterWantedState();
-		Double targetFlywheelVelocity;
+		Double targetFlywheelVelocity, targetDistanceInches;
 		switch (wantedState) {
 			case MANUAL_VELOCITY:
+				targetDistanceInches = null;
 				targetFlywheelVelocity = commands.getShooterManualWantedFlywheelVelocity();
 				break;
 			case VISION_VELOCITY:
-				targetFlywheelVelocity = mLimelight.isTargetFound() ? kTargetDistanceToVelocity.getInterpolated(distanceFilter.calculate(mLimelight.getEstimatedDistanceZ())) : null;
+				if (mLimelight.isTargetFound()) {
+					targetDistanceInches = distanceFilter.calculate(mLimelight.getCorrectedEstimatedDistanceZ());
+					targetFlywheelVelocity = kTargetDistanceToVelocity.getInterpolated(targetDistanceInches);
+				} else {
+					targetDistanceInches = null;
+					targetFlywheelVelocity = null;
+				}
 				break;
 			default:
+				targetDistanceInches = null;
 				targetFlywheelVelocity = 0.0;
 				break;
 		}
-		if (targetFlywheelVelocity == null) {
-			mRumbleOutput = false;
-			mRumbleTimer.stop();
-		} else {
+		if (targetFlywheelVelocity != null) {
 			targetFlywheelVelocity = Util.clamp(targetFlywheelVelocity, 0.0, mConfig.maxVelocity);
-
-			if (!robotState.shooterHoodIsInTransition) updateHood(robotState, targetFlywheelVelocity);
-
+			boolean shouldUpdateHood = !state.shooterHoodIsInTransition && targetFlywheelVelocity > kEpsilon;
+			if (shouldUpdateHood) updateHood(state, targetDistanceInches);
 			mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);
+		}
+		updateRumble(commands, state, targetFlywheelVelocity);
+	}
 
-			/* Rumble */
+	private void updateRumble(@ReadOnly Commands commands, @ReadOnly RobotState state, Double targetFlywheelVelocity) {
+		if (targetFlywheelVelocity == null) {
+			mRumbleTimer.stop();
+			mRumbleOutput = false;
+		} else {
 			boolean inShootingVelocityRange = targetFlywheelVelocity > kEpsilon &&
-					withinRange(targetFlywheelVelocity, robotState.shooterFlywheelVelocity, mConfig.velocityTolerance),
+					withinRange(targetFlywheelVelocity, state.shooterFlywheelVelocity, mConfig.velocityTolerance),
 					justChangedReadyToShoot = mIsReadyToShoot != inShootingVelocityRange;
 			mIsReadyToShoot = inShootingVelocityRange;
-			switch (wantedState) {
+			switch (commands.getShooterWantedState()) {
 				case MANUAL_VELOCITY:
 				case VISION_VELOCITY:
 					boolean justEnteredReadyToShoot = justChangedReadyToShoot && inShootingVelocityRange,
@@ -98,13 +109,21 @@ public class Shooter extends SubsystemBase {
 		}
 	}
 
-	private void updateHood(@ReadOnly RobotState robotState, double targetFlywheelVelocity) {
-		boolean isHoodExtended = robotState.shooterIsHoodExtended,
-				isBlockingExtended = robotState.shooterIsBlockingExtended;
-		Map.Entry<Double, HoodState> targetHoodEntry = kTargetVelocityToHoodState.floorEntry(targetFlywheelVelocity);
-		HoodState targetHoodState = targetHoodEntry.getValue();
-		double deltaFromThreshold = Math.abs(targetFlywheelVelocity - targetHoodEntry.getKey());
-		if (deltaFromThreshold > mConfig.hoodSwitchVelocityThreshold) {
+	private void updateHood(@ReadOnly RobotState state, Double targetDistanceInches) {
+		boolean isHoodExtended = state.shooterIsHoodExtended,
+				isBlockingExtended = state.shooterIsBlockingExtended;
+		HoodState targetHoodState;
+		boolean shouldSwitch;
+		if (targetDistanceInches == null) {
+			targetHoodState = HoodState.LOW;
+			shouldSwitch = true;
+		} else {
+			Map.Entry<Double, HoodState> targetHoodEntry = kTargetDistanceToHoodState.floorEntry(targetDistanceInches);
+			double deltaFromThreshold = Math.abs(targetDistanceInches - targetHoodEntry.getKey());
+			shouldSwitch = deltaFromThreshold > mConfig.hoodSwitchVelocityThreshold;
+			targetHoodState = targetHoodEntry.getValue();
+		}
+		if (shouldSwitch) {
 			switch (targetHoodState) {
 				case LOW: {
 					/*
@@ -143,7 +162,7 @@ public class Shooter extends SubsystemBase {
 						// If we are in middle state continue locking
 						mBlockingOutput = true;
 					} else {
-						// We are in bottom state, wait until hood is extended
+						// We are in bottom state, wait until hood is fully extended to lock
 						mBlockingOutput = isHoodExtended;
 					}
 					break;
