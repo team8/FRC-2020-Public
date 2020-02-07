@@ -117,7 +117,6 @@ public class OperatorInterface {
 	}
 
 	private void updateLightingCommands(Commands commands) {
-		// commands.lightingWantedState = Lighting.LightingState.IDLE;
 		if (mTurnStick.getRawButtonPressed(6)) {
 			commands.lightingWantedState = Lighting.LightingState.TARGET_FOUND;
 		}
