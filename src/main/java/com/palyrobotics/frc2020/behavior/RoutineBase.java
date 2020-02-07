@@ -83,7 +83,7 @@ public abstract class RoutineBase {
 	 *
 	 * @see #checkFinished(RobotState)
 	 */
-	protected void start(Commands csommands, @ReadOnly RobotState state) {
+	protected void start(Commands commands, @ReadOnly RobotState state) {
 	}
 
 	@Override
