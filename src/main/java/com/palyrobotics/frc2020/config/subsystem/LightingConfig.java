@@ -4,5 +4,5 @@ import com.palyrobotics.frc2020.util.config.SubsystemConfigBase;
 
 public class LightingConfig extends SubsystemConfigBase {
 
-	public int ledCount;
+	public int ledCount, limelightSegmentFirstIndex, limelightSegmentBackIndex, backSegmentFirstIndex, backSegmentBackIndex, totalSegmentFirstIndex, totalSegmentLastIndex;
 }

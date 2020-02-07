@@ -1,3 +1,8 @@
 {
-  "ledCount" :  46
+  "ledCount" :  46,
+  "backSegmentFirstIndex" : 0,
+  "backSegmentLastIndex" : 30,
+  "limelightSegmentFirstIndex" : 31,
+  "limelightSegmentLastIndex" : 46
+
 }
