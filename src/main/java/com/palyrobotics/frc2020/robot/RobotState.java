@@ -21,28 +21,39 @@ public class RobotState {
 		AUTO, TELEOP, TESTING, DISABLED
 	}
 
-	public static final String kLoggerTag = Util.classToJsonName(RobotState.class);
-	/* Game and Field */
-	public GamePeriod gamePeriod = GamePeriod.DISABLED;
-	public String gameData, closestColorString;
-	public double closestColorConfidence;
-	public Color detectedRGBValues;
-	public ColorMatchResult closestColorRGB;
+	/* Climber */
+	public double climberPosition, climberVelocity;
+
 	/* Drive */
 	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());
 	public double driveYawDegrees;
 	public boolean driveIsQuickTurning;
 	public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;
 	public Pose2d drivePose = new Pose2d();
+
+	/* Indexer */
+	public boolean indexerIsHopperExtended;
+	public boolean indexerHasBackBall, indexerHasFrontBall, indexerHasTopBall;
+
+	/* Intake */
+	public boolean intakeIsExtended;
+
 	/* Shooter */
 	public double shooterFlywheelVelocity;
 	public boolean shooterIsReadyToShoot, shooterIsHoodExtended, shooterIsBlockingExtended;
-	// TODO: Reorder this and add comments to separate by subsystem and function
-	public boolean indexerHasBackBall, indexerHasFrontBall, indexerHasTopBall;
-	public boolean intakeIsExtended;
-	public boolean indexerIsHopperExtended;
-	// Climber
-	public double climberPosition, climberVelocity;
+
+	/* Spinner */
+	public String closestColorString;
+	public double closestColorConfidence;
+	public Color detectedRGBValues;
+	public ColorMatchResult closestColorRGB;
+
+	/* Game and Field */
+	public GamePeriod gamePeriod = GamePeriod.DISABLED;
+	public String gameData;
+
+	/* Miscellaneous */
+	public static final String kLoggerTag = Util.classToJsonName(RobotState.class);
 
 	public void resetOdometry(Pose2d pose) {
 		driveOdometry.resetPosition(pose, pose.getRotation());

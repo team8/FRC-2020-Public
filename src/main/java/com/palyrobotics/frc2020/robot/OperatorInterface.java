@@ -5,11 +5,11 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
+import com.palyrobotics.frc2020.behavior.routines.ball_superstructure.IndexerFeedAllRoutine;
+import com.palyrobotics.frc2020.behavior.routines.ball_superstructure.IndexerFeedSingleRoutine;
+import com.palyrobotics.frc2020.behavior.routines.ball_superstructure.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerFeedSingleRoutine;
-import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
-import com.palyrobotics.frc2020.behavior.routines.shooter.IndexerFeedAllRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;

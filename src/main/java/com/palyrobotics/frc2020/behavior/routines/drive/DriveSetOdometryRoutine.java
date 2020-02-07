@@ -57,6 +57,7 @@ public class DriveSetOdometryRoutine extends TimeoutRoutineBase {
 		// So, we break out and get into a neutral state. This way, controllers that
 		// depend on robot state odometry or yaw are recreated after they are reset.
 		commands.setDriveNeutral();
+		mTimer.start();
 	}
 
 	@Override

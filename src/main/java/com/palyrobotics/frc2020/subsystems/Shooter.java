@@ -14,6 +14,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 import com.palyrobotics.frc2020.vision.Limelight;
 
+import edu.wpi.first.wpilibj.MedianFilter;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Shooter extends SubsystemBase {
@@ -33,6 +34,8 @@ public class Shooter extends SubsystemBase {
 	private boolean mHoodOutput, mBlockingOutput, mRumbleOutput;
 	private Timer mRumbleTimer = new Timer();
 	private boolean mIsReadyToShoot;
+	// TODO: Change the size of the median filter to better or worse filter out values
+	private MedianFilter distanceFilter = new MedianFilter(5);
 
 	private Shooter() {
 	}
@@ -52,48 +55,56 @@ public class Shooter extends SubsystemBase {
 				break;
 			case VISION_VELOCITY:
 				targetFlywheelVelocity = kTargetDistanceToVelocity
-						.getInterpolated(mLimelight.getCorrectedEstimatedDistanceZ());
+						.getInterpolated(distanceFilter.calculate(mLimelight.getEstimatedDistanceZ()));
 				break;
 			default:
 				targetFlywheelVelocity = 0.0;
 				break;
 		}
 		targetFlywheelVelocity = Util.clamp(targetFlywheelVelocity, 0.0, mConfig.maxVelocity);
+
 		/* Hood */
 		HoodState targetHoodState = kTargetDistanceToHoodState.floorEntry(targetFlywheelVelocity).getValue();
 		boolean isHoodExtended = robotState.shooterIsHoodExtended,
 				isBlockingExtended = robotState.shooterIsBlockingExtended;
 		switch (targetHoodState) {
 			case LOW:
-				// TODO: are we even ble to release lock and go down at the same time?
-				// mHoodOutput = isBlockingExtended;
-				// When we are down, always make sure our locking piston is set to unblocking.
-				// This is how other states tell if we are down instead of just resting on top
-				// of the block, since the hood piston is retracted in those two cases
-				// meaning its extension state can't be used to determine physical position.
+				/*
+				When we are down, always make sure our locking piston is set to unblocking.
+				This is how other states tell if we are down instead of just resting on top
+				of the block, since the hood piston is retracted in case those two cases,
+				meaning its extension state can't be used to determine physical position.
+				*/
 				mHoodOutput = mBlockingOutput = false;
 				break;
 			case MIDDLE:
 				if (isBlockingExtended) {
-					// We are at the top hood position. See low case for how we can determine this.
+					/* Hood is already at the top or middle state */
 					mHoodOutput = false;
 					mBlockingOutput = true;
 				} else {
-					// We are at the low hood position.
+					/* We are at the low hood position. */
 					mHoodOutput = true;
-					// Unblock until we reach the top.
-					// Then block, which moves to first if condition and moves hood down to rest on
-					// top of blocking piston.
+					/*
+					Unblock until the hood reaches the top, then block.
+					This moves to the first if condition and moves the
+					hood down to rest on top of the blocking piston.
+					*/
 					mBlockingOutput = isHoodExtended;
 				}
 				break;
 			case HIGH:
-				// Assuming we will never bee in the state where our blocking is extended and
-				// our hood is pushing upwards against it.
+				/*
+				This assumes that we will never be in the state where
+				our blocking piston is extended and our hood is pushing
+				upwards against it.
+				*/
 				mHoodOutput = mBlockingOutput = true;
 				break;
 		}
+
 		mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);
+
 		/* Rumble */
 		boolean inShootingVelocityRange = targetFlywheelVelocity > kEpsilon &&
 				withinRange(targetFlywheelVelocity, robotState.shooterFlywheelVelocity, mConfig.velocityTolerance),
@@ -105,7 +116,6 @@ public class Shooter extends SubsystemBase {
 				boolean justEnteredReadyToShoot = justChangedReadyToShoot && inShootingVelocityRange,
 						justExitedReadyToShoot = justChangedReadyToShoot && !inShootingVelocityRange;
 				if (justEnteredReadyToShoot) {
-					// Just entered into acceptable velocity target range
 					mRumbleOutput = true;
 					mRumbleTimer.reset();
 					mRumbleTimer.start();

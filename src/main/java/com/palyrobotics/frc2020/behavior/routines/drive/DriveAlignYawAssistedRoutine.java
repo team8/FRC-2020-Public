@@ -31,6 +31,7 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 				kTimeoutMultiplier;
 		commands.visionWanted = true;
 		commands.visionWantedPipeline = mVisionPipeline;
+		mTimer.start();
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 	}
 
 	@Override
-	protected void stop(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
 		commands.visionWanted = false;
 	}
 

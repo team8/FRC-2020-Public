@@ -61,7 +61,7 @@ public abstract class RoutineBase {
 	/**
 	 * Called after the last update cycle. Not called if the routine finishes immediately.
 	 */
-	protected void stop(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
 	}
 
 	/**

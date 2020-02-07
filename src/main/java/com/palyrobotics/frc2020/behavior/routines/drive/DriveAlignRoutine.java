@@ -26,6 +26,7 @@ public class DriveAlignRoutine extends TimeoutRoutineBase {
 	public void start(Commands commands, @ReadOnly RobotState state) {
 		commands.visionWanted = true;
 		commands.visionWantedPipeline = mVisionPipeline;
+		mTimer.start();
 	}
 
 	@Override
@@ -34,13 +35,13 @@ public class DriveAlignRoutine extends TimeoutRoutineBase {
 	}
 
 	@Override
-	protected void stop(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		commands.visionWanted = false;
+	protected void update(Commands commands, @ReadOnly RobotState state) {
+		commands.setDriveVisionAlign();
 	}
 
 	@Override
-	protected void update(Commands commands, RobotState state) {
-		commands.setDriveVisionAlign();
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
+		commands.visionWanted = false;
 	}
 
 	@Override

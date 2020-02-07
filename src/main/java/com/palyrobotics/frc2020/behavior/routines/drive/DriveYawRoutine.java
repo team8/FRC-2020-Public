@@ -33,6 +33,7 @@ public class DriveYawRoutine extends TimeoutRoutineBase {
 	public void start(Commands commands, @ReadOnly RobotState state) {
 		mTimeout = DriveConstants.calculateTimeToFinishTurn(state.driveYawDegrees, mTargetYawDegrees) *
 				kTimeoutMultiplier;
+		mTimer.start();
 	}
 
 	@Override

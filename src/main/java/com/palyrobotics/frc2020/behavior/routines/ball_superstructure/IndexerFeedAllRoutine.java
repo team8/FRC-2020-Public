@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2020.behavior.routines.shooter;
+package com.palyrobotics.frc2020.behavior.routines.ball_superstructure;
 
 import java.util.Set;
 
@@ -25,7 +25,7 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 	}
 
 	@Override
-	protected void stop(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
 		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 	}
 
@@ -36,6 +36,6 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 
 	@Override
 	public Set<SubsystemBase> getRequiredSubsystems() {
-		return Set.of(mShooter);
+		return Set.of(mIndexer);
 	}
 }

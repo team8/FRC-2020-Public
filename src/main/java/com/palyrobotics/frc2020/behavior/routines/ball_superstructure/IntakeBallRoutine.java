@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2020.behavior.routines.intake;
+package com.palyrobotics.frc2020.behavior.routines.ball_superstructure;
 
 import java.util.Set;
 
@@ -22,6 +22,11 @@ public class IntakeBallRoutine extends TimedRoutine {
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		commands.intakeWantedState = Intake.State.INTAKE;
+	}
+
+	@Override
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
+		commands.intakeWantedState = Intake.State.LOWER;
 	}
 
 	@Override

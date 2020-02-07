@@ -5,9 +5,9 @@ import java.util.List;
 import com.palyrobotics.frc2020.behavior.ParallelRoutine;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
-import com.palyrobotics.frc2020.behavior.routines.intake.IntakeBallRoutine;
-import com.palyrobotics.frc2020.behavior.routines.intake.IntakeStowRoutine;
-import com.palyrobotics.frc2020.behavior.routines.shooter.IndexerFeedAllRoutine;
+import com.palyrobotics.frc2020.behavior.routines.ball_superstructure.IndexerFeedAllRoutine;
+import com.palyrobotics.frc2020.behavior.routines.ball_superstructure.IntakeBallRoutine;
+import com.palyrobotics.frc2020.behavior.routines.ball_superstructure.IntakeStowRoutine;
 
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
