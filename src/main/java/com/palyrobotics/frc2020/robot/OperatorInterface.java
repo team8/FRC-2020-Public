@@ -5,6 +5,7 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
+import com.palyrobotics.frc2020.auto.StartCenterTrenchThreeRendezvousTwo;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
@@ -120,6 +121,9 @@ public class OperatorInterface {
 		if (mOperatorXboxController.getDPadDownPressed()) {
 			commands.addWantedRoutine(
 					new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
+		}
+		if (mOperatorXboxController.getDPadUpPressed()) {
+			commands.addWantedRoutine(new StartCenterTrenchThreeRendezvousTwo().getRoutine());
 		}
 	}
 

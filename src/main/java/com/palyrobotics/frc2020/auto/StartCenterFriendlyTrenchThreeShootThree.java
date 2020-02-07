@@ -16,7 +16,7 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
  * @author Alexis
  */
 @SuppressWarnings ("Duplicates")
-public class ShootThreeFriendlyTrenchThreeShootThree extends AutoBase {
+public class StartCenterFriendlyTrenchThreeShootThree extends AutoBase {
 
 	// Starts center, initial 180
 	@Override

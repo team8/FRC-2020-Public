@@ -24,7 +24,7 @@ public class StartCenterRendezvousThree extends AutoBase {
 		var turn = new DriveYawRoutine(-45);
 
 		var getRendezvousBall1 = new DrivePathRoutine(newWaypoint(80, -70, 0));
-		var backup1 = new DrivePathRoutine(newWaypoint(60, -70, 0));
+		var backup1 = new DrivePathRoutine(newWaypoint(30, -70, 0));
 
 		var getRendezvousBall2 = new DrivePathRoutine(newWaypoint(85, -90, 0));
 
