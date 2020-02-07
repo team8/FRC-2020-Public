@@ -109,5 +109,6 @@ public class HardwareReader {
 		robotState.shooterFlywheelVelocity = hardware.masterEncoder.getVelocity();
 		robotState.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
 		robotState.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();
+		robotState.shooterHoodIsInTransition = hardware.hoodSolenoid.isInTransition() || hardware.blockingSolenoid.isInTransition();
 	}
 }

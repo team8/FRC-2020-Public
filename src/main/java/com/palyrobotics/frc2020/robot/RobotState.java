@@ -40,7 +40,9 @@ public class RobotState {
 
 	/* Shooter */
 	public double shooterFlywheelVelocity;
-	public boolean shooterIsReadyToShoot, shooterIsHoodExtended, shooterIsBlockingExtended;
+	public boolean shooterIsReadyToShoot;
+	public boolean shooterIsHoodExtended, shooterIsBlockingExtended;
+	public boolean shooterHoodIsInTransition;
 
 	/* Spinner */
 	public String closestColorString;

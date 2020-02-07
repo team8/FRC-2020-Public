@@ -41,13 +41,13 @@ public class TimedSolenoid extends Solenoid {
 		// Account for default state of piston(s) given solenoid state
 		if (mIsExtended != shouldBeExtended && !mIsInTransition) {
 			mIsInTransition = true;
+			mTimer.reset();
 			mTimer.start();
 		}
 		if (mTimer.get() > mExtensionDurationSeconds) {
 			mIsExtended = shouldBeExtended;
 			mIsInTransition = false;
 			mTimer.stop();
-			mTimer.reset();
 		}
 	}
 
