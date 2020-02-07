@@ -12,10 +12,6 @@ public class LightingOutputs {
 		lightingOutput = new ArrayList<>();
 	}
 
-	public LightingOutputs(List<int[]> input) {
-		lightingOutput = input;
-	}
-
 	@Override // Auto-generated
 	public int hashCode() {
 		return Objects.hash(lightingOutput);

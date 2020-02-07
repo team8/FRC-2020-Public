@@ -10,6 +10,7 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
+import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -62,8 +63,7 @@ public class HardwareWriter {
 
 	private void configureLightingHardware() {
 		var lightingHardware = HardwareAdapter.LightingHardware.getInstance();
-		//lightingHardware.LEDStrip.setLength(Configs.get(LightingConfig.class).ledCount);
-		lightingHardware.LEDStrip.setLength(50);
+		lightingHardware.LEDStrip.setLength(Configs.get(LightingConfig.class).ledCount);
 		lightingHardware.LEDStrip.start();
 		lightingHardware.LEDStrip.setData(mLighting.getOutput());
 	}

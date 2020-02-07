@@ -3,27 +3,25 @@ package com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
+import com.palyrobotics.frc2020.util.Color;
 
 import edu.wpi.first.wpilibj.Timer;
 
 public class FlashingLightsController extends Lighting.LEDController {
 
-	Timer mTimer = new Timer();
-	private int h;
-	private int s;
-	private int v;
+	private Timer mTimer = new Timer();
+	private Color.HSV mFlashedColor;
 	private int mDelayFactor;
 
-	public FlashingLightsController(int initIndex, int lastIndex, int h, int s, int v, int delayFactor) {
+	public FlashingLightsController(int initIndex, int lastIndex, Color.HSV flashedColor, int delayFactor) {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
-		this.h = h;
-		this.s = s;
-		this.v = v;
+		mFlashedColor = flashedColor;
 		mDelayFactor = delayFactor;
 		mTimer.start();
 		for (var i = mInitIndex; i < mLastIndex; i++) {
-			mLightingOutputs.lightingOutput.add(new int[] { h, s, v });
+			mLightingOutputs.lightingOutput
+					.add(new int[] { mFlashedColor.getH(), mFlashedColor.getS(), mFlashedColor.getV() });
 		}
 	}
 
@@ -32,15 +30,14 @@ public class FlashingLightsController extends Lighting.LEDController {
 		double time = Math.round(mTimer.get() * mDelayFactor);
 		if (time % 2 == 0) {
 			for (int i = mInitIndex; i < mLastIndex; i++) {
-				mLightingOutputs.lightingOutput.get(i - mInitIndex)[0] = h;
-				mLightingOutputs.lightingOutput.get(i - mInitIndex)[1] = s;
-				mLightingOutputs.lightingOutput.get(i - mInitIndex)[2] = v;
+				mLightingOutputs.lightingOutput.get(i - mInitIndex)[0] = mFlashedColor.getH();
+				mLightingOutputs.lightingOutput.get(i - mInitIndex)[1] = mFlashedColor.getS();
+				mLightingOutputs.lightingOutput.get(i - mInitIndex)[2] = mFlashedColor.getV();
 			}
 		} else {
 			for (int i = mInitIndex; i < mLastIndex; i++) {
-				mLightingOutputs.lightingOutput.get(i - mInitIndex)[0] = 0;
-				mLightingOutputs.lightingOutput.get(i - mInitIndex)[1] = 0;
-				mLightingOutputs.lightingOutput.get(i - mInitIndex)[2] = 0;
+				mLightingOutputs.lightingOutput.get(i - mInitIndex)[0] = mLightingOutputs.lightingOutput
+						.get(i - mInitIndex)[1] = mLightingOutputs.lightingOutput.get(i - mInitIndex)[2] = 0;
 			}
 		}
 	}

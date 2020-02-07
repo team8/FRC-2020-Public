@@ -6,6 +6,10 @@ public class Color {
 
 		private int h, s, v;
 		private int lastH, lastS, lastV;
+		public static Color.HSV BLUE = new HSV(100, 150, 150);
+		public static Color.HSV WHITE = new HSV(0, 75, 50);
+		public static Color.HSV LIMELIGHT_GREEN = new HSV(60, 255, 40);
+		public static Color.HSV RED = new HSV(5, 50, 60);
 
 		public HSV(int h, int s, int v) {
 			this.h = h;
