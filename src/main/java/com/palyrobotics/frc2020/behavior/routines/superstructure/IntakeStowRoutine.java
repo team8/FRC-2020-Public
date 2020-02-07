@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2020.behavior.routines.ball_superstructure;
+package com.palyrobotics.frc2020.behavior.routines.superstructure;
 
 import java.util.Set;
 

@@ -5,13 +5,13 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
-import com.palyrobotics.frc2020.behavior.routines.ball_superstructure.IndexerFeedAllRoutine;
-import com.palyrobotics.frc2020.behavior.routines.ball_superstructure.IndexerFeedSingleRoutine;
-import com.palyrobotics.frc2020.behavior.routines.ball_superstructure.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedSingleRoutine;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.Joysticks;
 import com.palyrobotics.frc2020.subsystems.*;
@@ -46,7 +46,7 @@ public class OperatorInterface {
 
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
-		updateBallSuperstructure(commands, state);
+		updateSuperstructure(commands, state);
 		updateSpinnerCommands(commands);
 
 		commands.shouldClearCurrentRoutines = mDriveStick.getTriggerPressed();
@@ -123,7 +123,7 @@ public class OperatorInterface {
 		}
 	}
 
-	private void updateBallSuperstructure(Commands commands, @ReadOnly RobotState state) {
+	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
 		/* Intake Toggle */
 		if (mOperatorXboxController.getDPadDownPressed()) {
 			commands.intakeWantedState = state.intakeIsExtended ? Intake.State.STOW : Intake.State.LOWER;
