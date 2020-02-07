@@ -4,19 +4,22 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import edu.wpi.first.wpilibj.Timer;
+import org.opencv.core.Scalar;
 
 public class FlashingLightsController extends Lighting.LEDController {
     Timer mTimer = new Timer();
     private int h;
     private int s;
     private int v;
+    private int mDelayFactor;
 
-    public FlashingLightsController (int initIndex, int lastIndex, int h, int s, int v) {
+    public FlashingLightsController (int initIndex, int lastIndex, int h, int s, int v, int delayFactor) {
         mInitIndex = initIndex;
         mLastIndex = lastIndex;
         this.h = h;
         this.s = s;
         this.v = v;
+        mDelayFactor = delayFactor;
         mTimer.start();
         for(var i = mInitIndex;i < mLastIndex;i++){
             mLightingOutputs.lightingOutput.add(new int[]{h,s,v});
@@ -24,7 +27,7 @@ public class FlashingLightsController extends Lighting.LEDController {
     }
     @Override
     public void updateSignal(Commands commands, RobotState state) {
-        double time = Math.round(mTimer.get());
+        double time = Math.round(mTimer.get() * mDelayFactor);
         if (time % 2 == 0) {
             for (int i = mInitIndex; i < mLastIndex; i++) {
                 mLightingOutputs.lightingOutput.get(i - mInitIndex)[0] = h;

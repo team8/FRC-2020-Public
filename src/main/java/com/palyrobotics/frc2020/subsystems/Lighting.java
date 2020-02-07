@@ -13,6 +13,7 @@ import com.palyrobotics.frc2020.util.control.LightingOutputs;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
+
 public class Lighting extends SubsystemBase {
 
     public enum LightingState {
@@ -119,7 +120,7 @@ public class Lighting extends SubsystemBase {
                 break;
             case CLIMB_TIME:
                 if(currentState != state){
-                    mLEDControllers[0] = new ConvergingBandsController(0, 20, 0, 75,  50, 100, 255, 255, 3);
+                    mLEDControllers[0] = new FlashingLightsController(0, 20, 60, 255, 40, 3);
                     mLEDControllers[1] = null;
                     mLEDControllers[2] = null;
                 }
