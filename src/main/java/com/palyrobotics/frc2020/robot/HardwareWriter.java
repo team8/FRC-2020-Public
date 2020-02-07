@@ -9,6 +9,7 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
+import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -32,6 +33,7 @@ public class HardwareWriter {
 	private final Intake mIntake = Intake.getInstance();
 	private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
+	private final Lighting mLighting = Lighting.getInstance();
 	private boolean mRumbleOutput;
 
 	void configureHardware(Set<SubsystemBase> enabledSubsystems) {
@@ -41,7 +43,8 @@ public class HardwareWriter {
 		if (enabledSubsystems.contains(mIntake)) configureIntakeHardware();
 		if (enabledSubsystems.contains(mShooter)) configureShooterHardware();
 		if (enabledSubsystems.contains(mSpinner)) configureSpinnerHardware();
-	}
+		if(enabledSubsystems.contains(mLighting)) configureLightingHardware();
+ 	}
 
 	private void configureClimberHardware() {
 		var hardware = HardwareAdapter.ClimberHardware.getInstance();
@@ -54,6 +57,14 @@ public class HardwareWriter {
 		hardware.verticalSparkEncoder.setVelocityConversionFactor(17.0666667 * 4.0 * Math.PI / 60.0);
 		hardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		hardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
+	}
+
+	private void configureLightingHardware() {
+		var lightingHardware = HardwareAdapter.LightingHardware.getInstance();
+		//lightingHardware.LEDStrip.setLength(Configs.get(LightingConfig.class).ledCount);
+		lightingHardware.LEDStrip.setLength(50);
+		lightingHardware.LEDStrip.start();
+		lightingHardware.LEDStrip.setData(mLighting.getOutput());
 	}
 
 	private void configureDriveHardware() {
@@ -157,6 +168,7 @@ public class HardwareWriter {
 			if (enabledSubsystems.contains(mIntake)) updateIntake();
 			if (enabledSubsystems.contains(mShooter)) updateShooter();
 			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
+			if(enabledSubsystems.contains(mLighting)) updateLighting();
 		}
 		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
 		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
@@ -174,6 +186,11 @@ public class HardwareWriter {
 	// drivetrainHardware.leftMasterFalcon.setOutput(mDrive.getDriveSignal().leftOutput);
 	// drivetrainHardware.rightMasterFalcon.setOutput(mDrive.getDriveSignal().rightOutput);
 	// }
+
+	private void updateLighting() {
+		var lightingHardware = HardwareAdapter.LightingHardware.getInstance();
+		lightingHardware.LEDStrip.setData(mLighting.getOutput());
+	}
 
 	private void updateDrivetrain() {
 		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();

@@ -9,7 +9,8 @@
 		"indexer",
 		"intake",
 		"drive",
-		"spinner"
+		"spinner",
+		"lighting"
 	],
 	"coastDriveWhenDisabled": false,
 	"enableVisionWhenDisabled": false,

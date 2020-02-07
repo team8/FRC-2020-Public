@@ -112,6 +112,21 @@ public class HardwareAdapter {
 	}
 
 	/**
+	 * 1 WS2812B LED Strip
+	 */
+	static class LightingHardware {
+		final AddressableLED LEDStrip = new AddressableLED(7);
+		private static LightingHardware sInstance = new LightingHardware();
+
+		private LightingHardware() {
+		}
+
+		static LightingHardware getInstance() {
+			return sInstance;
+		}
+	}
+
+	/**
 	 * 2 NEO (controlled by Spark MAX), 3 Solenoids
 	 */
 	static class ShooterHardware {

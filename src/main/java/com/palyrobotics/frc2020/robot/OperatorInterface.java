@@ -47,20 +47,8 @@ public class OperatorInterface {
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
-		// TODO: fix
-//		updateSpinnerCommands(commands);
-
-		if (mOperatorXboxController.getAButtonPressed()) {
-			var customVelocity = Configs.get(ShooterConfig.class).customVelocity;
-			commands.setShooterCustomFlywheelVelocity(customVelocity, Shooter.HoodState.LOW);
-		}
-
-		if (mTurnStick.getRawButtonPressed(6)) {
-			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
-		}
-		if (mTurnStick.getRawButtonReleased(6)) {
-			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
-		}
+		updateSpinnerCommands(commands);
+		updateLightingCommands(commands);
 
 		mOperatorXboxController.updateLastInputs();
 	}
@@ -108,6 +96,23 @@ public class OperatorInterface {
 			}
 
 			mClimberLastVelocity = state.climberVelocity;
+		}
+	}
+
+	private void updateLightingCommands(Commands commands) {
+		// commands.lightingWantedState = Lighting.LightingState.IDLE;
+		if (mTurnStick.getRawButtonPressed(6)) {
+			commands.lightingWantedState = Lighting.LightingState.TARGET_FOUND;
+		}
+		if (mTurnStick.getRawButtonPressed(5)) {
+			commands.lightingWantedState = Lighting.LightingState.INIT;
+		}
+		if (mTurnStick.getRawButtonPressed(4)) {
+			commands.lightingWantedState = Lighting.LightingState.CLIMB_TIME;
+			//Lighting.getInstance().tempBallCount += 1;
+		}
+		if(mTurnStick.getRawButtonPressed(3)){
+			commands.lightingWantedState = Lighting.LightingState.DISABLE;
 		}
 	}
 
