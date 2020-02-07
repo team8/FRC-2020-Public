@@ -117,6 +117,7 @@ public class HardwareAdapter {
 	 * 1 WS2812B LED Strip
 	 */
 	static class LightingHardware {
+
 		final AddressableLED LEDStrip = new AddressableLED(7);
 		private static LightingHardware sInstance = new LightingHardware();
 

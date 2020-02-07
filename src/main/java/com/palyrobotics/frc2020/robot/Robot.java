@@ -122,7 +122,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		mRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
-
 		resetCommandsAndRoutines();
 
 		HardwareAdapter.Joysticks.getInstance().operatorXboxController.setRumble(false);

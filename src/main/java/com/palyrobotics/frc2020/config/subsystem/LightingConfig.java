@@ -4,5 +4,5 @@ import com.palyrobotics.frc2020.util.config.SubsystemConfigBase;
 
 public class LightingConfig extends SubsystemConfigBase {
 
-    public int maxBrightness, ledCount;
+	public int ledCount;
 }

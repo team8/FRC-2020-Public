@@ -10,7 +10,6 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
-import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -45,8 +44,8 @@ public class HardwareWriter {
 		if (enabledSubsystems.contains(mIntake)) configureIntakeHardware();
 		if (enabledSubsystems.contains(mShooter)) configureShooterHardware();
 		if (enabledSubsystems.contains(mSpinner)) configureSpinnerHardware();
-		if(enabledSubsystems.contains(mLighting)) configureLightingHardware();
- 	}
+		if (enabledSubsystems.contains(mLighting)) configureLightingHardware();
+	}
 
 	private void configureClimberHardware() {
 		var hardware = HardwareAdapter.ClimberHardware.getInstance();
@@ -177,7 +176,7 @@ public class HardwareWriter {
 			if (enabledSubsystems.contains(mIntake)) updateIntake();
 			if (enabledSubsystems.contains(mShooter)) updateShooter();
 			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
-			if(enabledSubsystems.contains(mLighting)) updateLighting();
+			if (enabledSubsystems.contains(mLighting)) updateLighting();
 		}
 		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
 		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
