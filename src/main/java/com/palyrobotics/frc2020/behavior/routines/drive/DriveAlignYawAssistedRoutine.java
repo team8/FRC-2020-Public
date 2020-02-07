@@ -27,11 +27,11 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 
 	@Override
 	public void start(Commands commands, @ReadOnly RobotState state) {
+		super.start(commands, state);
 		mTimeout = DriveConstants.calculateTimeToFinishTurn(state.driveYawDegrees, mTargetYawDegrees) *
 				kTimeoutMultiplier;
 		commands.visionWanted = true;
 		commands.visionWantedPipeline = mVisionPipeline;
-		mTimer.start();
 	}
 
 	@Override

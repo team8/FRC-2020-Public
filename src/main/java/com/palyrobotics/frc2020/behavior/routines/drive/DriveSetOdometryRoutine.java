@@ -51,13 +51,13 @@ public class DriveSetOdometryRoutine extends TimeoutRoutineBase {
 
 	@Override
 	public void start(Commands commands, @ReadOnly RobotState state) {
+		super.start(commands, state);
 		commands.driveWantedOdometryPose = mTargetPose;
 		// This is required since an existing controller which depends on robot state
 		// will not be notified when sensors are updated.
 		// So, we break out and get into a neutral state. This way, controllers that
 		// depend on robot state odometry or yaw are recreated after they are reset.
 		commands.setDriveNeutral();
-		mTimer.start();
 	}
 
 	@Override
