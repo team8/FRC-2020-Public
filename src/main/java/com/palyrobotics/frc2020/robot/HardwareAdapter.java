@@ -119,7 +119,7 @@ public class HardwareAdapter {
 	static class LightingHardware {
 
 		private static LightingHardware sInstance = new LightingHardware();
-		final AddressableLED LEDStrip = new AddressableLED(7);
+		final AddressableLED LEDStrip = new AddressableLED(1);
 
 		private LightingHardware() {
 		}
