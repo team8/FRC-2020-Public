@@ -54,6 +54,7 @@ public class RoutineManager {
 				if (!Collections.disjoint(newRoutine.getRequiredSubsystems(), runningRoutine.getRequiredSubsystems())) {
 					Log.warn(kLoggerTag, String.format("Dropping conflicting routine: %s%n", runningRoutine));
 					mRunningRoutines.remove(runningRoutine);
+					runningRoutine.stop(commands, state);
 				}
 			}
 			// If it finishes immediately never add it to running routines

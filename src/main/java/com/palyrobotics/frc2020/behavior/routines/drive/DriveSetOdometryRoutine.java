@@ -5,7 +5,7 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import java.util.Set;
 
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
+import com.palyrobotics.frc2020.behavior.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;

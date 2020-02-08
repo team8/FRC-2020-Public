@@ -2,15 +2,15 @@ package com.palyrobotics.frc2020.behavior;
 
 import java.util.List;
 
-public abstract class MultipleRoutine extends RoutineBase {
+public abstract class MultipleRoutineBase extends RoutineBase {
 
 	protected final List<RoutineBase> mRoutines;
 
-	public MultipleRoutine(RoutineBase... routines) {
+	public MultipleRoutineBase(RoutineBase... routines) {
 		this(List.of(routines));
 	}
 
-	public MultipleRoutine(List<RoutineBase> routines) {
+	public MultipleRoutineBase(List<RoutineBase> routines) {
 		if (routines.size() <= 1) {
 			throw new IllegalArgumentException("Multiple routines should have more than one routine!");
 		}

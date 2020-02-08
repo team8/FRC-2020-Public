@@ -2,7 +2,7 @@ package com.palyrobotics.frc2020.behavior.routines.drive;
 
 import java.util.Set;
 
-import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
+import com.palyrobotics.frc2020.behavior.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.config.VisionConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
@@ -36,7 +36,7 @@ public class DriveAlignRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		commands.setDriveVisionAlign();
+		commands.setDriveVisionAlign(mVisionPipeline);
 	}
 
 	@Override

@@ -42,14 +42,12 @@ public class OperatorInterface {
 	 */
 	void updateCommands(Commands commands, @ReadOnly RobotState state) {
 
-		commands.shouldClearCurrentRoutines = false;
+		commands.shouldClearCurrentRoutines = mDriveStick.getTriggerPressed();
 
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
 		updateSpinnerCommands(commands);
-
-		commands.shouldClearCurrentRoutines = mDriveStick.getTriggerPressed();
 
 		mOperatorXboxController.updateLastInputs();
 	}
@@ -103,14 +101,10 @@ public class OperatorInterface {
 	private void updateDriveCommands(Commands commands) {
 		// Both buttons align, button 3: 2x zoom, button 4: 1x zoom
 		boolean wantsOneTimesAlign = mTurnStick.getRawButton(3), wantsTwoTimesAlign = mTurnStick.getRawButton(4);
-		commands.visionWanted = wantsOneTimesAlign || wantsTwoTimesAlign;
 		if (wantsOneTimesAlign) {
-			commands.visionWantedPipeline = kTwoTimesZoomPipelineId;
+			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
 		} else if (wantsTwoTimesAlign) {
-			commands.visionWantedPipeline = kOneTimesZoomPipelineId;
-		}
-		if (commands.visionWanted) {
-			commands.setDriveVisionAlign();
+			commands.setDriveVisionAlign(kOneTimesZoomPipelineId);
 		} else {
 			commands.setDriveTeleop(
 					-mDriveStick.getY(), mTurnStick.getX(),
@@ -154,7 +148,7 @@ public class OperatorInterface {
 		/* Shooting */
 		// Handle flywheel velocity
 		if (mOperatorXboxController.getRightTriggerPressed()) {
-			commands.setShooterVisionAssisted();
+			commands.setShooterVisionAssisted(commands.visionWantedPipeline);
 		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
 			commands.setShooterIdle();
 		}

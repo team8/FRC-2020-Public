@@ -13,7 +13,7 @@ import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 /**
  * Runs routines one at a time. Finishes when the last one is finished.
  */
-public class SequentialRoutine extends MultipleRoutine {
+public class SequentialRoutine extends MultipleRoutineBase {
 
 	private final Iterator<RoutineBase> mIterator = mRoutines.iterator();
 	private RoutineBase mRunningRoutine = mIterator.next();

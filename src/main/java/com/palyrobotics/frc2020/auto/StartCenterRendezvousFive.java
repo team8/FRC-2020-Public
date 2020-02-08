@@ -4,7 +4,6 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
@@ -39,6 +38,6 @@ public class StartCenterRendezvousFive extends AutoBase {
 		// var turnAroundToShoot = new DriveYawRoutine(180.0);
 
 		return new SequentialRoutine(initialOdometry, turn, getTrenchBalls1, backup1.driveInReverse(), getTrenchBalls2,
-				backup2.driveInReverse(), getTrenchBalls3, turn2, goToShoot, new DriveAlignRoutine(1));
+				backup2.driveInReverse(), getTrenchBalls3, turn2, goToShoot /* TODO: add shoot */);
 	}
 }

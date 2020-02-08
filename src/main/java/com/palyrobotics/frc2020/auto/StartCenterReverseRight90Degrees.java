@@ -4,7 +4,6 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 
@@ -24,7 +23,7 @@ public class StartCenterReverseRight90Degrees extends AutoBase {
 		var getTrenchBalls = new DrivePathRoutine(newWaypoint(170, 55, 0));
 
 		return new SequentialRoutine(initialOdometry, reverse.driveInReverse(), getBallsRoutine, getTrenchBalls,
-				stowRoutine,
-				new DriveAlignRoutine(1), shootBallsRoutine);
+				stowRoutine
+				/* TODO: add shoot */, shootBallsRoutine);
 	}
 }

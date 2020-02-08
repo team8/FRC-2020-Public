@@ -3,7 +3,7 @@
 
     },
     "maxVelocity": 5000.0,
-    "rumbleDurationSeconds": 0.1,
     "velocityTolerance": 100.0,
+    "rumbleDurationSeconds": 0.1,
     "hoodSwitchDistanceThreshold": 10.0
 }

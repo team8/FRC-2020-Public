@@ -9,7 +9,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
  * {@link Commands} can intend to modify {@link RobotState}, so if our routine finished immediately,
  * it may not update data in {@link RobotState} which other routines depend on.
  */
-public abstract class OneUpdateRoutine extends RoutineBase {
+public abstract class OneUpdateRoutineBase extends RoutineBase {
 
 	private int mUpdateCount;
 

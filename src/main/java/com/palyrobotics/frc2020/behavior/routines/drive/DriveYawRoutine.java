@@ -4,7 +4,7 @@ import static com.palyrobotics.frc2020.util.Util.getDifferenceInAngleDegrees;
 
 import java.util.Set;
 
-import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
+import com.palyrobotics.frc2020.behavior.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.Commands;

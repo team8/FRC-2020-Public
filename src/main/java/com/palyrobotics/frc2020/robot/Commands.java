@@ -54,6 +54,7 @@ public class Commands {
 	public boolean visionWanted;
 
 	public boolean wantedRumble;
+	private Shooter.HoodState shooterWantedHoodState;
 
 	public void addWantedRoutines(RoutineBase... wantedRoutines) {
 		for (RoutineBase wantedRoutine : wantedRoutines) {
@@ -88,8 +89,10 @@ public class Commands {
 		driveWantedTrajectory = trajectory;
 	}
 
-	public void setDriveVisionAlign() {
+	public void setDriveVisionAlign(int visionPipeline) {
 		driveWantedState = Drive.State.VISION_ALIGN;
+		visionWantedPipeline = visionPipeline;
+		visionWanted = true;
 	}
 
 	public void setDriveTeleop() {
@@ -150,13 +153,15 @@ public class Commands {
 		shooterWantedState = Shooter.ShooterState.IDLE;
 	}
 
-	public void setShooterCustomFlywheelVelocity(double wantedVelocity) {
+	public void setShooterCustomFlywheelVelocity(double wantedVelocity, Shooter.HoodState hoodState) {
 		shooterWantedState = Shooter.ShooterState.CUSTOM_VELOCITY;
 		shooterWantedCustomFlywheelVelocity = wantedVelocity;
+		shooterWantedHoodState = hoodState;
 	}
 
-	public void setShooterVisionAssisted() {
+	public void setShooterVisionAssisted(int visionPipeline) {
 		shooterWantedState = Shooter.ShooterState.VISION_VELOCITY;
+		visionWantedPipeline = visionPipeline;
 	}
 
 	public Shooter.ShooterState getShooterWantedState() {
@@ -165,6 +170,10 @@ public class Commands {
 
 	public double getShooterWantedCustomFlywheelVelocity() {
 		return shooterWantedCustomFlywheelVelocity;
+	}
+
+	public Shooter.HoodState getShooterWantedHoodState() {
+		return shooterWantedHoodState;
 	}
 
 	// public void copyTo(Commands other) {

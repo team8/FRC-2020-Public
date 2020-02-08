@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.OperatorInterface;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Shooter;
+import com.palyrobotics.frc2020.subsystems.Shooter.HoodState;
 import com.palyrobotics.frc2020.util.config.Configs;
 
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ public class ShooterTest {
 		var state = new RobotState();
 		var shooter = Shooter.getInstance();
 		double testFlywheelVelocity = kShooterConfig.maxVelocity / 2.0;
-		commands.setShooterCustomFlywheelVelocity(testFlywheelVelocity);
+		commands.setShooterCustomFlywheelVelocity(testFlywheelVelocity, HoodState.LOW);
 		state.shooterFlywheelVelocity = testFlywheelVelocity;
 		shooter.update(commands, state);
 		assertTrue(shooter.isReadyToShoot());

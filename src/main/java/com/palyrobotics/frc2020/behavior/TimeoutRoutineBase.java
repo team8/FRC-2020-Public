@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2020.behavior.routines.waits;
+package com.palyrobotics.frc2020.behavior;
 
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.robot.ReadOnly;

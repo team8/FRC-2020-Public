@@ -12,6 +12,7 @@ public class ShooterConstants {
 
 	public static final InterpolatingDoubleTreeMap kTargetDistanceToVelocity = new InterpolatingDoubleTreeMap();
 	public static final TreeMap<Double, Shooter.HoodState> kTargetDistanceToHoodState = new TreeMap<>();
+	public static final double kTimeToShootPerBallSeconds = 1.0;
 
 	static {
 		// TODO: add actual values from empirical measurements
