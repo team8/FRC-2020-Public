@@ -18,14 +18,14 @@ public class StartCenterTrenchThreeRendezvousTwo extends AutoBase {
 		var getTrenchBalls = new DrivePathRoutine(
 				newWaypoint(40, 55, 0),
 				newWaypoint(170, 55, 0));
-		var turnRoutine = new DriveYawRoutine(180);
+		var turnRoutine = new DriveYawRoutine(-180);
 		var getRendezvous1 = new DrivePathRoutine(
 				newWaypoint(100, -8, -65));
 
 		return new SequentialRoutine(initialOdometry,
-				new DriveAlignYawAssistedRoutine(180, kOneTimesZoomPipelineId),
+//				new DriveAlignRoutine(0),
 				getBallsRoutine, getTrenchBalls,
 				turnRoutine, getRendezvous1,
-				new DriveAlignYawAssistedRoutine(180, kOneTimesZoomPipelineId));
+				new DriveAlignYawAssistedRoutine(-179, kOneTimesZoomPipelineId));
 	}
 }

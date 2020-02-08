@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class AlignDriveController extends ChezyDriveController {
 
-	private static final double kMaxAngularPower = 0.4;
+	private static final double kMaxAngularPower = 0.3;
 	private final Limelight mLimelight = Limelight.getInstance();
 	private VisionConfig mVisionConfig = Configs.get(VisionConfig.class);
 	private final PIDController mPidController = new PIDController(0.0, 0.0, 0.0);

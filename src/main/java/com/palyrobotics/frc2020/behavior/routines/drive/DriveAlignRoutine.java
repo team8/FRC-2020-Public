@@ -17,7 +17,7 @@ public class DriveAlignRoutine extends TimeoutRoutineBase {
 	private final VisionConfig mVisionConfig = Configs.get(VisionConfig.class);
 	private final int mVisionPipeline;
 
-	protected DriveAlignRoutine(int visionPipeline) {
+	public DriveAlignRoutine(int visionPipeline) {
 		super(3.0);
 		mVisionPipeline = visionPipeline;
 	}
