@@ -49,6 +49,7 @@ public class Commands {
 	private double shooterWantedCustomFlywheelVelocity;
 	/* Turret */
 	public Turret.TurretState turretWantedState;
+	public boolean turretCalibrationWanted;
 	/* Spinner */
 	public Spinner.State spinnerWantedState;
 	/* Vision */

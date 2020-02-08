@@ -158,6 +158,7 @@ public class HardwareAdapter {
 
 		private static TurretHardware sInstance = new TurretHardware();
 		final Talon talon = new Talon(sPortConstants.nariTurretId);
+		final Encoder calibrateEncoder = new Encoder(sPortConstants.nariTurretCalibrateEncoderAId, sPortConstants.nariTurretCalibrateEncoderBId);
 
 		private TurretHardware() {
 		}

@@ -52,6 +52,8 @@ public class RobotState {
 
 	/* Turret */
 	public double turretYawDegrees;
+	public boolean turretAtCenter;
+	public boolean turretIsCalibrated;
 
 	/* Game and Field */
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;

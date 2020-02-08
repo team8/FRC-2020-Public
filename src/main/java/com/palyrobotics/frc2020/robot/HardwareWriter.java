@@ -135,10 +135,8 @@ public class HardwareWriter {
 	}
 
 	private void configureTurretHardware() {
-		//TODO: reset encoder based on hitting hard stop on left or right
 		var turretHardware = HardwareAdapter.TurretHardware.getInstance();
 		turretHardware.talon.configFactoryDefault(kTimeoutMs);
-		turretHardware.talon.setSelectedSensorPosition(0);
 	}
 
 	// public void resetDriveSensors(Pose2d pose) {
@@ -232,5 +230,9 @@ public class HardwareWriter {
 	private void updateTurret() {
 		var turretHardware = HardwareAdapter.TurretHardware.getInstance();
 		turretHardware.talon.setOutput(mTurret.getOutput());
+
+		if (mTurret.getCalibrationWanted()) {
+			turretHardware.talon.setSelectedSensorPosition(0);
+		}
 	}
 }

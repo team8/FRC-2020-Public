@@ -2,7 +2,7 @@ package com.palyrobotics.frc2020.behavior.routines.turret;
 
 import java.util.Set;
 
-import com.palyrobotics.frc2020.behavior.routines.waits.TimeoutRoutineBase;
+import com.palyrobotics.frc2020.behavior.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.config.subsystem.TurretConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;

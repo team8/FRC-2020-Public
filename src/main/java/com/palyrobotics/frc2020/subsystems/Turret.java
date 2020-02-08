@@ -16,6 +16,7 @@ public class Turret extends SubsystemBase {
 	private static Turret sInstance = new Turret();
 	private TurretConfig mConfig = Configs.get(TurretConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
+	private boolean calibrationWanted = false;
 
 	private Turret() {
 	}
@@ -37,9 +38,16 @@ public class Turret extends SubsystemBase {
 				mOutput.setPercentOutput(-mConfig.rotatingOutput);
 				break;
 		}
+
+		// Calibration
+		calibrationWanted = commands.turretCalibrationWanted;
 	}
 
 	public ControllerOutput getOutput() {
 		return mOutput;
+	}
+
+	public boolean getCalibrationWanted() {
+		return calibrationWanted;
 	}
 }

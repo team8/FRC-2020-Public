@@ -43,6 +43,7 @@ public class PortConstants extends ConfigBase {
 	 * Turret
 	 */
 	public int nariTurretId;
+	public int nariTurretCalibrateEncoderAId, nariTurretCalibrateEncoderBId;
 
 	/**
 	 * Spinner

@@ -115,5 +115,6 @@ public class HardwareReader {
 	private void readTurretState(RobotState robotState) {
 		var hardware = TurretHardware.getInstance();
 		robotState.turretYawDegrees = hardware.talon.getSelectedSensorPosition();
+		robotState.turretAtCenter = hardware.calibrateEncoder.get() > 0; //TODO: check if works, replace with different number if needed
 	}
 }

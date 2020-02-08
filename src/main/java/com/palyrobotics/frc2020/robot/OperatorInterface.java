@@ -177,6 +177,13 @@ public class OperatorInterface {
 		} else if (mOperatorXboxController.getBButtonPressed()) {
 			commands.addWantedRoutine(new TurretRotateRoutine(false, kTwoTimesZoomPipelineId));
 		}
+		// Calibrating turret at center
+		if (!state.turretIsCalibrated && state.turretAtCenter) {
+			commands.turretCalibrationWanted = true;
+			state.turretIsCalibrated = true; //TODO: move so that it doesn't break @ReadOnly, idk where though
+		} else {
+			commands.turretCalibrationWanted = false;
+		}
 		// Handle flywheel velocity
 		if (mOperatorXboxController.getRightTriggerPressed()) {
 			commands.setShooterVisionAssisted(commands.visionWantedPipeline);
@@ -212,6 +219,7 @@ public class OperatorInterface {
 		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
+		commands.turretWantedState = Turret.TurretState.IDLE;
 		commands.wantedCompression = true;
 		commands.wantedRumble = false;
 		commands.visionWanted = false;
