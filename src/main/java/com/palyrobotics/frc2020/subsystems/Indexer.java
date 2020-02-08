@@ -21,7 +21,7 @@ public class Indexer extends SubsystemBase {
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
 	private boolean mHopperOutput = true;
-	private boolean mBlockOutput = false;
+	private boolean mBlockOutput = true;
 
 	private Indexer() {
 	}
@@ -35,23 +35,23 @@ public class Indexer extends SubsystemBase {
 		switch (commands.indexerWantedBeltState) {
 			case IDLE:
 				mOutput.setIdle();
-				mBlockOutput = false;
+				mBlockOutput = true;
 				break;
 			case INDEX:
 				mOutput.setPercentOutput(mConfig.indexingOutput);
-				mBlockOutput = false;
+				mBlockOutput = true;
 				break;
 			case WAITING_TO_FEED:
 				mOutput.setIdle();
-				mBlockOutput = true;
+				mBlockOutput = false;
 				break;
 			case FEED_SINGLE:
 				mOutput.setPercentOutput(mConfig.feedingOutput);
-				mBlockOutput = true;
+				mBlockOutput = false;
 				break;
 			case FEED_ALL:
 				mOutput.setPercentOutput(mConfig.indexingOutput);
-				mBlockOutput = true;
+				mBlockOutput = false;
 				break;
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.CLOSED;
