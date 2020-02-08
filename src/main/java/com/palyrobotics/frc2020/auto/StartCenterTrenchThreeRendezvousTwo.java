@@ -1,7 +1,6 @@
 package com.palyrobotics.frc2020.auto;
 
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
-import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
@@ -10,7 +9,7 @@ import com.palyrobotics.frc2020.behavior.routines.drive.*;
 /**
  * @author Nolan
  */
-public class StartCenterTrenchThreeRendezvousTwo extends AutoBase {
+public class StartCenterTrenchThreeRendezvousTwo extends EndRendezvousTwoRoutine {
 
 	@Override
 	public RoutineBase getRoutine() {
@@ -22,10 +21,7 @@ public class StartCenterTrenchThreeRendezvousTwo extends AutoBase {
 		var getRendezvous1 = new DrivePathRoutine(
 				newWaypoint(100, -8, -65));
 
-		return new SequentialRoutine(initialOdometry,
-//				new DriveAlignRoutine(0),
-				getBallsRoutine, getTrenchBalls,
-				turnRoutine, getRendezvous1,
-				new DriveAlignYawAssistedRoutine(-179, kOneTimesZoomPipelineId));
+		return new SequentialRoutine(CenterStraightFriendlyTrench(),
+				endRoutine());
 	}
 }

@@ -7,7 +7,6 @@ import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IntakeBallRoutine;
-import com.palyrobotics.frc2020.behavior.routines.superstructure.IntakeStowRoutine;
 
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
@@ -25,12 +24,8 @@ public abstract class AutoBase {
 
 	ParallelRoutine getBallsRoutine = new ParallelRoutine(
 			new TimedRoutine(1),
-			new IntakeBallRoutine());
-
-	ParallelRoutine stowRoutine = new ParallelRoutine(
-			new TimedRoutine(1),
-			new IndexerFeedAllRoutine(),
-			new IntakeStowRoutine());
+			new IntakeBallRoutine(),
+			new IndexerFeedAllRoutine());
 
 	// TODO: add in a shooter routine here
 	ParallelRoutine shootBallsRoutine = new ParallelRoutine(
