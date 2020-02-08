@@ -46,7 +46,7 @@ public class Commands {
 	public Intake.State intakeWantedState;
 	/* Shooter */
 	private Shooter.ShooterState shooterWantedState;
-	private double shooterManualWantedFlywheelVelocity;
+	private double shooterWantedCustomFlywheelVelocity;
 	/* Spinner */
 	public Spinner.State spinnerWantedState;
 	/* Vision */
@@ -150,9 +150,9 @@ public class Commands {
 		shooterWantedState = Shooter.ShooterState.IDLE;
 	}
 
-	public void setShooterManualFlywheelVelocity(double wantedVelocity) {
-		shooterWantedState = Shooter.ShooterState.MANUAL_VELOCITY;
-		shooterManualWantedFlywheelVelocity = wantedVelocity;
+	public void setShooterCustomFlywheelVelocity(double wantedVelocity) {
+		shooterWantedState = Shooter.ShooterState.CUSTOM_VELOCITY;
+		shooterWantedCustomFlywheelVelocity = wantedVelocity;
 	}
 
 	public void setShooterVisionAssisted() {
@@ -163,8 +163,8 @@ public class Commands {
 		return shooterWantedState;
 	}
 
-	public double getShooterManualWantedFlywheelVelocity() {
-		return shooterManualWantedFlywheelVelocity;
+	public double getShooterWantedCustomFlywheelVelocity() {
+		return shooterWantedCustomFlywheelVelocity;
 	}
 
 	// public void copyTo(Commands other) {

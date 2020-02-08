@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Shooter extends SubsystemBase {
 
 	public enum ShooterState {
-		IDLE, MANUAL_VELOCITY, VISION_VELOCITY
+		IDLE, CUSTOM_VELOCITY, VISION_VELOCITY
 	}
 
 	public enum HoodState {
@@ -52,9 +52,9 @@ public class Shooter extends SubsystemBase {
 		ShooterState wantedState = commands.getShooterWantedState();
 		Double targetFlywheelVelocity, targetDistanceInches;
 		switch (wantedState) {
-			case MANUAL_VELOCITY:
+			case CUSTOM_VELOCITY:
 				targetDistanceInches = null;
-				targetFlywheelVelocity = commands.getShooterManualWantedFlywheelVelocity();
+				targetFlywheelVelocity = commands.getShooterWantedCustomFlywheelVelocity();
 				break;
 			case VISION_VELOCITY:
 				if (mLimelight.isTargetFound()) {
@@ -89,7 +89,7 @@ public class Shooter extends SubsystemBase {
 					justChangedReadyToShoot = mIsReadyToShoot != inShootingVelocityRange;
 			mIsReadyToShoot = inShootingVelocityRange;
 			switch (commands.getShooterWantedState()) {
-				case MANUAL_VELOCITY:
+				case CUSTOM_VELOCITY:
 				case VISION_VELOCITY:
 					boolean justEnteredReadyToShoot = justChangedReadyToShoot && inShootingVelocityRange,
 							justExitedReadyToShoot = justChangedReadyToShoot && !inShootingVelocityRange;

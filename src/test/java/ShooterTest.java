@@ -22,7 +22,7 @@ public class ShooterTest {
 		var state = new RobotState();
 		var shooter = Shooter.getInstance();
 		double testFlywheelVelocity = kShooterConfig.maxVelocity / 2.0;
-		commands.setShooterManualFlywheelVelocity(testFlywheelVelocity);
+		commands.setShooterCustomFlywheelVelocity(testFlywheelVelocity);
 		state.shooterFlywheelVelocity = testFlywheelVelocity;
 		shooter.update(commands, state);
 		assertTrue(shooter.isReadyToShoot());
