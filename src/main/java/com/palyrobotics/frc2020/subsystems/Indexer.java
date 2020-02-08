@@ -20,8 +20,7 @@ public class Indexer extends SubsystemBase {
 	private static Indexer sInstance = new Indexer();
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
-	private boolean mHopperOutput = true;
-	private boolean mBlockOutput = false;
+	private boolean mHopperOutput, mBlockOutput;
 
 	private Indexer() {
 	}

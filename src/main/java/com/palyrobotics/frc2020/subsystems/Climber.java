@@ -15,7 +15,7 @@ public class Climber extends SubsystemBase {
 
 	private static Climber sInstance = new Climber();
 	private ControllerOutput mVerticalOutput = new ControllerOutput(), mAdjustingOutput = new ControllerOutput();
-	private boolean mSolenoidOutput = true;
+	private boolean mSolenoidOutput;
 	private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
 
 	private Climber() {
