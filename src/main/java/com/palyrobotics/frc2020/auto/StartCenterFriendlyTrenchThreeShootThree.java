@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2020.auto;
 
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
-import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
+import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
@@ -28,7 +28,6 @@ public class StartCenterFriendlyTrenchThreeShootThree extends AutoBase {
 				newWaypoint(170, 55, 0));
 
 		return new SequentialRoutine(initialOdometry, getBallsRoutine, getTrenchBalls, stowRoutine,
-				new DriveAlignYawAssistedRoutine(1000, kTwoTimesZoomPipelineId), // TODO: why is this 1000?
-				shootBallsRoutine);
+				new DriveAlignYawAssistedRoutine(180, kOneTimesZoomPipelineId), shootBallsRoutine);
 	}
 }
