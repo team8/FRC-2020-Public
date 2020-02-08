@@ -33,7 +33,7 @@ public abstract class FriendlyTrenchRoutine extends AutoBase {
 				new DriveSetOdometryRoutine(0, 0, 180),
 				new DrivePathRoutine(newWaypoint(25, -35, 90)).reverse(),
 				getBallsRoutine,
-				new DrivePathRoutine(newWaypoint(80, 45, 0), newWaypoint(170, 45, 0)));
+				new DrivePathRoutine(newWaypoint(80, 55, 0), newWaypoint(170, 55, 0)));
 	}
 
 	SequentialRoutine Left180FriendlyTrench() {
