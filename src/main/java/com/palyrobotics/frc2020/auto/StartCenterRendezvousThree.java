@@ -14,6 +14,6 @@ public class StartCenterRendezvousThree extends RendezvousRoutine {
 	@Override
 	public RoutineBase getRoutine() {
 
-		return new SequentialRoutine(CenterRendezvousThree());
+		return CenterRendezvousThree();
 	}
 }
