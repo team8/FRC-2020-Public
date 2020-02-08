@@ -58,7 +58,7 @@ public class Lighting extends SubsystemBase {
 					break;
 				case IDLE:
 					mLEDControllers.add(new OneColorController(mConfig.totalSegmentFirstIndex,
-							mConfig.limelightSegmentBackIndex, Color.HSV.WHITE));
+							mConfig.totalSegmentBackIndex, Color.HSV.WHITE));
 					break;
 				case INIT:
 					resetLedStrip();
