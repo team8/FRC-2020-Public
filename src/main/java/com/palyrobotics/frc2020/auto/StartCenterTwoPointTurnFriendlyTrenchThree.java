@@ -4,10 +4,10 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
-import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
 /**
  * @author Alexis
@@ -27,6 +27,6 @@ public class StartCenterTwoPointTurnFriendlyTrenchThree extends AutoBase {
 		var turnAroundToShoot = new DriveYawRoutine(180);
 
 		return new SequentialRoutine(initialOdometry, point1.driveInReverse(), getBallsRoutine, point2, stowRoutine,
-				turnAroundToShoot, new VisionAlignRoutine(), shootBallsRoutine);
+				turnAroundToShoot, new DriveAlignRoutine(1), shootBallsRoutine);
 	}
 }

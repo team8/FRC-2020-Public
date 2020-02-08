@@ -4,10 +4,10 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
-import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
 /**
  * @author Alexis
@@ -30,6 +30,6 @@ public class StartRightTrenchStealTwoShootFive extends AutoBase {
 		// var turnAroundToShoot = new DriveYawRoutine(180.0);
 
 		return new SequentialRoutine(initialOdometry, getTrenchBalls, backup.driveInReverse(), turn, goToShoot,
-				new VisionAlignRoutine());
+				new DriveAlignRoutine(1));
 	}
 }

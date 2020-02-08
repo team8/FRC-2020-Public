@@ -4,10 +4,10 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
-import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
 /**
  * @author Nolan
@@ -26,6 +26,6 @@ public class ShootThreeTrenchThreeRendezvousTwo extends AutoBase {
 
 		return new SequentialRoutine(initialOdometry, getBallsRoutine, getTrenchBalls, turnRoutine, getRendezvous1,
 				new DriveYawRoutine(180),
-				new VisionAlignRoutine());
+				new DriveAlignRoutine(1));
 	}
 }
