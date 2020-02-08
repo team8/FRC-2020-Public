@@ -14,6 +14,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.service.TelemetryService;
 import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.MedianFilter;
@@ -58,7 +59,7 @@ public class Shooter extends SubsystemBase {
 				break;
 			case VISION_VELOCITY:
 				if (mLimelight.isTargetFound()) {
-					targetDistanceInches = distanceFilter.calculate(mLimelight.getCorrectedEstimatedDistanceZ());
+					targetDistanceInches = distanceFilter.calculate(mLimelight.getEstimatedDistanceZ());
 					targetFlywheelVelocity = kTargetDistanceToVelocity.getInterpolated(targetDistanceInches);
 				} else {
 					targetDistanceInches = null;
@@ -74,6 +75,8 @@ public class Shooter extends SubsystemBase {
 			targetFlywheelVelocity = Util.clamp(targetFlywheelVelocity, 0.0, mConfig.maxVelocity);
 			boolean shouldUpdateHood = !state.shooterHoodIsInTransition && targetFlywheelVelocity > kEpsilon;
 			if (shouldUpdateHood) updateHood(state, targetDistanceInches);
+			TelemetryService.putArbitrary("shooter.targetDistance", targetDistanceInches);
+			TelemetryService.putArbitrary("shooter.targetVelocity", targetFlywheelVelocity);
 			mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);
 		}
 		updateRumble(commands, state, targetFlywheelVelocity);
@@ -113,17 +116,19 @@ public class Shooter extends SubsystemBase {
 		boolean isHoodExtended = state.shooterIsHoodExtended,
 				isBlockingExtended = state.shooterIsBlockingExtended;
 		HoodState targetHoodState;
-		boolean shouldSwitch;
+		boolean shouldUpdate;
 		if (targetDistanceInches == null) {
 			targetHoodState = HoodState.LOW;
-			shouldSwitch = true;
+			shouldUpdate = true;
 		} else {
 			Map.Entry<Double, HoodState> targetHoodEntry = kTargetDistanceToHoodState.floorEntry(targetDistanceInches);
 			double deltaFromThreshold = Math.abs(targetDistanceInches - targetHoodEntry.getKey());
-			shouldSwitch = deltaFromThreshold > mConfig.hoodSwitchVelocityThreshold;
+			shouldUpdate = deltaFromThreshold > mConfig.hoodSwitchDistanceThreshold;
 			targetHoodState = targetHoodEntry.getValue();
 		}
-		if (shouldSwitch) {
+		TelemetryService.putArbitrary("shooter.shouldUpdate", shouldUpdate);
+		if (shouldUpdate) {
+			TelemetryService.putArbitrary("shooter.hoodState", targetHoodState);
 			switch (targetHoodState) {
 				case LOW: {
 					/*

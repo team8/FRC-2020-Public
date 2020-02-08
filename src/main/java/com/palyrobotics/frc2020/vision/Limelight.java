@@ -203,13 +203,12 @@ public class Limelight {
 	 */
 	public double getEstimatedDistanceZ() {
 		// TODO implement
-		return 0.0;
-		// double a1 = OtherConstants.kLimelightElevationAngleDegrees;
-		// double a2 = this.getPitchToTarget();
-		// double h1 = OtherConstants.kLimelightHeightInches;
-		// double h2 = OtherConstants.kRocketHatchTargetHeight;
-		// return ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))) - 10; // 10 =
-		// limelight's offset from front of robot
+		double a1 = 0.0;
+		double a2 = getPitchToTarget();
+		double h1 = 50.0;
+		double h2 = 80.0;
+		// Avoid divide by zero
+		return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))));
 	}
 
 	/**
