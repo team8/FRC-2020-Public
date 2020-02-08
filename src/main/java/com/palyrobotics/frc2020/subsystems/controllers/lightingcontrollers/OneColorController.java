@@ -15,16 +15,14 @@ public class OneColorController extends Lighting.LEDController {
 		mColor = color;
 		for (var i = mInitIndex; i < mLastIndex; i++) {
 			mLightingOutputs.lightingOutput
-					.add(new int[] { mColor.getH(), mColor.getS(), mColor.getV() });
+					.add(Color.HSV.getNewInstance(mColor.getH(), mColor.getS(), mColor.getV()));
 		}
 	}
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		for (int i = mInitIndex; i < mLastIndex; i++) {
-			mLightingOutputs.lightingOutput.get(i)[0] = mColor.getH();
-			mLightingOutputs.lightingOutput.get(i)[1] = mColor.getS();
-			mLightingOutputs.lightingOutput.get(i)[2] = mColor.getV();
+			mLightingOutputs.lightingOutput.get(i).setHSV(mColor.getH(), mColor.getS(), mColor.getV());
 		}
 	}
 }

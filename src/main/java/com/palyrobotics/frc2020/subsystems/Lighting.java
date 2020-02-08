@@ -91,9 +91,9 @@ public class Lighting extends SubsystemBase {
 		}
 		for (LEDController ledController : mLEDControllers) {
 			LightingOutputs currentOutput = ledController.update(commands, robotState);
-			for (var i = 0; i < currentOutput.lightingOutput.size(); i++) {
-				int[] rgbValue = currentOutput.lightingOutput.get(i);
-				mOutputBuffer.setHSV(i + ledController.mInitIndex, rgbValue[0], rgbValue[1], rgbValue[2]);
+			for (int i = 0; i < currentOutput.lightingOutput.size(); i++) {
+				Color.HSV hsvValue = currentOutput.lightingOutput.get(i);
+				mOutputBuffer.setHSV(i + ledController.mInitIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());
 			}
 		}
 	}

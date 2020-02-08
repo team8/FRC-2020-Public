@@ -4,6 +4,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
+import com.palyrobotics.frc2020.util.Color;
 
 public class DisabledSequenceController extends Lighting.LEDController {
 
@@ -13,7 +14,7 @@ public class DisabledSequenceController extends Lighting.LEDController {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
 		for (var i = initIndex; i <= lastIndex; i++) {
-			mLightingOutputs.lightingOutput.add(new int[] { mCurrentHue, 247, 87 });
+			mLightingOutputs.lightingOutput.add(Color.HSV.getNewInstance(mCurrentHue, 247, 87));
 		}
 	}
 
@@ -22,7 +23,7 @@ public class DisabledSequenceController extends Lighting.LEDController {
 		mCurrentHue = mCurrentHue >= 200 ? mCurrentHue-- : mCurrentHue++;
 
 		for (var i = 0; i < mLightingOutputs.lightingOutput.size(); i++) {
-			mLightingOutputs.lightingOutput.get(i)[0] = mCurrentHue;
+			mLightingOutputs.lightingOutput.get(i).setH(mCurrentHue);
 		}
 	}
 }
