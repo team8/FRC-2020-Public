@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.palyrobotics.frc2020.util.Color;
+
 public class LightingOutputs {
 
-	public List<int[]> lightingOutput; // array of ints for rgb values
+	public List<Color.HSV> lightingOutput; // array of ints for rgb values
 
 	public LightingOutputs() {
 		lightingOutput = new ArrayList<>();

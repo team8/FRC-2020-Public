@@ -21,7 +21,7 @@ public class FlashingLightsController extends Lighting.LEDController {
 		mTimer.start();
 		for (var i = mInitIndex; i < mLastIndex; i++) {
 			mLightingOutputs.lightingOutput
-					.add(new int[] { mFlashedColor.getH(), mFlashedColor.getS(), mFlashedColor.getV() });
+					.add(Color.HSV.getNewInstance(mFlashedColor.getH(), mFlashedColor.getS(), mFlashedColor.getV()));
 		}
 	}
 
@@ -30,14 +30,12 @@ public class FlashingLightsController extends Lighting.LEDController {
 		double time = Math.round(mTimer.get() * mDelayFactor);
 		if (time % 2 == 0) {
 			for (int i = mInitIndex; i < mLastIndex; i++) {
-				mLightingOutputs.lightingOutput.get(i - mInitIndex)[0] = mFlashedColor.getH();
-				mLightingOutputs.lightingOutput.get(i - mInitIndex)[1] = mFlashedColor.getS();
-				mLightingOutputs.lightingOutput.get(i - mInitIndex)[2] = mFlashedColor.getV();
+				mLightingOutputs.lightingOutput.get(i - mInitIndex).setHSV(mFlashedColor.getH(), mFlashedColor.getS(),
+						mFlashedColor.getV());
 			}
 		} else {
 			for (int i = mInitIndex; i < mLastIndex; i++) {
-				mLightingOutputs.lightingOutput.get(i - mInitIndex)[0] = mLightingOutputs.lightingOutput
-						.get(i - mInitIndex)[1] = mLightingOutputs.lightingOutput.get(i - mInitIndex)[2] = 0;
+				mLightingOutputs.lightingOutput.get(i - mInitIndex).setHSV(0, 0, 0);
 			}
 		}
 	}

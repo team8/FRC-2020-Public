@@ -24,7 +24,8 @@ public class ConvergingBandsController extends Lighting.LEDController {
 		mBandLedCount = bandLedCount;
 		mTimer.start();
 		for (var i = mInitIndex; i < mLastIndex; i++) {
-			mLightingOutputs.lightingOutput.add(new int[] { bandColor.getH(), bandColor.getS(), bandColor.getV() });
+			mLightingOutputs.lightingOutput
+					.add(Color.HSV.getNewInstance(bandColor.getH(), bandColor.getS(), bandColor.getV()));
 		}
 	}
 
@@ -35,19 +36,12 @@ public class ConvergingBandsController extends Lighting.LEDController {
 		}
 		for (var i = 0; i < (mLastIndex - mInitIndex) / 2 - 1; i++) {
 			if ((i + mCurrentBandPosition) / mBandLedCount % 2 == 0) {
-				mLightingOutputs.lightingOutput.get(i)[0] = mLightingOutputs.lightingOutput
-						.get(mLastIndex - mInitIndex - i - 1)[0] = mBandColor.getH();
-				mLightingOutputs.lightingOutput.get(i)[1] = mLightingOutputs.lightingOutput
-						.get(mLastIndex - mInitIndex - i - 1)[1] = mBandColor.getS();
-				mLightingOutputs.lightingOutput.get(i)[2] = mLightingOutputs.lightingOutput
-						.get(mLastIndex - mInitIndex - i - 1)[2] = mBandColor.getV();
+				mLightingOutputs.lightingOutput.get(i).setHSV(mBandColor.getH(), mBandColor.getS(), mBandColor.getV());
+				mLightingOutputs.lightingOutput.get(mLastIndex - mInitIndex - i - 1).setHSV(mBandColor.getH(),
+						mBandColor.getS(), mBandColor.getV());
 			} else {
-				mLightingOutputs.lightingOutput.get(i)[0] = mLightingOutputs.lightingOutput
-						.get(mLastIndex - mInitIndex - i - 1)[0] = mBackgroundColor.getH();
-				mLightingOutputs.lightingOutput.get(i)[1] = mLightingOutputs.lightingOutput
-						.get(mLastIndex - mInitIndex - i - 1)[1] = mBackgroundColor.getS();
-				mLightingOutputs.lightingOutput.get(i)[2] = mLightingOutputs.lightingOutput
-						.get(mLastIndex - mInitIndex - i - 1)[2] = mBackgroundColor.getV();
+				mLightingOutputs.lightingOutput.get(i).setHSV(mBackgroundColor.getH(), mBackgroundColor.getS(),
+						mBackgroundColor.getV());
 			}
 		}
 		mOldTimerValue = Math.round(mTimer.get() * 6);

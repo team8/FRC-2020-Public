@@ -57,6 +57,11 @@ public class Color {
 			this.v = v;
 		}
 
+		public Color.HSV getLastColor() {
+			return new HSV(lastH, lastS, lastV);
+		}
+
+		//TODO getNewInstance should take Color instance as well.
 		public static HSV getNewInstance() {
 			return new HSV(0, 0, 0);
 		}
