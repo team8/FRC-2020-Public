@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.behavior;
 
+import static java.util.Map.entry;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -14,6 +16,11 @@ public abstract class RoutineBase {
 	private enum State {
 		INIT, RUNNING, FINISHED
 	}
+
+	private static final Map<State, String> kStateToStatus = Map.ofEntries(
+			entry(State.INIT, "Not Started"),
+			entry(State.RUNNING, "Running"),
+			entry(State.FINISHED, "Finished"));
 
 	/** Only should be used for {@link #getRequiredSubsystems()} */
 	protected final Climber mClimber = Climber.getInstance();
@@ -96,8 +103,7 @@ public abstract class RoutineBase {
 	}
 
 	public String getStatus() {
-		return Map.ofEntries(Map.entry(State.INIT, "Not Started"), Map.entry(State.RUNNING, "Running"),
-				Map.entry(State.FINISHED, "Finished")).get(mState);
+		return kStateToStatus.get(mState);
 	}
 
 	/**

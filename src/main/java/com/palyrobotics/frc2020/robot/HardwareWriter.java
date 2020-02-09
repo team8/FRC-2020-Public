@@ -43,22 +43,22 @@ public class HardwareWriter {
 	}
 
 	private void configureClimberHardware() {
-		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
-		climberHardware.verticalSpark.restoreFactoryDefaults();
-		climberHardware.horizontalSpark.restoreFactoryDefaults();
-		climberHardware.verticalSpark.enableVoltageCompensation(12.0);
-		climberHardware.horizontalSpark.enableVoltageCompensation(12.0);
+		var hardware = HardwareAdapter.ClimberHardware.getInstance();
+		hardware.verticalSpark.restoreFactoryDefaults();
+		hardware.horizontalSpark.restoreFactoryDefaults();
+		hardware.verticalSpark.enableVoltageCompensation(12.0);
+		hardware.horizontalSpark.enableVoltageCompensation(12.0);
 		/* Encoder units are inches and inches/sec */
-		climberHardware.verticalSparkEncoder.setPositionConversionFactor(17.0666667 * 4.0 * Math.PI);
-		climberHardware.verticalSparkEncoder.setVelocityConversionFactor(17.0666667 * 4.0 * Math.PI / 60.0);
-		climberHardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
-		climberHardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
+		hardware.verticalSparkEncoder.setPositionConversionFactor(17.0666667 * 4.0 * Math.PI);
+		hardware.verticalSparkEncoder.setVelocityConversionFactor(17.0666667 * 4.0 * Math.PI / 60.0);
+		hardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		hardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
 	}
 
 	private void configureDriveHardware() {
-		var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
+		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
 		var driveConfig = Configs.get(DriveConfig.class);
-		for (Falcon falcon : driveHardware.falcons) {
+		for (Falcon falcon : hardware.falcons) {
 			falcon.configFactoryDefault();
 			falcon.enableVoltageCompensation(true);
 			falcon.configVoltageCompSaturation(12.0, kTimeoutMs);
@@ -68,20 +68,18 @@ public class HardwareWriter {
 					kTimeoutMs);
 			falcon.configOpenloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
 			falcon.configClosedloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
-			falcon.configSensorConversions(driveConfig.positionConversion,
-					driveConfig.velocityConversion);
+			falcon.configSensorConversions(1.0, 1.0); // TODO: find
 		}
 
 		/* Left Side */
-		driveHardware.leftMasterFalcon.setInverted(false);
-		driveHardware.leftSlaveFalcon.follow(driveHardware.leftMasterFalcon);
-		driveHardware.leftSlaveFalcon.setInverted(InvertType.FollowMaster);
+		hardware.leftMasterFalcon.setInverted(false);
+		hardware.leftSlaveFalcon.follow(hardware.leftMasterFalcon);
+		hardware.leftSlaveFalcon.setInverted(InvertType.FollowMaster);
 
 		/* Right Side */
-		driveHardware.rightMasterFalcon.setInverted(true);
-		driveHardware.rightSlaveFalcon.follow(driveHardware.rightMasterFalcon);
-		driveHardware.rightSlaveFalcon.setInverted(InvertType.FollowMaster);
-
+		hardware.rightMasterFalcon.setInverted(true);
+		hardware.rightSlaveFalcon.follow(hardware.rightMasterFalcon);
+		hardware.rightSlaveFalcon.setInverted(InvertType.FollowMaster);
 		resetDriveSensors(new Pose2d());
 	}
 
@@ -135,10 +133,10 @@ public class HardwareWriter {
 
 	public void resetDriveSensors(Pose2d pose) {
 		double heading = pose.getRotation().getDegrees();
-		var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-		driveHardware.gyro.setYaw(heading, kTimeoutMs);
-		driveHardware.leftMasterFalcon.setSelectedSensorPosition(0);
-		driveHardware.rightMasterFalcon.setSelectedSensorPosition(0);
+		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
+		hardware.gyro.setYaw(heading, kTimeoutMs);
+		hardware.leftMasterFalcon.setSelectedSensorPosition(0);
+		hardware.rightMasterFalcon.setSelectedSensorPosition(0);
 		Log.info(kLoggerTag, String.format("Drive sensors reset, gyro heading: %s", heading));
 	}
 
@@ -158,17 +156,16 @@ public class HardwareWriter {
 			if (enabledSubsystems.contains(mIntake)) updateIntake();
 			if (enabledSubsystems.contains(mShooter)) updateShooter();
 			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
-			updateMiscellaneous();
 		}
 		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
 		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
 	}
 
 	private void updateClimber() {
-		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
-		climberHardware.verticalSpark.setOutput(mClimber.getVerticalOutput());
-		climberHardware.horizontalSpark.setOutput(mClimber.getAdjustingOutput());
-		climberHardware.solenoid.setExtended(mClimber.getSolenoidOutput());
+		var hardware = HardwareAdapter.ClimberHardware.getInstance();
+		hardware.verticalSpark.setOutput(mClimber.getVerticalOutput());
+		hardware.horizontalSpark.setOutput(mClimber.getAdjustingOutput());
+		hardware.solenoid.setExtended(mClimber.getSolenoidOutput());
 	}
 
 	// private void updateDrivetrain() {
@@ -178,22 +175,22 @@ public class HardwareWriter {
 	// }
 
 	private void updateDrivetrain() {
-		var drivetrainHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-		drivetrainHardware.leftMasterFalcon.setOutput(mDrive.getDriveSignal().leftOutput);
-		drivetrainHardware.rightMasterFalcon.setOutput(mDrive.getDriveSignal().rightOutput);
+		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
+		hardware.leftMasterFalcon.setOutput(mDrive.getDriveSignal().leftOutput);
+		hardware.rightMasterFalcon.setOutput(mDrive.getDriveSignal().rightOutput);
 	}
 
 	private void updateIndexer() {
-		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
-		indexerHardware.masterSpark.setOutput(mIndexer.getOutput());
-		indexerHardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
-		indexerHardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
+		var hardware = HardwareAdapter.IndexerHardware.getInstance();
+		hardware.masterSpark.setOutput(mIndexer.getOutput());
+		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
+		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 	}
 
 	private void updateIntake() {
-		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
-		intakeHardware.talon.setOutput(mIntake.getOutput());
-		intakeHardware.solenoid.setExtended(mIntake.getExtendedOutput());
+		var hardware = HardwareAdapter.IntakeHardware.getInstance();
+		hardware.talon.setOutput(mIntake.getOutput());
+		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
 	}
 
 	private void updateShooter() {
@@ -205,11 +202,7 @@ public class HardwareWriter {
 	}
 
 	private void updateSpinner() {
-		var spinnerHardware = HardwareAdapter.SpinnerHardware.getInstance();
-		spinnerHardware.talon.setOutput(mSpinner.getOutput());
-	}
-
-	private void updateMiscellaneous() {
-		HardwareAdapter.MiscellaneousHardware.getInstance();
+		var hardware = HardwareAdapter.SpinnerHardware.getInstance();
+		hardware.talon.setOutput(mSpinner.getOutput());
 	}
 }

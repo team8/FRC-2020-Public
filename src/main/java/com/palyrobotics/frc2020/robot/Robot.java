@@ -221,6 +221,12 @@ public class Robot extends TimedRobot {
 			mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
 			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
 		}
+		var compressor = HardwareAdapter.MiscellaneousHardware.getInstance().compressor;
+		if (mCommands.wantsCompression) {
+			compressor.start();
+		} else {
+			compressor.stop();
+		}
 		mLimelight.setPipeline(mCommands.visionWantedPipeline);
 	}
 

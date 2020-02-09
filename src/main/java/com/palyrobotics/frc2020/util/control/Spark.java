@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.util.control;
 
+import static java.util.Map.entry;
+
 import java.util.Map;
 
 import com.revrobotics.CANError;
@@ -94,11 +96,11 @@ public class Spark extends CANSparkMax {
 	}
 
 	protected static final Map<ControllerOutput.Mode, ControlType> kModeToController = Map.ofEntries(
-			Map.entry(ControllerOutput.Mode.PERCENT_OUTPUT, ControlType.kDutyCycle),
-			Map.entry(ControllerOutput.Mode.POSITION, ControlType.kPosition),
-			Map.entry(ControllerOutput.Mode.VELOCITY, ControlType.kVelocity),
-			Map.entry(ControllerOutput.Mode.PROFILED_POSITION, ControlType.kSmartMotion),
-			Map.entry(ControllerOutput.Mode.PROFILED_VELOCITY, ControlType.kSmartVelocity));
+			entry(ControllerOutput.Mode.PERCENT_OUTPUT, ControlType.kDutyCycle),
+			entry(ControllerOutput.Mode.POSITION, ControlType.kPosition),
+			entry(ControllerOutput.Mode.VELOCITY, ControlType.kVelocity),
+			entry(ControllerOutput.Mode.PROFILED_POSITION, ControlType.kSmartMotion),
+			entry(ControllerOutput.Mode.PROFILED_VELOCITY, ControlType.kSmartVelocity));
 
 	private final SparkController mController = new SparkController(this);
 

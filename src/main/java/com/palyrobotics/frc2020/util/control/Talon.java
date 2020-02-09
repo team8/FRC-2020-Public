@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.util.control;
 
+import static java.util.Map.entry;
+
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -100,11 +102,11 @@ public class Talon extends TalonSRX {
 	}
 
 	protected static final Map<ControllerOutput.Mode, ControlMode> kModeToController = Map.ofEntries(
-			Map.entry(ControllerOutput.Mode.PERCENT_OUTPUT, ControlMode.PercentOutput),
-			Map.entry(ControllerOutput.Mode.POSITION, ControlMode.Position),
-			Map.entry(ControllerOutput.Mode.VELOCITY, ControlMode.Velocity),
-			Map.entry(ControllerOutput.Mode.PROFILED_POSITION, ControlMode.MotionMagic),
-			Map.entry(ControllerOutput.Mode.PROFILED_VELOCITY, ControlMode.MotionProfile));
+			entry(ControllerOutput.Mode.PERCENT_OUTPUT, ControlMode.PercentOutput),
+			entry(ControllerOutput.Mode.POSITION, ControlMode.Position),
+			entry(ControllerOutput.Mode.VELOCITY, ControlMode.Velocity),
+			entry(ControllerOutput.Mode.PROFILED_POSITION, ControlMode.MotionMagic),
+			entry(ControllerOutput.Mode.PROFILED_VELOCITY, ControlMode.MotionProfile));
 	private final TalonController mController = new TalonController(this);
 
 	public Talon(int deviceId) {

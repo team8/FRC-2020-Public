@@ -120,16 +120,24 @@ public class OperatorInterface {
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
 		/* Intake Toggle */
 		if (mOperatorXboxController.getDPadDownPressed()) {
-			commands.intakeWantedState = state.intakeIsExtended ? Intake.State.STOW : Intake.State.LOWER;
+			switch (commands.intakeWantedState) {
+				case LOWER:
+				case INTAKE:
+					commands.intakeWantedState = Intake.State.STOW;
+					break;
+				case STOW:
+					commands.intakeWantedState = Intake.State.LOWER;
+					break;
+			}
 		}
 		/* Indexer Hopper Control */
 		if (mOperatorXboxController.getDPadRightPressed()) {
-			if (state.indexerIsHopperExtended) {
+			if (commands.indexerWantedHopperState == Indexer.HopperState.CLOSED) {
 				// Open hopper, stow intake, and advance balls
 				commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 				commands.intakeWantedState = Intake.State.STOW;
 				commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
-			} else {
+			} else if (commands.indexerWantedHopperState == Indexer.HopperState.OPEN) {
 				// Close hopper, lower intake, and advance balls a bit
 				commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 				commands.addWantedRoutine(new IndexerTimeRoutine(1.0));
@@ -181,5 +189,6 @@ public class OperatorInterface {
 		commands.spinnerWantedState = Spinner.State.IDLE;
 		commands.visionWantedPipeline = kOneTimesZoomPipelineId;
 		commands.visionWanted = false;
+		commands.wantsCompression = true;
 	}
 }

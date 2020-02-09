@@ -63,13 +63,13 @@ public class HardwareReader {
 	}
 
 	private void readDriveState(RobotState robotState) {
-		var drivetrain = DrivetrainHardware.getInstance();
-		drivetrain.gyro.getYawPitchRoll(mGyroAngles);
+		var hardware = DrivetrainHardware.getInstance();
+		hardware.gyro.getYawPitchRoll(mGyroAngles);
 		robotState.driveYawDegrees = mGyroAngles[kYawIndex];
-		robotState.driveLeftVelocity = drivetrain.leftMasterFalcon.getConvertedVelocity();
-		robotState.driveRightVelocity = drivetrain.rightMasterFalcon.getConvertedVelocity();
-		robotState.driveLeftPosition = drivetrain.leftMasterFalcon.getConvertedPosition();
-		robotState.driveRightPosition = drivetrain.rightMasterFalcon.getConvertedPosition();
+		robotState.driveLeftVelocity = hardware.leftMasterFalcon.getConvertedVelocity();
+		robotState.driveRightVelocity = hardware.rightMasterFalcon.getConvertedVelocity();
+		robotState.driveLeftPosition = hardware.leftMasterFalcon.getConvertedPosition();
+		robotState.driveRightPosition = hardware.rightMasterFalcon.getConvertedPosition();
 		robotState.updateOdometry(robotState.driveYawDegrees, robotState.driveLeftPosition, robotState.driveRightPosition);
 	}
 

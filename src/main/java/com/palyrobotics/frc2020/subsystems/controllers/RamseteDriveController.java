@@ -39,7 +39,6 @@ public class RamseteDriveController extends Drive.DriveController {
 		Trajectory.State targetPose = wantedTrajectory.sample(mTimer.get());
 		ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
 		DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kKinematics.toWheelSpeeds(speeds);
-		// TODO: remove 60
 		mOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond,
 				mConfig.profiledVelocityGains);
 		mOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond,
