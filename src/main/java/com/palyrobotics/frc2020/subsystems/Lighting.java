@@ -50,6 +50,7 @@ public class Lighting extends SubsystemBase {
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
 		Lighting.LightingState wantedState = commands.lightingWantedState;
 		boolean isNewState = mState != wantedState;
+		mState = wantedState;
 		if (isNewState) {
 			mLEDControllers.clear();
 			switch (mState) {
@@ -69,10 +70,11 @@ public class Lighting extends SubsystemBase {
 							Color.HSV.BLUE, 3));
 					break;
 				case DISABLE:
-					mLEDControllers.add(new DisabledSequenceController(mConfig.backSegmentFirstIndex,
-							mConfig.backSegmentBackIndex));
+//					mLEDControllers.add(new DisabledSequenceController(mConfig.backSegmentFirstIndex,
+//							mConfig.backSegmentBackIndex));
 					break;
 				case TARGET_FOUND:
+					System.out.println("entering");
 					mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
 							mConfig.limelightSegmentBackIndex, Color.HSV.LIMELIGHT_GREEN, 3));
 					break;
@@ -87,10 +89,10 @@ public class Lighting extends SubsystemBase {
 				default:
 					break;
 			}
-			mState = wantedState;
 		}
 		for (LEDController ledController : mLEDControllers) {
 			LightingOutputs currentOutput = ledController.update(commands, robotState);
+			System.out.println(ledController.getClass().getName());
 			for (int i = 0; i < currentOutput.lightingOutput.size(); i++) {
 				Color.HSV hsvValue = currentOutput.lightingOutput.get(i);
 				mOutputBuffer.setHSV(i + ledController.mInitIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());

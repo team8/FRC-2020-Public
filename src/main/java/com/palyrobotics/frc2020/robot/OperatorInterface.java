@@ -101,6 +101,7 @@ public class OperatorInterface {
 
 	private void updateLightingCommands(Commands commands) {
 		if (mTurnStick.getRawButtonPressed(6)) {
+			System.out.println("target found running");
 			commands.lightingWantedState = Lighting.LightingState.TARGET_FOUND;
 		}
 		if (mTurnStick.getRawButtonPressed(5)) {
