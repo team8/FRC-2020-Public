@@ -55,7 +55,7 @@ public class Commands {
 	/* Miscellaneous */
 	public boolean wantedCompression;
 	/* Lighting */
-	public Lighting.LightingState lightingWantedState = Lighting.LightingState.IDLE;
+	public Lighting.State lightingWantedState = Lighting.State.IDLE;
 
 	public boolean wantedRumble;
 	private Shooter.HoodState shooterWantedHoodState;

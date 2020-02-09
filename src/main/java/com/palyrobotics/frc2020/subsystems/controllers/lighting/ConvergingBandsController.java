@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers;
+package com.palyrobotics.frc2020.subsystems.controllers.lighting;
 
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -24,7 +24,7 @@ public class ConvergingBandsController extends Lighting.LEDController {
 		mBandLedCount = bandLedCount;
 		mTimer.start();
 		for (var i = mInitIndex; i < mLastIndex; i++) {
-			mLightingOutputs.lightingOutput
+			mOutputs.lightingOutput
 					.add(Color.HSV.getNewInstance(bandColor.getH(), bandColor.getS(), bandColor.getV()));
 		}
 	}
@@ -36,11 +36,11 @@ public class ConvergingBandsController extends Lighting.LEDController {
 		}
 		for (var i = 0; i < (mLastIndex - mInitIndex) / 2 - 1; i++) {
 			if ((i + mCurrentBandPosition) / mBandLedCount % 2 == 0) {
-				mLightingOutputs.lightingOutput.get(i).setHSV(mBandColor.getH(), mBandColor.getS(), mBandColor.getV());
-				mLightingOutputs.lightingOutput.get(mLastIndex - mInitIndex - i - 1).setHSV(mBandColor.getH(),
+				mOutputs.lightingOutput.get(i).setHSV(mBandColor.getH(), mBandColor.getS(), mBandColor.getV());
+				mOutputs.lightingOutput.get(mLastIndex - mInitIndex - i - 1).setHSV(mBandColor.getH(),
 						mBandColor.getS(), mBandColor.getV());
 			} else {
-				mLightingOutputs.lightingOutput.get(i).setHSV(mBackgroundColor.getH(), mBackgroundColor.getS(),
+				mOutputs.lightingOutput.get(i).setHSV(mBackgroundColor.getH(), mBackgroundColor.getS(),
 						mBackgroundColor.getV());
 			}
 		}

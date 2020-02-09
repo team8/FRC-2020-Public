@@ -116,23 +116,6 @@ public class OperatorInterface {
 		}
 	}
 
-	private void updateLightingCommands(Commands commands) {
-		if (mTurnStick.getRawButtonPressed(6)) {
-			System.out.println("target found running");
-			commands.lightingWantedState = Lighting.LightingState.TARGET_FOUND;
-		}
-		if (mTurnStick.getRawButtonPressed(5)) {
-			commands.lightingWantedState = Lighting.LightingState.INIT;
-		}
-		if (mTurnStick.getRawButtonPressed(4)) {
-			commands.lightingWantedState = Lighting.LightingState.SHOOTER_FULLRPM;
-			//Lighting.getInstance().tempBallCount += 1;
-		}
-		if (mTurnStick.getRawButtonPressed(3)) {
-			commands.lightingWantedState = Lighting.LightingState.DISABLE;
-		}
-	}
-
 	private void updateDriveCommands(Commands commands) {
 		// Both buttons align, button 3: 2x zoom, button 4: 1x zoom
 		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignRawButton),
@@ -155,6 +138,23 @@ public class OperatorInterface {
 //					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
 //					new DrivePathRoutine(newWaypoint(30.0, 0.0, 0.0)));
 //		}
+	}
+
+	private void updateLightingCommands(Commands commands) {
+		// TODO: temporary, remove
+		if (mTurnStick.getRawButtonPressed(6)) {
+			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
+		}
+		if (mTurnStick.getRawButtonPressed(5)) {
+			commands.lightingWantedState = Lighting.State.INIT;
+		}
+		if (mTurnStick.getRawButtonPressed(4)) {
+			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
+			//Lighting.getInstance().tempBallCount += 1;
+		}
+		if (mTurnStick.getRawButtonPressed(3)) {
+			commands.lightingWantedState = Lighting.State.DISABLE;
+		}
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
@@ -229,6 +229,7 @@ public class OperatorInterface {
 		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		commands.intakeWantedState = Intake.State.STOW;
 		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
+		commands.lightingWantedState = Lighting.State.INIT;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
 		commands.wantedCompression = true;
