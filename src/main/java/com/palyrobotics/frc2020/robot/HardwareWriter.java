@@ -31,9 +31,9 @@ public class HardwareWriter {
 	private final Drive mDrive = Drive.getInstance();
 	private final Indexer mIndexer = Indexer.getInstance();
 	private final Intake mIntake = Intake.getInstance();
+	private final Lighting mLighting = Lighting.getInstance();
 	private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
-	private final Lighting mLighting = Lighting.getInstance();
 	private boolean mRumbleOutput;
 
 	void configureHardware(Set<SubsystemBase> enabledSubsystems) {
@@ -41,9 +41,9 @@ public class HardwareWriter {
 		if (enabledSubsystems.contains(mDrive)) configureDriveHardware();
 		if (enabledSubsystems.contains(mIndexer)) configureIndexerHardware();
 		if (enabledSubsystems.contains(mIntake)) configureIntakeHardware();
+		if (enabledSubsystems.contains(mLighting)) configureLightingHardware();
 		if (enabledSubsystems.contains(mShooter)) configureShooterHardware();
 		if (enabledSubsystems.contains(mSpinner)) configureSpinnerHardware();
-		if (enabledSubsystems.contains(mLighting)) configureLightingHardware();
 	}
 
 	private void configureClimberHardware() {
@@ -57,13 +57,6 @@ public class HardwareWriter {
 		hardware.verticalSparkEncoder.setVelocityConversionFactor(17.0666667 * 4.0 * Math.PI / 60.0);
 		hardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		hardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
-	}
-
-	private void configureLightingHardware() {
-		var lightingHardware = HardwareAdapter.LightingHardware.getInstance();
-		lightingHardware.LEDStrip.setLength(Configs.get(LightingConfig.class).ledCount);
-		lightingHardware.LEDStrip.start();
-		lightingHardware.LEDStrip.setData(mLighting.getOutput());
 	}
 
 	private void configureDriveHardware() {
@@ -113,6 +106,13 @@ public class HardwareWriter {
 		talon.configVoltageCompSaturation(12, kTimeoutMs);
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
 		talon.setInverted(false);
+	}
+
+	private void configureLightingHardware() {
+		var hardware = HardwareAdapter.LightingHardware.getInstance();
+		hardware.ledStrip.setLength(Configs.get(LightingConfig.class).ledCount);
+		hardware.ledStrip.start();
+		hardware.ledStrip.setData(mLighting.getOutput());
 	}
 
 	private void configureShooterHardware() {
@@ -186,11 +186,6 @@ public class HardwareWriter {
 	// drivetrainHardware.rightMasterFalcon.setOutput(mDrive.getDriveSignal().rightOutput);
 	// }
 
-	private void updateLighting() {
-		var lightingHardware = HardwareAdapter.LightingHardware.getInstance();
-		lightingHardware.LEDStrip.setData(mLighting.getOutput());
-	}
-
 	private void updateDrivetrain() {
 		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
 		hardware.leftMasterFalcon.setOutput(mDrive.getDriveSignal().leftOutput);
@@ -210,6 +205,11 @@ public class HardwareWriter {
 		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
 		LiveGraph.add("intakeCurrent", hardware.talon.getSupplyCurrent());
 		LiveGraph.add("intakeAppliedOutput", hardware.talon.getMotorOutputPercent());
+	}
+
+	private void updateLighting() {
+		var hardware = HardwareAdapter.LightingHardware.getInstance();
+		hardware.ledStrip.setData(mLighting.getOutput());
 	}
 
 	private void updateShooter() {

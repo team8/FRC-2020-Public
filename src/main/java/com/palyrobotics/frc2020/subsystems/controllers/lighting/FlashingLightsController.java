@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers;
+package com.palyrobotics.frc2020.subsystems.controllers.lighting;
 
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -20,7 +20,7 @@ public class FlashingLightsController extends Lighting.LEDController {
 		mDelayFactor = delayFactor;
 		mTimer.start();
 		for (var i = mInitIndex; i < mLastIndex; i++) {
-			mLightingOutputs.lightingOutput
+			mOutputs.lightingOutput
 					.add(Color.HSV.getNewInstance(mFlashedColor.getH(), mFlashedColor.getS(), mFlashedColor.getV()));
 		}
 	}
@@ -30,12 +30,12 @@ public class FlashingLightsController extends Lighting.LEDController {
 		double time = Math.round(mTimer.get() * mDelayFactor);
 		if (time % 2 == 0) {
 			for (int i = mInitIndex; i < mLastIndex; i++) {
-				mLightingOutputs.lightingOutput.get(i - mInitIndex).setHSV(mFlashedColor.getH(), mFlashedColor.getS(),
+				mOutputs.lightingOutput.get(i - mInitIndex).setHSV(mFlashedColor.getH(), mFlashedColor.getS(),
 						mFlashedColor.getV());
 			}
 		} else {
 			for (int i = mInitIndex; i < mLastIndex; i++) {
-				mLightingOutputs.lightingOutput.get(i - mInitIndex).setHSV(0, 0, 0);
+				mOutputs.lightingOutput.get(i - mInitIndex).setHSV(0, 0, 0);
 			}
 		}
 	}

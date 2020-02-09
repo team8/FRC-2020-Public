@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
 	private final Spinner mSpinner = Spinner.getInstance();
 	private final Lighting mLighting = Lighting.getInstance();
 
-	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mShooter, mSpinner, mLighting),
+	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mLighting, mShooter, mSpinner),
 			mEnabledSubsystems;
 	private Set<RobotService> mServices = Set.of(new CommandReceiverService(), new NetworkLoggerService(),
 			new TelemetryService()),
@@ -66,7 +66,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
-		mCommands.lightingWantedState = Lighting.LightingState.INIT;
 		String setupSummary = setupSubsystemsAndServices();
 
 		if (kCanUseHardware) mHardwareWriter.configureHardware(mEnabledSubsystems);

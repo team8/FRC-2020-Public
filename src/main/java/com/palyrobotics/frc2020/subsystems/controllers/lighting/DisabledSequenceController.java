@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers;
+package com.palyrobotics.frc2020.subsystems.controllers.lighting;
 
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
@@ -14,7 +14,7 @@ public class DisabledSequenceController extends Lighting.LEDController {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
 		for (var i = initIndex; i <= lastIndex; i++) {
-			mLightingOutputs.lightingOutput.add(Color.HSV.getNewInstance(mCurrentHue, 247, 87));
+			mOutputs.lightingOutput.add(Color.HSV.getNewInstance(mCurrentHue, 247, 87));
 		}
 	}
 
@@ -22,8 +22,8 @@ public class DisabledSequenceController extends Lighting.LEDController {
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		mCurrentHue = mCurrentHue >= 200 ? mCurrentHue-- : mCurrentHue++;
 
-		for (var i = 0; i < mLightingOutputs.lightingOutput.size(); i++) {
-			mLightingOutputs.lightingOutput.get(i).setH(mCurrentHue);
+		for (var i = 0; i < mOutputs.lightingOutput.size(); i++) {
+			mOutputs.lightingOutput.get(i).setH(mCurrentHue);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers;
+package com.palyrobotics.frc2020.subsystems.controllers.lighting;
 
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -20,7 +20,7 @@ public class InitSequenceController extends Lighting.LEDController {
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		if (mCurrentLedIndex <= mLastIndex) {
-			mLightingOutputs.lightingOutput
+			mOutputs.lightingOutput
 					.add(Color.HSV.getNewInstance((int) ((mCurrentLedIndex - mInitIndex) * Math.log(mCurrentLedIndex) +
 							5), 247, 100));
 			mCurrentLedIndex += 1;

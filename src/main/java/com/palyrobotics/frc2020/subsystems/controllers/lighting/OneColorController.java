@@ -1,4 +1,4 @@
-package com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers;
+package com.palyrobotics.frc2020.subsystems.controllers.lighting;
 
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -14,7 +14,7 @@ public class OneColorController extends Lighting.LEDController {
 		mLastIndex = lastIndex;
 		mColor = color;
 		for (var i = mInitIndex; i < mLastIndex; i++) {
-			mLightingOutputs.lightingOutput
+			mOutputs.lightingOutput
 					.add(Color.HSV.getNewInstance(mColor.getH(), mColor.getS(), mColor.getV()));
 		}
 	}
@@ -22,7 +22,7 @@ public class OneColorController extends Lighting.LEDController {
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		for (int i = mInitIndex; i < mLastIndex; i++) {
-			mLightingOutputs.lightingOutput.get(i).setHSV(mColor.getH(), mColor.getS(), mColor.getV());
+			mOutputs.lightingOutput.get(i).setHSV(mColor.getH(), mColor.getS(), mColor.getV());
 		}
 	}
 }

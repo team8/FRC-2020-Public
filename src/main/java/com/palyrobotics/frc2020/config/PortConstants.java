@@ -33,6 +33,11 @@ public class PortConstants extends ConfigBase {
 	public int nariIntakeSolenoidId;
 
 	/**
+	 * Lighting
+	 */
+	public int nariLightingPwmPort;
+
+	/**
 	 * Shooter
 	 */
 	public int nariShooterMasterId, nariShooterSlaveId;
@@ -43,9 +48,4 @@ public class PortConstants extends ConfigBase {
 	 * Spinner
 	 */
 	public int nariSpinnerId;
-
-	/**
-	 * Lighting
-	 */
-	public int nariLightingPWMPort;
 }

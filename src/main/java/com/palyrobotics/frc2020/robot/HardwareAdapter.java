@@ -112,12 +112,12 @@ public class HardwareAdapter {
 	}
 
 	/**
-	 * 1 WS2812B LED Strip
+	 * 1 WS2812B LED Strip connected to roboRIO via PWM
 	 */
 	static class LightingHardware {
 
 		private static LightingHardware sInstance = new LightingHardware();
-		final AddressableLED LEDStrip = new AddressableLED(1);
+		final AddressableLED ledStrip = new AddressableLED(sPortConstants.nariLightingPwmPort);
 
 		private LightingHardware() {
 		}

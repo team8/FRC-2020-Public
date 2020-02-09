@@ -1,25 +1,19 @@
 package com.palyrobotics.frc2020.util;
 
 import java.util.LinkedList;
+import java.util.List;
 
-/**
- * Implements a simple circular buffer. Can be used for any class.
- */
-public class CircularBufferGeneric<E> {
+public class CircularBuffer<E> {
 
 	final int mWindowSize;
-	final LinkedList<E> mSamples;
-	double mSum;
+	final LinkedList<E> mSamples = new LinkedList<>();
 
-	public CircularBufferGeneric(int window_size) {
-		mWindowSize = window_size;
-		mSamples = new LinkedList<>();
-		mSum = 0.0;
+	public CircularBuffer(int windowSize) {
+		mWindowSize = windowSize;
 	}
 
 	public void clear() {
 		mSamples.clear();
-		mSum = 0.0;
 	}
 
 	public void addValue(E val) {
@@ -29,15 +23,7 @@ public class CircularBufferGeneric<E> {
 		}
 	}
 
-	public int getNumValues() {
-		return mSamples.size();
-	}
-
-	public boolean isFull() {
-		return mWindowSize == mSamples.size();
-	}
-
-	public LinkedList<E> getLinkedList() {
+	public List<E> samples() {
 		/*
 		* NOTE: To get an Array of the specific class type which the instance is using,
 		* you have to use this specific code:
@@ -46,7 +32,6 @@ public class CircularBufferGeneric<E> {
 		* The reason is that for some reason an array of a generic class(i.e. E[]) cannot be created because
 		* of some archaic data flow ambiguities
 		*/
-
 		return mSamples;
 	}
 }

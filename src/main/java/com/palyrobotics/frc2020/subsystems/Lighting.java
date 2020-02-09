@@ -6,7 +6,10 @@ import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
-import com.palyrobotics.frc2020.subsystems.controllers.lightingcontrollers.*;
+import com.palyrobotics.frc2020.subsystems.controllers.lighting.ConvergingBandsController;
+import com.palyrobotics.frc2020.subsystems.controllers.lighting.FlashingLightsController;
+import com.palyrobotics.frc2020.subsystems.controllers.lighting.InitSequenceController;
+import com.palyrobotics.frc2020.subsystems.controllers.lighting.OneColorController;
 import com.palyrobotics.frc2020.util.Color;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LightingOutputs;
@@ -15,25 +18,25 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 public class Lighting extends SubsystemBase {
 
-	public enum LightingState {
+	public enum State {
 		IDLE, OFF, INIT, DISABLE, TARGET_FOUND, INDEXER_COUNT, SHOOTER_FULLRPM, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED
 	}
 
 	private static Lighting sInstance = new Lighting();
 	private LightingConfig mConfig = Configs.get(LightingConfig.class);
 	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
-	private Lighting.LightingState mState = LightingState.IDLE;
+	private State mState = State.IDLE;
 	private ArrayList<LEDController> mLEDControllers = new ArrayList<>();
 
 	public abstract static class LEDController {
 
 		protected int mInitIndex;
 		protected int mLastIndex;
-		protected LightingOutputs mLightingOutputs = new LightingOutputs();
+		protected LightingOutputs mOutputs = new LightingOutputs();
 
 		public final LightingOutputs update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 			updateSignal(commands, state);
-			return mLightingOutputs;
+			return mOutputs;
 		}
 
 		public abstract void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state);
@@ -48,7 +51,7 @@ public class Lighting extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
-		Lighting.LightingState wantedState = commands.lightingWantedState;
+		State wantedState = commands.lightingWantedState;
 		boolean isNewState = mState != wantedState;
 		mState = wantedState;
 		if (isNewState) {
@@ -59,15 +62,15 @@ public class Lighting extends SubsystemBase {
 					break;
 				case IDLE:
 					mLEDControllers.add(new OneColorController(mConfig.totalSegmentFirstIndex,
-							mConfig.totalSegmentBackIndex, Color.HSV.WHITE));
+							mConfig.totalSegmentBackIndex, Color.HSV.kWhite));
 					break;
 				case INIT:
 					resetLedStrip();
 					mLEDControllers.add(
 							new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex));
 					mLEDControllers.add(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex,
-							mConfig.limelightSegmentBackIndex, Color.HSV.WHITE,
-							Color.HSV.BLUE, 3));
+							mConfig.limelightSegmentBackIndex, Color.HSV.kWhite,
+							Color.HSV.kBlue, 3));
 					break;
 				case DISABLE:
 //					mLEDControllers.add(new DisabledSequenceController(mConfig.backSegmentFirstIndex,
@@ -76,7 +79,7 @@ public class Lighting extends SubsystemBase {
 				case TARGET_FOUND:
 					System.out.println("entering");
 					mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
-							mConfig.limelightSegmentBackIndex, Color.HSV.LIMELIGHT_GREEN, 3));
+							mConfig.limelightSegmentBackIndex, Color.HSV.kLime, 3));
 					break;
 				case INDEXER_COUNT:
 				case HOPPER_OPEN:
@@ -84,7 +87,7 @@ public class Lighting extends SubsystemBase {
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
 					mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
-							mConfig.limelightSegmentBackIndex, Color.HSV.RED, 3));
+							mConfig.limelightSegmentBackIndex, Color.HSV.kRed, 3));
 					break;
 				default:
 					break;
@@ -109,5 +112,4 @@ public class Lighting extends SubsystemBase {
 	public AddressableLEDBuffer getOutput() {
 		return mOutputBuffer;
 	}
-
 }

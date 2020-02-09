@@ -6,9 +6,10 @@ import java.util.Objects;
 
 import com.palyrobotics.frc2020.util.Color;
 
+@SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class LightingOutputs {
 
-	public List<Color.HSV> lightingOutput; // array of ints for rgb values
+	public List<Color.HSV> lightingOutput;
 
 	public LightingOutputs() {
 		lightingOutput = new ArrayList<>();
