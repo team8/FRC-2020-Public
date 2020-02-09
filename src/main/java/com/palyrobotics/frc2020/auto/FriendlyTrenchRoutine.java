@@ -16,24 +16,24 @@ public abstract class FriendlyTrenchRoutine extends AutoBase {
 		return new SequentialRoutine(
 				new DriveSetOdometryRoutine(0, 0, 180),
 				getBallsRoutine, new DrivePathRoutine(
-						newWaypoint(40, 55, 0),
-						newWaypoint(170, 55, 0)));
+						newWaypoint(40, 70, 0),
+						newWaypoint(170, 70, 0)));
 	}
 
 	SequentialRoutine CenterReverseRight90DegreeFriendlyTrench() {
 		return new SequentialRoutine(
 				new DriveSetOdometryRoutine(0, 0, 180),
 				getBallsRoutine,
-				new DrivePathRoutine(newWaypoint(40, 55, 0)).reverse(),
-				new DrivePathRoutine(newWaypoint(170, 55, 0)));
+				new DrivePathRoutine(newWaypoint(40, 70, 0)).driveInReverse(),
+				new DrivePathRoutine(newWaypoint(170, 70, 0)));
 	}
 
 	SequentialRoutine CenterTwoPointTurnFriendlyTrench() {
 		return new SequentialRoutine(
 				new DriveSetOdometryRoutine(0, 0, 180),
-				new DrivePathRoutine(newWaypoint(25, -35, 90)).reverse(),
 				getBallsRoutine,
-				new DrivePathRoutine(newWaypoint(80, 55, 0), newWaypoint(170, 55, 0)));
+				new DrivePathRoutine(newWaypoint(25, -35, 90)).reverse(),
+				new DrivePathRoutine(newWaypoint(80, 70, 0), newWaypoint(170, 70, 0)));
 	}
 
 	SequentialRoutine Left180FriendlyTrench() {
