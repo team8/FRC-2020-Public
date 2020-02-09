@@ -77,7 +77,6 @@ public class Lighting extends SubsystemBase {
 //							mConfig.backSegmentBackIndex));
 					break;
 				case TARGET_FOUND:
-					System.out.println("entering");
 					mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
 							mConfig.limelightSegmentBackIndex, Color.HSV.kLime, 3));
 					break;
@@ -95,7 +94,6 @@ public class Lighting extends SubsystemBase {
 		}
 		for (LEDController ledController : mLEDControllers) {
 			LightingOutputs currentOutput = ledController.update(commands, robotState);
-			System.out.println(ledController.getClass().getName());
 			for (int i = 0; i < currentOutput.lightingOutput.size(); i++) {
 				Color.HSV hsvValue = currentOutput.lightingOutput.get(i);
 				mOutputBuffer.setHSV(i + ledController.mInitIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());
