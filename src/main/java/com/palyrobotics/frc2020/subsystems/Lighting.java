@@ -6,10 +6,7 @@ import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
-import com.palyrobotics.frc2020.subsystems.controllers.lighting.ConvergingBandsController;
-import com.palyrobotics.frc2020.subsystems.controllers.lighting.FlashingLightsController;
-import com.palyrobotics.frc2020.subsystems.controllers.lighting.InitSequenceController;
-import com.palyrobotics.frc2020.subsystems.controllers.lighting.OneColorController;
+import com.palyrobotics.frc2020.subsystems.controllers.lighting.*;
 import com.palyrobotics.frc2020.util.Color;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LightingOutputs;
@@ -40,6 +37,10 @@ public class Lighting extends SubsystemBase {
 		}
 
 		public abstract void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state);
+
+		public boolean checkFinished() {
+			return false;
+		}
 	}
 
 	private Lighting() {
@@ -61,23 +62,23 @@ public class Lighting extends SubsystemBase {
 					resetLedStrip();
 					break;
 				case IDLE:
-					mLEDControllers.add(new OneColorController(mConfig.totalSegmentFirstIndex,
+					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentBackIndex, Color.HSV.kWhite));
 					break;
 				case INIT:
 					resetLedStrip();
-					mLEDControllers.add(
+					addToControllers(
 							new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex));
-					mLEDControllers.add(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex,
+					addToControllers(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex,
 							mConfig.limelightSegmentBackIndex, Color.HSV.kWhite,
 							Color.HSV.kBlue, 3));
 					break;
 				case DISABLE:
-//					mLEDControllers.add(new DisabledSequenceController(mConfig.backSegmentFirstIndex,
-//							mConfig.backSegmentBackIndex));
+					addToControllers(new DisabledSequenceController(mConfig.backSegmentFirstIndex,
+							mConfig.backSegmentBackIndex));
 					break;
 				case TARGET_FOUND:
-					mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
+					addToControllers(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
 							mConfig.limelightSegmentBackIndex, Color.HSV.kLime, 3));
 					break;
 				case INDEXER_COUNT:
@@ -85,23 +86,30 @@ public class Lighting extends SubsystemBase {
 				case CLIMB_EXTENDED:
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
-					mLEDControllers.add(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
-							mConfig.limelightSegmentBackIndex, Color.HSV.kRed, 3));
+					addToControllers(new PulseController(new Color.HSV[] { Color.HSV.kRed }, 0, 20, 1.0 / 6.0));
 					break;
 				default:
 					break;
 			}
 		}
+		ArrayList<LEDController> toRemove = new ArrayList<>();
 		for (LEDController ledController : mLEDControllers) {
+			if (ledController.checkFinished()) {
+				toRemove.add(ledController);
+			}
 			LightingOutputs currentOutput = ledController.update(commands, robotState);
 			for (int i = 0; i < currentOutput.lightingOutput.size(); i++) {
 				Color.HSV hsvValue = currentOutput.lightingOutput.get(i);
 				mOutputBuffer.setHSV(i + ledController.mInitIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());
 			}
 		}
+		for (LEDController ledController : toRemove) {
+			mLEDControllers.remove(ledController);
+		}
 	}
 
 	private void resetLedStrip() {
+		mLEDControllers.clear();
 		for (int i = 0; i < mOutputBuffer.getLength(); i++) {
 			mOutputBuffer.setRGB(i, 0, 0, 0);
 		}
@@ -109,5 +117,14 @@ public class Lighting extends SubsystemBase {
 
 	public AddressableLEDBuffer getOutput() {
 		return mOutputBuffer;
+	}
+	void addToControllers(LEDController controller) {
+		for (var i = mLEDControllers.size() - 1; i >= 0; i--) {
+			if (mLEDControllers.get(i).mInitIndex == controller.mInitIndex &&
+					mLEDControllers.get(i).mLastIndex == controller.mLastIndex) {
+				mLEDControllers.remove(i);
+			}
+		}
+		mLEDControllers.add(controller);
 	}
 }

@@ -9,6 +9,7 @@ import com.palyrobotics.frc2020.util.Color;
 public class DisabledSequenceController extends Lighting.LEDController {
 
 	private int mCurrentHue = 0;
+	private boolean mIsHueUpwards;
 
 	public DisabledSequenceController(int initIndex, int lastIndex) {
 		mInitIndex = initIndex;
@@ -20,7 +21,13 @@ public class DisabledSequenceController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		mCurrentHue = mCurrentHue >= 200 ? mCurrentHue-- : mCurrentHue++;
+		if (mCurrentHue >= 200) {
+			mIsHueUpwards = false;
+		}
+		if (mCurrentHue <= 0) {
+			mIsHueUpwards = true;
+		}
+		mCurrentHue = mIsHueUpwards ? mCurrentHue++ : mCurrentHue--;
 
 		for (var i = 0; i < mOutputs.lightingOutput.size(); i++) {
 			mOutputs.lightingOutput.get(i).setH(mCurrentHue);
