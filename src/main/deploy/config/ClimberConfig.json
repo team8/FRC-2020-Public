@@ -5,8 +5,6 @@
     "velocityChangeThreshold": 0.0,
     "raisingArbitraryDemand": 0.0,
     "climbingArbitraryDemand": 0.0,
-    "positionConversionFactor": 0.0,
-    "velocityConversionFactor": 0.0,
     "raisingGains": {
 
     },

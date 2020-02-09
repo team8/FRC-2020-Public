@@ -40,9 +40,9 @@ public class RamseteDriveController extends Drive.DriveController {
 		ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
 		DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kKinematics.toWheelSpeeds(speeds);
 		// TODO: remove 60
-		mOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond * 60.0,
+		mOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond,
 				mConfig.profiledVelocityGains);
-		mOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond * 60.0,
+		mOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond,
 				mConfig.profiledVelocityGains);
 		CSVWriter.addData("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
 		CSVWriter.addData("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);

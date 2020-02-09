@@ -252,7 +252,6 @@ public class Robot extends TimedRobot {
 
 	private void setDriveIdleMode(boolean isIdle) {
 		// TODO: drive disabled neutral state should probably be in commands
-		if (mEnabledSubsystems
-				.contains(mDrive)) mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
+		if (mEnabledSubsystems.contains(mDrive)) mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
 	}
 }

@@ -1,19 +1,18 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.util.List;
 import java.util.Set;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
-import com.palyrobotics.frc2020.config.constants.DriveConstants;
-import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.control.Spark;
-import com.revrobotics.CANEncoder;
+import com.palyrobotics.frc2020.util.control.Falcon;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -45,100 +44,85 @@ public class HardwareWriter {
 
 	private void configureClimberHardware() {
 		var climberHardware = HardwareAdapter.ClimberHardware.getInstance();
-		var config = Configs.get(ClimberConfig.class);
 		climberHardware.verticalSpark.restoreFactoryDefaults();
 		climberHardware.horizontalSpark.restoreFactoryDefaults();
-		climberHardware.verticalSpark.enableVoltageCompensation(12);
-		climberHardware.verticalSpark.getEncoder().setPositionConversionFactor(config.positionConversionFactor);
-		climberHardware.verticalSpark.getEncoder().setVelocityConversionFactor(config.velocityConversionFactor);
+		climberHardware.verticalSpark.enableVoltageCompensation(12.0);
+		climberHardware.horizontalSpark.enableVoltageCompensation(12.0);
+		/* Encoder units are inches and inches/sec */
+		climberHardware.verticalSparkEncoder.setPositionConversionFactor(17.0666667 * 4.0 * Math.PI);
+		climberHardware.verticalSparkEncoder.setVelocityConversionFactor(17.0666667 * 4.0 * Math.PI / 60.0);
 		climberHardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		climberHardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
-
 	}
 
 	private void configureDriveHardware() {
 		var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
 		var driveConfig = Configs.get(DriveConfig.class);
-		for (Spark spark : driveHardware.sparks) {
-			spark.restoreFactoryDefaults();
-			spark.enableVoltageCompensation(DriveConstants.kMaxVoltage);
-			CANEncoder encoder = spark.getEncoder();
-			encoder.setPositionConversionFactor(DriveConstants.kDriveMetersPerRotation);
-			encoder.setVelocityConversionFactor(DriveConstants.kDriveMetersPerSecondPerRpm);
-			spark.setSmartCurrentLimit(driveConfig.stallCurrentLimit, driveConfig.freeCurrentLimit,
-					driveConfig.freeRpmLimit);
-			spark.setOpenLoopRampRate(driveConfig.controllerRampRate);
-			spark.setClosedLoopRampRate(driveConfig.controllerRampRate);
+		for (Falcon falcon : driveHardware.falcons) {
+			falcon.configFactoryDefault();
+			falcon.enableVoltageCompensation(true);
+			falcon.configVoltageCompSaturation(12.0, kTimeoutMs);
+			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,
+					kPidIndex, kTimeoutMs);
+			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero,
+					kTimeoutMs);
+			falcon.configOpenloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
+			falcon.configClosedloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
+			falcon.configSensorConversions(driveConfig.positionConversion,
+					driveConfig.velocityConversion);
 		}
+
 		/* Left Side */
-		for (Spark spark : List.of(driveHardware.leftMasterSpark, driveHardware.leftSlave1Spark,
-				driveHardware.leftSlave2Spark)) {
-			spark.setInverted(false);
-		}
-		for (Spark spark : List.of(driveHardware.leftSlave1Spark, driveHardware.leftSlave2Spark)) {
-			spark.follow(driveHardware.leftMasterSpark);
-		}
+		driveHardware.leftMasterFalcon.setInverted(true);
+		driveHardware.leftSlaveFalcon.follow(driveHardware.leftMasterFalcon);
+		driveHardware.leftSlaveFalcon.setInverted(InvertType.FollowMaster);
+
 		/* Right Side */
-		for (Spark spark : List.of(driveHardware.rightMasterSpark, driveHardware.rightSlave1Spark,
-				driveHardware.rightSlave2Spark)) {
-			spark.setInverted(true); // Note: Inverted
-		}
-		for (Spark spark : List.of(driveHardware.rightSlave1Spark, driveHardware.rightSlave2Spark)) {
-			spark.follow(driveHardware.rightMasterSpark);
-		}
+		driveHardware.rightMasterFalcon.setInverted(false);
+		driveHardware.rightSlaveFalcon.follow(driveHardware.rightMasterFalcon);
+		driveHardware.rightSlaveFalcon.setInverted(InvertType.FollowMaster);
+
+		resetDriveSensors(new Pose2d());
 	}
 
-	// private void configureDriveHardware() {
-	// var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-	// var driveConfig = Configs.get(DriveConfig.class);
-	// for (Falcon falcon : driveHardware.falcons) {
-	// falcon.configFactoryDefault();
-	// falcon.enableVoltageCompensation(true);
-	// falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,
-	// kPidIndex, kTimeoutMs);
-	// falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero,
-	// kTimeoutMs);
-	// falcon.configOpenloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
-	// falcon.configClosedloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
-	// falcon.configSensorConversions(driveConfig.positionConversion,
-	// driveConfig.velocityConversion);
-	// }
-	//
-	// /* Left Side */
-	// driveHardware.leftMasterFalcon.setInverted(false);
-	// driveHardware.leftSlaveFalcon.setInverted(false);
-	// driveHardware.leftSlaveFalcon.follow(driveHardware.leftMasterFalcon);
-	//
-	// /* Right Side */
-	// driveHardware.rightMasterFalcon.setInverted(false);
-	// driveHardware.rightSlaveFalcon.setInverted(false);
-	// driveHardware.rightSlaveFalcon.follow(driveHardware.rightMasterFalcon);
-	//
-	// resetDriveSensors(new Pose2d());
-	// }
-
 	private void configureIndexerHardware() {
-		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
-		indexerHardware.horizontalSpark.restoreFactoryDefaults();
-		indexerHardware.verticalSpark.restoreFactoryDefaults();
-		indexerHardware.verticalSpark.follow(indexerHardware.horizontalSpark);
+		var hardware = HardwareAdapter.IndexerHardware.getInstance();
+		hardware.masterSpark.restoreFactoryDefaults();
+		hardware.slaveSpark.restoreFactoryDefaults();
+		hardware.masterSpark.enableVoltageCompensation(12);
+		hardware.slaveSpark.enableVoltageCompensation(12);
+		hardware.slaveSpark.follow(hardware.masterSpark);
+		hardware.masterSpark.setOpenLoopRampRate(0.1);
+		hardware.masterSpark.setInverted(true);
 	}
 
 	private void configureIntakeHardware() {
-		var intakeHardware = HardwareAdapter.IntakeHardware.getInstance();
-		intakeHardware.talon.configFactoryDefault(kTimeoutMs);
+		var talon = HardwareAdapter.IntakeHardware.getInstance().talon;
+		talon.configFactoryDefault(kTimeoutMs);
+		talon.enableVoltageCompensation(true);
+		talon.configVoltageCompSaturation(12, kTimeoutMs);
+		talon.configOpenloopRamp(0.1, kTimeoutMs);
+		talon.setInverted(true);
 	}
 
 	private void configureShooterHardware() {
-		var shooterHardware = HardwareAdapter.ShooterHardware.getInstance();
-		shooterHardware.masterSpark.restoreFactoryDefaults();
-		shooterHardware.slaveSpark.follow(shooterHardware.masterSpark);
-		// TODO: Add velocity conversions and other configs
+		var hardware = HardwareAdapter.ShooterHardware.getInstance();
+		hardware.masterSpark.restoreFactoryDefaults();
+		hardware.slaveSpark.restoreFactoryDefaults();
+		hardware.slaveSpark.follow(hardware.masterSpark);
+		hardware.masterSpark.setInverted(false);
+		hardware.slaveSpark.setInverted(true);
+		/* Velocity in RPM, adjusted for gearing ratio */
+		hardware.masterEncoder.setVelocityConversionFactor(0.76923076);
+		// TODO: Current limiting and closed/open loop ramp rates
 	}
 
 	private void configureSpinnerHardware() {
-		var spinnerHardware = HardwareAdapter.SpinnerHardware.getInstance();
-		spinnerHardware.talon.configFactoryDefault(kTimeoutMs);
+		var talon = HardwareAdapter.SpinnerHardware.getInstance().talon;
+		talon.configFactoryDefault(kTimeoutMs);
+		talon.configOpenloopRamp(0.1, kTimeoutMs);
+		talon.enableVoltageCompensation(true);
+		talon.configVoltageCompSaturation(12, kTimeoutMs);
 	}
 
 	// public void resetDriveSensors(Pose2d pose) {
@@ -153,16 +137,13 @@ public class HardwareWriter {
 		double heading = pose.getRotation().getDegrees();
 		var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
 		driveHardware.gyro.setYaw(heading, kTimeoutMs);
-		driveHardware.leftMasterEncoder.setPosition(0.0);
-		driveHardware.rightMasterEncoder.setPosition(0.0);
-		Log.info(kLoggerTag, String.format("Drive Sensors Reset to %s", heading));
+		driveHardware.leftMasterFalcon.setSelectedSensorPosition(0);
+		driveHardware.rightMasterFalcon.setSelectedSensorPosition(0);
+		Log.info(kLoggerTag, String.format("Drive sensors reset, gyro heading: %s", heading));
 	}
 
 	void setDriveNeutralMode(NeutralMode neutralMode) {
-		// HardwareAdapter.DrivetrainHardware.getInstance().falcons.forEach(spark ->
-		// spark.setNeutralMode(neutralMode));
-		HardwareAdapter.DrivetrainHardware.getInstance().sparks.forEach(spark -> spark.setIdleMode(
-				neutralMode == NeutralMode.Brake ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast));
+		HardwareAdapter.DrivetrainHardware.getInstance().falcons.forEach(falcon -> falcon.setNeutralMode(neutralMode));
 	}
 
 	/**
@@ -198,13 +179,13 @@ public class HardwareWriter {
 
 	private void updateDrivetrain() {
 		var drivetrainHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-		drivetrainHardware.leftMasterSpark.setOutput(mDrive.getDriveSignal().leftOutput);
-		drivetrainHardware.rightMasterSpark.setOutput(mDrive.getDriveSignal().rightOutput);
+		drivetrainHardware.leftMasterFalcon.setOutput(mDrive.getDriveSignal().leftOutput);
+		drivetrainHardware.rightMasterFalcon.setOutput(mDrive.getDriveSignal().rightOutput);
 	}
 
 	private void updateIndexer() {
 		var indexerHardware = HardwareAdapter.IndexerHardware.getInstance();
-		indexerHardware.horizontalSpark.setOutput(mIndexer.getOutput());
+		indexerHardware.masterSpark.setOutput(mIndexer.getOutput());
 		indexerHardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
 		indexerHardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 	}

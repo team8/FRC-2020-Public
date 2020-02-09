@@ -12,6 +12,5 @@ public class ClimberConfig extends SubsystemConfigBase {
 	public double velocityChangeThreshold;
 
 	public double raisingArbitraryDemand, climbingArbitraryDemand;
-	public double positionConversionFactor, velocityConversionFactor;
 	public ProfiledGains raisingGains, climbingGains;
 }

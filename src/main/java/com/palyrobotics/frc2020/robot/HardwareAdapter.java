@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
 import com.palyrobotics.frc2020.util.control.TimedSolenoid;
@@ -43,51 +44,21 @@ public class HardwareAdapter {
 		}
 	}
 
-	// /**
-	// * 4 Falcon 500s (controlled by Talon FX), 1 Pigeon IMU Gyro connected via
-	// Talon
-	// * SRX data cable.
-	// */
-	// static class DrivetrainHardware {
-	//
-	// private static DrivetrainHardware sInstance;
-	//
-	// final Falcon leftMasterFalcon = new
-	// Falcon(sPortConstants.nariDriveLeftMasterId),
-	// leftSlaveFalcon = new Falcon(sPortConstants.nariDriveLeftSlaveId);
-	// final Falcon rightMasterFalcon = new
-	// Falcon(sPortConstants.nariDriveRightMasterId),
-	// rightSlaveFalcon = new Falcon(sPortConstants.nariDriveRightSlaveId);
-	//
-	// final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon,
-	// rightMasterFalcon, rightSlaveFalcon);
-	//
-	// // TODO: Update this
-	// final PigeonIMU gyro = new PigeonIMU(new WPI_TalonSRX(8));
-	//
-	// private DrivetrainHardware() {
-	// }
-	//
-	// static DrivetrainHardware getInstance() {
-	// if (sInstance == null)
-	// sInstance = new DrivetrainHardware();
-	// return sInstance;
-	// }
-	// }
-
-	// TODO: remove
 	/**
-	 * 6 Spark Maxes, 1 Pigeon Gyro via TalonSRX data cable.
+	 * 4 Falcon 500s (controlled by Talon FX), 1 Pigeon IMU Gyro connected via Talon SRX data cable.
 	 */
 	static class DrivetrainHardware {
 
 		private static DrivetrainHardware sInstance;
-		final Spark leftMasterSpark = new Spark(15), leftSlave1Spark = new Spark(14), leftSlave2Spark = new Spark(13),
-				rightMasterSpark = new Spark(20), rightSlave1Spark = new Spark(1), rightSlave2Spark = new Spark(2);
-		final CANEncoder leftMasterEncoder = leftMasterSpark.getEncoder(),
-				rightMasterEncoder = rightMasterSpark.getEncoder();
-		final List<Spark> sparks = List.of(leftMasterSpark, leftSlave1Spark, leftSlave2Spark, rightMasterSpark,
-				rightSlave1Spark, rightSlave2Spark);
+
+		final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId),
+				leftSlaveFalcon = new Falcon(sPortConstants.nariDriveLeftSlaveId);
+		final Falcon rightMasterFalcon = new Falcon(sPortConstants.nariDriveRightMasterId),
+				rightSlaveFalcon = new Falcon(sPortConstants.nariDriveRightSlaveId);
+
+		final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon,
+				rightMasterFalcon, rightSlaveFalcon);
+
 		final PigeonIMU gyro = new PigeonIMU(new WPI_TalonSRX(8));
 
 		private DrivetrainHardware() {
@@ -105,9 +76,8 @@ public class HardwareAdapter {
 	static class IndexerHardware {
 
 		private static IndexerHardware sInstance;
-		final Spark horizontalSpark = new Spark(sPortConstants.nariIndexerMasterId),
-				verticalSpark = new Spark(sPortConstants.nariIndexerSlaveId);
-
+		final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId),
+				slaveSpark = new Spark(sPortConstants.nariIndexerSlaveId);
 		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.2, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);
 		final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDio),
