@@ -73,12 +73,12 @@ public class HardwareWriter {
 		}
 
 		/* Left Side */
-		driveHardware.leftMasterFalcon.setInverted(true);
+		driveHardware.leftMasterFalcon.setInverted(false);
 		driveHardware.leftSlaveFalcon.follow(driveHardware.leftMasterFalcon);
 		driveHardware.leftSlaveFalcon.setInverted(InvertType.FollowMaster);
 
 		/* Right Side */
-		driveHardware.rightMasterFalcon.setInverted(false);
+		driveHardware.rightMasterFalcon.setInverted(true);
 		driveHardware.rightSlaveFalcon.follow(driveHardware.rightMasterFalcon);
 		driveHardware.rightSlaveFalcon.setInverted(InvertType.FollowMaster);
 
