@@ -11,6 +11,7 @@ import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllR
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedSingleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
+import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.Joysticks;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
@@ -45,7 +46,21 @@ public class OperatorInterface {
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
-		updateSpinnerCommands(commands);
+
+//		updateSpinnerCommands(commands);
+
+		// TODO: remove
+		if (mOperatorXboxController.getAButtonPressed()) {
+			var customVelocity = Configs.get(ShooterConfig.class).customVelocity;
+			commands.setShooterCustomFlywheelVelocity(customVelocity, Shooter.HoodState.LOW);
+		}
+
+//		if (mTurnStick.getRawButtonPressed(6)) {
+//			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
+//		}
+//		if (mTurnStick.getRawButtonReleased(6)) {
+//			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
+//		}
 
 		mOperatorXboxController.updateLastInputs();
 	}
@@ -108,6 +123,9 @@ public class OperatorInterface {
 					-mDriveStick.getY(), mTurnStick.getX(),
 					mTurnStick.getTrigger(), mDriveStick.getTrigger());
 		}
+		if (mTurnStick.getRawButtonReleased(3) || mTurnStick.getRawButtonReleased(4)) {
+			commands.visionWanted = false;
+		}
 		/* Path Following */
 //		if (mOperatorXboxController.getDPadDownPressed()) {
 //			commands.addWantedRoutine(
@@ -157,6 +175,8 @@ public class OperatorInterface {
 			commands.setShooterVisionAssisted(commands.visionWantedPipeline);
 		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
 			commands.setShooterIdle();
+			commands.visionWanted = false;
+			commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		}
 		// Feeding
 		if (state.shooterIsReadyToShoot) {

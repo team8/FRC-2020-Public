@@ -14,6 +14,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.util.service.TelemetryService;
 import com.palyrobotics.frc2020.vision.Limelight;
 
@@ -73,8 +74,9 @@ public class Shooter extends SubsystemBase {
 				break;
 		}
 		targetFlywheelVelocity = Util.clamp(targetFlywheelVelocity, 0.0, mConfig.maxVelocity);
-		TelemetryService.putArbitrary("shooter.targetDistance", targetDistanceInches);
-		TelemetryService.putArbitrary("shooter.targetVelocity", targetFlywheelVelocity);
+		LiveGraph.add("shooter.targetDistance", targetDistanceInches == null ? -1 : targetDistanceInches);
+		LiveGraph.add("shooter.targetVelocity", targetFlywheelVelocity);
+		LiveGraph.add("shooter.currentVelocity", state.shooterFlywheelVelocity);
 		boolean shouldUpdateHood = !state.shooterHoodIsInTransition && targetFlywheelVelocity > kEpsilon;
 		if (shouldUpdateHood) updateHood(commands, state, targetDistanceInches);
 		mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);

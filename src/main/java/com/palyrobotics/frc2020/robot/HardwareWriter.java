@@ -90,7 +90,7 @@ public class HardwareWriter {
 		hardware.slaveSpark.restoreFactoryDefaults();
 		hardware.masterSpark.enableVoltageCompensation(12);
 		hardware.slaveSpark.enableVoltageCompensation(12);
-//		hardware.slaveSpark.follow(hardware.masterSpark);
+		hardware.slaveSpark.follow(hardware.masterSpark);
 		hardware.masterSpark.setOpenLoopRampRate(0.1);
 		hardware.masterSpark.setInverted(false);
 		hardware.masterSpark.setSmartCurrentLimit(60);
@@ -112,7 +112,7 @@ public class HardwareWriter {
 		hardware.slaveSpark.follow(hardware.masterSpark, true);
 		hardware.masterSpark.setInverted(false);
 		/* Velocity in RPM, adjusted for gearing ratio */
-		hardware.masterEncoder.setVelocityConversionFactor(0.76923076);
+//		hardware.masterEncoder.setVelocityConversionFactor(0.76923076);
 		// TODO: Current limiting and closed/open loop ramp rates
 	}
 
@@ -185,7 +185,9 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
 		hardware.masterSpark.setOutput(mIndexer.getOutput());
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
-		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
+//		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
+		// TODO: remove
+		hardware.blockingSolenoid.setExtended(false);
 	}
 
 	private void updateIntake() {
@@ -199,6 +201,7 @@ public class HardwareWriter {
 	private void updateShooter() {
 		var hardware = HardwareAdapter.ShooterHardware.getInstance();
 		hardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
+		LiveGraph.add("shooter", mShooter.getFlywheelOutput().getReference());
 		hardware.blockingSolenoid.setExtended(mShooter.getBlockingOutput());
 		hardware.hoodSolenoid.setExtended(mShooter.getHoodOutput());
 		mRumbleOutput |= mShooter.getRumbleOutput();

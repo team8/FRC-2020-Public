@@ -11,7 +11,7 @@ import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
 public class IndexerFeedSingleRoutine extends TimeoutRoutineBase {
 
-	private boolean mHasBallPassed;
+	private boolean mLastIndexerHasTopBall;
 
 	public IndexerFeedSingleRoutine() {
 		super(3.0);
@@ -24,19 +24,18 @@ public class IndexerFeedSingleRoutine extends TimeoutRoutineBase {
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		commands.indexerWantedBeltState = Indexer.BeltState.FEED_SINGLE;
-		if (!mHasBallPassed && state.indexerHasTopBall) {
-			mHasBallPassed = true;
-		}
 	}
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
-		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
+		commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
 	}
 
 	@Override
 	public boolean checkIfFinishedEarly(RobotState state) {
-		return mHasBallPassed;
+		boolean isFinished = mLastIndexerHasTopBall && !state.indexerHasTopBall;
+		mLastIndexerHasTopBall = state.indexerHasTopBall;
+		return isFinished;
 	}
 
 	@Override

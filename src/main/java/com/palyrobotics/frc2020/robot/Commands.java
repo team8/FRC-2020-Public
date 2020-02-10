@@ -163,6 +163,7 @@ public class Commands {
 
 	public void setShooterVisionAssisted(int visionPipeline) {
 		shooterWantedState = Shooter.ShooterState.VISION_VELOCITY;
+		visionWanted = true;
 		visionWantedPipeline = visionPipeline;
 	}
 

@@ -1,9 +1,11 @@
 {
     "velocityGains": {
-
+        "f": 0.000252,
+        "p": 0.00016
     },
     "maxVelocity": 5000.0,
-    "velocityTolerance": 100.0,
+    "velocityTolerance": 200.0,
     "rumbleDurationSeconds": 0.1,
-    "hoodSwitchDistanceThreshold": 10.0
+    "hoodSwitchDistanceThreshold": 10.0,
+    "customVelocity": 2100
 }

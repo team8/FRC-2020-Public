@@ -37,7 +37,7 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = true;
 				break;
 			case INDEX:
-				mOutput.setPercentOutput(-mConfig.indexingOutput);
+				mOutput.setPercentOutput(mConfig.indexingOutput);
 				mBlockOutput = true;
 				break;
 			case WAITING_TO_FEED:

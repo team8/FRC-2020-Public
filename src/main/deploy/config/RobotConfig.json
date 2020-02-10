@@ -1,11 +1,15 @@
 {
 	"enabledServices": [
 		"commandReceiverService",
-		"networkLoggerService"
+		"networkLoggerService",
+		"telemetryService"
 	],
 	"enabledSubsystems": [
+		"shooter",
+		"indexer",
 		"intake",
-		"indexer"
+		"drive",
+		"spinner"
 	],
 	"coastDriveIfDisabled": false,
 	"motorOutputMultiplier": 1.0,

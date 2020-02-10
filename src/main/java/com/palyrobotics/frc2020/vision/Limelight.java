@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.vision;
 
+import com.esotericsoftware.minlog.Log;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.vision.LimelightControlMode.*;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -202,13 +204,21 @@ public class Limelight {
 	 * @return dist - the estimated distance
 	 */
 	public double getEstimatedDistanceZ() {
-		// TODO implement
-		double a1 = 0.0;
+		double oneTimesZoomAngle = 37.29759588;
+		double twoTimesZoomAngle = 35.34009588;
 		double a2 = getPitchToTarget();
-		double h1 = 50.0;
-		double h2 = 80.0;
+		double h1 = 32.5;
+		double h2 = 90.5;
+		LiveGraph.add("pitch", getPitchToTarget());
 		// Avoid divide by zero
-		return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(a1 + a2))));
+		if (getPipeline() == 0) {
+			return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(oneTimesZoomAngle + a2))));
+		} else if (getPipeline() == 1) {
+			return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(twoTimesZoomAngle + a2))));
+		} else {
+			Log.warn("Wrong pipeline used for distance estimation");
+			return 0;
+		}
 	}
 
 	/**

@@ -10,4 +10,6 @@ public class ShooterConfig extends SubsystemConfigBase {
 	public double maxVelocity, velocityTolerance;
 	public double rumbleDurationSeconds;
 	public double hoodSwitchDistanceThreshold;
+	// TODO: remove
+	public double customVelocity;
 }

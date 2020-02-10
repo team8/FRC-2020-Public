@@ -5,6 +5,7 @@ import java.util.Set;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.*;
 import com.palyrobotics.frc2020.subsystems.*;
+import com.palyrobotics.frc2020.util.service.TelemetryService;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -106,6 +107,7 @@ public class HardwareReader {
 	private void readShooterState(RobotState robotState) {
 		var hardware = ShooterHardware.getInstance();
 		robotState.shooterFlywheelVelocity = hardware.masterEncoder.getVelocity();
+		TelemetryService.putArbitrary("shooter.flywheelVelocity", robotState.shooterFlywheelVelocity);
 		robotState.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
 		robotState.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();
 		robotState.shooterHoodIsInTransition = hardware.hoodSolenoid.isInTransition() || hardware.blockingSolenoid.isInTransition();
