@@ -5,8 +5,6 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class ConvergingBandsController extends Lighting.LEDController {
 
 	private Color.HSV mBandColor;
@@ -31,7 +29,7 @@ public class ConvergingBandsController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (mTimer.hasPeriodPassed(1/mSpeed)) {
+		if (mTimer.hasPeriodPassed(1 / mSpeed)) {
 			mCurrentBandPosition += 1;
 		}
 		for (var i = 0; i < (mLastIndex - mInitIndex) / 2 - 1; i++) {

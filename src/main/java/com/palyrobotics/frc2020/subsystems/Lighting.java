@@ -90,7 +90,7 @@ public class Lighting extends SubsystemBase {
 				case CLIMB_EXTENDED:
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
-					addToControllers(new PulseController(0, 20,  new Color.HSV[] { Color.HSV.kRed }, (double) 1/6));
+					addToControllers(new PulseController(0, 20, new Color.HSV[] { Color.HSV.kRed }, (double) 1 / 6));
 					break;
 			}
 		}

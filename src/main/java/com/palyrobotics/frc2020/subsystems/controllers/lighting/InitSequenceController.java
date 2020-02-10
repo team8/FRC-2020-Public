@@ -5,8 +5,6 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class InitSequenceController extends Lighting.LEDController {
 
 	private int mCurrentLedIndex;
@@ -21,7 +19,7 @@ public class InitSequenceController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (mTimer.hasPeriodPassed(1/mSpeed) && mCurrentLedIndex <= mLastIndex) {
+		if (mTimer.hasPeriodPassed(1 / mSpeed) && mCurrentLedIndex <= mLastIndex) {
 			mOutputs.lightingOutput
 					.add(Color.HSV.getNewInstance((int) ((mCurrentLedIndex - mInitIndex) * Math.log(mCurrentLedIndex) +
 							5), 247, 100));
