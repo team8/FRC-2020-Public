@@ -30,6 +30,7 @@ public class OperatorInterface {
 
 	public static final double kDeadBand = 0.05;
 	public static final double kClimberEnableControlTimeSeconds = 30;
+	public static final int kOnesTimesZoomAlignRawButton = 3, kTwoTimesZoomAlignButton = 4;
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
@@ -46,10 +47,9 @@ public class OperatorInterface {
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
-
+		// TODO: fix
 //		updateSpinnerCommands(commands);
 
-		// TODO: remove
 		if (mOperatorXboxController.getAButtonPressed()) {
 			var customVelocity = Configs.get(ShooterConfig.class).customVelocity;
 			commands.setShooterCustomFlywheelVelocity(customVelocity, Shooter.HoodState.LOW);
@@ -113,7 +113,8 @@ public class OperatorInterface {
 
 	private void updateDriveCommands(Commands commands) {
 		// Both buttons align, button 3: 2x zoom, button 4: 1x zoom
-		boolean wantsOneTimesAlign = mTurnStick.getRawButton(3), wantsTwoTimesAlign = mTurnStick.getRawButton(4);
+		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignRawButton),
+				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton);
 		if (wantsOneTimesAlign) {
 			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
 		} else if (wantsTwoTimesAlign) {
@@ -123,7 +124,7 @@ public class OperatorInterface {
 					-mDriveStick.getY(), mTurnStick.getX(),
 					mTurnStick.getTrigger(), mDriveStick.getTrigger());
 		}
-		if (mTurnStick.getRawButtonReleased(3) || mTurnStick.getRawButtonReleased(4)) {
+		if (mTurnStick.getRawButtonReleased(kOnesTimesZoomAlignRawButton) || mTurnStick.getRawButtonReleased(kTwoTimesZoomAlignButton)) {
 			commands.visionWanted = false;
 		}
 		/* Path Following */

@@ -93,6 +93,11 @@ public class Spark extends CANSparkMax {
 		void setIZone(int slot, double iZone) {
 			mPidController.setIZone(iZone, slot);
 		}
+
+		@Override
+		void setIMax(int slot, double iMax) {
+			mPidController.setIMaxAccum(iMax, slot);
+		}
 	}
 
 	protected static final Map<ControllerOutput.Mode, ControlType> kModeToController = Map.ofEntries(

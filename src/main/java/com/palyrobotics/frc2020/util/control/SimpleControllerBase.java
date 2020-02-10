@@ -28,10 +28,8 @@ public abstract class SimpleControllerBase<TController> {
 	public boolean setOutput(ControllerOutput output) {
 		ControllerOutput.Mode mode = output.getControlMode();
 		// Checks to make sure we are using this properly
-		boolean isProfiled = mode == ControllerOutput.Mode.PROFILED_POSITION ||
-				mode == ControllerOutput.Mode.PROFILED_VELOCITY,
-				requiresGains = isProfiled || mode == ControllerOutput.Mode.POSITION ||
-						mode == ControllerOutput.Mode.VELOCITY;
+		boolean isProfiled = mode == ControllerOutput.Mode.PROFILED_POSITION || mode == ControllerOutput.Mode.PROFILED_VELOCITY,
+				requiresGains = isProfiled || mode == ControllerOutput.Mode.POSITION || mode == ControllerOutput.Mode.VELOCITY;
 		Gains gains = output.getGains();
 		// Slot is determined based on control mode
 		// TODO add feature to add custom slots
@@ -39,8 +37,7 @@ public abstract class SimpleControllerBase<TController> {
 		updateGainsIfChanged(gains, slot);
 		boolean areGainsEqual = !requiresGains || Objects.equals(gains, mLastGains.get(slot));
 		double reference = output.getReference(), arbitraryPercentOutput = output.getArbitraryDemand();
-		if (!areGainsEqual || slot != mLastSlot || mode != mLastMode || reference != mLastReference ||
-				arbitraryPercentOutput != mLastArbitraryPercentOutput) {
+		if (!areGainsEqual || slot != mLastSlot || mode != mLastMode || reference != mLastReference || arbitraryPercentOutput != mLastArbitraryPercentOutput) {
 			if (setReference(mode, slot, reference, arbitraryPercentOutput)) {
 				mLastSlot = slot;
 				mLastMode = mode;
@@ -56,7 +53,8 @@ public abstract class SimpleControllerBase<TController> {
 				// System.out.printf("%s, %d, %f, %f, %s%n", type, slot, reference,
 				// arbitraryPercentOutput, Configs.toJson(gains));
 			} else {
-				DriverStation.reportError(String.format("Error updating output on spark max with ID: %d", getId()),
+				DriverStation.reportError(
+						String.format("Error updating output on spark max with ID: %d", getId()),
 						new RuntimeException().getStackTrace());
 			}
 		}
@@ -85,6 +83,7 @@ public abstract class SimpleControllerBase<TController> {
 		if (Double.compare(lastGains.d, newGains.d) != 0) setD(slot, newGains.d);
 		if (Double.compare(lastGains.f, newGains.f) != 0) setF(slot, newGains.f);
 		if (Double.compare(lastGains.iZone, newGains.iZone) != 0) setIZone(slot, newGains.iZone);
+		if (Double.compare(lastGains.iMax, newGains.iMax) != 0) setIMax(slot, newGains.iMax);
 	}
 
 	abstract void setP(int slot, double p);
@@ -96,4 +95,6 @@ public abstract class SimpleControllerBase<TController> {
 	abstract void setF(int slot, double f);
 
 	abstract void setIZone(int slot, double iZone);
+
+	abstract void setIMax(int slot, double iMax);
 }

@@ -9,6 +9,7 @@ public class DriveConfig extends SubsystemConfigBase {
 
 	public Gains velocityGains;
 	public ProfiledGains profiledVelocityGains, turnGains;
+	public double turnGainsS;
 	public double quickStopWeight, quickTurnScalar, quickStopDeadBand, quickStopScalar, turnSensitivity,
 			lowNegativeInertiaThreshold, lowNegativeInertiaFarScalar, lowNegativeInertiaCloseScalar,
 			lowNegativeInertiaTurnScalar, wheelNonLinearity, controllerRampRate;

@@ -21,8 +21,10 @@ public class AlignDriveController extends ChezyDriveController {
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		if (mLimelight.isTargetFound()) {
 			mPidController.setPID(mVisionConfig.gains.p, mVisionConfig.gains.i, mVisionConfig.gains.d);
+			mPidController.setIntegratorRange(-mVisionConfig.gains.iMax, mVisionConfig.gains.iMax);
 			double percentOutput = mPidController.calculate(mLimelight.getYawToTarget());
 			percentOutput = Util.clamp(percentOutput, -kMaxAngularPower, kMaxAngularPower);
+			percentOutput += Math.signum(percentOutput) * mVisionConfig.gainsS;
 			double rightPercentOutput = percentOutput, leftPercentOutput = -percentOutput;
 			mOutputs.leftOutput.setPercentOutput(leftPercentOutput);
 			mOutputs.rightOutput.setPercentOutput(rightPercentOutput);

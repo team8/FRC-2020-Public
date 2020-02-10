@@ -1,5 +1,6 @@
 package com.palyrobotics.frc2020.util.control;
 
+import static com.palyrobotics.frc2020.robot.HardwareWriter.kTimeoutMs;
 import static java.util.Map.entry;
 
 import java.util.Map;
@@ -8,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.palyrobotics.frc2020.robot.HardwareWriter;
 
 public class Talon extends TalonSRX {
 
@@ -24,23 +24,23 @@ public class Talon extends TalonSRX {
 		protected void updateGains(boolean isFirstInitialization, int slot, Gains newGains, Gains lastGains) {
 			super.updateGains(isFirstInitialization, slot, newGains, lastGains);
 			if (isFirstInitialization) {
-				mController.configMotionSCurveStrength(4, HardwareWriter.kTimeoutMs);
+				mController.configMotionSCurveStrength(4, kTimeoutMs);
 			}
 		}
 
 		@Override
 		void setProfiledAcceleration(int slot, double acceleration) {
-			mController.configMotionAcceleration(round(acceleration), HardwareWriter.kTimeoutMs);
+			mController.configMotionAcceleration(round(acceleration), kTimeoutMs);
 		}
 
 		@Override
 		void setProfiledCruiseVelocity(int slot, double cruiseVelocity) {
-			mController.configMotionCruiseVelocity(round(cruiseVelocity), HardwareWriter.kTimeoutMs);
+			mController.configMotionCruiseVelocity(round(cruiseVelocity), kTimeoutMs);
 		}
 
 		@Override
 		protected void setProfiledAllowableError(int slot, double allowableError) {
-			mController.configAllowableClosedloopError(slot, round(allowableError), HardwareWriter.kTimeoutMs);
+			mController.configAllowableClosedloopError(slot, round(allowableError), kTimeoutMs);
 		}
 
 		@Override
@@ -77,27 +77,32 @@ public class Talon extends TalonSRX {
 
 		@Override
 		void setP(int slot, double p) {
-			mController.config_kP(slot, p, HardwareWriter.kTimeoutMs);
+			mController.config_kP(slot, p, kTimeoutMs);
 		}
 
 		@Override
 		void setI(int slot, double i) {
-			mController.config_kI(slot, i, HardwareWriter.kTimeoutMs);
+			mController.config_kI(slot, i, kTimeoutMs);
 		}
 
 		@Override
 		void setD(int slot, double d) {
-			mController.config_kD(slot, d, HardwareWriter.kTimeoutMs);
+			mController.config_kD(slot, d, kTimeoutMs);
 		}
 
 		@Override
 		void setF(int slot, double f) {
-			mController.config_kF(slot, f, HardwareWriter.kTimeoutMs);
+			mController.config_kF(slot, f, kTimeoutMs);
 		}
 
 		@Override
 		void setIZone(int slot, double iZone) {
-			mController.config_IntegralZone(slot, round(iZone), HardwareWriter.kTimeoutMs);
+			mController.config_IntegralZone(slot, round(iZone), kTimeoutMs);
+		}
+
+		@Override
+		void setIMax(int slot, double iMax) {
+			mController.configMaxIntegralAccumulator(slot, iMax, kTimeoutMs);
 		}
 	}
 
