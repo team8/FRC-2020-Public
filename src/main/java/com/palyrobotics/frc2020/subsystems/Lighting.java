@@ -16,20 +16,15 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		IDLE, OFF, INIT, DISABLE, TARGET_FOUND, INDEXER_COUNT, SHOOTER_FULLRPM, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED
+		IDLE, OFF, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED, BALL_ENTERED
 	}
-
-	private static Lighting sInstance = new Lighting();
-	private LightingConfig mConfig = Configs.get(LightingConfig.class);
-	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
-	private State mState = State.IDLE;
-	private ArrayList<LEDController> mLEDControllers = new ArrayList<>();
 
 	public abstract static class LEDController {
 
+		protected LightingOutputs mOutputs = new LightingOutputs();
+
 		protected int mInitIndex;
 		protected int mLastIndex;
-		protected LightingOutputs mOutputs = new LightingOutputs();
 
 		public final LightingOutputs update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 			updateSignal(commands, state);
@@ -42,6 +37,13 @@ public class Lighting extends SubsystemBase {
 			return false;
 		}
 	}
+
+	private static Lighting sInstance = new Lighting();
+	private LightingConfig mConfig = Configs.get(LightingConfig.class);
+	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
+	private State mState;
+	private ArrayList<LEDController> mLEDControllers = new ArrayList<>();
+	private ArrayList<LEDController> mToRemove = new ArrayList<>();
 
 	private Lighting() {
 	}
@@ -56,14 +58,13 @@ public class Lighting extends SubsystemBase {
 		boolean isNewState = mState != wantedState;
 		mState = wantedState;
 		if (isNewState) {
-			mLEDControllers.clear();
 			switch (mState) {
 				case OFF:
 					resetLedStrip();
 					break;
 				case IDLE:
 					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex,
-							mConfig.totalSegmentBackIndex, Color.HSV.kWhite));
+						mConfig.totalSegmentBackIndex, Color.HSV.kWhite));
 					break;
 				case INIT:
 					resetLedStrip();
@@ -81,31 +82,42 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
 							mConfig.limelightSegmentBackIndex, Color.HSV.kLime, 3));
 					break;
-				case INDEXER_COUNT:
+				case BALL_ENTERED:
 				case HOPPER_OPEN:
 				case CLIMB_EXTENDED:
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
-					addToControllers(new PulseController(new Color.HSV[] { Color.HSV.kRed }, 0, 20, 1.0 / 6.0));
-					break;
-				default:
+					addToControllers(new PulseController(0, 20, 1.0 / 6.0, new Color.HSV[] { Color.HSV.kRed }));
 					break;
 			}
 		}
-		ArrayList<LEDController> toRemove = new ArrayList<>();
+		
 		for (LEDController ledController : mLEDControllers) {
 			if (ledController.checkFinished()) {
-				toRemove.add(ledController);
+				mToRemove.add(ledController);
 			}
-			LightingOutputs currentOutput = ledController.update(commands, robotState);
-			for (int i = 0; i < currentOutput.lightingOutput.size(); i++) {
-				Color.HSV hsvValue = currentOutput.lightingOutput.get(i);
-				mOutputBuffer.setHSV(i + ledController.mInitIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());
+			else {
+				LightingOutputs controllerOutput = ledController.update(commands, robotState);
+				for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
+					Color.HSV hsvValue = controllerOutput.lightingOutput.get(i);
+					mOutputBuffer.setHSV(i + ledController.mInitIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());
+				}
 			}
 		}
-		for (LEDController ledController : toRemove) {
+		for (LEDController ledController : mToRemove) {
 			mLEDControllers.remove(ledController);
 		}
+		mToRemove.clear();
+	}
+
+	private void addToControllers(LEDController controller) {
+		for (var i = mLEDControllers.size() - 1; i >= 0; i--) {
+			if (mLEDControllers.get(i).mInitIndex == controller.mInitIndex &&
+					mLEDControllers.get(i).mLastIndex == controller.mLastIndex) {
+				mLEDControllers.remove(i);
+			}
+		}
+		mLEDControllers.add(controller);
 	}
 
 	private void resetLedStrip() {
@@ -117,14 +129,5 @@ public class Lighting extends SubsystemBase {
 
 	public AddressableLEDBuffer getOutput() {
 		return mOutputBuffer;
-	}
-	void addToControllers(LEDController controller) {
-		for (var i = mLEDControllers.size() - 1; i >= 0; i--) {
-			if (mLEDControllers.get(i).mInitIndex == controller.mInitIndex &&
-					mLEDControllers.get(i).mLastIndex == controller.mLastIndex) {
-				mLEDControllers.remove(i);
-			}
-		}
-		mLEDControllers.add(controller);
 	}
 }
