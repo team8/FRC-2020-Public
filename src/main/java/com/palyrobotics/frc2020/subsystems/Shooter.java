@@ -62,7 +62,7 @@ public class Shooter extends SubsystemBase {
 				break;
 			case VISION_VELOCITY:
 				if (mLimelight.isTargetFound()) {
-					targetDistanceInches = distanceFilter.calculate(mLimelight.getEstimatedDistanceZ());
+					targetDistanceInches = distanceFilter.calculate(mLimelight.getEstimatedDistanceInches());
 					targetFlywheelVelocity = kTargetDistanceToVelocity.getInterpolated(targetDistanceInches);
 				} else {
 					targetDistanceInches = null;
@@ -88,7 +88,6 @@ public class Shooter extends SubsystemBase {
 		/* Rumble */
 		updateRumble(commands, justChangedReadyToShoot);
 		/* Telemetry */
-		LiveGraph.add("shooterTargetDistance", targetDistanceInches == null ? -1 : targetDistanceInches);
 		LiveGraph.add("shooterTargetVelocity", targetFlywheelVelocity);
 		LiveGraph.add("shooterCurrentVelocity", state.shooterFlywheelVelocity);
 		TelemetryService.putArbitrary("shooterTargetDistance", targetDistanceInches);

@@ -25,6 +25,7 @@ import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.commands.CommandReceiverService;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.util.service.NetworkLoggerService;
 import com.palyrobotics.frc2020.util.service.RobotService;
 import com.palyrobotics.frc2020.util.service.TelemetryService;
@@ -159,6 +160,7 @@ public class Robot extends TimedRobot {
 		for (RobotService robotService : mEnabledServices) {
 			robotService.update(mRobotState, mCommands);
 		}
+		LiveGraph.add("visionEstimatedDistance", mLimelight.getEstimatedDistanceInches());
 	}
 
 	@Override

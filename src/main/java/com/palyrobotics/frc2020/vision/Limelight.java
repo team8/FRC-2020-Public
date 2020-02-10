@@ -1,7 +1,7 @@
 package com.palyrobotics.frc2020.vision;
 
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.vision.LimelightControlMode.*;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  */
 public class Limelight {
 
+	private static String kLoggerTag = Util.classToJsonName(Limelight.class);
 	public static final int kOneTimesZoomPipelineId = 0, kTwoTimesZoomPipelineId = 1;
 
 	private static Limelight sInstance = new Limelight();
@@ -201,43 +202,24 @@ public class Limelight {
 	 * Estimate z distance from camera to distance as seen at
 	 * http://docs.limelightvision.io/en/latest/cs_estimating_distance.html
 	 *
-	 * @return dist - the estimated distance
+	 * @return Estimated distance in inches
 	 */
-	public double getEstimatedDistanceZ() {
+	public double getEstimatedDistanceInches() {
+		// Tuned 2/10/20 using lowest mounting on original design
 		double oneTimesZoomAngle = 37.29759588;
 		double twoTimesZoomAngle = 35.34009588;
 		double a2 = getPitchToTarget();
 		double h1 = 32.5;
 		double h2 = 90.5;
-		LiveGraph.add("pitch", getPitchToTarget());
 		// Avoid divide by zero
 		if (getPipeline() == 0) {
 			return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(oneTimesZoomAngle + a2))));
 		} else if (getPipeline() == 1) {
 			return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(twoTimesZoomAngle + a2))));
 		} else {
-			Log.warn("Wrong pipeline used for distance estimation");
-			return 0;
+			Log.warn(kLoggerTag, "Wrong pipeline used for distance estimation");
+			return 0.0;
 		}
-	}
-
-	/**
-	 * Estimate z distance from camera to distance as seen at
-	 * http://docs.limelightvision.io/en/latest/cs_estimating_distance.html but with divide by cos(tx)
-	 * to make up for difference in the distance prediction when the robot is rotated (Experimental)
-	 *
-	 * @return dist - the estimated distance
-	 */
-	public double getCorrectedEstimatedDistanceZ() {
-		// TODO implement this
-		// double a1 = OtherConstants.kLimelightElevationAngleDegrees;
-		// double a2 = getPitchToTarget();
-		// double h1 = OtherConstants.kLimelightHeightInches;
-		// double h2 = OtherConstants.kRocketHatchTargetHeight;
-		// // Avoid divide by zero
-		// return Math.max(OtherConstants.kLimelightMinDistance, ((h2 - h1) /
-		// Math.tan(Math.toRadians(a1 + a2))));
-		return 0.0;
 	}
 
 	/**
