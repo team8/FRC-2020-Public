@@ -10,16 +10,14 @@ import edu.wpi.first.wpilibj.Timer;
 public class PulseController extends Lighting.LEDController {
 
 	private Color.HSV[] mPulse;
-	private int mPulseStartIndex;
 	private int mPulseEndIndex;
 	private double mPulseSpeed;
-	Timer mTimer = new Timer();
+	private Timer mTimer = new Timer();
 
-	public PulseController(Color.HSV[] pulse, int startIndex, int endIndex, double pulseMoveSpeed) {
+	public PulseController(int startIndex, int endIndex, double pulseMoveSpeed, Color.HSV[] pulse) {
 		mPulse = pulse;
 		mInitIndex = startIndex;
 		mLastIndex = startIndex + mPulse.length - 1;
-		mPulseStartIndex = startIndex;
 		mPulseEndIndex = endIndex;
 		mPulseSpeed = pulseMoveSpeed;
 		mTimer.start();

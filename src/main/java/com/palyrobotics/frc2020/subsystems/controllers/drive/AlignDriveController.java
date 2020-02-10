@@ -1,10 +1,9 @@
-package com.palyrobotics.frc2020.subsystems.controllers;
+package com.palyrobotics.frc2020.subsystems.controllers.drive;
 
 import com.palyrobotics.frc2020.config.VisionConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
-import com.palyrobotics.frc2020.subsystems.controllers.drive.ChezyDriveController;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.vision.Limelight;
