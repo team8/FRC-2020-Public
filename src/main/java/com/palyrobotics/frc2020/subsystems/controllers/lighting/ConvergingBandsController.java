@@ -12,17 +12,17 @@ public class ConvergingBandsController extends Lighting.LEDController {
 	private Color.HSV mBandColor;
 	private Color.HSV mBackgroundColor;
 	private int mBandLedCount;
-	private Timer mTimer = new Timer();
 	private int mCurrentBandPosition;
-	private double mOldTimerValue;
+	private double mSpeed;
 
-	public ConvergingBandsController(int initIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount) {
+	public ConvergingBandsController(int initIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, int speed) {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
 		mBandColor = bandColor;
 		mBackgroundColor = backgroundColor;
 		mBandLedCount = bandLedCount;
-		mTimer.start();
+		mSpeed = speed == 0 ? 0.001 : speed;
+		mTimer.reset();
 		for (var i = mInitIndex; i < mLastIndex; i++) {
 			mOutputs.lightingOutput
 					.add(Color.HSV.getNewInstance(bandColor.getH(), bandColor.getS(), bandColor.getV()));
@@ -31,7 +31,7 @@ public class ConvergingBandsController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get() * 6) != mOldTimerValue) {
+		if (mTimer.hasPeriodPassed(1/mSpeed)) {
 			mCurrentBandPosition += 1;
 		}
 		for (var i = 0; i < (mLastIndex - mInitIndex) / 2 - 1; i++) {
@@ -44,6 +44,5 @@ public class ConvergingBandsController extends Lighting.LEDController {
 						mBackgroundColor.getV());
 			}
 		}
-		mOldTimerValue = Math.round(mTimer.get() * 6);
 	}
 }

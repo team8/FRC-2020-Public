@@ -11,13 +11,13 @@ public class FlashingLightsController extends Lighting.LEDController {
 
 	private Timer mTimer = new Timer();
 	private Color.HSV mFlashedColor;
-	private int mDelayFactor;
+	private int mDelay;
 
-	public FlashingLightsController(int initIndex, int lastIndex, Color.HSV flashedColor, int delayFactor) {
+	public FlashingLightsController(int initIndex, int lastIndex, Color.HSV flashedColor, int delay) {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
-		mDelayFactor = delayFactor;
+		mDelay = delay;
 		mTimer.start();
 		for (var i = mInitIndex; i < mLastIndex; i++) {
 			mOutputs.lightingOutput
@@ -27,8 +27,7 @@ public class FlashingLightsController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		double time = Math.round(mTimer.get() * mDelayFactor);
-		if (time % 2 == 0) {
+		if (mTimer.hasPeriodPassed(mDelay)) {
 			for (int i = mInitIndex; i < mLastIndex; i++) {
 				mOutputs.lightingOutput.get(i - mInitIndex).setHSV(mFlashedColor.getH(), mFlashedColor.getS(),
 						mFlashedColor.getV());
