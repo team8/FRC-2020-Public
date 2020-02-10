@@ -23,7 +23,7 @@ public abstract class AutoBase {
 	/* Routines that are just combinations of other routines */
 
 	ParallelRoutine getBallsRoutine = new ParallelRoutine(
-			new TimedRoutine(1),
+			new TimedRoutine(0.25),
 			new IntakeBallRoutine(),
 			new IndexerFeedAllRoutine());
 

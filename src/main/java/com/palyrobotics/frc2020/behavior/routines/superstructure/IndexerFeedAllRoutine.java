@@ -12,7 +12,7 @@ import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 
 	public IndexerFeedAllRoutine() {
-		super(5.0);
+		super(0.25);
 	}
 
 	public IndexerFeedAllRoutine(double timeoutSeconds) {

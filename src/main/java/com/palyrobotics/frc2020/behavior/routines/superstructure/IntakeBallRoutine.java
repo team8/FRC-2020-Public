@@ -12,7 +12,7 @@ import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 public class IntakeBallRoutine extends TimedRoutine {
 
 	public IntakeBallRoutine() {
-		super(3.0);
+		super(0.5);
 	}
 
 	public IntakeBallRoutine(double durationSeconds) {

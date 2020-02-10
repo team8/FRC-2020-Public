@@ -17,12 +17,14 @@ public abstract class RendezvousRoutine extends AutoBase {
 				new DriveSetOdometryRoutine(0, 0, 180),
 				new DriveYawRoutine(-45),
 				getBallsRoutine,
-				new DrivePathRoutine(newWaypoint(80, -70, 0)),
+				new DrivePathRoutine(newWaypoint(80, -60, 0)),
 				//get ball 1
-				new DrivePathRoutine(newWaypoint(30, -70, 0)).reverse(),
+				new DrivePathRoutine(newWaypoint(30, -60, 0)).driveInReverse(),
 				//back up
-				new DrivePathRoutine(newWaypoint(85, -90, 0)),
+				new DrivePathRoutine(newWaypoint(85, -80, 0)),
 				// get ball 2
+				new DrivePathRoutine(newWaypoint(60, -80, 0)).driveInReverse(),
+				//back up
 				new IntakeStowRoutine(),
 				new DriveAlignYawAssistedRoutine(180, kOneTimesZoomPipelineId),
 				shootBallsRoutine);

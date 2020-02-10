@@ -14,7 +14,7 @@ public abstract class EndRendezvousTwoRoutine extends FriendlyTrenchRoutine {
 	SequentialRoutine endRoutine() {
 		return new SequentialRoutine(
 				new IntakeStowRoutine(),
-				new DrivePathRoutine(newWaypoint(110, -8, -65)),
+				new DrivePathRoutine(newWaypoint(105, -8, -65)),
 				new DriveAlignYawAssistedRoutine(-180, kOneTimesZoomPipelineId));
 	}
 }

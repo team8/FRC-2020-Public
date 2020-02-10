@@ -123,7 +123,7 @@ public class OperatorInterface {
 					new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
 		}
 		if (mOperatorXboxController.getDPadUpPressed()) {
-			commands.addWantedRoutine(new StartCenterTwoPointTurnFriendlyTrenchThreeRendezvousTwo().getRoutine());
+			commands.addWantedRoutine(new StartCenterRendezvousThree().getRoutine());
 		}
 	}
 

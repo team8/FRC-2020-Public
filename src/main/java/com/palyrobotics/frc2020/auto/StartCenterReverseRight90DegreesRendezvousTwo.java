@@ -4,7 +4,7 @@ import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 
 /**
- * @author Nolan Tested
+ * @author Nolan Tested, works
  */
 @SuppressWarnings ("Duplicates")
 public class StartCenterReverseRight90DegreesRendezvousTwo extends EndRendezvousTwoRoutine {

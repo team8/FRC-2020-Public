@@ -5,7 +5,7 @@ import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.*;
 
 /**
- * @author Nolan Tested
+ * @author Nolan Tested, works
  */
 public class StartCenterTrenchThreeRendezvousTwo extends EndRendezvousTwoRoutine {
 
