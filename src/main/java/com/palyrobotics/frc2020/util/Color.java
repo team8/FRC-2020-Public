@@ -63,15 +63,6 @@ public class Color {
 		public Color.HSV getLastColor() {
 			return new HSV(lastH, lastS, lastV);
 		}
-
-		//TODO getNewInstance should take Color instance as well.
-		public static HSV getNewInstance() {
-			return new HSV(0, 0, 0);
-		}
-
-		public static HSV getNewInstance(int h, int s, int v) {
-			return new HSV(h, s, v);
-		}
 	}
 
 	public static class RGB {
@@ -113,14 +104,10 @@ public class Color {
 			this.b = b;
 		}
 
-		public void setHSV(int r, int g, int b) {
+		public void setRGB(int r, int g, int b) {
 			this.r = r;
 			this.g = g;
 			this.b = b;
-		}
-
-		public static RGB getNewInstance() {
-			return new RGB(0, 0, 0);
 		}
 	}
 }

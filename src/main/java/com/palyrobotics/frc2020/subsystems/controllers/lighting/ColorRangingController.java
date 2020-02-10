@@ -15,7 +15,7 @@ public class ColorRangingController extends Lighting.LEDController {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
 		for (var i = initIndex; i <= lastIndex; i++) {
-			mOutputs.lightingOutput.add(Color.HSV.getNewInstance(mCurrentHue, 247, 87));
+			mOutputs.lightingOutput.add(new Color.HSV(mCurrentHue, 247, 87));
 		}
 	}
 

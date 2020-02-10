@@ -15,7 +15,7 @@ public class OneColorController extends Lighting.LEDController {
 		mColor = color;
 		for (var i = mInitIndex; i < mLastIndex; i++) {
 			mOutputs.lightingOutput
-					.add(Color.HSV.getNewInstance(mColor.getH(), mColor.getS(), mColor.getV()));
+					.add(new Color.HSV(mColor.getH(), mColor.getS(), mColor.getV()));
 		}
 	}
 
