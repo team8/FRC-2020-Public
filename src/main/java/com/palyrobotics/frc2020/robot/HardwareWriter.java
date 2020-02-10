@@ -194,14 +194,14 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.IntakeHardware.getInstance();
 		hardware.talon.setOutput(mIntake.getOutput());
 		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
-		LiveGraph.add("current", hardware.talon.getSupplyCurrent());
-		LiveGraph.add("output", hardware.talon.getMotorOutputPercent());
+		LiveGraph.add("intakeCurrent", hardware.talon.getSupplyCurrent());
+		LiveGraph.add("intakeAppliedOutput", hardware.talon.getMotorOutputPercent());
 	}
 
 	private void updateShooter() {
 		var hardware = HardwareAdapter.ShooterHardware.getInstance();
 		hardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
-		LiveGraph.add("shooter", mShooter.getFlywheelOutput().getReference());
+		LiveGraph.add("shooterAppliedOutput", hardware.masterSpark.getAppliedOutput());
 		hardware.blockingSolenoid.setExtended(mShooter.getBlockingOutput());
 		hardware.hoodSolenoid.setExtended(mShooter.getHoodOutput());
 		mRumbleOutput |= mShooter.getRumbleOutput();

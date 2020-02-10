@@ -2,8 +2,7 @@ package com.palyrobotics.frc2020.subsystems;
 
 import static com.palyrobotics.frc2020.config.constants.ShooterConstants.kTargetDistanceToHoodState;
 import static com.palyrobotics.frc2020.config.constants.ShooterConstants.kTargetDistanceToVelocity;
-import static com.palyrobotics.frc2020.util.Util.kEpsilon;
-import static com.palyrobotics.frc2020.util.Util.withinRange;
+import static com.palyrobotics.frc2020.util.Util.*;
 
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
-import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
@@ -50,7 +48,10 @@ public class Shooter extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		/* Flywheel Velocity */
+		/*
+		Flywheel distance and velocity. Hood state is selected automatically using distance.
+		Unless it is null, then the desired hood state from commands are used.
+		*/
 		ShooterState wantedState = commands.getShooterWantedState();
 		double targetFlywheelVelocity;
 		Double targetDistanceInches;
@@ -73,26 +74,34 @@ public class Shooter extends SubsystemBase {
 				targetFlywheelVelocity = 0.0;
 				break;
 		}
-		targetFlywheelVelocity = Util.clamp(targetFlywheelVelocity, 0.0, mConfig.maxVelocity);
-		LiveGraph.add("shooter.targetDistance", targetDistanceInches == null ? -1 : targetDistanceInches);
-		LiveGraph.add("shooter.targetVelocity", targetFlywheelVelocity);
-		LiveGraph.add("shooter.currentVelocity", state.shooterFlywheelVelocity);
-		boolean shouldUpdateHood = !state.shooterHoodIsInTransition && targetFlywheelVelocity > kEpsilon;
-		if (shouldUpdateHood) updateHood(commands, state, targetDistanceInches);
+		targetFlywheelVelocity = clamp(targetFlywheelVelocity, 0.0, mConfig.maxVelocity);
 		mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);
-		updateRumble(commands, state, targetFlywheelVelocity);
-	}
-
-	private void updateRumble(@ReadOnly Commands commands, @ReadOnly RobotState state, double targetFlywheelVelocity) {
+		/* Ready to shoot */
 		boolean inShootingVelocityRange = targetFlywheelVelocity > kEpsilon &&
 				withinRange(targetFlywheelVelocity, state.shooterFlywheelVelocity, mConfig.velocityTolerance);
-		boolean justChangedReadyToShoot = mIsReadyToShoot != inShootingVelocityRange;
-		mIsReadyToShoot = inShootingVelocityRange && !state.shooterHoodIsInTransition;
+		boolean isReadyToShoot = inShootingVelocityRange && !state.shooterHoodIsInTransition,
+				justChangedReadyToShoot = mIsReadyToShoot != isReadyToShoot;
+		mIsReadyToShoot = isReadyToShoot;
+		/* Hood */
+		boolean shouldUpdateHood = !state.shooterHoodIsInTransition && targetFlywheelVelocity > kEpsilon;
+		if (shouldUpdateHood) updateHood(commands, state, targetDistanceInches);
+		/* Rumble */
+		updateRumble(commands, justChangedReadyToShoot);
+		/* Telemetry */
+		LiveGraph.add("shooterTargetDistance", targetDistanceInches == null ? -1 : targetDistanceInches);
+		LiveGraph.add("shooterTargetVelocity", targetFlywheelVelocity);
+		LiveGraph.add("shooterCurrentVelocity", state.shooterFlywheelVelocity);
+		TelemetryService.putArbitrary("shooterTargetDistance", targetDistanceInches);
+		TelemetryService.putArbitrary("shooterTargetVelocity", targetFlywheelVelocity);
+		TelemetryService.putArbitrary("shooterFlywheelVelocity", state.shooterFlywheelVelocity);
+	}
+
+	private void updateRumble(@ReadOnly Commands commands, boolean justChangedReadyToShoot) {
 		switch (commands.getShooterWantedState()) {
 			case CUSTOM_VELOCITY:
 			case VISION_VELOCITY:
-				boolean justEnteredReadyToShoot = justChangedReadyToShoot && inShootingVelocityRange,
-						justExitedReadyToShoot = justChangedReadyToShoot && !inShootingVelocityRange;
+				boolean justEnteredReadyToShoot = justChangedReadyToShoot && mIsReadyToShoot,
+						justExitedReadyToShoot = justChangedReadyToShoot && !mIsReadyToShoot;
 				if (justEnteredReadyToShoot) {
 					mRumbleOutput = true;
 					mRumbleTimer.reset();
@@ -121,7 +130,7 @@ public class Shooter extends SubsystemBase {
 			double deltaFromThreshold = Math.abs(targetDistanceInches - closestEntry.getKey());
 			targetHoodState = deltaFromThreshold > mConfig.hoodSwitchDistanceThreshold ? floorEntry.getValue() : closestEntry.getValue();
 		}
-		TelemetryService.putArbitrary("shooter.hoodState", targetHoodState);
+		TelemetryService.putArbitrary("shooterTargetHoodState", targetHoodState);
 		switch (targetHoodState) {
 			case LOW: {
 				/*

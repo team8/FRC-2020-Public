@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 public class Robot extends TimedRobot {
 
 	private static final String kLoggerTag = Util.classToJsonName(Robot.class);
+	private static final boolean kCanUseHardware = RobotBase.isReal() || !System.getProperty("os.name").startsWith("Mac");
 	private final RobotState mRobotState = new RobotState();
 	private final Limelight mLimelight = Limelight.getInstance();
 	private final RobotConfig mConfig = Configs.get(RobotConfig.class);
@@ -65,7 +66,7 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		String setupSummary = setupSubsystemsAndServices();
 
-		mHardwareWriter.configureHardware(mEnabledSubsystems);
+		if (kCanUseHardware) mHardwareWriter.configureHardware(mEnabledSubsystems);
 
 		mEnabledServices.forEach(RobotService::start);
 
@@ -191,7 +192,7 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateRobotState() {
-		mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
+		if (kCanUseHardware) mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
 		mRobotState.shooterIsReadyToShoot = mShooter.isReadyToShoot();
 	}
 
@@ -203,7 +204,7 @@ public class Robot extends TimedRobot {
 		Pose2d wantedPose = mCommands.driveWantedOdometryPose;
 		if (wantedPose != null) {
 			mRobotState.resetOdometry(wantedPose);
-			mHardwareWriter.resetDriveSensors(wantedPose);
+			if (kCanUseHardware) mHardwareWriter.resetDriveSensors(wantedPose);
 			mCommands.driveWantedOdometryPose = null;
 		}
 	}
@@ -213,7 +214,7 @@ public class Robot extends TimedRobot {
 		for (SubsystemBase subsystem : mEnabledSubsystems) {
 			subsystem.update(mCommands, mRobotState);
 		}
-		mHardwareWriter.updateHardware(mEnabledSubsystems);
+		if (kCanUseHardware) mHardwareWriter.updateHardware(mEnabledSubsystems);
 		if (mCommands.visionWanted) {
 			mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
 			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
@@ -222,7 +223,7 @@ public class Robot extends TimedRobot {
 			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
 		}
 		var compressor = HardwareAdapter.MiscellaneousHardware.getInstance().compressor;
-		if (mCommands.wantsCompression) {
+		if (mCommands.wantedCompression) {
 			compressor.start();
 		} else {
 			compressor.stop();
@@ -257,7 +258,6 @@ public class Robot extends TimedRobot {
 	}
 
 	private void setDriveIdleMode(boolean isIdle) {
-		// TODO: drive disabled neutral state should probably be in commands
-		if (mEnabledSubsystems.contains(mDrive)) mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
+		if (kCanUseHardware && mEnabledSubsystems.contains(mDrive)) mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
 	}
 }

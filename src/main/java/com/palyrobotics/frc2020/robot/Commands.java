@@ -53,7 +53,7 @@ public class Commands {
 	public int visionWantedPipeline;
 	public boolean visionWanted;
 	/* Miscellaneous */
-	public boolean wantsCompression;
+	public boolean wantedCompression;
 
 	public boolean wantedRumble;
 	private Shooter.HoodState shooterWantedHoodState;

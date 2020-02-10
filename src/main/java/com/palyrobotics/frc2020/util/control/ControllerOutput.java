@@ -108,7 +108,7 @@ public class ControllerOutput {
 
 	@Override // Auto-generated
 	public String toString() {
-		return String.format("Output{mMode=%s, mGains=%s, mReference=%s, mArbitraryDemand=%s}", mMode, mGains,
+		return String.format("Output{mode=%s, gains=%s, reference=%s, arbitraryDemand=%s}", mMode, mGains,
 				mReference, mArbitraryDemand);
 	}
 }

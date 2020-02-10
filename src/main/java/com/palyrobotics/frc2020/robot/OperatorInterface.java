@@ -210,6 +210,7 @@ public class OperatorInterface {
 		commands.spinnerWantedState = Spinner.State.IDLE;
 		commands.visionWantedPipeline = kOneTimesZoomPipelineId;
 		commands.visionWanted = false;
-		commands.wantsCompression = true;
+		commands.wantedCompression = true;
+		commands.wantedRumble = false;
 	}
 }
