@@ -10,6 +10,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
+import com.palyrobotics.frc2020.util.CircularBufferGeneric;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.vision.Limelight;
 
@@ -18,6 +19,7 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 	private static final double kTimeoutMultiplier = 2.0;
 	private final VisionConfig mVisionConfig = Configs.get(VisionConfig.class);
 	private final Limelight mLimelight = Limelight.getInstance();
+	private CircularBufferGeneric<Boolean> mTargetSeenHistory = new CircularBufferGeneric<>(3);
 	private final int mVisionPipeline;
 
 	public DriveAlignYawAssistedRoutine(double yawDegrees, int visionPipeline) {
@@ -36,8 +38,9 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		commands.visionWanted = true;
 		commands.visionWantedPipeline = mVisionPipeline;
+		mTargetSeenHistory.addValue(mLimelight.isTargetFound());
 		double yawErrorDegrees = getDifferenceInAngleDegrees(state.driveYawDegrees, mTargetYawDegrees);
-		if (mLimelight.isTargetFound() && Math.abs(yawErrorDegrees) <= mVisionConfig.alignSwitchYawAngleMin) {
+		if (mTargetSeenHistory.getLinkedList().get(0) && mTargetSeenHistory.getLinkedList().get(1) && mTargetSeenHistory.getLinkedList().get(2) && Math.abs(yawErrorDegrees) <= mVisionConfig.alignSwitchYawAngleMin) {
 			commands.setDriveVisionAlign();
 		} else {
 			commands.setDriveYaw(mTargetYawDegrees);
