@@ -35,7 +35,7 @@ public abstract class FriendlyTrenchRoutine extends AutoBase {
 				new DriveSetOdometryRoutine(0, 0, 180),
 //				new VisionAlignRoutine(),
 				getBallsRoutine,
-				new DrivePathRoutine(newWaypoint(25, -35, 90)).reverse(),
+				new DrivePathRoutine(newWaypoint(25, -35, 90)).driveInReverse(),
 				new DrivePathRoutine(newWaypoint(80, 65, 0), newWaypoint(170, 65, 0)));
 	}
 
