@@ -40,6 +40,6 @@ public abstract class ServerServiceBase extends Listener implements RobotService
 
 	@Override
 	public void disconnected(Connection connection) {
-		Log.info(mLoggerTag, "Disconnected!");
+		Log.warn(mLoggerTag, "Disconnected!");
 	}
 }

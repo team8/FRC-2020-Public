@@ -208,8 +208,6 @@ public class OperatorInterface {
 		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
-		commands.visionWantedPipeline = kOneTimesZoomPipelineId;
-		commands.visionWanted = false;
 		commands.wantedCompression = true;
 		commands.wantedRumble = false;
 	}

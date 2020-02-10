@@ -11,8 +11,9 @@
 		"drive",
 		"spinner"
 	],
-	"coastDriveIfDisabled": false,
-	"enableLimelightIfDisabled": false,
+	"coastDriveWhenDisabled": false,
+	"enableVisionWhenDisabled": false,
+	"visionPipelineWhenDisabled": 0,
 	"motorOutputMultiplier": 1.0,
 	"disableHardwareUpdates": false
 }

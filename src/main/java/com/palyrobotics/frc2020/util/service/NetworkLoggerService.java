@@ -1,8 +1,9 @@
 package com.palyrobotics.frc2020.util.service;
 
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
 
+import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
 import com.esotericsoftware.minlog.Log.Logger;
 
@@ -11,8 +12,9 @@ import edu.wpi.first.wpilibj.Timer;
 public class NetworkLoggerService extends ServerServiceBase implements RobotService {
 
 	private static final int kPort = 5802;
+	private static final int kMaxLogs = 500;
 
-	private Queue<LogEntry> mLogs = new LinkedList<>();
+	private Deque<LogEntry> mLogs = new LinkedList<>();
 	private Timer mTimer = new Timer();
 
 	private Logger mLogger = new Logger() {
@@ -27,7 +29,10 @@ public class NetworkLoggerService extends ServerServiceBase implements RobotServ
 			double timeSeconds = mTimer.get();
 			long timeMilliseconds = Math.round(timeSeconds * 1000.0);
 			var log = new LogEntry(timeMilliseconds, level, category, message, exception);
-			mLogs.add(log);
+			mLogs.addLast(log);
+			while (mLogs.size() > kMaxLogs) {
+				mLogs.removeFirst();
+			}
 			if (mServer.getConnections().length == 0) {
 				// If we aren't connected, forward to system out which goes to driver station
 				if (level == Log.LEVEL_ERROR) {
@@ -36,9 +41,7 @@ public class NetworkLoggerService extends ServerServiceBase implements RobotServ
 					System.out.println(log);
 				}
 			} else {
-				while (!mLogs.isEmpty()) {
-					mServer.sendToAllTCP(mLogs.remove());
-				}
+				mServer.sendToAllTCP(log);
 			}
 		}
 	};
@@ -46,6 +49,14 @@ public class NetworkLoggerService extends ServerServiceBase implements RobotServ
 	@Override
 	int getPort() {
 		return kPort;
+	}
+
+	@Override
+	public void connected(Connection connection) {
+		super.connected(connection);
+		for (LogEntry log : mLogs) {
+			mServer.sendToTCP(connection.getID(), log);
+		}
 	}
 
 	@Override
