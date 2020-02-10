@@ -64,7 +64,7 @@ public class Lighting extends SubsystemBase {
 					break;
 				case IDLE:
 					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex,
-						mConfig.totalSegmentBackIndex, Color.HSV.kWhite));
+							mConfig.totalSegmentBackIndex, Color.HSV.kWhite));
 					break;
 				case INIT:
 					resetLedStrip();
@@ -91,12 +91,11 @@ public class Lighting extends SubsystemBase {
 					break;
 			}
 		}
-		
+
 		for (LEDController ledController : mLEDControllers) {
 			if (ledController.checkFinished()) {
 				mToRemove.add(ledController);
-			}
-			else {
+			} else {
 				LightingOutputs controllerOutput = ledController.update(commands, robotState);
 				for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
 					Color.HSV hsvValue = controllerOutput.lightingOutput.get(i);
