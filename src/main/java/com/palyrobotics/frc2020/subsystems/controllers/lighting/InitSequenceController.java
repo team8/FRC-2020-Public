@@ -10,21 +10,23 @@ import edu.wpi.first.wpilibj.Timer;
 public class InitSequenceController extends Lighting.LEDController {
 
 	private int mCurrentLedIndex;
+	private double mSpeed;
 
-	public InitSequenceController(int initIndex, int lastIndex) {
+	public InitSequenceController(int initIndex, int lastIndex, int speed) {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
 		mCurrentLedIndex = initIndex;
+		mSpeed = speed == 0 ? 0.001 : speed;
 	}
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (mCurrentLedIndex <= mLastIndex) {
+		if (mTimer.hasPeriodPassed(1/mSpeed) && mCurrentLedIndex <= mLastIndex) {
 			mOutputs.lightingOutput
 					.add(Color.HSV.getNewInstance((int) ((mCurrentLedIndex - mInitIndex) * Math.log(mCurrentLedIndex) +
 							5), 247, 100));
 			mCurrentLedIndex += 1;
 		}
-		Timer.delay(0.07);
 	}
+
 }

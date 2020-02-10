@@ -6,12 +6,12 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
-public class DisabledSequenceController extends Lighting.LEDController {
+public class ColorRangingController extends Lighting.LEDController {
 
 	private int mCurrentHue = 0;
 	private boolean mIsHueUpwards;
 
-	public DisabledSequenceController(int initIndex, int lastIndex) {
+	public ColorRangingController(int initIndex, int lastIndex) {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
 		for (var i = initIndex; i <= lastIndex; i++) {

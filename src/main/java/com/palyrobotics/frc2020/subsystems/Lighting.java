@@ -12,6 +12,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LightingOutputs;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Lighting extends SubsystemBase {
 
@@ -22,6 +23,8 @@ public class Lighting extends SubsystemBase {
 	public abstract static class LEDController {
 
 		protected LightingOutputs mOutputs = new LightingOutputs();
+
+		protected Timer mTimer = new Timer();
 
 		protected int mInitIndex;
 		protected int mLastIndex;
@@ -69,13 +72,13 @@ public class Lighting extends SubsystemBase {
 				case INIT:
 					resetLedStrip();
 					addToControllers(
-							new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex));
+							new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex, 1));
 					addToControllers(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex,
 							mConfig.limelightSegmentBackIndex, Color.HSV.kWhite,
-							Color.HSV.kBlue, 3));
+							Color.HSV.kBlue, 3, 6));
 					break;
 				case DISABLE:
-					addToControllers(new DisabledSequenceController(mConfig.backSegmentFirstIndex,
+					addToControllers(new ColorRangingController(mConfig.backSegmentFirstIndex,
 							mConfig.backSegmentBackIndex));
 					break;
 				case TARGET_FOUND:
@@ -87,7 +90,7 @@ public class Lighting extends SubsystemBase {
 				case CLIMB_EXTENDED:
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
-					addToControllers(new PulseController(0, 20, 1.0 / 6.0, new Color.HSV[] { Color.HSV.kRed }));
+					addToControllers(new PulseController(0, 20,  new Color.HSV[] { Color.HSV.kRed }, (double) 1/6));
 					break;
 			}
 		}
