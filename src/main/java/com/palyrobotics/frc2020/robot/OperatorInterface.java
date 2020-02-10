@@ -1,11 +1,9 @@
 package com.palyrobotics.frc2020.robot;
 
 import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
-import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
-import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
@@ -111,10 +109,10 @@ public class OperatorInterface {
 					mTurnStick.getTrigger(), mDriveStick.getTrigger());
 		}
 		/* Path Following */
-		if (mOperatorXboxController.getDPadDownPressed()) {
-			commands.addWantedRoutine(
-					new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
-		}
+//		if (mOperatorXboxController.getDPadDownPressed()) {
+//			commands.addWantedRoutine(
+//					new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
+//		}
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
@@ -169,6 +167,7 @@ public class OperatorInterface {
 				commands.addWantedRoutine(new IndexerFeedAllRoutine());
 			}
 		}
+
 	}
 
 	private void updateSpinnerCommands(Commands commands) {
@@ -180,11 +179,12 @@ public class OperatorInterface {
 	}
 
 	public void reset(Commands commands) {
+		commands.routinesWanted.clear();
 		commands.climberWantedState = Climber.ClimberState.IDLE;
 		commands.setDriveNeutral();
 		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		commands.intakeWantedState = Intake.State.STOW;
-		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
+		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
 		commands.visionWantedPipeline = kOneTimesZoomPipelineId;

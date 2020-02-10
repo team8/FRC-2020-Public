@@ -13,6 +13,7 @@ import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -89,9 +90,10 @@ public class HardwareWriter {
 		hardware.slaveSpark.restoreFactoryDefaults();
 		hardware.masterSpark.enableVoltageCompensation(12);
 		hardware.slaveSpark.enableVoltageCompensation(12);
-		hardware.slaveSpark.follow(hardware.masterSpark);
+//		hardware.slaveSpark.follow(hardware.masterSpark);
 		hardware.masterSpark.setOpenLoopRampRate(0.1);
-		hardware.masterSpark.setInverted(true);
+		hardware.masterSpark.setInverted(false);
+		hardware.masterSpark.setSmartCurrentLimit(60);
 	}
 
 	private void configureIntakeHardware() {
@@ -100,16 +102,15 @@ public class HardwareWriter {
 		talon.enableVoltageCompensation(true);
 		talon.configVoltageCompSaturation(12, kTimeoutMs);
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
-		talon.setInverted(true);
+		talon.setInverted(false);
 	}
 
 	private void configureShooterHardware() {
 		var hardware = HardwareAdapter.ShooterHardware.getInstance();
 		hardware.masterSpark.restoreFactoryDefaults();
 		hardware.slaveSpark.restoreFactoryDefaults();
-		hardware.slaveSpark.follow(hardware.masterSpark);
+		hardware.slaveSpark.follow(hardware.masterSpark, true);
 		hardware.masterSpark.setInverted(false);
-		hardware.slaveSpark.setInverted(true);
 		/* Velocity in RPM, adjusted for gearing ratio */
 		hardware.masterEncoder.setVelocityConversionFactor(0.76923076);
 		// TODO: Current limiting and closed/open loop ramp rates
@@ -191,6 +192,8 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.IntakeHardware.getInstance();
 		hardware.talon.setOutput(mIntake.getOutput());
 		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
+		LiveGraph.add("current", hardware.talon.getSupplyCurrent());
+		LiveGraph.add("output", hardware.talon.getMotorOutputPercent());
 	}
 
 	private void updateShooter() {
