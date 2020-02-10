@@ -75,8 +75,10 @@ public class Robot extends TimedRobot {
 		Configs.listen(RobotConfig.class, config -> {
 			if (isDisabled()) {
 				setDriveIdleMode(config.coastDriveIfDisabled);
+				setVision(config.enableLimelightIfDisabled);
 			}
 		});
+
 		if (RobotBase.isSimulation()) {
 			System.out.println("Writing CSV file...");
 			pathToCsv();
@@ -136,6 +138,7 @@ public class Robot extends TimedRobot {
 		mRobotState.gamePeriod = period;
 		resetCommandsAndRoutines();
 		setDriveIdleMode(false);
+		setVision(false);
 		CSVWriter.cleanFile();
 		CSVWriter.resetTimer();
 	}
@@ -215,13 +218,7 @@ public class Robot extends TimedRobot {
 			subsystem.update(mCommands, mRobotState);
 		}
 		if (kCanUseHardware) mHardwareWriter.updateHardware(mEnabledSubsystems);
-		if (mCommands.visionWanted) {
-			mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
-			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
-		} else {
-			mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
-			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
-		}
+		setVision(mCommands.visionWanted);
 		var compressor = HardwareAdapter.MiscellaneousHardware.getInstance().compressor;
 		if (mCommands.wantedCompression) {
 			compressor.start();
@@ -229,6 +226,16 @@ public class Robot extends TimedRobot {
 			compressor.stop();
 		}
 		mLimelight.setPipeline(mCommands.visionWantedPipeline);
+	}
+
+	private void setVision(boolean visionWanted) {
+		if (visionWanted) {
+			mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
+			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+		} else {
+			mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
+			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
+		}
 	}
 
 	private String setupSubsystemsAndServices() {

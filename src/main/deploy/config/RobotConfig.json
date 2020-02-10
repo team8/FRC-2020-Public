@@ -12,6 +12,7 @@
 		"spinner"
 	],
 	"coastDriveIfDisabled": false,
+	"enableLimelightIfDisabled": false,
 	"motorOutputMultiplier": 1.0,
 	"disableHardwareUpdates": false
 }
