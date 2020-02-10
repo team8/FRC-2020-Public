@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class FlashingLightsController extends Lighting.LEDController {
 
-	private Timer mTimer = new Timer();
 	private Color.HSV mFlashedColor;
 	private int mDelay;
 
@@ -18,10 +17,10 @@ public class FlashingLightsController extends Lighting.LEDController {
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
 		mDelay = delay;
-		mTimer.start();
+		mTimer.reset();
 		for (var i = mInitIndex; i < mLastIndex; i++) {
 			mOutputs.lightingOutput
-					.add(Color.HSV.getNewInstance(mFlashedColor.getH(), mFlashedColor.getS(), mFlashedColor.getV()));
+					.add(new Color.HSV(mFlashedColor.getH(), mFlashedColor.getS(), mFlashedColor.getV()));
 		}
 	}
 

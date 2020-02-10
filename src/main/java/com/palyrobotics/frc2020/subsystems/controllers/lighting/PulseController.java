@@ -19,7 +19,7 @@ public class PulseController extends Lighting.LEDController {
 		mSpeed = speed;
 		for (Color.HSV currentColor : pulseColorSequence) {
 			mOutputs.lightingOutput
-					.add(Color.HSV.getNewInstance(currentColor.getH(), currentColor.getS(), currentColor.getV()));
+					.add(new Color.HSV(currentColor.getH(), currentColor.getS(), currentColor.getV()));
 		}
 	}
 

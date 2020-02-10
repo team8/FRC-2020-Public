@@ -23,7 +23,7 @@ public class ConvergingBandsController extends Lighting.LEDController {
 		mTimer.reset();
 		for (var i = mInitIndex; i < mLastIndex; i++) {
 			mOutputs.lightingOutput
-					.add(Color.HSV.getNewInstance(bandColor.getH(), bandColor.getS(), bandColor.getV()));
+					.add(new Color.HSV(bandColor.getH(), bandColor.getS(), bandColor.getV()));
 		}
 	}
 

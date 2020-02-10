@@ -21,7 +21,7 @@ public class InitSequenceController extends Lighting.LEDController {
 	public void updateSignal(Commands commands, RobotState state) {
 		if (mTimer.hasPeriodPassed(1 / mSpeed) && mCurrentLedIndex <= mLastIndex) {
 			mOutputs.lightingOutput
-					.add(Color.HSV.getNewInstance((int) ((mCurrentLedIndex - mInitIndex) * Math.log(mCurrentLedIndex) +
+					.add(new Color.HSV((int) ((mCurrentLedIndex - mInitIndex) * Math.log(mCurrentLedIndex) +
 							5), 247, 100));
 			mCurrentLedIndex += 1;
 		}
