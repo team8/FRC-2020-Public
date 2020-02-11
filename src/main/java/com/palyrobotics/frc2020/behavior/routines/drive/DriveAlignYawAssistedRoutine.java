@@ -19,7 +19,7 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 	private static final double kTimeoutMultiplier = 2.0;
 	private final VisionConfig mVisionConfig = Configs.get(VisionConfig.class);
 	private final Limelight mLimelight = Limelight.getInstance();
-	private CircularBufferGeneric<Boolean> mTargetSeenHistory = new CircularBufferGeneric<>(3);
+	private CircularBufferGeneric<Boolean> mTargetSeenHistory = new CircularBufferGeneric<>(mVisionConfig.sampleSizeFiltering);
 	private final int mVisionPipeline;
 
 	public DriveAlignYawAssistedRoutine(double yawDegrees, int visionPipeline) {

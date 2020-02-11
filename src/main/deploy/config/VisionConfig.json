@@ -3,5 +3,6 @@
 		"p": 0.01
 	},
 	"acceptableYawError": 3,
-	"alignSwitchYawAngleMin": 50
+	"alignSwitchYawAngleMin": 50,
+	"sampleSizeFiltering": 3
 }
