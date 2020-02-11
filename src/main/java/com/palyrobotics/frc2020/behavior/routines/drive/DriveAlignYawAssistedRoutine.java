@@ -40,7 +40,7 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 		commands.visionWantedPipeline = mVisionPipeline;
 		mTargetSeenHistory.addValue(mLimelight.isTargetFound());
 		double yawErrorDegrees = getDifferenceInAngleDegrees0To360(state.driveYawDegrees, mTargetYawDegrees);
-		if (mTargetSeenHistory.getLinkedList().get(0) && mTargetSeenHistory.getLinkedList().get(1) && mTargetSeenHistory.getLinkedList().get(2) && Math.abs(yawErrorDegrees) <= mVisionConfig.alignSwitchYawAngleMin) {
+		if (!mTargetSeenHistory.getLinkedList().contains(false) && Math.abs(yawErrorDegrees) <= mVisionConfig.alignSwitchYawAngleMin) {
 			commands.setDriveVisionAlign();
 		} else {
 			commands.setDriveYaw(mTargetYawDegrees);
