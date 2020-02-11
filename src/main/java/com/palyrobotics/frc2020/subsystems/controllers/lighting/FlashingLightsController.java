@@ -5,8 +5,6 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class FlashingLightsController extends Lighting.LEDController {
 
 	private Color.HSV mFlashedColor;
@@ -26,7 +24,7 @@ public class FlashingLightsController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get()/mDelay) % 2 == 0) {
+		if (Math.round(mTimer.get() / mDelay) % 2 == 0) {
 			for (int i = mInitIndex; i < mLastIndex; i++) {
 				mOutputs.lightingOutput.get(i - mInitIndex).setHSV(mFlashedColor.getH(), mFlashedColor.getS(),
 						mFlashedColor.getV());

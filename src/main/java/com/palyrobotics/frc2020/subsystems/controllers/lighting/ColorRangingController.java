@@ -21,7 +21,7 @@ public class ColorRangingController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		if(mCurrentHue >= 150){
+		if (mCurrentHue >= 150) {
 			mCurrentHue = 0;
 		}
 		mCurrentHue++;

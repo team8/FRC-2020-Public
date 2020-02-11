@@ -29,7 +29,7 @@ public class ConvergingBandsController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get()/mSpeed) % 2 == 1) {
+		if (Math.round(mTimer.get() / mSpeed) % 2 == 1) {
 			mCurrentBandPosition += 1;
 			mTimer.reset();
 		}
