@@ -17,17 +17,20 @@ public class PulseController extends Lighting.LEDController {
 		mLastIndex = startIndex + mPulse.length - 1;
 		mPulseEndIndex = endIndex;
 		mSpeed = speed;
-		for (Color.HSV currentColor : pulseColorSequence) {
-			mOutputs.lightingOutput
-					.add(new Color.HSV(currentColor.getH(), currentColor.getS(), currentColor.getV()));
-		}
 	}
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		if (mTimer.hasPeriodPassed(1 / mSpeed)) {
-			mInitIndex += 1;
-			mLastIndex += 1;
+			//TODO Reimplement
+//			for (int i = mInitIndex; i < mLastIndex; i++) {
+//				for (Color.HSV currentColor : mPulse) {
+//					mOutputs.lightingOutput
+//							.add(new Color.HSV(currentColor.getH(), currentColor.getS(), currentColor.getV()));
+//				}
+//			}
+//			mInitIndex += 1;
+//			mLastIndex += 1;
 		}
 	}
 
