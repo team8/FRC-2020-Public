@@ -7,4 +7,5 @@ public class TurretConfig extends SubsystemConfigBase {
 	public double rotatingOutput;
 	public double acceptableYawError;
 	public double maximumAngle;
+	public double distanceToMiddleOfField;
 }

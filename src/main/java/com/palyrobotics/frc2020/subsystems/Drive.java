@@ -4,10 +4,10 @@ import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
-import com.palyrobotics.frc2020.subsystems.controllers.AlignDriveController;
-import com.palyrobotics.frc2020.subsystems.controllers.ChezyDriveController;
-import com.palyrobotics.frc2020.subsystems.controllers.RamseteDriveController;
-import com.palyrobotics.frc2020.subsystems.controllers.YawDriveController;
+import com.palyrobotics.frc2020.subsystems.drive.AlignDriveController;
+import com.palyrobotics.frc2020.subsystems.drive.ChezyDriveController;
+import com.palyrobotics.frc2020.subsystems.drive.RamseteDriveController;
+import com.palyrobotics.frc2020.subsystems.drive.YawDriveController;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 

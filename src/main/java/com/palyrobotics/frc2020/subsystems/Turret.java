@@ -1,11 +1,13 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.config.subsystem.TurretConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.control.DriveOutputs;
 
 public class Turret extends SubsystemBase {
 
@@ -17,6 +19,19 @@ public class Turret extends SubsystemBase {
 	private TurretConfig mConfig = Configs.get(TurretConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
 	private boolean calibrationWanted = false;
+
+	public abstract static class TurretController {
+
+		protected final TurretConfig mConfig = Configs.get(TurretConfig.class);
+		protected ControllerOutput mOutput = new ControllerOutput();
+
+		public final ControllerOutput update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+			updateSignal(commands, state);
+			return mOutput;
+		}
+
+		public abstract void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state);
+	}
 
 	private Turret() {
 	}

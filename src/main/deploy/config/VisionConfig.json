@@ -5,5 +5,5 @@
 	},
 	"gainsS": 0.0,
 	"acceptableYawError": 1.0,
-	"alignSwitchYawAngleMin": 40.0
+	"alignSwitchYawAngleMin": 40.0,
 }
