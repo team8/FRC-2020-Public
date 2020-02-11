@@ -3,14 +3,11 @@ package com.palyrobotics.frc2020.auto;
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 
-
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignYawAssistedRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
-import com.palyrobotics.frc2020.behavior.routines.vision.VisionAlignRoutine;
 
 /**
  * @author Alexis
@@ -31,12 +28,9 @@ public class StartRightTrenchStealTwoShootFive extends AutoBase {
 		//TODO> add backup
 		var getRendezvous2 = new DrivePathRoutine(newWaypoint(95, 130, 10));
 
-
-
 		return new SequentialRoutine(initialOdometry, getTrenchBalls, goToShoot,
 				new DriveAlignYawAssistedRoutine(150, kOneTimesZoomPipelineId),
 				getRendezvous1, getRendezvous2,
-				new DriveAlignYawAssistedRoutine(150, kOneTimesZoomPipelineId)
-		);
+				new DriveAlignYawAssistedRoutine(150, kOneTimesZoomPipelineId));
 	}
 }

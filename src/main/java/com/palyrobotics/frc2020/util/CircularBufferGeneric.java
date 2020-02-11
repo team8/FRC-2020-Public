@@ -3,55 +3,53 @@ package com.palyrobotics.frc2020.util;
 import java.util.LinkedList;
 
 /**
- * Copied from 254
- * Implements a simple circular buffer.
- * Can be used for any class.
+ * Copied from 254 Implements a simple circular buffer. Can be used for any class.
  */
 public class CircularBufferGeneric<E> {
-    /**
-     *
-     */
-    private int mWindowSize;
-    private LinkedList<E> mSamples;
-    private double mSum;
 
-    public CircularBufferGeneric(int window_size) {
-        mWindowSize = window_size;
-        mSamples = new LinkedList<E>();
-        mSum = 0.0;
-    }
+	/**
+	*
+	*/
+	private int mWindowSize;
+	private LinkedList<E> mSamples;
+	private double mSum;
 
+	public CircularBufferGeneric(int window_size) {
+		mWindowSize = window_size;
+		mSamples = new LinkedList<E>();
+		mSum = 0.0;
+	}
 
-    public void clear() {
-        mSamples.clear();
-        mSum = 0.0;
-    }
+	public void clear() {
+		mSamples.clear();
+		mSum = 0.0;
+	}
 
-    public void addValue(E val) {
-        mSamples.addLast(val);
-        if (mSamples.size() > mWindowSize) {
-            mSamples.removeFirst();
-        }
-    }
+	public void addValue(E val) {
+		mSamples.addLast(val);
+		if (mSamples.size() > mWindowSize) {
+			mSamples.removeFirst();
+		}
+	}
 
-    public int getNumValues() {
-        return mSamples.size();
-    }
+	public int getNumValues() {
+		return mSamples.size();
+	}
 
-    public boolean isFull() {
-        return mWindowSize == mSamples.size();
-    }
+	public boolean isFull() {
+		return mWindowSize == mSamples.size();
+	}
 
-    public LinkedList<E> getLinkedList() {
-        /*
-         * NOTE: To get an Array of the specific class type which the instance is using,
-         * you have to use this specific code:
-         * specificCircularBufferGeneric.getLinkedList().toArray(new ClassThatIWant[specificCircularBufferGeneric
-         * .getLinkedList().size()]);
-         * The reason is that for some reason an array of a generic class(i.e. E[]) cannot be created because
-         * of some archaic data flow ambiguities
-         */
+	public LinkedList<E> getLinkedList() {
+		/*
+		* NOTE: To get an Array of the specific class type which the instance is using,
+		* you have to use this specific code:
+		* specificCircularBufferGeneric.getLinkedList().toArray(new ClassThatIWant[specificCircularBufferGeneric
+		* .getLinkedList().size()]);
+		* The reason is that for some reason an array of a generic class(i.e. E[]) cannot be created because
+		* of some archaic data flow ambiguities
+		*/
 
-        return mSamples;
-    }
+		return mSamples;
+	}
 }
