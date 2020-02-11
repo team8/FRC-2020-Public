@@ -9,14 +9,12 @@ import com.palyrobotics.frc2020.util.Color;
 
 public class PulseController extends Lighting.LEDController {
 
-	private Color.HSV[] mPulse;
 	private int mPulseEndIndex;
 	private double mSpeed;
 
 	public PulseController(int startIndex, int endIndex, Color.HSV[] pulseColorSequence, double speed) {
-		mPulse = pulseColorSequence;
 		mInitIndex = startIndex;
-		mLastIndex = startIndex + mPulse.length - 1;
+		mLastIndex = startIndex + pulseColorSequence.length - 1;
 		mPulseEndIndex = endIndex;
 		mSpeed = speed;
 		mTimer.start();

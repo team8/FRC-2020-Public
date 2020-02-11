@@ -90,8 +90,8 @@ public class Lighting extends SubsystemBase {
 				case CLIMB_EXTENDED:
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
-					addToControllers(new PulseController(0,
-							20, new Color.HSV[] { Color.HSV.kLime, Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue }, 1.0 / 1.0));
+					addToControllers(new PulseController(mConfig.backSegmentFirstIndex,
+							mConfig.limelightSegmentBackIndex, new Color.HSV[] { Color.HSV.kLime, Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue }, 1.0));
 					break;
 			}
 		}
@@ -114,7 +114,6 @@ public class Lighting extends SubsystemBase {
 	}
 
 	private void addToControllers(LEDController controller) {
-		//TODO Can this be moved to update?
 		for (var i = mLEDControllers.size() - 1; i >= 0; i--) {
 			if (mLEDControllers.get(i).mInitIndex == controller.mInitIndex &&
 					mLEDControllers.get(i).mLastIndex == controller.mLastIndex) {
