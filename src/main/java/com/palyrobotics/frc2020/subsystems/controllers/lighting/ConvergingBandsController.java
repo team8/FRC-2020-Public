@@ -21,6 +21,10 @@ public class ConvergingBandsController extends Lighting.LEDController {
 		mBandLedCount = bandLedCount;
 		mSpeed = speed == 0 ? 0.001 : speed;
 		mTimer.reset();
+		for (var i = mInitIndex; i < mLastIndex; i++) {
+			mOutputs.lightingOutput
+					.add(new Color.HSV(bandColor.getH(), bandColor.getS(), bandColor.getV()));
+		}
 	}
 
 	@Override
@@ -30,11 +34,11 @@ public class ConvergingBandsController extends Lighting.LEDController {
 		}
 		for (var i = 0; i < (mLastIndex - mInitIndex) / 2 - 1; i++) {
 			if ((i + mCurrentBandPosition) / mBandLedCount % 2 == 0) {
-				mOutputs.setHSV(i, mBandColor.getH(), mBandColor.getS(), mBandColor.getV());
-				mOutputs.setHSV(mLastIndex - mInitIndex - i - 1, mBandColor.getH(),
+				mOutputs.lightingOutput.get(i).setHSV(mBandColor.getH(), mBandColor.getS(), mBandColor.getV());
+				mOutputs.lightingOutput.get(mLastIndex - mInitIndex - i - 1).setHSV(mBandColor.getH(),
 						mBandColor.getS(), mBandColor.getV());
 			} else {
-				mOutputs.setHSV(i, mBackgroundColor.getH(), mBackgroundColor.getS(),
+				mOutputs.lightingOutput.get(i).setHSV(mBackgroundColor.getH(), mBackgroundColor.getS(),
 						mBackgroundColor.getV());
 			}
 		}

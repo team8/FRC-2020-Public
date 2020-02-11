@@ -9,6 +9,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.controllers.lighting.*;
 import com.palyrobotics.frc2020.util.Color;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.control.LightingOutputs;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
@@ -21,15 +22,14 @@ public class Lighting extends SubsystemBase {
 
 	public abstract static class LEDController {
 
-		private LightingConfig mConfig = Configs.get(LightingConfig.class);
-		protected AddressableLEDBuffer mOutputs = new AddressableLEDBuffer(mConfig.ledCount);
+		protected LightingOutputs mOutputs = new LightingOutputs();
 
 		protected Timer mTimer = new Timer();
 
 		protected int mInitIndex;
 		protected int mLastIndex;
 
-		public final AddressableLEDBuffer update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+		public final LightingOutputs update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 			updateSignal(commands, state);
 			return mOutputs;
 		}
@@ -100,7 +100,11 @@ public class Lighting extends SubsystemBase {
 			if (ledController.checkFinished()) {
 				mToRemove.add(ledController);
 			} else {
-				mOutputBuffer = ledController.update(commands, robotState);
+				LightingOutputs controllerOutput = ledController.update(commands, robotState);
+				for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
+					Color.HSV hsvValue = controllerOutput.lightingOutput.get(i);
+					mOutputBuffer.setHSV(i + ledController.mInitIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());
+				}
 			}
 		}
 		for (LEDController ledController : mToRemove) {

@@ -229,6 +229,7 @@ public class OperatorInterface {
 		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		commands.intakeWantedState = Intake.State.STOW;
 		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
+		commands.lightingWantedState = Lighting.State.INIT;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
 		commands.wantedCompression = true;
