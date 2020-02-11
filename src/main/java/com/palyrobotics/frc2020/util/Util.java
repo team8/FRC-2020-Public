@@ -1,8 +1,11 @@
 package com.palyrobotics.frc2020.util;
 
+import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.util.Units;
+
+import java.util.logging.Logger;
 
 /**
  * This class holds a bunch of static methods and variables needed for mathematics
@@ -63,14 +66,27 @@ public class Util {
 
 	/**
 	 * Get the difference in angle between two angles.
+	 * TODO: fix and get PID to work
 	 *
 	 * @param  from The first angle
 	 * @param  to   The second angle
 	 * @return      The change in angle from the first argument necessary to line up with the second.
 	 *              Always between -180 and 180
 	 */
-	public static double getDifferenceInAngleDegrees(double from, double to) {
-		return boundAngleNeg180to180Degrees(to - from);
+	public static double getDifferenceInAngleDegreesNeg180To180(double from, double to) {
+		return boundAngleNeg180to180Degrees(from - to);
+	}
+
+	/**
+	 * Get the difference in angle between two angles.
+	 *
+	 * @param  from The first angle
+	 * @param  to   The second angle
+	 * @return      The change in angle from the first argument necessary to line up with the second.
+	 *              Always between 0 and 360
+	 */
+	public static double getDifferenceInAngleDegrees0To360(double from, double to) {
+		return boundAngle0to360Degrees(from - to);
 	}
 
 	public static double boundAngleNeg180to180Degrees(double angle) {

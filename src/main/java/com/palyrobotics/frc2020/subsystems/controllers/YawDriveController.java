@@ -29,7 +29,7 @@ public class YawDriveController extends Drive.DriveController {
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		double wantedYawDegrees = commands.getDriveWantedYawDegrees(),
-				currentYawDegrees = Util.boundAngleNeg180to180Degrees(state.driveYawDegrees);
+				currentYawDegrees = Util.boundAngle0to360Degrees(state.driveYawDegrees);
 		if (mTargetYaw == null || !Util.approximatelyEqual(mTargetYaw, wantedYawDegrees)) {
 			mController.reset(currentYawDegrees);
 			mTargetYaw = wantedYawDegrees;

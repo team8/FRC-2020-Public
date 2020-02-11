@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2020.behavior.routines.drive;
 
-import static com.palyrobotics.frc2020.util.Util.getDifferenceInAngleDegrees;
+import static com.palyrobotics.frc2020.util.Util.getDifferenceInAngleDegrees0To360;
 
 import java.util.Set;
 
@@ -39,7 +39,7 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 		commands.visionWanted = true;
 		commands.visionWantedPipeline = mVisionPipeline;
 		mTargetSeenHistory.addValue(mLimelight.isTargetFound());
-		double yawErrorDegrees = getDifferenceInAngleDegrees(state.driveYawDegrees, mTargetYawDegrees);
+		double yawErrorDegrees = getDifferenceInAngleDegrees0To360(state.driveYawDegrees, mTargetYawDegrees);
 		if (mTargetSeenHistory.getLinkedList().get(0) && mTargetSeenHistory.getLinkedList().get(1) && mTargetSeenHistory.getLinkedList().get(2) && Math.abs(yawErrorDegrees) <= mVisionConfig.alignSwitchYawAngleMin) {
 			commands.setDriveVisionAlign();
 		} else {
