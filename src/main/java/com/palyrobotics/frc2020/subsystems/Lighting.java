@@ -72,10 +72,10 @@ public class Lighting extends SubsystemBase {
 				case INIT:
 					resetLedStrip();
 					addToControllers(
-							new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex, 1.0/25.0));
+							new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex, 1.0 / 25.0));
 					addToControllers(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex,
 							mConfig.limelightSegmentBackIndex, Color.HSV.kWhite,
-							Color.HSV.kBlue, 3, 1.0/5.0));
+							Color.HSV.kBlue, 3, 1.0 / 5.0));
 					break;
 				case DISABLE:
 					addToControllers(new ColorRangingController(mConfig.backSegmentFirstIndex,
@@ -91,7 +91,7 @@ public class Lighting extends SubsystemBase {
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
 					addToControllers(new PulseController(0,
-							20, new Color.HSV[] { Color.HSV.kLime , Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue}, 1.0/1.0));
+							20, new Color.HSV[] { Color.HSV.kLime, Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue }, 1.0 / 1.0));
 					break;
 			}
 		}

@@ -1,11 +1,11 @@
 package com.palyrobotics.frc2020.subsystems.controllers.lighting;
 
+import java.util.Arrays;
+
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
-
-import java.util.Arrays;
 
 public class PulseController extends Lighting.LEDController {
 
@@ -25,7 +25,7 @@ public class PulseController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get()/mSpeed) % 2 == 1) {
+		if (Math.round(mTimer.get() / mSpeed) % 2 == 1) {
 			mInitIndex += 1;
 			mLastIndex += 1;
 			mTimer.reset();

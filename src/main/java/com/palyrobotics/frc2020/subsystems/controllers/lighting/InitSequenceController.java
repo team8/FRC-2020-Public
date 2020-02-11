@@ -20,7 +20,7 @@ public class InitSequenceController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get()/mSpeed) % 2 == 1 && mCurrentLedIndex <= mLastIndex) {
+		if (Math.round(mTimer.get() / mSpeed) % 2 == 1 && mCurrentLedIndex <= mLastIndex) {
 			mOutputs.lightingOutput
 					.add(new Color.HSV((int) ((mCurrentLedIndex - mInitIndex) * Math.log(mCurrentLedIndex) +
 							5), 247, 100));
