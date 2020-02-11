@@ -125,7 +125,7 @@ public class OperatorInterface {
 	private void updateLightingCommands(Commands commands) {
 		// TODO: temporary, remove
 		if (mTurnStick.getRawButtonPressed(6)) {
-			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
+			commands.lightingWantedState = Lighting.State.OFF;
 		}
 		if (mTurnStick.getRawButtonPressed(5)) {
 			commands.lightingWantedState = Lighting.State.INIT;
@@ -135,7 +135,7 @@ public class OperatorInterface {
 			//Lighting.getInstance().tempBallCount += 1;
 		}
 		if (mTurnStick.getRawButtonPressed(3)) {
-			commands.lightingWantedState = Lighting.State.DISABLE;
+			commands.lightingWantedState = Lighting.State.IDLE;
 		}
 	}
 

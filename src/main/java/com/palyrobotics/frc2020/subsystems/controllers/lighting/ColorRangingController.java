@@ -21,13 +21,10 @@ public class ColorRangingController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		if (mCurrentHue >= 200) {
-			mIsHueUpwards = false;
+		if(mCurrentHue >= 150){
+			mCurrentHue = 0;
 		}
-		if (mCurrentHue <= 0) {
-			mIsHueUpwards = true;
-		}
-		mCurrentHue = mIsHueUpwards ? mCurrentHue++ : mCurrentHue--;
+		mCurrentHue++;
 
 		for (var i = 0; i < mOutputs.lightingOutput.size(); i++) {
 			mOutputs.lightingOutput.get(i).setH(mCurrentHue);
