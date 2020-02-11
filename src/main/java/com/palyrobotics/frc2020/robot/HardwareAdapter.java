@@ -119,7 +119,7 @@ public class HardwareAdapter {
 	static class LightingHardware {
 
 		private static LightingHardware sInstance = new LightingHardware();
-		final AddressableLED ledStrip = new AddressableLED(sPortConstants.nariLightingPwmPort);
+		final AddressableLED ledStrip = new AddressableLED(1);
 
 		private LightingHardware() {
 		}

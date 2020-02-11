@@ -13,14 +13,14 @@ public class ConvergingBandsController extends Lighting.LEDController {
 	private int mCurrentBandPosition;
 	private double mSpeed;
 
-	public ConvergingBandsController(int initIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, int speed) {
+	public ConvergingBandsController(int initIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
 		mBandColor = bandColor;
 		mBackgroundColor = backgroundColor;
 		mBandLedCount = bandLedCount;
 		mSpeed = speed == 0 ? 0.001 : speed;
-		mTimer.reset();
+		mTimer.start();
 		for (var i = mInitIndex; i < mLastIndex; i++) {
 			mOutputs.lightingOutput
 					.add(new Color.HSV(bandColor.getH(), bandColor.getS(), bandColor.getV()));
@@ -29,8 +29,9 @@ public class ConvergingBandsController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (mTimer.hasPeriodPassed(1 / mSpeed)) {
+		if (Math.round(mTimer.get()/mSpeed) % 2 == 1) {
 			mCurrentBandPosition += 1;
+			mTimer.reset();
 		}
 		for (var i = 0; i < (mLastIndex - mInitIndex) / 2 - 1; i++) {
 			if ((i + mCurrentBandPosition) / mBandLedCount % 2 == 0) {
@@ -40,6 +41,8 @@ public class ConvergingBandsController extends Lighting.LEDController {
 			} else {
 				mOutputs.lightingOutput.get(i).setHSV(mBackgroundColor.getH(), mBackgroundColor.getS(),
 						mBackgroundColor.getV());
+				mOutputs.lightingOutput.get(mLastIndex - mInitIndex - i - 1).setHSV(mBackgroundColor.getH(),
+						mBackgroundColor.getS(), mBackgroundColor.getV());
 			}
 		}
 	}

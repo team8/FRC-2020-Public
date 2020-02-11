@@ -5,6 +5,8 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
+import java.util.Arrays;
+
 public class PulseController extends Lighting.LEDController {
 
 	private Color.HSV[] mPulse;
@@ -17,17 +19,16 @@ public class PulseController extends Lighting.LEDController {
 		mLastIndex = startIndex + mPulse.length - 1;
 		mPulseEndIndex = endIndex;
 		mSpeed = speed;
-		for (Color.HSV currentColor : pulseColorSequence) {
-			mOutputs.lightingOutput
-					.add(new Color.HSV(currentColor.getH(), currentColor.getS(), currentColor.getV()));
-		}
+		mTimer.start();
+		mOutputs.lightingOutput.addAll(Arrays.asList(pulseColorSequence));
 	}
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (mTimer.hasPeriodPassed(1 / mSpeed)) {
+		if (Math.round(mTimer.get()/mSpeed) % 2 == 1) {
 			mInitIndex += 1;
 			mLastIndex += 1;
+			mTimer.reset();
 		}
 	}
 

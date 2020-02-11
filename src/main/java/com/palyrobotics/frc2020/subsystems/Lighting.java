@@ -72,10 +72,10 @@ public class Lighting extends SubsystemBase {
 				case INIT:
 					resetLedStrip();
 					addToControllers(
-							new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex, 1));
+							new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex, 1.0/25.0));
 					addToControllers(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex,
 							mConfig.limelightSegmentBackIndex, Color.HSV.kWhite,
-							Color.HSV.kBlue, 3, 6));
+							Color.HSV.kBlue, 3, 1.0/5.0));
 					break;
 				case DISABLE:
 					addToControllers(new ColorRangingController(mConfig.backSegmentFirstIndex,
@@ -83,19 +83,19 @@ public class Lighting extends SubsystemBase {
 					break;
 				case TARGET_FOUND:
 					addToControllers(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
-							mConfig.limelightSegmentBackIndex, Color.HSV.kLime, 3));
+							mConfig.limelightSegmentBackIndex, Color.HSV.kLime, 1));
 					break;
 				case BALL_ENTERED:
 				case HOPPER_OPEN:
 				case CLIMB_EXTENDED:
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
-					addToControllers(new PulseController(mConfig.limelightSegmentFirstIndex,
-							mConfig.limelightSegmentBackIndex, new Color.HSV[] { Color.HSV.kRed }, (double) 1 / 6));
+					addToControllers(new PulseController(0,
+							20, new Color.HSV[] { Color.HSV.kLime , Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue}, 1.0/1.0));
 					break;
 			}
 		}
-
+		mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
 		for (LEDController ledController : mLEDControllers) {
 			if (ledController.checkFinished()) {
 				mToRemove.add(ledController);
