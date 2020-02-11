@@ -15,7 +15,7 @@
 	"nariIndexerTopInfraredDio": 9,
 	"nariIntakeId": 8,
 	"nariIntakeSolenoidId": 0,
-	"nariLightingPwmPort": 1,
+	"nariLightingPwmPort": 9,
 	"nariShooterMasterId": 16,
 	"nariShooterSlaveId": 1,
 	"nariShooterHoodSolenoid": 5,
