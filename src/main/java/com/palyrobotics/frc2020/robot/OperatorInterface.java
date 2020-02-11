@@ -55,12 +55,12 @@ public class OperatorInterface {
 			commands.setShooterCustomFlywheelVelocity(customVelocity, Shooter.HoodState.LOW);
 		}
 
-//		if (mTurnStick.getRawButtonPressed(6)) {
-//			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
-//		}
-//		if (mTurnStick.getRawButtonReleased(6)) {
-//			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
-//		}
+		if (mTurnStick.getRawButtonPressed(6)) {
+			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
+		}
+		if (mTurnStick.getRawButtonReleased(6)) {
+			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
+		}
 
 		mOperatorXboxController.updateLastInputs();
 	}

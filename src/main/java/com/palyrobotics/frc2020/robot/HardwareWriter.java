@@ -185,9 +185,7 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
 		hardware.masterSpark.setOutput(mIndexer.getOutput());
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
-//		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
-		// TODO: remove
-		hardware.blockingSolenoid.setExtended(false);
+		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 	}
 
 	private void updateIntake() {
