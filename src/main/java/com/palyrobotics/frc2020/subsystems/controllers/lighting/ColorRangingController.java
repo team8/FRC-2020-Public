@@ -9,7 +9,6 @@ import com.palyrobotics.frc2020.util.Color;
 public class ColorRangingController extends Lighting.LEDController {
 
 	private int mCurrentHue = 0;
-	private boolean mIsHueUpwards;
 
 	public ColorRangingController(int initIndex, int lastIndex) {
 		mInitIndex = initIndex;
