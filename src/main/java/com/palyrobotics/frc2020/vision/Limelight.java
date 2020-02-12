@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.vision.LimelightControlMode.*;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * Wrapper around the Limelight's network tables
@@ -198,6 +199,11 @@ public class Limelight {
 		return mTable.getEntry("cy" + raw.getValue()).getDouble(0.0);
 	}
 
+	// TODO: remove
+	public double _distance;
+
+	public XboxController _controller = new XboxController(3);
+
 	/**
 	 * Estimate z distance from camera to distance as seen at
 	 * http://docs.limelightvision.io/en/latest/cs_estimating_distance.html
@@ -205,6 +211,9 @@ public class Limelight {
 	 * @return Estimated distance in inches
 	 */
 	public double getEstimatedDistanceInches() {
+//		double add = _controller.getY(GenericHID.Hand.kRight);
+//		if (Math.abs(add) > 0.2) _distance += add - Math.signum(add) * 0.2;
+//		return _distance;
 		// Tuned 2/10/20 using lowest mounting on original design
 		double oneTimesZoomAngle = 36.60555401;
 		double twoTimesZoomAngle = 31.88412543;

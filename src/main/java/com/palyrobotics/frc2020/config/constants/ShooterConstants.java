@@ -22,7 +22,7 @@ public class ShooterConstants {
 		kTargetDistanceToVelocity.put(200.0, 2450.0);
 		// TODO: config?
 		kTargetDistanceToHoodState.put(0.0, Shooter.HoodState.LOW);
-		kTargetDistanceToHoodState.put(1000.0, Shooter.HoodState.MIDDLE);
-		kTargetDistanceToHoodState.put(2000.0, Shooter.HoodState.HIGH);
+		kTargetDistanceToHoodState.put(100.0, Shooter.HoodState.MIDDLE);
+		kTargetDistanceToHoodState.put(200.0, Shooter.HoodState.HIGH);
 	}
 }

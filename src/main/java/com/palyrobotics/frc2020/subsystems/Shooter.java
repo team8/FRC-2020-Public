@@ -21,14 +21,6 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Shooter extends SubsystemBase {
 
-	public enum ShooterState {
-		IDLE, CUSTOM_VELOCITY, VISION_VELOCITY
-	}
-
-	public enum HoodState {
-		LOW, MIDDLE, HIGH
-	}
-
 	private static Shooter sInstance = new Shooter();
 	private Limelight mLimelight = Limelight.getInstance();
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
@@ -83,11 +75,12 @@ public class Shooter extends SubsystemBase {
 				justChangedReadyToShoot = mIsReadyToShoot != isReadyToShoot;
 		mIsReadyToShoot = isReadyToShoot;
 		/* Hood */
-		boolean shouldUpdateHood = !state.shooterHoodIsInTransition && targetFlywheelVelocity > kEpsilon;
+		boolean shouldUpdateHood = !state.shooterHoodIsInTransition && (targetFlywheelVelocity > kEpsilon || wantedState == ShooterState.IDLE);
 		if (shouldUpdateHood) updateHood(commands, state, targetDistanceInches);
 		/* Rumble */
 		updateRumble(commands, justChangedReadyToShoot);
 		/* Telemetry */
+		LiveGraph.add("shooterTargetDistance", targetDistanceInches == null ? -1 : targetDistanceInches);
 		LiveGraph.add("shooterTargetVelocity", targetFlywheelVelocity);
 		LiveGraph.add("shooterCurrentVelocity", state.shooterFlywheelVelocity);
 		TelemetryService.putArbitrary("shooterTargetDistance", targetDistanceInches);
@@ -125,7 +118,8 @@ public class Shooter extends SubsystemBase {
 		} else {
 			Map.Entry<Double, HoodState> floorEntry = kTargetDistanceToHoodState.floorEntry(targetDistanceInches),
 					ceilingEntry = kTargetDistanceToHoodState.ceilingEntry(targetDistanceInches),
-					closestEntry = targetDistanceInches - floorEntry.getKey() > ceilingEntry.getKey() - targetDistanceInches ? ceilingEntry : floorEntry;
+					closestEntry;
+			closestEntry = ceilingEntry == null ? floorEntry : targetDistanceInches - floorEntry.getKey() > ceilingEntry.getKey() - targetDistanceInches ? ceilingEntry : floorEntry;
 			double deltaFromThreshold = Math.abs(targetDistanceInches - closestEntry.getKey());
 			targetHoodState = deltaFromThreshold > mConfig.hoodSwitchDistanceThreshold ? floorEntry.getValue() : closestEntry.getValue();
 		}
@@ -194,5 +188,13 @@ public class Shooter extends SubsystemBase {
 
 	public boolean isReadyToShoot() {
 		return mIsReadyToShoot;
+	}
+
+	public enum ShooterState {
+		IDLE, CUSTOM_VELOCITY, VISION_VELOCITY
+	}
+
+	public enum HoodState {
+		LOW, MIDDLE, HIGH
 	}
 }

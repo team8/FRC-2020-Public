@@ -19,9 +19,14 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.ShooterCustomVelocityRoutine;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.Shooter;
 import com.palyrobotics.frc2020.util.config.ConfigBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.service.RobotService;
@@ -50,8 +55,9 @@ public class CommandReceiverService implements RobotService {
 		get.addArgument("--raw").action(Arguments.storeTrue());
 		subparsers.addParser("reload").addArgument("config_name");
 		Subparser run = subparsers.addParser("run");
-		run.addArgument("routine_name").setDefault("measure_elevator_speed");
-		run.addArgument("parameters").nargs("*");
+		run.addArgument("hood_state");
+		run.addArgument("manual_speed");
+//		run.addArgument("parameters").nargs("*");
 		subparsers.addParser("save").addArgument("config_name");
 		subparsers.addParser("calibrate").addSubparsers().dest("subsystem").addParser("arm")
 				.help("Resets the Spark encoder so it is in-line with the potentiometer");
@@ -98,20 +104,20 @@ public class CommandReceiverService implements RobotService {
 	}
 
 	@Override
-	public void update(@ReadOnly RobotState state, @ReadOnly Commands commands) {
+	public void update(@ReadOnly RobotState state, Commands commands) {
 		mCommand.tryGetAndReset(command -> {
 			if (command == null) return;
-			String result = executeCommand(command);
+			String result = executeCommand(command, commands);
 			mResult.setAndNotify(result);
 		});
 	}
 
-	public String executeCommand(String command) {
+	public String executeCommand(String command, Commands commands) {
 		if (command == null) throw new IllegalArgumentException("Command can not be null!");
 		String result;
 		try {
 			Namespace parse = mParser.parseArgs(command.trim().split("\\s+"));
-			result = handleParsedCommand(parse);
+			result = handleParsedCommand(parse, commands);
 		} catch (ArgumentParserException parseException) {
 			var help = new StringWriter();
 			var printer = new PrintWriter(help);
@@ -121,9 +127,10 @@ public class CommandReceiverService implements RobotService {
 		return result;
 	}
 
-	private String handleParsedCommand(Namespace parse) throws ArgumentParserException {
+	private String handleParsedCommand(Namespace parse, Commands commands) throws ArgumentParserException {
 		// TODO less nesting >:( refactor into functions
 		var commandName = parse.getString("command");
+		System.out.println(commandName);
 		switch (commandName) {
 			case "get":
 			case "set":
@@ -210,16 +217,20 @@ public class CommandReceiverService implements RobotService {
 				}
 			}
 			case "run": {
-				String routineName = parse.getString("routine_name");
-				switch (routineName) {
-					default: {
-						throw new ArgumentParserException("Routine not recognized!", mParser);
-					}
-				}
+//				String routineName = parse.getString("routine_name");
+//				switch (routineName) {
+//					default: {
+//						throw new ArgumentParserException("Routine not recognized!", mParser);
+//					}
+//				}
+				var hoodState = Shooter.HoodState.valueOf(parse.getString("hood_state"));
+				var manualSpeed = Double.parseDouble(parse.getString("manual_speed"));
+				commands.addWantedRoutines(new ShooterCustomVelocityRoutine(7.0, manualSpeed, hoodState),
+						new SequentialRoutine(new TimedRoutine(4.0), new IndexerFeedAllRoutine(7.0)));
+				return String.format("Running with hood state %s and velocity %f", hoodState, manualSpeed);
 			}
-
 			default: {
-				throw new RuntimeException();
+				throw new RuntimeException("Unknown command");
 			}
 		}
 	}
