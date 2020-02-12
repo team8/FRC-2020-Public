@@ -25,6 +25,7 @@ public class HardwareWriter {
 			// 0 for Primary closed-loop. 1 for auxiliary closed-loop.
 			kPidIndex = 0;
 	private static final String kLoggerTag = Util.classToJsonName(HardwareWriter.class);
+	public static final double kVoltageCompensation = 12.0;
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	private final Climber mClimber = Climber.getInstance();
 	private final Drive mDrive = Drive.getInstance();
@@ -47,8 +48,8 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.ClimberHardware.getInstance();
 		hardware.verticalSpark.restoreFactoryDefaults();
 		hardware.horizontalSpark.restoreFactoryDefaults();
-		hardware.verticalSpark.enableVoltageCompensation(12.0);
-		hardware.horizontalSpark.enableVoltageCompensation(12.0);
+		hardware.verticalSpark.enableVoltageCompensation(kVoltageCompensation);
+		hardware.horizontalSpark.enableVoltageCompensation(kVoltageCompensation);
 		/* Encoder units are inches and inches/sec */
 		hardware.verticalSparkEncoder.setPositionConversionFactor(17.0666667 * 4.0 * Math.PI);
 		hardware.verticalSparkEncoder.setVelocityConversionFactor(17.0666667 * 4.0 * Math.PI / 60.0);
@@ -60,9 +61,9 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
 		var driveConfig = Configs.get(DriveConfig.class);
 		for (Falcon falcon : hardware.falcons) {
-			falcon.configFactoryDefault();
+			falcon.configFactoryDefault(kTimeoutMs);
 			falcon.enableVoltageCompensation(true);
-			falcon.configVoltageCompSaturation(12.0, kTimeoutMs);
+			falcon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,
 					kPidIndex, kTimeoutMs);
 			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero,
@@ -86,21 +87,28 @@ public class HardwareWriter {
 
 	private void configureIndexerHardware() {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
+		// Sparks
 		hardware.masterSpark.restoreFactoryDefaults();
 		hardware.slaveSpark.restoreFactoryDefaults();
-		hardware.masterSpark.enableVoltageCompensation(12);
-		hardware.slaveSpark.enableVoltageCompensation(12);
+		hardware.masterSpark.enableVoltageCompensation(kVoltageCompensation);
+		hardware.slaveSpark.enableVoltageCompensation(kVoltageCompensation);
 		hardware.slaveSpark.follow(hardware.masterSpark);
 		hardware.masterSpark.setOpenLoopRampRate(0.1);
 		hardware.masterSpark.setInverted(false);
 		hardware.masterSpark.setSmartCurrentLimit(60);
+		// Talon
+		var talon = hardware.talon;
+		talon.configFactoryDefault(kTimeoutMs);
+		talon.enableVoltageCompensation(true);
+		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
+		talon.configOpenloopRamp(0.1, kTimeoutMs);
 	}
 
 	private void configureIntakeHardware() {
 		var talon = HardwareAdapter.IntakeHardware.getInstance().talon;
 		talon.configFactoryDefault(kTimeoutMs);
 		talon.enableVoltageCompensation(true);
-		talon.configVoltageCompSaturation(12, kTimeoutMs);
+		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
 		talon.setInverted(false);
 	}
@@ -121,7 +129,7 @@ public class HardwareWriter {
 		talon.configFactoryDefault(kTimeoutMs);
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
 		talon.enableVoltageCompensation(true);
-		talon.configVoltageCompSaturation(12, kTimeoutMs);
+		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 	}
 
 	// public void resetDriveSensors(Pose2d pose) {
@@ -186,6 +194,7 @@ public class HardwareWriter {
 		hardware.masterSpark.setOutput(mIndexer.getOutput());
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
+		hardware.talon.setOutput(mIndexer.getBottomOutput());
 	}
 
 	private void updateIntake() {

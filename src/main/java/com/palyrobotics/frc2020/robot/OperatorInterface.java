@@ -210,5 +210,6 @@ public class OperatorInterface {
 		commands.spinnerWantedState = Spinner.State.IDLE;
 		commands.wantedCompression = true;
 		commands.wantedRumble = false;
+		mOperatorXboxController.clearLastInputs();
 	}
 }

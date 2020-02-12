@@ -8,6 +8,7 @@
 	"nariDriveRightSlaveId": 3,
 	"nariIndexerMasterId": 10,
 	"nariIndexerSlaveId": 11,
+	"nariIndexerTalonId": 7,
 	"nariIndexerHopperSolenoidId": 2,
 	"nariIndexerBlockingSolenoidId": 3,
 	"nariIndexerBackInfraredDio": 7,

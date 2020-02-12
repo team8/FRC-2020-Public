@@ -19,6 +19,11 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 		mLastTriggers.replaceAll((hand, b) -> getTrigger(hand));
 	}
 
+	public void clearLastInputs() {
+		mLastPOV = -1;
+		mLastTriggers.replaceAll((hand, b) -> false);
+	}
+
 	public boolean getDPadRightPressed() {
 		return getPOV() != mLastPOV && getDPadRight();
 	}

@@ -8,7 +8,6 @@
 		"shooter",
 		"indexer",
 		"intake",
-		"drive",
 		"spinner"
 	],
 	"coastDriveWhenDisabled": false,
