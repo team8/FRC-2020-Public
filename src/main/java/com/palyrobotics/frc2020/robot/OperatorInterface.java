@@ -179,13 +179,11 @@ public class OperatorInterface {
 			commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		}
 		// Feeding
-		if (state.shooterIsReadyToShoot) {
-			if (mOperatorXboxController.getLeftBumperPressed()) {
-				// Shoot one ball
-				commands.addWantedRoutine(new IndexerFeedSingleRoutine());
-			} else if (mOperatorXboxController.getRightBumperPressed()) {
-				commands.addWantedRoutine(new IndexerFeedAllRoutine());
-			}
+		if (mOperatorXboxController.getLeftBumperPressed()) {
+			// Shoot one ball
+			commands.addWantedRoutine(new IndexerFeedSingleRoutine());
+		} else if (mOperatorXboxController.getRightBumperPressed()) {
+			commands.addWantedRoutine(new IndexerFeedAllRoutine());
 		}
 
 	}
