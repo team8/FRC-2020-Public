@@ -64,6 +64,7 @@ public class Lighting extends SubsystemBase {
 			switch (mState) {
 				case OFF:
 					resetLedStrip();
+					mLEDControllers.clear();
 					break;
 				case IDLE:
 					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex,
@@ -71,8 +72,9 @@ public class Lighting extends SubsystemBase {
 					break;
 				case INIT:
 					resetLedStrip();
+					mLEDControllers.clear();
 					addToControllers(
-							new InitSequenceController(mConfig.backSupportSegmentFirstIndex, mConfig.backSupportSegmentLastIndex, 1.0 / 25.0));
+							new InitSequenceController(mConfig.shooterSegmentFirstIndex, mConfig.shooterSegmentLastIndex, 1.0 / 25.0));
 					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex,
 							mConfig.spinnerSegmentLastIndex, Color.HSV.kWhite,
 							Color.HSV.kBlue, 3, 1.0 / 5.0));
@@ -95,7 +97,9 @@ public class Lighting extends SubsystemBase {
 					break;
 			}
 		}
-		mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
+
+		resetLedStrip();
+
 		for (LEDController ledController : mLEDControllers) {
 			if (ledController.checkFinished()) {
 				mToRemove.add(ledController);
@@ -124,7 +128,6 @@ public class Lighting extends SubsystemBase {
 	}
 
 	private void resetLedStrip() {
-		mLEDControllers.clear();
 		for (int i = 0; i < mOutputBuffer.getLength(); i++) {
 			mOutputBuffer.setRGB(i, 0, 0, 0);
 		}
