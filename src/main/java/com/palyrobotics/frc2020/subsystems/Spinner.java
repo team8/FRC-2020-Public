@@ -11,7 +11,7 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 public class Spinner extends SubsystemBase {
 
 	public enum State {
-		IDLE, ROTATING
+		IDLE, ROTATING_LEFT, ROTATING_RIGHT
 	}
 
 	private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
@@ -29,8 +29,11 @@ public class Spinner extends SubsystemBase {
 			case IDLE:
 				mOutput.setIdle();
 				break;
-			case ROTATING:
+			case ROTATING_LEFT:
 				mOutput.setPercentOutput(mConfig.percentOutput);
+				break;
+			case ROTATING_RIGHT:
+				mOutput.setPercentOutput(-mConfig.percentOutput);
 				break;
 		}
 	}

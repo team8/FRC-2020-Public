@@ -16,14 +16,19 @@ public class SpinnerPositionControlRoutine extends RoutineBase {
 
 	@Override
 	protected void start(Commands commands, @ReadOnly RobotState state) {
-		mDirectionToGoalColor = mSpinner.directionToGoalColor(mCurrentColor, mTargetColor);
+		mDirectionToGoalColor = mSpinner.directionToGoalColor(state.closestColorString, state.gameData);
 	}
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		mTargetColor = state.gameData;
 		mCurrentColor = state.closestColorString;
-		commands.spinnerWantedState = Spinner.State.ROTATING;
+
+		if (mDirectionToGoalColor < 0) {
+			commands.spinnerWantedState = Spinner.State.ROTATING_LEFT;
+		} else if (mDirectionToGoalColor > 0) {
+			commands.spinnerWantedState = Spinner.State.ROTATING_RIGHT;
+		}
 	}
 
 	@Override

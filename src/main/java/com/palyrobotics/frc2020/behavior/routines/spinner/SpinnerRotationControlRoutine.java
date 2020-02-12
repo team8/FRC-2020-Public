@@ -22,7 +22,7 @@ public class SpinnerRotationControlRoutine extends RoutineBase {
 		String currentColor = state.closestColorString;
 		mColorChangeCounter = !currentColor.equals(mPreviousColor) ? mColorChangeCounter++ : mColorChangeCounter;
 		mPreviousColor = currentColor;
-		commands.spinnerWantedState = Spinner.State.ROTATING;
+		commands.spinnerWantedState = Spinner.State.ROTATING_RIGHT;
 	}
 
 	@Override
