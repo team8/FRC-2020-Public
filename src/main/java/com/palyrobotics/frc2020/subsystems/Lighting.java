@@ -26,7 +26,7 @@ public class Lighting extends SubsystemBase {
 
 		protected Timer mTimer = new Timer();
 
-		protected int mInitIndex;
+		protected int mInitIndex; //indexes that led controller will write to
 		protected int mLastIndex;
 
 		public final LightingOutputs update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
@@ -45,8 +45,8 @@ public class Lighting extends SubsystemBase {
 	private LightingConfig mConfig = Configs.get(LightingConfig.class);
 	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
 	private State mState;
-	private ArrayList<LEDController> mLEDControllers = new ArrayList<>();
-	private ArrayList<LEDController> mToRemove = new ArrayList<>();
+	private ArrayList<LEDController> mLEDControllers = new ArrayList<>(); //array of active led controllers
+	private ArrayList<LEDController> mToRemove = new ArrayList<>(); //array of all controller that are finished
 
 	private Lighting() {
 	}

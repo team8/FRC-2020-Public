@@ -13,6 +13,15 @@ public class ConvergingBandsController extends Lighting.LEDController {
 	private int mCurrentBandPosition;
 	private double mSpeed;
 
+	/**
+	 * Band color converges to center of strip
+	 *
+	 * @param initIndex       initial index upon which led patterns should start
+	 * @param lastIndex       end index upon which led patterns should stop
+	 * @param bandColor       color that should pulse through led strip
+	 * @param backgroundColor background color upon which converging effect will occur.
+	 */
+
 	public ConvergingBandsController(int initIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;

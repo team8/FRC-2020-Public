@@ -10,6 +10,14 @@ public class FlashingLightsController extends Lighting.LEDController {
 	private Color.HSV mFlashedColor;
 	private int mDelay;
 
+	/**
+	 * Color flashes with given delay
+	 *
+	 * @param initIndex    initial index upon which led patterns should start
+	 * @param lastIndex    end index upon which led patterns should stop
+	 * @param flashedColor color to flashed on white background
+	 */
+
 	public FlashingLightsController(int initIndex, int lastIndex, Color.HSV flashedColor, int delay) {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
