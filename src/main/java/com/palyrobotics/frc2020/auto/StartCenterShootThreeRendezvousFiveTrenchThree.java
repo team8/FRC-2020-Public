@@ -26,6 +26,7 @@ public class StartCenterShootThreeRendezvousFiveTrenchThree extends EndRendezvou
 		var getRendezvous2 = new DrivePathRoutine(newWaypoint(140, -30, 30));
 
 		var turn2 = new DriveYawRoutine(90);
+
 		var getRendezvous3 = new DrivePathRoutine(newWaypoint(140, 20, 90));
 
 		return new SequentialRoutine(initialOdometry, turn, getRendezvous1, backup1, getRendezvous2, turn2, getRendezvous3,
