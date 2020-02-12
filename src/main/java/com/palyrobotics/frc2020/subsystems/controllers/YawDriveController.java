@@ -5,6 +5,8 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.Util;
+import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -29,7 +31,9 @@ public class YawDriveController extends Drive.DriveController {
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		double wantedYawDegrees = commands.getDriveWantedYawDegrees(),
-				currentYawDegrees = Util.boundAngle0to360Degrees(state.driveYawDegrees);
+				currentYawDegrees = Util.boundAngleNeg180to180Degrees(state.driveYawDegrees);
+		LiveGraph.add("CurrentYaw", currentYawDegrees);
+		CSVWriter.addData("CurrentYaw", currentYawDegrees);
 		if (mTargetYaw == null || !Util.approximatelyEqual(mTargetYaw, wantedYawDegrees)) {
 			mController.reset(currentYawDegrees);
 			mTargetYaw = wantedYawDegrees;

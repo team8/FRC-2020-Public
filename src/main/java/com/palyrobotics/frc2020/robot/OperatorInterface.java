@@ -1,12 +1,13 @@
 package com.palyrobotics.frc2020.robot;
 
 import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
-import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
 import com.palyrobotics.frc2020.auto.*;
-import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
@@ -119,11 +120,12 @@ public class OperatorInterface {
 		}
 		/* Path Following */
 		if (mOperatorXboxController.getDPadDownPressed()) {
-			commands.addWantedRoutine(
-					new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
+//			commands.addWantedRoutine(new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
+			commands.addWantedRoutine(new DriveSetOdometryRoutine(0, 0, 0));
 		}
 		if (mOperatorXboxController.getDPadUpPressed()) {
 			commands.addWantedRoutine(new StartRightTrenchStealTwoShootFive().getRoutine());
+//			commands.addWantedRoutine(new SequentialRoutine(new DriveYawRoutine(170), new DriveYawRoutine(110)));
 		}
 	}
 

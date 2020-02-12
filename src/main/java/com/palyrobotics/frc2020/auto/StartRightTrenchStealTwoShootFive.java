@@ -24,13 +24,14 @@ public class StartRightTrenchStealTwoShootFive extends AutoBase {
 
 		var goToShoot = new DrivePathRoutine(newWaypoint(100, 75, 180)).driveInReverse();
 
-		var getRendezvous1 = new DrivePathRoutine(newWaypoint(100, 115, 10));
-		//TODO> add backup
-		var getRendezvous2 = new DrivePathRoutine(newWaypoint(95, 130, 10));
+		var getRendezvous1 = new DrivePathRoutine(newWaypoint(90, 115, 30));
+		var backup = new DrivePathRoutine(newWaypoint(40, 115, 30)).driveInReverse();
+		//TODO add backup
+		var getRendezvous2 = new DrivePathRoutine(newWaypoint(70, 140, 10));
 
 		return new SequentialRoutine(initialOdometry, getTrenchBalls, goToShoot,
-				new DriveAlignYawAssistedRoutine(150, kOneTimesZoomPipelineId),
-				getRendezvous1, getRendezvous2,
-				new DriveAlignYawAssistedRoutine(150, kOneTimesZoomPipelineId));
+				new DriveAlignYawAssistedRoutine(170, kOneTimesZoomPipelineId),
+				getRendezvous1, backup, getRendezvous2,
+				new DriveAlignYawAssistedRoutine(175, kOneTimesZoomPipelineId));
 	}
 }

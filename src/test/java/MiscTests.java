@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.palyrobotics.frc2020.util.InterpolatingDoubleTreeMap;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.control.*;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -34,11 +35,22 @@ public class MiscTests {
 			output.setTargetPositionProfiled(0.1, 0.1, profiledGains);
 			assertTrue(spark.setOutput(output));
 			assertFalse(spark.setOutput(output));
-		} else {
-			System.out.println("OS is not Windows, skipping lazy spark max tests");
 		}
 	}
 
+	@Test
+	public void testTurnDifference(){
+		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(180, 180), 0);
+		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(30, 120), -90);
+		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(180, -180), 0);
+		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(-90, 45), -135);
+		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(20, -40), 60);
+		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(-120, 120), 120);
+		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(30, 110), -80);
+		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(10, 170), -160);
+
+
+	}
 	@Test
 	public void testInterpolatingTreeMap() {
 		var map = new InterpolatingDoubleTreeMap();
