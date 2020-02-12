@@ -25,6 +25,8 @@ public class Turret extends SubsystemBase {
 	private PIDController mPIDController = new PIDController(mConfig.turnGains.p, mConfig.turnGains.i, mConfig.turnGains.d);
 	private boolean calibrationWanted = false;
 
+	/*might use controllers*/
+
 	public abstract static class TurretController {
 
 		protected final TurretConfig mConfig = Configs.get(TurretConfig.class);
@@ -58,13 +60,19 @@ public class Turret extends SubsystemBase {
 				mOutput.setPercentOutput(-mConfig.rotatingOutput);
 				break;
 			case VISION_ALIGN:
-				mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
-				mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
-				mLimelight.setPipeline(0);
+				if (robotState.drivePose.getTranslation().getY() > mConfig.distanceToMiddleOfField) { //might be translation x
+					mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+					mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
+					mLimelight.setPipeline(0);
+				}
 				double PIDInput = mLimelight.isTargetFound() ? mLimelight.getYawToTarget() : robotState.driveYawDegrees;
 				double percentOutput = -mPIDController.calculate(PIDInput);
 				percentOutput = Util.clamp(percentOutput, -percentOutput, percentOutput);
-				mOutput.setPercentOutput(percentOutput);
+				if (Math.abs(robotState.turretYawDegrees) - mConfig.maximumAngle < mConfig.acceptableYawError) {
+					mOutput.setPercentOutput(0);
+				} else {
+					mOutput.setPercentOutput(percentOutput);
+				}
 		}
 
 		// Calibration
