@@ -12,6 +12,7 @@ import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedSing
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerIdleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
+import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.Joysticks;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;

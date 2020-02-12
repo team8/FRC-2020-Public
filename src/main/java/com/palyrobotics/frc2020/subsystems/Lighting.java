@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		IDLE, OFF, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED, BALL_ENTERED
+		IDLE, OFF, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE
 	}
 
 	public abstract static class LEDController {
@@ -87,6 +87,7 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex,
 							mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1));
 					break;
+				case SPINNER_DONE:
 				case BALL_ENTERED:
 				case HOPPER_OPEN:
 				case CLIMB_EXTENDED:
@@ -118,18 +119,22 @@ public class Lighting extends SubsystemBase {
 	}
 
 	private void addToControllers(LEDController controller) {
-		for (var i = mLEDControllers.size() - 1; i >= 0; i--) {
-			if (mLEDControllers.get(i).mInitIndex == controller.mInitIndex &&
-					mLEDControllers.get(i).mLastIndex == controller.mLastIndex) {
-				mLEDControllers.remove(i);
-			}
-		}
+		removeOldControllers(controller);
 		mLEDControllers.add(controller);
 	}
 
 	private void resetLedStrip() {
 		for (int i = 0; i < mOutputBuffer.getLength(); i++) {
 			mOutputBuffer.setRGB(i, 0, 0, 0);
+		}
+	}
+
+	private void removeOldControllers(LEDController controller) {
+		for (var i = mLEDControllers.size() - 1; i >= 0; i--) {
+			if (mLEDControllers.get(i).mInitIndex == controller.mInitIndex &&
+					mLEDControllers.get(i).mLastIndex == controller.mLastIndex) {
+				mLEDControllers.remove(i);
+			}
 		}
 	}
 
