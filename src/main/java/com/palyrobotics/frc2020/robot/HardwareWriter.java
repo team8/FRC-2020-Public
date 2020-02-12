@@ -120,7 +120,7 @@ public class HardwareWriter {
 		hardware.slaveSpark.follow(hardware.masterSpark, true);
 		hardware.masterSpark.setInverted(false);
 		/* Velocity in RPM, adjusted for gearing ratio */
-//		hardware.masterEncoder.setVelocityConversionFactor(0.76923076);
+		hardware.masterEncoder.setVelocityConversionFactor(0.76923076);
 		// TODO: Current limiting and closed/open loop ramp rates
 	}
 

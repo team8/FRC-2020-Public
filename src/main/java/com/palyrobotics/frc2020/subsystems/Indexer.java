@@ -8,8 +8,6 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class Indexer extends SubsystemBase {
 
 	private static Indexer sInstance = new Indexer();
