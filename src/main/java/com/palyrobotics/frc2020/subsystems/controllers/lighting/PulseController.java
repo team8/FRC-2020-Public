@@ -12,10 +12,19 @@ public class PulseController extends Lighting.LEDController {
 	private int mPulseEndIndex;
 	private double mSpeed;
 
-	public PulseController(int startIndex, int endIndex, Color.HSV[] pulseColorSequence, double speed) {
-		mInitIndex = startIndex;
-		mLastIndex = startIndex + pulseColorSequence.length - 1;
-		mPulseEndIndex = endIndex;
+	/**
+	 * Pulses array of color through entire led strip
+	 *
+	 * @param initIndex          initial index upon which led patterns should start
+	 * @param lastIndex          end index upon which led patterns should stop
+	 * @param pulseColorSequence array of values which should move through led strip
+	 * @param speed              speed of pulse movement
+	 */
+
+	public PulseController(int initIndex, int lastIndex, Color.HSV[] pulseColorSequence, double speed) {
+		mInitIndex = initIndex;
+		mLastIndex = lastIndex + pulseColorSequence.length - 1;
+		mPulseEndIndex = lastIndex;
 		mSpeed = speed;
 		mTimer.start();
 		mOutputs.lightingOutput.addAll(Arrays.asList(pulseColorSequence));

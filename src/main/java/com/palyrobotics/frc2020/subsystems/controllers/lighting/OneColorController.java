@@ -9,6 +9,14 @@ public class OneColorController extends Lighting.LEDController {
 
 	private Color.HSV mColor;
 
+	/**
+	 * Single color, no animation, led controller
+	 *
+	 * @param initIndex initial index upon which led patterns should start
+	 * @param lastIndex end index upon which led patterns should stop
+	 * @param color     color to be displayed
+	 */
+
 	public OneColorController(int initIndex, int lastIndex, Color.HSV color) {
 		mInitIndex = initIndex;
 		mLastIndex = lastIndex;
