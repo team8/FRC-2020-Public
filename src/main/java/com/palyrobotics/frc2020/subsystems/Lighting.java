@@ -67,31 +67,31 @@ public class Lighting extends SubsystemBase {
 					break;
 				case IDLE:
 					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex,
-							mConfig.totalSegmentBackIndex, Color.HSV.kWhite));
+							mConfig.totalSegmentLastIndex, Color.HSV.kWhite));
 					break;
 				case INIT:
 					resetLedStrip();
 					addToControllers(
-							new InitSequenceController(mConfig.backSegmentFirstIndex, mConfig.backSegmentBackIndex, 1.0 / 25.0));
-					addToControllers(new ConvergingBandsController(mConfig.limelightSegmentFirstIndex,
-							mConfig.limelightSegmentBackIndex, Color.HSV.kWhite,
+							new InitSequenceController(mConfig.backSupportSegmentFirstIndex, mConfig.backSupportSegmentLastIndex, 1.0 / 25.0));
+					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex,
+							mConfig.spinnerSegmentLastIndex, Color.HSV.kWhite,
 							Color.HSV.kBlue, 3, 1.0 / 5.0));
 					break;
 				case DISABLE:
-					addToControllers(new ColorRangingController(mConfig.backSegmentFirstIndex,
-							mConfig.backSegmentBackIndex));
+					addToControllers(new ColorRangingController(mConfig.backSupportSegmentFirstIndex,
+							mConfig.backSupportSegmentLastIndex));
 					break;
 				case TARGET_FOUND:
-					addToControllers(new FlashingLightsController(mConfig.limelightSegmentFirstIndex,
-							mConfig.limelightSegmentBackIndex, Color.HSV.kLime, 1));
+					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex,
+							mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1));
 					break;
 				case BALL_ENTERED:
 				case HOPPER_OPEN:
 				case CLIMB_EXTENDED:
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
-					addToControllers(new PulseController(mConfig.backSegmentFirstIndex,
-							mConfig.limelightSegmentBackIndex, new Color.HSV[] { Color.HSV.kLime, Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue }, 1.0));
+					addToControllers(new PulseController(mConfig.spinnerSegmentFirstIndex,
+							mConfig.spinnerSegmentLastIndex, new Color.HSV[] { Color.HSV.kLime, Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue }, 1.0));
 					break;
 			}
 		}
