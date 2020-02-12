@@ -17,7 +17,6 @@ import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
-import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -33,7 +32,6 @@ public class OperatorInterface {
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
-	private final Limelight mLimelight = Limelight.getInstance();
 	private double mClimberLastVelocity;
 
 	/**
@@ -122,7 +120,6 @@ public class OperatorInterface {
 	}
 
 	private void updateLightingCommands(Commands commands) {
-		// TODO: temporary, remove
 		if (mTurnStick.getRawButtonPressed(6)) {
 			commands.lightingWantedState = Lighting.State.OFF;
 		}
@@ -131,7 +128,6 @@ public class OperatorInterface {
 		}
 		if (mTurnStick.getRawButtonPressed(4)) {
 			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
-			//Lighting.getInstance().tempBallCount += 1;
 		}
 		if (mTurnStick.getRawButtonPressed(3)) {
 			commands.lightingWantedState = Lighting.State.IDLE;
@@ -210,9 +206,9 @@ public class OperatorInterface {
 		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		commands.intakeWantedState = Intake.State.STOW;
 		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
-		commands.lightingWantedState = Lighting.State.INIT;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
+		commands.lightingWantedState = Lighting.State.IDLE;
 		commands.wantedCompression = true;
 		commands.wantedRumble = false;
 	}
