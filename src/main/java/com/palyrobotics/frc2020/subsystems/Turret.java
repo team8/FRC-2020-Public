@@ -1,23 +1,28 @@
 package com.palyrobotics.frc2020.subsystems;
 
-import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.config.subsystem.TurretConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
-import com.palyrobotics.frc2020.util.control.DriveOutputs;
+import com.palyrobotics.frc2020.vision.Limelight;
+import com.palyrobotics.frc2020.vision.LimelightControlMode;
+
+import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class Turret extends SubsystemBase {
 
-	public enum TurretState {
-		IDLE, ROTATING_LEFT, ROTATING_RIGHT
+	public enum State {
+		IDLE, ROTATING_LEFT, ROTATING_RIGHT, VISION_ALIGN
 	}
 
 	private static Turret sInstance = new Turret();
 	private TurretConfig mConfig = Configs.get(TurretConfig.class);
 	private ControllerOutput mOutput = new ControllerOutput();
+	private Limelight mLimelight = new Limelight();
+	private PIDController mPIDController = new PIDController(mConfig.turnGains.p, mConfig.turnGains.i, mConfig.turnGains.d);
 	private boolean calibrationWanted = false;
 
 	public abstract static class TurretController {
@@ -52,6 +57,13 @@ public class Turret extends SubsystemBase {
 			case ROTATING_RIGHT:
 				mOutput.setPercentOutput(-mConfig.rotatingOutput);
 				break;
+			case VISION_ALIGN:
+				mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+				mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
+				mLimelight.setPipeline(0);
+				double percentOutput = mPIDController.calculate(mLimelight.getYawToTarget());
+				percentOutput = Util.clamp(percentOutput, -percentOutput, percentOutput);
+				mOutput.setPercentOutput(percentOutput);
 		}
 
 		// Calibration

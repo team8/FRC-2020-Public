@@ -176,6 +176,8 @@ public class OperatorInterface {
 			commands.addWantedRoutine(new TurretRotateRoutine(true, kTwoTimesZoomPipelineId));
 		} else if (mOperatorXboxController.getBButtonPressed()) {
 			commands.addWantedRoutine(new TurretRotateRoutine(false, kTwoTimesZoomPipelineId));
+		} else if (mOperatorXboxController.getMenuButtonPressed()) {
+			commands.turretWantedState = Turret.State.VISION_ALIGN;
 		}
 		// Calibrating turret at center
 		if (!state.turretIsCalibrated && state.turretAtCenter) {

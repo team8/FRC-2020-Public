@@ -33,8 +33,8 @@ public class TurretRotateRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		commands.turretWantedState = (leftDirection) ? Turret.TurretState.ROTATING_LEFT :
-				Turret.TurretState.ROTATING_RIGHT;
+		commands.turretWantedState = (leftDirection) ? Turret.State.ROTATING_LEFT :
+				Turret.State.ROTATING_RIGHT;
 	}
 
 	@Override

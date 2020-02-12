@@ -1,6 +1,11 @@
 {
-    "rotatingOutput": 0.0,
+    "rotatingOutput": 0.1,
     "acceptableYawError": 0.5,
     "maximumAngle": 0.0,
-    "distanceToMiddleOfField" : 100
+    "distanceToMiddleOfField" : 100,
+    "turnGains": {
+        "f": 0.0021,
+        "p": 0.0045
+    },
+    "maxRotationOutput" : 0.5
 }
