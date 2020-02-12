@@ -47,8 +47,7 @@ public class OperatorInterface {
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
-		// TODO: fix
-//		updateSpinnerCommands(commands);
+		updateSpinnerCommands(commands);
 
 		if (mOperatorXboxController.getAButtonPressed()) {
 			var customVelocity = Configs.get(ShooterConfig.class).customVelocity;
