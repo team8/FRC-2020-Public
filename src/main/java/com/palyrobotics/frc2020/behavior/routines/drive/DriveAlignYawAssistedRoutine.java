@@ -1,6 +1,5 @@
 package com.palyrobotics.frc2020.behavior.routines.drive;
 
-import static com.palyrobotics.frc2020.util.Util.getDifferenceInAngleDegrees0To360;
 import static com.palyrobotics.frc2020.util.Util.getDifferenceInAngleDegreesNeg180To180;
 
 import java.util.Set;

@@ -70,15 +70,13 @@ public class Util {
 	 *              Always between -180 and 180
 	 */
 	public static double getDifferenceInAngleDegreesNeg180To180(double from, double to) {
-		if(Math.abs(boundAngleNeg180to180Degrees(from - to)) > 180){
-			if(boundAngleNeg180to180Degrees(from - to) < 0){
+		if (Math.abs(boundAngleNeg180to180Degrees(from - to)) > 180) {
+			if (boundAngleNeg180to180Degrees(from - to) < 0) {
 				return boundAngleNeg180to180Degrees(180 + (from - to));
-			}
-			else{
+			} else {
 				return boundAngleNeg180to180Degrees(180 - (from - to));
 			}
-		}
-		else{
+		} else {
 			return boundAngleNeg180to180Degrees(from - to);
 		}
 	}

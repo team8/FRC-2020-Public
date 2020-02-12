@@ -15,7 +15,7 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 @SuppressWarnings ("Duplicates")
 public class StartRightTrenchStealTwoShootFive extends AutoBase {
 
-	//TODO: test
+	//TODO: fix
 	@Override
 	public RoutineBase getRoutine() {
 		var initialOdometry = new DriveSetOdometryRoutine(0, 0, 0);

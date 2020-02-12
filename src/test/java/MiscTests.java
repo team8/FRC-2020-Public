@@ -39,7 +39,7 @@ public class MiscTests {
 	}
 
 	@Test
-	public void testTurnDifference(){
+	public void testTurnDifference() {
 		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(180, 180), 0);
 		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(30, 120), -90);
 		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(180, -180), 0);
@@ -49,8 +49,8 @@ public class MiscTests {
 		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(30, 110), -80);
 		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(10, 170), -160);
 
-
 	}
+
 	@Test
 	public void testInterpolatingTreeMap() {
 		var map = new InterpolatingDoubleTreeMap();
