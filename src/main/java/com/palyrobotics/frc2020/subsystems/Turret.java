@@ -61,7 +61,8 @@ public class Turret extends SubsystemBase {
 				mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
 				mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
 				mLimelight.setPipeline(0);
-				double percentOutput = mPIDController.calculate(mLimelight.getYawToTarget());
+				double PIDInput = mLimelight.isTargetFound() ? mLimelight.getYawToTarget() : robotState.driveYawDegrees;
+				double percentOutput = -mPIDController.calculate(PIDInput);
 				percentOutput = Util.clamp(percentOutput, -percentOutput, percentOutput);
 				mOutput.setPercentOutput(percentOutput);
 		}
