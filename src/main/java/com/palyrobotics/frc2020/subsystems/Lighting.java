@@ -74,7 +74,7 @@ public class Lighting extends SubsystemBase {
 					resetLedStrip();
 					mLEDControllers.clear();
 					addToControllers(
-							new InitSequenceController(mConfig.shooterSegmentFirstIndex, mConfig.shooterSegmentLastIndex, 1.0 / 25.0));
+							new InitSequenceController(mConfig.backSupportSegmentFirstIndex, mConfig.backSupportSegmentLastIndex, 1.0 / 25.0));
 					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex,
 							mConfig.spinnerSegmentLastIndex, Color.HSV.kWhite,
 							Color.HSV.kBlue, 3, 1.0 / 5.0));

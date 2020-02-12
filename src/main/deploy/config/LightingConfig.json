@@ -3,9 +3,9 @@
   "shooterSegmentFirstIndex" : 0,
   "shooterSegmentLastIndex" : 41,
   "spinnerSegmentFirstIndex" : 42,
-  "spinnerSegmentLastIndex" : 56,
-  "backSupportSegmentFirstIndex" : 57,
-  "backSupportSegmentLastIndex" : 84,
+  "spinnerSegmentLastIndex" : 57,
+  "backSupportSegmentFirstIndex" : 58,
+  "backSupportSegmentLastIndex" : 83,
   "totalSegmentFirstIndex" : 0,
-  "totalSegmentLastIndex" : 84
+  "totalSegmentLastIndex" : 83
 }
