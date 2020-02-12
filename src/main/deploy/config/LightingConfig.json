@@ -1,9 +1,11 @@
 {
-  "ledCount" :  46,
-  "backSegmentFirstIndex" : 0,
-  "backSegmentBackIndex" : 29,
-  "limelightSegmentFirstIndex" : 30,
-  "limelightSegmentBackIndex" : 46,
+  "ledCount" :  84,
+  "shooterSegmentFirstIndex" : 0,
+  "shooterSegmentLastIndex" : 41,
+  "spinnerSegmentFirstIndex" : 42,
+  "spinnerSegmentLastIndex" : 56,
+  "backSupportSegmentFirstIndex" : 57,
+  "backSupportSegmentLastIndex" : 84,
   "totalSegmentFirstIndex" : 0,
-  "totalSegmentBackIndex" : 46
+  "totalSegmentLastIndex" : 84
 }
