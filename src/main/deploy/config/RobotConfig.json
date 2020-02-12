@@ -5,6 +5,7 @@
 		"telemetryService"
 	],
 	"enabledSubsystems": [
+		"drive",
 		"shooter",
 		"indexer",
 		"intake",

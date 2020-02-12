@@ -28,16 +28,27 @@ public class Indexer extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		double multiplier, breh;
-		if (((long) (Timer.getFPGATimestamp() * 4.0) % 2L) == 0L) {
-			multiplier = 0.0;
-			breh = 1.0;
-		} else {
-			multiplier = 1.0;
-			breh = 0.0;
-		}
-//		if (Math.sin(Timer.getFPGATimestamp() * 1) > 0) {
+//		if (((long) (Timer.getFPGATimestamp() * 4.0) % 2L) == 0L) {
 //			multiplier = 0.0;
+//			breh = 1.0;
+//		} else {
+//			multiplier = 1.0;
+//			breh = 1.0; // 0.0, indexer
 //		}
+
+//		if (Math.sin(Timer.getFPGATimestamp() * 2 * Math.PI) > 0) {
+//			multiplier = 0.0;
+//			breh = 1.0;
+//		} else {
+//			multiplier = 1.0;
+//			breh = 0.0;
+//		}
+
+//		multiplier = Math.sin(2 * Math.PI * Timer.getFPGATimestamp());
+//		breh = Math.sin(2 * Math.PI * Timer.getFPGATimestamp() + Math.PI);
+		multiplier = 1.0;
+		breh = 1.0;
+
 		LiveGraph.add("multiplier", multiplier);
 		switch (commands.indexerWantedBeltState) {
 			case IDLE:

@@ -206,10 +206,10 @@ public class Limelight {
 	 */
 	public double getEstimatedDistanceInches() {
 		// Tuned 2/10/20 using lowest mounting on original design
-		double oneTimesZoomAngle = 37.29759588;
-		double twoTimesZoomAngle = 35.34009588;
+		double oneTimesZoomAngle = 36.60555401;
+		double twoTimesZoomAngle = 31.88412543;
 		double a2 = getPitchToTarget();
-		double h1 = 32.5;
+		double h1 = 32.75;
 		double h2 = 90.5;
 		// Avoid divide by zero
 		if (getPipeline() == 0) {
