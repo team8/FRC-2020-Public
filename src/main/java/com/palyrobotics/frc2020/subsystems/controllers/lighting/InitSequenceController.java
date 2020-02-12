@@ -16,15 +16,15 @@ public class InitSequenceController extends Lighting.LEDController {
 		mCurrentLedIndex = initIndex;
 		mTimer.start();
 		mSpeed = speed == 0 ? 0.001 : speed;
-		for(var i = initIndex;i < lastIndex;i++){
-			mOutputs.lightingOutput.add(new Color.HSV(0,0,0));
+		for (var i = initIndex; i < lastIndex; i++) {
+			mOutputs.lightingOutput.add(new Color.HSV(0, 0, 0));
 		}
 	}
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		if (Math.round(mTimer.get() / mSpeed) % 2 == 1 && mCurrentLedIndex < mLastIndex) {
-			mOutputs.lightingOutput.get(mCurrentLedIndex - mInitIndex).setHSV((int)((mCurrentLedIndex - mInitIndex) * Math.log(mCurrentLedIndex) +
+			mOutputs.lightingOutput.get(mCurrentLedIndex - mInitIndex).setHSV((int) ((mCurrentLedIndex - mInitIndex) * Math.log(mCurrentLedIndex) +
 					5), 247, 100);
 			mCurrentLedIndex += 1;
 			mTimer.reset();
