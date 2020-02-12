@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
@@ -13,6 +14,7 @@ public class SpinnerPositionControlRoutine extends RoutineBase {
 
 	private String mCurrentColor, mTargetColor;
 	private int mDirectionToGoalColor;
+	private boolean mIsFinished;
 
 	@Override
 	protected void start(Commands commands, @ReadOnly RobotState state) {
@@ -24,6 +26,8 @@ public class SpinnerPositionControlRoutine extends RoutineBase {
 		mTargetColor = state.gameData;
 		mCurrentColor = state.closestColorString;
 		commands.spinnerWantedState = Spinner.State.ROTATING;
+		mIsFinished = mTargetColor.equals(mCurrentColor);
+		commands.lightingWantedState = mIsFinished ? Lighting.State.SPINNER_DONE : commands.lightingWantedState;
 	}
 
 	@Override
