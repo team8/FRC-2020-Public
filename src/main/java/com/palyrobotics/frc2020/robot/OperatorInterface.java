@@ -221,7 +221,7 @@ public class OperatorInterface {
 		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
-		commands.turretWantedState = Turret.TurretState.IDLE;
+		commands.turretWantedState = Turret.State.IDLE;
 		commands.wantedCompression = true;
 		commands.wantedRumble = false;
 		commands.visionWanted = false;
