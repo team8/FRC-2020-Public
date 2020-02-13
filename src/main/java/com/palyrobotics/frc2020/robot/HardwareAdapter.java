@@ -121,7 +121,7 @@ public class HardwareAdapter {
 		final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId),
 				slaveSpark = new Spark(sPortConstants.nariShooterSlaveId);
 		final CANEncoder masterEncoder = masterSpark.getEncoder();
-		final TimedSolenoid hoodSolenoid = new TimedSolenoid(sPortConstants.nariShooterHoodSolenoid, 0.3, true),
+		final TimedSolenoid hoodSolenoid = new TimedSolenoid(sPortConstants.nariShooterHoodSolenoid, 0.25, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariShooterBlockingSolenoidId, 0.1, false);
 
 		private ShooterHardware() {

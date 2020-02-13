@@ -127,10 +127,9 @@ public class CommandReceiverService implements RobotService {
 		return result;
 	}
 
-	private String handleParsedCommand(Namespace parse, Commands commands) throws ArgumentParserException {
+	private String handleParsedCommand(Namespace parse, Commands commands) {
 		// TODO less nesting >:( refactor into functions
 		var commandName = parse.getString("command");
-		System.out.println(commandName);
 		switch (commandName) {
 			case "get":
 			case "set":

@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.util.Units;
 
 public class DriveConstants {
 
@@ -17,11 +16,11 @@ public class DriveConstants {
 	 * Path following constants
 	 */
 	public static final double kWheelDiameterInches = 6.0, kTrackWidthInches = 24.5,
-			kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
+			kTrackWidthMeters = 0.67160389;
 
 	public static final DifferentialDriveKinematics kKinematics = new DifferentialDriveKinematics(
 			DriveConstants.kTrackWidthMeters);
-	public static final double kS = 0.145, kV = 2.59, kA = 0.484;
+	public static final double kS = 0.343, kV = 2.76, kA = 0.382;
 	public static final SimpleMotorFeedforward kFeedForward = new SimpleMotorFeedforward(kS, kV, kA);
 	public static final DifferentialDriveVoltageConstraint kVoltageConstraints = new DifferentialDriveVoltageConstraint(
 			kFeedForward, kKinematics, kMaxVoltage);
@@ -29,7 +28,7 @@ public class DriveConstants {
 	/**
 	 * Unit Conversions
 	 */
-	public static final double kDriveMetersPerRotation = 0.04677268475,
+	public static final double kDriveMetersPerRotation = 0.0, // TODO: FILL IN
 			kDriveMetersPerSecondPerRpm = kDriveMetersPerRotation;
 	/**
 	 * Cheesy Drive Constants

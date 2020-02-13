@@ -21,6 +21,14 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Shooter extends SubsystemBase {
 
+	public enum ShooterState {
+		IDLE, CUSTOM_VELOCITY, VISION_VELOCITY
+	}
+
+	public enum HoodState {
+		LOW, MIDDLE, HIGH
+	}
+
 	private static Shooter sInstance = new Shooter();
 	private Limelight mLimelight = Limelight.getInstance();
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
@@ -40,33 +48,12 @@ public class Shooter extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		/*
-		Flywheel distance and velocity. Hood state is selected automatically using distance.
-		Unless it is null, then the desired hood state from commands are used.
-		*/
-		ShooterState wantedState = commands.getShooterWantedState();
-		double targetFlywheelVelocity;
-		Double targetDistanceInches;
-		switch (wantedState) {
-			case CUSTOM_VELOCITY:
-				targetDistanceInches = null;
-				targetFlywheelVelocity = commands.getShooterWantedCustomFlywheelVelocity();
-				break;
-			case VISION_VELOCITY:
-				if (mLimelight.isTargetFound()) {
-					targetDistanceInches = distanceFilter.calculate(mLimelight.getEstimatedDistanceInches());
-					targetFlywheelVelocity = kTargetDistanceToVelocity.getInterpolated(targetDistanceInches);
-				} else {
-					targetDistanceInches = null;
-					targetFlywheelVelocity = commands.getShooterWantedCustomFlywheelVelocity();
-				}
-				break;
-			default:
-				targetDistanceInches = null;
-				targetFlywheelVelocity = 0.0;
-				break;
-		}
-		targetFlywheelVelocity = clamp(targetFlywheelVelocity, 0.0, mConfig.maxVelocity);
+		/* Target Distance (only for vision, null otherwise */
+		Double targetDistanceInches = getTargetDistanceInches(commands);
+		/* Hood State */
+		HoodState hoodState = updateHood(commands, state, targetDistanceInches);
+		/* Flywheel Velocity */
+		double targetFlywheelVelocity = getTargetFlywheelVelocity(commands, hoodState, targetDistanceInches);
 		mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);
 		/* Ready to shoot */
 		boolean inShootingVelocityRange = targetFlywheelVelocity > kEpsilon &&
@@ -74,56 +61,70 @@ public class Shooter extends SubsystemBase {
 		boolean isReadyToShoot = inShootingVelocityRange && !state.shooterHoodIsInTransition,
 				justChangedReadyToShoot = mIsReadyToShoot != isReadyToShoot;
 		mIsReadyToShoot = isReadyToShoot;
-		/* Hood */
-		boolean shouldUpdateHood = !state.shooterHoodIsInTransition && (targetFlywheelVelocity > kEpsilon || wantedState == ShooterState.IDLE);
-		if (shouldUpdateHood) updateHood(commands, state, targetDistanceInches);
 		/* Rumble */
 		updateRumble(commands, justChangedReadyToShoot);
 		/* Telemetry */
 		LiveGraph.add("shooterTargetDistance", targetDistanceInches == null ? -1 : targetDistanceInches);
 		LiveGraph.add("shooterTargetVelocity", targetFlywheelVelocity);
-		LiveGraph.add("shooterCurrentVelocity", state.shooterFlywheelVelocity);
+//		LiveGraph.add("shooterCurrentVelocity", state.shooterFlywheelVelocity);
 		TelemetryService.putArbitrary("shooterTargetDistance", targetDistanceInches);
 		TelemetryService.putArbitrary("shooterTargetVelocity", targetFlywheelVelocity);
 		TelemetryService.putArbitrary("shooterFlywheelVelocity", state.shooterFlywheelVelocity);
 	}
 
-	private void updateRumble(@ReadOnly Commands commands, boolean justChangedReadyToShoot) {
+	private Double getTargetDistanceInches(@ReadOnly Commands commands) {
+		if (commands.getShooterWantedState() == ShooterState.VISION_VELOCITY && mLimelight.isTargetFound()) {
+			return distanceFilter.calculate(mLimelight.getEstimatedDistanceInches());
+		}
+		return null;
+	}
+
+	private double getTargetFlywheelVelocity(@ReadOnly Commands commands, HoodState hoodState, Double targetDistanceInches) {
+		double targetFlywheelVelocity;
 		switch (commands.getShooterWantedState()) {
 			case CUSTOM_VELOCITY:
+				targetFlywheelVelocity = commands.getShooterWantedCustomFlywheelVelocity();
+				break;
 			case VISION_VELOCITY:
-				boolean justEnteredReadyToShoot = justChangedReadyToShoot && mIsReadyToShoot,
-						justExitedReadyToShoot = justChangedReadyToShoot && !mIsReadyToShoot;
-				if (justEnteredReadyToShoot) {
-					mRumbleOutput = true;
-					mRumbleTimer.reset();
-					mRumbleTimer.start();
-				} else if (mRumbleTimer.get() > mConfig.rumbleDurationSeconds || justExitedReadyToShoot) {
-					mRumbleTimer.stop();
-					mRumbleOutput = false;
+				if (targetDistanceInches == null) {
+					targetFlywheelVelocity = commands.getShooterWantedCustomFlywheelVelocity();
+				} else {
+					targetFlywheelVelocity = kTargetDistanceToVelocity.get(hoodState).getInterpolated(targetDistanceInches);
 				}
 				break;
 			default:
-				mRumbleOutput = false;
+				targetFlywheelVelocity = 0.0;
 				break;
 		}
+		return clamp(targetFlywheelVelocity, 0.0, mConfig.maxVelocity);
 	}
 
-	private void updateHood(Commands commands, @ReadOnly RobotState state, Double targetDistanceInches) {
-		boolean isHoodExtended = state.shooterIsHoodExtended,
-				isBlockingExtended = state.shooterIsBlockingExtended;
+	// Null hood state represents no action
+	private HoodState updateHood(@ReadOnly Commands commands, @ReadOnly RobotState state, Double targetDistanceInches) {
 		HoodState targetHoodState;
 		if (targetDistanceInches == null) {
-			targetHoodState = commands.getShooterWantedHoodState();
+			if (commands.getShooterWantedState() == ShooterState.CUSTOM_VELOCITY) {
+				targetHoodState = commands.getShooterWantedHoodState();
+			} else {
+				targetHoodState = null;
+			}
 		} else {
 			Map.Entry<Double, HoodState> floorEntry = kTargetDistanceToHoodState.floorEntry(targetDistanceInches),
 					ceilingEntry = kTargetDistanceToHoodState.ceilingEntry(targetDistanceInches),
-					closestEntry;
-			closestEntry = ceilingEntry == null ? floorEntry : targetDistanceInches - floorEntry.getKey() > ceilingEntry.getKey() - targetDistanceInches ? ceilingEntry : floorEntry;
+					closestEntry = ceilingEntry == null || targetDistanceInches - floorEntry.getKey() < ceilingEntry.getKey() - targetDistanceInches ? floorEntry : ceilingEntry;
 			double deltaFromThreshold = Math.abs(targetDistanceInches - closestEntry.getKey());
 			targetHoodState = deltaFromThreshold > mConfig.hoodSwitchDistanceThreshold ? floorEntry.getValue() : closestEntry.getValue();
 		}
 		TelemetryService.putArbitrary("shooterTargetHoodState", targetHoodState);
+		if (targetHoodState != null) {
+			applyHoodState(state, targetHoodState);
+		}
+		return targetHoodState;
+	}
+
+	private void applyHoodState(@ReadOnly RobotState state, HoodState targetHoodState) {
+		boolean isHoodExtended = state.shooterIsHoodExtended,
+				isBlockingExtended = state.shooterIsBlockingExtended;
 		switch (targetHoodState) {
 			case LOW: {
 				/*
@@ -170,6 +171,28 @@ public class Shooter extends SubsystemBase {
 		}
 	}
 
+	private void updateRumble(@ReadOnly Commands commands, boolean justChangedReadyToShoot) {
+		switch (commands.getShooterWantedState()) {
+			case CUSTOM_VELOCITY:
+			case VISION_VELOCITY:
+				boolean justEnteredReadyToShoot = justChangedReadyToShoot && mIsReadyToShoot,
+						justExitedReadyToShoot = justChangedReadyToShoot && !mIsReadyToShoot;
+				if (justEnteredReadyToShoot) {
+					mRumbleOutput = true;
+					mRumbleTimer.reset();
+					mRumbleTimer.start();
+				} else if (mRumbleTimer.get() > mConfig.rumbleDurationSeconds || justExitedReadyToShoot) {
+					mRumbleTimer.stop();
+					mRumbleOutput = false;
+				}
+				break;
+			default:
+				mRumbleOutput = false;
+				break;
+		}
+		TelemetryService.putArbitrary("shooterWantsRumble", mRumbleOutput);
+	}
+
 	public ControllerOutput getFlywheelOutput() {
 		return mFlywheelOutput;
 	}
@@ -188,13 +211,5 @@ public class Shooter extends SubsystemBase {
 
 	public boolean isReadyToShoot() {
 		return mIsReadyToShoot;
-	}
-
-	public enum ShooterState {
-		IDLE, CUSTOM_VELOCITY, VISION_VELOCITY
-	}
-
-	public enum HoodState {
-		LOW, MIDDLE, HIGH
 	}
 }

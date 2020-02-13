@@ -1,7 +1,7 @@
 {
-    "bottomSparkIndexingOutput": -0.6,
-    "bottomTalonIndexingOutput": -0.6,
-    "topSparkIndexingOutput": -0.6,
+    "bottomSparkIndexingOutput": -0.3,
+    "bottomTalonIndexingOutput": -0.3,
+    "topSparkIndexingOutput": -0.3,
     "feedingOutput": -0.3,
     "ballInchTolerance": 0.0,
     "ballCountRequired": 0

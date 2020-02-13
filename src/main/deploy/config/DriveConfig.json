@@ -1,7 +1,7 @@
 {
 	"profiledVelocityGains": {
-		"f": 0.0032,
-		"p": 0.0008,
+		"f": 0.00261,
+		"p": 0.0,
 		"velocity": 800.0,
 		"acceleration": 1200.0
 	},

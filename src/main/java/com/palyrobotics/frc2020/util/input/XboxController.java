@@ -132,9 +132,9 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController {
 		return getBumperReleased(Hand.kLeft);
 	}
 
-	public void setRumble(boolean on) {
-		setRumble(RumbleType.kRightRumble, on ? 1.0 : 0.0);
-		setRumble(RumbleType.kLeftRumble, on ? 1.0 : 0.0);
+	public void setRumble(boolean isOn) {
+		setRumble(RumbleType.kRightRumble, isOn ? 1.0 : 0.0);
+		setRumble(RumbleType.kLeftRumble, isOn ? 1.0 : 0.0);
 	}
 
 	public boolean getRightTrigger() {

@@ -47,11 +47,11 @@ public class OperatorInterface {
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
-		updateSpinnerCommands(commands);
+//		updateSpinnerCommands(commands);
 
 		if (mOperatorXboxController.getAButtonPressed()) {
 			var customVelocity = Configs.get(ShooterConfig.class).customVelocity;
-			commands.setShooterCustomFlywheelVelocity(customVelocity, Shooter.HoodState.LOW);
+			commands.setShooterCustomFlywheelVelocity(customVelocity, Shooter.HoodState.MIDDLE);
 		}
 
 		if (mTurnStick.getRawButtonPressed(6)) {
