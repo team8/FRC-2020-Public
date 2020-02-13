@@ -10,6 +10,8 @@ import com.palyrobotics.frc2020.util.Color;
 public class PulseController extends Lighting.LEDController {
 
 	private int mPulseEndIndex;
+	private boolean mIsColorsInitialized;
+	private List<Color.HSV> mPulse;
 
 	/**
 	 * Pulses array of color through entire led strip
@@ -23,15 +25,20 @@ public class PulseController extends Lighting.LEDController {
 	public PulseController(int startIndex, int lastIndex, List<Color.HSV> pulseColorSequence, double speed) {
 		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
-		mLastIndex = lastIndex + pulseColorSequence.size() - 1;
+		mLastIndex = startIndex + pulseColorSequence.size() - 1;
 		mPulseEndIndex = lastIndex;
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mTimer.start();
-//		mOutputs.lightingOutput.addAll(pulseColorSequence); //TODO Fix pulse controller
+		mPulse = pulseColorSequence;
 	}
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
+		if(!mIsColorsInitialized){
+			mOutputs.lightingOutput.clear();
+			mOutputs.lightingOutput.addAll(mPulse);
+			mIsColorsInitialized = true;
+		}
 		if (Math.round(mTimer.get() / mSpeed) % 2 == 1) {
 			mStartIndex += 1;
 			mLastIndex += 1;

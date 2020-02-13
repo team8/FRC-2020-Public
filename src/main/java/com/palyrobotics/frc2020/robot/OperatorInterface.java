@@ -141,7 +141,7 @@ public class OperatorInterface {
 
 	private void updateLightingCommands(Commands commands) {
 		if (mTurnStick.getRawButtonPressed(6)) {
-			commands.lightingWantedState = Lighting.State.OFF;
+			commands.lightingWantedState = Lighting.State.DISABLE;
 		}
 		if (mTurnStick.getRawButtonPressed(5)) {
 			commands.lightingWantedState = Lighting.State.INIT;
