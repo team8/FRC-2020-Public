@@ -1,7 +1,7 @@
 {
     "velocityGains": {
-        "f": 0.00019384614,
-        "p": 0.00012307692
+        "f": 0.000176,
+        "p": 0.000185
     },
     "maxVelocity": 4500.0,
     "velocityTolerance": 100.0,

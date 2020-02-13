@@ -71,6 +71,8 @@ public class HardwareReader {
 		robotState.driveRightVelocity = hardware.rightMasterFalcon.getConvertedVelocity();
 		robotState.driveLeftPosition = hardware.leftMasterFalcon.getConvertedPosition();
 		robotState.driveRightPosition = hardware.rightMasterFalcon.getConvertedPosition();
+		LiveGraph.add("leftPosition", robotState.driveLeftPosition);
+		LiveGraph.add("rightPosition", robotState.driveRightPosition);
 		robotState.updateOdometry(robotState.driveYawDegrees, robotState.driveLeftPosition, robotState.driveRightPosition);
 		LiveGraph.add("driveLeftPosition", robotState.driveLeftPosition);
 		LiveGraph.add("driveLeftVelocity", robotState.driveLeftVelocity);
