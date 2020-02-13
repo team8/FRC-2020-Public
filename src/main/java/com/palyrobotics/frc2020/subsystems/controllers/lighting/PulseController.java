@@ -34,7 +34,7 @@ public class PulseController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if(!mIsColorsInitialized){
+		if (!mIsColorsInitialized) {
 			mOutputs.lightingOutput.clear();
 			mOutputs.lightingOutput.addAll(mPulse);
 			mIsColorsInitialized = true;
