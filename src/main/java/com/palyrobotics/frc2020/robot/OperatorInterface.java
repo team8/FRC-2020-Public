@@ -46,6 +46,7 @@ public class OperatorInterface {
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
+
 //		updateSpinnerCommands(commands);
 		updateLightingCommands(commands);
 
