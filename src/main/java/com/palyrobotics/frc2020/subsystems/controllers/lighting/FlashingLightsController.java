@@ -12,9 +12,9 @@ public class FlashingLightsController extends Lighting.LEDController {
 	/**
 	 * Color flashes with given delay
 	 *
-	 * @param startIndex   initial index upon which led patterns should start
-	 * @param lastIndex    end index upon which led patterns should stop
-	 * @param flashedColor color to flashed on white background
+	 * @param startIndex   Initial index upon which led patterns should start
+	 * @param lastIndex    End index upon which led patterns should stop
+	 * @param flashedColor Color to be flashed on white background
 	 */
 
 	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, int delay) {
@@ -22,17 +22,13 @@ public class FlashingLightsController extends Lighting.LEDController {
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
-		kZeroSpeed = delay == 0 ? kZeroSpeed : delay;
+		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mTimer.start();
-		for (var i = mStartIndex; i < mLastIndex; i++) {
-			mOutputs.lightingOutput
-					.add(new Color.HSV(mFlashedColor.getH(), mFlashedColor.getS(), mFlashedColor.getV()));
-		}
 	}
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get() / kZeroSpeed) % 2 == 0) {
+		if (Math.round(mTimer.get() / mSpeed) % 2 == 0) {
 			for (int i = mStartIndex; i < mLastIndex; i++) {
 				mOutputs.lightingOutput.get(i - mStartIndex).setHSV(mFlashedColor.getH(), mFlashedColor.getS(),
 						mFlashedColor.getV());

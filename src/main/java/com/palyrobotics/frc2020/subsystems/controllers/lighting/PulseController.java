@@ -14,10 +14,10 @@ public class PulseController extends Lighting.LEDController {
 	/**
 	 * Pulses array of color through entire led strip
 	 *
-	 * @param startIndex         initial index upon which led patterns should start
-	 * @param lastIndex          end index upon which led patterns should stop
-	 * @param pulseColorSequence array of values which should move through led strip
-	 * @param speed              speed of pulse movement
+	 * @param startIndex         Initial index upon which led patterns should start
+	 * @param lastIndex          End index upon which led patterns should stop
+	 * @param pulseColorSequence Array of values which should move through led strip
+	 * @param speed              Speed of pulse movement
 	 */
 
 	public PulseController(int startIndex, int lastIndex, List<Color.HSV> pulseColorSequence, double speed) {
@@ -25,14 +25,14 @@ public class PulseController extends Lighting.LEDController {
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex + pulseColorSequence.size() - 1;
 		mPulseEndIndex = lastIndex;
-		kZeroSpeed = speed == 0 ? kZeroSpeed : speed;
+		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mTimer.start();
-		mOutputs.lightingOutput.addAll(pulseColorSequence);
+//		mOutputs.lightingOutput.addAll(pulseColorSequence); //TODO Fix pulse controller
 	}
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get() / kZeroSpeed) % 2 == 1) {
+		if (Math.round(mTimer.get() / mSpeed) % 2 == 1) {
 			mStartIndex += 1;
 			mLastIndex += 1;
 			mTimer.reset();

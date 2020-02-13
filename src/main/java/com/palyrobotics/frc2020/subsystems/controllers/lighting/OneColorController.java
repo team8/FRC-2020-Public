@@ -12,9 +12,9 @@ public class OneColorController extends Lighting.LEDController {
 	/**
 	 * Single color, no animation, led controller
 	 *
-	 * @param startIndex initial index upon which led patterns should start
-	 * @param lastIndex  end index upon which led patterns should stop
-	 * @param color      color to be displayed
+	 * @param startIndex Initial index upon which led patterns should start
+	 * @param lastIndex  End index upon which led patterns should stop
+	 * @param color      Color to be displayed
 	 */
 
 	public OneColorController(int startIndex, int lastIndex, Color.HSV color) {
@@ -22,10 +22,6 @@ public class OneColorController extends Lighting.LEDController {
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mColor = color;
-		for (var i = mStartIndex; i < mLastIndex; i++) {
-			mOutputs.lightingOutput
-					.add(new Color.HSV(mColor.getH(), mColor.getS(), mColor.getV()));
-		}
 	}
 
 	@Override

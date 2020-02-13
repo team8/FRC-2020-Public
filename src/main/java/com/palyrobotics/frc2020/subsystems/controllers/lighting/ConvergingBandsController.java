@@ -15,10 +15,10 @@ public class ConvergingBandsController extends Lighting.LEDController {
 	/**
 	 * Band color converges to center of strip
 	 *
-	 * @param startIndex      initial index upon which led patterns should start
-	 * @param lastIndex       end index upon which led patterns should stop
-	 * @param bandColor       color that should pulse through led strip
-	 * @param backgroundColor background color upon which converging effect will occur.
+	 * @param startIndex      Initial index upon which led patterns should start
+	 * @param lastIndex       End index upon which led patterns should stop
+	 * @param bandColor       Color that should pulse through led strip
+	 * @param backgroundColor Background color upon which converging effect will occur.
 	 */
 
 	public ConvergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
@@ -28,13 +28,13 @@ public class ConvergingBandsController extends Lighting.LEDController {
 		mBandColor = bandColor;
 		mBackgroundColor = backgroundColor;
 		mBandLedCount = bandLedCount;
-		kZeroSpeed = speed == 0 ? kZeroSpeed : speed;
+		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mTimer.start();
 	}
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get() / kZeroSpeed) % 2 == 1) {
+		if (Math.round(mTimer.get() / mSpeed) % 2 == 1) {
 			mCurrentBandPosition += 1;
 			mTimer.reset();
 		}

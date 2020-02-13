@@ -23,13 +23,14 @@ public class Lighting extends SubsystemBase {
 
 	public abstract static class LEDController {
 
-		protected LightingOutputs mOutputs = new LightingOutputs();
+		protected static final double kZeroSpeed = 1e-4;
 
+		protected LightingOutputs mOutputs = new LightingOutputs();
 		protected Timer mTimer = new Timer();
 
-		protected static double kZeroSpeed = 1e-4;
 		protected int mStartIndex;
 		protected int mLastIndex;
+		protected double mSpeed;
 
 		protected LEDController(int startIndex, int lastIndex) {
 			for (var i = startIndex; i <= lastIndex; i++) {

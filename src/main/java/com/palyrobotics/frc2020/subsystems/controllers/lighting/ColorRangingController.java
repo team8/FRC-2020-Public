@@ -12,8 +12,8 @@ public class ColorRangingController extends Lighting.LEDController {
 	/**
 	 * Slides through hsv spectrum and applies color to led strip
 	 *
-	 * @param startIndex initial index upon which led patterns should start
-	 * @param lastIndex  end index upon which led patterns should stop
+	 * @param startIndex Initial index upon which led patterns should start
+	 * @param lastIndex  End index upon which led patterns should stop
 	 */
 
 	public ColorRangingController(int startIndex, int lastIndex) {
