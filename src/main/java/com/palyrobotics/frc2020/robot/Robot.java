@@ -76,7 +76,6 @@ public class Robot extends TimedRobot {
 		Configs.listen(RobotConfig.class, config -> {
 			if (isDisabled()) {
 				updateDriveNeutralMode(config.coastDriveWhenDisabled);
-				updateVision(config.enableVisionWhenDisabled, config.visionPipelineWhenDisabled);
 			}
 		});
 
@@ -126,7 +125,6 @@ public class Robot extends TimedRobot {
 
 		HardwareAdapter.Joysticks.getInstance().operatorXboxController.setRumble(false);
 		updateDriveNeutralMode(mConfig.coastDriveWhenDisabled);
-		updateVision(mConfig.enableVisionWhenDisabled, mConfig.visionPipelineWhenDisabled);
 
 		CSVWriter.write();
 	}
@@ -165,6 +163,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		updateVision(mConfig.enableVisionWhenDisabled, mConfig.visionPipelineWhenDisabled);
 	}
 
 	@Override

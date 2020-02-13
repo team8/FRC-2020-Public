@@ -65,13 +65,11 @@ public class HardwareWriter {
 			falcon.configFactoryDefault(kTimeoutMs);
 			falcon.enableVoltageCompensation(true);
 			falcon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
-			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,
-					kPidIndex, kTimeoutMs);
-			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero,
-					kTimeoutMs);
+			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPidIndex, kTimeoutMs);
+			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero, kTimeoutMs);
 			falcon.configOpenloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
 			falcon.configClosedloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
-			falcon.configSensorConversions(DriveConstants.kDriveMetersPerTick, DriveConstants.kDriveVelocityConversion);
+			falcon.configSensorConversions(DriveConstants.kDriveMetersPerTick, DriveConstants.kDriveMetersPerSecondPerTickPer100Ms);
 		}
 
 		/* Left Side */

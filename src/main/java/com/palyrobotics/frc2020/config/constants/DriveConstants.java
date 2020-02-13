@@ -13,24 +13,23 @@ import edu.wpi.first.wpilibj.util.Units;
 public class DriveConstants {
 
 	public static final double kMaxVoltage = 12.0;
+
 	/**
 	 * Path following constants
 	 */
-	public static final double kWheelDiameterInches = 6.0, kTrackWidthInches = 24.5,
-			kTrackWidthMeters = 0.67160389;
+	public static final double kWheelDiameterInches = 6.0,
+			kTrackWidthMeters = 0.67160389; // Tuned 2/12/20
 
-	public static final DifferentialDriveKinematics kKinematics = new DifferentialDriveKinematics(
-			DriveConstants.kTrackWidthMeters);
-	public static final double kS = 0.343, kV = 2.76, kA = 0.382;
+	public static final DifferentialDriveKinematics kKinematics = new DifferentialDriveKinematics(DriveConstants.kTrackWidthMeters);
+	public static final double kS = 0.343, kV = 2.76, kA = 0.382; // Tuned 2/12/20
 	public static final SimpleMotorFeedforward kFeedForward = new SimpleMotorFeedforward(kS, kV, kA);
-	public static final DifferentialDriveVoltageConstraint kVoltageConstraints = new DifferentialDriveVoltageConstraint(
-			kFeedForward, kKinematics, kMaxVoltage);
+	public static final DifferentialDriveVoltageConstraint kVoltageConstraints = new DifferentialDriveVoltageConstraint(kFeedForward, kKinematics, kMaxVoltage);
 
 	/**
 	 * Unit Conversions
 	 */
 	public static final double kDriveMetersPerTick = (1.0 / 2048.0) * (1.0 / 12.34567901) * Units.inchesToMeters(kWheelDiameterInches) * Math.PI,
-			kDriveVelocityConversion = kDriveMetersPerTick * 10; // Ticks/100 ms -> m/s
+			kDriveMetersPerSecondPerTickPer100Ms = kDriveMetersPerTick * 10;
 	/**
 	 * Cheesy Drive Constants
 	 */
@@ -45,15 +44,14 @@ public class DriveConstants {
 	 * @return Copy of the standard trajectory configuration. Can be modified safely.
 	 */
 	public static TrajectoryConfig getStandardTrajectoryConfig() {
-		return new TrajectoryConfig(kConfig.maxPathVelocityMetersPerSecond,
-				kConfig.maxPathAccelerationMetersPerSecondSquared).setKinematics(kKinematics)
-						.addConstraint(kVoltageConstraints);
+		return new TrajectoryConfig(kConfig.maxPathVelocityMetersPerSecond, kConfig.maxPathAccelerationMetersPerSecondSquared)
+				.setKinematics(kKinematics)
+				.addConstraint(kVoltageConstraints);
 	}
 
 	public static double calculateTimeToFinishTurn(double currentYawDegrees, double targetYawDegrees) {
 		return new TrapezoidProfile(
 				new TrapezoidProfile.Constraints(kConfig.turnGains.velocity, kConfig.turnGains.acceleration),
-				new TrapezoidProfile.State(targetYawDegrees, 0.0), new TrapezoidProfile.State(currentYawDegrees, 0.0))
-						.totalTime();
+				new TrapezoidProfile.State(targetYawDegrees, 0.0), new TrapezoidProfile.State(currentYawDegrees, 0.0)).totalTime();
 	}
 }

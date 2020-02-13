@@ -1,9 +1,12 @@
 package com.palyrobotics.frc2020.robot;
 
 import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
+import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
+import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
@@ -127,9 +130,11 @@ public class OperatorInterface {
 			commands.visionWanted = false;
 		}
 		/* Path Following */
-//		if (mOperatorXboxController.getDPadDownPressed()) {
-//			commands.addWantedRoutine(new DrivePathRoutine(new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(0))));
-//		}
+		if (mOperatorXboxController.getDPadDownPressed()) {
+			commands.addWantedRoutines(
+					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
+					new DrivePathRoutine(newWaypoint(30.0, 0.0, 0.0)));
+		}
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {

@@ -5,7 +5,6 @@ import static com.palyrobotics.frc2020.util.Util.getDifferenceInAngleDegrees;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.config.VisionConfig;
-import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -23,13 +22,6 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 	public DriveAlignYawAssistedRoutine(double yawDegrees, int visionPipeline) {
 		super(yawDegrees);
 		mVisionPipeline = visionPipeline;
-	}
-
-	@Override
-	public void start(Commands commands, @ReadOnly RobotState state) {
-		super.start(commands, state);
-		mTimeout = DriveConstants.calculateTimeToFinishTurn(state.driveYawDegrees, mTargetYawDegrees) *
-				kTimeoutMultiplier;
 	}
 
 	@Override
