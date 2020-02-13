@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2020.subsystems;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.robot.Commands;
@@ -17,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		IDLE, OFF, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE
+		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE
 	}
 
 	public abstract static class LEDController {
@@ -26,8 +27,15 @@ public class Lighting extends SubsystemBase {
 
 		protected Timer mTimer = new Timer();
 
-		protected int mInitIndex; //indexes that led controller will write to
+		protected static double kZeroSpeed = 1e-4;
+		protected int mStartIndex;
 		protected int mLastIndex;
+
+		protected LEDController(int startIndex, int lastIndex) {
+			for (var i = startIndex; i <= lastIndex; i++) {
+				mOutputs.lightingOutput.add(new Color.HSV());
+			}
+		}
 
 		public final LightingOutputs update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 			updateSignal(commands, state);
@@ -45,8 +53,7 @@ public class Lighting extends SubsystemBase {
 	private LightingConfig mConfig = Configs.get(LightingConfig.class);
 	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
 	private State mState;
-	private ArrayList<LEDController> mLEDControllers = new ArrayList<>(); //array of active led controllers
-	private ArrayList<LEDController> mToRemove = new ArrayList<>(); //array of all controller that are finished
+	private List<LEDController> mLEDControllers = new ArrayList<>(); //array of active led controllers
 
 	private Lighting() {
 	}
@@ -94,47 +101,32 @@ public class Lighting extends SubsystemBase {
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
 					addToControllers(new PulseController(mConfig.spinnerSegmentFirstIndex,
-							mConfig.spinnerSegmentLastIndex, new Color.HSV[] { Color.HSV.kLime, Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue }, 1.0));
+							mConfig.spinnerSegmentLastIndex, List.of(Color.HSV.kLime, Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue), 1.0));
 					break;
 			}
 		}
 
 		resetLedStrip();
+		mLEDControllers.removeIf(LEDController::checkFinished);
 
 		for (LEDController ledController : mLEDControllers) {
-			if (ledController.checkFinished()) {
-				mToRemove.add(ledController);
-			} else {
-				LightingOutputs controllerOutput = ledController.update(commands, robotState);
-				for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
-					Color.HSV hsvValue = controllerOutput.lightingOutput.get(i);
-					mOutputBuffer.setHSV(i + ledController.mInitIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());
-				}
+			LightingOutputs controllerOutput = ledController.update(commands, robotState);
+			for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
+				Color.HSV hsvValue = controllerOutput.lightingOutput.get(i);
+				mOutputBuffer.setHSV(i + ledController.mStartIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());
 			}
 		}
-		for (LEDController ledController : mToRemove) {
-			mLEDControllers.remove(ledController);
-		}
-		mToRemove.clear();
 	}
 
 	private void addToControllers(LEDController controller) {
-		removeOldControllers(controller);
+		mLEDControllers.removeIf(controllers -> controllers.mStartIndex == controller.mStartIndex &&
+				controllers.mLastIndex == controller.mLastIndex);
 		mLEDControllers.add(controller);
 	}
 
 	private void resetLedStrip() {
 		for (int i = 0; i < mOutputBuffer.getLength(); i++) {
 			mOutputBuffer.setRGB(i, 0, 0, 0);
-		}
-	}
-
-	private void removeOldControllers(LEDController controller) {
-		for (var i = mLEDControllers.size() - 1; i >= 0; i--) {
-			if (mLEDControllers.get(i).mInitIndex == controller.mInitIndex &&
-					mLEDControllers.get(i).mLastIndex == controller.mLastIndex) {
-				mLEDControllers.remove(i);
-			}
 		}
 	}
 

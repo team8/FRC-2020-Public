@@ -14,6 +14,9 @@ public class Color {
 				kLime = new HSV(60, 255, 40),
 				kRed = new HSV(5, 50, 60);
 
+		public HSV() {
+		}
+
 		public HSV(int h, int s, int v) {
 			this.h = h;
 			this.s = s;

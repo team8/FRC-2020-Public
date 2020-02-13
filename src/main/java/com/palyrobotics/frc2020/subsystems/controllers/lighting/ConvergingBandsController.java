@@ -11,46 +11,42 @@ public class ConvergingBandsController extends Lighting.LEDController {
 	private Color.HSV mBackgroundColor;
 	private int mBandLedCount;
 	private int mCurrentBandPosition;
-	private double mSpeed;
 
 	/**
 	 * Band color converges to center of strip
 	 *
-	 * @param initIndex       initial index upon which led patterns should start
+	 * @param startIndex      initial index upon which led patterns should start
 	 * @param lastIndex       end index upon which led patterns should stop
 	 * @param bandColor       color that should pulse through led strip
 	 * @param backgroundColor background color upon which converging effect will occur.
 	 */
 
-	public ConvergingBandsController(int initIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
-		mInitIndex = initIndex;
+	public ConvergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
+		super(startIndex, lastIndex);
+		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mBandColor = bandColor;
 		mBackgroundColor = backgroundColor;
 		mBandLedCount = bandLedCount;
-		mSpeed = speed == 0 ? 0.001 : speed;
+		kZeroSpeed = speed == 0 ? kZeroSpeed : speed;
 		mTimer.start();
-		for (var i = mInitIndex; i < mLastIndex; i++) {
-			mOutputs.lightingOutput
-					.add(new Color.HSV(bandColor.getH(), bandColor.getS(), bandColor.getV()));
-		}
 	}
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get() / mSpeed) % 2 == 1) {
+		if (Math.round(mTimer.get() / kZeroSpeed) % 2 == 1) {
 			mCurrentBandPosition += 1;
 			mTimer.reset();
 		}
-		for (var i = 0; i < (mLastIndex - mInitIndex) / 2 - 1; i++) {
+		for (var i = 0; i < (mLastIndex - mStartIndex) / 2 - 1; i++) {
 			if ((i + mCurrentBandPosition) / mBandLedCount % 2 == 0) {
 				mOutputs.lightingOutput.get(i).setHSV(mBandColor.getH(), mBandColor.getS(), mBandColor.getV());
-				mOutputs.lightingOutput.get(mLastIndex - mInitIndex - i - 1).setHSV(mBandColor.getH(),
+				mOutputs.lightingOutput.get(mLastIndex - mStartIndex - i - 1).setHSV(mBandColor.getH(),
 						mBandColor.getS(), mBandColor.getV());
 			} else {
 				mOutputs.lightingOutput.get(i).setHSV(mBackgroundColor.getH(), mBackgroundColor.getS(),
 						mBackgroundColor.getV());
-				mOutputs.lightingOutput.get(mLastIndex - mInitIndex - i - 1).setHSV(mBackgroundColor.getH(),
+				mOutputs.lightingOutput.get(mLastIndex - mStartIndex - i - 1).setHSV(mBackgroundColor.getH(),
 						mBackgroundColor.getS(), mBackgroundColor.getV());
 			}
 		}

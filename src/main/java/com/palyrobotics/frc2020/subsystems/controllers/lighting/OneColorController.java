@@ -12,16 +12,17 @@ public class OneColorController extends Lighting.LEDController {
 	/**
 	 * Single color, no animation, led controller
 	 *
-	 * @param initIndex initial index upon which led patterns should start
-	 * @param lastIndex end index upon which led patterns should stop
-	 * @param color     color to be displayed
+	 * @param startIndex initial index upon which led patterns should start
+	 * @param lastIndex  end index upon which led patterns should stop
+	 * @param color      color to be displayed
 	 */
 
-	public OneColorController(int initIndex, int lastIndex, Color.HSV color) {
-		mInitIndex = initIndex;
+	public OneColorController(int startIndex, int lastIndex, Color.HSV color) {
+		super(startIndex, lastIndex);
+		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mColor = color;
-		for (var i = mInitIndex; i < mLastIndex; i++) {
+		for (var i = mStartIndex; i < mLastIndex; i++) {
 			mOutputs.lightingOutput
 					.add(new Color.HSV(mColor.getH(), mColor.getS(), mColor.getV()));
 		}
@@ -29,7 +30,7 @@ public class OneColorController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		for (int i = mInitIndex; i < mLastIndex; i++) {
+		for (int i = mStartIndex; i < mLastIndex; i++) {
 			mOutputs.lightingOutput.get(i).setHSV(mColor.getH(), mColor.getS(), mColor.getV());
 		}
 	}

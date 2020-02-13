@@ -37,7 +37,7 @@ public class SpinnerPositionControlRoutine extends RoutineBase {
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		return mTargetColor.equals(mCurrentColor);
+		return mIsFinished;
 	}
 
 	@Override
