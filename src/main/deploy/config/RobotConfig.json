@@ -6,9 +6,7 @@
 	],
 	"enabledSubsystems": [
 		"drive",
-		"shooter",
-		"indexer",
-		"intake"
+		"shooter"
 	],
 	"coastDriveWhenDisabled": false,
 	"enableVisionWhenDisabled": false,

@@ -5,6 +5,7 @@ import java.util.Set;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.*;
 import com.palyrobotics.frc2020.subsystems.*;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -105,6 +106,7 @@ public class HardwareReader {
 
 	private void readShooterState(RobotState robotState) {
 		var hardware = ShooterHardware.getInstance();
+		LiveGraph.add("shooterFlywheelVelocity", hardware.masterEncoder.getVelocity());
 		robotState.shooterFlywheelVelocity = hardware.masterEncoder.getVelocity();
 		robotState.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
 		robotState.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();

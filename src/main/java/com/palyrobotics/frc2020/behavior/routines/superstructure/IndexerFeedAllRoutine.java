@@ -21,11 +21,12 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		if (state.shooterIsReadyToShoot) {
-			commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
-		} else {
-			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
-		}
+		commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
+//		if (state.shooterIsReadyToShoot) {
+//			commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
+//		} else {
+//			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
+//		}
 	}
 
 	@Override

@@ -19,9 +19,6 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.palyrobotics.frc2020.behavior.SequentialRoutine;
-import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
-import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.ShooterCustomVelocityRoutine;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
@@ -224,8 +221,9 @@ public class CommandReceiverService implements RobotService {
 //				}
 				var hoodState = Shooter.HoodState.valueOf(parse.getString("hood_state"));
 				var manualSpeed = Double.parseDouble(parse.getString("manual_speed"));
-				commands.addWantedRoutines(new ShooterCustomVelocityRoutine(7.0, manualSpeed, hoodState),
-						new SequentialRoutine(new TimedRoutine(4.0), new IndexerFeedAllRoutine(7.0)));
+				commands.addWantedRoutine(new ShooterCustomVelocityRoutine(20.0, manualSpeed, hoodState));
+//				commands.addWantedRoutines(new ShooterCustomVelocityRoutine(15.0, manualSpeed, hoodState),
+//						new SequentialRoutine(new TimedRoutine(4.0), new IndexerFeedAllRoutine(7.0)));
 				return String.format("Running with hood state %s and velocity %f", hoodState, manualSpeed);
 			}
 			default: {

@@ -47,7 +47,7 @@ public class OperatorInterface {
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
-//		updateSpinnerCommands(commands);
+		updateSpinnerCommands(commands);
 
 		if (mOperatorXboxController.getAButtonPressed()) {
 			var customVelocity = Configs.get(ShooterConfig.class).customVelocity;
@@ -128,8 +128,7 @@ public class OperatorInterface {
 		}
 		/* Path Following */
 //		if (mOperatorXboxController.getDPadDownPressed()) {
-//			commands.addWantedRoutine(
-//					new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
+//			commands.addWantedRoutine(new DrivePathRoutine(new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(0))));
 //		}
 	}
 

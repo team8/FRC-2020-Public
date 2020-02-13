@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Units;
 
 public class DriveConstants {
 
@@ -28,8 +29,8 @@ public class DriveConstants {
 	/**
 	 * Unit Conversions
 	 */
-	public static final double kDriveMetersPerRotation = 0.0, // TODO: FILL IN
-			kDriveMetersPerSecondPerRpm = kDriveMetersPerRotation;
+	public static final double kDriveMetersPerTick = (1.0 / 2048.0) * (1.0 / 12.34567901) * Units.inchesToMeters(kWheelDiameterInches) * Math.PI,
+			kDriveVelocityConversion = kDriveMetersPerTick * 10; // Ticks/100 ms -> m/s
 	/**
 	 * Cheesy Drive Constants
 	 */

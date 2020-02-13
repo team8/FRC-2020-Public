@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
+import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
@@ -51,8 +52,8 @@ public class HardwareWriter {
 		hardware.verticalSpark.enableVoltageCompensation(kVoltageCompensation);
 		hardware.horizontalSpark.enableVoltageCompensation(kVoltageCompensation);
 		/* Encoder units are inches and inches/sec */
-		hardware.verticalSparkEncoder.setPositionConversionFactor(17.0666667 * 4.0 * Math.PI);
-		hardware.verticalSparkEncoder.setVelocityConversionFactor(17.0666667 * 4.0 * Math.PI / 60.0);
+		hardware.verticalSparkEncoder.setPositionConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
+		hardware.verticalSparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI / 60.0);
 		hardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		hardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
 	}
@@ -70,7 +71,7 @@ public class HardwareWriter {
 					kTimeoutMs);
 			falcon.configOpenloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
 			falcon.configClosedloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
-			falcon.configSensorConversions(1.0, 1.0); // TODO: find
+			falcon.configSensorConversions(DriveConstants.kDriveMetersPerTick, DriveConstants.kDriveVelocityConversion);
 		}
 
 		/* Left Side */
@@ -110,7 +111,7 @@ public class HardwareWriter {
 		talon.enableVoltageCompensation(true);
 		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
-		talon.setInverted(false);
+		talon.setInverted(true);
 	}
 
 	private void configureShooterHardware() {
@@ -119,8 +120,8 @@ public class HardwareWriter {
 		hardware.slaveSpark.restoreFactoryDefaults();
 		hardware.slaveSpark.follow(hardware.masterSpark, true);
 		hardware.masterSpark.setInverted(false);
-		/* Velocity in RPM, adjusted for gearing ratio */
-		hardware.masterEncoder.setVelocityConversionFactor(0.76923076);
+		/* Flywheel velocity in RPM, adjusted for gearing ratio */
+		hardware.masterEncoder.setVelocityConversionFactor(1.0 / 0.76923076);
 		// TODO: Current limiting and closed/open loop ramp rates
 	}
 
