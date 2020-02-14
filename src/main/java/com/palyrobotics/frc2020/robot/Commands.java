@@ -97,6 +97,7 @@ public class Commands {
 		driveWantedState = Drive.State.VISION_ALIGN;
 		visionWantedPipeline = visionPipeline;
 		visionWanted = true;
+		lightingWantedState = Lighting.State.ROBOT_ALIGNING;
 	}
 
 	public void setDriveTeleop() {

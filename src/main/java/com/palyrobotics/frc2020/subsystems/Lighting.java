@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE
+		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNING, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE
 	}
 
 	public abstract static class LEDController {
@@ -93,7 +93,7 @@ public class Lighting extends SubsystemBase {
 					break;
 				case TARGET_FOUND:
 					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex,
-							mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1));
+							mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1, 3));
 					break;
 				case SPINNER_DONE:
 				case BALL_ENTERED:
@@ -101,8 +101,11 @@ public class Lighting extends SubsystemBase {
 				case CLIMB_EXTENDED:
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
-					addToControllers(new PulseController(mConfig.spinnerSegmentFirstIndex,
-							mConfig.spinnerSegmentLastIndex, List.of(Color.HSV.kLime, Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue), 1.0));
+				case ROBOT_ALIGNING:
+					addToControllers(new PulseController(mConfig.backSupportSegmentFirstIndex,
+							mConfig.backSupportSegmentLastIndex, List.of(Color.HSV.kLime, Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue), 1));
+					addToControllers(new OneColorController(mConfig.shooterSegmentFirstIndex, mConfig.shooterSegmentLastIndex, Color.HSV.kWhite, 5));
+					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kBlue, Color.HSV.kNothing, 3, 1.0 / 5.0, 5));
 					break;
 			}
 		}

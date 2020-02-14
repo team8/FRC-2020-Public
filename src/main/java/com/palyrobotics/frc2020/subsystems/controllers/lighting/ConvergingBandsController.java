@@ -11,6 +11,7 @@ public class ConvergingBandsController extends Lighting.LEDController {
 	private Color.HSV mBackgroundColor;
 	private int mBandLedCount;
 	private int mCurrentBandPosition;
+	private int mDuration = -1;
 
 	/**
 	 * Band color converges to center of strip
@@ -32,6 +33,18 @@ public class ConvergingBandsController extends Lighting.LEDController {
 		mTimer.start();
 	}
 
+	public ConvergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration) {
+		super(startIndex, lastIndex);
+		mStartIndex = startIndex;
+		mLastIndex = lastIndex;
+		mBandColor = bandColor;
+		mBackgroundColor = backgroundColor;
+		mBandLedCount = bandLedCount;
+		mSpeed = speed == 0 ? kZeroSpeed : speed;
+		mDuration = duration;
+		mTimer.start();
+	}
+
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		if (Math.round(mTimer.get() / mSpeed) % 2 == 1) {
@@ -50,5 +63,11 @@ public class ConvergingBandsController extends Lighting.LEDController {
 						mBackgroundColor.getS(), mBackgroundColor.getV());
 			}
 		}
+	}
+
+	@Override
+
+	public boolean checkFinished() {
+		return mDuration != -1 && mTimer.hasPeriodPassed(mDuration);
 	}
 }

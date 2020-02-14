@@ -8,6 +8,7 @@ import com.palyrobotics.frc2020.util.Color;
 public class FlashingLightsController extends Lighting.LEDController {
 
 	private Color.HSV mFlashedColor;
+	private int mDuration = -1;
 
 	/**
 	 * Color flashes with given delay
@@ -26,6 +27,16 @@ public class FlashingLightsController extends Lighting.LEDController {
 		mTimer.start();
 	}
 
+	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, int delay, int duration) {
+		super(startIndex, lastIndex);
+		mStartIndex = startIndex;
+		mLastIndex = lastIndex;
+		mFlashedColor = flashedColor;
+		mSpeed = delay == 0 ? kZeroSpeed : delay;
+		mDuration = duration;
+		mTimer.start();
+	}
+
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		if (Math.round(mTimer.get() / mSpeed) % 2 == 0) {
@@ -38,5 +49,10 @@ public class FlashingLightsController extends Lighting.LEDController {
 				mOutputs.lightingOutput.get(i - mStartIndex).setHSV(0, 0, 0);
 			}
 		}
+	}
+
+	@Override
+	public boolean checkFinished() {
+		return mDuration != -1 && mTimer.hasPeriodPassed(mDuration);
 	}
 }

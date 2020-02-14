@@ -34,11 +34,13 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 		} else {
 			commands.setDriveYaw(mTargetYawDegrees);
 		}
+		commands.lightingWantedState = Lighting.State.ROBOT_ALIGNING;
 	}
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
 		commands.visionWanted = false;
+		commands.lightingWantedState = Lighting.State.TARGET_FOUND;
 	}
 
 	@Override
