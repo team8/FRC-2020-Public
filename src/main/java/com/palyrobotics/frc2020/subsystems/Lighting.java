@@ -83,7 +83,7 @@ public class Lighting extends SubsystemBase {
 					mLEDControllers.clear();
 					addToControllers(
 							new InitSequenceController(mConfig.backSupportSegmentFirstIndex, mConfig.backSupportSegmentLastIndex, 1.0 / 25.0));
-					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex,
+					addToControllers(new ConvergingBandsController(mConfig.shooterSegmentFirstIndex,
 							mConfig.spinnerSegmentLastIndex, Color.HSV.kWhite,
 							Color.HSV.kBlue, 3, 1.0 / 5.0));
 					break;

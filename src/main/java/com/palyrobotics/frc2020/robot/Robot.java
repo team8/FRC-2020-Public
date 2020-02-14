@@ -155,6 +155,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
+		mCommands.lightingWantedState = Lighting.State.INIT;
 		if (mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
 			mHardwareWriter.updateLighting();
