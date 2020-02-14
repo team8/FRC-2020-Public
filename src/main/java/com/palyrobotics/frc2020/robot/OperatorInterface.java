@@ -1,17 +1,15 @@
 package com.palyrobotics.frc2020.robot;
 
 import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
-import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
-import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedSingleRoutine;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerIdleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
@@ -50,16 +48,20 @@ public class OperatorInterface {
 		updateClimberCommands(commands, state);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
-		updateSpinnerCommands(commands);
+//		updateSpinnerCommands(commands);
 
+		// TODO: remove
 		if (mOperatorXboxController.getAButtonPressed()) {
 			var customVelocity = Configs.get(ShooterConfig.class).customVelocity;
 			commands.setShooterCustomFlywheelVelocity(customVelocity, Shooter.HoodState.MIDDLE);
 		}
 
+		// TODO: remove
 		if (mTurnStick.getRawButtonPressed(6)) {
 			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
 		}
+
+		// TODO: remove
 		if (mTurnStick.getRawButtonReleased(6)) {
 			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
 		}
@@ -130,11 +132,11 @@ public class OperatorInterface {
 			commands.visionWanted = false;
 		}
 		/* Path Following */
-		if (mOperatorXboxController.getDPadDownPressed()) {
-			commands.addWantedRoutines(
-					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
-					new DrivePathRoutine(newWaypoint(30.0, 0.0, 0.0)));
-		}
+//		if (mOperatorXboxController.getDPadDownPressed()) {
+//			commands.addWantedRoutines(
+//					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
+//					new DrivePathRoutine(newWaypoint(30.0, 0.0, 0.0)));
+//		}
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
@@ -171,16 +173,18 @@ public class OperatorInterface {
 		}
 		if (mOperatorXboxController.getDPadLeftReleased()) {
 			commands.intakeWantedState = Intake.State.LOWER;
-			commands.addWantedRoutine(new IndexerTimeRoutine(1.0));
+			commands.addWantedRoutine(new IndexerTimeRoutine(0.5));
 		}
 		/* Shooting */
 		// Handle flywheel velocity
 		if (mOperatorXboxController.getRightTriggerPressed()) {
 			commands.setShooterVisionAssisted(commands.visionWantedPipeline);
+			commands.wantedCompression = false;
 		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
 			commands.setShooterIdle();
 			commands.visionWanted = false;
-			commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
+			commands.addWantedRoutine(new IndexerIdleRoutine());
+			commands.wantedCompression = true;
 		}
 		// Feeding
 		if (mOperatorXboxController.getLeftBumperPressed()) {

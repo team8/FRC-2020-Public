@@ -5,7 +5,7 @@ import com.palyrobotics.frc2020.util.config.SubsystemConfigBase;
 @SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class IndexerConfig extends SubsystemConfigBase {
 
-	public double bottomSparkIndexingOutput, bottomTalonIndexingOutput, topSparkIndexingOutput, feedingOutput;
+	public double sparkIndexingOutput, talonIndexingOutput, feedingOutput, reverseTime;
 
 	public double ballInchTolerance;
 	public int ballCountRequired;

@@ -22,9 +22,10 @@ public class AlignDriveController extends ChezyDriveController {
 		if (mLimelight.isTargetFound()) {
 			mPidController.setPID(mVisionConfig.gains.p, mVisionConfig.gains.i, mVisionConfig.gains.d);
 			mPidController.setIntegratorRange(-mVisionConfig.gains.iMax, mVisionConfig.gains.iMax);
-			double percentOutput = mPidController.calculate(mLimelight.getYawToTarget());
+			double yawToTarget = mLimelight.getYawToTarget();
+			double percentOutput = mPidController.calculate(yawToTarget);
 			percentOutput = Util.clamp(percentOutput, -kMaxAngularPower, kMaxAngularPower);
-			percentOutput += Math.signum(percentOutput) * mVisionConfig.gainsS;
+			percentOutput += Math.signum(-yawToTarget) * mConfig.turnGainsS;
 			double rightPercentOutput = percentOutput, leftPercentOutput = -percentOutput;
 			mOutputs.leftOutput.setPercentOutput(leftPercentOutput);
 			mOutputs.rightOutput.setPercentOutput(rightPercentOutput);

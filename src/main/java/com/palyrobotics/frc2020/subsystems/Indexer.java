@@ -12,8 +12,8 @@ public class Indexer extends SubsystemBase {
 
 	private static Indexer sInstance = new Indexer();
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
-	private ControllerOutput mOutput = new ControllerOutput(),
-			mBottomOutput = new ControllerOutput();
+	private ControllerOutput mSparkOutput = new ControllerOutput(),
+			mTalonOutput = new ControllerOutput();
 	private boolean mHopperOutput, mBlockOutput;
 
 	private Indexer() {
@@ -50,40 +50,44 @@ public class Indexer extends SubsystemBase {
 		LiveGraph.add("multiplier", multiplier);
 		switch (commands.indexerWantedBeltState) {
 			case IDLE:
-				mOutput.setIdle();
-				mBottomOutput.setIdle();
+				mSparkOutput.setIdle();
+				mTalonOutput.setIdle();
 				mBlockOutput = true;
 				break;
 			case INDEX:
-				mOutput.setPercentOutput(mConfig.bottomSparkIndexingOutput * breh);
-				mBottomOutput.setPercentOutput(mConfig.bottomTalonIndexingOutput * multiplier);
+				mSparkOutput.setPercentOutput(mConfig.sparkIndexingOutput * breh);
+				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput * multiplier);
 				mBlockOutput = true;
 				break;
 			case WAITING_TO_FEED:
-				mOutput.setIdle();
-				mBottomOutput.setIdle();
+				mSparkOutput.setIdle();
+				mTalonOutput.setIdle();
 				mBlockOutput = false;
 				break;
 			case FEED_SINGLE:
-				mOutput.setPercentOutput(mConfig.feedingOutput);
-				mBottomOutput.setPercentOutput(mConfig.feedingOutput);
+				mSparkOutput.setPercentOutput(mConfig.feedingOutput);
+				mTalonOutput.setPercentOutput(mConfig.feedingOutput);
 				mBlockOutput = false;
 				break;
 			case FEED_ALL:
-				mOutput.setPercentOutput(mConfig.bottomSparkIndexingOutput);
-				mBottomOutput.setPercentOutput(mConfig.bottomTalonIndexingOutput);
+				mSparkOutput.setPercentOutput(mConfig.sparkIndexingOutput);
+				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 				break;
+			case REVERSING:
+				mSparkOutput.setPercentOutput(-mConfig.sparkIndexingOutput);
+				mTalonOutput.setPercentOutput(-mConfig.sparkIndexingOutput);
+				mBlockOutput = false;
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
 	}
 
-	public ControllerOutput getOutput() {
-		return mOutput;
+	public ControllerOutput getSparkOutput() {
+		return mSparkOutput;
 	}
 
-	public ControllerOutput getBottomOutput() {
-		return mBottomOutput;
+	public ControllerOutput getTalonOutput() {
+		return mTalonOutput;
 	}
 
 	public boolean getHopperOutput() {
@@ -95,7 +99,7 @@ public class Indexer extends SubsystemBase {
 	}
 
 	public enum BeltState {
-		IDLE, INDEX, WAITING_TO_FEED, FEED_SINGLE, FEED_ALL
+		IDLE, INDEX, WAITING_TO_FEED, FEED_SINGLE, FEED_ALL, REVERSING
 	}
 
 	public enum HopperState {

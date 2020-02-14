@@ -11,7 +11,7 @@
 		"velocity": 140.0,
 		"acceleration": 140.0
 	},
-	"turnGainsS": 0.0,
+	"turnGainsS": 0.04,
 	"quickStopWeight": 0.125,
 	"quickTurnScalar": 0.55,
 	"quickStopDeadBand": 0.5,

@@ -190,10 +190,10 @@ public class HardwareWriter {
 
 	private void updateIndexer() {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
-		hardware.masterSpark.setOutput(mIndexer.getOutput());
+		hardware.masterSpark.setOutput(mIndexer.getSparkOutput());
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
-		hardware.talon.setOutput(mIndexer.getBottomOutput());
+		hardware.talon.setOutput(mIndexer.getTalonOutput());
 	}
 
 	private void updateIntake() {

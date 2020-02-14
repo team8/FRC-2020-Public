@@ -1,9 +1,8 @@
 {
 	"gains": {
-		"p": 0.01,
-		"d": 0.001
+		"p": 0.0058,
+		"d": 0.0011
 	},
-	"gainsS": 0.0,
 	"acceptableYawError": 1.0,
 	"alignSwitchYawAngleMin": 40.0
 }
