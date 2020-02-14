@@ -104,10 +104,47 @@ public class HardwareReader {
 
 	private void readIndexerState(RobotState state) {
 		var hardware = IndexerHardware.getInstance();
-		state.indexerHasBackBall = !hardware.backInfrared.get();
-		state.indexerHasFrontBall = !hardware.frontInfrared.get();
-		state.indexerHasTopBall = !hardware.topInfrared.get();
+
+		state.hasFrontLeftBall = hardware.leftFrontInfrared.get();
+		state.hasFrontRightBall = hardware.rightFrontInfrared.get();
+		state.hasMiddleBall = hardware.leftMiddleInfrared.get();
+
+		// System.out.println(robotState.hasMiddleBall);
+		if (state.backInfraredReadings.getLinkedList().size() == 0) {
+			state.backInfraredReadings.addValue(false);
+			state.backInfraredReadings.addValue(false);
+		}
+
+		if (state.backInfraredReadings.getLinkedList().get(1) == state.hasMiddleBall) {
+			// robotState.backInfraredReadings.addValue(robotState.hasMiddleBall);
+			if (state.hasMiddleBall) {
+				state.backInfraredReadings.addValue(false);
+			} else {
+				state.backInfraredReadings.addValue(true);
+			}
+
+		}
+		if (state.backInfraredReadings.getLinkedList().get(0).equals(true) && state.backInfraredReadings.getLinkedList().get(1).equals(false)) {
+			state.guaranteedBallCount++;
+			state.backInfraredReadings.addValue(false);
+
+		}
+		state.ballCounter = 0;
+
+		if (!state.hasFrontRightBall) {
+			state.ballCounter++;
+		}
+		if (!state.hasFrontLeftBall) {
+			state.ballCounter++;
+		}
+		if (!state.hasMiddleBall) {
+			state.ballCounter++;
+		}
+
+		System.out.println(state.guaranteedBallCount + state.ballCounter);
+
 		state.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
+
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
 		checkTalonFaults(hardware.leftVTalon);

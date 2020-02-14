@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.robot;
 
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
+import com.palyrobotics.frc2020.util.GenericCircularBuffer;
 import com.palyrobotics.frc2020.util.Util;
 import com.revrobotics.ColorMatchResult;
 
@@ -39,6 +40,11 @@ public class RobotState {
 	/* Indexer */
 	public boolean indexerIsHopperExtended;
 	public boolean indexerHasBackBall, indexerHasFrontBall, indexerHasTopBall;
+	public Boolean hasFrontLeftBall, hasFrontRightBall, hasMiddleBall;
+	public int ballCounter = 0;
+	public int guaranteedBallCount = 0;
+
+	public GenericCircularBuffer<Boolean> backInfraredReadings = new GenericCircularBuffer<Boolean>(2);
 
 	/* Intake */
 	public boolean intakeIsExtended;
