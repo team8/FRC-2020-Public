@@ -139,18 +139,18 @@ public class OperatorInterface {
 	}
 
 	private void updateLightingCommands(Commands commands) {
-		if (mTurnStick.getRawButtonPressed(6)) {
-			commands.lightingWantedState = Lighting.State.DISABLE;
-		}
-		if (mTurnStick.getRawButtonPressed(5)) {
-			commands.lightingWantedState = Lighting.State.INIT;
-		}
-		if (mTurnStick.getRawButtonPressed(4)) {
-			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
-		}
-		if (mTurnStick.getRawButtonPressed(3)) {
-			commands.lightingWantedState = Lighting.State.IDLE;
-		}
+//		if (mTurnStick.getRawButtonPressed(6)) {
+//			commands.lightingWantedState = Lighting.State.DISABLE;
+//		}
+//		if (mTurnStick.getRawButtonPressed(5)) {
+//			commands.lightingWantedState = Lighting.State.INIT;
+//		}
+//		if (mTurnStick.getRawButtonPressed(4)) {
+//			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
+//		}
+//		if (mTurnStick.getRawButtonPressed(3)) {
+//			commands.lightingWantedState = Lighting.State.IDLE;
+//		}
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
@@ -227,7 +227,7 @@ public class OperatorInterface {
 		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
-		commands.lightingWantedState = Lighting.State.IDLE;
+		commands.lightingWantedState = Lighting.State.INIT;
 		commands.wantedCompression = true;
 		commands.wantedRumble = false;
 		commands.visionWanted = false;

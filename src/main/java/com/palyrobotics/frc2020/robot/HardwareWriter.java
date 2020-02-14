@@ -217,7 +217,7 @@ public class HardwareWriter {
 		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
 	}
 
-	private void updateLighting() {
+	public void updateLighting() {
 		var hardware = HardwareAdapter.LightingHardware.getInstance();
 		hardware.ledStrip.setData(mLighting.getOutput());
 	}
