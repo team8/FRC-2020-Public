@@ -68,6 +68,12 @@ task spotlessBuild {
     tasks.build.mustRunAfter(tasks.spotlessApply)
 }
 
+task spotlessDeploy {
+    group = "team8"
+    dependsOn(tasks.spotlessApply, tasks.deploy)
+    tasks.deploy.mustRunAfter(tasks.spotlessApply)
+}
+
 // Set this to true to enable desktop support.
 def includeDesktopSupport = false
 
