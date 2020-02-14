@@ -105,9 +105,9 @@ public class HardwareReader {
 	private void readIndexerState(RobotState state) {
 		var hardware = IndexerHardware.getInstance();
 
-		state.hasFrontLeftBall = hardware.leftFrontInfrared.get();
-		state.hasFrontRightBall = hardware.rightFrontInfrared.get();
-		state.hasMiddleBall = hardware.leftMiddleInfrared.get();
+		state.hasFrontLeftBall = !hardware.leftFrontInfrared.get();
+		state.hasFrontRightBall = !hardware.rightFrontInfrared.get();
+		state.hasMiddleBall = !hardware.leftMiddleInfrared.get();
 
 		// System.out.println(robotState.hasMiddleBall);
 		if (state.backInfraredReadings.getLinkedList().size() == 0) {
@@ -115,35 +115,25 @@ public class HardwareReader {
 			state.backInfraredReadings.addValue(false);
 		}
 
-		if (state.backInfraredReadings.getLinkedList().get(1) == state.hasMiddleBall) {
-			// robotState.backInfraredReadings.addValue(robotState.hasMiddleBall);
-			if (state.hasMiddleBall) {
-				state.backInfraredReadings.addValue(false);
-			} else {
-				state.backInfraredReadings.addValue(true);
-			}
+		state.backInfraredReadings.addValue(state.hasMiddleBall);
 
-		}
-		if (state.backInfraredReadings.getLinkedList().get(0).equals(true) && state.backInfraredReadings.getLinkedList().get(1).equals(false)) {
+		if (state.backInfraredReadings.getLinkedList().get(0).equals(false) && state.backInfraredReadings.getLinkedList().get(1).equals(true)) {
 			state.guaranteedBallCount++;
-			state.backInfraredReadings.addValue(false);
-
+//			robotState.backInfraredReadings.addValue(true);
 		}
-		state.ballCounter = 0;
+		state.possibleBallCount = 0;
 
-		if (!state.hasFrontRightBall) {
-			state.ballCounter++;
+		if (state.hasFrontRightBall) {
+			state.possibleBallCount++;
 		}
-		if (!state.hasFrontLeftBall) {
-			state.ballCounter++;
+		if (state.hasFrontLeftBall) {
+			state.possibleBallCount++;
 		}
-		if (!state.hasMiddleBall) {
-			state.ballCounter++;
+		if (state.hasMiddleBall) {
+			state.possibleBallCount++;
 		}
 
-		System.out.println(state.guaranteedBallCount + state.ballCounter);
-
-		state.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
+		System.out.println(state.guaranteedBallCount + state.possibleBallCount);
 
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
