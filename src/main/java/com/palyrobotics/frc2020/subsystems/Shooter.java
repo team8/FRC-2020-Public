@@ -102,18 +102,27 @@ public class Shooter extends SubsystemBase {
 	// Null hood state represents no action
 	private HoodState updateHood(@ReadOnly Commands commands, @ReadOnly RobotState state, Double targetDistanceInches) {
 		HoodState targetHoodState;
-		if (targetDistanceInches == null) {
-			if (commands.getShooterWantedState() == ShooterState.CUSTOM_VELOCITY) {
+		switch (commands.getShooterWantedState()) {
+			case IDLE:
+				targetHoodState = HoodState.HIGH;
+				break;
+			case CUSTOM_VELOCITY:
 				targetHoodState = commands.getShooterWantedHoodState();
-			} else {
+				break;
+			case VISION_VELOCITY:
+				if (targetDistanceInches == null) {
+					targetHoodState = null;
+				} else {
+					Map.Entry<Double, HoodState> floorEntry = kTargetDistanceToHoodState.floorEntry(targetDistanceInches),
+							ceilingEntry = kTargetDistanceToHoodState.ceilingEntry(targetDistanceInches),
+							closestEntry = ceilingEntry == null || targetDistanceInches - floorEntry.getKey() < ceilingEntry.getKey() - targetDistanceInches ? floorEntry : ceilingEntry;
+					double deltaFromThreshold = Math.abs(targetDistanceInches - closestEntry.getKey());
+					targetHoodState = deltaFromThreshold > mConfig.hoodSwitchDistanceThreshold ? floorEntry.getValue() : closestEntry.getValue();
+				}
+				break;
+			default:
 				targetHoodState = null;
-			}
-		} else {
-			Map.Entry<Double, HoodState> floorEntry = kTargetDistanceToHoodState.floorEntry(targetDistanceInches),
-					ceilingEntry = kTargetDistanceToHoodState.ceilingEntry(targetDistanceInches),
-					closestEntry = ceilingEntry == null || targetDistanceInches - floorEntry.getKey() < ceilingEntry.getKey() - targetDistanceInches ? floorEntry : ceilingEntry;
-			double deltaFromThreshold = Math.abs(targetDistanceInches - closestEntry.getKey());
-			targetHoodState = deltaFromThreshold > mConfig.hoodSwitchDistanceThreshold ? floorEntry.getValue() : closestEntry.getValue();
+				break;
 		}
 		TelemetryService.putArbitrary("shooterTargetHoodState", targetHoodState);
 		if (targetHoodState != null) {
