@@ -36,7 +36,7 @@ public class RobotState {
 	public boolean indexerIsHopperExtended;
 	public boolean indexerHasBackBall, indexerHasFrontBall, indexerHasTopBall;
 	public Boolean hasFrontLeftBall, hasFrontRightBall, hasMiddleBall;
-	public int ballCounter = 0;
+	public int possibleBallCount = 0;
 	public int guaranteedBallCount = 0;
 
 	public GenericCircularBuffer<Boolean> backInfraredReadings = new GenericCircularBuffer<Boolean>(2);

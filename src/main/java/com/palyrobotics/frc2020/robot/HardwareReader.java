@@ -103,44 +103,35 @@ public class HardwareReader {
 	private void readIndexerState(RobotState robotState) {
 		var hardware = IndexerHardware.getInstance();
 
-		robotState.hasFrontLeftBall = hardware.leftFrontInfrared.get();
-		robotState.hasFrontRightBall = hardware.rightFrontInfrared.get();
-		robotState.hasMiddleBall = hardware.leftMiddleInfrared.get();
+		robotState.hasFrontLeftBall = !hardware.leftFrontInfrared.get();
+		robotState.hasFrontRightBall = !hardware.rightFrontInfrared.get();
+		robotState.hasMiddleBall = !hardware.leftMiddleInfrared.get();
 
 		// System.out.println(robotState.hasMiddleBall);
 		if (robotState.backInfraredReadings.getLinkedList().size() == 0) {
 			robotState.backInfraredReadings.addValue(false);
 			robotState.backInfraredReadings.addValue(false);
-			System.out.println("entered");
 		}
 
-		if (robotState.backInfraredReadings.getLinkedList().get(1) == robotState.hasMiddleBall) {
-			// robotState.backInfraredReadings.addValue(robotState.hasMiddleBall);
-			if (robotState.hasMiddleBall) {
-				robotState.backInfraredReadings.addValue(false);
-			} else {
-				robotState.backInfraredReadings.addValue(true);
-			}
+		robotState.backInfraredReadings.addValue(robotState.hasMiddleBall);
 
-		}
-		if (robotState.backInfraredReadings.getLinkedList().get(0).equals(true) && robotState.backInfraredReadings.getLinkedList().get(1).equals(false)) {
+		if (robotState.backInfraredReadings.getLinkedList().get(0).equals(false) && robotState.backInfraredReadings.getLinkedList().get(1).equals(true)) {
 			robotState.guaranteedBallCount++;
-			robotState.backInfraredReadings.addValue(false);
+//			robotState.backInfraredReadings.addValue(true);
+		}
+		robotState.possibleBallCount = 0;
 
+		if (robotState.hasFrontRightBall) {
+			robotState.possibleBallCount++;
 		}
-		robotState.ballCounter = 0;
-
-		if (!robotState.hasFrontRightBall) {
-			robotState.ballCounter++;
+		if (robotState.hasFrontLeftBall) {
+			robotState.possibleBallCount++;
 		}
-		if (!robotState.hasFrontLeftBall) {
-			robotState.ballCounter++;
-		}
-		if (!robotState.hasMiddleBall) {
-			robotState.ballCounter++;
+		if (robotState.hasMiddleBall) {
+			robotState.possibleBallCount++;
 		}
 
-		System.out.println(robotState.guaranteedBallCount + robotState.ballCounter);
+		System.out.println(robotState.guaranteedBallCount + robotState.possibleBallCount);
 
 		robotState.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
 	}
