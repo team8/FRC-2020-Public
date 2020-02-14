@@ -119,7 +119,6 @@ public class HardwareReader {
 
 		if (state.backInfraredReadings.getLinkedList().get(0).equals(false) && state.backInfraredReadings.getLinkedList().get(1).equals(true)) {
 			state.guaranteedBallCount++;
-//			robotState.backInfraredReadings.addValue(true);
 		}
 		state.possibleBallCount = 0;
 
@@ -133,7 +132,9 @@ public class HardwareReader {
 			state.possibleBallCount++;
 		}
 
-		System.out.println(state.guaranteedBallCount + state.possibleBallCount);
+		state.totalBallCount = state.guaranteedBallCount + state.possibleBallCount;
+
+		System.out.println(state.totalBallCount);
 
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
