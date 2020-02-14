@@ -38,6 +38,7 @@ public class RobotState {
 	public Boolean hasFrontLeftBall, hasFrontRightBall, hasMiddleBall;
 	public int possibleBallCount = 0;
 	public int guaranteedBallCount = 0;
+	public int totalBallCount = 0;
 
 	public GenericCircularBuffer<Boolean> backInfraredReadings = new GenericCircularBuffer<Boolean>(2);
 

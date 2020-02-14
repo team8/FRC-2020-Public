@@ -107,7 +107,6 @@ public class HardwareReader {
 		robotState.hasFrontRightBall = !hardware.rightFrontInfrared.get();
 		robotState.hasMiddleBall = !hardware.leftMiddleInfrared.get();
 
-		// System.out.println(robotState.hasMiddleBall);
 		if (robotState.backInfraredReadings.getLinkedList().size() == 0) {
 			robotState.backInfraredReadings.addValue(false);
 			robotState.backInfraredReadings.addValue(false);
@@ -115,9 +114,8 @@ public class HardwareReader {
 
 		robotState.backInfraredReadings.addValue(robotState.hasMiddleBall);
 
-		if (robotState.backInfraredReadings.getLinkedList().get(0).equals(false) && robotState.backInfraredReadings.getLinkedList().get(1).equals(true)) {
+		if (robotState.backInfraredReadings.getLinkedList().get(0).equals(true) && robotState.backInfraredReadings.getLinkedList().get(1).equals(false)) {
 			robotState.guaranteedBallCount++;
-//			robotState.backInfraredReadings.addValue(true);
 		}
 		robotState.possibleBallCount = 0;
 
@@ -131,7 +129,9 @@ public class HardwareReader {
 			robotState.possibleBallCount++;
 		}
 
-		System.out.println(robotState.guaranteedBallCount + robotState.possibleBallCount);
+		robotState.totalBallCount = robotState.guaranteedBallCount + robotState.possibleBallCount;
+
+		System.out.println(robotState.totalBallCount);
 
 		robotState.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
 	}
