@@ -102,9 +102,46 @@ public class HardwareReader {
 
 	private void readIndexerState(RobotState robotState) {
 		var hardware = IndexerHardware.getInstance();
-		robotState.indexerHasBackBall = hardware.backInfrared.get();
-		robotState.indexerHasFrontBall = hardware.frontInfrared.get();
-		robotState.indexerHasTopBall = hardware.topInfrared.get();
+
+		robotState.hasFrontLeftBall = hardware.leftFrontInfrared.get();
+		robotState.hasFrontRightBall = hardware.rightFrontInfrared.get();
+		robotState.hasMiddleBall = hardware.leftMiddleInfrared.get();
+
+		// System.out.println(robotState.hasMiddleBall);
+		if (robotState.backInfraredReadings.getLinkedList().size() == 0) {
+			robotState.backInfraredReadings.addValue(false);
+			robotState.backInfraredReadings.addValue(false);
+			System.out.println("entered");
+		}
+
+		if (robotState.backInfraredReadings.getLinkedList().get(1) == robotState.hasMiddleBall) {
+			// robotState.backInfraredReadings.addValue(robotState.hasMiddleBall);
+			if (robotState.hasMiddleBall) {
+				robotState.backInfraredReadings.addValue(false);
+			} else {
+				robotState.backInfraredReadings.addValue(true);
+			}
+
+		}
+		if (robotState.backInfraredReadings.getLinkedList().get(0).equals(true) && robotState.backInfraredReadings.getLinkedList().get(1).equals(false)) {
+			robotState.guaranteedBallCount++;
+			robotState.backInfraredReadings.addValue(false);
+
+		}
+		robotState.ballCounter = 0;
+
+		if (!robotState.hasFrontRightBall) {
+			robotState.ballCounter++;
+		}
+		if (!robotState.hasFrontLeftBall) {
+			robotState.ballCounter++;
+		}
+		if (!robotState.hasMiddleBall) {
+			robotState.ballCounter++;
+		}
+
+		System.out.println(robotState.guaranteedBallCount + robotState.ballCounter);
+
 		robotState.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
 	}
 

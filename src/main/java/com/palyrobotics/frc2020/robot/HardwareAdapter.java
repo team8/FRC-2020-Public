@@ -81,9 +81,12 @@ public class HardwareAdapter {
 		final Talon talon = new Talon(sPortConstants.nariIndexerTalonId);
 		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);
-		final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDio),
-				frontInfrared = new DigitalInput(sPortConstants.nariIndexerFrontInfraredDio),
-				topInfrared = new DigitalInput(sPortConstants.nariIndexerTopInfraredDio);
+
+		final DigitalInput leftFrontInfrared = new DigitalInput(sPortConstants.nariIndexerLeftFrontInfraredDIO);
+		final DigitalInput rightFrontInfrared = new DigitalInput(sPortConstants.nariIndexerRightFrontInfraredDIO);
+		// final DigitalInput leftBackInfrared = new
+		// DigitalInput(sPortConstants.nariIndexerLeftBackInfraredDIO);
+		final DigitalInput leftMiddleInfrared = new DigitalInput(sPortConstants.nariIndexerLeftMiddleInfraredDIO);
 
 		private IndexerHardware() {
 		}
