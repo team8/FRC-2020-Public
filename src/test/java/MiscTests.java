@@ -48,6 +48,7 @@ public class MiscTests {
 		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(-120, 120), 120);
 		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(30, 110), -80);
 		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(10, 170), -160);
+		assertEquals(Util.getDifferenceInAngleDegreesNeg180To180(-175, 150), 35);
 
 	}
 

@@ -12,8 +12,6 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.CircularBufferGeneric;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.vision.Limelight;
 
 public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
@@ -40,10 +38,8 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		commands.visionWanted = true;
 		commands.visionWantedPipeline = mVisionPipeline;
-		LiveGraph.add("mTargetYawDegrees", mTargetYawDegrees);
-		CSVWriter.addData("mTargetYawDegrees", mTargetYawDegrees);
 		mTargetSeenHistory.addValue(mLimelight.isTargetFound());
-		double yawErrorDegrees = getDifferenceInAngleDegrees0To360(state.driveYawDegrees, mTargetYawDegrees);
+		double yawErrorDegrees = getDifferenceInAngleDegreesNeg180To180(state.driveYawDegrees, mTargetYawDegrees);
 		if (!mTargetSeenHistory.getLinkedList().contains(false) && Math.abs(yawErrorDegrees) <= mVisionConfig.alignSwitchYawAngleMin) {
 			commands.setDriveVisionAlign();
 		} else {

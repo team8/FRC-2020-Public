@@ -123,7 +123,7 @@ public class OperatorInterface {
 		}
 		if (mOperatorXboxController.getDPadUpPressed()) {
 			commands.addWantedRoutine(new StartRightTrenchStealTwoShootFive().getRoutine());
-//			commands.addWantedRoutine(new SequentialRoutine(new DriveYawRoutine(170), new DriveYawRoutine(110)));
+//			commands.addWantedRoutine(new SequentialRoutine(new DriveYawRoutine(10), new DriveYawRoutine(150)));
 		}
 	}
 

@@ -17,9 +17,9 @@ public class YawDriveController extends Drive.DriveController {
 	private ProfiledPIDController mController = new ProfiledPIDController(0.0, 0.0, 0.0,
 			new TrapezoidProfile.Constraints());
 	private Double mTargetYaw;
+	private Double mTargetRealYaw;
 
 	public YawDriveController() {
-		mController.enableContinuousInput(-180.0, 180.0);
 	}
 
 	/**
@@ -30,19 +30,27 @@ public class YawDriveController extends Drive.DriveController {
 	 */
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+		//TODO: start with state.driveYawDegrees and increase until difference between target and state.driveYawDegrees = 0
+		//Or don't use getDifference in angle, and instead just keep the state.driveYawDegrees the same.
 		double wantedYawDegrees = commands.getDriveWantedYawDegrees(),
+				realCurrentYawDegrees = state.driveYawDegrees,
 				currentYawDegrees = Util.boundAngleNeg180to180Degrees(state.driveYawDegrees);
-		LiveGraph.add("CurrentYaw", currentYawDegrees);
-		CSVWriter.addData("CurrentYaw", currentYawDegrees);
+		LiveGraph.add("realYaw", realCurrentYawDegrees);
+		CSVWriter.addData("realYaw", realCurrentYawDegrees);
 		if (mTargetYaw == null || !Util.approximatelyEqual(mTargetYaw, wantedYawDegrees)) {
-			mController.reset(currentYawDegrees);
+			mController.reset(realCurrentYawDegrees);
 			mTargetYaw = wantedYawDegrees;
+			mTargetRealYaw = realCurrentYawDegrees - Util.getDifferenceInAngleDegreesNeg180To180(currentYawDegrees, mTargetYaw);
 		}
+		LiveGraph.add("mTargetRealYaw", mTargetRealYaw);
+		CSVWriter.addData("mTargetRealYaw", mTargetRealYaw);
 		mController.setPID(mConfig.turnGains.p, mConfig.turnGains.i, mConfig.turnGains.d);
 		mController.setConstraints(
 				new TrapezoidProfile.Constraints(mConfig.turnGains.velocity, mConfig.turnGains.acceleration));
 		var feedForwardCalculator = new SimpleMotorFeedforward(0.0, mConfig.turnGains.f, 0.0);
-		double percentOutput = mController.calculate(currentYawDegrees, wantedYawDegrees);
+		double percentOutput = mController.calculate(realCurrentYawDegrees, mTargetRealYaw);
+		LiveGraph.add("error", mTargetRealYaw - realCurrentYawDegrees);
+		CSVWriter.addData("error", mTargetRealYaw - realCurrentYawDegrees);
 		percentOutput += feedForwardCalculator.calculate(mController.getSetpoint().velocity);
 		mOutputs.leftOutput.setPercentOutput(-percentOutput);
 		mOutputs.rightOutput.setPercentOutput(percentOutput);
