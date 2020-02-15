@@ -54,6 +54,8 @@ public class Commands {
 	public boolean visionWanted;
 	/* Miscellaneous */
 	public boolean wantedCompression;
+	/* Lighting */
+	public Lighting.State lightingWantedState;
 
 	public boolean wantedRumble;
 	private Shooter.HoodState shooterWantedHoodState;
@@ -95,6 +97,7 @@ public class Commands {
 		driveWantedState = Drive.State.VISION_ALIGN;
 		visionWantedPipeline = visionPipeline;
 		visionWanted = true;
+		lightingWantedState = Lighting.State.ROBOT_ALIGNING;
 	}
 
 	public void setDriveTeleop() {

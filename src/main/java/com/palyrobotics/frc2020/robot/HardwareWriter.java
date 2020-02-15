@@ -10,6 +10,7 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
+import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -32,6 +33,7 @@ public class HardwareWriter {
 	private final Drive mDrive = Drive.getInstance();
 	private final Indexer mIndexer = Indexer.getInstance();
 	private final Intake mIntake = Intake.getInstance();
+	private final Lighting mLighting = Lighting.getInstance();
 	private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
 	private boolean mRumbleOutput;
@@ -41,6 +43,7 @@ public class HardwareWriter {
 		if (enabledSubsystems.contains(mDrive)) configureDriveHardware();
 		if (enabledSubsystems.contains(mIndexer)) configureIndexerHardware();
 		if (enabledSubsystems.contains(mIntake)) configureIntakeHardware();
+		if (enabledSubsystems.contains(mLighting)) configureLightingHardware();
 		if (enabledSubsystems.contains(mShooter)) configureShooterHardware();
 		if (enabledSubsystems.contains(mSpinner)) configureSpinnerHardware();
 	}
@@ -53,7 +56,7 @@ public class HardwareWriter {
 		hardware.horizontalSpark.enableVoltageCompensation(kVoltageCompensation);
 		/* Encoder units are inches and inches/sec */
 		hardware.verticalSparkEncoder.setPositionConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
-		hardware.verticalSparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI / 60.0);
+		hardware.verticalSparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
 		hardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		hardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
 	}
@@ -114,6 +117,13 @@ public class HardwareWriter {
 		talon.setInverted(true);
 	}
 
+	private void configureLightingHardware() {
+		var hardware = HardwareAdapter.LightingHardware.getInstance();
+		hardware.ledStrip.setLength(Configs.get(LightingConfig.class).ledCount);
+		hardware.ledStrip.start();
+		hardware.ledStrip.setData(mLighting.getOutput());
+	}
+
 	private void configureShooterHardware() {
 		var hardware = HardwareAdapter.ShooterHardware.getInstance();
 		hardware.masterSpark.restoreFactoryDefaults();
@@ -166,6 +176,7 @@ public class HardwareWriter {
 			if (enabledSubsystems.contains(mIntake)) updateIntake();
 			if (enabledSubsystems.contains(mShooter)) updateShooter();
 			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
+			if (enabledSubsystems.contains(mLighting)) updateLighting();
 		}
 		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
 		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
@@ -204,6 +215,11 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.IntakeHardware.getInstance();
 		hardware.talon.setOutput(mIntake.getOutput());
 		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
+	}
+
+	public void updateLighting() {
+		var hardware = HardwareAdapter.LightingHardware.getInstance();
+		hardware.ledStrip.setData(mLighting.getOutput());
 	}
 
 	private void updateShooter() {

@@ -19,7 +19,6 @@ import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
-import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -35,7 +34,6 @@ public class OperatorInterface {
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
-	private final Limelight mLimelight = Limelight.getInstance();
 	private double mClimberLastVelocity;
 
 	/**
@@ -49,6 +47,7 @@ public class OperatorInterface {
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
 //		updateSpinnerCommands(commands);
+		updateLightingCommands(commands);
 
 		// TODO: remove
 		if (mOperatorXboxController.getAButtonPressed()) {
@@ -139,6 +138,21 @@ public class OperatorInterface {
 //		}
 	}
 
+	private void updateLightingCommands(Commands commands) {
+//		if (mTurnStick.getRawButtonPressed(6)) {
+//			commands.lightingWantedState = Lighting.State.DISABLE;
+//		}
+//		if (mTurnStick.getRawButtonPressed(5)) {
+//			commands.lightingWantedState = Lighting.State.INIT;
+//		}
+//		if (mTurnStick.getRawButtonPressed(4)) {
+//			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
+//		}
+//		if (mTurnStick.getRawButtonPressed(3)) {
+//			commands.lightingWantedState = Lighting.State.IDLE;
+//		}
+	}
+
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
 		/* Intake Toggle */
 		if (mOperatorXboxController.getDPadDownPressed()) {
@@ -213,6 +227,7 @@ public class OperatorInterface {
 		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
+		commands.lightingWantedState = Lighting.State.INIT;
 		commands.wantedCompression = true;
 		commands.wantedRumble = false;
 		commands.visionWanted = false;

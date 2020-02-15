@@ -56,8 +56,9 @@ public class Robot extends TimedRobot {
 	private final Intake mIntake = Intake.getInstance();
 	private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
+	private final Lighting mLighting = Lighting.getInstance();
 
-	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mShooter, mSpinner),
+	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mLighting, mShooter, mSpinner),
 			mEnabledSubsystems;
 	private Set<RobotService> mServices = Set.of(new CommandReceiverService(), new NetworkLoggerService(),
 			new TelemetryService()),
@@ -120,7 +121,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		mRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
-
 		resetCommandsAndRoutines();
 
 		HardwareAdapter.Joysticks.getInstance().operatorXboxController.setRumble(false);
@@ -146,6 +146,7 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		startStage(RobotState.GamePeriod.TELEOP);
 		mCommands.setDriveTeleop();
+		mCommands.lightingWantedState = Lighting.State.INIT;
 	}
 
 	@Override
@@ -155,6 +156,10 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
+		if (mEnabledSubsystems.contains(mLighting)) {
+			mLighting.update(mCommands, mRobotState);
+			mHardwareWriter.updateLighting();
+		}
 		for (RobotService robotService : mEnabledServices) {
 			robotService.update(mRobotState, mCommands);
 		}

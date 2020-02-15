@@ -8,6 +8,7 @@ import com.palyrobotics.frc2020.config.VisionConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.vision.Limelight;
@@ -29,14 +30,17 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 		double yawErrorDegrees = getDifferenceInAngleDegrees(state.driveYawDegrees, mTargetYawDegrees);
 		if (mLimelight.isTargetFound() && Math.abs(yawErrorDegrees) < mVisionConfig.alignSwitchYawAngleMin) {
 			commands.setDriveVisionAlign(mVisionPipeline);
+			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
 		} else {
 			commands.setDriveYaw(mTargetYawDegrees);
 		}
+		commands.lightingWantedState = Lighting.State.ROBOT_ALIGNING;
 	}
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
 		commands.visionWanted = false;
+		commands.lightingWantedState = Lighting.State.TARGET_FOUND;
 	}
 
 	@Override
