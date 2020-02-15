@@ -1,5 +1,6 @@
 package com.palyrobotics.frc2020.subsystems.controllers.drive;
 
+import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 public class YawDriveController extends Drive.DriveController {
 
+	private static final String kLoggerTag = Util.classToJsonName(YawDriveController.class);
 	private ProfiledPIDController mController = new ProfiledPIDController(0.0, 0.0, 0.0,
 			new TrapezoidProfile.Constraints());
 	private Double mTargetYaw;
@@ -31,6 +33,7 @@ public class YawDriveController extends Drive.DriveController {
 		double wantedYawDegrees = commands.getDriveWantedYawDegrees(),
 				currentYawDegrees = Util.boundAngleNeg180to180Degrees(state.driveYawDegrees);
 		if (mTargetYaw == null || Util.getDifferenceInAngleDegrees(mTargetYaw, wantedYawDegrees) > Util.kEpsilon) {
+			Log.debug(kLoggerTag, "Reset profiled PID controller");
 			mController.reset(currentYawDegrees);
 			mTargetYaw = wantedYawDegrees;
 		}

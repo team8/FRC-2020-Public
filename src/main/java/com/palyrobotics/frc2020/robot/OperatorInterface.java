@@ -30,6 +30,8 @@ public class OperatorInterface {
 	public static final double kDeadBand = 0.05;
 	public static final double kClimberEnableControlTimeSeconds = 30;
 	public static final int kOnesTimesZoomAlignRawButton = 3, kTwoTimesZoomAlignButton = 4;
+	private final ShooterConfig mShooterConfig = Configs.get(ShooterConfig.class);
+	private final ClimberConfig mClimberConfig = Configs.get(ClimberConfig.class);
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
@@ -50,7 +52,7 @@ public class OperatorInterface {
 
 		// TODO: remove
 		if (mOperatorXboxController.getAButtonPressed()) {
-			var customVelocity = Configs.get(ShooterConfig.class).customVelocity;
+			var customVelocity = mShooterConfig.customVelocity;
 			commands.setShooterCustomFlywheelVelocity(customVelocity, Shooter.HoodState.MIDDLE);
 		}
 
@@ -69,43 +71,40 @@ public class OperatorInterface {
 
 	private void updateClimberCommands(Commands commands, @ReadOnly RobotState state) {
 		if (DriverStation.getInstance().getMatchTime() < kClimberEnableControlTimeSeconds) {
-			var mConfig = Configs.get(ClimberConfig.class);
 			double velocityDelta = state.climberVelocity - mClimberLastVelocity;
 
 			switch (commands.climberWantedState) {
 				case RAISING:
-					if (Util.withinRange(state.climberPosition, mConfig.climberTopHeight,
-							mConfig.allowablePositionError) && mOperatorXboxController.getMenuButtonPressed()) {
-						commands.climberWantedState = Climber.ClimberState.LOWERING_TO_BAR;
+					boolean withinTopHeight = Util.withinRange(state.climberPosition, mClimberConfig.climberTopHeight, mClimberConfig.allowablePositionError);
+					if (withinTopHeight && mOperatorXboxController.getMenuButtonPressed()) {
+						commands.climberWantedState = Climber.State.LOWERING_TO_BAR;
 					}
 					break;
 				case LOWERING_TO_BAR:
-					if (velocityDelta > mConfig.velocityChangeThreshold) {
-						commands.climberWantedState = Climber.ClimberState.CLIMBING;
+					if (velocityDelta > mClimberConfig.velocityChangeThreshold) {
+						commands.climberWantedState = Climber.State.CLIMBING;
 						commands.addWantedRoutine(new XboxVibrateRoutine(2.0));
 					}
 					break;
 				case CLIMBING:
-					commands.climberWantedVelocity = handleDeadBand(mOperatorXboxController.getY(Hand.kLeft),
-							kDeadBand);
-					commands.climberWantedAdjustingPercentOutput = handleDeadBand(
-							mOperatorXboxController.getX(Hand.kRight), kDeadBand);
+					commands.climberWantedVelocity = handleDeadBand(mOperatorXboxController.getY(Hand.kLeft), kDeadBand);
+					commands.climberWantedAdjustingPercentOutput = handleDeadBand(mOperatorXboxController.getX(Hand.kRight), kDeadBand);
 					break;
 			}
 
 			// Raise from anywhere if you're not climbing or locked
 			if (mOperatorXboxController.getWindowButtonPressed()) {
-				if (commands.climberWantedState == Climber.ClimberState.LOWERING_TO_BAR ||
-						commands.climberWantedState == Climber.ClimberState.IDLE) {
-					commands.climberWantedState = Climber.ClimberState.RAISING;
+				if (commands.climberWantedState == Climber.State.LOWERING_TO_BAR ||
+						commands.climberWantedState == Climber.State.IDLE) {
+					commands.climberWantedState = Climber.State.RAISING;
 				}
 			} else if (mOperatorXboxController.getDPadUpPressed()) {
 				// Toggle climber lock
-				if (commands.climberWantedState == Climber.ClimberState.LOCKED) {
+				if (commands.climberWantedState == Climber.State.LOCKED) {
 					commands.climberWantedState = commands.preLockClimberWantedState;
 				} else {
 					commands.preLockClimberWantedState = commands.climberWantedState;
-					commands.climberWantedState = Climber.ClimberState.LOCKED;
+					commands.climberWantedState = Climber.State.LOCKED;
 				}
 			}
 
@@ -189,6 +188,7 @@ public class OperatorInterface {
 		/* Shooting */
 		// Handle flywheel velocity
 		if (mOperatorXboxController.getRightTriggerPressed()) {
+			commands.setShooterFlywheelSpinUpVelocity(mShooterConfig.noTargetSpinUpVelocity);
 			commands.setShooterVisionAssisted(commands.visionWantedPipeline);
 			commands.wantedCompression = false;
 		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
@@ -217,7 +217,7 @@ public class OperatorInterface {
 
 	public void reset(Commands commands) {
 		commands.routinesWanted.clear();
-		commands.climberWantedState = Climber.ClimberState.IDLE;
+		commands.climberWantedState = Climber.State.IDLE;
 		commands.setDriveNeutral();
 		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		commands.intakeWantedState = Intake.State.STOW;

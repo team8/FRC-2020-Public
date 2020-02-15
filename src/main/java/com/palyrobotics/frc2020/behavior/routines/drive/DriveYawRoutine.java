@@ -11,6 +11,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 
 public class DriveYawRoutine extends TimeoutRoutineBase {
@@ -19,14 +20,11 @@ public class DriveYawRoutine extends TimeoutRoutineBase {
 	protected double mTargetYawDegrees;
 	private DriveConfig mDriveConfig = Configs.get(DriveConfig.class);
 
-	public DriveYawRoutine() {
-	}
-
 	/**
 	 * Yaw is relative to absolute odometry rotation, not relative to current rotation.
 	 */
 	public DriveYawRoutine(double yawDegrees) {
-		mTargetYawDegrees = yawDegrees;
+		mTargetYawDegrees = Util.boundAngleNeg180to180Degrees(yawDegrees);
 	}
 
 	@Override

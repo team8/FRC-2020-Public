@@ -9,7 +9,7 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Climber extends SubsystemBase {
 
-	public enum ClimberState {
+	public enum State {
 		RAISING, LOWERING_TO_BAR, CLIMBING, LOCKED, IDLE
 	}
 

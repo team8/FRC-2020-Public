@@ -5,6 +5,7 @@ import java.util.*;
 import com.palyrobotics.frc2020.subsystems.Shooter.HoodState;
 import com.palyrobotics.frc2020.util.InterpolatingDoubleTreeMap;
 
+@SuppressWarnings ("squid:S2386")
 public class ShooterConstants {
 
 	private ShooterConstants() {

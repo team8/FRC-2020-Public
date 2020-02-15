@@ -15,7 +15,6 @@ import com.palyrobotics.frc2020.vision.Limelight;
 
 public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 
-	private static final double kTimeoutMultiplier = 2.0;
 	private final VisionConfig mVisionConfig = Configs.get(VisionConfig.class);
 	private final Limelight mLimelight = Limelight.getInstance();
 	private final int mVisionPipeline;

@@ -22,8 +22,8 @@ public class Commands {
 	public List<RoutineBase> routinesWanted = new ArrayList<>();
 	public boolean shouldClearCurrentRoutines;
 	/* Climber */
-	public Climber.ClimberState climberWantedState;
-	public Climber.ClimberState preLockClimberWantedState;
+	public Climber.State climberWantedState;
+	public Climber.State preLockClimberWantedState;
 	public double climberWantedVelocity;
 	public double climberWantedAdjustingPercentOutput;
 	/* Drive */
@@ -163,6 +163,10 @@ public class Commands {
 		shooterWantedState = Shooter.ShooterState.CUSTOM_VELOCITY;
 		shooterWantedCustomFlywheelVelocity = wantedVelocity;
 		shooterWantedHoodState = hoodState;
+	}
+
+	public void setShooterFlywheelSpinUpVelocity(double wantedVelocity) {
+		shooterWantedCustomFlywheelVelocity = wantedVelocity;
 	}
 
 	public void setShooterVisionAssisted(int visionPipeline) {
