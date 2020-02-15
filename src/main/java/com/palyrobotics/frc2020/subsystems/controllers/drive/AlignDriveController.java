@@ -20,15 +20,20 @@ public class AlignDriveController extends ChezyDriveController {
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		if (mLimelight.isTargetFound()) {
-			mPidController.setPID(mVisionConfig.gains.p, mVisionConfig.gains.i, mVisionConfig.gains.d);
-			mPidController.setIntegratorRange(-mVisionConfig.gains.iMax, mVisionConfig.gains.iMax);
-			double yawToTarget = mLimelight.getYawToTarget();
-			double percentOutput = mPidController.calculate(yawToTarget);
-			percentOutput = Util.clamp(percentOutput, -kMaxAngularPower, kMaxAngularPower);
-			percentOutput += Math.signum(-yawToTarget) * mConfig.turnGainsS;
-			double rightPercentOutput = percentOutput, leftPercentOutput = -percentOutput;
-			mOutputs.leftOutput.setPercentOutput(leftPercentOutput);
-			mOutputs.rightOutput.setPercentOutput(rightPercentOutput);
+			if (mLimelight.getYawToTarget() > mVisionConfig.acceptableYawError) {
+				mPidController.setPID(mVisionConfig.gains.p, mVisionConfig.gains.i, mVisionConfig.gains.d);
+				mPidController.setIntegratorRange(-mVisionConfig.gains.iMax, mVisionConfig.gains.iMax);
+				double yawToTarget = mLimelight.getYawToTarget();
+				double percentOutput = mPidController.calculate(yawToTarget);
+				percentOutput = Util.clamp(percentOutput, -kMaxAngularPower, kMaxAngularPower);
+				percentOutput += Math.signum(-yawToTarget) * mConfig.turnGainsS;
+				double rightPercentOutput = percentOutput, leftPercentOutput = -percentOutput;
+				mOutputs.leftOutput.setPercentOutput(leftPercentOutput);
+				mOutputs.rightOutput.setPercentOutput(rightPercentOutput);
+			} else {
+				mOutputs.leftOutput.setIdle();
+				mOutputs.rightOutput.setIdle();
+			}
 		} else {
 			super.updateSignal(commands, state);
 		}
