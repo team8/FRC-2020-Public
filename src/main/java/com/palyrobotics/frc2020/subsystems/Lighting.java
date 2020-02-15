@@ -81,11 +81,7 @@ public class Lighting extends SubsystemBase {
 				case INIT:
 					resetLedStrip();
 					mLEDControllers.clear();
-					addToControllers(
-							new InitSequenceController(mConfig.backSupportSegmentFirstIndex, mConfig.backSupportSegmentLastIndex, 1.0 / 25.0));
-					addToControllers(new ConvergingBandsController(mConfig.shooterSegmentFirstIndex,
-							mConfig.spinnerSegmentLastIndex, Color.HSV.kWhite,
-							Color.HSV.kBlue, 3, 1.0 / 5.0));
+					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kAqua));
 					break;
 				case DISABLE:
 					addToControllers(new ColorRangingController(mConfig.backSupportSegmentFirstIndex,
@@ -102,7 +98,7 @@ public class Lighting extends SubsystemBase {
 							mConfig.totalSegmentLastIndex, new Color.HSV(30, 150, 150), 1, 3));
 				case HOPPER_OPEN:
 					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
-							mConfig.totalSegmentLastIndex, new Color.HSV(255, 100, 100), 1, 3));
+							mConfig.totalSegmentLastIndex, Color.HSV.kPurple, 1, 3));
 				case CLIMB_EXTENDED:
 					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, Color.HSV.kRed, 1, 3));
