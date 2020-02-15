@@ -14,6 +14,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.ColorMatch;
 
@@ -140,6 +141,10 @@ public class HardwareReader {
 		state.totalBallCount = state.guaranteedBallCount + state.possibleBallCount;
 
 		System.out.println(state.totalBallCount);
+
+		LiveGraph.add("total balls:", state.totalBallCount);
+
+		state.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
 
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
