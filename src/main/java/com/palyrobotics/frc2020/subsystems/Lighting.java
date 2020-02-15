@@ -96,15 +96,19 @@ public class Lighting extends SubsystemBase {
 				case BALL_ENTERED:
 					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, new Color.HSV(30, 150, 150), 1, 3));
+					break;
 				case HOPPER_OPEN:
 					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, Color.HSV.kPurple, 1, 3));
+					break;
 				case CLIMB_EXTENDED:
 					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, Color.HSV.kRed, 1, 3));
+					break;
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
 					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 5));
+					break;
 				case ROBOT_ALIGNING:
 					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1));
 					break;
