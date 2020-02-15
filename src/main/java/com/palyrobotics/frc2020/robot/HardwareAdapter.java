@@ -78,6 +78,7 @@ public class HardwareAdapter {
 		private static IndexerHardware sInstance;
 		final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId),
 				slaveSpark = new Spark(sPortConstants.nariIndexerSlaveId);
+		final CANEncoder masterEncoder = masterSpark.getEncoder();
 		final Talon talon = new Talon(sPortConstants.nariIndexerTalonId);
 		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);

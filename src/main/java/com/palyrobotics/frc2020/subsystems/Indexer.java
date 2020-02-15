@@ -6,7 +6,6 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 
 public class Indexer extends SubsystemBase {
 
@@ -25,7 +24,7 @@ public class Indexer extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		double multiplier, breh;
+//		double multiplier, breh;
 //		if (((long) (Timer.getFPGATimestamp() * 4.0) % 2L) == 0L) {
 //			multiplier = 0.0;
 //			breh = 1.0;
@@ -44,10 +43,10 @@ public class Indexer extends SubsystemBase {
 
 //		multiplier = Math.sin(2 * Math.PI * Timer.getFPGATimestamp());
 //		breh = Math.sin(2 * Math.PI * Timer.getFPGATimestamp() + Math.PI);
-		multiplier = 1.0;
-		breh = 1.0;
+//		multiplier = 1.0;
+//		breh = 1.0;
+//		LiveGraph.add("multiplier", multiplier);
 
-		LiveGraph.add("multiplier", multiplier);
 		switch (commands.indexerWantedBeltState) {
 			case IDLE:
 				mSparkOutput.setIdle();
@@ -55,8 +54,8 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = true;
 				break;
 			case INDEX:
-				mSparkOutput.setPercentOutput(mConfig.sparkIndexingOutput * breh);
-				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput * multiplier);
+				mSparkOutput.setTargetVelocity(mConfig.sparkIndexingOutput, mConfig.velocityGains);
+				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = true;
 				break;
 			case WAITING_TO_FEED:
@@ -65,18 +64,18 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = false;
 				break;
 			case FEED_SINGLE:
-				mSparkOutput.setPercentOutput(mConfig.feedingOutput);
+				mSparkOutput.setTargetVelocity(mConfig.feedingOutput, mConfig.velocityGains);
 				mTalonOutput.setPercentOutput(mConfig.feedingOutput);
 				mBlockOutput = false;
 				break;
 			case FEED_ALL:
-				mSparkOutput.setPercentOutput(mConfig.sparkIndexingOutput);
+				mSparkOutput.setTargetVelocity(mConfig.sparkIndexingOutput, mConfig.velocityGains);
 				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 				break;
 			case REVERSING:
-				mSparkOutput.setPercentOutput(-mConfig.sparkIndexingOutput);
-				mTalonOutput.setPercentOutput(-mConfig.sparkIndexingOutput);
+				mSparkOutput.setTargetVelocity(-mConfig.sparkIndexingOutput, mConfig.velocityGains);
+				mTalonOutput.setPercentOutput(-mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;

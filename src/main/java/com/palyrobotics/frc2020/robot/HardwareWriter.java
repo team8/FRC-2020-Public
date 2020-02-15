@@ -93,14 +93,16 @@ public class HardwareWriter {
 		hardware.slaveSpark.enableVoltageCompensation(kVoltageCompensation);
 		hardware.slaveSpark.follow(hardware.masterSpark);
 		hardware.masterSpark.setOpenLoopRampRate(0.1);
-		hardware.masterSpark.setInverted(false);
-		hardware.masterSpark.setSmartCurrentLimit(60);
+		hardware.masterSpark.setInverted(true);
+		hardware.masterSpark.getPIDController().setOutputRange(-0.6, 0.6);
+//		hardware.masterSpark.setSmartCurrentLimit(70, 10, 0);
 		// Talon
 		var talon = hardware.talon;
 		talon.configFactoryDefault(kTimeoutMs);
 		talon.enableVoltageCompensation(true);
 		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
+		talon.setInverted(true);
 	}
 
 	private void configureIntakeHardware() {
@@ -194,14 +196,14 @@ public class HardwareWriter {
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 		hardware.talon.setOutput(mIndexer.getTalonOutput());
+		LiveGraph.add("indexerAppliedOutput", hardware.masterSpark.getAppliedOutput());
+		LiveGraph.add("indexerVelocity", hardware.masterEncoder.getVelocity());
 	}
 
 	private void updateIntake() {
 		var hardware = HardwareAdapter.IntakeHardware.getInstance();
 		hardware.talon.setOutput(mIntake.getOutput());
 		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
-		LiveGraph.add("intakeCurrent", hardware.talon.getSupplyCurrent());
-		LiveGraph.add("intakeAppliedOutput", hardware.talon.getMotorOutputPercent());
 	}
 
 	private void updateShooter() {

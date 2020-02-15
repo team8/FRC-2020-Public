@@ -1,8 +1,10 @@
 {
-    "sparkIndexingOutput": -0.3,
-    "talonIndexingOutput": -0.35,
-    "reverseTime": 0.2,
-    "feedingOutput": -0.3,
-    "ballInchTolerance": 0.0,
-    "ballCountRequired": 0
+    "sparkIndexingOutput": 1000.0,
+    "talonIndexingOutput": 0.35,
+    "reverseTime": 0.15,
+    "feedingOutput": 800.0,
+    "velocityGains": {
+        "p": 0.0003,
+        "f": 0.00032
+    }
 }
