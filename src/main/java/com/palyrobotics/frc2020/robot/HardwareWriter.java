@@ -56,7 +56,7 @@ public class HardwareWriter {
 		hardware.horizontalSpark.enableVoltageCompensation(kVoltageCompensation);
 		/* Encoder units are inches and inches/sec */
 		hardware.verticalSparkEncoder.setPositionConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
-		hardware.verticalSparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI / 60.0);
+		hardware.verticalSparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
 		hardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		hardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
 	}
