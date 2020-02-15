@@ -33,12 +33,13 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		commands.indexerWantedBeltState = mReverseTimer.get() > mConfig.reverseTime ? Indexer.BeltState.FEED_ALL : Indexer.BeltState.REVERSING;
-//		if (state.shooterIsReadyToShoot) {
-//			commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
-//		} else {
-//			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
-//		}
+		if (state.shooterIsReadyToShoot) {
+			commands.indexerWantedBeltState = mReverseTimer.get() > mConfig.reverseTime ? Indexer.BeltState.FEED_ALL : Indexer.BeltState.REVERSING;
+		} else {
+			commands.indexerWantedBeltState = mReverseTimer.get() > mConfig.reverseTime ? Indexer.BeltState.WAITING_TO_FEED : Indexer.BeltState.REVERSING;
+			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
+			commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
+		}
 	}
 
 	@Override

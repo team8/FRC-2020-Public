@@ -1,7 +1,11 @@
 {
-	"gains": {
+	"oneTimesZoomGains": {
 		"p": 0.0058,
 		"d": 0.0011
+	},
+	"twoTimesZoomGains": {
+		"p": 0.0029,
+		"d": 0.00055
 	},
 	"acceptableYawError": 0.1,
 	"alignSwitchYawAngleMin": 40.0

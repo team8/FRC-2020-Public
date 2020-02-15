@@ -142,7 +142,8 @@ public class Shooter extends SubsystemBase {
 				of the block, since the hood piston is retracted in case those two cases,
 				meaning its extension state can't be used to determine physical position.
 				*/
-				mHoodOutput = mBlockingOutput = false;
+				mBlockingOutput = false;
+				mHoodOutput = isBlockingExtended;
 				break;
 			}
 			case MIDDLE:

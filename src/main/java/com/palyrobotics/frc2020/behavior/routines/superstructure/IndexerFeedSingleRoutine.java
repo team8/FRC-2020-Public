@@ -29,6 +29,7 @@ public class IndexerFeedSingleRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
+		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 		commands.indexerWantedBeltState = mReverseTimer.get() > mConfig.reverseTime ? Indexer.BeltState.FEED_SINGLE : Indexer.BeltState.REVERSING;
 //		if (state.shooterIsReadyToShoot) {
 //			commands.indexerWantedBeltState = Indexer.BeltState.FEED_SINGLE;

@@ -6,6 +6,6 @@ import com.palyrobotics.frc2020.util.control.Gains;
 @SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class VisionConfig extends ConfigBase {
 
-	public Gains gains;
+	public Gains oneTimesZoomGains, twoTimesZoomGains;
 	public double acceptableYawError, alignSwitchYawAngleMin;
 }

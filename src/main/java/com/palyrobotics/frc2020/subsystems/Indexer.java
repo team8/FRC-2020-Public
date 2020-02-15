@@ -74,8 +74,8 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = false;
 				break;
 			case REVERSING:
-				mSparkOutput.setTargetVelocity(-mConfig.sparkIndexingOutput, mConfig.velocityGains);
-				mTalonOutput.setPercentOutput(-mConfig.talonIndexingOutput);
+				mSparkOutput.setTargetVelocity(-mConfig.reversingOutput, mConfig.velocityGains);
+				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;

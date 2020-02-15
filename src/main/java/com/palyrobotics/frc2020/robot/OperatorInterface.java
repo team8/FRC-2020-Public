@@ -184,6 +184,7 @@ public class OperatorInterface {
 		}
 		if (mOperatorXboxController.getDPadLeftReleased()) {
 			commands.intakeWantedState = Intake.State.LOWER;
+			commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		}
 		/* Shooting */
 		// Handle flywheel velocity
