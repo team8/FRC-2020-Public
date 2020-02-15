@@ -10,7 +10,6 @@ import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControl
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedSingleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerIdleRoutine;
-import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerTimeRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.Joysticks;
@@ -175,7 +174,6 @@ public class OperatorInterface {
 			} else if (commands.indexerWantedHopperState == Indexer.HopperState.OPEN) {
 				// Close hopper, lower intake, and advance balls a bit
 				commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
-				commands.addWantedRoutine(new IndexerTimeRoutine(1.0));
 			}
 			commands.intakeWantedState = Intake.State.LOWER;
 		}
@@ -187,7 +185,6 @@ public class OperatorInterface {
 		}
 		if (mOperatorXboxController.getDPadLeftReleased()) {
 			commands.intakeWantedState = Intake.State.LOWER;
-			commands.addWantedRoutine(new IndexerTimeRoutine(0.5));
 		}
 		/* Shooting */
 		// Handle flywheel velocity
