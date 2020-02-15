@@ -93,19 +93,24 @@ public class Lighting extends SubsystemBase {
 					break;
 				case TARGET_FOUND:
 					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex,
-							mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1, 3));
+							mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2));
 					break;
 				case SPINNER_DONE:
+					addToControllers(new OneColorController(mConfig.shooterSegmentFirstIndex, mConfig.shooterSegmentLastIndex, Color.HSV.kBlue, 2));
 				case BALL_ENTERED:
+					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
+							mConfig.totalSegmentLastIndex, new Color.HSV(30, 150, 150), 1, 3));
 				case HOPPER_OPEN:
+					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
+							mConfig.totalSegmentLastIndex, new Color.HSV(255, 100, 100), 1, 3));
 				case CLIMB_EXTENDED:
+					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
+							mConfig.totalSegmentLastIndex, Color.HSV.kRed, 1, 3));
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
+					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 5));
 				case ROBOT_ALIGNING:
-					addToControllers(new PulseController(mConfig.backSupportSegmentFirstIndex,
-							mConfig.backSupportSegmentLastIndex, List.of(Color.HSV.kLime, Color.HSV.kBlue, Color.HSV.kLime, Color.HSV.kBlue), 1));
-					addToControllers(new OneColorController(mConfig.shooterSegmentFirstIndex, mConfig.shooterSegmentLastIndex, Color.HSV.kWhite, 5));
-					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kBlue, Color.HSV.kNothing, 3, 1.0 / 5.0, 5));
+					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1));
 					break;
 			}
 		}
