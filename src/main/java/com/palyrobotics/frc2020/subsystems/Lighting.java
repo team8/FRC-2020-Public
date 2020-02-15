@@ -93,6 +93,7 @@ public class Lighting extends SubsystemBase {
 					break;
 				case SPINNER_DONE:
 					addToControllers(new OneColorController(mConfig.shooterSegmentFirstIndex, mConfig.shooterSegmentLastIndex, Color.HSV.kBlue, 2));
+					break;
 				case BALL_ENTERED:
 					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, new Color.HSV(30, 150, 150), 1, 3));
