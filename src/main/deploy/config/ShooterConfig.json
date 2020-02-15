@@ -3,7 +3,7 @@
         "f": 0.000176,
         "p": 0.000185
     },
-    "maxVelocity": 4500.0,
+    "maxVelocity": 5000.0,
     "velocityTolerance": 100.0,
     "rumbleDurationSeconds": 0.5,
     "hoodSwitchDistanceThreshold": 10.0,
