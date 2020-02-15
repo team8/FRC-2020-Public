@@ -20,7 +20,11 @@
 	"nariIndexerLeftFrontInfraredDIO": 5,
 	"nariIndexerRightFrontInfraredDIO": 6,
 	"nariIndexerLeftMiddleInfraredDIO": 9,
+<<<<<<< HEAD
 >>>>>>> ball counter rebase with practice-bot branch
+=======
+	"nariIndexerMiddleFrontInfraredDIO": 7,
+>>>>>>> added front middle sensor
 	"nariIntakeId": 8,
 	"nariIntakeSolenoidId": 0,
 	"nariLightingPwmPort": 9,

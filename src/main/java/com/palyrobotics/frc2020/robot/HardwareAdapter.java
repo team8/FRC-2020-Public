@@ -88,9 +88,8 @@ public class HardwareAdapter {
 
 		final DigitalInput leftFrontInfrared = new DigitalInput(sPortConstants.nariIndexerLeftFrontInfraredDIO);
 		final DigitalInput rightFrontInfrared = new DigitalInput(sPortConstants.nariIndexerRightFrontInfraredDIO);
-		// final DigitalInput leftBackInfrared = new
-		// DigitalInput(sPortConstants.nariIndexerLeftBackInfraredDIO);
 		final DigitalInput leftMiddleInfrared = new DigitalInput(sPortConstants.nariIndexerLeftMiddleInfraredDIO);
+		final DigitalInput middleFrontInfrared = new DigitalInput(sPortConstants.nariIndexerMiddleFrontInfraredDIO);
 
 		private IndexerHardware() {
 		}

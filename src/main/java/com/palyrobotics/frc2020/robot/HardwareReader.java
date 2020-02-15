@@ -108,6 +108,7 @@ public class HardwareReader {
 		state.hasFrontLeftBall = !hardware.leftFrontInfrared.get();
 		state.hasFrontRightBall = !hardware.rightFrontInfrared.get();
 		state.hasMiddleBall = !hardware.leftMiddleInfrared.get();
+		state.hasFrontMiddleBall = !hardware.middleFrontInfrared.get();
 
 		// System.out.println(robotState.hasMiddleBall);
 		if (state.backInfraredReadings.getLinkedList().size() == 0) {
@@ -126,6 +127,10 @@ public class HardwareReader {
 			state.possibleBallCount++;
 		}
 		if (state.hasFrontLeftBall) {
+			state.possibleBallCount++;
+		}
+
+		if (state.hasFrontMiddleBall) {
 			state.possibleBallCount++;
 		}
 		if (state.hasMiddleBall) {

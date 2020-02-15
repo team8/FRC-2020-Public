@@ -40,7 +40,7 @@ public class RobotState {
 	/* Indexer */
 	public boolean indexerIsHopperExtended;
 	public boolean indexerHasBackBall, indexerHasFrontBall, indexerHasTopBall;
-	public Boolean hasFrontLeftBall, hasFrontRightBall, hasMiddleBall;
+	public Boolean hasFrontLeftBall, hasFrontRightBall, hasMiddleBall, hasFrontMiddleBall;
 	public int possibleBallCount = 0;
 	public int guaranteedBallCount = 0;
 	public int totalBallCount = 0;
