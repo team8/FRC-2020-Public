@@ -54,7 +54,11 @@ public class Shooter extends SubsystemBase {
 		HoodState hoodState = updateHood(commands, state, targetDistanceInches);
 		/* Flywheel Velocity */
 		double targetFlywheelVelocity = getTargetFlywheelVelocity(commands, hoodState, targetDistanceInches);
-		mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);
+		if (targetFlywheelVelocity > kEpsilon) {
+			mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);
+		} else {
+			mFlywheelOutput.setIdle();
+		}
 		/* Ready to shoot */
 		boolean inShootingVelocityRange = targetFlywheelVelocity > kEpsilon &&
 				withinRange(targetFlywheelVelocity, state.shooterFlywheelVelocity, mConfig.velocityTolerance);

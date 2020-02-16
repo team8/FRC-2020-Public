@@ -55,7 +55,7 @@ public class Indexer extends SubsystemBase {
 				break;
 			case INDEX:
 				mSparkOutput.setTargetVelocity(mConfig.sparkIndexingOutput, mConfig.velocityGains);
-				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mTalonOutput.setTargetVelocity(mConfig.talonIndexingOutput, mConfig.velocityGains);
 				mBlockOutput = true;
 				break;
 			case WAITING_TO_FEED:
@@ -65,11 +65,11 @@ public class Indexer extends SubsystemBase {
 				break;
 			case FEED_SINGLE:
 				mSparkOutput.setTargetVelocity(mConfig.feedingOutput, mConfig.velocityGains);
-				mTalonOutput.setPercentOutput(mConfig.feedingOutput);
+				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 				break;
 			case FEED_ALL:
-				mSparkOutput.setTargetVelocity(mConfig.sparkIndexingOutput, mConfig.velocityGains);
+				mSparkOutput.setTargetVelocity(mConfig.feedingOutput, mConfig.velocityGains);
 				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 				break;

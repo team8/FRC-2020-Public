@@ -11,11 +11,8 @@ import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class IndexerFeedSingleRoutine extends TimeoutRoutineBase {
 
-	private Timer mReverseTimer = new Timer();
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
 	private boolean mLastIndexerHasTopBall;
 
@@ -30,7 +27,7 @@ public class IndexerFeedSingleRoutine extends TimeoutRoutineBase {
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
-		commands.indexerWantedBeltState = mReverseTimer.get() > mConfig.reverseTime ? Indexer.BeltState.FEED_SINGLE : Indexer.BeltState.REVERSING;
+		commands.indexerWantedBeltState = mTimer.get() > mConfig.reverseTime ? Indexer.BeltState.FEED_SINGLE : Indexer.BeltState.REVERSING;
 //		if (state.shooterIsReadyToShoot) {
 //			commands.indexerWantedBeltState = Indexer.BeltState.FEED_SINGLE;
 //		} else {

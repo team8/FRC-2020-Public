@@ -97,8 +97,8 @@ public class HardwareWriter {
 		hardware.slaveSpark.follow(hardware.masterSpark);
 		hardware.masterSpark.setOpenLoopRampRate(0.1);
 		hardware.masterSpark.setInverted(true);
-		hardware.masterSpark.getPIDController().setOutputRange(-0.8, 0.8);
-//		hardware.masterSpark.setSmartCurrentLimit(70, 10, 0);
+		hardware.masterSpark.getPIDController().setOutputRange(-0.6, 0.6);
+		hardware.masterSpark.setSmartCurrentLimit(80);
 		// Talon
 		var talon = hardware.talon;
 		talon.configFactoryDefault(kTimeoutMs);
@@ -161,7 +161,8 @@ public class HardwareWriter {
 	}
 
 	void setDriveNeutralMode(NeutralMode neutralMode) {
-		HardwareAdapter.DrivetrainHardware.getInstance().falcons.forEach(falcon -> falcon.setNeutralMode(neutralMode));
+//		HardwareAdapter.DrivetrainHardware.getInstance().falcons.forEach(falcon -> falcon.setNeutralMode(neutralMode));
+		HardwareAdapter.DrivetrainHardware.getInstance().falcons.forEach(falcon -> falcon.setNeutralMode(NeutralMode.Coast));
 	}
 
 	/**
@@ -209,6 +210,10 @@ public class HardwareWriter {
 		hardware.talon.setOutput(mIndexer.getTalonOutput());
 		LiveGraph.add("indexerAppliedOutput", hardware.masterSpark.getAppliedOutput());
 		LiveGraph.add("indexerVelocity", hardware.masterEncoder.getVelocity());
+		LiveGraph.add("indexerTargetVelocity", mIndexer.getSparkOutput().getReference());
+		LiveGraph.add("indexerCurrent10", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(10));
+		LiveGraph.add("indexerCurrent11", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(11));
+		LiveGraph.add("intakeCurrent8", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(8));
 	}
 
 	private void updateIntake() {

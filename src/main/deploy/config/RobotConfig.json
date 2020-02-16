@@ -8,8 +8,7 @@
 		"drive",
 		"shooter",
 		"indexer",
-		"intake",
-		"lighting"
+		"intake"
 	],
 	"coastDriveWhenDisabled": false,
 	"enableVisionWhenDisabled": false,

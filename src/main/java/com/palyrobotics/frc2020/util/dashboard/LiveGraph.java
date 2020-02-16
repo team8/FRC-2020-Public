@@ -5,9 +5,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class LiveGraph {
 
-	private static NetworkTable sLiveTable = NetworkTableInstance.getDefault().getTable("control-center-live");
+	private static final NetworkTableInstance sNetworkTableInstance = NetworkTableInstance.create();
+	private static final NetworkTable sLiveTable = sNetworkTableInstance.getTable("control-center-live");
 
 	private LiveGraph() {
+		sNetworkTableInstance.setUpdateRate(0.01);
 	}
 
 	public static void add(String key, double value) {

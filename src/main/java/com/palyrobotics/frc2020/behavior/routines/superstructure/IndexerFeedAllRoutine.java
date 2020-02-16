@@ -11,34 +11,33 @@ import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 
-	private Timer mReverseTimer = new Timer();
-	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
+	private final IndexerConfig mConfig = Configs.get(IndexerConfig.class);
+	private final boolean mWaitForFlywheel;
 
 	public IndexerFeedAllRoutine() {
-		super(5.0);
+		this(5.0);
 	}
 
 	public IndexerFeedAllRoutine(double timeoutSeconds) {
-		super(timeoutSeconds);
+		this(timeoutSeconds, false);
 	}
 
-	@Override
-	public void start(Commands commands, @ReadOnly RobotState state) {
-		mReverseTimer.start();
+	public IndexerFeedAllRoutine(double timeoutSeconds, boolean waitForFlywheel) {
+		super(timeoutSeconds);
+		mWaitForFlywheel = waitForFlywheel;
 	}
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		if (state.shooterIsReadyToShoot) {
-			commands.indexerWantedBeltState = mReverseTimer.get() > mConfig.reverseTime ? Indexer.BeltState.FEED_ALL : Indexer.BeltState.REVERSING;
+		boolean shouldReverse = mTimer.get() < mConfig.reverseTime;
+		if (!mWaitForFlywheel || state.shooterIsReadyToShoot) {
+			commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.FEED_ALL : Indexer.BeltState.REVERSING;
 		} else {
-			commands.indexerWantedBeltState = mReverseTimer.get() > mConfig.reverseTime ? Indexer.BeltState.WAITING_TO_FEED : Indexer.BeltState.REVERSING;
-			commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
+			commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.WAITING_TO_FEED : Indexer.BeltState.REVERSING;
 		}
+		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 	}
 
 	@Override
