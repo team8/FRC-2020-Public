@@ -126,7 +126,9 @@ public class OperatorInterface {
 					mTurnStick.getTrigger(), mDriveStick.getTrigger());
 		}
 		if (mTurnStick.getRawButtonReleased(kOnesTimesZoomAlignRawButton) || mTurnStick.getRawButtonReleased(kTwoTimesZoomAlignButton)) {
-			commands.visionWanted = false;
+			if (commands.getShooterWantedState() != Shooter.ShooterState.VISION_VELOCITY) {
+				commands.visionWanted = false;
+			}
 		}
 		/* Path Following */
 //		if (mOperatorXboxController.getDPadDownPressed()) {

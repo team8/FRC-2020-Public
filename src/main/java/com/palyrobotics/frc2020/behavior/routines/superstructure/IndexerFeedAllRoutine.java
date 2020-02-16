@@ -37,7 +37,6 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 			commands.indexerWantedBeltState = mReverseTimer.get() > mConfig.reverseTime ? Indexer.BeltState.FEED_ALL : Indexer.BeltState.REVERSING;
 		} else {
 			commands.indexerWantedBeltState = mReverseTimer.get() > mConfig.reverseTime ? Indexer.BeltState.WAITING_TO_FEED : Indexer.BeltState.REVERSING;
-			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
 			commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 		}
 	}

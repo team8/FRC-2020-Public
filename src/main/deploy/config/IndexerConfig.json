@@ -3,7 +3,7 @@
     "talonIndexingOutput": 0.35,
     "reverseTime": 0.15,
     "feedingOutput": 1000.0,
-    "reversingOutput": 800.0,
+    "reversingOutput": 1000.0,
     "velocityGains": {
         "p": 0.0003,
         "f": 0.00032

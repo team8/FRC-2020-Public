@@ -97,7 +97,7 @@ public class HardwareWriter {
 		hardware.slaveSpark.follow(hardware.masterSpark);
 		hardware.masterSpark.setOpenLoopRampRate(0.1);
 		hardware.masterSpark.setInverted(true);
-		hardware.masterSpark.getPIDController().setOutputRange(-0.6, 0.6);
+		hardware.masterSpark.getPIDController().setOutputRange(-0.8, 0.8);
 //		hardware.masterSpark.setSmartCurrentLimit(70, 10, 0);
 		// Talon
 		var talon = hardware.talon;
