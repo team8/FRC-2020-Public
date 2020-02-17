@@ -4,7 +4,6 @@ import java.util.Set;
 
 import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
-import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.*;
 import com.palyrobotics.frc2020.subsystems.*;
@@ -126,7 +125,7 @@ public class HardwareReader {
 		for (var value : FaultID.values()) {
 			boolean isFaulted = spark.getFault(value);
 			if (isFaulted) {
-				Log.error(kLoggerTag, String.format("Spark %d fault: %s", spark.getDeviceId(), value));
+//				Log.error(kLoggerTag, String.format("Spark %d fault: %s", spark.getDeviceId(), value));
 				wasAnyFault = true;
 			}
 		}
@@ -139,7 +138,7 @@ public class HardwareReader {
 		var faults = new Faults();
 		talon.getFaults(faults);
 		if (faults.hasAnyFault()) {
-			Log.error(kLoggerTag, String.format("Talon %d faults: %s", talon.getDeviceID(), faults));
+//			Log.error(kLoggerTag, String.format("Talon %d faults: %s", talon.getDeviceID(), faults));
 		}
 	}
 

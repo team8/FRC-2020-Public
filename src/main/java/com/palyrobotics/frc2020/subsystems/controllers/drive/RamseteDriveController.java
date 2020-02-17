@@ -5,7 +5,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
-import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -41,13 +41,13 @@ public class RamseteDriveController extends Drive.DriveController {
 		DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kKinematics.toWheelSpeeds(speeds);
 		mOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond, mConfig.profiledVelocityGains);
 		mOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond, mConfig.profiledVelocityGains);
-		CSVWriter.addData("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
-		CSVWriter.addData("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
-		CSVWriter.addData("currentPoseX", state.drivePose.getTranslation().getX());
-		CSVWriter.addData("currentPoseY", state.drivePose.getTranslation().getY());
-		CSVWriter.addData("leftVelocity", state.driveLeftVelocity);
-		CSVWriter.addData("rightVelocity", state.driveRightVelocity);
-		CSVWriter.addData("targetPoseX", targetPose.poseMeters.getTranslation().getX());
-		CSVWriter.addData("targetPoseY", targetPose.poseMeters.getTranslation().getY());
+		LiveGraph.add("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
+		LiveGraph.add("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
+		LiveGraph.add("currentPoseX", state.drivePose.getTranslation().getX());
+		LiveGraph.add("currentPoseY", state.drivePose.getTranslation().getY());
+		LiveGraph.add("leftVelocity", state.driveLeftVelocity);
+		LiveGraph.add("rightVelocity", state.driveRightVelocity);
+		LiveGraph.add("targetPoseX", targetPose.poseMeters.getTranslation().getX());
+		LiveGraph.add("targetPoseY", targetPose.poseMeters.getTranslation().getY());
 	}
 }
