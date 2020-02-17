@@ -40,7 +40,7 @@ public class DriveSetOdometryRoutine extends TimeoutRoutineBase {
 
 	@Override
 	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
-		return state.drivePose.equals(mTargetPose);
+		return state.drivePoseMeters.equals(mTargetPose);
 	}
 
 	@Override

@@ -1,7 +1,11 @@
 package com.palyrobotics.frc2020.vision;
 
+import static com.palyrobotics.frc2020.robot.OperatorInterface.kTwoTimesZoomAlignButton;
+
 import com.esotericsoftware.minlog.Log;
+import com.palyrobotics.frc2020.config.VisionConfig;
 import com.palyrobotics.frc2020.util.Util;
+import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.vision.LimelightControlMode.*;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -15,6 +19,7 @@ public class Limelight {
 
 	private static String kLoggerTag = Util.classToJsonName(Limelight.class);
 	public static final int kOneTimesZoomPipelineId = 0, kTwoTimesZoomPipelineId = 1;
+	private static VisionConfig kVisionConfig = Configs.get(VisionConfig.class);
 
 	private static Limelight sInstance = new Limelight();
 	private NetworkTable mTable;
@@ -32,6 +37,10 @@ public class Limelight {
 	 */
 	public boolean isTargetFound() {
 		return mTable.getEntry("tv").getDouble(0.0) != 0.0;
+	}
+
+	public boolean isAligned() {
+		return isTargetFound() && getYawToTarget() < kVisionConfig.acceptableYawError;
 	}
 
 	/**
@@ -221,9 +230,9 @@ public class Limelight {
 		double h1 = 32.75;
 		double h2 = 90.5;
 		// Avoid divide by zero
-		if (getPipeline() == 0) {
+		if (getPipeline() == kOneTimesZoomPipelineId) {
 			return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(oneTimesZoomAngle + a2))));
-		} else if (getPipeline() == 1) {
+		} else if (getPipeline() == kTwoTimesZoomAlignButton) {
 			return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(twoTimesZoomAngle + a2))));
 		} else {
 			Log.warn(kLoggerTag, "Wrong pipeline used for distance estimation");

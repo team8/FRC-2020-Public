@@ -13,9 +13,11 @@ public class Falcon extends TalonFX {
 	}
 
 	private final FalconController mController = new FalconController(this);
+	private final String mName;
 
-	public Falcon(int deviceNumber) {
+	public Falcon(int deviceNumber, String name) {
 		super(deviceNumber);
+		mName = name;
 	}
 
 	public boolean setOutput(ControllerOutput output) {
@@ -29,6 +31,10 @@ public class Falcon extends TalonFX {
 	public void configSensorConversions(double positionConversion, double velocityConversion) {
 		mController.mPositionConversion = positionConversion;
 		mController.mVelocityConversion = velocityConversion;
+	}
+
+	public String getName() {
+		return String.format("(Falcon #%d), %s", getDeviceID(), mName);
 	}
 
 	public double getConvertedPosition() {

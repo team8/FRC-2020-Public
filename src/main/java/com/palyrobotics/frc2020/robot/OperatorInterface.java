@@ -31,7 +31,7 @@ public class OperatorInterface {
 
 	public static final double kDeadBand = 0.05;
 	public static final double kClimberEnableControlTimeSeconds = 30;
-	public static final int kOnesTimesZoomAlignRawButton = 3, kTwoTimesZoomAlignButton = 4;
+	public static final int kOnesTimesZoomAlignButton = 3, kTwoTimesZoomAlignButton = 4;
 	private final ShooterConfig mShooterConfig = Configs.get(ShooterConfig.class);
 	private final ClimberConfig mClimberConfig = Configs.get(ClimberConfig.class);
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
@@ -115,22 +115,20 @@ public class OperatorInterface {
 	}
 
 	private void updateDriveCommands(Commands commands) {
-		// Both buttons align, button 3: 1x zoom, button 4: 2x zoom
-		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignRawButton),
+		commands.setDriveTeleop(
+				handleDeadBand(-mDriveStick.getY(), kDeadBand), handleDeadBand(mTurnStick.getX(), kDeadBand),
+				mTurnStick.getTrigger(), mDriveStick.getTrigger());
+		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignButton),
 				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton);
-		if (wantsTwoTimesAlign) {
-			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
-		} else if (wantsOneTimesAlign) {
+		// Vision align overwrites wanted drive state, using teleop commands when no target is in sight
+		if (wantsOneTimesAlign) {
 			commands.setDriveVisionAlign(kOneTimesZoomPipelineId);
-		} else {
-			commands.setDriveTeleop(
-					-mDriveStick.getY(), mTurnStick.getX(),
-					mTurnStick.getTrigger(), mDriveStick.getTrigger());
+		} else if (wantsTwoTimesAlign) {
+			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
 		}
-		if (mTurnStick.getRawButtonReleased(kOnesTimesZoomAlignRawButton) || mTurnStick.getRawButtonReleased(kTwoTimesZoomAlignButton)) {
-			if (commands.getShooterWantedState() != Shooter.ShooterState.VISION_VELOCITY) {
-				commands.visionWanted = false;
-			}
+		boolean justReleasedAlign = mTurnStick.getRawButtonReleased(kOnesTimesZoomAlignButton) || mTurnStick.getRawButtonReleased(kTwoTimesZoomAlignButton);
+		if (justReleasedAlign && commands.getShooterWantedState() != Shooter.ShooterState.VISION_VELOCITY) {
+			commands.visionWanted = false;
 		}
 		/* Path Following */
 		if (mOperatorXboxController.getBButtonPressed()) {

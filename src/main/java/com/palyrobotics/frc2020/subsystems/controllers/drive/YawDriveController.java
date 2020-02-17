@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.subsystems.controllers.drive;
 
+import static com.palyrobotics.frc2020.util.Util.*;
+
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
@@ -14,8 +16,7 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 public class YawDriveController extends Drive.DriveController {
 
 	private static final String kLoggerTag = Util.classToJsonName(YawDriveController.class);
-	private ProfiledPIDController mController = new ProfiledPIDController(0.0, 0.0, 0.0,
-			new TrapezoidProfile.Constraints());
+	private ProfiledPIDController mController = new ProfiledPIDController(0.0, 0.0, 0.0, new TrapezoidProfile.Constraints());
 	private Double mTargetYaw;
 
 	public YawDriveController() {
@@ -31,22 +32,20 @@ public class YawDriveController extends Drive.DriveController {
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		double wantedYawDegrees = commands.getDriveWantedYawDegrees(),
-				currentYawDegrees = Util.boundAngleNeg180to180Degrees(state.driveYawDegrees);
-		if (mTargetYaw == null || Util.getDifferenceInAngleDegrees(mTargetYaw, wantedYawDegrees) > Util.kEpsilon) {
+				currentYawDegrees = boundAngleNeg180to180Degrees(state.driveYawDegrees);
+		if (mTargetYaw == null || getDifferenceInAngleDegrees(mTargetYaw, wantedYawDegrees) > kEpsilon) {
 			Log.debug(kLoggerTag, "Reset profiled PID controller");
-			mController.reset(currentYawDegrees);
+			mController.reset(currentYawDegrees, state.driveYawVelocity);
 			mTargetYaw = wantedYawDegrees;
 		}
-		mController.setPID(mConfig.turnGains.p, mConfig.turnGains.i, mConfig.turnGains.d);
-		mController.setConstraints(
-				new TrapezoidProfile.Constraints(mConfig.turnGains.velocity, mConfig.turnGains.acceleration));
-		double percentOutput = mController.calculate(currentYawDegrees, wantedYawDegrees);
+		var turnGains = mConfig.turnGains;
+		mController.setPID(turnGains.p, turnGains.i, turnGains.d);
+		mController.setIntegratorRange(-turnGains.iMax, turnGains.iMax);
+		mController.setConstraints(new TrapezoidProfile.Constraints(turnGains.velocity, turnGains.acceleration));
 		double targetVelocity = mController.getSetpoint().velocity;
-		percentOutput += targetVelocity * mConfig.turnGains.f;
-		double feedForward = Math.signum(targetVelocity) * mConfig.turnGainsS;
-		double rightPercentOutput = percentOutput + feedForward, leftPercentOutput = -percentOutput - feedForward;
-		mOutputs.leftOutput.setPercentOutput(leftPercentOutput);
-		mOutputs.rightOutput.setPercentOutput(rightPercentOutput);
+		double percentOutput = mController.calculate(currentYawDegrees, wantedYawDegrees) + Math.signum(targetVelocity) * mConfig.turnGainsS + targetVelocity * turnGains.f;
+		mOutputs.leftOutput.setPercentOutput(-percentOutput);
+		mOutputs.rightOutput.setPercentOutput(percentOutput);
 		LiveGraph.add("currentYaw", state.driveYawDegrees);
 		LiveGraph.add("targetYaw", mController.getSetpoint().position);
 	}

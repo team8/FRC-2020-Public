@@ -4,15 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.util.config.Configs;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
 public abstract class SimpleControllerBase<TController> {
 
-	private static Map<ControllerOutput.Mode, Integer> sModeToSlot = Map.of(ControllerOutput.Mode.PROFILED_POSITION, 1,
-			ControllerOutput.Mode.PROFILED_VELOCITY, 2);
+	private static final int kProfiledPositionSlot = 1, kProfiledVelocitySlot = 2;
+	private static Map<ControllerOutput.Mode, Integer> sModeToSlot = Map.of(
+			ControllerOutput.Mode.PROFILED_POSITION, kProfiledPositionSlot,
+			ControllerOutput.Mode.PROFILED_VELOCITY, kProfiledVelocitySlot);
 
 	protected RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	protected TController mController;
@@ -53,9 +54,7 @@ public abstract class SimpleControllerBase<TController> {
 				// System.out.printf("%s, %d, %f, %f, %s%n", type, slot, reference,
 				// arbitraryPercentOutput, Configs.toJson(gains));
 			} else {
-				DriverStation.reportError(
-						String.format("Error updating output on spark max with ID: %d", getId()),
-						new RuntimeException().getStackTrace());
+				Log.error("sparkController", String.format("Error updating output on spark max with ID: %d", getId()));
 			}
 		}
 		return false;
@@ -65,8 +64,7 @@ public abstract class SimpleControllerBase<TController> {
 		if (gains != null) {
 			boolean isFirstInitialization = !mLastGains.containsKey(slot);
 			if (isFirstInitialization) { // Empty gains for default value instead of null
-				mLastGains.put(slot, (slot == 1 || slot == 2) ? new ProfiledGains() : new Gains()); // TODO a little
-				// ugly
+				mLastGains.put(slot, (slot == kProfiledPositionSlot || slot == kProfiledVelocitySlot) ? new ProfiledGains() : new Gains());
 			}
 			Gains lastGains = mLastGains.get(slot);
 			updateGains(isFirstInitialization, slot, gains, lastGains);

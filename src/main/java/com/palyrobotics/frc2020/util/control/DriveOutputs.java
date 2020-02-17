@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.util.control;
 
 import java.util.Objects;
 
+@SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class DriveOutputs {
 
 	public ControllerOutput leftOutput, rightOutput;

@@ -106,11 +106,27 @@ public class Spark extends CANSparkMax {
 			entry(ControllerOutput.Mode.VELOCITY, ControlType.kVelocity),
 			entry(ControllerOutput.Mode.PROFILED_POSITION, ControlType.kSmartMotion),
 			entry(ControllerOutput.Mode.PROFILED_VELOCITY, ControlType.kSmartVelocity));
-
 	private final SparkController mController = new SparkController(this);
+	private final String mName;
 
-	public Spark(int deviceId) {
+	public Spark(int deviceId, String name) {
 		super(deviceId, MotorType.kBrushless);
+		mName = name;
+		clearFaults();
+	}
+
+	public String getName() {
+		return String.format("(Spark #%d), %s", getDeviceId(), mName);
+	}
+
+	/**
+	 * As of 2/17/20 Spark controllers {@link CANSparkMax#getPIDController()} returns a new object. So,
+	 * it causes issues in loops and should be cached instead.
+	 *
+	 * @return Cached {@link CANPIDController} instance.
+	 */
+	public CANPIDController getController() {
+		return mController.mPidController;
 	}
 
 	public boolean setOutput(ControllerOutput output) {

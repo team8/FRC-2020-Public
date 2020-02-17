@@ -29,8 +29,8 @@ public class HardwareAdapter {
 	static class ClimberHardware {
 
 		private static ClimberHardware sInstance;
-		final Spark verticalSpark = new Spark(sPortConstants.nariClimberVerticalId),
-				horizontalSpark = new Spark(sPortConstants.nariClimberHorizontalId);
+		final Spark verticalSpark = new Spark(sPortConstants.nariClimberVerticalId, "Climber Arm"),
+				horizontalSpark = new Spark(sPortConstants.nariClimberHorizontalId, "Climber Adjust");
 		final CANEncoder verticalSparkEncoder = verticalSpark.getEncoder(),
 				horizontalSparkEncoder = horizontalSpark.getEncoder();
 		final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariClimberSolenoidId, 0.2, true);
@@ -51,10 +51,10 @@ public class HardwareAdapter {
 
 		private static DrivetrainHardware sInstance;
 
-		final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId),
-				leftSlaveFalcon = new Falcon(sPortConstants.nariDriveLeftSlaveId);
-		final Falcon rightMasterFalcon = new Falcon(sPortConstants.nariDriveRightMasterId),
-				rightSlaveFalcon = new Falcon(sPortConstants.nariDriveRightSlaveId);
+		final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId, "Drive Left Master"),
+				leftSlaveFalcon = new Falcon(sPortConstants.nariDriveLeftSlaveId, "Drive Left Slave");
+		final Falcon rightMasterFalcon = new Falcon(sPortConstants.nariDriveRightMasterId, "Drive Right Master"),
+				rightSlaveFalcon = new Falcon(sPortConstants.nariDriveRightSlaveId, "Drive Right Slave");
 
 		final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon,
 				rightMasterFalcon, rightSlaveFalcon);
@@ -76,10 +76,10 @@ public class HardwareAdapter {
 	static class IndexerHardware {
 
 		private static IndexerHardware sInstance;
-		final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId),
-				slaveSpark = new Spark(sPortConstants.nariIndexerSlaveId);
+		final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId, "Indexer Master"),
+				slaveSpark = new Spark(sPortConstants.nariIndexerSlaveId, "Indexer Slave");
 		final CANEncoder masterEncoder = masterSpark.getEncoder();
-		final Talon talon = new Talon(sPortConstants.nariIndexerTalonId);
+		final Talon talon = new Talon(sPortConstants.nariIndexerTalonId, "Indexer Beavertail");
 		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);
 		final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDio),
@@ -101,7 +101,7 @@ public class HardwareAdapter {
 	static class IntakeHardware {
 
 		private static IntakeHardware sInstance;
-		final Talon talon = new Talon(sPortConstants.nariIntakeId);
+		final Talon talon = new Talon(sPortConstants.nariIntakeId, "Intake");
 		final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariIntakeSolenoidId, 1.0, false);
 
 		private IntakeHardware() {
@@ -136,8 +136,8 @@ public class HardwareAdapter {
 	static class ShooterHardware {
 
 		private static ShooterHardware sInstance;
-		final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId),
-				slaveSpark = new Spark(sPortConstants.nariShooterSlaveId);
+		final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId, "Shooter Master"),
+				slaveSpark = new Spark(sPortConstants.nariShooterSlaveId, "Shooter Slave");
 		final CANEncoder masterEncoder = masterSpark.getEncoder();
 		final TimedSolenoid hoodSolenoid = new TimedSolenoid(sPortConstants.nariShooterHoodSolenoid, 0.25, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariShooterBlockingSolenoidId, 0.2, false);
@@ -157,7 +157,7 @@ public class HardwareAdapter {
 	static class SpinnerHardware {
 
 		private static SpinnerHardware sInstance = new SpinnerHardware();
-		final Talon talon = new Talon(sPortConstants.nariSpinnerId);
+		final Talon talon = new Talon(sPortConstants.nariSpinnerId, "Spinner");
 		final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
 		private SpinnerHardware() {

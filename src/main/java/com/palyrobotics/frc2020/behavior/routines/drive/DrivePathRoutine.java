@@ -43,6 +43,11 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		mWaypoints = waypoints;
 	}
 
+	public DrivePathRoutine endingVelocity(double startingVelocityMetersPerSecond) {
+		mTrajectoryConfig.setEndVelocity(startingVelocityMetersPerSecond);
+		return this;
+	}
+
 	/**
 	 * Robot will try to drive in reverse while traversing the path. Does not reverse the path itself.
 	 */
@@ -69,7 +74,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		return this;
 	}
 
-	public void generateTrajectory(Pose2d startingPose) {
+	public void generateTrajectory(Pose2d startingPose, double startingVelocityMetersPerSecond) {
 		if (mTrajectory == null) {
 			var waypointsWithStart = new LinkedList<>(mWaypoints);
 			if (mShouldReversePath) {
@@ -91,7 +96,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	public void start(Commands commands, @ReadOnly RobotState state) {
 		// Required to start the timeout timer
 		super.start(commands, state);
-		generateTrajectory(state.drivePose);
+		generateTrajectory(state.drivePoseMeters, state.driveVelocityMetersPerSecond);
 	}
 
 	@Override
