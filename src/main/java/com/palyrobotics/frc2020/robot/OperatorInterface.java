@@ -28,7 +28,7 @@ public class OperatorInterface {
 
 	public static final double kDeadBand = 0.05;
 	public static final double kClimberEnableControlTimeSeconds = 30;
-	public static final int kOnesTimesZoomAlignButton = 3, kTwoTimesZoomAlignButton = 4;
+	public static final int kOnesTimesZoomAlignButton = 3, kTwoTimesZoomAlignButton = 4, kInnerAlignButton = 5;
 	private final ShooterConfig mShooterConfig = Configs.get(ShooterConfig.class);
 	private final ClimberConfig mClimberConfig = Configs.get(ClimberConfig.class);
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
@@ -95,14 +95,17 @@ public class OperatorInterface {
 		commands.setDriveTeleop(
 				handleDeadBand(-mDriveStick.getY(), kDeadBand), handleDeadBand(mTurnStick.getX(), kDeadBand),
 				mTurnStick.getTrigger(), mDriveStick.getTrigger());
-		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignButton),
-				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton);
 		// Vision align overwrites wanted drive state, using teleop commands when no target is in sight
-		if (wantsOneTimesAlign) {
-			commands.setDriveVisionAlign(kOneTimesZoomPipelineId);
-		} else if (wantsTwoTimesAlign) {
+		// Both buttons align, button 3: 1x zoom, button 4: 2x zoom
+		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignButton),
+				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton),
+				wantsInnerAlign = mTurnStick.getRawButton(kInnerAlignButton);
+		if (wantsTwoTimesAlign) {
 			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
+		} else if (wantsOneTimesAlign) {
+			commands.setDriveVisionAlign(kOneTimesZoomPipelineId);
 		}
+
 		boolean justReleasedAlign = mTurnStick.getRawButtonReleased(kOnesTimesZoomAlignButton) || mTurnStick.getRawButtonReleased(kTwoTimesZoomAlignButton);
 		if (justReleasedAlign && commands.getShooterWantedState() != Shooter.ShooterState.VISION_VELOCITY) {
 			commands.visionWanted = false;
