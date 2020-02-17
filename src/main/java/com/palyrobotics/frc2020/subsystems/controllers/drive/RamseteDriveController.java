@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2020.subsystems.controllers.drive;
 
-import com.palyrobotics.frc2020.config.constants.DriveConstants;
+import static com.palyrobotics.frc2020.config.constants.DriveConstants.kKinematics;
+
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -38,10 +39,13 @@ public class RamseteDriveController extends Drive.DriveController {
 		}
 		Trajectory.State targetPose = wantedTrajectory.sample(mTimer.get());
 		ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
-		DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kKinematics.toWheelSpeeds(speeds);
-		mOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond, mConfig.profiledVelocityGains);
-		mOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond, mConfig.profiledVelocityGains);
+		DifferentialDriveWheelSpeeds wheelSpeeds = kKinematics.toWheelSpeeds(speeds);
+		mOutputs.leftOutput.setTargetVelocity(wheelSpeeds.leftMetersPerSecond, mConfig.velocityGains);
+		mOutputs.rightOutput.setTargetVelocity(wheelSpeeds.rightMetersPerSecond, mConfig.velocityGains);
+//		mOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond, mConfig.profiledVelocityGains);
+//		mOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond, mConfig.profiledVelocityGains);
 		LiveGraph.add("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
+		LiveGraph.add("time", mTimer.get());
 		LiveGraph.add("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
 		LiveGraph.add("currentPoseX", state.drivePose.getTranslation().getX());
 		LiveGraph.add("currentPoseY", state.drivePose.getTranslation().getY());

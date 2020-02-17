@@ -55,16 +55,17 @@ public class Talon extends TalonSRX {
 			switch (mode) {
 				case VELOCITY:
 				case PROFILED_VELOCITY:
-					convertedReference = reference * mVelocityConversion;
+					convertedReference = reference / mVelocityConversion;
 					break;
 				case POSITION:
 				case PROFILED_POSITION:
-					convertedReference = reference * mPositionConversion;
+					convertedReference = reference / mPositionConversion;
 					break;
 				default:
 					convertedReference = reference;
 					break;
 			}
+			System.out.println(convertedReference);
 			mController.set(
 					controllerMode, convertedReference,
 					DemandType.ArbitraryFeedForward, arbitraryPercentOutput);

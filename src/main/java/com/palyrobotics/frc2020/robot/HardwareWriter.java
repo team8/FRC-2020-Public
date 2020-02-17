@@ -169,8 +169,7 @@ public class HardwareWriter {
 	}
 
 	void setDriveNeutralMode(NeutralMode neutralMode) {
-//		HardwareAdapter.DrivetrainHardware.getInstance().falcons.forEach(falcon -> falcon.setNeutralMode(neutralMode));
-		HardwareAdapter.DrivetrainHardware.getInstance().falcons.forEach(falcon -> falcon.setNeutralMode(NeutralMode.Coast));
+		HardwareAdapter.DrivetrainHardware.getInstance().falcons.forEach(falcon -> falcon.setNeutralMode(neutralMode));
 	}
 
 	/**

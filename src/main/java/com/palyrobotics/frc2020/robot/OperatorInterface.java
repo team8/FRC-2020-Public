@@ -4,6 +4,9 @@ import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
+import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
@@ -131,11 +134,14 @@ public class OperatorInterface {
 			}
 		}
 		/* Path Following */
-//		if (mOperatorXboxController.getDPadDownPressed()) {
-//			commands.addWantedRoutines(
+		if (mOperatorXboxController.getBButtonPressed()) {
+//			commands.addWantedRoutine(new SequentialRoutine(
 //					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
-//					new DrivePathRoutine(newWaypoint(30.0, 0.0, 0.0)));
-//		}
+//					new DrivePathRoutine(newWaypoint(30.0, 0.0, 0.0))));
+			commands.addWantedRoutine(new SequentialRoutine(
+					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
+					new DriveYawRoutine(180.0)));
+		}
 	}
 
 	private void updateLightingCommands(Commands commands) {

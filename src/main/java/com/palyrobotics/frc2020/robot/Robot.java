@@ -1,10 +1,5 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -12,13 +7,8 @@ import java.util.stream.Collectors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.auto.StartCenterRendezvousThree;
-import com.palyrobotics.frc2020.behavior.RoutineBase;
+import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
-import com.palyrobotics.frc2020.behavior.SequentialRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
@@ -82,41 +72,41 @@ public class Robot extends TimedRobot {
 
 		if (RobotBase.isSimulation()) {
 			Log.info(kLoggerTag, "Writing CSV file...");
-			pathToCsv();
+//			pathToCsv();
 		}
 	}
 
-	private void pathToCsv() {
-		var drivePath = new StartCenterRendezvousThree().getRoutine();
-		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
-			writer.write("x,y" + '\n');
-			var seq = (SequentialRoutine) drivePath;
-			List<RoutineBase> routines = seq.getRoutines();
-			Pose2d lastPoint = new Pose2d();
-			for (RoutineBase routine : routines) {
-				if (routine instanceof DriveSetOdometryRoutine) {
-					lastPoint = ((DriveSetOdometryRoutine) routine).getTargetPose();
-				} else if (routine instanceof DrivePathRoutine) {
-					var drivePathRoutine = (DrivePathRoutine) routine;
-					drivePathRoutine.generateTrajectory(lastPoint);
-					var path = drivePathRoutine.getTrajectory().getStates();
-					for (var point : path) {
-						lastPoint = point.poseMeters;
-						writer.write(String.format("%f,%f%n", point.poseMeters.getTranslation().getX(),
-								point.poseMeters.getTranslation().getY()));
-					}
-				} else if (routine instanceof DriveYawRoutine) {
-					// do nothing
-				}
-			}
-			// for (Trajectory.State state : drivePath.getTrajectory().getStates()) {
-			// var point = state.poseMeters.getTranslation();
-			// writer.write(String.format("%f,%f%n", point.getX(), point.getY()));
-			// }
-		} catch (IOException writeException) {
-			writeException.printStackTrace();
-		}
-	}
+//	private void pathToCsv() {
+//		var drivePath = new StartCenterRendezvousThree().getRoutine();
+//		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
+//			writer.write("x,y" + '\n');
+//			var seq = (SequentialRoutine) drivePath;
+//			List<RoutineBase> routines = seq.getRoutines();
+//			Pose2d lastPoint = new Pose2d();
+//			for (RoutineBase routine : routines) {
+//				if (routine instanceof DriveSetOdometryRoutine) {
+//					lastPoint = ((DriveSetOdometryRoutine) routine).getTargetPose();
+//				} else if (routine instanceof DrivePathRoutine) {
+//					var drivePathRoutine = (DrivePathRoutine) routine;
+//					drivePathRoutine.generateTrajectory(lastPoint);
+//					var path = drivePathRoutine.getTrajectory().getStates();
+//					for (var point : path) {
+//						lastPoint = point.poseMeters;
+//						writer.write(String.format("%f,%f%n", point.poseMeters.getTranslation().getX(),
+//								point.poseMeters.getTranslation().getY()));
+//					}
+//				} else if (routine instanceof DriveYawRoutine) {
+//					// do nothing
+//				}
+//			}
+//			// for (Trajectory.State state : drivePath.getTrajectory().getStates()) {
+//			// var point = state.poseMeters.getTranslation();
+//			// writer.write(String.format("%f,%f%n", point.getX(), point.getY()));
+//			// }
+//		} catch (IOException writeException) {
+//			writeException.printStackTrace();
+//		}
+//	}
 
 	@Override
 	public void disabledInit() {
@@ -132,6 +122,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
+		mCommands.addWantedRoutine(new StartCenterFriendlyTrenchThreeShootThree().getRoutine());
 	}
 
 	private void startStage(RobotState.GamePeriod period) {

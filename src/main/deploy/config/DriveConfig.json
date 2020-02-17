@@ -1,13 +1,11 @@
 {
-	"profiledVelocityGains": {
-		"f": 0.00261,
-		"p": 0.0,
-		"velocity": 800.0,
-		"acceleration": 1200.0
+	"velocityGains": {
+		"f": 0.04781863509,
+		"p": 0.02
 	},
 	"turnGains": {
-		"f": 0.0021,
-		"p": 0.0045,
+		"f": 0.00145,
+		"p": 0.0003,
 		"velocity": 140.0,
 		"acceleration": 140.0
 	},

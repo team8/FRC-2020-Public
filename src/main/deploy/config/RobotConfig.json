@@ -1,7 +1,8 @@
 {
 	"enabledServices": [
 		"commandReceiverService",
-		"networkLoggerService"
+		"networkLoggerService",
+		"telemetryService"
 	],
 	"enabledSubsystems": [
 		"drive",

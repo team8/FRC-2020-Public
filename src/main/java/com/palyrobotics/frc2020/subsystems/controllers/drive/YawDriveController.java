@@ -6,9 +6,9 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.Util;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 public class YawDriveController extends Drive.DriveController {
@@ -40,11 +40,15 @@ public class YawDriveController extends Drive.DriveController {
 		mController.setPID(mConfig.turnGains.p, mConfig.turnGains.i, mConfig.turnGains.d);
 		mController.setConstraints(
 				new TrapezoidProfile.Constraints(mConfig.turnGains.velocity, mConfig.turnGains.acceleration));
-		var feedForwardCalculator = new SimpleMotorFeedforward(mConfig.turnGainsS, mConfig.turnGains.f, 0.0);
 		double percentOutput = mController.calculate(currentYawDegrees, wantedYawDegrees);
-		percentOutput += feedForwardCalculator.calculate(mController.getSetpoint().velocity);
-		mOutputs.leftOutput.setPercentOutput(-percentOutput);
-		mOutputs.rightOutput.setPercentOutput(percentOutput);
+		double targetVelocity = mController.getSetpoint().velocity;
+		percentOutput += targetVelocity * mConfig.turnGains.f;
+		double feedForward = Math.signum(targetVelocity) * mConfig.turnGainsS;
+		double rightPercentOutput = percentOutput + feedForward, leftPercentOutput = -percentOutput - feedForward;
+		mOutputs.leftOutput.setPercentOutput(leftPercentOutput);
+		mOutputs.rightOutput.setPercentOutput(rightPercentOutput);
+		LiveGraph.add("currentYaw", state.driveYawDegrees);
+		LiveGraph.add("targetYaw", mController.getSetpoint().position);
 	}
 
 }
