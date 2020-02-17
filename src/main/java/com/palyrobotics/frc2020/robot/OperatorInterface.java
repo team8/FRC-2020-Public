@@ -20,6 +20,7 @@ import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
+import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -31,7 +32,7 @@ public class OperatorInterface {
 
 	public static final double kDeadBand = 0.05;
 	public static final double kClimberEnableControlTimeSeconds = 30;
-	public static final int kOnesTimesZoomAlignRawButton = 3, kTwoTimesZoomAlignButton = 4;
+	public static final int kOnesTimesZoomAlignRawButton = 3, kTwoTimesZoomAlignButton = 4, kInnerAlignButton = 0; //TODO: replace with actual button number
 	private final ShooterConfig mShooterConfig = Configs.get(ShooterConfig.class);
 	private final ClimberConfig mClimberConfig = Configs.get(ClimberConfig.class);
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
@@ -117,7 +118,8 @@ public class OperatorInterface {
 	private void updateDriveCommands(Commands commands) {
 		// Both buttons align, button 3: 1x zoom, button 4: 2x zoom
 		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignRawButton),
-				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton);
+				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton),
+				wantsInnerAlign = mTurnStick.getRawButton(kInnerAlignButton);
 		if (wantsTwoTimesAlign) {
 			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
 		} else if (wantsOneTimesAlign) {
