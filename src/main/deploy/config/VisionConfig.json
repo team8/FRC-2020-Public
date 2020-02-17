@@ -1,15 +1,8 @@
 {
-	"oneTimesZoomGains": {
-		"p": 0.005,
-		"i": 0.005,
-		"d": 0.001,
-		"iMax": 0.03
+	"profiledGains": {
 	},
-	"twoTimesZoomGains": {
-		"p": 0.0005,
-		"i": 0.0025,
-		"d": 0.0005,
-		"iMax": 0.03
+	"preciseGains": {
+
 	},
 	"acceptableYawError": 0.15,
 	"alignSwitchYawAngleMin": 40.0

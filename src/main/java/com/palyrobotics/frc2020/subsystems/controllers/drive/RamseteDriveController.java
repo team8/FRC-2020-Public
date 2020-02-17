@@ -38,17 +38,17 @@ public class RamseteDriveController extends Drive.DriveController {
 			mTimer.reset();
 		}
 		Trajectory.State targetPose = wantedTrajectory.sample(mTimer.get());
-		ChassisSpeeds speeds = mController.calculate(state.drivePose, targetPose);
+		ChassisSpeeds speeds = mController.calculate(state.drivePoseMeters, targetPose);
 		DifferentialDriveWheelSpeeds wheelSpeeds = kKinematics.toWheelSpeeds(speeds);
-		mOutputs.leftOutput.setTargetVelocity(wheelSpeeds.leftMetersPerSecond, mConfig.velocityGains);
-		mOutputs.rightOutput.setTargetVelocity(wheelSpeeds.rightMetersPerSecond, mConfig.velocityGains);
+		mOutputs.leftOutput.setTargetVelocity(wheelSpeeds.leftMetersPerSecond, Math.signum(wheelSpeeds.leftMetersPerSecond) * mConfig.turnGainsS, mConfig.velocityGains);
+		mOutputs.rightOutput.setTargetVelocity(wheelSpeeds.rightMetersPerSecond, Math.signum(wheelSpeeds.rightMetersPerSecond) * mConfig.turnGainsS, mConfig.velocityGains);
 //		mOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond, mConfig.profiledVelocityGains);
 //		mOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond, mConfig.profiledVelocityGains);
 		LiveGraph.add("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
 		LiveGraph.add("time", mTimer.get());
 		LiveGraph.add("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
-		LiveGraph.add("currentPoseX", state.drivePose.getTranslation().getX());
-		LiveGraph.add("currentPoseY", state.drivePose.getTranslation().getY());
+		LiveGraph.add("currentPoseX", state.drivePoseMeters.getTranslation().getX());
+		LiveGraph.add("currentPoseY", state.drivePoseMeters.getTranslation().getY());
 		LiveGraph.add("leftVelocity", state.driveLeftVelocity);
 		LiveGraph.add("rightVelocity", state.driveRightVelocity);
 		LiveGraph.add("targetPoseX", targetPose.poseMeters.getTranslation().getX());

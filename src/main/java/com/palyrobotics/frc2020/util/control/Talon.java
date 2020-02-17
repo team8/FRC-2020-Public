@@ -114,9 +114,16 @@ public class Talon extends TalonSRX {
 			entry(ControllerOutput.Mode.PROFILED_POSITION, ControlMode.MotionMagic),
 			entry(ControllerOutput.Mode.PROFILED_VELOCITY, ControlMode.MotionProfile));
 	private final TalonController mController = new TalonController(this);
+	private final String mName;
 
-	public Talon(int deviceId) {
+	public Talon(int deviceId, String name) {
 		super(deviceId);
+		mName = name;
+		clearStickyFaults(kTimeoutMs);
+	}
+
+	public String getName() {
+		return String.format("(Talon #%d), %s", getDeviceID(), mName);
 	}
 
 	public static int round(double d) {

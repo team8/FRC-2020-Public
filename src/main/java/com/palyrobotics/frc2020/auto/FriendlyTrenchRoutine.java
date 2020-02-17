@@ -58,7 +58,7 @@ public abstract class FriendlyTrenchRoutine extends AutoBase {
 		return new SequentialRoutine(
 //				new DriveAlignYawAssistedRoutine(180, kOneTimesZoomPipelineId),
 				new DriveYawRoutine(180.0),
-				new DriveAlignRoutine(OperatorInterface.kOnesTimesZoomAlignRawButton),
+				new DriveAlignRoutine(OperatorInterface.kOnesTimesZoomAlignButton),
 				new ParallelRoutine(
 						new ShooterVisionRoutine(7),
 						new IndexerFeedAllRoutine(7, true, true)));

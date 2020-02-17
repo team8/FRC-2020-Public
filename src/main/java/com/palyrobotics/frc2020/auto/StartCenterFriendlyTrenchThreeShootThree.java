@@ -22,7 +22,7 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 	@Override
 	public RoutineBase getRoutine() {
 		return new SequentialRoutine(
-				new DriveAlignRoutine(OperatorInterface.kOnesTimesZoomAlignRawButton),
+				new DriveAlignRoutine(OperatorInterface.kOnesTimesZoomAlignButton),
 				new ParallelRoutine(
 						new IntakeLowerRoutine(),
 						new ShooterVisionRoutine(5),

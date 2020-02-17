@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.robot;
 
 import java.util.Set;
 
+import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.*;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class HardwareReader {
 
 	private static String kLoggerTag = Util.classToJsonName(HardwareReader.class);
+	public static final double kPeriod = 0.02;
 	private static final int kYawIndex = 0;
 	/**
 	 * A REV Color Match object is used to register and detect known colors. This can be calibrated
@@ -72,7 +74,9 @@ public class HardwareReader {
 	private void readDriveState(RobotState robotState) {
 		var hardware = DrivetrainHardware.getInstance();
 		hardware.gyro.getYawPitchRoll(mGyroAngles);
-		robotState.driveYawDegrees = mGyroAngles[kYawIndex];
+		double yawDegrees = mGyroAngles[kYawIndex];
+		robotState.driveYawVelocity = (yawDegrees - robotState.driveYawDegrees) / kPeriod;
+		robotState.driveYawDegrees = yawDegrees;
 		robotState.driveLeftVelocity = hardware.leftMasterFalcon.getConvertedVelocity();
 		robotState.driveRightVelocity = hardware.rightMasterFalcon.getConvertedVelocity();
 		robotState.driveLeftPosition = hardware.leftMasterFalcon.getConvertedPosition();
@@ -133,11 +137,11 @@ public class HardwareReader {
 	}
 
 	private void checkTalonFaults(BaseTalon talon) {
-//		var faults = new Faults();
-//		talon.getFaults(faults);
-//		if (faults.hasAnyFault()) {
-////			Log.error(kLoggerTag, String.format("Talon %d faults: %s", talon.getDeviceID(), faults));
-//		}
+		var faults = new Faults();
+		talon.getFaults(faults);
+		if (faults.hasAnyFault()) {
+//			Log.error(kLoggerTag, String.format("Talon %d faults: %s", talon.getDeviceID(), faults));
+		}
 	}
 
 	private void readIntakeState(RobotState robotState) {

@@ -44,7 +44,7 @@ public class DriveAlignYawAssistedRoutine extends DriveYawRoutine {
 
 	@Override
 	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
-		return mLimelight.isTargetFound() && Math.abs(mLimelight.getYawToTarget()) < mVisionConfig.acceptableYawError;
+		return mLimelight.isAligned();
 	}
 
 	@Override

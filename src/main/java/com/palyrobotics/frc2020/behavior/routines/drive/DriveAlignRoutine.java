@@ -32,7 +32,7 @@ public class DriveAlignRoutine extends TimeoutRoutineBase {
 
 	@Override
 	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
-		return Math.abs(mLimelight.getYawToTarget()) < mVisionConfig.acceptableYawError;
+		return mLimelight.isAligned();
 	}
 
 	@Override

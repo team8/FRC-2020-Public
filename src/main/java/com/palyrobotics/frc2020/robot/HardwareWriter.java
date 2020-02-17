@@ -15,15 +15,21 @@ import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
-import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2020.util.control.Spark;
+import com.palyrobotics.frc2020.util.control.Talon;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.FaultID;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class HardwareWriter {
 
-	public static final int kTimeoutMs = 50,
+	public static final int
+	// Blocks config calls for specified timeout
+	kTimeoutMs = 50,
 			// Different from slot index.
 			// 0 for Primary closed-loop. 1 for auxiliary closed-loop.
 			kPidIndex = 0;
@@ -78,6 +84,7 @@ public class HardwareWriter {
 			falcon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPidIndex, kTimeoutMs);
 			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero, kTimeoutMs);
+//			falcon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration())
 			falcon.configOpenloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
 			falcon.configClosedloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
 			falcon.configSensorConversions(DriveConstants.kDriveMetersPerTick, DriveConstants.kDriveMetersPerSecondPerTickPer100Ms);
@@ -105,8 +112,10 @@ public class HardwareWriter {
 		hardware.slaveSpark.follow(hardware.masterSpark);
 		hardware.masterSpark.setOpenLoopRampRate(0.1);
 		hardware.masterSpark.setInverted(true);
-		hardware.masterSpark.getPIDController().setOutputRange(-0.6, 0.6);
-		hardware.masterSpark.setSmartCurrentLimit(80);
+		double maxOutput = 0.6;
+		hardware.masterSpark.getController().setOutputRange(-maxOutput, maxOutput);
+		hardware.masterSpark.setSmartCurrentLimit((int) Math.round(30.0 / maxOutput));
+		hardware.masterSpark.setSecondaryCurrentLimit(40.0 / maxOutput);
 		// Talon
 		var talon = hardware.talon;
 		talon.configFactoryDefault(kTimeoutMs);
@@ -169,7 +178,9 @@ public class HardwareWriter {
 	}
 
 	void setDriveNeutralMode(NeutralMode neutralMode) {
-		HardwareAdapter.DrivetrainHardware.getInstance().falcons.forEach(falcon -> falcon.setNeutralMode(neutralMode));
+		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
+		hardware.leftMasterFalcon.setNeutralMode(neutralMode);
+		hardware.rightMasterFalcon.setNeutralMode(neutralMode);
 	}
 
 	/**
@@ -197,36 +208,44 @@ public class HardwareWriter {
 		hardware.solenoid.setExtended(mClimber.getSolenoidOutput());
 	}
 
-	// private void updateDrivetrain() {
-	// var drivetrainHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-	// drivetrainHardware.leftMasterFalcon.setOutput(mDrive.getDriveSignal().leftOutput);
-	// drivetrainHardware.rightMasterFalcon.setOutput(mDrive.getDriveSignal().rightOutput);
-	// }
-
 	private void updateDrivetrain() {
 		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
 		hardware.leftMasterFalcon.setOutput(mDrive.getDriveSignal().leftOutput);
 		hardware.rightMasterFalcon.setOutput(mDrive.getDriveSignal().rightOutput);
+		hardware.falcons.forEach(this::handleReset);
 	}
 
 	private void updateIndexer() {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
 		hardware.masterSpark.setOutput(mIndexer.getSparkOutput());
+		handleFaults(hardware.masterSpark, hardware.slaveSpark);
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 		hardware.talon.setOutput(mIndexer.getTalonOutput());
-		CSVWriter.addData("indexerAppliedOutput", hardware.masterSpark.getAppliedOutput());
-		CSVWriter.addData("indexerVelocity", hardware.masterEncoder.getVelocity());
-		CSVWriter.addData("indexerTargetVelocity", mIndexer.getSparkOutput().getReference());
-		CSVWriter.addData("indexerCurrent10", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(10));
-		CSVWriter.addData("indexerCurrent11", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(11));
-		CSVWriter.addData("intakeCurrent8", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(8));
+		handleReset(hardware.talon);
+		LiveGraph.add("indexerAppliedOutput", hardware.masterSpark.getAppliedOutput());
+		LiveGraph.add("indexerVelocity", hardware.masterEncoder.getVelocity());
+		LiveGraph.add("indexerTargetVelocity", mIndexer.getSparkOutput().getReference());
+		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
+		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
+		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
+		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));
+		LiveGraph.add("batteryVoltage", RobotController.getBatteryVoltage());
+	}
+
+	private void handleFaults(Spark master, Spark slave) {
+		if (slave.getStickyFault(FaultID.kHasReset)) {
+			slave.follow(master);
+			slave.clearFaults();
+			Log.error(kLoggerTag, String.format("%s spark reset", slave.getName()));
+		}
 	}
 
 	private void updateIntake() {
 		var hardware = HardwareAdapter.IntakeHardware.getInstance();
 		hardware.talon.setOutput(mIntake.getOutput());
 		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
+		handleReset(hardware.talon);
 	}
 
 	public void updateLighting() {
@@ -246,5 +265,18 @@ public class HardwareWriter {
 	private void updateSpinner() {
 		var hardware = HardwareAdapter.SpinnerHardware.getInstance();
 		hardware.talon.setOutput(mSpinner.getOutput());
+		handleReset(hardware.talon);
+	}
+
+	private void handleReset(Talon talon) {
+		if (talon.hasResetOccurred()) {
+			Log.error(kLoggerTag, String.format("%s talon reset", talon.getName()));
+		}
+	}
+
+	private void handleReset(Falcon falcon) {
+		if (falcon.hasResetOccurred()) {
+			Log.error(kLoggerTag, String.format("%s falcon reset", falcon.getName()));
+		}
 	}
 }

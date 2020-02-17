@@ -12,7 +12,7 @@ public class MiscTests {
 	@Test
 	public void testSparkWrapper() {
 		if (System.getProperty("os.name").startsWith("Windows")) {
-			var spark = new Spark(0);
+			var spark = new Spark(0, "Mock");
 			var gains = new Gains();
 			var output = new ControllerOutput();
 			output.setTargetPosition(0.0, gains);
