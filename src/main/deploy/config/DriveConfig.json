@@ -25,7 +25,7 @@
 	"freeCurrentLimit": 48,
 	"freeRpmLimit": 0,
 	"nonlinearPasses": 3,
-	"maxPathVelocityMetersPerSecond": 1.1,
-	"maxPathAccelerationMetersPerSecondSquared": 1.1,
+	"maxPathVelocityMetersPerSecond": 1.4,
+	"maxPathAccelerationMetersPerSecondSquared": 1.4,
 	"allowableYawErrorDegrees": 2.0
 }

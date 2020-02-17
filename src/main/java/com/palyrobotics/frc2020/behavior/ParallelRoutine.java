@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
@@ -26,7 +27,13 @@ public class ParallelRoutine extends MultipleRoutineBase {
 
 	@Override
 	public void update(Commands commands, @ReadOnly RobotState state) {
-		mRunningRoutines.removeIf(runningRoutine -> runningRoutine.execute(commands, state));
+		mRunningRoutines.removeIf(runningRoutine -> {
+			boolean isFinished = runningRoutine.execute(commands, state);
+			if (isFinished) {
+				Log.debug(getName(), String.format("Dropping routine: %s", runningRoutine.getName()));
+			}
+			return isFinished;
+		});
 	}
 
 	@Override

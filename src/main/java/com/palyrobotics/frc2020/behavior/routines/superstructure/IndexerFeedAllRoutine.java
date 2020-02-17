@@ -15,27 +15,37 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 
 	private final IndexerConfig mConfig = Configs.get(IndexerConfig.class);
 	private final boolean mWaitForFlywheel;
+	private boolean mDoReverse;
 
 	public IndexerFeedAllRoutine() {
 		this(5.0);
 	}
 
 	public IndexerFeedAllRoutine(double timeoutSeconds) {
-		this(timeoutSeconds, false);
+		this(timeoutSeconds, false, true);
 	}
 
-	public IndexerFeedAllRoutine(double timeoutSeconds, boolean waitForFlywheel) {
+	public IndexerFeedAllRoutine(double timeoutSeconds, boolean waitForFlywheel, boolean doReverse) {
 		super(timeoutSeconds);
 		mWaitForFlywheel = waitForFlywheel;
+		mDoReverse = doReverse;
 	}
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		boolean shouldReverse = mTimer.get() < mConfig.reverseTime;
 		if (!mWaitForFlywheel || state.shooterIsReadyToShoot) {
-			commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.FEED_ALL;
+			if (mDoReverse) {
+				commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.FEED_ALL;
+			} else {
+				commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
+			}
 		} else {
-			commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.WAITING_TO_FEED;
+			if (mDoReverse) {
+				commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.WAITING_TO_FEED;
+			} else {
+				commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
+			}
 		}
 		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 	}

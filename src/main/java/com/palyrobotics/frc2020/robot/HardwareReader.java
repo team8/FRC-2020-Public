@@ -2,7 +2,6 @@ package com.palyrobotics.frc2020.robot;
 
 import java.util.Set;
 
-import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.*;
@@ -10,7 +9,6 @@ import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
-import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -121,25 +119,25 @@ public class HardwareReader {
 	}
 
 	private void checkSparkFaults(Spark spark) {
-		boolean wasAnyFault = false;
-		for (var value : FaultID.values()) {
-			boolean isFaulted = spark.getFault(value);
-			if (isFaulted) {
-//				Log.error(kLoggerTag, String.format("Spark %d fault: %s", spark.getDeviceId(), value));
-				wasAnyFault = true;
-			}
-		}
-		if (wasAnyFault) {
-			spark.clearFaults();
-		}
+//		boolean wasAnyFault = false;
+//		for (var value : FaultID.values()) {
+//			boolean isFaulted = spark.getFault(value);
+//			if (isFaulted) {
+////				Log.error(kLoggerTag, String.format("Spark %d fault: %s", spark.getDeviceId(), value));
+//				wasAnyFault = true;
+//			}
+//		}
+//		if (wasAnyFault) {
+//			spark.clearFaults();
+//		}
 	}
 
 	private void checkTalonFaults(BaseTalon talon) {
-		var faults = new Faults();
-		talon.getFaults(faults);
-		if (faults.hasAnyFault()) {
-//			Log.error(kLoggerTag, String.format("Talon %d faults: %s", talon.getDeviceID(), faults));
-		}
+//		var faults = new Faults();
+//		talon.getFaults(faults);
+//		if (faults.hasAnyFault()) {
+////			Log.error(kLoggerTag, String.format("Talon %d faults: %s", talon.getDeviceID(), faults));
+//		}
 	}
 
 	private void readIntakeState(RobotState robotState) {

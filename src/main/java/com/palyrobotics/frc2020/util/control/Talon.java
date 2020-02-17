@@ -65,7 +65,6 @@ public class Talon extends TalonSRX {
 					convertedReference = reference;
 					break;
 			}
-			System.out.println(convertedReference);
 			mController.set(
 					controllerMode, convertedReference,
 					DemandType.ArbitraryFeedForward, arbitraryPercentOutput);

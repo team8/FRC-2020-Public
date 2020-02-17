@@ -16,6 +16,13 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 
 public class DrivePathRoutine extends TimeoutRoutineBase {
 
+	public static class WaypointWithSpeed {
+
+		public WaypointWithSpeed(double xInches, double yInches, double yawDegrees, double speed) {
+
+		}
+	}
+
 	private static final double kTimeoutMultiplier = 1.0;
 	private final List<Pose2d> mWaypoints;
 	private final TrajectoryConfig mTrajectoryConfig = DriveConstants.getStandardTrajectoryConfig();

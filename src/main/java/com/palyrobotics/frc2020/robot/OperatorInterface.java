@@ -1,12 +1,11 @@
 package com.palyrobotics.frc2020.robot;
 
 import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
+import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
-import com.palyrobotics.frc2020.behavior.SequentialRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
@@ -116,12 +115,12 @@ public class OperatorInterface {
 	}
 
 	private void updateDriveCommands(Commands commands) {
-		// Both buttons align, button 3: 2x zoom, button 4: 1x zoom
+		// Both buttons align, button 3: 1x zoom, button 4: 2x zoom
 		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignRawButton),
 				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton);
-		if (wantsOneTimesAlign) {
+		if (wantsTwoTimesAlign) {
 			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
-		} else if (wantsTwoTimesAlign) {
+		} else if (wantsOneTimesAlign) {
 			commands.setDriveVisionAlign(kOneTimesZoomPipelineId);
 		} else {
 			commands.setDriveTeleop(
@@ -138,9 +137,10 @@ public class OperatorInterface {
 //			commands.addWantedRoutine(new SequentialRoutine(
 //					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
 //					new DrivePathRoutine(newWaypoint(30.0, 0.0, 0.0))));
-			commands.addWantedRoutine(new SequentialRoutine(
-					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
-					new DriveYawRoutine(180.0)));
+//			commands.addWantedRoutine(new SequentialRoutine(
+//					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
+//					new DriveYawRoutine(180.0)));
+			commands.addWantedRoutine(new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
 		}
 	}
 
@@ -212,7 +212,7 @@ public class OperatorInterface {
 			// Shoot one ball
 			commands.addWantedRoutine(new IndexerFeedSingleRoutine());
 		} else if (mOperatorXboxController.getRightBumperPressed()) {
-			commands.addWantedRoutine(new IndexerFeedAllRoutine(5.0, true));
+			commands.addWantedRoutine(new IndexerFeedAllRoutine(5.0, true, true));
 		}
 
 	}

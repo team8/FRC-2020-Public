@@ -1,24 +1,31 @@
 package com.palyrobotics.frc2020.auto;
 
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
-import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 
+import com.palyrobotics.frc2020.behavior.ParallelRoutine;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignYawAssistedRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
-import com.palyrobotics.frc2020.behavior.routines.superstructure.IntakeStowRoutine;
+import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.*;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerTimeRoutine;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.IntakeBallRoutine;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.ShooterVisionRoutine;
+import com.palyrobotics.frc2020.robot.OperatorInterface;
 
 public abstract class FriendlyTrenchRoutine extends AutoBase {
 
 	SequentialRoutine centerStraightFriendlyTrench() {
 		return new SequentialRoutine(
 				new DriveSetOdometryRoutine(0, 0, 180),
-//				new VisionAlignRoutine(),
-				getBallsRoutine, new DrivePathRoutine(
-						newWaypoint(40, 65, 0),
-						newWaypoint(170, 65, 0)));
+				new ParallelRoutine(
+						new DrivePathRoutine(
+								newWaypoint(40, 67, 0),
+								newWaypoint(170, 67, 0)),
+						new SequentialRoutine(
+								new TimedRoutine(3.0),
+								new ParallelRoutine(
+										new IntakeBallRoutine(3.0),
+										new IndexerTimeRoutine(3.0)))));
 	}
 
 	SequentialRoutine CenterReverseRight90DegreeFriendlyTrench() {
@@ -49,8 +56,11 @@ public abstract class FriendlyTrenchRoutine extends AutoBase {
 
 	SequentialRoutine endRoutine() {
 		return new SequentialRoutine(
-				new IntakeStowRoutine(),
-				new DriveAlignYawAssistedRoutine(180, kOneTimesZoomPipelineId),
-				shootBallsRoutine);
+//				new DriveAlignYawAssistedRoutine(180, kOneTimesZoomPipelineId),
+				new DriveYawRoutine(180.0),
+				new DriveAlignRoutine(OperatorInterface.kOnesTimesZoomAlignRawButton),
+				new ParallelRoutine(
+						new ShooterVisionRoutine(7),
+						new IndexerFeedAllRoutine(7, true, true)));
 	}
 }
