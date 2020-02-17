@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class LiveGraph {
 
-	private static final NetworkTableInstance sNetworkTableInstance = NetworkTableInstance.create();
+	private static final NetworkTableInstance sNetworkTableInstance = NetworkTableInstance.getDefault();
 	private static final NetworkTable sLiveTable = sNetworkTableInstance.getTable("control-center-live");
 
 	private LiveGraph() {

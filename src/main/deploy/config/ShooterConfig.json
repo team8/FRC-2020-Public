@@ -1,9 +1,9 @@
 {
     "velocityGains": {
-        "f": 0.0001724,
-        "p": 0.0012626,
-        "i": 0.0,
-        "d": 0.001,
+        "f": 0.000176,
+        "p": 0.000185,
+        "i": 0.0000005,
+        "d": 0.00009,
         "iZone": 150.0,
         "iMax": 0.0
     },
@@ -12,5 +12,5 @@
     "rumbleDurationSeconds": 0.5,
     "hoodSwitchDistanceThreshold": 10.0,
     "noTargetSpinUpVelocity": 2000,
-    "customVelocity": 1800
+    "customVelocity": 800
 }

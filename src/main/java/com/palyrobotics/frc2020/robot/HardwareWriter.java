@@ -15,6 +15,7 @@ import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
+import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
 
@@ -46,6 +47,13 @@ public class HardwareWriter {
 		if (enabledSubsystems.contains(mLighting)) configureLightingHardware();
 		if (enabledSubsystems.contains(mShooter)) configureShooterHardware();
 		if (enabledSubsystems.contains(mSpinner)) configureSpinnerHardware();
+		configureMiscellaneousHardware();
+	}
+
+	private void configureMiscellaneousHardware() {
+		var hardware = HardwareAdapter.MiscellaneousHardware.getInstance();
+		hardware.pdp.clearStickyFaults();
+		hardware.compressor.clearAllPCMStickyFaults();
 	}
 
 	private void configureClimberHardware() {
@@ -208,12 +216,12 @@ public class HardwareWriter {
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 		hardware.talon.setOutput(mIndexer.getTalonOutput());
-		LiveGraph.add("indexerAppliedOutput", hardware.masterSpark.getAppliedOutput());
-		LiveGraph.add("indexerVelocity", hardware.masterEncoder.getVelocity());
-		LiveGraph.add("indexerTargetVelocity", mIndexer.getSparkOutput().getReference());
-		LiveGraph.add("indexerCurrent10", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(10));
-		LiveGraph.add("indexerCurrent11", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(11));
-		LiveGraph.add("intakeCurrent8", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(8));
+		CSVWriter.addData("indexerAppliedOutput", hardware.masterSpark.getAppliedOutput());
+		CSVWriter.addData("indexerVelocity", hardware.masterEncoder.getVelocity());
+		CSVWriter.addData("indexerTargetVelocity", mIndexer.getSparkOutput().getReference());
+		CSVWriter.addData("indexerCurrent10", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(10));
+		CSVWriter.addData("indexerCurrent11", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(11));
+		CSVWriter.addData("intakeCurrent8", HardwareAdapter.MiscellaneousHardware.getInstance().pdp.getCurrent(8));
 	}
 
 	private void updateIntake() {

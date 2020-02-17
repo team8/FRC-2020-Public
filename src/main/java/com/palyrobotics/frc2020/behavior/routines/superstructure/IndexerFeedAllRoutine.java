@@ -33,9 +33,9 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		boolean shouldReverse = mTimer.get() < mConfig.reverseTime;
 		if (!mWaitForFlywheel || state.shooterIsReadyToShoot) {
-			commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.FEED_ALL : Indexer.BeltState.REVERSING;
+			commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.FEED_ALL;
 		} else {
-			commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.WAITING_TO_FEED : Indexer.BeltState.REVERSING;
+			commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.WAITING_TO_FEED;
 		}
 		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 	}

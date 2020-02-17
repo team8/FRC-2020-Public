@@ -1,12 +1,16 @@
 {
 	"oneTimesZoomGains": {
-		"p": 0.0059,
-		"d": 0.001
+		"p": 0.01,
+		"i": 0.005,
+		"d": 0.001,
+		"iMax": 0.03
 	},
 	"twoTimesZoomGains": {
-		"p": 0.0029,
-		"d": 0.00055
+		"p": 0.0005,
+		"i": 0.0025,
+		"d": 0.0005,
+		"iMax": 0.03
 	},
-	"acceptableYawError": 0.1,
+	"acceptableYawError": 0.15,
 	"alignSwitchYawAngleMin": 40.0
 }

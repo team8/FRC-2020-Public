@@ -37,7 +37,7 @@ public class Shooter extends SubsystemBase {
 	private Timer mRumbleTimer = new Timer();
 	private boolean mIsReadyToShoot;
 	// TODO: Change the size of the median filter to better or worse filter out values
-	private MedianFilter distanceFilter = new MedianFilter(5);
+	private MedianFilter distanceFilter = new MedianFilter(12);
 
 	private Shooter() {
 	}
