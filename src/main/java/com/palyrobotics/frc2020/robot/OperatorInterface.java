@@ -32,7 +32,7 @@ public class OperatorInterface {
 
 	public static final double kDeadBand = 0.05;
 	public static final double kClimberEnableControlTimeSeconds = 30;
-	public static final int kOnesTimesZoomAlignRawButton = 3, kTwoTimesZoomAlignButton = 4, kInnerAlignButton = 0; //TODO: replace with actual button number
+	public static final int kOnesTimesZoomAlignRawButton = 3, kTwoTimesZoomAlignButton = 4, kInnerAlignButton = 5; //TODO: replace with actual button number
 	private final ShooterConfig mShooterConfig = Configs.get(ShooterConfig.class);
 	private final ClimberConfig mClimberConfig = Configs.get(ClimberConfig.class);
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
@@ -119,7 +119,7 @@ public class OperatorInterface {
 		// Both buttons align, button 3: 1x zoom, button 4: 2x zoom
 		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignRawButton),
 				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton),
-				wantsInnerAlign = mTurnStick.getRawButton(kInnerAlignButton);
+				wantsInnerAlign = mTurnStick.getRawButtonPressed(kInnerAlignButton);
 		if (wantsTwoTimesAlign) {
 			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
 		} else if (wantsOneTimesAlign) {
