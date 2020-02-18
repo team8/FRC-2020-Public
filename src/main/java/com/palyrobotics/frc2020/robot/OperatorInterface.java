@@ -5,6 +5,7 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignInnerRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
@@ -92,9 +93,6 @@ public class OperatorInterface {
 	}
 
 	private void updateDriveCommands(Commands commands) {
-		commands.setDriveTeleop(
-				handleDeadBand(-mDriveStick.getY(), kDeadBand), handleDeadBand(mTurnStick.getX(), kDeadBand),
-				mTurnStick.getTrigger(), mDriveStick.getTrigger());
 		// Vision align overwrites wanted drive state, using teleop commands when no target is in sight
 		// Both buttons align, button 3: 1x zoom, button 4: 2x zoom
 		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignButton),
@@ -104,11 +102,19 @@ public class OperatorInterface {
 			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
 		} else if (wantsOneTimesAlign) {
 			commands.setDriveVisionAlign(kOneTimesZoomPipelineId);
+		} else if (wantsInnerAlign) {
+			commands.addWantedRoutine(new DriveAlignInnerRoutine(1)); //TODO: replace pipeline?
+		} else {
+			commands.setDriveTeleop(
+					-mDriveStick.getY(), mTurnStick.getX(),
+					mTurnStick.getTrigger(), mDriveStick.getTrigger());
 		}
-
 		boolean justReleasedAlign = mTurnStick.getRawButtonReleased(kOnesTimesZoomAlignButton) || mTurnStick.getRawButtonReleased(kTwoTimesZoomAlignButton);
-		if (justReleasedAlign && commands.getShooterWantedState() != Shooter.ShooterState.VISION_VELOCITY) {
-			commands.visionWanted = false;
+
+		if (mTurnStick.getRawButtonReleased(kOnesTimesZoomAlignButton) || mTurnStick.getRawButtonReleased(kTwoTimesZoomAlignButton)) {
+			if (justReleasedAlign && commands.getShooterWantedState() != Shooter.ShooterState.VISION_VELOCITY) {
+				commands.visionWanted = false;
+			}
 		}
 		/* Path Following */
 		if (mOperatorXboxController.getBButtonPressed()) {
