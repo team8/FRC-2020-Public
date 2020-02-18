@@ -5,6 +5,7 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignInnerRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.miscellaneous.XboxVibrateRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
@@ -20,7 +21,6 @@ import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
-import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -124,6 +124,8 @@ public class OperatorInterface {
 			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
 		} else if (wantsOneTimesAlign) {
 			commands.setDriveVisionAlign(kOneTimesZoomPipelineId);
+		} else if (wantsInnerAlign) {
+			commands.addWantedRoutine(new DriveAlignInnerRoutine(1)); //TODO: replace pipeline?
 		} else {
 			commands.setDriveTeleop(
 					-mDriveStick.getY(), mTurnStick.getX(),
