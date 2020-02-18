@@ -45,12 +45,10 @@ public class DriveAlignInnerRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		if (Math.abs(mLimelight.getYawToTarget()) < mVisionConfig.acceptableYawError && mTargetYawDegrees == 0.0) {
+		if (mLimelight.isTargetFound() && Math.abs(mLimelight.getYawToTarget()) < mVisionConfig.acceptableYawError && mTargetYawDegrees == 0.0) {
 			mTargetYawDegrees = Math.toDegrees(Math.atan(mLimelight.getEstimatedDistanceInches() * Math.sin(Math.toRadians(state.driveYawDegrees)) / (mLimelight.getEstimatedDistanceInches() * Math.cos(Math.toRadians(state.driveYawDegrees)) + 29.25)));
-			if (state.driveYawDegrees < 0) {
-				mTargetYawDegrees *= -1;
-			}
 		}
+
 		if (mTargetYawDegrees != 0.0) {
 			commands.setDriveYaw(mTargetYawDegrees);
 			commands.visionWanted = false;
@@ -58,6 +56,9 @@ public class DriveAlignInnerRoutine extends TimeoutRoutineBase {
 			commands.setDriveVisionAlign(mVisionPipeline);
 		}
 		commands.lightingWantedState = Lighting.State.ROBOT_ALIGNING;
+		System.out.println("robot yaw: " + state.driveYawDegrees);
+		System.out.println("target yaw: " + mTargetYawDegrees);
+		System.out.println("estimated distance" + mLimelight.getEstimatedDistanceInches());
 	}
 
 	@Override

@@ -97,7 +97,7 @@ public class OperatorInterface {
 		// Both buttons align, button 3: 1x zoom, button 4: 2x zoom
 		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignButton),
 				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton),
-				wantsInnerAlign = mTurnStick.getRawButton(kInnerAlignButton);
+				wantsInnerAlign = mTurnStick.getRawButtonPressed(kInnerAlignButton);
 		if (wantsTwoTimesAlign) {
 			commands.setDriveVisionAlign(kTwoTimesZoomPipelineId);
 		} else if (wantsOneTimesAlign) {
