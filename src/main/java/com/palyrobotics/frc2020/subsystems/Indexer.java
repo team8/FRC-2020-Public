@@ -11,7 +11,8 @@ public class Indexer extends SubsystemBase {
 
 	private static Indexer sInstance = new Indexer();
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
-	private ControllerOutput mSparkOutput = new ControllerOutput(),
+	private ControllerOutput mMasterSparkOutput = new ControllerOutput(),
+			mSlaveSparkOutput = new ControllerOutput(),
 			mTalonOutput = new ControllerOutput();
 	private boolean mHopperOutput, mBlockOutput;
 
@@ -49,40 +50,51 @@ public class Indexer extends SubsystemBase {
 
 		switch (commands.indexerWantedBeltState) {
 			case IDLE:
-				mSparkOutput.setIdle();
+				mMasterSparkOutput.setIdle();
+				mSlaveSparkOutput.setIdle();
 				mTalonOutput.setIdle();
 				mBlockOutput = true;
 				break;
 			case INDEX:
-				mSparkOutput.setTargetVelocity(mConfig.sparkIndexingOutput, mConfig.velocityGains);
+				setIndexerVelocity(mConfig.sparkIndexingOutput);
 				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = true;
 				break;
 			case WAITING_TO_FEED:
-				mSparkOutput.setIdle();
+				mMasterSparkOutput.setIdle();
+				mSlaveSparkOutput.setIdle();
 				mTalonOutput.setIdle();
 				mBlockOutput = false;
 				break;
 			case FEED_SINGLE:
-				mSparkOutput.setTargetVelocity(mConfig.feedingOutput, mConfig.velocityGains);
+				setIndexerVelocity(mConfig.feedingOutput);
 				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 				break;
 			case FEED_ALL:
-				mSparkOutput.setTargetVelocity(mConfig.feedingOutput, mConfig.velocityGains);
+				setIndexerVelocity(mConfig.feedingOutput);
 				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 				break;
 			case REVERSING:
-				mSparkOutput.setTargetVelocity(-mConfig.reversingOutput, mConfig.velocityGains);
+				setIndexerVelocity(-mConfig.reversingOutput);
 				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
 	}
 
-	public ControllerOutput getSparkOutput() {
-		return mSparkOutput;
+	private void setIndexerVelocity(double velocity) {
+		mMasterSparkOutput.setTargetVelocity(velocity, mConfig.masterVelocityGains);
+		mSlaveSparkOutput.setTargetVelocity(velocity, mConfig.slaveVelocityGains);
+	}
+
+	public ControllerOutput getMasterSparkOutput() {
+		return mMasterSparkOutput;
+	}
+
+	public ControllerOutput getSlaveSparkOutput() {
+		return mSlaveSparkOutput;
 	}
 
 	public ControllerOutput getTalonOutput() {

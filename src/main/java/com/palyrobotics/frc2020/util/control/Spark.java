@@ -18,7 +18,7 @@ import com.revrobotics.ControlType;
  *
  * @author Quintin
  */
-public class Spark extends CANSparkMax {
+public class Spark extends CANSparkMax implements Controller {
 
 	static class SparkController extends ProfiledControllerBase<Spark> {
 

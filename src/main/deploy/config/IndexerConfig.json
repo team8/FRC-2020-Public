@@ -4,8 +4,12 @@
     "reverseTime": 0.15,
     "feedingOutput": 1000.0,
     "reversingOutput": 1000.0,
-    "velocityGains": {
-        "p": 0.00035,
-        "f": 0.0003
+    "masterVelocityGains": {
+        "p": 0.00018,
+        "f": 0.00033
+    },
+    "slaveVelocityGains": {
+        "p": 0.00015,
+        "f": 0.00021
     }
 }

@@ -3,7 +3,7 @@ package com.palyrobotics.frc2020.util.control;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-public class Falcon extends TalonFX {
+public class Falcon extends TalonFX implements Controller {
 
 	static class FalconController extends Talon.TalonController {
 

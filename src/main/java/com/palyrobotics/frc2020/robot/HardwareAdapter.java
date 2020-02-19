@@ -47,9 +47,9 @@ public class HardwareAdapter {
 	/**
 	 * 4 Falcon 500s (controlled by Talon FX), 1 Pigeon IMU Gyro connected via Talon SRX data cable.
 	 */
-	static class DrivetrainHardware {
+	static class DriveHardware {
 
-		private static DrivetrainHardware sInstance;
+		private static DriveHardware sInstance;
 
 		final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId, "Drive Left Master"),
 				leftSlaveFalcon = new Falcon(sPortConstants.nariDriveLeftSlaveId, "Drive Left Slave");
@@ -61,11 +61,11 @@ public class HardwareAdapter {
 
 		final PigeonIMU gyro = new PigeonIMU(new WPI_TalonSRX(8));
 
-		private DrivetrainHardware() {
+		private DriveHardware() {
 		}
 
-		static DrivetrainHardware getInstance() {
-			if (sInstance == null) sInstance = new DrivetrainHardware();
+		static DriveHardware getInstance() {
+			if (sInstance == null) sInstance = new DriveHardware();
 			return sInstance;
 		}
 	}
@@ -78,7 +78,7 @@ public class HardwareAdapter {
 		private static IndexerHardware sInstance;
 		final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId, "Indexer Master"),
 				slaveSpark = new Spark(sPortConstants.nariIndexerSlaveId, "Indexer Slave");
-		final CANEncoder masterEncoder = masterSpark.getEncoder();
+		final CANEncoder masterEncoder = masterSpark.getEncoder(), slaveEncoder = slaveSpark.getEncoder();
 		final Talon talon = new Talon(sPortConstants.nariIndexerTalonId, "Indexer Beavertail");
 		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);

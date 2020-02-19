@@ -2,30 +2,35 @@ package com.palyrobotics.frc2020.robot;
 
 import java.util.Set;
 
-import com.ctre.phoenix.motorcontrol.Faults;
-import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import com.ctre.phoenix.motorcontrol.StickyFaults;
+import com.esotericsoftware.minlog.Log;
+import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.*;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
+import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
+import com.palyrobotics.frc2020.util.control.Talon;
+import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class HardwareReader {
 
-	private static String kLoggerTag = Util.classToJsonName(HardwareReader.class);
-	public static final double kPeriod = 0.02;
-	private static final int kYawIndex = 0;
+	private static final String kLoggerTag = Util.classToJsonName(HardwareReader.class);
+	private static final double kPeriod = 0.02;
+	private static final int kYawIndex = 0, kYawAngularVelocityIndex = 2;
+	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	/**
 	 * A REV Color Match object is used to register and detect known colors. This can be calibrated
 	 * ahead of time or during operation. This object uses euclidean distance to estimate the closest
 	 * match with a given confidence range.
 	 */
-	public final ColorMatch mColorMatcher = new ColorMatch();
-	private final double[] mGyroAngles = new double[3];
+	private final ColorMatch mColorMatcher = new ColorMatch();
+	private final double[] mGyroAngles = new double[3], mGyroAngularVelocities = new double[3];
 
 	public HardwareReader() {
 		mColorMatcher.addColorMatch(SpinnerConstants.kCyanCPTarget);
@@ -72,44 +77,27 @@ public class HardwareReader {
 	}
 
 	private void readDriveState(RobotState robotState) {
-		var hardware = DrivetrainHardware.getInstance();
+		var hardware = DriveHardware.getInstance();
 		hardware.gyro.getYawPitchRoll(mGyroAngles);
-		double yawDegrees = mGyroAngles[kYawIndex];
-		robotState.driveYawVelocity = (yawDegrees - robotState.driveYawDegrees) / kPeriod;
-		robotState.driveYawDegrees = yawDegrees;
+		hardware.gyro.getRawGyro(mGyroAngularVelocities);
+		robotState.driveYawDegrees = mGyroAngles[kYawIndex];
+		robotState.driveYawAngularVelocityDegrees = mGyroAngularVelocities[kYawAngularVelocityIndex];
 		robotState.driveLeftVelocity = hardware.leftMasterFalcon.getConvertedVelocity();
 		robotState.driveRightVelocity = hardware.rightMasterFalcon.getConvertedVelocity();
 		robotState.driveLeftPosition = hardware.leftMasterFalcon.getConvertedPosition();
 		robotState.driveRightPosition = hardware.rightMasterFalcon.getConvertedPosition();
-		LiveGraph.add("leftPosition", robotState.driveLeftPosition);
-		LiveGraph.add("rightPosition", robotState.driveRightPosition);
+//		LiveGraph.add("leftPosition", robotState.driveLeftPosition);
+//		LiveGraph.add("rightPosition", robotState.driveRightPosition);
 		robotState.updateOdometry(robotState.driveYawDegrees, robotState.driveLeftPosition, robotState.driveRightPosition);
-		LiveGraph.add("driveLeftPosition", robotState.driveLeftPosition);
-		LiveGraph.add("driveLeftVelocity", robotState.driveLeftVelocity);
-		LiveGraph.add("driveRightPosition", robotState.driveRightPosition);
-		LiveGraph.add("driveRightVelocity", robotState.driveRightVelocity);
-		LiveGraph.add("driveYaw", robotState.driveYawDegrees);
-		LiveGraph.add("driveRightPercentOutput", hardware.rightMasterFalcon.getMotorOutputPercent());
-		LiveGraph.add("driveLeftPercentOutput", hardware.leftMasterFalcon.getMotorOutputPercent());
-		hardware.falcons.forEach(this::checkTalonFaults);
+//		LiveGraph.add("driveLeftPosition", robotState.driveLeftPosition);
+//		LiveGraph.add("driveLeftVelocity", robotState.driveLeftVelocity);
+//		LiveGraph.add("driveRightPosition", robotState.driveRightPosition);
+//		LiveGraph.add("driveRightVelocity", robotState.driveRightVelocity);
+//		LiveGraph.add("driveYaw", robotState.driveYawDegrees);
+//		LiveGraph.add("driveRightPercentOutput", hardware.rightMasterFalcon.getMotorOutputPercent());
+//		LiveGraph.add("driveLeftPercentOutput", hardware.leftMasterFalcon.getMotorOutputPercent());
+		hardware.falcons.forEach(this::checkFalconFaults);
 	}
-
-	// private void readDriveState(RobotState robotState) {
-	// var drivetrain = HardwareAdapter.DrivetrainHardware.getInstance();
-	// drivetrain.gyro.getYawPitchRoll(mGyroValues);
-	// robotState.driveYawDegrees = mGyroValues[0];
-	// robotState.driveLeftVelocity =
-	// drivetrain.leftMasterFalcon.getConvertedVelocity();
-	// robotState.driveRightVelocity =
-	// drivetrain.rightMasterFalcon.getConvertedVelocity();
-	// robotState.driveLeftPosition =
-	// drivetrain.leftMasterFalcon.getConvertedPosition();
-	// robotState.driveRightPosition =
-	// drivetrain.rightMasterFalcon.getConvertedPosition();
-	// robotState.updateOdometry(robotState.driveYawDegrees,
-	// robotState.driveLeftPosition,
-	// robotState.driveRightPosition);
-	// }
 
 	private void readIndexerState(RobotState robotState) {
 		var hardware = IndexerHardware.getInstance();
@@ -122,28 +110,6 @@ public class HardwareReader {
 		checkTalonFaults(hardware.talon);
 	}
 
-	private void checkSparkFaults(Spark spark) {
-//		boolean wasAnyFault = false;
-//		for (var value : FaultID.values()) {
-//			boolean isFaulted = spark.getFault(value);
-//			if (isFaulted) {
-////				Log.error(kLoggerTag, String.format("Spark %d fault: %s", spark.getDeviceId(), value));
-//				wasAnyFault = true;
-//			}
-//		}
-//		if (wasAnyFault) {
-//			spark.clearFaults();
-//		}
-	}
-
-	private void checkTalonFaults(BaseTalon talon) {
-		var faults = new Faults();
-		talon.getFaults(faults);
-		if (faults.hasAnyFault()) {
-//			Log.error(kLoggerTag, String.format("Talon %d faults: %s", talon.getDeviceID(), faults));
-		}
-	}
-
 	private void readIntakeState(RobotState robotState) {
 		var hardware = IntakeHardware.getInstance();
 		robotState.intakeIsExtended = hardware.solenoid.isExtended();
@@ -152,12 +118,51 @@ public class HardwareReader {
 
 	private void readShooterState(RobotState robotState) {
 		var hardware = ShooterHardware.getInstance();
-		LiveGraph.add("shooterFlywheelVelocity", hardware.masterEncoder.getVelocity());
+//		LiveGraph.add("shooterFlywheelVelocity", hardware.masterEncoder.getVelocity());
+// 		LiveGraph.add("shooterAppliedOutput", hardware.masterSpark.getAppliedOutput());
 		robotState.shooterFlywheelVelocity = hardware.masterEncoder.getVelocity();
 		robotState.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
 		robotState.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();
 		robotState.shooterHoodIsInTransition = hardware.hoodSolenoid.isInTransition() || hardware.blockingSolenoid.isInTransition();
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
+	}
+
+	private void checkSparkFaults(Spark spark) {
+		if (mRobotConfig.checkFaults) {
+			boolean wasAnyFault = false;
+			for (var value : FaultID.values()) {
+				boolean isFaulted = spark.getStickyFault(value);
+				if (isFaulted) {
+					Log.error(kLoggerTag, String.format("Spark %d fault: %s", spark.getDeviceId(), value));
+					wasAnyFault = true;
+				}
+			}
+			if (wasAnyFault) {
+				spark.clearFaults();
+			}
+		}
+	}
+
+	private void checkTalonFaults(Talon talon) {
+		if (mRobotConfig.checkFaults) {
+			var faults = new StickyFaults();
+			talon.getStickyFaults(faults);
+			if (faults.hasAnyFault()) {
+				Log.error(kLoggerTag, String.format("%s faults: %s", talon.getName(), faults));
+				talon.clearStickyFaults();
+			}
+		}
+	}
+
+	private void checkFalconFaults(Falcon falcon) {
+		if (mRobotConfig.checkFaults) {
+			var faults = new StickyFaults();
+			falcon.getStickyFaults(faults);
+			if (faults.hasAnyFault()) {
+				Log.error(kLoggerTag, String.format("%s faults: %s", falcon.getName(), faults));
+				falcon.clearStickyFaults();
+			}
+		}
 	}
 }

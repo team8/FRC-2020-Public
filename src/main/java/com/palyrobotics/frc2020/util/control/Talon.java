@@ -10,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-public class Talon extends TalonSRX {
+public class Talon extends TalonSRX implements Controller {
 
 	static class TalonController extends ProfiledControllerBase<BaseTalon> {
 

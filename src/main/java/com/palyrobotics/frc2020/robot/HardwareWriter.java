@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.esotericsoftware.minlog.Log;
@@ -17,19 +18,16 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.FaultID;
 
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class HardwareWriter {
 
 	public static final int
 	// Blocks config calls for specified timeout
-	kTimeoutMs = 50,
+	kTimeoutMs = 100,
 			// Different from slot index.
 			// 0 for Primary closed-loop. 1 for auxiliary closed-loop.
 			kPidIndex = 0;
@@ -76,7 +74,7 @@ public class HardwareWriter {
 	}
 
 	private void configureDriveHardware() {
-		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
+		var hardware = HardwareAdapter.DriveHardware.getInstance();
 		var driveConfig = Configs.get(DriveConfig.class);
 		for (Falcon falcon : hardware.falcons) {
 			falcon.configFactoryDefault(kTimeoutMs);
@@ -109,10 +107,11 @@ public class HardwareWriter {
 		hardware.slaveSpark.restoreFactoryDefaults();
 		hardware.masterSpark.enableVoltageCompensation(kVoltageCompensation);
 		hardware.slaveSpark.enableVoltageCompensation(kVoltageCompensation);
-		hardware.slaveSpark.follow(hardware.masterSpark);
 		hardware.masterSpark.setOpenLoopRampRate(0.1);
+		hardware.slaveSpark.setOpenLoopRampRate(0.1);
 		hardware.masterSpark.setInverted(true);
-		double maxOutput = 0.6;
+		hardware.slaveSpark.setInverted(true);
+		double maxOutput = 0.8;
 		hardware.masterSpark.getController().setOutputRange(-maxOutput, maxOutput);
 		hardware.masterSpark.setSmartCurrentLimit((int) Math.round(30.0 / maxOutput));
 		hardware.masterSpark.setSecondaryCurrentLimit(40.0 / maxOutput);
@@ -131,6 +130,7 @@ public class HardwareWriter {
 		talon.enableVoltageCompensation(true);
 		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
+		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30.0, 5.0, 2.0));
 		talon.setInverted(true);
 	}
 
@@ -170,7 +170,7 @@ public class HardwareWriter {
 
 	public void resetDriveSensors(Pose2d pose) {
 		double heading = pose.getRotation().getDegrees();
-		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
+		var hardware = HardwareAdapter.DriveHardware.getInstance();
 		hardware.gyro.setYaw(heading, kTimeoutMs);
 		hardware.leftMasterFalcon.setSelectedSensorPosition(0);
 		hardware.rightMasterFalcon.setSelectedSensorPosition(0);
@@ -178,7 +178,7 @@ public class HardwareWriter {
 	}
 
 	void setDriveNeutralMode(NeutralMode neutralMode) {
-		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
+		var hardware = HardwareAdapter.DriveHardware.getInstance();
 		hardware.leftMasterFalcon.setNeutralMode(neutralMode);
 		hardware.rightMasterFalcon.setNeutralMode(neutralMode);
 	}
@@ -209,43 +209,38 @@ public class HardwareWriter {
 	}
 
 	private void updateDrivetrain() {
-		var hardware = HardwareAdapter.DrivetrainHardware.getInstance();
+		var hardware = HardwareAdapter.DriveHardware.getInstance();
+		hardware.falcons.forEach(this::handleReset);
 		hardware.leftMasterFalcon.setOutput(mDrive.getDriveSignal().leftOutput);
 		hardware.rightMasterFalcon.setOutput(mDrive.getDriveSignal().rightOutput);
-		hardware.falcons.forEach(this::handleReset);
 	}
 
 	private void updateIndexer() {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
-		hardware.masterSpark.setOutput(mIndexer.getSparkOutput());
-		handleFaults(hardware.masterSpark, hardware.slaveSpark);
+		handleReset(hardware.talon);
+		hardware.masterSpark.setOutput(mIndexer.getMasterSparkOutput());
+		hardware.slaveSpark.setOutput(mIndexer.getSlaveSparkOutput());
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 		hardware.talon.setOutput(mIndexer.getTalonOutput());
-		handleReset(hardware.talon);
-		LiveGraph.add("indexerAppliedOutput", hardware.masterSpark.getAppliedOutput());
-		LiveGraph.add("indexerVelocity", hardware.masterEncoder.getVelocity());
-		LiveGraph.add("indexerTargetVelocity", mIndexer.getSparkOutput().getReference());
-		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
-		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
-		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
-		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));
-		LiveGraph.add("batteryVoltage", RobotController.getBatteryVoltage());
-	}
-
-	private void handleFaults(Spark master, Spark slave) {
-		if (slave.getStickyFault(FaultID.kHasReset)) {
-			slave.follow(master);
-			slave.clearFaults();
-			Log.error(kLoggerTag, String.format("%s spark reset", slave.getName()));
-		}
+//		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
+//		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
+//		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
+//		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
+//		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
+//		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
+//		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
+//		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
+//		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));
+//		LiveGraph.add("totalCurrent", pdp.getTotalCurrent());
+//		LiveGraph.add("batteryVoltage", RobotController.getBatteryVoltage());
 	}
 
 	private void updateIntake() {
 		var hardware = HardwareAdapter.IntakeHardware.getInstance();
+		handleReset(hardware.talon);
 		hardware.talon.setOutput(mIntake.getOutput());
 		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
-		handleReset(hardware.talon);
 	}
 
 	public void updateLighting() {
@@ -255,8 +250,8 @@ public class HardwareWriter {
 
 	private void updateShooter() {
 		var hardware = HardwareAdapter.ShooterHardware.getInstance();
+		handleReset(hardware.masterSpark, hardware.slaveSpark);
 		hardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
-		LiveGraph.add("shooterAppliedOutput", hardware.masterSpark.getAppliedOutput());
 		hardware.blockingSolenoid.setExtended(mShooter.getBlockingOutput());
 		hardware.hoodSolenoid.setExtended(mShooter.getHoodOutput());
 		mRumbleOutput |= mShooter.getRumbleOutput();
@@ -264,18 +259,26 @@ public class HardwareWriter {
 
 	private void updateSpinner() {
 		var hardware = HardwareAdapter.SpinnerHardware.getInstance();
-		hardware.talon.setOutput(mSpinner.getOutput());
 		handleReset(hardware.talon);
+		hardware.talon.setOutput(mSpinner.getOutput());
+	}
+
+	private void handleReset(Spark master, Spark slave) {
+		if (mRobotConfig.checkFaults && slave.getStickyFault(FaultID.kHasReset)) {
+			slave.follow(master);
+			slave.clearFaults();
+			Log.error(kLoggerTag, String.format("%s spark reset", slave.getName()));
+		}
 	}
 
 	private void handleReset(Talon talon) {
-		if (talon.hasResetOccurred()) {
+		if (mRobotConfig.checkFaults && talon.hasResetOccurred()) {
 			Log.error(kLoggerTag, String.format("%s talon reset", talon.getName()));
 		}
 	}
 
 	private void handleReset(Falcon falcon) {
-		if (falcon.hasResetOccurred()) {
+		if (mRobotConfig.checkFaults && falcon.hasResetOccurred()) {
 			Log.error(kLoggerTag, String.format("%s falcon reset", falcon.getName()));
 		}
 	}

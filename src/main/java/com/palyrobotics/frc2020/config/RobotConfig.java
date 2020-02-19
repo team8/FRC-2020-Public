@@ -7,7 +7,7 @@ import com.palyrobotics.frc2020.util.config.ConfigBase;
 @SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class RobotConfig extends ConfigBase {
 
-	public boolean coastDriveWhenDisabled, disableHardwareUpdates, enableVisionWhenDisabled;
+	public boolean coastDriveWhenDisabled, disableHardwareUpdates, enableVisionWhenDisabled, checkFaults;
 	public int visionPipelineWhenDisabled;
 
 	// Useful for testing at lower speeds
