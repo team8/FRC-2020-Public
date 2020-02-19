@@ -1,8 +1,26 @@
 {
 	"profiledGains": {
+		"f": 0.00145,
+		"p": 0.0003,
+		"velocity": 140.0,
+		"acceleration": 140.0
 	},
 	"preciseGains": {
-
+		"p": 0.009,
+		"i": 0.03,
+		"d": 0.000675
+	},
+	"oneTimesZoomGains": {
+		"p": 0.005,
+		"i": 0.005,
+		"d": 0.001,
+		"iMax": 0.03
+	},
+	"twoTimesZoomGains": {
+		"p": 0.0005,
+		"i": 0.0025,
+		"d": 0.0005,
+		"iMax": 0.03
 	},
 	"acceptableYawError": 0.15,
 	"alignSwitchYawAngleMin": 40.0

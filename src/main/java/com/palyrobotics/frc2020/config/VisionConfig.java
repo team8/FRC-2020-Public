@@ -10,4 +10,6 @@ public class VisionConfig extends ConfigBase {
 	public ProfiledGains profiledGains;
 	public Gains preciseGains;
 	public double acceptableYawError, alignSwitchYawAngleMin;
+
+	public Gains oneTimesZoomGains, twoTimesZoomGains;
 }

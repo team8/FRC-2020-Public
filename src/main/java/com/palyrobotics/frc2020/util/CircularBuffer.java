@@ -1,13 +1,12 @@
 package com.palyrobotics.frc2020.util;
 
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.Predicate;
 
 public class CircularBuffer<E> {
 
 	private final int mWindowSize;
-	private final Deque<E> mSamples = new LinkedList<>();
+	private final LinkedList<E> mSamples = new LinkedList<>();
 
 	public CircularBuffer(int windowSize) {
 		mWindowSize = windowSize;
@@ -19,7 +18,7 @@ public class CircularBuffer<E> {
 
 	public void add(E val) {
 		mSamples.addLast(val);
-		if (mSamples.size() > mWindowSize) {
+		while (mSamples.size() > mWindowSize) {
 			mSamples.removeFirst();
 		}
 	}
@@ -36,7 +35,7 @@ public class CircularBuffer<E> {
 				.count();
 	}
 
-	public Deque<E> getSamples() {
+	public LinkedList<E> getSamples() {
 		return mSamples;
 	}
 }
