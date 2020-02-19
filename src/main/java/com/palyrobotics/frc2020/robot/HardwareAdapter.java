@@ -2,6 +2,10 @@ package com.palyrobotics.frc2020.robot;
 
 import java.util.List;
 
+<<<<<<< HEAD
+=======
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+>>>>>>> Increased status frame on gyro raw values.
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;

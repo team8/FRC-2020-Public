@@ -12,8 +12,8 @@ public class DriveConfig extends SubsystemConfigBase {
 	public double turnGainsS;
 	public double quickStopWeight, quickTurnScalar, quickStopDeadBand, quickStopScalar, turnSensitivity,
 			lowNegativeInertiaThreshold, lowNegativeInertiaFarScalar, lowNegativeInertiaCloseScalar,
-			lowNegativeInertiaTurnScalar, wheelNonLinearity, controllerRampRate;
-	public int stallCurrentLimit, freeCurrentLimit, freeRpmLimit, nonlinearPasses;
+			lowNegativeInertiaTurnScalar, wheelNonLinearity;
+	public int nonlinearPasses;
 	public double maxPathVelocityMetersPerSecond, maxPathAccelerationMetersPerSecondSquared;
 	public double allowableYawErrorDegrees;
 }

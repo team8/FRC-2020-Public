@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2020.util.control;
 
-import com.palyrobotics.frc2020.util.Util;
+import static com.palyrobotics.frc2020.util.Util.clamp;
 
 import edu.wpi.first.hal.util.BoundaryException;
 import edu.wpi.first.wpilibj.Timer;
@@ -35,13 +35,6 @@ public class SynchronousPIDF {
 	}
 
 	/**
-	 * Checks if the given input is within the range (min, max), both exclusive.
-	 */
-	public static boolean inRange(double v, double min, double max) {
-		return v > min && v < max;
-	}
-
-	/**
 	 * Allocate a PID object with the given constants for P, I, D
 	 *
 	 * @param Kp the proportional coefficient
@@ -64,26 +57,34 @@ public class SynchronousPIDF {
 		setPIDF(Kp, Ki, Kd, Kf);
 	}
 
-	public double calculate(double input, double inputDerivative) {
+	/**
+	 * Checks if the given input is within the range (min, max), both exclusive.
+	 */
+	public static boolean inRange(double v, double min, double max) {
+		return v > min && v < max;
+	}
+
+	public double getDt() {
 		double timestamp = Timer.getFPGATimestamp();
 		double dt = timestamp - m_last_timestamp;
 		m_last_timestamp = timestamp;
+		return Math.max(dt, 1e-6);
+	}
 
-		return calculate(input, inputDerivative, dt);
+	public double calculate(double input) {
+		double dt = getDt();
+		return calculate(input, (m_error - m_prevError) / dt, dt);
+	}
+
+	public double calculate(double input, double inputDerivative) {
+		return calculate(input, inputDerivative, getDt());
 	}
 
 	/**
 	 * Read the input, calculate the output accordingly, and write to the output. This should be called
 	 * at a constant rate by the user (ex. in a timed thread)
-	 *
-	 * @param input the input
-	 * @param dt    time passed since previous call to calculate
 	 */
 	public double calculate(double input, double inputDerivative, double dt) {
-		if (dt < 1E-6) {
-			dt = 1E-6;
-		}
-
 		m_last_input = input;
 		m_error = m_setpoint - input;
 		if (m_continuous) {
@@ -105,11 +106,11 @@ public class SynchronousPIDF {
 		// Don't blow away m_error so as to not break derivative
 		double proportionalError = Math.abs(m_error) < m_deadband ? 0 : m_error;
 
-//		m_result = (m_P * proportionalError + m_I * m_totalError + m_D * inputDerivative + m_F * m_setpoint);
+//        m_result = (m_P * proportionalError + m_I * m_totalError + m_D * (m_error - m_prevError) / dt + m_F * m_setpoint);
 		m_result = (m_P * proportionalError + m_I * m_totalError + m_D * inputDerivative + m_F * m_setpoint);
 		m_prevError = m_error;
 
-		return Util.clamp(m_result, m_minimumOutput, m_maximumOutput);
+		return clamp(m_result, m_minimumOutput, m_maximumOutput);
 	}
 
 	/**
@@ -302,19 +303,5 @@ public class SynchronousPIDF {
 
 	public void resetIntegrator() {
 		m_totalError = 0;
-	}
-
-	public String getState() {
-		String lState = "";
-
-		lState += "Kp: " + m_P + "\n";
-		lState += "Ki: " + m_I + "\n";
-		lState += "Kd: " + m_D + "\n";
-
-		return lState;
-	}
-
-	public String getType() {
-		return "PIDController";
 	}
 }

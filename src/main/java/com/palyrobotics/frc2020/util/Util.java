@@ -116,7 +116,7 @@ public class Util {
 
 	public static String classToJsonName(Class<?> clazz) {
 		if (clazz.isAnonymousClass()) {
-			return String.format("anonymous%s", clazz.getSuperclass().getSimpleName());
+			return "anonymous" + clazz.getSuperclass().getSimpleName();
 		}
 		String className = clazz.getSimpleName();
 		// Make first character lowercase to match JSON conventions
