@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.robot;
 
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
+import com.palyrobotics.frc2020.util.InterpolatingDoubleTreeMap;
 import com.palyrobotics.frc2020.util.Util;
 import com.revrobotics.ColorMatchResult;
 
@@ -34,6 +35,7 @@ public class RobotState {
 	public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;
 	public Pose2d drivePoseMeters = new Pose2d();
 	public double driveVelocityMetersPerSecond;
+	public InterpolatingDoubleTreeMap pastPoses = new InterpolatingDoubleTreeMap();
 
 	/* Indexer */
 	public boolean indexerIsHopperExtended;

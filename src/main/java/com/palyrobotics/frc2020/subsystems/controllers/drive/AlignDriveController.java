@@ -10,6 +10,7 @@ import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.MedianFilter;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
@@ -94,7 +95,7 @@ public class AlignDriveController extends ChezyDriveController {
 		double gyroYawDegrees = state.driveYawDegrees;
 		double gyroYawAngularVelocity = state.driveYawAngularVelocityDegrees;
 		if (mLimelight.isTargetFound()) {
-			double currentYawToTargetDegrees = mLimelight.getYawToTarget();
+			double currentYawToTargetDegrees = state.pastPoses.getInterpolated(Timer.getFPGATimestamp() - mLimelight.getPipelineLatency() - 11) - mLimelight.getYawToTarget();
 			LiveGraph.add("currentYawToTargetDegrees", currentYawToTargetDegrees);
 			++mTargetReadingsCount;
 			mTargetGyroYaw = mTargetGyroYawFilter.calculate(gyroYawDegrees - currentYawToTargetDegrees);

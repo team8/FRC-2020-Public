@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 
 public class HardwareReader {
 
@@ -82,6 +83,7 @@ public class HardwareReader {
 		hardware.gyro.getRawGyro(mGyroAngularVelocities);
 		robotState.driveYawDegrees = mGyroAngles[kYawIndex];
 		robotState.driveYawAngularVelocityDegrees = mGyroAngularVelocities[kYawAngularVelocityIndex];
+		robotState.pastPoses.put(Timer.getFPGATimestamp(), robotState.driveYawDegrees);
 		robotState.driveLeftVelocity = hardware.leftMasterFalcon.getConvertedVelocity();
 		robotState.driveRightVelocity = hardware.rightMasterFalcon.getConvertedVelocity();
 		robotState.driveLeftPosition = hardware.leftMasterFalcon.getConvertedPosition();
