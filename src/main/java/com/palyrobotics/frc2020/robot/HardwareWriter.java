@@ -115,13 +115,19 @@ public class HardwareWriter {
 		hardware.masterSpark.getController().setOutputRange(-maxOutput, maxOutput);
 		hardware.masterSpark.setSmartCurrentLimit((int) Math.round(30.0 / maxOutput));
 		hardware.masterSpark.setSecondaryCurrentLimit(40.0 / maxOutput);
-		// Talon
-		var talon = hardware.talon;
-		talon.configFactoryDefault(kTimeoutMs);
-		talon.enableVoltageCompensation(true);
-		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
-		talon.configOpenloopRamp(0.1, kTimeoutMs);
-		talon.setInverted(true);
+		// Talons
+		hardware.leftVTalon.configFactoryDefault(kTimeoutMs);
+		hardware.leftVTalon.enableVoltageCompensation(true);
+		hardware.leftVTalon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
+		hardware.leftVTalon.configOpenloopRamp(0.1, kTimeoutMs);
+		hardware.leftVTalon.setInverted(true);
+
+		hardware.rightVTalon.configFactoryDefault(kTimeoutMs);
+		hardware.rightVTalon.enableVoltageCompensation(true);
+		hardware.rightVTalon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
+		hardware.rightVTalon.configOpenloopRamp(0.1, kTimeoutMs);
+		hardware.rightVTalon.setInverted(true);
+
 	}
 
 	private void configureIntakeHardware() {
@@ -217,12 +223,14 @@ public class HardwareWriter {
 
 	private void updateIndexer() {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
-		handleReset(hardware.talon);
+		handleReset(hardware.leftVTalon);
+		handleReset(hardware.rightVTalon);
 		hardware.masterSpark.setOutput(mIndexer.getMasterSparkOutput());
 		hardware.slaveSpark.setOutput(mIndexer.getSlaveSparkOutput());
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
-		hardware.talon.setOutput(mIndexer.getTalonOutput());
+		hardware.leftVTalon.setOutput(mIndexer.getLeftVTalonOutput());
+		hardware.rightVTalon.setOutput(mIndexer.getRightVTalonOutput());
 //		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
 //		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
 //		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
