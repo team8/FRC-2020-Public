@@ -115,12 +115,13 @@ public class HardwareWriter {
 		hardware.masterSpark.getController().setOutputRange(-maxOutput, maxOutput);
 		hardware.masterSpark.setSmartCurrentLimit((int) Math.round(30.0 / maxOutput));
 		hardware.masterSpark.setSecondaryCurrentLimit(40.0 / maxOutput);
+
 		// Talons
 		hardware.leftVTalon.configFactoryDefault(kTimeoutMs);
 		hardware.leftVTalon.enableVoltageCompensation(true);
 		hardware.leftVTalon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		hardware.leftVTalon.configOpenloopRamp(0.1, kTimeoutMs);
-		hardware.leftVTalon.setInverted(true);
+		hardware.leftVTalon.setInverted(false);
 
 		hardware.rightVTalon.configFactoryDefault(kTimeoutMs);
 		hardware.rightVTalon.enableVoltageCompensation(true);
