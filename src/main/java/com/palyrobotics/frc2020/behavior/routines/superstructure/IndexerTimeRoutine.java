@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.behavior.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Indexer.BeltState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
@@ -23,6 +24,7 @@ public class IndexerTimeRoutine extends TimeoutRoutineBase {
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		commands.indexerWantedBeltState = BeltState.INDEX;
+		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 	}
 
 	@Override
