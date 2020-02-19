@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class Robot extends TimedRobot {
 
+	public static final double kPeriod = 0.01;
 	private static final String kLoggerTag = Util.classToJsonName(Robot.class);
 	private static final boolean kCanUseHardware = RobotBase.isReal() || !System.getProperty("os.name").startsWith("Mac");
 	private final RobotState mRobotState = new RobotState();
@@ -53,6 +54,10 @@ public class Robot extends TimedRobot {
 	private Set<RobotService> mServices = Set.of(new CommandReceiverService(), new NetworkLoggerService(),
 			new TelemetryService()),
 			mEnabledServices;
+
+	public Robot() {
+		super(kPeriod);
+	}
 
 	@Override
 	public void robotInit() {

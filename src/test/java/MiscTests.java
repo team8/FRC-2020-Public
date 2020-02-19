@@ -4,6 +4,7 @@ import com.palyrobotics.frc2020.util.InterpolatingDoubleTreeMap;
 import com.palyrobotics.frc2020.util.control.*;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.PIDController;
 
 import org.junit.jupiter.api.Test;
 
@@ -64,5 +65,12 @@ public class MiscTests {
 		Timer.delay(0.11);
 		state.setExtended(false);
 		assertFalse(state.isExtended());
+	}
+
+	@Test
+	public void testPid() {
+		var pid254 = new SynchronousPIDF(0.009, 0.0, 0.000675);
+		var pidWpi = new PIDController(0.009, 0.0, 0.000675);
+		assertEquals(pid254.calculate(1.0, -50.0, 0.02), pidWpi.calculate(1.0));
 	}
 }

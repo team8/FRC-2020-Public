@@ -6,11 +6,11 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
-import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
@@ -36,6 +36,8 @@ public class HardwareWriter {
 			kPidIndex = 0;
 	private static final String kLoggerTag = Util.classToJsonName(HardwareWriter.class);
 	public static final double kVoltageCompensation = 12.0;
+	public static final SupplyCurrentLimitConfiguration k30AmpCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(
+			true, 30.0, 60.0, 1.0);
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	private final Climber mClimber = Climber.getInstance();
 	private final Drive mDrive = Drive.getInstance();
@@ -75,28 +77,34 @@ public class HardwareWriter {
 
 	private void configureDriveHardware() {
 		var hardware = HardwareAdapter.DriveHardware.getInstance();
-		var driveConfig = Configs.get(DriveConfig.class);
+		/* Falcons */
 		for (Falcon falcon : hardware.falcons) {
 			falcon.configFactoryDefault(kTimeoutMs);
 			falcon.enableVoltageCompensation(true);
 			falcon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 			falcon.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPidIndex, kTimeoutMs);
 			falcon.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToZero, kTimeoutMs);
-//			falcon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration())
-			falcon.configOpenloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
-			falcon.configClosedloopRamp(driveConfig.controllerRampRate, kTimeoutMs);
+			falcon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
+					true, 40.0, 80.0, 1.0));
+			falcon.configOpenloopRamp(0.1, kTimeoutMs);
+			falcon.configClosedloopRamp(0.1, kTimeoutMs);
 			falcon.configSensorConversions(DriveConstants.kDriveMetersPerTick, DriveConstants.kDriveMetersPerSecondPerTickPer100Ms);
 		}
-
-		/* Left Side */
+		// Left
 		hardware.leftMasterFalcon.setInverted(false);
 		hardware.leftSlaveFalcon.follow(hardware.leftMasterFalcon);
 		hardware.leftSlaveFalcon.setInverted(InvertType.FollowMaster);
-
-		/* Right Side */
+		// Right
 		hardware.rightMasterFalcon.setInverted(true);
 		hardware.rightSlaveFalcon.follow(hardware.rightMasterFalcon);
 		hardware.rightSlaveFalcon.setInverted(InvertType.FollowMaster);
+		/* Gyro */
+		hardware.gyro.clearStickyFaults(kTimeoutMs);
+		hardware.gyro.configFactoryDefault(kTimeoutMs);
+		// 10 ms update period for yaw degrees and yaw angular velocity in degrees per second
+		hardware.gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 10, kTimeoutMs);
+		hardware.gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_2_Gyro, 10, kTimeoutMs);
+		/* Falcons and Gyro */
 		resetDriveSensors(new Pose2d());
 	}
 
@@ -115,20 +123,21 @@ public class HardwareWriter {
 		hardware.masterSpark.getController().setOutputRange(-maxOutput, maxOutput);
 		hardware.masterSpark.setSmartCurrentLimit((int) Math.round(30.0 / maxOutput));
 		hardware.masterSpark.setSecondaryCurrentLimit(40.0 / maxOutput);
-
-		// Talons
+		/* V-Belt Talons */
+		// Left
 		hardware.leftVTalon.configFactoryDefault(kTimeoutMs);
 		hardware.leftVTalon.enableVoltageCompensation(true);
 		hardware.leftVTalon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		hardware.leftVTalon.configOpenloopRamp(0.1, kTimeoutMs);
 		hardware.leftVTalon.setInverted(true);
-
+		hardware.leftVTalon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
+		// Right
 		hardware.rightVTalon.configFactoryDefault(kTimeoutMs);
 		hardware.rightVTalon.enableVoltageCompensation(true);
 		hardware.rightVTalon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		hardware.rightVTalon.configOpenloopRamp(0.1, kTimeoutMs);
-		hardware.rightVTalon.setInverted(false);
-
+		hardware.rightVTalon.setInverted(true);
+		hardware.rightVTalon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
 	}
 
 	private void configureIntakeHardware() {
@@ -137,7 +146,7 @@ public class HardwareWriter {
 		talon.enableVoltageCompensation(true);
 		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
-		talon.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30.0, 5.0, 2.0));
+		talon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration);
 		talon.setInverted(true);
 	}
 
@@ -166,14 +175,6 @@ public class HardwareWriter {
 		talon.enableVoltageCompensation(true);
 		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 	}
-
-	// public void resetDriveSensors(Pose2d pose) {
-	// var driveHardware = HardwareAdapter.DrivetrainHardware.getInstance();
-	// driveHardware.gyro.setYaw(pose.getRotation().getDegrees(), kTimeoutMs);
-	// driveHardware.falcons.forEach(falcon -> falcon.setSelectedSensorPosition(0,
-	// kPidIndex, kTimeoutMs));
-	// Log.info(kLoggerTag, String.format("Drive sensors reset to %s", pose));
-	// }
 
 	public void resetDriveSensors(Pose2d pose) {
 		double heading = pose.getRotation().getDegrees();

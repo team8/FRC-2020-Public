@@ -5,6 +5,7 @@ import static com.palyrobotics.frc2020.util.Util.*;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.Robot;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.Util;
@@ -15,7 +16,8 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 public class YawDriveController extends Drive.DriveController {
 
 	private static final String kLoggerTag = Util.classToJsonName(YawDriveController.class);
-	private ProfiledPIDController mController = new ProfiledPIDController(0.0, 0.0, 0.0, new TrapezoidProfile.Constraints());
+	private ProfiledPIDController mController = new ProfiledPIDController(
+			0.0, 0.0, 0.0, new TrapezoidProfile.Constraints(), Robot.kPeriod);
 	private Double mTargetYaw;
 
 	public YawDriveController() {
