@@ -107,7 +107,7 @@ public class HardwareReader {
 		robotState.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
-		checkTalonFaults(hardware.talon);
+		checkTalonFaults(hardware.leftVTalon);
 	}
 
 	private void readIntakeState(RobotState robotState) {

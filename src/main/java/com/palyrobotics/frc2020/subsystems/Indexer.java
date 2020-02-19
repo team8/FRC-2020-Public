@@ -13,7 +13,8 @@ public class Indexer extends SubsystemBase {
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
 	private ControllerOutput mMasterSparkOutput = new ControllerOutput(),
 			mSlaveSparkOutput = new ControllerOutput(),
-			mTalonOutput = new ControllerOutput();
+			mLeftVTalonOutput = new ControllerOutput(),
+			mRightVTalonOutput = new ControllerOutput();
 	private boolean mHopperOutput, mBlockOutput;
 
 	private Indexer() {
@@ -52,33 +53,39 @@ public class Indexer extends SubsystemBase {
 			case IDLE:
 				mMasterSparkOutput.setIdle();
 				mSlaveSparkOutput.setIdle();
-				mTalonOutput.setIdle();
+				mLeftVTalonOutput.setIdle();
+				mRightVTalonOutput.setIdle();
 				mBlockOutput = true;
 				break;
 			case INDEX:
 				setIndexerVelocity(mConfig.sparkIndexingOutput);
-				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mLeftVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mRightVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = true;
 				break;
 			case WAITING_TO_FEED:
 				mMasterSparkOutput.setIdle();
 				mSlaveSparkOutput.setIdle();
-				mTalonOutput.setIdle();
+				mLeftVTalonOutput.setIdle();
+				mRightVTalonOutput.setIdle();
 				mBlockOutput = false;
 				break;
 			case FEED_SINGLE:
 				setIndexerVelocity(mConfig.feedingOutput);
-				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mLeftVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mRightVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 				break;
 			case FEED_ALL:
 				setIndexerVelocity(mConfig.feedingOutput);
-				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mLeftVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mRightVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
 				mBlockOutput = false;
 				break;
 			case REVERSING:
 				setIndexerVelocity(-mConfig.reversingOutput);
-				mTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mLeftVTalonOutput.setIdle();
+				mRightVTalonOutput.setIdle();
 				mBlockOutput = false;
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
@@ -97,8 +104,12 @@ public class Indexer extends SubsystemBase {
 		return mSlaveSparkOutput;
 	}
 
-	public ControllerOutput getTalonOutput() {
-		return mTalonOutput;
+	public ControllerOutput getLeftVTalonOutput() {
+		return mLeftVTalonOutput;
+	}
+
+	public ControllerOutput getRightVTalonOutput() {
+		return mRightVTalonOutput;
 	}
 
 	public boolean getHopperOutput() {
