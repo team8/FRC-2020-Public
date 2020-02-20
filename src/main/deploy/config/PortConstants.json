@@ -23,6 +23,7 @@
 =======
 	"nariIndexerFrontLeftPort": 5,
 	"nariIndexerFrontRightPort": 6,
+<<<<<<< HEAD
 >>>>>>> work in progress variable renaming
 	"nariIndexerLeftMiddleInfraredDIO": 9,
 <<<<<<< HEAD
@@ -30,6 +31,10 @@
 =======
 	"nariIndexerMiddleFrontInfraredDIO": 7,
 >>>>>>> added front middle sensor
+=======
+	"nariIndexerFrontMiddlePort": 7,
+	"nariIndexerMiddleRightPort": 9,
+>>>>>>> renaming complete; code compiles now
 	"nariIntakeId": 8,
 	"nariIntakeSolenoidId": 0,
 	"nariLightingPwmPort": 9,
