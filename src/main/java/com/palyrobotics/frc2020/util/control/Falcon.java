@@ -1,23 +1,27 @@
 package com.palyrobotics.frc2020.util.control;
 
-import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import static com.palyrobotics.frc2020.robot.HardwareWriter.kTimeoutMs;
+
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.esotericsoftware.minlog.Log;
+import com.palyrobotics.frc2020.util.control.Talon.BaseTalonController;
 
 public class Falcon extends TalonFX implements Controller {
 
-	static class FalconController extends Talon.TalonController {
+	static class FalconController extends BaseTalonController<Falcon> {
 
-		protected FalconController(BaseTalon talon) {
-			super(talon);
+		protected FalconController(Falcon falcon) {
+			super(falcon);
 		}
 	}
 
 	private final FalconController mController = new FalconController(this);
 	private final String mName;
 
-	public Falcon(int deviceNumber, String name) {
-		super(deviceNumber);
+	public Falcon(int deviceId, String name) {
+		super(deviceId);
 		mName = name;
+		clearStickyFaults(kTimeoutMs);
 	}
 
 	public boolean setOutput(ControllerOutput output) {
@@ -31,6 +35,20 @@ public class Falcon extends TalonFX implements Controller {
 	public void configSensorConversions(double positionConversion, double velocityConversion) {
 		mController.mPositionConversion = positionConversion;
 		mController.mVelocityConversion = velocityConversion;
+	}
+
+	/**
+	 * @see Talon#handleReset()
+	 */
+	public void handleReset() {
+		if (hasResetOccurred()) {
+			Log.error("reset", String.format("%s reset", mController.getName()));
+			mController.updateFrameTimings();
+		}
+	}
+
+	public void setFrameTimings(int controlFrameMs, int statusFrameMs) {
+		mController.setFrameTimings(controlFrameMs, statusFrameMs);
 	}
 
 	public String getName() {

@@ -8,15 +8,15 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.util.config.Configs;
 
-public abstract class SimpleControllerBase<TController> {
+public abstract class SimpleControllerBase<TController extends Controller> {
 
 	private static final int kProfiledPositionSlot = 1, kProfiledVelocitySlot = 2;
 	private static Map<ControllerOutput.Mode, Integer> sModeToSlot = Map.of(
 			ControllerOutput.Mode.PROFILED_POSITION, kProfiledPositionSlot,
 			ControllerOutput.Mode.PROFILED_VELOCITY, kProfiledVelocitySlot);
-
 	protected RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	protected TController mController;
+	protected int mControlFrameMs, mStatusFrameMs;
 	private double mLastReference, mLastArbitraryPercentOutput;
 	private int mLastSlot;
 	private ControllerOutput.Mode mLastMode;
@@ -54,7 +54,7 @@ public abstract class SimpleControllerBase<TController> {
 				// System.out.printf("%s, %d, %f, %f, %s%n", type, slot, reference,
 				// arbitraryPercentOutput, Configs.toJson(gains));
 			} else {
-				Log.error("sparkController", String.format("Error updating output on spark max with ID: %d", getId()));
+				Log.error("controller", String.format("Error updating output on controller: %s", getName()));
 			}
 		}
 		return false;
@@ -73,7 +73,9 @@ public abstract class SimpleControllerBase<TController> {
 
 	abstract boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput);
 
-	abstract int getId();
+	String getName() {
+		return mController.getName();
+	}
 
 	protected void updateGains(boolean isFirstInitialization, int slot, Gains newGains, Gains lastGains) {
 		if (Double.compare(lastGains.p, newGains.p) != 0) setP(slot, newGains.p);
@@ -95,4 +97,24 @@ public abstract class SimpleControllerBase<TController> {
 	abstract void setIZone(int slot, double iZone);
 
 	abstract void setIMax(int slot, double iMax);
+
+	/**
+	 * Configures how often this controller communicates with the roboRIO over CAN.
+	 *
+	 * @param controlFrameMs Period for commands sent to controller
+	 * @param statusFrameMs  Period for received information from the controller. Needs to be similar to
+	 *                       closed loop control loop period, since it contains encoder information
+	 */
+	void setFrameTimings(int controlFrameMs, int statusFrameMs) {
+		mControlFrameMs = controlFrameMs;
+		mStatusFrameMs = statusFrameMs;
+		updateFrameTimings();
+	}
+
+	/**
+	 * Force telling the speed controller its communication periods.
+	 *
+	 * @see #setFrameTimings(int, int) which defines periods.
+	 */
+	abstract void updateFrameTimings();
 }

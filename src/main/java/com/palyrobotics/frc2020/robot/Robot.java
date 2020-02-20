@@ -151,7 +151,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		if (mEnabledSubsystems.contains(mLighting)) {
+		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
 			mHardwareWriter.updateLighting();
 		}

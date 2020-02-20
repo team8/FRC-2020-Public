@@ -70,9 +70,9 @@ public class Shooter extends SubsystemBase {
 //		LiveGraph.add("shooterTargetDistance", targetDistanceInches == null ? -1 : targetDistanceInches);
 //		LiveGraph.add("shooterTargetVelocity", targetFlywheelVelocity);
 //		LiveGraph.add("shooterCurrentVelocity", state.shooterFlywheelVelocity);
-		TelemetryService.putArbitrary("shooterTargetDistance", targetDistanceInches);
-		TelemetryService.putArbitrary("shooterTargetVelocity", targetFlywheelVelocity);
-		TelemetryService.putArbitrary("shooterFlywheelVelocity", state.shooterFlywheelVelocity);
+//		TelemetryService.putArbitrary("shooterTargetDistance", targetDistanceInches);
+//		TelemetryService.putArbitrary("shooterTargetVelocity", targetFlywheelVelocity);
+//		TelemetryService.putArbitrary("shooterFlywheelVelocity", state.shooterFlywheelVelocity);
 	}
 
 	private Double getTargetDistanceInches(@ReadOnly Commands commands) {

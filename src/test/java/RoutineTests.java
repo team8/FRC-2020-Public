@@ -52,6 +52,7 @@ public class RoutineTests {
 			routineManager.update(commands, state);
 			Timer.delay(0.02);
 		} while (!routineManager.getCurrentRoutines().isEmpty());
+		System.out.println(timer.get());
 		assertTrue(timer.get() > 0.2);
 	}
 }

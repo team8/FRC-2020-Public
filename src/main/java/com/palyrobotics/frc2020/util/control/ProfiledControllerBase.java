@@ -1,6 +1,6 @@
 package com.palyrobotics.frc2020.util.control;
 
-public abstract class ProfiledControllerBase<TController> extends SimpleControllerBase<TController> {
+public abstract class ProfiledControllerBase<TController extends Controller> extends SimpleControllerBase<TController> {
 
 	protected ProfiledControllerBase(TController controller) {
 		super(controller);

@@ -118,7 +118,7 @@ public class HardwareReader {
 	private void readShooterState(RobotState robotState) {
 		var hardware = ShooterHardware.getInstance();
 //		LiveGraph.add("shooterFlywheelVelocity", hardware.masterEncoder.getVelocity());
-// 		LiveGraph.add("shooterAppliedOutput", hardware.masterSpark.getAppliedOutput());
+//		LiveGraph.add("shooterAppliedOutput", hardware.masterSpark.getAppliedOutput());
 		robotState.shooterFlywheelVelocity = hardware.masterEncoder.getVelocity();
 		robotState.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
 		robotState.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();
