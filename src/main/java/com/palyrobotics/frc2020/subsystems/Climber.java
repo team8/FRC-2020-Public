@@ -14,7 +14,7 @@ public class Climber extends SubsystemBase {
 	}
 
 	private static Climber sInstance = new Climber();
-	private ControllerOutput mVerticalOutput = new ControllerOutput(), mAdjustingOutput = new ControllerOutput();
+	private ControllerOutput mVerticalOutput = new ControllerOutput();
 	private boolean mSolenoidOutput;
 	private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
 
@@ -29,30 +29,24 @@ public class Climber extends SubsystemBase {
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		switch (commands.climberWantedState) {
 			case RAISING:
-				mVerticalOutput.setTargetPositionProfiled(mConfig.climberTopHeight, mConfig.raisingArbitraryDemand,
-						mConfig.raisingGains);
-				mAdjustingOutput.setIdle();
+				mVerticalOutput.setTargetPositionProfiled(mConfig.climberTopHeight, mConfig.raisingArbitraryDemand, mConfig.raisingGains);
 				mSolenoidOutput = true;
 				break;
 			case LOWERING_TO_BAR:
 				mVerticalOutput.setPercentOutput(mConfig.loweringPercentOutput);
-				mAdjustingOutput.setIdle();
 				mSolenoidOutput = true;
 				break;
 			case CLIMBING:
 				mVerticalOutput.setTargetVelocityProfiled(commands.climberWantedVelocity,
 						mConfig.climbingArbitraryDemand, mConfig.climbingGains);
-				mAdjustingOutput.setPercentOutput(commands.climberWantedAdjustingPercentOutput);
 				mSolenoidOutput = true;
 				break;
 			case LOCKED:
 				mVerticalOutput.setIdle();
-				mAdjustingOutput.setPercentOutput(commands.climberWantedAdjustingPercentOutput);
 				mSolenoidOutput = false;
 				break;
 			case IDLE:
 				mVerticalOutput.setIdle();
-				mAdjustingOutput.setIdle();
 				mSolenoidOutput = true;
 				break;
 		}
@@ -60,10 +54,6 @@ public class Climber extends SubsystemBase {
 
 	public ControllerOutput getVerticalOutput() {
 		return mVerticalOutput;
-	}
-
-	public ControllerOutput getAdjustingOutput() {
-		return mAdjustingOutput;
 	}
 
 	public boolean getSolenoidOutput() {

@@ -70,10 +70,9 @@ public class HardwareReader {
 
 	private void readClimberState(RobotState robotState) {
 		var hardware = ClimberHardware.getInstance();
-		robotState.climberPosition = hardware.verticalSparkEncoder.getPosition();
-		robotState.climberVelocity = hardware.verticalSparkEncoder.getVelocity();
-		checkSparkFaults(hardware.verticalSpark);
-		checkSparkFaults(hardware.horizontalSpark);
+		robotState.climberPosition = hardware.sparkEncoder.getPosition();
+		robotState.climberVelocity = hardware.sparkEncoder.getVelocity();
+		checkSparkFaults(hardware.spark);
 	}
 
 	private void readDriveState(RobotState robotState) {
