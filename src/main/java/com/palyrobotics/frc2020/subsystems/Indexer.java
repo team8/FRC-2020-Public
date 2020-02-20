@@ -26,28 +26,14 @@ public class Indexer extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-//		double multiplier, breh;
-//		if (((long) (Timer.getFPGATimestamp() * 4.0) % 2L) == 0L) {
-//			multiplier = 0.0;
-//			breh = 1.0;
+		double leftMultiplier = 1.0, rightMultiplier = 1.0;
+//		if ((Math.round(Timer.getFPGATimestamp() * mConfig.pulsePeriod) % 2L) == 0L) {
+//			leftMultiplier = 0.0;
+//			rightMultiplier = 0.6;
 //		} else {
-//			multiplier = 1.0;
-//			breh = 1.0; // 0.0, indexer
+//			leftMultiplier = 0.4;
+//			rightMultiplier = 0.0;
 //		}
-
-//		if (Math.sin(Timer.getFPGATimestamp() * 2 * Math.PI) > 0) {
-//			multiplier = 0.0;
-//			breh = 1.0;
-//		} else {
-//			multiplier = 1.0;
-//			breh = 0.0;
-//		}
-
-//		multiplier = Math.sin(2 * Math.PI * Timer.getFPGATimestamp());
-//		breh = Math.sin(2 * Math.PI * Timer.getFPGATimestamp() + Math.PI);
-//		multiplier = 1.0;
-//		breh = 1.0;
-//		LiveGraph.add("multiplier", multiplier);
 
 		switch (commands.indexerWantedBeltState) {
 			case IDLE:
@@ -59,8 +45,8 @@ public class Indexer extends SubsystemBase {
 				break;
 			case INDEX:
 				setIndexerVelocity(mConfig.sparkIndexingOutput);
-				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput);
-				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput);
+				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
+				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
 				mBlockOutput = true;
 				break;
 			case WAITING_TO_FEED:
@@ -72,14 +58,14 @@ public class Indexer extends SubsystemBase {
 				break;
 			case FEED_SINGLE:
 				setIndexerVelocity(mConfig.feedingOutput);
-				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput);
-				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput);
+				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
+				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
 				mBlockOutput = false;
 				break;
 			case FEED_ALL:
 				setIndexerVelocity(mConfig.feedingOutput);
-				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput);
-				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput);
+				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
+				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
 				mBlockOutput = false;
 				break;
 			case REVERSING:

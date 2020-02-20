@@ -65,11 +65,6 @@ public class Spark extends CANSparkMax implements Controller {
 		}
 
 		@Override
-		int getId() {
-			return mController.getDeviceId();
-		}
-
-		@Override
 		void setP(int slot, double p) {
 			mPidController.setP(p, slot);
 		}
@@ -97,6 +92,14 @@ public class Spark extends CANSparkMax implements Controller {
 		@Override
 		void setIMax(int slot, double iMax) {
 			mPidController.setIMaxAccum(iMax, slot);
+		}
+
+		@Override
+		void updateFrameTimings() {
+			mController.setControlFramePeriodMs(mControlFrameMs);
+			mController.setPeriodicFramePeriod(PeriodicFrame.kStatus0, mStatusFrameMs);
+			mController.setPeriodicFramePeriod(PeriodicFrame.kStatus1, mStatusFrameMs);
+			mController.setPeriodicFramePeriod(PeriodicFrame.kStatus2, mStatusFrameMs);
 		}
 	}
 

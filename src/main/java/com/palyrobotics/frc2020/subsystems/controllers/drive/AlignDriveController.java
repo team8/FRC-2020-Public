@@ -103,7 +103,7 @@ public class AlignDriveController extends ChezyDriveController {
 				mPidController.setPID(preciseGains.p, preciseGains.i, preciseGains.d);
 //				mPidController.setIntegratorRange(-preciseGains.iMax, preciseGains.iMax);
 				mPidController.setSetpoint(mTargetGyroYaw);
-				double percentOutput = mPidController.calculate(gyroYawDegrees, gyroYawAngularVelocity);
+				double percentOutput = mPidController.calculate(gyroYawDegrees, -gyroYawAngularVelocity);
 				double staticAdjustedPercentOutput = percentOutput + Math.signum(percentOutput) * mConfig.turnGainsS;
 //				CSVWriter.addData("percentOutput", percentOutput);
 //				CSVWriter.addData("gyroYawDegrees", gyroYawDegrees);

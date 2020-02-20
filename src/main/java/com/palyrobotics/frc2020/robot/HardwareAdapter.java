@@ -82,9 +82,11 @@ public class HardwareAdapter {
 		private static IndexerHardware sInstance;
 		final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId, "Indexer Master"),
 				slaveSpark = new Spark(sPortConstants.nariIndexerSlaveId, "Indexer Slave");
+		final List<Spark> sparks = List.of(masterSpark, slaveSpark);
 		final CANEncoder masterEncoder = masterSpark.getEncoder(), slaveEncoder = slaveSpark.getEncoder();
 		final Talon leftVTalon = new Talon(sPortConstants.nariIndexerLeftVTalonId, "Indexer Left V"),
 				rightVTalon = new Talon(sPortConstants.nariIndexerRightVTalonId, "Indexer Right V");
+		final List<Talon> vTalons = List.of(leftVTalon, rightVTalon);
 		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);
 		final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDio),

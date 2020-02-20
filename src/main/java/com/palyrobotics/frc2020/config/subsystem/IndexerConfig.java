@@ -7,5 +7,6 @@ import com.palyrobotics.frc2020.util.control.Gains;
 public class IndexerConfig extends SubsystemConfigBase {
 
 	public double sparkIndexingOutput, leftTalonIndexingOutput, rightTalonIndexingOutput, feedingOutput, reversingOutput, reverseTime;
+	public double pulsePeriod;
 	public Gains masterVelocityGains, slaveVelocityGains;
 }

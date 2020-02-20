@@ -5,18 +5,18 @@ import static java.util.Map.entry;
 
 import java.util.Map;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.esotericsoftware.minlog.Log;
 
 public class Talon extends TalonSRX implements Controller {
 
-	static class TalonController extends ProfiledControllerBase<BaseTalon> {
+	static class BaseTalonController<T extends BaseTalon & Controller> extends ProfiledControllerBase<T> {
 
 		protected double mPositionConversion, mVelocityConversion;
 
-		protected TalonController(BaseTalon talon) {
+		protected BaseTalonController(T talon) {
 			super(talon);
 		}
 
@@ -72,11 +72,6 @@ public class Talon extends TalonSRX implements Controller {
 		}
 
 		@Override
-		int getId() {
-			return mController.getDeviceID();
-		}
-
-		@Override
 		void setP(int slot, double p) {
 			mController.config_kP(slot, p, kTimeoutMs);
 		}
@@ -105,6 +100,17 @@ public class Talon extends TalonSRX implements Controller {
 		void setIMax(int slot, double iMax) {
 			mController.configMaxIntegralAccumulator(slot, iMax, kTimeoutMs);
 		}
+
+		@Override
+		void updateFrameTimings() {
+			/* Update period of commands sent to controller */
+			mController.setControlFramePeriod(ControlFrame.Control_3_General, mControlFrameMs);
+			/* Update period of feedback received from controller */
+			// Applied motor output, fault information, limit switch information
+			mController.setStatusFramePeriod(StatusFrame.Status_1_General, mStatusFrameMs, kTimeoutMs);
+			// Selected sensor position and velocity, supply current measurement, sticky fault information
+			mController.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, mStatusFrameMs, kTimeoutMs);
+		}
 	}
 
 	protected static final Map<ControllerOutput.Mode, ControlMode> kModeToController = Map.ofEntries(
@@ -113,7 +119,7 @@ public class Talon extends TalonSRX implements Controller {
 			entry(ControllerOutput.Mode.VELOCITY, ControlMode.Velocity),
 			entry(ControllerOutput.Mode.PROFILED_POSITION, ControlMode.MotionMagic),
 			entry(ControllerOutput.Mode.PROFILED_VELOCITY, ControlMode.MotionProfile));
-	private final TalonController mController = new TalonController(this);
+	private final BaseTalonController<Talon> mController = new BaseTalonController<>(this);
 	private final String mName;
 
 	public Talon(int deviceId, String name) {
@@ -122,15 +128,30 @@ public class Talon extends TalonSRX implements Controller {
 		clearStickyFaults(kTimeoutMs);
 	}
 
+	public boolean setOutput(ControllerOutput output) {
+		return mController.setOutput(output);
+	}
+
+	/**
+	 * When controllers reset over CAN, frame periods are cleared. This handles resetting them to their
+	 * configured values before.
+	 */
+	public void handleReset() {
+		if (hasResetOccurred()) {
+			Log.error("reset", String.format("%s reset", mController.getName()));
+			mController.updateFrameTimings();
+		}
+	}
+
+	public void configFrameTimings(int controlFrameMs, int statusFrameMs) {
+		mController.setFrameTimings(controlFrameMs, statusFrameMs);
+	}
+
 	public String getName() {
 		return String.format("(Talon #%d), %s", getDeviceID(), mName);
 	}
 
 	public static int round(double d) {
 		return (int) Math.round(d);
-	}
-
-	public boolean setOutput(ControllerOutput output) {
-		return mController.setOutput(output);
 	}
 }
