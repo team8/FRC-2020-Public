@@ -6,7 +6,7 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
+import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.MedianFilter;
@@ -74,58 +74,57 @@ public class AlignDriveController extends ChezyDriveController {
 //				return;
 //			}
 
-//		double yawToTargetDegrees = mLimelight.getYawToTarget();
-//		double absoluteYawErrorDegrees = Math.abs(yawToTargetDegrees);
-//		if (absoluteYawErrorDegrees > mVisionConfig.acceptableYawError) {
-//			var preciseGains = mVisionConfig.preciseGains;
-//			mPidController.setPID(preciseGains.p, preciseGains.i, preciseGains.d);
-//			mPidController.setIntegratorRange(-preciseGains.iMax, preciseGains.iMax);
-//			double percentOutput = mPidController.calculate(yawToTargetDegrees, 0.0);
-//			double staticAdjustedPercentOutput = percentOutput + Math.signum(percentOutput) * mConfig.turnGainsS;
-//			CSVWriter.addData("percentOutput", percentOutput);
-//			CSVWriter.addData("yawToTargetDegrees", yawToTargetDegrees);
-//			CSVWriter.addData("staticAdjustedPercentOutput", staticAdjustedPercentOutput);
-//			CSVWriter.addData("isDone", 0.0);
-//			mOutputs.leftOutput.setPercentOutput(-staticAdjustedPercentOutput);
-//			mOutputs.rightOutput.setPercentOutput(staticAdjustedPercentOutput);
-//			return;
+		double yawToTargetDegrees = mLimelight.getYawToTarget();
+		double absoluteYawErrorDegrees = Math.abs(yawToTargetDegrees);
+		if (absoluteYawErrorDegrees > mVisionConfig.acceptableYawError) {
+			var preciseGains = mVisionConfig.preciseGains;
+			mPidController.setPID(preciseGains.p, preciseGains.i, preciseGains.d);
+			mPidController.setIntegratorRange(-preciseGains.iMax, preciseGains.iMax);
+			double percentOutput = mPidController.calculate(yawToTargetDegrees, 0.0);
+			double staticAdjustedPercentOutput = percentOutput + Math.signum(percentOutput) * mConfig.turnGainsS;
+			CSVWriter.addData("percentOutput", percentOutput);
+			CSVWriter.addData("yawToTargetDegrees", yawToTargetDegrees);
+			CSVWriter.addData("staticAdjustedPercentOutput", staticAdjustedPercentOutput);
+			CSVWriter.addData("isDone", 0.0);
+			mOutputs.leftOutput.setPercentOutput(-staticAdjustedPercentOutput);
+			mOutputs.rightOutput.setPercentOutput(staticAdjustedPercentOutput);
+			return;
+		}
+//		double gyroYawDegrees = state.driveYawDegrees;
+//		double gyroYawAngularVelocity = state.driveYawAngularVelocityDegrees;
+//		if (mLimelight.isTargetFound()) {
+//			double currentYawToTargetDegrees = mLimelight.getYawToTarget();
+//			LiveGraph.add("currentYawToTargetDegrees", currentYawToTargetDegrees);
+//			++mTargetReadingsCount;
+//			mTargetGyroYaw = mTargetGyroYawFilter.calculate(gyroYawDegrees - currentYawToTargetDegrees);
 //		}
-//		CSVWriter.addData("isDone", 1.0);
-		double gyroYawDegrees = state.driveYawDegrees;
-		double gyroYawAngularVelocity = state.driveYawAngularVelocityDegrees;
-		if (mLimelight.isTargetFound()) {
-			double currentYawToTargetDegrees = mLimelight.getYawToTarget();
-			LiveGraph.add("currentYawToTargetDegrees", currentYawToTargetDegrees);
-			++mTargetReadingsCount;
-			mTargetGyroYaw = mTargetGyroYawFilter.calculate(gyroYawDegrees - currentYawToTargetDegrees);
-		}
-		if (mTargetReadingsCount >= 1) {
-			double absoluteGyroYawErrorDegrees = Math.abs(gyroYawDegrees - mTargetGyroYaw);
-			if (absoluteGyroYawErrorDegrees > mVisionConfig.acceptableYawError) {
-				var preciseGains = mVisionConfig.preciseGains;
-				mPidController.setPID(preciseGains.p, preciseGains.i, preciseGains.d);
-				mPidController.setIntegratorRange(-preciseGains.iMax, preciseGains.iMax);
-				double percentOutput = mPidController.calculate(gyroYawDegrees, mTargetGyroYaw);
-				double staticAdjustedPercentOutput = percentOutput + Math.signum(percentOutput) * mConfig.turnGainsS;
-//				CSVWriter.addData("percentOutput", percentOutput);
-//				CSVWriter.addData("gyroYawDegrees", gyroYawDegrees);
-//				CSVWriter.addData("currentYawToTargetDegrees", currentYawToTargetDegrees);
-//				CSVWriter.addData("gyroYawAngularVelocity", gyroYawAngularVelocity);
-//				CSVWriter.addData("mTargetGyroYaw", mTargetGyroYaw);
-//				CSVWriter.addData("staticAdjustedPercentOutput", staticAdjustedPercentOutput);
-//				CSVWriter.addData("isDone", 0.0);
-				LiveGraph.add("percentOutput", percentOutput);
-				LiveGraph.add("gyroYawDegrees", gyroYawDegrees);
-				LiveGraph.add("gyroYawAngularVelocity", gyroYawAngularVelocity);
-				LiveGraph.add("mTargetGyroYaw", mTargetGyroYaw);
-				LiveGraph.add("staticAdjustedPercentOutput", staticAdjustedPercentOutput);
-				LiveGraph.add("isDone", 0.0);
-				mOutputs.leftOutput.setPercentOutput(-staticAdjustedPercentOutput);
-				mOutputs.rightOutput.setPercentOutput(staticAdjustedPercentOutput);
-				return;
-			}
-		}
-		LiveGraph.add("isDone", 1.0);
+//		if (mTargetReadingsCount >= 1) {
+//			double absoluteGyroYawErrorDegrees = Math.abs(gyroYawDegrees - mTargetGyroYaw);
+//			if (absoluteGyroYawErrorDegrees > mVisionConfig.acceptableYawError) {
+//				var preciseGains = mVisionConfig.preciseGains;
+//				mPidController.setPID(preciseGains.p, preciseGains.i, preciseGains.d);
+//				mPidController.setIntegratorRange(-preciseGains.iMax, preciseGains.iMax);
+//				double percentOutput = mPidController.calculate(gyroYawDegrees, mTargetGyroYaw);
+//				double staticAdjustedPercentOutput = percentOutput + Math.signum(percentOutput) * mConfig.turnGainsS;
+////				CSVWriter.addData("percentOutput", percentOutput);
+////				CSVWriter.addData("gyroYawDegrees", gyroYawDegrees);
+////				CSVWriter.addData("currentYawToTargetDegrees", currentYawToTargetDegrees);
+////				CSVWriter.addData("gyroYawAngularVelocity", gyroYawAngularVelocity);
+////				CSVWriter.addData("mTargetGyroYaw", mTargetGyroYaw);
+////				CSVWriter.addData("staticAdjustedPercentOutput", staticAdjustedPercentOutput);
+////				CSVWriter.addData("isDone", 0.0);
+//				LiveGraph.add("percentOutput", percentOutput);
+//				LiveGraph.add("gyroYawDegrees", gyroYawDegrees);
+//				LiveGraph.add("gyroYawAngularVelocity", gyroYawAngularVelocity);
+//				LiveGraph.add("mTargetGyroYaw", mTargetGyroYaw);
+//				LiveGraph.add("staticAdjustedPercentOutput", staticAdjustedPercentOutput);
+//				LiveGraph.add("isDone", 0.0);
+//				mOutputs.leftOutput.setPercentOutput(-staticAdjustedPercentOutput);
+//				mOutputs.rightOutput.setPercentOutput(staticAdjustedPercentOutput);
+//				return;
+//			}
+//		}
+//		LiveGraph.add("isDone", 1.0);
 
 		super.updateSignal(commands, state);
 	}

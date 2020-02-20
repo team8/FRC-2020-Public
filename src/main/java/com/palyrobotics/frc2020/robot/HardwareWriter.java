@@ -65,15 +65,12 @@ public class HardwareWriter {
 
 	private void configureClimberHardware() {
 		var hardware = HardwareAdapter.ClimberHardware.getInstance();
-		hardware.verticalSpark.restoreFactoryDefaults();
-		hardware.horizontalSpark.restoreFactoryDefaults();
-		hardware.verticalSpark.enableVoltageCompensation(kVoltageCompensation);
-		hardware.horizontalSpark.enableVoltageCompensation(kVoltageCompensation);
+		hardware.spark.restoreFactoryDefaults();
+		hardware.spark.enableVoltageCompensation(kVoltageCompensation);
 		/* Encoder units are inches and inches/sec */
-		hardware.verticalSparkEncoder.setPositionConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
-		hardware.verticalSparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
-		hardware.verticalSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
-		hardware.horizontalSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
+		hardware.sparkEncoder.setPositionConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
+		hardware.sparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
+		hardware.spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 	}
 
 	private void configureDriveHardware() {
@@ -213,8 +210,7 @@ public class HardwareWriter {
 
 	private void updateClimber() {
 		var hardware = HardwareAdapter.ClimberHardware.getInstance();
-		hardware.verticalSpark.setOutput(mClimber.getVerticalOutput());
-		hardware.horizontalSpark.setOutput(mClimber.getAdjustingOutput());
+		hardware.spark.setOutput(mClimber.getVerticalOutput());
 		hardware.solenoid.setExtended(mClimber.getSolenoidOutput());
 	}
 

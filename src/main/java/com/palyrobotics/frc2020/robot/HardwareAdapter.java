@@ -26,15 +26,13 @@ import edu.wpi.first.wpilibj.*;
 public class HardwareAdapter {
 
 	/**
-	 * 1 NEO, 1 NEO 550 (both controlled by Spark MAX), 1 Solenoid
+	 * 1 NEO (controlled by Spark MAX), 1 Solenoid
 	 */
 	static class ClimberHardware {
 
 		private static ClimberHardware sInstance;
-		final Spark verticalSpark = new Spark(sPortConstants.nariClimberVerticalId, "Climber Arm"),
-				horizontalSpark = new Spark(sPortConstants.nariClimberHorizontalId, "Climber Adjust");
-		final CANEncoder verticalSparkEncoder = verticalSpark.getEncoder(),
-				horizontalSparkEncoder = horizontalSpark.getEncoder();
+		final Spark spark = new Spark(sPortConstants.nariClimberId, "Climber");
+		final CANEncoder sparkEncoder = spark.getEncoder();
 		final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariClimberSolenoidId, 0.2, true);
 
 		ClimberHardware() {

@@ -8,8 +8,7 @@ public class PortConstants extends ConfigBase {
 	/**
 	 * Climber
 	 */
-	public int nariClimberHorizontalId;
-	public int nariClimberVerticalId;
+	public int nariClimberId;
 	public int nariClimberSolenoidId;
 
 	/**
