@@ -96,7 +96,7 @@ public class AlignDriveController extends ChezyDriveController {
 		double gyroYawAngularVelocity = state.driveYawAngularVelocityDegrees;
 
 		if (mLimelight.isTargetFound()) {
-			double yawToTargetDegrees = state.pastPoses.getInterpolated(Timer.getFPGATimestamp() - mLimelight.getPipelineLatency() - 11) - mLimelight.getYawToTarget();;
+			double yawToTargetDegrees = state.pastPoses.getInterpolated(Timer.getMatchTime() - (mLimelight.getPipelineLatency() + 11) / 1000.0) - mLimelight.getYawToTarget();
 			LiveGraph.add("yawToTargetDegrees", yawToTargetDegrees);
 			++mTargetReadingsCount;
 			mTargetGyroYaw = mTargetGyroYawFilter.calculate(gyroYawDegrees - yawToTargetDegrees);

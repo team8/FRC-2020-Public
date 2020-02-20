@@ -2,6 +2,8 @@ package com.palyrobotics.frc2020.util;
 
 import java.util.TreeMap;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  * Interpolating tree maps are used to get values at points that are not defined by making a guess
  * from points that are defined using linear interpolation.
@@ -12,6 +14,9 @@ public class CircularInterpolatingDoubleTreeMap extends TreeMap<Double, Double> 
 
 	public CircularInterpolatingDoubleTreeMap(int windowSize) {
 		mWindowSize = windowSize;
+		while (size() < mWindowSize) {
+			put(Timer.getFPGATimestamp(), 0.0);
+		}
 	}
 
 	public double interpolate(double low, double high, double normalizedValue) {
