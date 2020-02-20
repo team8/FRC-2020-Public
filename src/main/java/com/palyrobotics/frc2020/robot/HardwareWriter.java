@@ -18,9 +18,12 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.FaultID;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class HardwareWriter {
@@ -121,13 +124,13 @@ public class HardwareWriter {
 		hardware.leftVTalon.enableVoltageCompensation(true);
 		hardware.leftVTalon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		hardware.leftVTalon.configOpenloopRamp(0.1, kTimeoutMs);
-		hardware.leftVTalon.setInverted(false);
+		hardware.leftVTalon.setInverted(true);
 
 		hardware.rightVTalon.configFactoryDefault(kTimeoutMs);
 		hardware.rightVTalon.enableVoltageCompensation(true);
 		hardware.rightVTalon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		hardware.rightVTalon.configOpenloopRamp(0.1, kTimeoutMs);
-		hardware.rightVTalon.setInverted(true);
+		hardware.rightVTalon.setInverted(false);
 
 	}
 
@@ -232,17 +235,17 @@ public class HardwareWriter {
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 		hardware.leftVTalon.setOutput(mIndexer.getLeftVTalonOutput());
 		hardware.rightVTalon.setOutput(mIndexer.getRightVTalonOutput());
-//		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
-//		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
-//		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
-//		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
-//		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
-//		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
-//		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
-//		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
-//		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));
-//		LiveGraph.add("totalCurrent", pdp.getTotalCurrent());
-//		LiveGraph.add("batteryVoltage", RobotController.getBatteryVoltage());
+		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
+		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
+		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
+		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
+		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
+		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
+		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
+		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
+		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));
+		LiveGraph.add("totalCurrent", pdp.getTotalCurrent());
+		LiveGraph.add("batteryVoltage", RobotController.getBatteryVoltage());
 	}
 
 	private void updateIntake() {

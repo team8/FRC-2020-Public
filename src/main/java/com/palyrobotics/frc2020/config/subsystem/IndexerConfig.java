@@ -6,6 +6,6 @@ import com.palyrobotics.frc2020.util.control.Gains;
 @SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class IndexerConfig extends SubsystemConfigBase {
 
-	public double sparkIndexingOutput, talonIndexingOutput, feedingOutput, reversingOutput, reverseTime;
+	public double sparkIndexingOutput, leftTalonIndexingOutput, rightTalonIndexingOutput, feedingOutput, reversingOutput, reverseTime;
 	public Gains masterVelocityGains, slaveVelocityGains;
 }

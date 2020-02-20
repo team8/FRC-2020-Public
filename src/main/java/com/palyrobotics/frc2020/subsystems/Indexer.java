@@ -59,8 +59,8 @@ public class Indexer extends SubsystemBase {
 				break;
 			case INDEX:
 				setIndexerVelocity(mConfig.sparkIndexingOutput);
-				mLeftVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
-				mRightVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput);
+				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput);
 				mBlockOutput = true;
 				break;
 			case WAITING_TO_FEED:
@@ -72,20 +72,20 @@ public class Indexer extends SubsystemBase {
 				break;
 			case FEED_SINGLE:
 				setIndexerVelocity(mConfig.feedingOutput);
-				mLeftVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
-				mRightVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput);
+				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput);
 				mBlockOutput = false;
 				break;
 			case FEED_ALL:
 				setIndexerVelocity(mConfig.feedingOutput);
-				mLeftVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
-				mRightVTalonOutput.setPercentOutput(mConfig.talonIndexingOutput);
+				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput);
+				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput);
 				mBlockOutput = false;
 				break;
 			case REVERSING:
 				setIndexerVelocity(-mConfig.reversingOutput);
-				mLeftVTalonOutput.setIdle();
-				mRightVTalonOutput.setIdle();
+				mLeftVTalonOutput.setPercentOutput(-mConfig.leftTalonIndexingOutput);
+				mRightVTalonOutput.setPercentOutput(-mConfig.rightTalonIndexingOutput);
 				mBlockOutput = false;
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
