@@ -61,6 +61,6 @@ public abstract class FriendlyTrenchRoutine extends AutoBase {
 				new DriveAlignRoutine(OperatorInterface.kOnesTimesZoomAlignButton),
 				new ParallelRoutine(
 						new ShooterVisionRoutine(7),
-						new IndexerFeedAllRoutine(7, true, true)));
+						new IndexerFeedAllRoutine(7).waitForFlywheel().doReverse()));
 	}
 }

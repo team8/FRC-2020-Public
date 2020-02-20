@@ -41,7 +41,7 @@ public class TrenchStealTwoShootFive extends AutoBase {
 				new DriveAlignRoutine(0),
 				new ParallelRoutine(
 						new ShooterVisionRoutine(6),
-						new IndexerFeedAllRoutine(6, true, true)));
+						new IndexerFeedAllRoutine(6).waitForFlywheel().doReverse()));
 
 		return new SequentialRoutine(setInitialOdometry, getTrenchBalls, goToShoot, shootBalls);
 	}

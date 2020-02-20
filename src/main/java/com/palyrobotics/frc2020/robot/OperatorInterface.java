@@ -210,7 +210,7 @@ public class OperatorInterface {
 			// Shoot one ball
 			commands.addWantedRoutine(new IndexerFeedSingleRoutine());
 		} else if (mOperatorXboxController.getRightBumperPressed()) {
-			commands.addWantedRoutine(new IndexerFeedAllRoutine(5.0, false, true));
+			commands.addWantedRoutine(new IndexerFeedAllRoutine(5.0).waitForFlywheel());
 		}
 
 	}

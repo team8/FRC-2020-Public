@@ -26,7 +26,7 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 				new ParallelRoutine(
 						new IntakeLowerRoutine(),
 						new ShooterVisionRoutine(5),
-						new IndexerFeedAllRoutine(5, true, false)),
+						new IndexerFeedAllRoutine(5).waitForFlywheel().doReverse()),
 				centerStraightFriendlyTrench(),
 				endRoutine());
 	}

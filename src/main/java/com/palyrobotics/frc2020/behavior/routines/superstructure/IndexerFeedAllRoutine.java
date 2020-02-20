@@ -14,27 +14,59 @@ import com.palyrobotics.frc2020.util.config.Configs;
 public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 
 	private final IndexerConfig mConfig = Configs.get(IndexerConfig.class);
-	private final boolean mWaitForFlywheel;
-	private boolean mDoReverse;
+	private boolean mWaitForFlywheel = false;
+	private boolean mDoReverse = false;
+	private boolean mIgnoreSpinup = false;
+	private double mTimeoutSeconds = 5.0;
+	private boolean mSpunUpOnce = false;
 
 	public IndexerFeedAllRoutine() {
 		this(5.0);
 	}
 
 	public IndexerFeedAllRoutine(double timeoutSeconds) {
-		this(timeoutSeconds, false, true);
+		mTimeoutSeconds = timeoutSeconds;
+		mSpunUpOnce = false;
+		doReverse();
 	}
 
-	public IndexerFeedAllRoutine(double timeoutSeconds, boolean waitForFlywheel, boolean doReverse) {
-		super(timeoutSeconds);
-		mWaitForFlywheel = waitForFlywheel;
-		mDoReverse = doReverse;
+	public IndexerFeedAllRoutine waitForFlywheel() {
+		mWaitForFlywheel = true;
+		return this;
+	}
+
+	public IndexerFeedAllRoutine doReverse() {
+		mDoReverse = true;
+		return this;
+	}
+
+	public IndexerFeedAllRoutine ignoreSpinup() {
+		mIgnoreSpinup = true;
+		return this;
 	}
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		boolean shouldReverse = mTimer.get() < mConfig.reverseTime;
-		if (!mWaitForFlywheel || state.shooterIsReadyToShoot) {
+		if (mIgnoreSpinup) {
+			if (mSpunUpOnce) {
+				if (mDoReverse) {
+					commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.FEED_ALL;
+				} else {
+					commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
+				}
+			} else if (state.shooterIsReadyToShoot) {
+				mSpunUpOnce = true;
+			} else {
+				if (mDoReverse) {
+					commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.WAITING_TO_FEED;
+				} else {
+					commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
+				}
+			}
+		}
+
+		else if (!mWaitForFlywheel || state.shooterIsReadyToShoot) {
 			if (mDoReverse) {
 				commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.FEED_ALL;
 			} else {
