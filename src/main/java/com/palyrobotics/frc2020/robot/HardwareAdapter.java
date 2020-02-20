@@ -86,10 +86,10 @@ public class HardwareAdapter {
 		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);
 
-		final DigitalInput leftFrontInfrared = new DigitalInput(sPortConstants.nariIndexerLeftFrontInfraredDIO);
-		final DigitalInput rightFrontInfrared = new DigitalInput(sPortConstants.nariIndexerRightFrontInfraredDIO);
-		final DigitalInput leftMiddleInfrared = new DigitalInput(sPortConstants.nariIndexerLeftMiddleInfraredDIO);
-		final DigitalInput middleFrontInfrared = new DigitalInput(sPortConstants.nariIndexerMiddleFrontInfraredDIO);
+		final DigitalInput frontLeftInfrared = new DigitalInput(sPortConstants.nariIndexerFrontLeftPort);
+		final DigitalInput frontRightInfrared = new DigitalInput(sPortConstants.nariIndexerFrontRightPort);
+		final DigitalInput frontMiddleInfrared = new DigitalInput(sPortConstants.nariIndexerFrontMiddlePort);
+		final DigitalInput middleRightInfrared = new DigitalInput(sPortConstants.nariIndexerMiddleRightPort);
 
 		private IndexerHardware() {
 		}

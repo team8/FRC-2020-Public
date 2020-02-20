@@ -13,12 +13,17 @@
 	"nariIndexerHopperSolenoidId": 2,
 	"nariIndexerBlockingSolenoidId": 3,
 <<<<<<< HEAD
+<<<<<<< HEAD
 	"nariIndexerBackInfraredDio": 0,
 	"nariIndexerFrontInfraredDio": 8,
 	"nariIndexerTopInfraredDio": 9,
 =======
 	"nariIndexerLeftFrontInfraredDIO": 5,
 	"nariIndexerRightFrontInfraredDIO": 6,
+=======
+	"nariIndexerFrontLeftPort": 5,
+	"nariIndexerFrontRightPort": 6,
+>>>>>>> work in progress variable renaming
 	"nariIndexerLeftMiddleInfraredDIO": 9,
 <<<<<<< HEAD
 >>>>>>> ball counter rebase with practice-bot branch

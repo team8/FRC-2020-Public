@@ -106,10 +106,10 @@ public class HardwareReader {
 	private void readIndexerState(RobotState state) {
 		var hardware = IndexerHardware.getInstance();
 
-		state.hasFrontLeftBall = !hardware.leftFrontInfrared.get();
-		state.hasFrontRightBall = !hardware.rightFrontInfrared.get();
-		state.hasMiddleBall = !hardware.leftMiddleInfrared.get();
-		state.hasFrontMiddleBall = !hardware.middleFrontInfrared.get();
+		state.hasFrontLeftBall = !hardware.frontLeftInfrared.get();
+		state.hasFrontRightBall = !hardware.frontRightInfrared.get();
+		state.hasMiddleBall = !hardware.middleRightInfrared.get();
+		state.hasFrontMiddleBall = !hardware.frontMiddleInfrared.get();
 
 		// System.out.println(robotState.hasMiddleBall);
 		if (state.backInfraredReadings.getLinkedList().size() == 0) {
