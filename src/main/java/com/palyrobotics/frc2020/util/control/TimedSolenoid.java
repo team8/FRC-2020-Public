@@ -45,7 +45,7 @@ public class TimedSolenoid extends Solenoid {
 			mTimer.reset();
 			mTimer.start();
 		}
-		if (mTimer.get() > mExtensionDurationSeconds) {
+		if (mTimer.hasElapsed(mExtensionDurationSeconds)) {
 			mIsExtended = wantedIsExtended;
 			mIsInTransition = false;
 			mTimer.stop();

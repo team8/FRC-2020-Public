@@ -46,7 +46,7 @@ public class ShooterRoutine extends DriveAlignYawAssistedRoutine {
 
 	@Override
 	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
-		return mReadyToShootTimer.get() > mFeedTimeSeconds;
+		return mReadyToShootTimer.hasElapsed(mFeedTimeSeconds);
 	}
 
 	@Override

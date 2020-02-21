@@ -53,6 +53,6 @@ public class RoutineTests {
 			Timer.delay(0.02);
 		} while (!routineManager.getCurrentRoutines().isEmpty());
 		System.out.println(timer.get());
-		assertTrue(timer.get() > 0.2);
+		assertTrue(timer.hasElapsed(0.2));
 	}
 }

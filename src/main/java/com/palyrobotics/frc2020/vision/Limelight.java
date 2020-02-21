@@ -9,6 +9,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.vision.LimelightControlMode.*;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -17,15 +18,16 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class Limelight {
 
-	private static String kLoggerTag = Util.classToJsonName(Limelight.class);
 	public static final int kOneTimesZoomPipelineId = 0, kTwoTimesZoomPipelineId = 1;
+	private static String kLoggerTag = Util.classToJsonName(Limelight.class);
+	private static final NetworkTableInstance sNetworkTableInstance = NetworkTableInstance.getDefault();
 	private static VisionConfig kVisionConfig = Configs.get(VisionConfig.class);
 
 	private static Limelight sInstance = new Limelight();
 	private NetworkTable mTable;
 
 	public Limelight() {
-		mTable = NetworkTableInstance.getDefault().getTable("limelight");
+		mTable = sNetworkTableInstance.getTable("limelight");
 	}
 
 	public static Limelight getInstance() {
@@ -97,7 +99,11 @@ public class Limelight {
 	}
 
 	public void setLEDMode(LedMode ledMode) {
-		mTable.getEntry("ledMode").setValue(ledMode.getValue());
+		NetworkTableEntry entry = mTable.getEntry("ledMode");
+		if (Double.compare(entry.getDouble(0), ledMode.getValue()) != 0) {
+			entry.setValue(ledMode.getValue());
+			sNetworkTableInstance.flush();
+		}
 	}
 
 	/**

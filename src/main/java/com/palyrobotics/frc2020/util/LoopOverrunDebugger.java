@@ -42,7 +42,7 @@ public class LoopOverrunDebugger {
 	}
 
 	public void finish() {
-		if (mPrintDuration == null || mTimer.get() > mPrintDuration) printSummary();
+		if (mPrintDuration == null || mTimer.hasElapsed(mPrintDuration)) printSummary();
 	}
 
 	private void printSummary() {
