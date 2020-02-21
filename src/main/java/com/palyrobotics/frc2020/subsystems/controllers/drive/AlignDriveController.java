@@ -23,7 +23,7 @@ public class AlignDriveController extends ChezyDriveController {
 	private double mTargetGyroYaw;
 
 	public AlignDriveController() {
-		mPidController.setDeadband(mVisionConfig.acceptableYawError);
+		mPidController.setDeadBand(mVisionConfig.acceptableYawError);
 	}
 
 	@Override
