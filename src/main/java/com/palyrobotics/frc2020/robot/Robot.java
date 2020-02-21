@@ -74,14 +74,15 @@ public class Robot extends TimedRobot {
 				updateDriveNeutralMode(config.coastDriveWhenDisabled);
 			}
 		});
-
-		if (RobotBase.isSimulation()) {
-			Log.info(kLoggerTag, "Writing CSV file...");
-//			pathToCsv();
-		}
 	}
 
-//	private void pathToCsv() {
+	@Override
+	public void simulationInit() {
+//		Log.info(kLoggerTag, "Writing path CSV file...");
+//		pathToCsv();
+	}
+
+	//	private void pathToCsv() {
 //		var drivePath = new StartCenterRendezvousThree().getRoutine();
 //		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
 //			writer.write("x,y" + '\n');
@@ -160,6 +161,11 @@ public class Robot extends TimedRobot {
 		}
 		LiveGraph.add("visionEstimatedDistance", mLimelight.getEstimatedDistanceInches());
 		LiveGraph.add("isEnabled", isEnabled());
+	}
+
+	@Override
+	public void simulationPeriodic() {
+
 	}
 
 	@Override

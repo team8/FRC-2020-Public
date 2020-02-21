@@ -194,7 +194,7 @@ public class Shooter extends SubsystemBase {
 					mRumbleOutput = true;
 					mRumbleTimer.reset();
 					mRumbleTimer.start();
-				} else if (mRumbleTimer.get() > mConfig.rumbleDurationSeconds || justExitedReadyToShoot) {
+				} else if (mRumbleTimer.hasElapsed(mConfig.rumbleDurationSeconds) || justExitedReadyToShoot) {
 					mRumbleTimer.stop();
 					mRumbleOutput = false;
 				}

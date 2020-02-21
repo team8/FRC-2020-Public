@@ -3,6 +3,7 @@ package com.palyrobotics.frc2020.robot;
 import java.util.Set;
 
 import com.ctre.phoenix.motorcontrol.StickyFaults;
+import com.ctre.phoenix.sensors.PigeonIMU.PigeonState;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
@@ -21,7 +22,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class HardwareReader {
 
 	private static final String kLoggerTag = Util.classToJsonName(HardwareReader.class);
-	private static final double kPeriod = 0.02;
 	private static final int kYawIndex = 0, kYawAngularVelocityIndex = 2;
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	/**
@@ -43,86 +43,90 @@ public class HardwareReader {
 	 * Takes all of the sensor data from the hardware, and unwraps it into the current
 	 * {@link RobotState}.
 	 */
-	void updateState(Set<SubsystemBase> enabledSubsystems, RobotState robotState) {
-		readGameAndFieldState(robotState);
-		if (enabledSubsystems.contains(Climber.getInstance())) readClimberState(robotState);
-		if (enabledSubsystems.contains(Drive.getInstance())) readDriveState(robotState);
-		if (enabledSubsystems.contains(Indexer.getInstance())) readIndexerState(robotState);
-		if (enabledSubsystems.contains(Intake.getInstance())) readIntakeState(robotState);
-		if (enabledSubsystems.contains(Shooter.getInstance())) readShooterState(robotState);
+	void updateState(Set<SubsystemBase> enabledSubsystems, RobotState state) {
+		readGameAndFieldState(state);
+		if (enabledSubsystems.contains(Climber.getInstance())) readClimberState(state);
+		if (enabledSubsystems.contains(Drive.getInstance())) readDriveState(state);
+		if (enabledSubsystems.contains(Indexer.getInstance())) readIndexerState(state);
+		if (enabledSubsystems.contains(Intake.getInstance())) readIntakeState(state);
+		if (enabledSubsystems.contains(Shooter.getInstance())) readShooterState(state);
 	}
 
-	private void readGameAndFieldState(RobotState robotState) {
-		robotState.gameData = DriverStation.getInstance().getGameSpecificMessage();
-		robotState.detectedRGBValues = SpinnerHardware.getInstance().colorSensor.getColor();
-		robotState.closestColorRGB = mColorMatcher.matchClosestColor(robotState.detectedRGBValues);
-		if (robotState.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
-			robotState.closestColorString = "Cyan";
-		} else if (robotState.closestColorRGB.color == SpinnerConstants.kYellowCPTarget) {
-			robotState.closestColorString = "Yellow";
-		} else if (robotState.closestColorRGB.color == SpinnerConstants.kGreenCPTarget) {
-			robotState.closestColorString = "Green";
-		} else if (robotState.closestColorRGB.color == SpinnerConstants.kRedCPTarget) {
-			robotState.closestColorString = "Red";
+	private void readGameAndFieldState(RobotState state) {
+		state.gameData = DriverStation.getInstance().getGameSpecificMessage();
+		state.detectedRGBValues = SpinnerHardware.getInstance().colorSensor.getColor();
+		state.closestColorRGB = mColorMatcher.matchClosestColor(state.detectedRGBValues);
+		if (state.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
+			state.closestColorString = "Cyan";
+		} else if (state.closestColorRGB.color == SpinnerConstants.kYellowCPTarget) {
+			state.closestColorString = "Yellow";
+		} else if (state.closestColorRGB.color == SpinnerConstants.kGreenCPTarget) {
+			state.closestColorString = "Green";
+		} else if (state.closestColorRGB.color == SpinnerConstants.kRedCPTarget) {
+			state.closestColorString = "Red";
 		}
-		robotState.closestColorConfidence = robotState.closestColorRGB.confidence;
+		state.closestColorConfidence = state.closestColorRGB.confidence;
 	}
 
-	private void readClimberState(RobotState robotState) {
+	private void readClimberState(RobotState state) {
 		var hardware = ClimberHardware.getInstance();
-		robotState.climberPosition = hardware.sparkEncoder.getPosition();
-		robotState.climberVelocity = hardware.sparkEncoder.getVelocity();
+		state.climberPosition = hardware.sparkEncoder.getPosition();
+		state.climberVelocity = hardware.sparkEncoder.getVelocity();
 		checkSparkFaults(hardware.spark);
 	}
 
-	private void readDriveState(RobotState robotState) {
+	private void readDriveState(RobotState state) {
 		var hardware = DriveHardware.getInstance();
+		/* Gyro */
+		state.driveIsGyroReady = hardware.gyro.getState() == PigeonState.Ready;
 		hardware.gyro.getYawPitchRoll(mGyroAngles);
+		state.driveYawDegrees = mGyroAngles[kYawIndex];
 		hardware.gyro.getRawGyro(mGyroAngularVelocities);
-		robotState.driveYawDegrees = mGyroAngles[kYawIndex];
-		robotState.driveYawAngularVelocityDegrees = mGyroAngularVelocities[kYawAngularVelocityIndex];
-		robotState.driveLeftVelocity = hardware.leftMasterFalcon.getConvertedVelocity();
-		robotState.driveRightVelocity = hardware.rightMasterFalcon.getConvertedVelocity();
-		robotState.driveLeftPosition = hardware.leftMasterFalcon.getConvertedPosition();
-		robotState.driveRightPosition = hardware.rightMasterFalcon.getConvertedPosition();
-//		LiveGraph.add("leftPosition", robotState.driveLeftPosition);
-//		LiveGraph.add("rightPosition", robotState.driveRightPosition);
-		robotState.updateOdometry(robotState.driveYawDegrees, robotState.driveLeftPosition, robotState.driveRightPosition);
-//		LiveGraph.add("driveLeftPosition", robotState.driveLeftPosition);
-//		LiveGraph.add("driveLeftVelocity", robotState.driveLeftVelocity);
-//		LiveGraph.add("driveRightPosition", robotState.driveRightPosition);
-//		LiveGraph.add("driveRightVelocity", robotState.driveRightVelocity);
-//		LiveGraph.add("driveYaw", robotState.driveYawDegrees);
+		state.driveYawAngularVelocityDegrees = mGyroAngularVelocities[kYawAngularVelocityIndex];
+		/* Falcons */
+		state.driveLeftVelocity = hardware.leftMasterFalcon.getConvertedVelocity();
+		state.driveRightVelocity = hardware.rightMasterFalcon.getConvertedVelocity();
+		state.driveLeftPosition = hardware.leftMasterFalcon.getConvertedPosition();
+		state.driveRightPosition = hardware.rightMasterFalcon.getConvertedPosition();
+//		LiveGraph.add("leftPosition", state.driveLeftPosition);
+//		LiveGraph.add("rightPosition", state.driveRightPosition);
+		/* Odometry */
+		state.updateOdometry(state.driveYawDegrees, state.driveLeftPosition, state.driveRightPosition);
+//		LiveGraph.add("driveLeftPosition", state.driveLeftPosition);
+//		LiveGraph.add("driveLeftVelocity", state.driveLeftVelocity);
+//		LiveGraph.add("driveRightPosition", state.driveRightPosition);
+//		LiveGraph.add("driveRightVelocity", state.driveRightVelocity);
+//		LiveGraph.add("driveYaw", state.driveYawDegrees);
 //		LiveGraph.add("driveRightPercentOutput", hardware.rightMasterFalcon.getMotorOutputPercent());
 //		LiveGraph.add("driveLeftPercentOutput", hardware.leftMasterFalcon.getMotorOutputPercent());
 		hardware.falcons.forEach(this::checkFalconFaults);
 	}
 
-	private void readIndexerState(RobotState robotState) {
+	private void readIndexerState(RobotState state) {
 		var hardware = IndexerHardware.getInstance();
-		robotState.indexerHasBackBall = hardware.backInfrared.get();
-		robotState.indexerHasFrontBall = hardware.frontInfrared.get();
-		robotState.indexerHasTopBall = hardware.topInfrared.get();
-		robotState.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
+		state.indexerHasBackBall = hardware.backInfrared.get();
+		state.indexerHasFrontBall = hardware.frontInfrared.get();
+		state.indexerHasTopBall = hardware.topInfrared.get();
+		state.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
 		checkTalonFaults(hardware.leftVTalon);
 	}
 
-	private void readIntakeState(RobotState robotState) {
+	private void readIntakeState(RobotState state) {
 		var hardware = IntakeHardware.getInstance();
-		robotState.intakeIsExtended = hardware.solenoid.isExtended();
+		state.intakeIsExtended = hardware.solenoid.isExtended();
 		checkTalonFaults(hardware.talon);
 	}
 
-	private void readShooterState(RobotState robotState) {
+	private void readShooterState(RobotState state) {
 		var hardware = ShooterHardware.getInstance();
 //		LiveGraph.add("shooterFlywheelVelocity", hardware.masterEncoder.getVelocity());
 //		LiveGraph.add("shooterAppliedOutput", hardware.masterSpark.getAppliedOutput());
-		robotState.shooterFlywheelVelocity = hardware.masterEncoder.getVelocity();
-		robotState.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
-		robotState.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();
-		robotState.shooterHoodIsInTransition = hardware.hoodSolenoid.isInTransition() || hardware.blockingSolenoid.isInTransition();
+		state.shooterFlywheelVelocity = hardware.masterEncoder.getVelocity();
+		state.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
+		state.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();
+		state.shooterHoodIsInTransition = hardware.hoodSolenoid.isInTransition() || hardware.blockingSolenoid.isInTransition();
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
 	}

@@ -34,6 +34,7 @@ public class RobotState {
 	public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;
 	public Pose2d drivePoseMeters = new Pose2d();
 	public double driveVelocityMetersPerSecond;
+	public boolean driveIsGyroReady;
 
 	/* Indexer */
 	public boolean indexerIsHopperExtended;

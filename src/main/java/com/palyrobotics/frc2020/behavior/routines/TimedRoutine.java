@@ -30,7 +30,7 @@ public class TimedRoutine extends RoutineBase {
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		return mTimer.get() > mTimeout;
+		return mTimer.hasElapsed(mTimeout);
 	}
 
 	@Override

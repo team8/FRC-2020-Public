@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.palyrobotics.frc2020.util.Util;
 
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Configuration storage using JSON
@@ -29,10 +28,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 public class Configs {
 
 	private static final String kConfigFolderName = "config", kLoggerTag = Util.classToJsonName(Configs.class);
-	private static final Path kConfigFolder = (RobotBase.isReal() ?
-			Paths.get(Filesystem.getDeployDirectory().toString(), kConfigFolderName) :
-			Paths.get(Filesystem.getOperatingDirectory().toString(), "src", "main", "deploy", kConfigFolderName))
-					.toAbsolutePath();
+	private static final Path kConfigFolder = Paths.get(Filesystem.getDeployDirectory().toString(), kConfigFolderName);
 	private static final HashMap<String, Class<? extends ConfigBase>> sNameToClass = new HashMap<>();
 	private static final HashMap<Class<? extends ConfigBase>, ConfigBase> sConfigMap = new HashMap<>(16);
 	private static final HashMap<Class<? extends ConfigBase>, List<Runnable>> sListeners = new HashMap<>();

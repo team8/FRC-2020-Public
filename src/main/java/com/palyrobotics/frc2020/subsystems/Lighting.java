@@ -64,7 +64,7 @@ public class Lighting extends SubsystemBase {
 	}
 
 	@Override
-	public void update(@ReadOnly Commands commands, @ReadOnly RobotState robotState) {
+	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		State wantedState = commands.lightingWantedState;
 		boolean isNewState = mState != wantedState;
 		mState = wantedState;
@@ -120,7 +120,7 @@ public class Lighting extends SubsystemBase {
 		mLEDControllers.removeIf(LEDController::checkFinished);
 
 		for (LEDController ledController : mLEDControllers) {
-			LightingOutputs controllerOutput = ledController.update(commands, robotState);
+			LightingOutputs controllerOutput = ledController.update(commands, state);
 			for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
 				Color.HSV hsvValue = controllerOutput.lightingOutput.get(i);
 				mOutputBuffer.setHSV(i + ledController.mStartIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());

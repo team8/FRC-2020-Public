@@ -53,6 +53,6 @@ public class FlashingLightsController extends Lighting.LEDController {
 
 	@Override
 	public boolean checkFinished() {
-		return mDuration != -1 && mTimer.get() > mDuration;
+		return mDuration != -1 && mTimer.hasElapsed(mDuration);
 	}
 }
