@@ -13,23 +13,23 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class SynchronousPIDF {
 
-	private double m_P; // factor for "proportional" control
-	private double m_I; // factor for "integral" control
-	private double m_D; // factor for "derivative" control
-	private double m_F; // factor for feed forward gain
-	private double m_maximumOutput = 1.0; // |maximum output|
-	private double m_minimumOutput = -1.0; // |minimum output|
-	private double m_maximumInput = 0.0; // maximum input - limit setpoint to this
-	private double m_minimumInput = 0.0; // minimum input - limit setpoint to this
-	private boolean m_continuous = false; // do the endpoints wrap around? eg. absolute encoder
-	private double m_prevError = 0.0; // the prior sensor input (used to compute velocity)
-	private double m_totalError = 0.0; // the sum of the errors for use in the integral calc
-	private double m_setpoint = 0.0;
-	private double m_error = 0.0;
-	private double m_result = 0.0;
-	private double m_last_input = Double.NaN;
-	private double m_deadband = 0.0; // If the absolute error is less than deadband then treat error for the proportional term as 0
-	private double m_last_timestamp = Timer.getFPGATimestamp();
+	private double mP; // factor for "proportional" control
+	private double mI; // factor for "integral" control
+	private double mD; // factor for "derivative" control
+	private double mF; // factor for feed forward gain
+	private double mMaximumOutput = 1.0; // |maximum output|
+	private double mMinimumOutput = -1.0; // |minimum output|
+	private double mMaximumInput; // maximum input - limit setpoint to this
+	private double mMinimumInput; // minimum input - limit setpoint to this
+	private boolean mContinuous = false; // do the endpoints wrap around? eg. absolute encoder
+	private double mLastError; // the prior sensor input (used to compute velocity)
+	private double mTotalError; // the sum of the errors for use in the integral calc
+	private double mSetPoint;
+	private double mError;
+	private double mResult;
+	private double mLastInput = Double.NaN;
+	private double mDeadBand; // If the absolute error is less than dead band then treat error for the proportional term as 0
+	private double mLastTimestamp = Timer.getFPGATimestamp();
 
 	public SynchronousPIDF() {
 	}
@@ -37,24 +37,24 @@ public class SynchronousPIDF {
 	/**
 	 * Allocate a PID object with the given constants for P, I, D
 	 *
-	 * @param Kp the proportional coefficient
-	 * @param Ki the integral coefficient
-	 * @param Kd the derivative coefficient
+	 * @param p the proportional coefficient
+	 * @param i the integral coefficient
+	 * @param d the derivative coefficient
 	 */
-	public SynchronousPIDF(double Kp, double Ki, double Kd) {
-		setPIDF(Kp, Ki, Kd, 0);
+	public SynchronousPIDF(double p, double i, double d) {
+		setPIDF(p, i, d, 0.0);
 	}
 
 	/**
 	 * Allocate a PID object with the given constants for P, I, D
 	 *
-	 * @param Kp the proportional coefficient
-	 * @param Ki the integral coefficient
-	 * @param Kd the derivative coefficient
-	 * @param Kf the feed forward gain coefficient
+	 * @param p the proportional coefficient
+	 * @param i the integral coefficient
+	 * @param d the derivative coefficient
+	 * @param f the feed forward gain coefficient
 	 */
-	public SynchronousPIDF(double Kp, double Ki, double Kd, double Kf) {
-		setPIDF(Kp, Ki, Kd, Kf);
+	public SynchronousPIDF(double p, double i, double d, double f) {
+		setPIDF(p, i, d, f);
 	}
 
 	/**
@@ -66,14 +66,14 @@ public class SynchronousPIDF {
 
 	public double getDt() {
 		double timestamp = Timer.getFPGATimestamp();
-		double dt = timestamp - m_last_timestamp;
-		m_last_timestamp = timestamp;
+		double dt = timestamp - mLastTimestamp;
+		mLastTimestamp = timestamp;
 		return Math.max(dt, 1e-6);
 	}
 
 	public double calculate(double input) {
 		double dt = getDt();
-		return calculate(input, (m_error - m_prevError) / dt, dt);
+		return calculate(input, (mError - mLastError) / dt, dt);
 	}
 
 	public double calculate(double input, double inputDerivative) {
@@ -85,32 +85,31 @@ public class SynchronousPIDF {
 	 * at a constant rate by the user (ex. in a timed thread)
 	 */
 	public double calculate(double input, double inputDerivative, double dt) {
-		m_last_input = input;
-		m_error = m_setpoint - input;
-		if (m_continuous) {
-			if (Math.abs(m_error) > (m_maximumInput - m_minimumInput) / 2) {
-				if (m_error > 0) {
-					m_error = m_error - m_maximumInput + m_minimumInput;
+		mLastInput = input;
+		mError = mSetPoint - input;
+		if (mContinuous) {
+			if (Math.abs(mError) > (mMaximumInput - mMinimumInput) / 2) {
+				if (mError > 0) {
+					mError = mError - mMaximumInput + mMinimumInput;
 				} else {
-					m_error = m_error + m_maximumInput - m_minimumInput;
+					mError = mError + mMaximumInput - mMinimumInput;
 				}
 			}
 		}
 
-		if (inRange(m_error * m_P, m_minimumOutput, m_maximumOutput)) {
-			m_totalError += m_error * dt;
+		if (inRange(mError * mP, mMinimumOutput, mMaximumOutput)) {
+			mTotalError += mError * dt;
 		} else {
-			m_totalError = 0;
+			mTotalError = 0;
 		}
 
 		// Don't blow away m_error so as to not break derivative
-		double proportionalError = Math.abs(m_error) < m_deadband ? 0 : m_error;
+		double proportionalError = Math.abs(mError) < mDeadBand ? 0 : mError;
 
-//        m_result = (m_P * proportionalError + m_I * m_totalError + m_D * (m_error - m_prevError) / dt + m_F * m_setpoint);
-		m_result = (m_P * proportionalError + m_I * m_totalError + m_D * inputDerivative + m_F * m_setpoint);
-		m_prevError = m_error;
+		mResult = (mP * proportionalError + mI * mTotalError + mD * inputDerivative + mF * mSetPoint);
+		mLastError = mError;
 
-		return clamp(m_result, m_minimumOutput, m_maximumOutput);
+		return clamp(mResult, mMinimumOutput, mMaximumOutput);
 	}
 
 	/**
@@ -122,9 +121,9 @@ public class SynchronousPIDF {
 	 * @param d Differential coefficient
 	 */
 	public void setPID(double p, double i, double d) {
-		m_P = p;
-		m_I = i;
-		m_D = d;
+		mP = p;
+		mI = i;
+		mD = d;
 	}
 
 	/**
@@ -138,7 +137,7 @@ public class SynchronousPIDF {
 	 */
 	public void setPIDF(double p, double i, double d, double f) {
 		setPID(p, i, d);
-		m_F = f;
+		mF = f;
 	}
 
 	/**
@@ -147,7 +146,7 @@ public class SynchronousPIDF {
 	 * @return proportional coefficient
 	 */
 	public double getP() {
-		return m_P;
+		return mP;
 	}
 
 	/**
@@ -156,7 +155,7 @@ public class SynchronousPIDF {
 	 * @return integral coefficient
 	 */
 	public double getI() {
-		return m_I;
+		return mI;
 	}
 
 	/**
@@ -165,7 +164,7 @@ public class SynchronousPIDF {
 	 * @return differential coefficient
 	 */
 	public double getD() {
-		return m_D;
+		return mD;
 	}
 
 	/**
@@ -174,7 +173,7 @@ public class SynchronousPIDF {
 	 * @return feed forward coefficient
 	 */
 	public double getF() {
-		return m_F;
+		return mF;
 	}
 
 	/**
@@ -184,7 +183,7 @@ public class SynchronousPIDF {
 	 * @return the latest calculated output
 	 */
 	public double get() {
-		return m_result;
+		return mResult;
 	}
 
 	/**
@@ -195,11 +194,11 @@ public class SynchronousPIDF {
 	 * @param continuous Set to true turns on continuous, false turns off continuous
 	 */
 	public void setContinuous(boolean continuous) {
-		m_continuous = continuous;
+		mContinuous = continuous;
 	}
 
-	public void setDeadband(double deadband) {
-		m_deadband = deadband;
+	public void setDeadBand(double deadBand) {
+		mDeadBand = deadBand;
 	}
 
 	/**
@@ -221,9 +220,9 @@ public class SynchronousPIDF {
 		if (minimumInput > maximumInput) {
 			throw new BoundaryException("Lower bound is greater than upper bound");
 		}
-		m_minimumInput = minimumInput;
-		m_maximumInput = maximumInput;
-		setSetpoint(m_setpoint);
+		mMinimumInput = minimumInput;
+		mMaximumInput = maximumInput;
+		setSetpoint(mSetPoint);
 	}
 
 	/**
@@ -236,8 +235,8 @@ public class SynchronousPIDF {
 		if (minimumOutput > maximumOutput) {
 			throw new BoundaryException("Lower bound is greater than upper bound");
 		}
-		m_minimumOutput = minimumOutput;
-		m_maximumOutput = maximumOutput;
+		mMinimumOutput = minimumOutput;
+		mMaximumOutput = maximumOutput;
 	}
 
 	public void setMaxAbsoluteOutput(double maxAbsoluteOutput) {
@@ -250,16 +249,10 @@ public class SynchronousPIDF {
 	 * @param setpoint the desired setpoint
 	 */
 	public void setSetpoint(double setpoint) {
-		if (m_maximumInput > m_minimumInput) {
-			if (setpoint > m_maximumInput) {
-				m_setpoint = m_maximumInput;
-			} else if (setpoint < m_minimumInput) {
-				m_setpoint = m_minimumInput;
-			} else {
-				m_setpoint = setpoint;
-			}
+		if (mMaximumInput > mMinimumInput) {
+			mSetPoint = clamp(mSetPoint, mMinimumInput, mMaximumInput);
 		} else {
-			m_setpoint = setpoint;
+			mSetPoint = setpoint;
 		}
 	}
 
@@ -269,7 +262,7 @@ public class SynchronousPIDF {
 	 * @return the current setpoint
 	 */
 	public double getSetpoint() {
-		return m_setpoint;
+		return mSetPoint;
 	}
 
 	/**
@@ -278,7 +271,7 @@ public class SynchronousPIDF {
 	 * @return the current error
 	 */
 	public double getError() {
-		return m_error;
+		return mError;
 	}
 
 	/**
@@ -287,21 +280,21 @@ public class SynchronousPIDF {
 	 * @return true if the error is less than the tolerance
 	 */
 	public boolean onTarget(double tolerance) {
-		return !Double.isNaN(m_last_input) && Math.abs(m_last_input - m_setpoint) < tolerance;
+		return !Double.isNaN(mLastInput) && Math.abs(mLastInput - mSetPoint) < tolerance;
 	}
 
 	/**
 	 * Reset all internal terms.
 	 */
 	public void reset() {
-		m_last_input = Double.NaN;
-		m_prevError = 0;
-		m_totalError = 0;
-		m_result = 0;
-		m_setpoint = 0;
+		mLastInput = Double.NaN;
+		mLastError = 0;
+		mTotalError = 0;
+		mResult = 0;
+		mSetPoint = 0;
 	}
 
 	public void resetIntegrator() {
-		m_totalError = 0;
+		mTotalError = 0;
 	}
 }
