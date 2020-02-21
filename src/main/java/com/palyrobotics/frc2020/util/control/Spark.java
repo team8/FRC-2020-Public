@@ -58,44 +58,44 @@ public class Spark extends CANSparkMax implements Controller {
 		}
 
 		@Override
-		boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput) {
+		protected boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput) {
 			ControlType controllerType = kModeToController.get(mode);
 			return mPidController.setReference(reference, controllerType, slot, arbitraryPercentOutput,
 					ArbFFUnits.kPercentOut) == CANError.kOk;
 		}
 
 		@Override
-		void setP(int slot, double p) {
+		protected void setP(int slot, double p) {
 			mPidController.setP(p, slot);
 		}
 
 		@Override
-		void setI(int slot, double i) {
+		protected void setI(int slot, double i) {
 			mPidController.setI(i, slot);
 		}
 
 		@Override
-		void setD(int slot, double d) {
+		protected void setD(int slot, double d) {
 			mPidController.setD(d, slot);
 		}
 
 		@Override
-		void setF(int slot, double f) {
+		protected void setF(int slot, double f) {
 			mPidController.setFF(f, slot);
 		}
 
 		@Override
-		void setIZone(int slot, double iZone) {
+		protected void setIZone(int slot, double iZone) {
 			mPidController.setIZone(iZone, slot);
 		}
 
 		@Override
-		void setIMax(int slot, double iMax) {
+		protected void setIMax(int slot, double iMax) {
 			mPidController.setIMaxAccum(iMax, slot);
 		}
 
 		@Override
-		void updateFrameTimings() {
+		protected void setFrameTimings() {
 			mController.setControlFramePeriodMs(mControlFrameMs);
 			mController.setPeriodicFramePeriod(PeriodicFrame.kStatus0, mStatusFrameMs);
 			mController.setPeriodicFramePeriod(PeriodicFrame.kStatus1, mStatusFrameMs);

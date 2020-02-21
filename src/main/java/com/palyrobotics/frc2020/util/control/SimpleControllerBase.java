@@ -16,6 +16,7 @@ public abstract class SimpleControllerBase<TController extends Controller> {
 			ControllerOutput.Mode.PROFILED_VELOCITY, kProfiledVelocitySlot);
 	protected RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	protected TController mController;
+	protected boolean mHasCustomFrames;
 	protected int mControlFrameMs, mStatusFrameMs;
 	private double mLastReference, mLastArbitraryPercentOutput;
 	private int mLastSlot;
@@ -71,9 +72,9 @@ public abstract class SimpleControllerBase<TController extends Controller> {
 		}
 	}
 
-	abstract boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput);
+	protected abstract boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput);
 
-	String getName() {
+	protected String getName() {
 		return mController.getName();
 	}
 
@@ -86,17 +87,28 @@ public abstract class SimpleControllerBase<TController extends Controller> {
 		if (Double.compare(lastGains.iMax, newGains.iMax) != 0) setIMax(slot, newGains.iMax);
 	}
 
-	abstract void setP(int slot, double p);
+	protected abstract void setP(int slot, double p);
 
-	abstract void setI(int slot, double i);
+	protected abstract void setI(int slot, double i);
 
-	abstract void setD(int slot, double d);
+	protected abstract void setD(int slot, double d);
 
-	abstract void setF(int slot, double f);
+	protected abstract void setF(int slot, double f);
 
-	abstract void setIZone(int slot, double iZone);
+	protected abstract void setIZone(int slot, double iZone);
 
-	abstract void setIMax(int slot, double iMax);
+	protected abstract void setIMax(int slot, double iMax);
+
+	/**
+	 * Force telling the speed controller its custom communication periods if they exist.
+	 *
+	 * @see #configFrameTimings(int, int) to define custom periods.
+	 */
+	public final void updateFrameTimings() {
+		if (mHasCustomFrames) {
+			setFrameTimings();
+		}
+	}
 
 	/**
 	 * Configures how often this controller communicates with the roboRIO over CAN.
@@ -105,16 +117,15 @@ public abstract class SimpleControllerBase<TController extends Controller> {
 	 * @param statusFrameMs  Period for received information from the controller. Needs to be similar to
 	 *                       closed loop control loop period, since it contains encoder information
 	 */
-	void setFrameTimings(int controlFrameMs, int statusFrameMs) {
+	protected void configFrameTimings(int controlFrameMs, int statusFrameMs) {
+		mHasCustomFrames = true;
 		mControlFrameMs = controlFrameMs;
 		mStatusFrameMs = statusFrameMs;
-		updateFrameTimings();
+		setFrameTimings();
 	}
 
 	/**
-	 * Force telling the speed controller its communication periods.
-	 *
-	 * @see #setFrameTimings(int, int) which defines periods.
+	 * Implementation per controller for setting frame communication periods.
 	 */
-	abstract void updateFrameTimings();
+	protected abstract void setFrameTimings();
 }
