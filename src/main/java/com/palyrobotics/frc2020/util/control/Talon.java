@@ -49,7 +49,7 @@ public class Talon extends TalonSRX implements Controller {
 		}
 
 		@Override
-		boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput) {
+		protected boolean setReference(ControllerOutput.Mode mode, int slot, double reference, double arbitraryPercentOutput) {
 			ControlMode controllerMode = kModeToController.get(mode);
 			double convertedReference;
 			switch (mode) {
@@ -72,37 +72,37 @@ public class Talon extends TalonSRX implements Controller {
 		}
 
 		@Override
-		void setP(int slot, double p) {
+		protected void setP(int slot, double p) {
 			mController.config_kP(slot, p, kTimeoutMs);
 		}
 
 		@Override
-		void setI(int slot, double i) {
+		protected void setI(int slot, double i) {
 			mController.config_kI(slot, i, kTimeoutMs);
 		}
 
 		@Override
-		void setD(int slot, double d) {
+		protected void setD(int slot, double d) {
 			mController.config_kD(slot, d, kTimeoutMs);
 		}
 
 		@Override
-		void setF(int slot, double f) {
+		protected void setF(int slot, double f) {
 			mController.config_kF(slot, f, kTimeoutMs);
 		}
 
 		@Override
-		void setIZone(int slot, double iZone) {
+		protected void setIZone(int slot, double iZone) {
 			mController.config_IntegralZone(slot, round(iZone), kTimeoutMs);
 		}
 
 		@Override
-		void setIMax(int slot, double iMax) {
+		protected void setIMax(int slot, double iMax) {
 			mController.configMaxIntegralAccumulator(slot, iMax, kTimeoutMs);
 		}
 
 		@Override
-		void updateFrameTimings() {
+		protected void setFrameTimings() {
 			/* Update period of commands sent to controller */
 			mController.setControlFramePeriod(ControlFrame.Control_3_General, mControlFrameMs);
 			/* Update period of feedback received from controller */
@@ -144,7 +144,7 @@ public class Talon extends TalonSRX implements Controller {
 	}
 
 	public void configFrameTimings(int controlFrameMs, int statusFrameMs) {
-		mController.setFrameTimings(controlFrameMs, statusFrameMs);
+		mController.configFrameTimings(controlFrameMs, statusFrameMs);
 	}
 
 	public String getName() {

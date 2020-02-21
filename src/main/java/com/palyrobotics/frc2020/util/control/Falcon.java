@@ -48,7 +48,7 @@ public class Falcon extends TalonFX implements Controller {
 	}
 
 	public void setFrameTimings(int controlFrameMs, int statusFrameMs) {
-		mController.setFrameTimings(controlFrameMs, statusFrameMs);
+		mController.configFrameTimings(controlFrameMs, statusFrameMs);
 	}
 
 	public String getName() {

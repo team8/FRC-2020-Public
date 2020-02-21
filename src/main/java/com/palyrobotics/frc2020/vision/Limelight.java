@@ -9,7 +9,6 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.vision.LimelightControlMode.*;
 
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -99,11 +98,12 @@ public class Limelight {
 	}
 
 	public void setLEDMode(LedMode ledMode) {
-		NetworkTableEntry entry = mTable.getEntry("ledMode");
-		if (Double.compare(entry.getDouble(0), ledMode.getValue()) != 0) {
-			entry.setValue(ledMode.getValue());
-			sNetworkTableInstance.flush();
-		}
+//		NetworkTableEntry entry = mTable.getEntry("ledMode");
+//		if (Double.compare(entry.getDouble(0), ledMode.getValue()) != 0) {
+//			entry.setValue(ledMode.getValue());
+//			sNetworkTableInstance.flush();
+//		}
+		mTable.getEntry("ledMode").setValue(ledMode.getValue());
 	}
 
 	/**
