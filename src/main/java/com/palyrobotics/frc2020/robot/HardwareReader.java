@@ -108,20 +108,26 @@ public class HardwareReader {
 
 		state.hasFrontLeftBall = !hardware.frontLeftInfrared.get();
 		state.hasFrontRightBall = !hardware.frontRightInfrared.get();
-		state.hasMiddleBall = !hardware.middleRightInfrared.get();
 		state.hasFrontMiddleBall = !hardware.frontMiddleInfrared.get();
+		state.hasMiddleBall = !hardware.middleRightInfrared.get();
+		state.hasTopBall = !hardware.topInfrared.get();
 
-		// System.out.println(robotState.hasMiddleBall);
-		if (state.backInfraredReadings.getLinkedList().size() == 0) {
-			state.backInfraredReadings.addValue(false);
-			state.backInfraredReadings.addValue(false);
+		if (state.middleRightInfraredReadings.getLinkedList().size() == 0) {
+			state.middleRightInfraredReadings.addValue(false);
+			state.middleRightInfraredReadings.addValue(false);
 		}
 
-		state.backInfraredReadings.addValue(state.hasMiddleBall);
+		state.middleRightInfraredReadings.addValue(state.hasMiddleBall);
+		state.topInfraredReadings.addValue(state.hasTopBall);
 
-		if (state.backInfraredReadings.getLinkedList().get(0).equals(false) && state.backInfraredReadings.getLinkedList().get(1).equals(true)) {
+		if (state.middleRightInfraredReadings.getLinkedList().get(0).equals(true) && state.middleRightInfraredReadings.getLinkedList().get(1).equals(false)) {
 			state.guaranteedBallCount++;
 		}
+
+		if (state.topInfraredReadings.getLinkedList().get(0).equals(true) && state.middleRightInfraredReadings.getLinkedList().get(1).equals(false)) {
+			state.guaranteedBallCount--;
+		}
+
 		state.possibleBallCount = 0;
 
 		if (state.hasFrontRightBall) {
@@ -130,7 +136,6 @@ public class HardwareReader {
 		if (state.hasFrontLeftBall) {
 			state.possibleBallCount++;
 		}
-
 		if (state.hasFrontMiddleBall) {
 			state.possibleBallCount++;
 		}
