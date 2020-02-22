@@ -148,10 +148,7 @@ public class OperatorInterface {
 					break;
 			}
 		}
-		if (mOperatorXboxController.getMenuButtonPressed()) {
-			commands.addWantedRoutine(new IndexerCaterpillar());
-			commands.intakeWantedState = Intake.State.LOWER;
-		}
+
 		/* Indexer Hopper Control */
 		if (mOperatorXboxController.getDPadRightPressed()) {
 			if (commands.indexerWantedHopperState == Indexer.HopperState.CLOSED) {
@@ -173,6 +170,10 @@ public class OperatorInterface {
 		if (mOperatorXboxController.getDPadLeftReleased()) {
 			commands.intakeWantedState = Intake.State.LOWER;
 			commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
+		}
+		if (state.totalBallCount > state.previousTotalBallCount) {
+			commands.addWantedRoutine(new IndexerCaterpillar());
+			commands.intakeWantedState = Intake.State.LOWER;
 		}
 		/* Shooting */
 		// Handle flywheel velocity

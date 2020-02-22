@@ -5,7 +5,7 @@
     "reverseTime": 0.15,
     "feedingOutput": 1200.0,
     "reversingOutput": 1000.0,
-    "caterpillarTargetEncoderTicks": 7.0,
+    "caterpillarTargetEncoderTicks": 11.0,
     "maxPercentOutputCaterpillar": 0.5,
     "caterpillarTolerance" : 2,
     "masterVelocityGains": {
@@ -18,7 +18,7 @@
     },
     "pulsePeriod": 4,
     "positionGainsCaterpillar": {
-        "p": 0.0007,
+        "p": 5.0E-4,
         "f": 0.0
     }
 }

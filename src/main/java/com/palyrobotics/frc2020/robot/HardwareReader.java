@@ -105,6 +105,7 @@ public class HardwareReader {
 
 	private void readIndexerState(RobotState state) {
 		var hardware = IndexerHardware.getInstance();
+		robotState.previousTotalBallCount = robotState.totalBallCount;
 
 		state.hasFrontLeftBall = !hardware.frontLeftInfrared.get();
 		state.hasFrontRightBall = !hardware.frontRightInfrared.get();
