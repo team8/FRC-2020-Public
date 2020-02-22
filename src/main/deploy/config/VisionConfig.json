@@ -6,8 +6,8 @@
 		"acceleration": 140.0
 	},
 	"preciseGains": {
-		"p": 0.009,
-		"i": 0.03,
+		"p": 0.0085,
+		"i": 0.0,
 		"d": 0.000675
 	},
 	"oneTimesZoomGains": {

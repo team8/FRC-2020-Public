@@ -154,12 +154,11 @@ public class OperatorInterface {
 				// Open hopper, stow intake, and advance balls
 				commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 				commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
-				commands.intakeWantedState = Intake.State.INTAKE;
 			} else if (commands.indexerWantedHopperState == Indexer.HopperState.OPEN) {
 				// Close hopper, lower intake, and advance balls a bit
 				commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
-				commands.intakeWantedState = Intake.State.LOWER;
 			}
+			commands.intakeWantedState = Intake.State.LOWER;
 		}
 		/* Ball Intake Control */
 		if (mOperatorXboxController.getDPadLeft()) {
