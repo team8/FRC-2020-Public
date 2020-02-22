@@ -4,8 +4,11 @@ import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+
+import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class Indexer extends SubsystemBase {
 
@@ -15,7 +18,9 @@ public class Indexer extends SubsystemBase {
 			mSlaveSparkOutput = new ControllerOutput(),
 			mLeftVTalonOutput = new ControllerOutput(),
 			mRightVTalonOutput = new ControllerOutput();
+	private PIDController mCaterpillarPIDController = new PIDController(0.0, 0.0, 0.0);
 	private boolean mHopperOutput, mBlockOutput;
+	private double mInitialEncoderPosition = 0;
 
 	private Indexer() {
 	}
@@ -77,6 +82,14 @@ public class Indexer extends SubsystemBase {
 				mLeftVTalonOutput.setPercentOutput(-mConfig.leftTalonIndexingOutput);
 				mRightVTalonOutput.setPercentOutput(-mConfig.rightTalonIndexingOutput);
 				mBlockOutput = false;
+				break;
+			case CATERPILLAR:
+				mCaterpillarPIDController.setPID(mConfig.positionGainsCaterpillar.p, mConfig.positionGainsCaterpillar.i, mConfig.positionGainsCaterpillar.d);
+				double output = mCaterpillarPIDController.calculate(mConfig.caterpillarTargetEncoderTicks - (state.indexerEncoderPosition - mInitialEncoderPosition));
+				double clampedOutput = Util.clamp(output, -mConfig.maxPercentOutputCaterpillar, mConfig.maxPercentOutputCaterpillar);
+				mMasterSparkOutput.setPercentOutput(clampedOutput);
+				mSlaveSparkOutput.setPercentOutput(clampedOutput);
+				mBlockOutput = false;
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
 	}
@@ -110,8 +123,12 @@ public class Indexer extends SubsystemBase {
 		return mBlockOutput;
 	}
 
+	public void setInitialEncoderPosition(double initialEncoderPosition) {
+		this.mInitialEncoderPosition = initialEncoderPosition;
+	}
+
 	public enum BeltState {
-		IDLE, INDEX, WAITING_TO_FEED, FEED_SINGLE, FEED_ALL, REVERSING
+		IDLE, INDEX, WAITING_TO_FEED, FEED_SINGLE, FEED_ALL, REVERSING, CATERPILLAR
 	}
 
 	public enum HopperState {

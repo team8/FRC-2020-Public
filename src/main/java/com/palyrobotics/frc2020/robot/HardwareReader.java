@@ -151,6 +151,10 @@ public class HardwareReader {
 
 		state.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
 
+		state.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
+		state.indexerEncoderPosition = hardware.masterEncoder.getPosition();
+		state.indexerEncoderVelocity = hardware.masterEncoder.getVelocity();
+
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
 		checkTalonFaults(hardware.leftVTalon);
