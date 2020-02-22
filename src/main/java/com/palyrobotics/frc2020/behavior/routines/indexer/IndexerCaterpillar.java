@@ -10,6 +10,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 
 public class IndexerCaterpillar extends RoutineBase {
 
@@ -18,22 +19,25 @@ public class IndexerCaterpillar extends RoutineBase {
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		return (state.indexerEncoderPosition - initialEncoderPosition) > mConfig.caterpillarTargetEncoderTicks;
+		return Math.abs(state.indexerEncoderPosition - initialEncoderPosition - mConfig.caterpillarTargetEncoderTicks) < mConfig.caterpillarTolerance;
 	}
 
 	@Override
 	protected void start(Commands commands, @ReadOnly RobotState state) {
 		initialEncoderPosition = state.indexerEncoderPosition;
-		mIndexer.setInitialEncoderPosition(initialEncoderPosition);
+	}
+
+	@Override
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
+		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 	}
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		if ((state.indexerEncoderPosition - initialEncoderPosition) < mConfig.caterpillarTargetEncoderTicks) {
-			commands.indexerWantedBeltState = Indexer.BeltState.CATERPILLAR;
-		} else {
-			commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
-		}
+		commands.indexerWantedBeltState = Indexer.BeltState.CATERPILLAR;
+		LiveGraph.add("targetEncoder", initialEncoderPosition + mConfig.caterpillarTargetEncoderTicks);
+		LiveGraph.add("currentEncoder", state.indexerEncoderPosition);
+
 	}
 
 	@Override

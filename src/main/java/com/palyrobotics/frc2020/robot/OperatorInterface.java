@@ -6,6 +6,7 @@ import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.indexer.IndexerCaterpillar;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
@@ -146,6 +147,10 @@ public class OperatorInterface {
 					commands.intakeWantedState = Intake.State.LOWER;
 					break;
 			}
+		}
+		if (mOperatorXboxController.getMenuButtonPressed()) {
+			commands.addWantedRoutine(new IndexerCaterpillar());
+			commands.intakeWantedState = Intake.State.LOWER;
 		}
 		/* Indexer Hopper Control */
 		if (mOperatorXboxController.getDPadRightPressed()) {

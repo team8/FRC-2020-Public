@@ -7,6 +7,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 
@@ -85,12 +86,14 @@ public class Indexer extends SubsystemBase {
 				break;
 			case CATERPILLAR:
 				mCaterpillarPIDController.setPID(mConfig.positionGainsCaterpillar.p, mConfig.positionGainsCaterpillar.i, mConfig.positionGainsCaterpillar.d);
-				double output = mCaterpillarPIDController.calculate(mConfig.caterpillarTargetEncoderTicks - (state.indexerEncoderPosition - mInitialEncoderPosition));
+				double output = mCaterpillarPIDController.calculate(mConfig.caterpillarTargetEncoderTicks + state.indexerEncoderPosition);
 				double clampedOutput = Util.clamp(output, -mConfig.maxPercentOutputCaterpillar, mConfig.maxPercentOutputCaterpillar);
-				mMasterSparkOutput.setPercentOutput(clampedOutput);
-				mSlaveSparkOutput.setPercentOutput(clampedOutput);
-				mBlockOutput = false;
+				CSVWriter.addData("clampedOutput", -clampedOutput);
+				mMasterSparkOutput.setPercentOutput(-clampedOutput);
+				mSlaveSparkOutput.setPercentOutput(-clampedOutput);
+				mBlockOutput = true;
 		}
+
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
 	}
 
