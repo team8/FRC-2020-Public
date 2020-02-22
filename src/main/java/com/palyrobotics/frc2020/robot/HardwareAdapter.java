@@ -2,7 +2,6 @@ package com.palyrobotics.frc2020.robot;
 
 import java.util.List;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -59,7 +58,7 @@ public class HardwareAdapter {
 		final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon,
 				rightMasterFalcon, rightSlaveFalcon);
 
-		final PigeonIMU gyro = new PigeonIMU(new WPI_TalonSRX(8));
+		final PigeonIMU gyro = new PigeonIMU(9);
 
 		private DriveHardware() {
 		}

@@ -10,11 +10,11 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 public class Climber extends SubsystemBase {
 
 	public enum State {
-		RAISING, LOWERING_TO_BAR, CLIMBING, LOCKED, IDLE
+		CUSTOM_POSITIONING, MANUAL, LOCKED, IDLE
 	}
 
 	private static Climber sInstance = new Climber();
-	private ControllerOutput mVerticalOutput = new ControllerOutput();
+	private ControllerOutput mControllerOutput = new ControllerOutput();
 	private boolean mSolenoidOutput;
 	private ClimberConfig mConfig = Configs.get(ClimberConfig.class);
 
@@ -28,32 +28,27 @@ public class Climber extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		switch (commands.climberWantedState) {
-			case RAISING:
-				mVerticalOutput.setTargetPositionProfiled(mConfig.climberTopHeight, mConfig.raisingArbitraryDemand, mConfig.raisingGains);
-				mSolenoidOutput = true;
-				break;
-			case LOWERING_TO_BAR:
-				mVerticalOutput.setPercentOutput(mConfig.loweringPercentOutput);
-				mSolenoidOutput = true;
-				break;
-			case CLIMBING:
-				mVerticalOutput.setTargetVelocityProfiled(commands.climberWantedVelocity,
-						mConfig.climbingArbitraryDemand, mConfig.climbingGains);
-				mSolenoidOutput = true;
-				break;
-			case LOCKED:
-				mVerticalOutput.setIdle();
+			case CUSTOM_POSITIONING:
+				mControllerOutput.setTargetPositionProfiled(commands.climberPositionSetpoint, mConfig.raisingArbitraryDemand, mConfig.raisingGains);
 				mSolenoidOutput = false;
 				break;
-			case IDLE:
-				mVerticalOutput.setIdle();
+			case MANUAL:
+				mControllerOutput.setPercentOutput(commands.climberWantedManualPercentOutput);
+				mSolenoidOutput = false;
+				break;
+			case LOCKED:
+				mControllerOutput.setIdle();
 				mSolenoidOutput = true;
+				break;
+			case IDLE:
+				mControllerOutput.setIdle();
+				mSolenoidOutput = false;
 				break;
 		}
 	}
 
-	public ControllerOutput getVerticalOutput() {
-		return mVerticalOutput;
+	public ControllerOutput getControllerOutput() {
+		return mControllerOutput;
 	}
 
 	public boolean getSolenoidOutput() {
