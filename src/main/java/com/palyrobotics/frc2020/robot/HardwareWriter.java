@@ -119,8 +119,8 @@ public class HardwareWriter {
 			spark.setInverted(true);
 			double maxOutput = 0.8;
 			spark.getController().setOutputRange(-maxOutput, maxOutput);
-			spark.setSmartCurrentLimit((int) Math.round(30.0 / maxOutput));
-			spark.setSecondaryCurrentLimit(40.0 / maxOutput);
+//			spark.setSmartCurrentLimit((int) Math.round(40.0 / maxOutput));
+//			spark.setSecondaryCurrentLimit(50.0 / maxOutput);
 		}
 		/* V-Belt Talons */
 		for (Talon vTalon : hardware.vTalons) {
