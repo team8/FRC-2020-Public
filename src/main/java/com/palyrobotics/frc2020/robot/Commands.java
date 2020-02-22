@@ -23,9 +23,8 @@ public class Commands {
 	public boolean shouldClearCurrentRoutines;
 	/* Climber */
 	public Climber.State climberWantedState;
-	public Climber.State preLockClimberWantedState;
-	public double climberWantedVelocity;
-	public double climberWantedAdjustingPercentOutput;
+	public double climberPositionSetpoint;
+	public double climberWantedManualPercentOutput;
 	/* Drive */
 	/* Drive Commands */
 	private Drive.State driveWantedState;
@@ -70,19 +69,7 @@ public class Commands {
 		routinesWanted.add(wantedRoutine);
 	}
 
-	/* Climber */
-	public void setClimberWantedOutput(double output) {
-	}
-
-	public void setClimberWantedVelocity(double velocity) {
-		climberWantedVelocity = velocity;
-	}
-
 	/* Drive */
-	public void setClimberWantedAdjustingPercentOutput(double percentOutput) {
-		climberWantedAdjustingPercentOutput = percentOutput;
-	}
-
 	public void setDriveOutputs(DriveOutputs outputs) {
 		driveWantedState = Drive.State.OUTPUTS;
 		driveWantedSignal = outputs;
@@ -208,8 +195,5 @@ public class Commands {
 		other.shouldClearCurrentRoutines = shouldClearCurrentRoutines;
 		other.routinesWanted.addAll(routinesWanted);
 		other.climberWantedState = climberWantedState;
-		other.preLockClimberWantedState = preLockClimberWantedState;
-		other.climberWantedAdjustingPercentOutput = climberWantedAdjustingPercentOutput;
-		other.climberWantedVelocity = climberWantedVelocity;
 	}
 }

@@ -7,10 +7,8 @@ import com.palyrobotics.frc2020.util.control.ProfiledGains;
 public class ClimberConfig extends SubsystemConfigBase {
 
 	public double climberTopHeight;
-	public double loweringPercentOutput;
 	public double allowablePositionError;
-	public double velocityChangeThreshold;
 
-	public double raisingArbitraryDemand, climbingArbitraryDemand;
-	public ProfiledGains raisingGains, climbingGains;
+	public double raisingArbitraryDemand;
+	public ProfiledGains raisingGains;
 }

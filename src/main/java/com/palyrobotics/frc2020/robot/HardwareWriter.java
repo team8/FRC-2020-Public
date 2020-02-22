@@ -210,7 +210,7 @@ public class HardwareWriter {
 
 	private void updateClimber() {
 		var hardware = HardwareAdapter.ClimberHardware.getInstance();
-		hardware.spark.setOutput(mClimber.getVerticalOutput());
+		hardware.spark.setOutput(mClimber.getControllerOutput());
 		hardware.solenoid.setExtended(mClimber.getSolenoidOutput());
 	}
 
