@@ -1,11 +1,9 @@
 {
-  "ledCount" :  84,
+  "ledCount" :  58,
   "shooterSegmentFirstIndex" : 0,
   "shooterSegmentLastIndex" : 43,
   "spinnerSegmentFirstIndex" : 44,
   "spinnerSegmentLastIndex" : 57,
-  "backSupportSegmentFirstIndex" : 58,
-  "backSupportSegmentLastIndex" : 83,
   "totalSegmentFirstIndex" : 0,
-  "totalSegmentLastIndex" : 83
+  "totalSegmentLastIndex" : 57
 }
