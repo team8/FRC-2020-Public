@@ -34,8 +34,4 @@ public class CircularBuffer<E> {
 				.filter(predicate)
 				.count();
 	}
-
-	public LinkedList<E> getSamples() {
-		return mSamples;
-	}
 }

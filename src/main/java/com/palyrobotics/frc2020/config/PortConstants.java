@@ -16,6 +16,7 @@ public class PortConstants extends ConfigBase {
 	 */
 	public int nariDriveLeftMasterId, nariDriveLeftSlaveId;
 	public int nariDriveRightMasterId, nariDriveRightSlaveId;
+	public int nariDriveGyroId;
 
 	/**
 	 * Indexer
