@@ -16,13 +16,11 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class HardwareWriter {
@@ -242,8 +240,8 @@ public class HardwareWriter {
 //		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
 //		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
 //		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));
-		LiveGraph.add("totalCurrent", pdp.getTotalCurrent());
-		LiveGraph.add("batteryVoltage", RobotController.getBatteryVoltage());
+//		LiveGraph.add("totalCurrent", pdp.getTotalCurrent());
+//		LiveGraph.add("batteryVoltage", RobotController.getBatteryVoltage());
 	}
 
 	private void updateIntake() {
