@@ -128,7 +128,7 @@ public class OperatorInterface {
 //			commands.lightingWantedState = Lighting.State.INIT;
 //		}
 //		if (mTurnStick.getRawButtonPressed(4)) {
-//			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
+//			commands.lightingWantedState = Lighting.State.CLIMB_EXTENDED;
 //		}
 //		if (mTurnStick.getRawButtonPressed(3)) {
 //			commands.lightingWantedState = Lighting.State.IDLE;

@@ -37,7 +37,7 @@ public class OneColorController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		for (int i = mStartIndex; i < mLastIndex; i++) {
+		for (int i = 0; i < mOutputs.lightingOutput.size(); i++) {
 			mOutputs.lightingOutput.get(i).setHSV(mColor.getH(), mColor.getS(), mColor.getV());
 		}
 	}
