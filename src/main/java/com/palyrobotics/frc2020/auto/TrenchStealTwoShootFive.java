@@ -35,7 +35,7 @@ public class TrenchStealTwoShootFive extends AutoBase {
 				new IndexerTimeRoutine(8),
 				new IntakeBallRoutine(8));
 
-		var goToShoot = new DrivePathRoutine(newWaypoint(60, 160, 200)).driveInReverse();
+		var goToShoot = new DrivePathRoutine(newWaypoint(50, 150, 190)).driveInReverse();
 
 		var shootBalls = new SequentialRoutine(
 				new DriveAlignRoutine(0),
