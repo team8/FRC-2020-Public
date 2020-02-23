@@ -19,6 +19,7 @@ import com.palyrobotics.frc2020.util.control.Talon;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.FaultID;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotController;
@@ -28,7 +29,7 @@ public class HardwareWriter {
 
 	public static final int
 	// Blocks config calls for specified timeout
-	kTimeoutMs = 100,
+	kTimeoutMs = 150,
 			// Different from slot index.
 			// 0 for Primary closed-loop. 1 for auxiliary closed-loop.
 			kPidIndex = 0;
@@ -70,6 +71,12 @@ public class HardwareWriter {
 		/* Encoder units are inches and inches/sec */
 		hardware.sparkEncoder.setPositionConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
 		hardware.sparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
+		hardware.spark.setInverted(true);
+		hardware.sparkEncoder.setPosition(0.0);
+		hardware.spark.enableSoftLimit(SoftLimitDirection.kForward, true);
+		hardware.spark.setSoftLimit(SoftLimitDirection.kForward, 130.0f);
+		hardware.spark.enableSoftLimit(SoftLimitDirection.kReverse, true);
+		hardware.spark.setSoftLimit(SoftLimitDirection.kReverse, 0.0f);
 		hardware.spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 	}
 
@@ -101,8 +108,6 @@ public class HardwareWriter {
 		hardware.rightSlaveFalcon.setInverted(InvertType.FollowMaster);
 		hardware.rightSlaveFalcon.setFrameTimings(40, 40);
 		/* Gyro */
-		// We do not factory reset the gyro in order to keep temperature compensation features
-		hardware.gyro.clearStickyFaults(kTimeoutMs);
 		// 10 ms update period for yaw degrees and yaw angular velocity in degrees per second
 		setPigeonStatusFramePeriods(hardware.gyro);
 		/* Falcons and Gyro */

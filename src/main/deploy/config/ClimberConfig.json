@@ -1,8 +1,12 @@
 {
-    "climberTopHeight": 0.0,
+    "climberTopHeight": 120.0,
     "allowablePositionError": 0.5,
     "raisingArbitraryDemand": 0.0,
     "raisingGains": {
-
+        "f": 0.00024,
+        "p": 0.00005,
+        "d": 0.0,
+        "acceleration": 3500.0,
+        "velocity": 3100.0
     }
 }

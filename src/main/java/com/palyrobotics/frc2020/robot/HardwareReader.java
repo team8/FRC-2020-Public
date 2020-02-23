@@ -104,9 +104,9 @@ public class HardwareReader {
 
 	private void readIndexerState(RobotState state) {
 		var hardware = IndexerHardware.getInstance();
-		state.indexerHasBackBall = hardware.backInfrared.get();
-		state.indexerHasFrontBall = hardware.frontInfrared.get();
-		state.indexerHasTopBall = hardware.topInfrared.get();
+		state.indexerHasBackBall = !hardware.backInfrared.get();
+		state.indexerHasFrontBall = !hardware.frontInfrared.get();
+		state.indexerHasTopBall = !hardware.topInfrared.get();
 		state.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
