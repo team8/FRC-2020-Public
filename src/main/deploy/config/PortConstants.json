@@ -5,6 +5,7 @@
 	"nariDriveLeftSlaveId": 13,
 	"nariDriveRightMasterId": 2,
 	"nariDriveRightSlaveId": 3,
+	"nariDriveGyroId": 9,
 	"nariIndexerMasterId": 10,
 	"nariIndexerSlaveId": 11,
 	"nariIndexerLeftVTalonId": 7,

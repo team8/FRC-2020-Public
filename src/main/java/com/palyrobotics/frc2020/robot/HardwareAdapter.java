@@ -58,7 +58,7 @@ public class HardwareAdapter {
 		final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon,
 				rightMasterFalcon, rightSlaveFalcon);
 
-		final PigeonIMU gyro = new PigeonIMU(9);
+		final PigeonIMU gyro = new PigeonIMU(sPortConstants.nariDriveGyroId);
 
 		private DriveHardware() {
 		}
