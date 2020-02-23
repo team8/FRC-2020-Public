@@ -12,7 +12,7 @@
 	"nariIndexerRightVTalonId": 4,
 	"nariIndexerHopperSolenoidId": 2,
 	"nariIndexerBlockingSolenoidId": 3,
-	"nariIndexerBackInfraredDio": 7,
+	"nariIndexerBackInfraredDio": 0,
 	"nariIndexerFrontInfraredDio": 8,
 	"nariIndexerTopInfraredDio": 9,
 	"nariIntakeId": 8,

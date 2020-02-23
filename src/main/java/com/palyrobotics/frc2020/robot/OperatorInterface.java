@@ -19,7 +19,6 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 /**
@@ -70,26 +69,26 @@ public class OperatorInterface {
 	}
 
 	private void updateClimberCommands(Commands commands, @ReadOnly RobotState state) {
-		if (DriverStation.getInstance().getMatchTime() < kClimberEnableControlTimeSeconds) {
-			if (mOperatorXboxController.getWindowButtonPressed()) {
-				commands.climberWantedState = Climber.State.CUSTOM_POSITIONING;
-				commands.climberPositionSetpoint = mClimberConfig.climberTopHeight;
-			}
+//		if (DriverStation.getInstance().getMatchTime() < kClimberEnableControlTimeSeconds) {
+		if (mOperatorXboxController.getWindowButtonPressed()) {
+			commands.climberWantedState = Climber.State.CUSTOM_POSITIONING;
+			commands.climberPositionSetpoint = mClimberConfig.climberTopHeight;
+		}
 
-			if (mOperatorXboxController.getDPadUpPressed()) {
-				if (commands.climberWantedState != Climber.State.LOCKED) {
-					commands.climberWantedState = Climber.State.LOCKED;
-				} else {
-					commands.climberWantedState = Climber.State.IDLE;
-				}
-			}
-
-			commands.climberWantedManualPercentOutput = mOperatorXboxController.getY(Hand.kLeft);
-
-			if (commands.climberWantedState != Climber.State.MANUAL && handleDeadBand(commands.climberWantedManualPercentOutput, kDeadBand) != 0) {
-				commands.climberWantedState = Climber.State.MANUAL;
+		if (mOperatorXboxController.getDPadUpPressed()) {
+			if (commands.climberWantedState != Climber.State.LOCKED) {
+				commands.climberWantedState = Climber.State.LOCKED;
+			} else {
+				commands.climberWantedState = Climber.State.IDLE;
 			}
 		}
+
+		commands.climberWantedManualPercentOutput = -mOperatorXboxController.getY(Hand.kLeft);
+
+		if (commands.climberWantedState != Climber.State.MANUAL && handleDeadBand(commands.climberWantedManualPercentOutput, kDeadBand) != 0) {
+			commands.climberWantedState = Climber.State.MANUAL;
+		}
+//		}
 	}
 
 	private void updateDriveCommands(Commands commands) {

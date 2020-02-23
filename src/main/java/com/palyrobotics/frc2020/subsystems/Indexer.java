@@ -27,10 +27,10 @@ public class Indexer extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		double leftMultiplier = 1.0, rightMultiplier = 1.0;
-//		if (state.indexerHasBackBall) {
-//			leftMultiplier = 0.1;
-//			rightMultiplier = 0.1;
-//		}
+		if (state.indexerHasBackBall) {
+			leftMultiplier = 0.0;
+			rightMultiplier = 0.0;
+		}
 //		if ((Math.round(Timer.getFPGATimestamp() * mConfig.pulsePeriod) % 2L) == 0L) {
 //			leftMultiplier = 0.0;
 //			rightMultiplier = 0.6;
