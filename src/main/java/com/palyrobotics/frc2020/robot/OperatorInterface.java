@@ -129,18 +129,18 @@ public class OperatorInterface {
 	}
 
 	private void updateLightingCommands(Commands commands) {
-//		if (mTurnStick.getRawButtonPressed(6)) {
-//			commands.lightingWantedState = Lighting.State.DISABLE;
-//		}
-//		if (mTurnStick.getRawButtonPressed(5)) {
-//			commands.lightingWantedState = Lighting.State.INIT;
-//		}
-//		if (mTurnStick.getRawButtonPressed(4)) {
-//			commands.lightingWantedState = Lighting.State.CLIMB_EXTENDED;
-//		}
-//		if (mTurnStick.getRawButtonPressed(3)) {
-//			commands.lightingWantedState = Lighting.State.IDLE;
-//		}
+		if (mTurnStick.getRawButtonPressed(6)) {
+			commands.lightingWantedState = Lighting.State.DISABLE;
+		}
+		if (mTurnStick.getRawButtonPressed(5)) {
+			commands.lightingWantedState = Lighting.State.INIT;
+		}
+		if (mTurnStick.getRawButtonPressed(4)) {
+			commands.lightingWantedState = Lighting.State.CLIMB_EXTENDED;
+		}
+		if (mTurnStick.getRawButtonPressed(3)) {
+			commands.lightingWantedState = Lighting.State.IDLE;
+		}
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
