@@ -9,7 +9,7 @@ public class Color {
 
 		private int h, s, v;
 		private int lastH, lastS, lastV;
-		public static final Color.HSV kBlue = new HSV(100, 150, 20),
+		public static final Color.HSV kBlue = new HSV(100, 150, 150),
 				kWhite = new HSV(0, 75, 20),
 				kLime = new HSV(60, 255, 20),
 				kRed = new HSV(5, 50, 20),

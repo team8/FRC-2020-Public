@@ -14,6 +14,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.ColorMatch;
 
@@ -129,6 +130,7 @@ public class HardwareReader {
 		state.shooterHoodIsInTransition = hardware.hoodSolenoid.isInTransition() || hardware.blockingSolenoid.isInTransition();
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
+		LiveGraph.add("applied", hardware.masterSpark.getAppliedOutput());
 	}
 
 	private void checkSparkFaults(Spark spark) {
