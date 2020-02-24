@@ -72,7 +72,7 @@ public class HardwareWriter {
 		hardware.spark.setInverted(true);
 		hardware.sparkEncoder.setPosition(0.0);
 		hardware.spark.enableSoftLimit(SoftLimitDirection.kForward, true);
-		hardware.spark.setSoftLimit(SoftLimitDirection.kForward, 130.0f);
+		hardware.spark.setSoftLimit(SoftLimitDirection.kForward, 140.0f);
 		hardware.spark.enableSoftLimit(SoftLimitDirection.kReverse, true);
 		hardware.spark.setSoftLimit(SoftLimitDirection.kReverse, 0.0f);
 		hardware.spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -95,13 +95,13 @@ public class HardwareWriter {
 		}
 		// Left
 		hardware.leftMasterFalcon.setInverted(false);
-		hardware.leftMasterFalcon.setFrameTimings(5, 5);
+		hardware.leftMasterFalcon.setFrameTimings(10, 10);
 		hardware.leftSlaveFalcon.follow(hardware.leftMasterFalcon);
 		hardware.leftSlaveFalcon.setInverted(InvertType.FollowMaster);
 		hardware.leftSlaveFalcon.setFrameTimings(40, 40);
 		// Right
 		hardware.rightMasterFalcon.setInverted(true);
-		hardware.rightMasterFalcon.setFrameTimings(5, 5);
+		hardware.rightMasterFalcon.setFrameTimings(10, 10);
 		hardware.rightSlaveFalcon.follow(hardware.rightMasterFalcon);
 		hardware.rightSlaveFalcon.setInverted(InvertType.FollowMaster);
 		hardware.rightSlaveFalcon.setFrameTimings(40, 40);
@@ -280,8 +280,8 @@ public class HardwareWriter {
 	}
 
 	private void setPigeonStatusFramePeriods(PigeonIMU gyro) {
-		gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 5, kTimeoutMs);
-		gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_2_Gyro, 5, kTimeoutMs);
+		gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 10, kTimeoutMs);
+		gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_2_Gyro, 10, kTimeoutMs);
 	}
 
 	private void handleReset(PigeonIMU pigeon) {
