@@ -1,9 +1,11 @@
 {
-  "ledCount" :  58,
-  "shooterSegmentFirstIndex" : 0,
-  "shooterSegmentLastIndex" : 43,
-  "spinnerSegmentFirstIndex" : 44,
-  "spinnerSegmentLastIndex" : 57,
+  "ledCount" :  35,
+  "frontLeftSegmentFirstIndex"  : 0,
+  "frontLeftSegmentLastIndex"  : 8,
+  "frontRightSegmentFirstIndex"  : 10,
+  "frontRightSegmentLastIndex"  : 15,
+  "spinnerSegmentFirstIndex" : 16,
+  "spinnerSegmentLastIndex" : 34,
   "totalSegmentFirstIndex" : 0,
-  "totalSegmentLastIndex" : 57
+  "totalSegmentLastIndex" : 34
 }
