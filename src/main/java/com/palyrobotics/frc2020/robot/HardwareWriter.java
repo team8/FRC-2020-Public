@@ -94,13 +94,13 @@ public class HardwareWriter {
 		}
 		// Left
 		hardware.leftMasterFalcon.setInverted(false);
-		hardware.leftMasterFalcon.setFrameTimings(10, 10);
+		hardware.leftMasterFalcon.setFrameTimings(5, 5);
 		hardware.leftSlaveFalcon.follow(hardware.leftMasterFalcon);
 		hardware.leftSlaveFalcon.setInverted(InvertType.FollowMaster);
 		hardware.leftSlaveFalcon.setFrameTimings(40, 40);
 		// Right
 		hardware.rightMasterFalcon.setInverted(true);
-		hardware.rightMasterFalcon.setFrameTimings(10, 10);
+		hardware.rightMasterFalcon.setFrameTimings(5, 5);
 		hardware.rightSlaveFalcon.follow(hardware.rightMasterFalcon);
 		hardware.rightSlaveFalcon.setInverted(InvertType.FollowMaster);
 		hardware.rightSlaveFalcon.setFrameTimings(40, 40);
@@ -231,11 +231,11 @@ public class HardwareWriter {
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 		hardware.leftVTalon.setOutput(mIndexer.getLeftVTalonOutput());
 		hardware.rightVTalon.setOutput(mIndexer.getRightVTalonOutput());
-		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
-		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
-		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
-		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
-		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
+//		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
+//		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
+//		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
+//		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
+//		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
 		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
 //		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
 //		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
@@ -280,8 +280,8 @@ public class HardwareWriter {
 	}
 
 	private void setPigeonStatusFramePeriods(PigeonIMU gyro) {
-		gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 10, kTimeoutMs);
-		gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_2_Gyro, 10, kTimeoutMs);
+		gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 5, kTimeoutMs);
+		gyro.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_2_Gyro, 5, kTimeoutMs);
 	}
 
 	private void handleReset(PigeonIMU pigeon) {

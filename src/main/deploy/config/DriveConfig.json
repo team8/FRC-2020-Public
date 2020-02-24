@@ -6,8 +6,8 @@
 	"turnGains": {
 		"f": 0.00145,
 		"p": 0.0003,
-		"velocity": 140.0,
-		"acceleration": 140.0
+		"velocity": 180.0,
+		"acceleration": 180.0
 	},
 	"turnGainsS": 0.065,
 	"quickStopWeight": 0.125,
@@ -21,7 +21,7 @@
 	"lowNegativeInertiaTurnScalar": 2.5,
 	"wheelNonLinearity": 0.5,
 	"nonlinearPasses": 3,
-	"maxPathVelocityMetersPerSecond": 1.6,
-	"maxPathAccelerationMetersPerSecondSquared": 1.4,
+	"maxPathVelocityMetersPerSecond": 1.85,
+	"maxPathAccelerationMetersPerSecondSquared": 1.5,
 	"allowableYawErrorDegrees": 2.0
 }
