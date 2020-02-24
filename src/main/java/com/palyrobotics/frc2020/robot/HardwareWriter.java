@@ -17,7 +17,6 @@ import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -119,6 +118,7 @@ public class HardwareWriter {
 			spark.restoreFactoryDefaults();
 			spark.enableVoltageCompensation(kVoltageCompensation);
 			spark.setOpenLoopRampRate(0.1);
+			spark.setClosedLoopRampRate(0.1);
 			spark.setInverted(true);
 			double maxOutput = 0.8;
 			spark.getController().setOutputRange(-maxOutput, maxOutput);
@@ -231,11 +231,11 @@ public class HardwareWriter {
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 		hardware.leftVTalon.setOutput(mIndexer.getLeftVTalonOutput());
 		hardware.rightVTalon.setOutput(mIndexer.getRightVTalonOutput());
-//		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
-//		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
-//		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
-//		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
-//		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
+		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
+		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
+		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
+		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
+		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
 		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
 //		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
 //		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
@@ -272,11 +272,11 @@ public class HardwareWriter {
 	}
 
 	private void handleReset(Spark master, Spark slave) {
-		if (slave.getStickyFault(FaultID.kHasReset)) {
-			slave.follow(master);
-			slave.clearFaults();
-			Log.error(kLoggerTag, String.format("%s spark reset", slave.getName()));
-		}
+//		if (slave.getStickyFault(FaultID.kHasReset)) {
+//			slave.follow(master);
+//			slave.clearFaults();
+//			Log.error(kLoggerTag, String.format("%s spark reset", slave.getName()));
+//		}
 	}
 
 	private void setPigeonStatusFramePeriods(PigeonIMU gyro) {
