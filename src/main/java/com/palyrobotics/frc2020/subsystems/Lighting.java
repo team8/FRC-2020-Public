@@ -103,8 +103,8 @@ public class Lighting extends SubsystemBase {
 							mConfig.totalSegmentLastIndex, Color.HSV.kPurple, 1, 3));
 					break;
 				case CLIMB_EXTENDED:
-					addToControllers(new FlashingLightsController(0,
-							34, Color.HSV.kRed, 1, 3));
+					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
+							mConfig.totalSegmentLastIndex, Color.HSV.kRed, 1, 3));
 					break;
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
@@ -115,7 +115,6 @@ public class Lighting extends SubsystemBase {
 					break;
 			}
 		}
-
 		resetLedStrip();
 		mLEDControllers.removeIf(LEDController::checkFinished);
 
@@ -123,7 +122,7 @@ public class Lighting extends SubsystemBase {
 			LightingOutputs controllerOutput = ledController.update(commands, state);
 			for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
 				Color.HSV hsvValue = controllerOutput.lightingOutput.get(i);
-				mOutputBuffer.setHSV(i + ledController.mStartIndex, hsvValue.getH(), hsvValue.getS(), hsvValue.getV());
+				mOutputBuffer.setHSV(i + ledController.mStartIndex, hsvValue.getH(), hsvValue.getS(), Math.min(hsvValue.getV(), mConfig.maximumBrightness));
 			}
 		}
 	}

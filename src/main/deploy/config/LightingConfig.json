@@ -7,5 +7,6 @@
   "spinnerSegmentFirstIndex" : 16,
   "spinnerSegmentLastIndex" : 34,
   "totalSegmentFirstIndex" : 0,
-  "totalSegmentLastIndex" : 34
+  "totalSegmentLastIndex" : 34,
+  "maximumBrightness" : 30
 }
