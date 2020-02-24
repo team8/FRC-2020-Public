@@ -1,5 +1,5 @@
 {
-    "climberTopHeight": 120.0,
+    "climberTopHeight": 125.0,
     "allowablePositionError": 0.5,
     "raisingArbitraryDemand": 0.0,
     "raisingGains": {

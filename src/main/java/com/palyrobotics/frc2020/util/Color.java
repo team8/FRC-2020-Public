@@ -9,12 +9,12 @@ public class Color {
 
 		private int h, s, v;
 		private int lastH, lastS, lastV;
-		public static final Color.HSV kBlue = new HSV(100, 150, 150),
-				kWhite = new HSV(0, 75, 50),
-				kLime = new HSV(60, 255, 40),
-				kRed = new HSV(5, 50, 60),
-				kPurple = new HSV(180, 247, 100),
-				kAqua = new HSV(85, 247, 100),
+		public static final Color.HSV kBlue = new HSV(100, 150, 20),
+				kWhite = new HSV(0, 75, 20),
+				kLime = new HSV(60, 255, 20),
+				kRed = new HSV(5, 50, 20),
+				kPurple = new HSV(180, 247, 20),
+				kAqua = new HSV(85, 247, 20),
 				kNothing = new HSV(0, 0, 0);
 
 		public HSV() {

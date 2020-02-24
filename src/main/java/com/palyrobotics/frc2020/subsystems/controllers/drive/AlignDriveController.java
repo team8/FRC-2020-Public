@@ -7,7 +7,6 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.SynchronousPIDF;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.MedianFilter;
@@ -63,13 +62,13 @@ public class AlignDriveController extends ChezyDriveController {
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		double gyroYawDegrees = state.driveYawDegrees;
 		double gyroYawAngularVelocity = state.driveYawAngularVelocityDegrees;
-		LiveGraph.add("isTargetFound", mLimelight.isTargetFound() ? 1.0 : 0.0);
+//		LiveGraph.add("isTargetFound", mLimelight.isTargetFound() ? 1.0 : 0.0);
 		if (mLimelight.isTargetFound()) {
 			double visionYawToTargetDegrees = mLimelight.getYawToTarget();
 //			LiveGraph.add("visionYawToTargetDegrees", visionYawToTargetDegrees);
 			mTargetGyroYaw = mTargetYawFilter.calculate(gyroYawDegrees - visionYawToTargetDegrees);
 			mTargetFoundCount++;
-			LiveGraph.add("mTargetFoundCount", mTargetFoundCount);
+//			LiveGraph.add("mTargetFoundCount", mTargetFoundCount);
 		} else {
 			mTargetFoundCount = 0;
 		}
