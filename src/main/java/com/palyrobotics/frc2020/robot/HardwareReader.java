@@ -89,6 +89,7 @@ public class HardwareReader {
 		state.indexerHasFrontBall = !hardware.frontInfrared.get();
 		state.indexerHasTopBall = !hardware.topInfrared.get();
 		state.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
+		state.indexerEncoderVelocity = hardware.masterEncoder.getVelocity();
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
 		checkTalonFaults(hardware.leftVTalon);

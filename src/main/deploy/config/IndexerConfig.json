@@ -13,5 +13,7 @@
         "p": 0.00015,
         "f": 0.00021
     },
-    "pulsePeriod": 4
+    "pulsePeriod": 4,
+    "circularBufferDuration": 0.5,
+    "stoppedMinNumrps": 100
 }

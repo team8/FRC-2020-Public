@@ -3,7 +3,9 @@ package com.palyrobotics.frc2020.subsystems;
 import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.Robot;
 import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.util.CircularBuffer;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
@@ -17,6 +19,8 @@ public class Indexer extends SubsystemBase {
 			mRightVTalonOutput = new ControllerOutput();
 	private boolean mHopperOutput, mBlockOutput;
 
+	private CircularBuffer<Double> mCircularBuffer = new CircularBuffer<Double>((int) ((1 / Robot.kPeriod) * 0.5));
+
 	private Indexer() {
 	}
 
@@ -26,6 +30,7 @@ public class Indexer extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+		mCircularBuffer.add(state.indexerEncoderVelocity);
 		double leftMultiplier = 1.0, rightMultiplier = 1.0;
 		if (state.indexerHasBackBall) {
 			leftMultiplier = 0.0;
@@ -67,23 +72,32 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = false;
 				break;
 			case FEED_ALL:
-				setIndexerVelocity(mConfig.feedingOutput);
-				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
-				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
-				mBlockOutput = false;
-				break;
+				if (mCircularBuffer.numberOfOccurrences(n -> n < 1.0) > (mConfig.stoppedMinNumrps)) {
+					doReverse();
+					break;
+				} else {
+					setIndexerVelocity(mConfig.feedingOutput);
+					mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
+					mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
+					mBlockOutput = false;
+					break;
+				}
 			case REVERSING:
-				setIndexerVelocity(-mConfig.reversingOutput);
-				mLeftVTalonOutput.setPercentOutput(-mConfig.leftTalonIndexingOutput);
-				mRightVTalonOutput.setPercentOutput(-mConfig.rightTalonIndexingOutput);
-				mBlockOutput = false;
+				doReverse();
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
 	}
 
 	private void setIndexerVelocity(double velocity) {
-		mMasterSparkOutput.setTargetVelocity(velocity, mConfig.masterVelocityGains);
-		mSlaveSparkOutput.setTargetVelocity(velocity, mConfig.slaveVelocityGains);
+		mMasterSparkOutput.setTargetVelocityProfiled(velocity, mConfig.masterVelocityGains);
+		mSlaveSparkOutput.setTargetVelocityProfiled(velocity, mConfig.slaveVelocityGains);
+	}
+
+	private void doReverse() {
+		setIndexerVelocity(-mConfig.reversingOutput);
+		mLeftVTalonOutput.setPercentOutput(-mConfig.leftTalonIndexingOutput);
+		mRightVTalonOutput.setPercentOutput(-mConfig.rightTalonIndexingOutput);
+		mBlockOutput = false;
 	}
 
 	public ControllerOutput getMasterSparkOutput() {
