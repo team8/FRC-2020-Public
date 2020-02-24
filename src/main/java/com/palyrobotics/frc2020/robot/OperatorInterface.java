@@ -160,8 +160,7 @@ public class OperatorInterface {
 				commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 			}
 			commands.intakeWantedState = Intake.State.LOWER;
-		}
-		/* Ball Intake Control */
+		} /* Ball Intake Control */
 		if (mOperatorXboxController.getDPadLeft()) {
 			commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 			commands.intakeWantedState = Intake.State.INTAKE;
