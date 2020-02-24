@@ -81,18 +81,18 @@ public class Lighting extends SubsystemBase {
 				case INIT:
 					resetLedStrip();
 					mLEDControllers.clear();
-					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kAqua));
+					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kLime));
 					break;
 				case DISABLE:
-					addToControllers(new ColorRangingController(mConfig.backSupportSegmentFirstIndex,
-							mConfig.backSupportSegmentLastIndex));
+					addToControllers(new ColorRangingController(mConfig.totalSegmentFirstIndex,
+							mConfig.totalSegmentLastIndex));
 					break;
 				case TARGET_FOUND:
 					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex,
 							mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2));
 					break;
 				case SPINNER_DONE:
-					addToControllers(new OneColorController(mConfig.shooterSegmentFirstIndex, mConfig.shooterSegmentLastIndex, Color.HSV.kBlue, 2));
+					addToControllers(new OneColorController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, Color.HSV.kBlue, 2));
 					break;
 				case BALL_ENTERED:
 					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
@@ -103,8 +103,8 @@ public class Lighting extends SubsystemBase {
 							mConfig.totalSegmentLastIndex, Color.HSV.kPurple, 1, 3));
 					break;
 				case CLIMB_EXTENDED:
-					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
-							mConfig.totalSegmentLastIndex, Color.HSV.kRed, 1, 3));
+					addToControllers(new FlashingLightsController(0,
+							34, Color.HSV.kRed, 1, 3));
 					break;
 				case INTAKE_EXTENDED:
 				case SHOOTER_FULLRPM:
