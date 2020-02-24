@@ -40,7 +40,7 @@ public class ShooterConstants {
 		kTargetDistanceToVelocity.put(HoodState.HIGH, highMap);
 		/* Hood States */
 		kTargetDistanceToHoodState.put(0.0, HoodState.LOW);
-		kTargetDistanceToHoodState.put(95.0, HoodState.MIDDLE);
+		kTargetDistanceToHoodState.put(60.0, HoodState.MIDDLE);
 		kTargetDistanceToHoodState.put(215.0, HoodState.HIGH);
 	}
 }

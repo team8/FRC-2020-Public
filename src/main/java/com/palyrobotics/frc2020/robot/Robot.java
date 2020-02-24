@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.auto.TrenchStealTwoShootFive;
+import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.subsystems.*;
@@ -15,6 +15,7 @@ import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.commands.CommandReceiverService;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.util.service.NetworkLoggerService;
 import com.palyrobotics.frc2020.util.service.RobotService;
 import com.palyrobotics.frc2020.util.service.TelemetryService;
@@ -127,7 +128,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
-		mCommands.addWantedRoutine(new TrenchStealTwoShootFive().getRoutine());
+		mCommands.addWantedRoutine(new StartCenterFriendlyTrenchThreeShootThree().getRoutine());
 	}
 
 	private void startStage(RobotState.GamePeriod period) {
@@ -158,7 +159,7 @@ public class Robot extends TimedRobot {
 		for (RobotService robotService : mEnabledServices) {
 			robotService.update(mRobotState, mCommands);
 		}
-//		LiveGraph.add("visionEstimatedDistance", mLimelight.getEstimatedDistanceInches());
+		LiveGraph.add("visionEstimatedDistance", mLimelight.getEstimatedDistanceInches());
 //		LiveGraph.add("isEnabled", isEnabled());
 	}
 

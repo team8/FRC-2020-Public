@@ -19,8 +19,8 @@ public abstract class FriendlyTrenchRoutine extends AutoBase {
 				new DriveSetOdometryRoutine(0, 0, 180),
 				new ParallelRoutine(
 						new DrivePathRoutine(
-								newWaypoint(40, 67, 0),
-								newWaypoint(170, 67, 0)),
+								newWaypoint(40, 70, 0),
+								newWaypoint(170, 70, 0)),
 						new SequentialRoutine(
 								new TimedRoutine(3.0),
 								new ParallelRoutine(
@@ -57,10 +57,11 @@ public abstract class FriendlyTrenchRoutine extends AutoBase {
 	SequentialRoutine endRoutine() {
 		return new SequentialRoutine(
 //				new DriveAlignYawAssistedRoutine(180, kOneTimesZoomPipelineId),
-				new DriveYawRoutine(180.0),
-				new DriveAlignRoutine(OperatorInterface.kOnesTimesZoomAlignButton),
+				new DriveAlignYawAssistedRoutine(180, OperatorInterface.kOnesTimesZoomAlignButton),
+//				new DriveYawRoutine(180.0),
+//				new DriveAlignRoutine(OperatorInterface.kOnesTimesZoomAlignButton),
 				new ParallelRoutine(
-						new ShooterVisionRoutine(7),
-						new IndexerFeedAllRoutine(7, true, true)));
+						new ShooterVisionRoutine(5),
+						new IndexerFeedAllRoutine(5, true, true)));
 	}
 }
