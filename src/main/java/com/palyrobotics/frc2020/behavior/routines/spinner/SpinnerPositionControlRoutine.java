@@ -32,7 +32,11 @@ public class SpinnerPositionControlRoutine extends RoutineBase {
 			commands.spinnerWantedState = Spinner.State.ROTATING_RIGHT;
 		}
 		mIsFinished = mTargetColor.equals(mCurrentColor);
-		commands.lightingWantedState = mIsFinished ? Lighting.State.SPINNER_DONE : commands.lightingWantedState;
+	}
+
+	@Override
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
+		commands.lightingWantedState = Lighting.State.SPINNER_DONE;
 	}
 
 	@Override

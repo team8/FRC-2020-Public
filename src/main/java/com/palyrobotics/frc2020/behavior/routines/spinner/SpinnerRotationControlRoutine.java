@@ -26,7 +26,12 @@ public class SpinnerRotationControlRoutine extends RoutineBase {
 		mPreviousColor = currentColor;
 		commands.spinnerWantedState = Spinner.State.ROTATING_RIGHT;
 		mIsFinished = mColorChangeCounter > mConfig.rotationControlColorChangeRequirementCount;
-		commands.lightingWantedState = mIsFinished ? Lighting.State.SPINNER_DONE : commands.lightingWantedState;
+	}
+
+	@Override
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
+		commands.lightingWantedState = Lighting.State.SPINNER_DONE;
+		super.stop(commands, state);
 	}
 
 	@Override
