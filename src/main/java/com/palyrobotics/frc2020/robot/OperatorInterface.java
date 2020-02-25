@@ -19,6 +19,7 @@ import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
+import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
@@ -34,6 +35,7 @@ public class OperatorInterface {
 	private final ClimberConfig mClimberConfig = Configs.get(ClimberConfig.class);
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
+	private Limelight mLimelight = Limelight.getInstance();
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
 	private double mClimberLastVelocity;
 
@@ -48,22 +50,7 @@ public class OperatorInterface {
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
 		updateSpinnerCommands(commands);
-		updateLightingCommands(commands);
-
-		// TODO: remove
-		if (mOperatorXboxController.getAButtonPressed()) {
-			commands.setShooterCustomFlywheelVelocity(mShooterConfig.noTargetSpinUpVelocity, Shooter.HoodState.LOW);
-		}
-
-		// TODO: remove
-		if (mTurnStick.getRawButtonPressed(6)) {
-			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
-		}
-
-		// TODO: remove
-		if (mTurnStick.getRawButtonReleased(6)) {
-			commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
-		}
+		updateLightingCommands(commands, state);
 
 		mOperatorXboxController.updateLastInputs();
 	}
@@ -125,12 +112,13 @@ public class OperatorInterface {
 		}
 	}
 
-	private void updateLightingCommands(Commands commands) {
-		if (mTurnStick.getRawButtonPressed(6)) {
-			commands.lightingWantedState = Lighting.State.DISABLE;
+	private void updateLightingCommands(Commands commands, @ReadOnly RobotState state) {
+
+		if (mLimelight.isTargetFound()) {
+			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
 		}
-		if (mTurnStick.getRawButtonPressed(5)) {
-			commands.lightingWantedState = Lighting.State.INIT;
+		if (state.indexerHasFrontBall) {
+			commands.lightingWantedState = Lighting.State.BALL_ENTERED;
 		}
 		if (mTurnStick.getRawButtonPressed(4)) {
 			commands.lightingWantedState = Lighting.State.CLIMB_EXTENDED;
@@ -221,7 +209,7 @@ public class OperatorInterface {
 		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;
-		commands.lightingWantedState = Lighting.State.INIT;
+		commands.lightingWantedState = Lighting.State.IDLE;
 		commands.wantedCompression = true;
 		commands.wantedRumble = false;
 		commands.visionWanted = false;

@@ -1,7 +1,6 @@
 package com.palyrobotics.frc2020.subsystems;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.robot.Commands;
@@ -13,6 +12,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LightingOutputs;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Lighting extends SubsystemBase {
@@ -66,6 +66,7 @@ public class Lighting extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		State wantedState = commands.lightingWantedState;
+		if (RobotController.getBatteryVoltage() < mConfig.minVoltageToFunction) wantedState = State.OFF;
 		boolean isNewState = mState != wantedState;
 		mState = wantedState;
 		if (isNewState) {
@@ -75,17 +76,15 @@ public class Lighting extends SubsystemBase {
 					mLEDControllers.clear();
 					break;
 				case IDLE:
+					mLEDControllers.clear();
 					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, Color.HSV.kWhite));
 					break;
 				case INIT:
+				case DISABLE:
 					resetLedStrip();
 					mLEDControllers.clear();
-					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kLime));
-					break;
-				case DISABLE:
-					addToControllers(new ColorRangingController(mConfig.totalSegmentFirstIndex,
-							mConfig.totalSegmentLastIndex));
+					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kAqua));
 					break;
 				case TARGET_FOUND:
 					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex,
@@ -95,8 +94,11 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new OneColorController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, Color.HSV.kBlue, 2));
 					break;
 				case BALL_ENTERED:
-					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
-							mConfig.totalSegmentLastIndex, new Color.HSV(30, 150, 150), 1, 3));
+					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
+							mConfig.frontLeftSegmentLastIndex, List.of(Color.HSV.kRed, Color.HSV.kRed, Color.HSV.kRed), 1));
+					addToControllers(new PulseController(mConfig.frontRightSegmentFirstIndex,
+							mConfig.frontRightSegmentLastIndex, List.of(Color.HSV.kRed, Color.HSV.kRed, Color.HSV.kRed), 1));
+					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kRed, Color.HSV.kWhite, 3, 1, 2));
 					break;
 				case HOPPER_OPEN:
 					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
@@ -116,8 +118,6 @@ public class Lighting extends SubsystemBase {
 			}
 		}
 		resetLedStrip();
-		mLEDControllers.removeIf(LEDController::checkFinished);
-
 		for (LEDController ledController : mLEDControllers) {
 			LightingOutputs controllerOutput = ledController.update(commands, state);
 			for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
@@ -128,14 +128,20 @@ public class Lighting extends SubsystemBase {
 	}
 
 	private void addToControllers(LEDController controller) {
-		mLEDControllers.removeIf(controllers -> controllers.mStartIndex == controller.mStartIndex &&
-				controllers.mLastIndex == controller.mLastIndex);
+		mLEDControllers.removeIf(controllers -> controllers.mStartIndex >= controller.mStartIndex &&
+				controllers.mLastIndex <= controller.mLastIndex);
 		mLEDControllers.add(controller);
 	}
 
 	private void resetLedStrip() {
 		for (int i = 0; i < mOutputBuffer.getLength(); i++) {
 			mOutputBuffer.setRGB(i, 0, 0, 0);
+		}
+	}
+
+	private void offIfLowVoltage(State state) {
+		if (RobotController.getBatteryVoltage() < mConfig.minVoltageToFunction) {
+
 		}
 	}
 
