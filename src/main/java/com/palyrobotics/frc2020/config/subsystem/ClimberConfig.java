@@ -8,6 +8,7 @@ public class ClimberConfig extends SubsystemConfigBase {
 
 	public double climberTopHeight;
 	public double allowablePositionError;
+	public double currentDrawWhenClimbing;
 
 	public double raisingArbitraryDemand;
 	public ProfiledGains raisingGains;

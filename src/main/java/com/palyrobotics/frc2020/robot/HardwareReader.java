@@ -70,6 +70,7 @@ public class HardwareReader {
 	private void readClimberState(RobotState state) {
 		var hardware = com.palyrobotics.frc2020.robot.HardwareAdapter.ClimberHardware.getInstance();
 		checkSparkFaults(hardware.spark);
+//		state.climberCurrentDraw = hardware.spark.getOutputCurrent();
 	}
 
 	private void readDriveState(RobotState state) {

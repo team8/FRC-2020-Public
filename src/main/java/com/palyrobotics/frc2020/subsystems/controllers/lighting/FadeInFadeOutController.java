@@ -5,7 +5,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
-public class FlashingLightsController extends Lighting.LEDController {
+public class FadeInFadeOutController extends Lighting.LEDController {
 
 	private Color.HSV mFlashedColor;
 	private double mDuration = -1;
@@ -18,7 +18,7 @@ public class FlashingLightsController extends Lighting.LEDController {
 	 * @param flashedColor Color to be flashed on white background
 	 */
 
-	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, int delay) {
+	public FadeInFadeOutController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay) {
 		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
@@ -27,7 +27,7 @@ public class FlashingLightsController extends Lighting.LEDController {
 		mTimer.start();
 	}
 
-	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration) {
+	public FadeInFadeOutController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration) {
 		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
@@ -39,20 +39,32 @@ public class FlashingLightsController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get() / mSpeed) % 2 == 0) {
+
+		if ((mTimer.get() % mSpeed) < (mSpeed / 2)) {
+
+			double n = ((mTimer.get() % mSpeed) / mSpeed);
+
 			for (int i = mStartIndex; i < mLastIndex; i++) {
-				mOutputs.lightingOutput.get(i - mStartIndex).setHSV(mFlashedColor.getH(), mFlashedColor.getS(),
-						mFlashedColor.getV());
+
+				mOutputs.lightingOutput.get(i - mStartIndex).setHSV(mFlashedColor.getH(),
+						mFlashedColor.getS(),
+						(int) (mFlashedColor.getV() * n));
 			}
 		} else {
+			double n = 1 - ((mTimer.get() % mSpeed) / mSpeed);
+
 			for (int i = mStartIndex; i < mLastIndex; i++) {
-				mOutputs.lightingOutput.get(i - mStartIndex).setHSV(0, 0, 0);
+
+				mOutputs.lightingOutput.get(i - mStartIndex).setHSV(mFlashedColor.getH(),
+						mFlashedColor.getS(),
+						(int) (mFlashedColor.getV() * n));
 			}
 		}
+
 	}
 
 	@Override
 	public boolean checkFinished() {
-		return mDuration != -1 && mTimer.hasElapsed(mDuration);
+		return mDuration != -1 && mTimer.get() > mDuration;
 	}
 }
