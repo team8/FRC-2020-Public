@@ -12,6 +12,7 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.util.service.TelemetryService;
 import com.palyrobotics.frc2020.vision.Limelight;
 
@@ -67,7 +68,7 @@ public class Shooter extends SubsystemBase {
 		/* Rumble */
 		updateRumble(commands, justChangedReadyToShoot);
 		/* Telemetry */
-//		LiveGraph.add("shooterTargetDistance", targetDistanceInches == null ? -1 : targetDistanceInches);
+		LiveGraph.add("shooterTargetDistance", targetDistanceInches == null ? -1 : targetDistanceInches);
 //		LiveGraph.add("shooterTargetVelocity", targetFlywheelVelocity);
 //		LiveGraph.add("shooterCurrentVelocity", state.shooterFlywheelVelocity);
 //		TelemetryService.putArbitrary("shooterTargetDistance", targetDistanceInches);

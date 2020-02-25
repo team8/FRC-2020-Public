@@ -32,7 +32,8 @@ public class ShooterConstants {
 		highMap.put(215.0, 3400.0);
 		highMap.put(237.0, 3550.0);
 		highMap.put(300.0, 3980.0);
-		highMap.put(350.0, 4390.0);
+		highMap.put(343.0, 4400.0);
+		highMap.put(360.0, 4450.0);
 //		highMap.put(215.0, 3350.0);
 //		highMap.put(237.0, 3500.0);
 //		highMap.put(300.0, 3930.0);
