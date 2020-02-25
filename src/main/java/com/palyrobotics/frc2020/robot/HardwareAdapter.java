@@ -14,8 +14,6 @@ import com.palyrobotics.frc2020.util.input.XboxController;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.ColorSensorV3;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.*;
 
 /**
@@ -180,7 +178,7 @@ public class HardwareAdapter {
 		private static MiscellaneousHardware sInstance;
 		final Compressor compressor = new Compressor();
 		final PowerDistributionPanel pdp = new PowerDistributionPanel();
-		final UsbCamera fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
+//		final UsbCamera fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
 
 		private MiscellaneousHardware() {
 			compressor.stop();

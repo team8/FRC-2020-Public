@@ -1,7 +1,5 @@
 package com.palyrobotics.frc2020.vision;
 
-import static com.palyrobotics.frc2020.robot.OperatorInterface.kTwoTimesZoomAlignButton;
-
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.VisionConfig;
 import com.palyrobotics.frc2020.util.Util;
@@ -238,7 +236,7 @@ public class Limelight {
 		// Avoid divide by zero
 		if (getPipeline() == kOneTimesZoomPipelineId) {
 			return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(oneTimesZoomAngle + a2))));
-		} else if (getPipeline() == kTwoTimesZoomAlignButton) {
+		} else if (getPipeline() == kTwoTimesZoomPipelineId) {
 			return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(twoTimesZoomAngle + a2))));
 		} else {
 			Log.warn(kLoggerTag, "Wrong pipeline used for distance estimation");
