@@ -87,6 +87,11 @@ public class Robot extends TimedRobot {
 				updateDriveNeutralMode(config.coastDriveWhenDisabled);
 			}
 		});
+		mCommands.lightingWantedState = Lighting.State.INIT;
+		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
+			mLighting.update(mCommands, mRobotState);
+			mHardwareWriter.updateLighting();
+		}
 	}
 
 	@Override
@@ -140,6 +145,12 @@ public class Robot extends TimedRobot {
 		updateDriveNeutralMode(mConfig.coastDriveWhenDisabled);
 
 		CSVWriter.write();
+
+		mCommands.lightingWantedState = Lighting.State.DISABLE;
+		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
+			mLighting.update(mCommands, mRobotState);
+			mHardwareWriter.updateLighting();
+		}
 	}
 
 	@Override
@@ -170,10 +181,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
-			mLighting.update(mCommands, mRobotState);
-			mHardwareWriter.updateLighting();
-		}
 		for (RobotService robotService : mEnabledServices) {
 			robotService.update(mRobotState, mCommands);
 		}

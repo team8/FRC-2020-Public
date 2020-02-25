@@ -7,7 +7,6 @@ import com.ctre.phoenix.sensors.PigeonIMU.PigeonState;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
-import com.palyrobotics.frc2020.robot.HardwareAdapter.*;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -54,10 +53,27 @@ public class HardwareReader {
 
 	private void readGameAndFieldState(RobotState state) {
 		state.gameData = DriverStation.getInstance().getGameSpecificMessage();
+		state.detectedRGBValues = com.palyrobotics.frc2020.robot.HardwareAdapter.SpinnerHardware.getInstance().colorSensor.getColor();
+		state.closestColorRGB = mColorMatcher.matchClosestColor(state.detectedRGBValues);
+		if (state.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
+			state.closestColorString = "Cyan";
+		} else if (state.closestColorRGB.color == SpinnerConstants.kYellowCPTarget) {
+			state.closestColorString = "Yellow";
+		} else if (state.closestColorRGB.color == SpinnerConstants.kGreenCPTarget) {
+			state.closestColorString = "Green";
+		} else if (state.closestColorRGB.color == SpinnerConstants.kRedCPTarget) {
+			state.closestColorString = "Red";
+		}
+		state.closestColorConfidence = state.closestColorRGB.confidence;
+	}
+
+	private void readClimberState(RobotState state) {
+		var hardware = com.palyrobotics.frc2020.robot.HardwareAdapter.ClimberHardware.getInstance();
+		checkSparkFaults(hardware.spark);
 	}
 
 	private void readDriveState(RobotState state) {
-		var hardware = DriveHardware.getInstance();
+		var hardware = com.palyrobotics.frc2020.robot.HardwareAdapter.DriveHardware.getInstance();
 		/* Gyro */
 		state.driveIsGyroReady = hardware.gyro.getState() == PigeonState.Ready;
 		hardware.gyro.getYawPitchRoll(mGyroAngles);
@@ -84,7 +100,7 @@ public class HardwareReader {
 	}
 
 	private void readIndexerState(RobotState state) {
-		var hardware = IndexerHardware.getInstance();
+		var hardware = com.palyrobotics.frc2020.robot.HardwareAdapter.IndexerHardware.getInstance();
 		state.indexerHasBackBall = !hardware.backInfrared.get();
 		state.indexerHasFrontBall = !hardware.frontInfrared.get();
 		state.indexerHasTopBall = !hardware.topInfrared.get();
@@ -95,13 +111,13 @@ public class HardwareReader {
 	}
 
 	private void readIntakeState(RobotState state) {
-		var hardware = IntakeHardware.getInstance();
+		var hardware = com.palyrobotics.frc2020.robot.HardwareAdapter.IntakeHardware.getInstance();
 		state.intakeIsExtended = hardware.solenoid.isExtended();
 		checkTalonFaults(hardware.talon);
 	}
 
 	private void readShooterState(RobotState state) {
-		var hardware = ShooterHardware.getInstance();
+		var hardware = com.palyrobotics.frc2020.robot.HardwareAdapter.ShooterHardware.getInstance();
 //		LiveGraph.add("shooterFlywheelVelocity", hardware.masterEncoder.getVelocity());
 //		LiveGraph.add("shooterAppliedOutput", hardware.masterSpark.getAppliedOutput());
 		state.shooterFlywheelVelocity = hardware.masterEncoder.getVelocity();
@@ -114,7 +130,7 @@ public class HardwareReader {
 	}
 
 	private void readSpinnerState(RobotState state) {
-		state.detectedRGBValues = SpinnerHardware.getInstance().colorSensor.getColor();
+		state.detectedRGBValues = HardwareAdapter.SpinnerHardware.getInstance().colorSensor.getColor();
 		state.closestColorRGB = mColorMatcher.matchClosestColor(state.detectedRGBValues);
 		if (state.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
 			state.closestColorString = "Cyan";
