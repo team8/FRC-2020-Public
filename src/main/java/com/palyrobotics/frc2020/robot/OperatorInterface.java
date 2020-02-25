@@ -103,7 +103,7 @@ public class OperatorInterface {
 		} else if (wantsOneTimesAlign) {
 			commands.setDriveVisionAlign(kOneTimesZoomPipelineId);
 		} else if (wantsInnerAlign) {
-			commands.addWantedRoutine(new DriveAlignInnerRoutine(1)); //TODO: replace pipeline?
+			commands.addWantedRoutine(new DriveAlignInnerRoutine(kOneTimesZoomPipelineId));
 		} else {
 			commands.setDriveTeleop(
 					-mDriveStick.getY(), mTurnStick.getX(),
