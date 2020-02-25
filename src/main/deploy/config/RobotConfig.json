@@ -5,6 +5,11 @@
 		"telemetryService"
 	],
 	"enabledSubsystems": [
+		"drive",
+		"indexer",
+		"intake",
+		"climber",
+		"shooter",
 		"lighting"
 	],
 	"checkFaults": false,
