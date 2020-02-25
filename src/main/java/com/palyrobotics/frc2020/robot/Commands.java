@@ -30,7 +30,7 @@ public class Commands {
 	private Drive.State driveWantedState;
 	// Teleop
 	private double driveWantedThrottle, driveWantedWheel;
-	private boolean driveWantsQuickTurn, driveWantsBrake;
+	private boolean driveWantsQuickTurn, driveWantsSlowTurn, driveWantedSlowTurnLeft, driveWantsBrake;
 	// Signal
 	private DriveOutputs driveWantedSignal;
 	// Path Following
@@ -88,14 +88,15 @@ public class Commands {
 	}
 
 	public void setDriveTeleop() {
-		setDriveTeleop(0.0, 0.0, false, false);
+		setDriveTeleop(0.0, 0.0, false, false, false);
 	}
 
-	public void setDriveTeleop(double throttle, double wheel, boolean wantsQuickTurn, boolean wantsBrake) {
+	public void setDriveTeleop(double throttle, double wheel, boolean wantsQuickTurn, boolean wantsSlowTurn, boolean wantsBrake) {
 		driveWantedState = Drive.State.TELEOP;
 		driveWantedThrottle = throttle;
 		driveWantedWheel = wheel;
 		driveWantsQuickTurn = wantsQuickTurn;
+		driveWantsSlowTurn = wantsSlowTurn;
 		driveWantsBrake = wantsBrake;
 	}
 
@@ -108,12 +109,24 @@ public class Commands {
 		driveWantedYawDegrees = yawDegrees;
 	}
 
+	public void setDriveSlowTurnLeft(boolean wantsSlowTurnLeft) {
+		driveWantedSlowTurnLeft = wantsSlowTurnLeft;
+	}
+
 	public Drive.State getDriveWantedState() {
 		return driveWantedState;
 	}
 
 	public boolean getDriveWantsQuickTurn() {
 		return driveWantsQuickTurn;
+	}
+
+	public boolean getDriveWantsSlowTurn() {
+		return driveWantsSlowTurn;
+	}
+
+	public boolean getDriveWantedSlowTurnLeft() {
+		return driveWantedSlowTurnLeft;
 	}
 
 	public double getDriveWantedThrottle() {

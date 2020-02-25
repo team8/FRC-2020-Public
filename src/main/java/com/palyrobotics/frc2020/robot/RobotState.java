@@ -30,7 +30,7 @@ public class RobotState {
 	/* Drive */
 	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());
 	public double driveYawDegrees, driveYawAngularVelocityDegrees;
-	public boolean driveIsQuickTurning;
+	public boolean driveIsQuickTurning, driveIsSlowTurning;
 	public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;
 	public Pose2d drivePoseMeters = new Pose2d();
 	public double driveVelocityMetersPerSecond;

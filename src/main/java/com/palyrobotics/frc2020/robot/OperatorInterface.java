@@ -92,9 +92,11 @@ public class OperatorInterface {
 	}
 
 	private void updateDriveCommands(Commands commands) {
+		commands.setDriveSlowTurnLeft(mTurnStick.getPOV(270) != -1);
 		commands.setDriveTeleop(
 				handleDeadBand(-mDriveStick.getY(), kDeadBand), handleDeadBand(mTurnStick.getX(), kDeadBand),
-				mTurnStick.getTrigger(), mDriveStick.getTrigger());
+				mTurnStick.getTrigger(), mTurnStick.getPOV(90) != -1 || mTurnStick.getPOV(270) != -1,
+				mDriveStick.getTrigger());
 		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignButton),
 				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton);
 		// Vision align overwrites wanted drive state, using teleop commands when no target is in sight
