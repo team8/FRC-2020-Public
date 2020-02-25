@@ -5,6 +5,7 @@ import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 import com.palyrobotics.frc2020.behavior.ParallelRoutine;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignYawAssistedRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
@@ -22,12 +23,13 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 	@Override
 	public RoutineBase getRoutine() {
 		var setInitialOdometry = new DriveSetOdometryRoutine(0, 0, 180);
-
-		var initialShoot = new SequentialRoutine(
-				new ParallelRoutine(
-						new IntakeLowerRoutine(),
-						new ShooterVisionRoutine(5.0),
-						new IndexerFeedAllRoutine(3.5, false, false)));
+		// TODO: Refactor into AutoBase
+		var initialShoot = new ParallelRoutine(
+				new IntakeLowerRoutine(),
+				new ShooterVisionRoutine(5.0),
+				new SequentialRoutine(
+						new TimedRoutine(1), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
+						new IndexerFeedAllRoutine(5, false, false)));
 
 		var turnAndGetBalls = new SequentialRoutine(
 				new DrivePathRoutine(newWaypoint(40, -35, 90)).driveInReverse(),
