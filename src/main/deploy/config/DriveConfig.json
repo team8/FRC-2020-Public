@@ -21,7 +21,7 @@
 	"lowNegativeInertiaTurnScalar": 2.5,
 	"wheelNonLinearity": 0.5,
 	"nonlinearPasses": 3,
-	"maxPathVelocityMetersPerSecond": 1.85,
-	"maxPathAccelerationMetersPerSecondSquared": 1.5,
+	"pathVelocityMetersPerSecond": 1.6,
+	"pathAccelerationMetersPerSecondSquared": 1.4,
 	"allowableYawErrorDegrees": 2.0
 }

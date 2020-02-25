@@ -19,7 +19,6 @@ import com.palyrobotics.frc2020.util.control.Talon;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class HardwareWriter {
@@ -236,7 +235,7 @@ public class HardwareWriter {
 //		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
 //		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
 //		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
-		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
+//		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
 //		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
 //		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
 //		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));

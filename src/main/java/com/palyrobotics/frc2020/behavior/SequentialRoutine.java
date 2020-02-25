@@ -39,6 +39,11 @@ public class SequentialRoutine extends MultipleRoutineBase {
 	}
 
 	@Override
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
+		mRunningRoutine.stop(commands, state);
+	}
+
+	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
 		return mRunningRoutine == null;
 	}
