@@ -11,6 +11,7 @@ import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControl
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedSingleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerIdleRoutine;
+import com.palyrobotics.frc2020.config.VisionConfig;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
@@ -33,6 +34,7 @@ public class OperatorInterface {
 	public static final int kOnesTimesZoomAlignButton = 3, kTwoTimesZoomAlignButton = 4;
 	private final ShooterConfig mShooterConfig = Configs.get(ShooterConfig.class);
 	private final ClimberConfig mClimberConfig = Configs.get(ClimberConfig.class);
+	private final VisionConfig mVisionConfig = Configs.get(VisionConfig.class);
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
 	private Limelight mLimelight = Limelight.getInstance();
@@ -113,24 +115,37 @@ public class OperatorInterface {
 	}
 
 	private void updateLightingCommands(Commands commands, @ReadOnly RobotState state) {
-
-		if (mLimelight.isTargetFound()) {
-			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
+		if (mOperatorXboxController.getDPadLeftPressed()) {
+			commands.lightingWantedState = Lighting.State.INTAKE_EXTENDED;
 		}
 		if (state.indexerHasFrontBall) {
 			commands.lightingWantedState = Lighting.State.BALL_ENTERED;
 		}
 		if (mTurnStick.getRawButtonPressed(4)) {
-			commands.lightingWantedState = Lighting.State.CLIMB_EXTENDED;
+			commands.lightingWantedState = Lighting.State.CLIMBING;
 		}
-		if (mTurnStick.getRawButtonPressed(3)) {
-			commands.lightingWantedState = Lighting.State.IDLE;
+		if (mLimelight.isTargetFound()) {
+			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
+		}
+
+		if (state.shooterIsReadyToShoot) {
+			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
+		}
+
+		if (commands.visionWanted) {
+			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNING;
+		}
+		if (mLimelight.getYawToTarget() <= mVisionConfig.acceptableYawError) {
+			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
+		}
+		if (state.climberCurrentDraw >= mClimberConfig.currentDrawWhenClimbing) {
+			commands.lightingWantedState = Lighting.State.CLIMBING;
 		}
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
 		/* Intake Toggle */
-		if (mOperatorXboxController.getDPadDownPressed()) {
+		if (mOperatorXboxController.getDPadDown()) {
 			switch (commands.intakeWantedState) {
 				case LOWER:
 				case INTAKE:

@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNING, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE
+		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNING, ROBOT_ALIGNED, CLIMBING, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE
 	}
 
 	public abstract static class LEDController {
@@ -36,6 +36,7 @@ public class Lighting extends SubsystemBase {
 			for (var i = startIndex; i <= lastIndex; i++) {
 				mOutputs.lightingOutput.add(new Color.HSV());
 			}
+			mTimer.reset();
 		}
 
 		public final LightingOutputs update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
@@ -98,22 +99,27 @@ public class Lighting extends SubsystemBase {
 							mConfig.frontLeftSegmentLastIndex, List.of(Color.HSV.kRed, Color.HSV.kRed, Color.HSV.kRed), 1));
 					addToControllers(new PulseController(mConfig.frontRightSegmentFirstIndex,
 							mConfig.frontRightSegmentLastIndex, List.of(Color.HSV.kRed, Color.HSV.kRed, Color.HSV.kRed), 1));
-					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kRed, Color.HSV.kWhite, 3, 1, 2));
+					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kRed, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
 					break;
-				case HOPPER_OPEN:
-					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
-							mConfig.totalSegmentLastIndex, Color.HSV.kPurple, 1, 3));
-					break;
-				case CLIMB_EXTENDED:
+				case CLIMBING:
 					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, Color.HSV.kRed, 1, 3));
 					break;
 				case INTAKE_EXTENDED:
+					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
+							mConfig.frontLeftSegmentLastIndex, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1));
+					addToControllers(new PulseController(mConfig.frontRightSegmentFirstIndex,
+							mConfig.frontRightSegmentLastIndex, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1));
+					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kRed, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
+					break;
 				case SHOOTER_FULLRPM:
-					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 5));
+					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2, 2));
 					break;
 				case ROBOT_ALIGNING:
-					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1));
+					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1, 2));
+					break;
+				case ROBOT_ALIGNED:
+					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 0.5, 2));
 					break;
 			}
 		}
@@ -136,12 +142,6 @@ public class Lighting extends SubsystemBase {
 	private void resetLedStrip() {
 		for (int i = 0; i < mOutputBuffer.getLength(); i++) {
 			mOutputBuffer.setRGB(i, 0, 0, 0);
-		}
-	}
-
-	private void offIfLowVoltage(State state) {
-		if (RobotController.getBatteryVoltage() < mConfig.minVoltageToFunction) {
-
 		}
 	}
 
