@@ -92,10 +92,10 @@ public class OperatorInterface {
 	}
 
 	private void updateDriveCommands(Commands commands) {
-		commands.setDriveSlowTurnLeft(mTurnStick.getPOV(270) != -1);
+		commands.setDriveSlowTurnLeft(mTurnStick.getPOV(0) == 270);
 		commands.setDriveTeleop(
 				handleDeadBand(-mDriveStick.getY(), kDeadBand), handleDeadBand(mTurnStick.getX(), kDeadBand),
-				mTurnStick.getTrigger(), mTurnStick.getPOV(90) != -1 || mTurnStick.getPOV(270) != -1,
+				mTurnStick.getTrigger(), mTurnStick.getPOV(0) == 90 || mTurnStick.getPOV(0) == 270,
 				mDriveStick.getTrigger());
 		boolean wantsOneTimesAlign = mTurnStick.getRawButton(kOnesTimesZoomAlignButton),
 				wantsTwoTimesAlign = mTurnStick.getRawButton(kTwoTimesZoomAlignButton);
