@@ -43,8 +43,8 @@ public class DriveConstants {
 	/**
 	 * @return Copy of the standard trajectory configuration. Can be modified safely.
 	 */
-	public static TrajectoryConfig getStandardTrajectoryConfig() {
-		return new TrajectoryConfig(kConfig.maxPathVelocityMetersPerSecond, kConfig.maxPathAccelerationMetersPerSecondSquared)
+	public static TrajectoryConfig getTrajectoryConfig(double maxPathVelocityMetersPerSecond, double maxPathAccelerationMetersPerSecondSquared) {
+		return new TrajectoryConfig(maxPathVelocityMetersPerSecond, maxPathAccelerationMetersPerSecondSquared)
 				.setKinematics(kKinematics)
 				.addConstraint(kVoltageConstraints);
 	}

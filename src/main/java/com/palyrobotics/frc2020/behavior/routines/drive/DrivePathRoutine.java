@@ -4,29 +4,26 @@ import java.util.*;
 
 import com.palyrobotics.frc2020.behavior.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
+import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
+import com.palyrobotics.frc2020.util.config.Configs;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 
 public class DrivePathRoutine extends TimeoutRoutineBase {
 
-	public static class WaypointWithSpeed {
-
-		public WaypointWithSpeed(double xInches, double yInches, double yawDegrees, double speed) {
-
-		}
-	}
-
+	private static final DriveConfig kConfig = Configs.get(DriveConfig.class);
 	private static final double kTimeoutMultiplier = 1.0;
 	private final List<Pose2d> mWaypoints;
-	private final TrajectoryConfig mTrajectoryConfig = DriveConstants.getStandardTrajectoryConfig();
-	private boolean mShouldReversePath;
+	private double mMaxVelocityMetersPerSecond = kConfig.pathVelocityMetersPerSecond,
+			mMaxAccelerationMetersPerSecondSq = kConfig.pathAccelerationMetersPerSecondSquared;
+	private double mStartingVelocityMetersPerSecond, mEndingVelocityMetersPerSecond;
+	private boolean mShouldReversePath, mDriveInReverse;
 	private Trajectory mTrajectory;
 
 	/**
@@ -43,8 +40,19 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		mWaypoints = waypoints;
 	}
 
-	public DrivePathRoutine endingVelocity(double startingVelocityMetersPerSecond) {
-		mTrajectoryConfig.setEndVelocity(startingVelocityMetersPerSecond);
+	public DrivePathRoutine startingVelocity(double velocityMetersPerSecond) {
+		mStartingVelocityMetersPerSecond = velocityMetersPerSecond;
+		return this;
+	}
+
+	public DrivePathRoutine endingVelocity(double velocityMetersPerSecond) {
+		mEndingVelocityMetersPerSecond = velocityMetersPerSecond;
+		return this;
+	}
+
+	public DrivePathRoutine setMovement(double velocityMetersPerSecond, double accelerationMetersPerSecondPerSecond) {
+		mMaxVelocityMetersPerSecond = velocityMetersPerSecond;
+		mMaxAccelerationMetersPerSecondSq = accelerationMetersPerSecondPerSecond;
 		return this;
 	}
 
@@ -52,7 +60,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	 * Robot will try to drive in reverse while traversing the path. Does not reverse the path itself.
 	 */
 	public DrivePathRoutine driveInReverse() {
-		mTrajectoryConfig.setReversed(true);
+		mDriveInReverse = true;
 		return this;
 	}
 
@@ -74,14 +82,18 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		return this;
 	}
 
-	public void generateTrajectory(Pose2d startingPose, double startingVelocityMetersPerSecond) {
+	public void generateTrajectory(Pose2d startingPose) {
 		if (mTrajectory == null) {
 			var waypointsWithStart = new LinkedList<>(mWaypoints);
 			if (mShouldReversePath) {
 				Collections.reverse(waypointsWithStart);
 			}
 			waypointsWithStart.addFirst(startingPose);
-			mTrajectory = TrajectoryGenerator.generateTrajectory(waypointsWithStart, mTrajectoryConfig);
+			var trajectoryConfig = DriveConstants.getTrajectoryConfig(mMaxVelocityMetersPerSecond, mMaxAccelerationMetersPerSecondSq);
+			trajectoryConfig.setReversed(mDriveInReverse);
+			trajectoryConfig.setStartVelocity(mStartingVelocityMetersPerSecond);
+			trajectoryConfig.setEndVelocity(mEndingVelocityMetersPerSecond);
+			mTrajectory = TrajectoryGenerator.generateTrajectory(waypointsWithStart, trajectoryConfig);
 			mTimeout = mTrajectory.getTotalTimeSeconds() * kTimeoutMultiplier;
 		} else {
 			throw new IllegalStateException("Trajectory already generated!");
@@ -96,7 +108,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	public void start(Commands commands, @ReadOnly RobotState state) {
 		// Required to start the timeout timer
 		super.start(commands, state);
-		generateTrajectory(state.drivePoseMeters, state.driveVelocityMetersPerSecond);
+		generateTrajectory(state.drivePoseMeters);
 	}
 
 	@Override

@@ -37,6 +37,13 @@ public class ParallelRoutine extends MultipleRoutineBase {
 	}
 
 	@Override
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
+		for (RoutineBase runningRoutine : mRunningRoutines) {
+			runningRoutine.stop(commands, state);
+		}
+	}
+
+	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
 		return mRunningRoutines.isEmpty();
 	}
