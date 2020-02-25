@@ -25,7 +25,7 @@ public class RobotState {
 	public static final String kLoggerTag = Util.classToJsonName(RobotState.class);
 
 	/* Climber */
-	public double climberPosition, climberVelocity;
+	public double climberPosition, climberVelocity, climberCurrentDraw;
 
 	/* Drive */
 	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());

@@ -2,6 +2,7 @@
     "climberTopHeight": 125.0,
     "allowablePositionError": 0.5,
     "raisingArbitraryDemand": 0.0,
+    "currentDrawWhenClimbing": 30,
     "raisingGains": {
         "f": 0.00024,
         "p": 0.00005,

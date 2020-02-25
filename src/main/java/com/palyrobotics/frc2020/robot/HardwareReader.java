@@ -73,6 +73,7 @@ public class HardwareReader {
 		state.climberPosition = hardware.sparkEncoder.getPosition();
 		state.climberVelocity = hardware.sparkEncoder.getVelocity();
 		checkSparkFaults(hardware.spark);
+		state.climberCurrentDraw = hardware.spark.getOutputCurrent();
 	}
 
 	private void readDriveState(RobotState state) {
