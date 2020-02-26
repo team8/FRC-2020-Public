@@ -18,6 +18,8 @@ public class ChezyDriveController extends Drive.DriveController {
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		// Quick-turn if right trigger is pressed
 		boolean isQuickTurn = state.driveIsQuickTurning = commands.getDriveWantsQuickTurn();
+		boolean isSlowTurn = state.driveIsSlowTurning = commands.getDriveWantsSlowTurn();
+		boolean slowTurnLeft = commands.getDriveWantedSlowTurnLeft();
 
 		double throttle = commands.getDriveWantedThrottle(), wheel = commands.getDriveWantedWheel();
 
@@ -70,6 +72,9 @@ public class ChezyDriveController extends Drive.DriveController {
 			}
 			overPower = 1.0;
 			angularPower = wheel * mConfig.quickTurnScalar;
+		} else if (isSlowTurn) {
+			overPower = 1.0;
+			angularPower = (slowTurnLeft) ? -mConfig.slowTurnScalar : mConfig.slowTurnScalar;
 		} else {
 			overPower = 0.0;
 			angularPower = absoluteThrottle * wheel * mConfig.turnSensitivity - mQuickStopAccumulator;
