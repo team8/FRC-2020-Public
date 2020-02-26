@@ -35,26 +35,25 @@ public class StartCenterFriendlyTrenchThreeShootThree extends AutoBase {
 //				new ShooterCustomVelocityRoutine(3.0, ),
 				new ShooterVisionRoutine(3.0),
 				new SequentialRoutine(
-						new TimedRoutine(0.8), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
-						new IndexerFeedAllRoutine(2.2, false, true)));
-		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(30.0);
+						new TimedRoutine(1), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
+						new IndexerFeedAllRoutine(3, false, false)));
+
 		var turnAndGetBalls = new SequentialRoutine(
-				new DrivePathRoutine(newWaypoint(20, -10, 90))
-						.setMovement(1.45, 1.4)
-						.driveInReverse(),
-				new IntakeBallRoutine(0.1, 1.0),
-				new DriveParallelPathRoutine(
-						new DrivePathRoutine(
-								newWaypoint(110, 71, 0),
-								newWaypoint(170, 71, 0))
-										.setMovement(3.2, 2.6)
-										// Slow down to intake balls
-										.limitWhen(1.1, inTrenchTest),
-						// Intake balls in trench
-						new ParallelRoutine(
-								new IntakeBallRoutine(Double.POSITIVE_INFINITY, 1.0),
-								new IndexerTimeRoutine(Double.POSITIVE_INFINITY)),
-						inTrenchTest));
+				new DrivePathRoutine(newWaypoint(30, -20, 90))
+						.driveInReverse()
+						.setMovement(2.0, 4.0),
+				new ParallelRoutine(
+						new IntakeBallRoutine(5),
+						new IndexerTimeRoutine(5),
+						new SequentialRoutine(
+								new DrivePathRoutine(
+										newWaypoint(50, 50, 45),
+										newWaypoint(70, 70, 0))
+												.setMovement(2.0, 4.0)
+												.endingVelocity(1.0),
+								new DrivePathRoutine(newWaypoint(170, 70, 0))
+										.startingVelocity(1.0)
+										.setMovement(1.0, 4.0))));
 
 		var turnAndShoot = new SequentialRoutine(
 				new ParallelRaceRoutine(
