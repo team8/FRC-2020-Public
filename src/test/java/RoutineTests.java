@@ -38,20 +38,5 @@ public class RoutineTests {
 	}
 
 	private static MockSubsystem mockSubsystem = new MockSubsystem();
-
-	// TODO: don't rely on time for test
-	@Test
-	public void testRoutineManager() {
-		Timer timer = new Timer();
-		timer.start();
-		var commands = new Commands();
-		var state = new RobotState();
-		var routineManager = new RoutineManager();
-		commands.addWantedRoutine(new SequentialRoutine(new TimedOne(), new TimedTwo()));
-		do {
-			routineManager.update(commands, state);
-			Timer.delay(0.02);
-		} while (!routineManager.getCurrentRoutines().isEmpty());
-		assertTrue(timer.hasElapsed(0.2));
-	}
+	
 }
