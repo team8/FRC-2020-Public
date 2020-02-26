@@ -89,41 +89,42 @@ public class Lighting extends SubsystemBase {
 					break;
 				case TARGET_FOUND:
 					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex,
-							mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2));
+							mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1));
 					break;
 				case SPINNER_DONE:
 					addToControllers(new OneColorController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, Color.HSV.kBlue, 2));
 					break;
 				case BALL_ENTERED:
 					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
-							mConfig.frontLeftSegmentLastIndex, List.of(Color.HSV.kRed, Color.HSV.kRed, Color.HSV.kRed), 1));
+							mConfig.frontLeftSegmentLastIndex, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
 					addToControllers(new PulseController(mConfig.frontRightSegmentFirstIndex,
-							mConfig.frontRightSegmentLastIndex, List.of(Color.HSV.kRed, Color.HSV.kRed, Color.HSV.kRed), 1));
-					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kRed, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
+							mConfig.frontRightSegmentLastIndex, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
+					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
 					break;
 				case CLIMBING:
 					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
-							mConfig.totalSegmentLastIndex, Color.HSV.kRed, 1, 3));
+							mConfig.totalSegmentLastIndex, Color.HSV.kOrange, 0.5, 3));
 					break;
 				case INTAKE_EXTENDED:
 					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
 							mConfig.frontLeftSegmentLastIndex, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1));
 					addToControllers(new PulseController(mConfig.frontRightSegmentFirstIndex,
 							mConfig.frontRightSegmentLastIndex, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1));
-					addToControllers(new ConvergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kRed, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
-					break;
-				case SHOOTER_FULLRPM:
-					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2, 2));
+					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
 					break;
 				case ROBOT_ALIGNING:
 					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 1, 2));
 					break;
 				case ROBOT_ALIGNED:
-					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 0.5, 2));
+					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2, 2));
+					break;
+				case SHOOTER_FULLRPM:
+					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 0.5, 5));
 					break;
 			}
 		}
 		resetLedStrip();
+		mLEDControllers.removeIf(LEDController::checkFinished);
 		for (LEDController ledController : mLEDControllers) {
 			LightingOutputs controllerOutput = ledController.update(commands, state);
 			for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
@@ -134,8 +135,8 @@ public class Lighting extends SubsystemBase {
 	}
 
 	private void addToControllers(LEDController controller) {
-		mLEDControllers.removeIf(controllers -> controllers.mStartIndex >= controller.mStartIndex &&
-				controllers.mLastIndex <= controller.mLastIndex);
+		mLEDControllers.removeIf(controllers -> controllers.mStartIndex == controller.mStartIndex &&
+				controllers.mLastIndex == controller.mLastIndex);
 		mLEDControllers.add(controller);
 	}
 

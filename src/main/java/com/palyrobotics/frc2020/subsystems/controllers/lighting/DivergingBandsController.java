@@ -5,7 +5,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
-public class ConvergingBandsController extends Lighting.LEDController {
+public class DivergingBandsController extends Lighting.LEDController {
 
 	private Color.HSV mBandColor;
 	private Color.HSV mBackgroundColor;
@@ -22,7 +22,7 @@ public class ConvergingBandsController extends Lighting.LEDController {
 	 * @param backgroundColor Background color upon which converging effect will occur.
 	 */
 
-	public ConvergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
+	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
 		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
@@ -33,7 +33,7 @@ public class ConvergingBandsController extends Lighting.LEDController {
 		mTimer.start();
 	}
 
-	public ConvergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration) {
+	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration) {
 		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
@@ -63,10 +63,10 @@ public class ConvergingBandsController extends Lighting.LEDController {
 						mBackgroundColor.getS(), mBackgroundColor.getV());
 			}
 		}
+		System.out.println(mTimer.get());
 	}
 
 	@Override
-
 	public boolean checkFinished() {
 		return mDuration != -1 && mTimer.hasElapsed(mDuration);
 	}
