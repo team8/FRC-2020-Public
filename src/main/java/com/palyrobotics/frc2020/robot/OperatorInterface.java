@@ -128,10 +128,6 @@ public class OperatorInterface {
 			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
 		}
 
-		if (state.shooterIsReadyToShoot) {
-			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
-		}
-
 		if (commands.visionWanted) {
 			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNING;
 		}
@@ -140,6 +136,10 @@ public class OperatorInterface {
 		}
 		if (state.climberCurrentDraw >= mClimberConfig.currentDrawWhenClimbing) {
 			commands.lightingWantedState = Lighting.State.CLIMBING;
+		}
+
+		if (true) {
+			commands.lightingWantedState = Lighting.State.BALL_ENTERED;
 		}
 	}
 
