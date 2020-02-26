@@ -14,6 +14,7 @@
 	"quickTurnScalar": 0.4,
 	"quickStopDeadBand": 0.5,
 	"quickStopScalar": 0.0,
+	"slowTurnScalar": 0.06,
 	"turnSensitivity": 0.8,
 	"lowNegativeInertiaThreshold": 0.65,
 	"lowNegativeInertiaFarScalar": 5.0,
