@@ -15,7 +15,7 @@ public class Color {
 				kOrange = new HSV(2, 247, 87),
 				kPurple = new HSV(180, 247, 20),
 				kAqua = new HSV(85, 247, 20),
-		        kRed = new HSV(0, 255, 100),
+				kRed = new HSV(0, 255, 100),
 				kPink = new HSV(0, 200, 100),
 				kNothing = new HSV(0, 0, 0);
 
