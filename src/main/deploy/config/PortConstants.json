@@ -22,5 +22,6 @@
 	"nariShooterSlaveId": 1,
 	"nariShooterHoodSolenoid": 5,
 	"nariShooterBlockingSolenoidId": 4,
+	"nariShooterInfraredDio": 10,
 	"nariSpinnerId": 6
 }
