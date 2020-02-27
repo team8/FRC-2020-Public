@@ -18,15 +18,19 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.ShooterCustomVelocityRoutine;
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.Robot;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Shooter;
+import com.palyrobotics.frc2020.util.autographer.AutoGrapherSerializer;
 import com.palyrobotics.frc2020.util.config.ConfigBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.service.RobotService;
@@ -61,11 +65,16 @@ public class CommandReceiverService implements RobotService {
 		subparsers.addParser("save").addArgument("config_name");
 		subparsers.addParser("calibrate").addSubparsers().dest("subsystem").addParser("arm")
 				.help("Resets the Spark encoder so it is in-line with the potentiometer");
+
+		Subparser auto = subparsers.addParser("auto");
+		auto.addArgument("action");
+		auto.addArgument("json").nargs("?");
+		auto.addArgument("autoname").nargs("?");
 	}
 
 	@Override
 	public void start() {
-		mServer = new Server();
+		mServer = new Server(100000000, 100000000);
 		mServer.getKryo().setRegistrationRequired(false);
 		try {
 			mServer.addListener(new Listener() {
@@ -104,20 +113,20 @@ public class CommandReceiverService implements RobotService {
 	}
 
 	@Override
-	public void update(@ReadOnly RobotState state, Commands commands) {
+	public void update(RobotState state, Commands commands) {
 		mCommand.tryGetAndReset(command -> {
 			if (command == null) return;
-			String result = executeCommand(command, commands);
+			String result = executeCommand(command, state, commands);
 			mResult.setAndNotify(result);
 		});
 	}
 
-	public String executeCommand(String command, Commands commands) {
+	public String executeCommand(String command, RobotState state, Commands commands) {
 		if (command == null) throw new IllegalArgumentException("Command can not be null!");
 		String result;
 		try {
 			Namespace parse = mParser.parseArgs(command.trim().split("\\s+"));
-			result = handleParsedCommand(parse, commands);
+			result = handleParsedCommand(parse, state, commands);
 		} catch (ArgumentParserException parseException) {
 			var help = new StringWriter();
 			var printer = new PrintWriter(help);
@@ -127,7 +136,7 @@ public class CommandReceiverService implements RobotService {
 		return result;
 	}
 
-	private String handleParsedCommand(Namespace parse, Commands commands) {
+	private String handleParsedCommand(Namespace parse, RobotState state, Commands commands) {
 		// TODO less nesting >:( refactor into functions
 		var commandName = parse.getString("command");
 		switch (commandName) {
@@ -229,6 +238,80 @@ public class CommandReceiverService implements RobotService {
 				commands.addWantedRoutines(new ShooterCustomVelocityRoutine(15.0, manualSpeed, hoodState),
 						new SequentialRoutine(new TimedRoutine(3.0), new IndexerFeedAllRoutine(7.0, true, true)));
 				return String.format("Running with hood state %s and velocity %f", hoodState, manualSpeed);
+			}
+			case "auto": {
+				switch (parse.getString("action")) {
+					case "load": {
+						String autoMode = parse.getString("json");
+						try {
+							return AutoGrapherSerializer.autoSerializer(autoMode);
+						} catch (Exception serializationException) {
+							String errorMessage = "Error serializing auto";
+							Log.error(errorMessage, serializationException);
+							return errorMessage;
+						}
+					}
+					case "trajectory": {
+						String paths = parse.getString("json");
+						try {
+							return AutoGrapherSerializer.autoTrajectoryGenerator(paths);
+						} catch (Exception trajectoryException) {
+							String errorMessage = "Error generating trajectory";
+							Log.error(errorMessage, trajectoryException);
+							return errorMessage;
+						}
+					}
+					case "run": {
+						String automodeJson = parse.getString("json");
+						String autoName = parse.getString("autoname");
+						try {
+							if (Robot.isReal()) {
+								commands.addWantedRoutine(AutoGrapherSerializer.replaceDrivePaths(automodeJson, autoName));
+							} else {
+								AutoGrapherSerializer.replaceDrivePaths(automodeJson, autoName);
+								return "kek";
+							}
+						} catch (Exception elMajorGoof) {
+							String errorMessage = "Error running auto";
+							Log.error(errorMessage, elMajorGoof);
+							return errorMessage;
+						}
+						return "kek";
+					}
+					case "return": {
+						String automodeJson = parse.getString("json");
+						String rotation = parse.getString("autoname");
+						try {
+							commands.addWantedRoutine(sMapper.readValue(automodeJson, DrivePathRoutine[].class)[0]);
+						} catch (JsonProcessingException e) {
+							e.printStackTrace();
+						}
+					}
+					case "getAutos": {
+						return AutoGrapherSerializer.getAutos();
+					}
+					case "locate": {
+						if (Robot.isReal()) {
+							try {
+								return sMapper.writeValueAsString(state.drivePoseMeters);
+							} catch (Exception locateRobotException) {
+								String errorMessage = "Error locating robot";
+								Log.error(errorMessage, locateRobotException);
+								return errorMessage;
+							}
+						} else {
+							return "u = big dumb";
+						}
+					}
+					case "reset": {
+						if (Robot.isReal()) {
+							commands.addWantedRoutine(new DriveSetOdometryRoutine());
+							return "gucci";
+						} else {
+							return "u = big dumb";
+						}
+					}
+				}
 			}
 			default: {
 				throw new RuntimeException("Unknown command");

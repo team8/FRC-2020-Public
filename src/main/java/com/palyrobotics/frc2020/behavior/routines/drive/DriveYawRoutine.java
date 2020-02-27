@@ -1,9 +1,5 @@
 package com.palyrobotics.frc2020.behavior.routines.drive;
 
-import static com.palyrobotics.frc2020.util.Util.getDifferenceInAngleDegrees;
-
-import java.util.Set;
-
 import com.palyrobotics.frc2020.behavior.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
@@ -13,6 +9,10 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
+
+import java.util.Set;
+
+import static com.palyrobotics.frc2020.util.Util.getDifferenceInAngleDegrees;
 
 public class DriveYawRoutine extends TimeoutRoutineBase {
 
@@ -44,6 +44,10 @@ public class DriveYawRoutine extends TimeoutRoutineBase {
 		// TODO: check velocity as well
 		double yawErrorDegrees = getDifferenceInAngleDegrees(state.driveYawDegrees, mTargetYawDegrees);
 		return Math.abs(yawErrorDegrees) < mDriveConfig.allowableYawErrorDegrees;
+	}
+
+	public double getYaw() {
+		return mTargetYawDegrees;
 	}
 
 	@Override

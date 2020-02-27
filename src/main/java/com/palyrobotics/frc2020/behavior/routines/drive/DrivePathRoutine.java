@@ -1,8 +1,19 @@
 package com.palyrobotics.frc2020.behavior.routines.drive;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.palyrobotics.frc2020.behavior.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
@@ -14,11 +25,14 @@ import com.palyrobotics.frc2020.util.config.Configs;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
+@JsonSerialize (using = DrivePathRoutine.DrivePathRoutineSerializer.class)
+@JsonDeserialize (using = DrivePathRoutine.DrivePathRoutineDeserializer.class)
 public class DrivePathRoutine extends TimeoutRoutineBase {
 
 	private static final DriveConfig kConfig = Configs.get(DriveConfig.class);
@@ -137,6 +151,21 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		}
 	}
 
+	public Trajectory generateTrajectory() {
+		var poses = new LinkedList<>(mPoses);
+		if (mShouldReversePath) {
+			Collections.reverse(poses);
+		}
+		var trajectoryConfig = DriveConstants.getTrajectoryConfig(mMaxVelocityMetersPerSecond, mMaxAccelerationMetersPerSecondSq);
+		trajectoryConfig.addConstraint(new CentripetalAccelerationConstraint(1.6));
+		trajectoryConfig.setReversed(mDriveInReverse);
+		trajectoryConfig.setStartVelocity(mStartingVelocityMetersPerSecond);
+		trajectoryConfig.setEndVelocity(mEndingVelocityMetersPerSecond);
+		trajectoryConfig.addConstraints(mConstraints);
+
+		return mWaypoints == null ? TrajectoryGenerator.generateTrajectory(poses, trajectoryConfig) : TrajectoryGenerator.generateTrajectory(poses.getFirst(), mWaypoints, poses.getLast(), trajectoryConfig);
+	}
+
 	public Trajectory getTrajectory() {
 		return mTrajectory;
 	}
@@ -162,5 +191,59 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	public boolean checkIfFinishedEarly(@ReadOnly RobotState state) {
 		// TODO: possibly implement to see if we are within a tolerance of the end early
 		return false;
+	}
+
+	public List<Pose2d> getWaypoints() {
+		return mPoses;
+	}
+
+	public boolean isReversed() {
+		return mDriveInReverse;
+	}
+
+	static class DrivePathRoutineSerializer extends StdSerializer<DrivePathRoutine> {
+
+		DrivePathRoutineSerializer() {
+			super(DrivePathRoutine.class);
+		}
+
+		@Override
+		public void serialize(DrivePathRoutine value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+			jgen.writeStartObject();
+			jgen.writeObjectField("reversed", value.mDriveInReverse);
+			List<Pose2d> niceUnitPoses = new ArrayList<>();
+			for (Pose2d pose : value.mPoses) {
+				niceUnitPoses.add(new Pose2d(pose.getTranslation().getX() * 39.37,
+						pose.getTranslation().getY() * 39.37,
+						new Rotation2d(pose.getRotation().getDegrees())));
+			}
+			jgen.writeObjectField("poseList", niceUnitPoses);
+			jgen.writeEndObject();
+		}
+	}
+
+	static class DrivePathRoutineDeserializer extends StdDeserializer<DrivePathRoutine> {
+
+		DrivePathRoutineDeserializer() {
+			super(DrivePathRoutine.class);
+		}
+
+		@Override
+		public DrivePathRoutine deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+			JsonNode node = jp.getCodec().readTree(jp);
+			Pose2d[] poseList = jp.getCodec().treeToValue(node.get("poseList"), Pose2d[].class);
+			boolean isReversed = jp.getCodec().treeToValue(node.get("reversed"), boolean.class);
+			List<Pose2d> meterPoses = new ArrayList<>();
+			for (Pose2d pose : poseList) {
+				meterPoses.add(new Pose2d(pose.getTranslation().getX() / 39.37,
+						pose.getTranslation().getY() / 39.37,
+						new Rotation2d(pose.getRotation().getRadians() * Math.toRadians(1))));
+				System.out.println(pose.getTranslation().getX() / 39.37);
+			}
+			ObjectMapper mapper = new ObjectMapper();
+			System.out.println(mapper.writeValueAsString(meterPoses));
+			return isReversed ? new DrivePathRoutine(meterPoses).driveInReverse() :
+					new DrivePathRoutine(meterPoses);
+		}
 	}
 }
