@@ -143,6 +143,8 @@ public class HardwareAdapter {
 		final TimedSolenoid hoodSolenoid = new TimedSolenoid(sPortConstants.nariShooterHoodSolenoid, 0.25, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariShooterBlockingSolenoidId, 0.2, false);
 
+		final DigitalInput shooterInfrared = new DigitalInput(sPortConstants.nariShooterInfraredDio);
+
 		private ShooterHardware() {
 		}
 

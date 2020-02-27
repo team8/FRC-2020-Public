@@ -125,6 +125,7 @@ public class HardwareReader {
 		state.shooterIsHoodExtended = hardware.hoodSolenoid.isExtended();
 		state.shooterIsBlockingExtended = hardware.blockingSolenoid.isExtended();
 		state.shooterHoodIsInTransition = hardware.hoodSolenoid.isInTransition() || hardware.blockingSolenoid.isInTransition();
+		state.shooterHasBall = !hardware.shooterInfrared.get();
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
 //		LiveGraph.add("applied", hardware.masterSpark.getAppliedOutput());

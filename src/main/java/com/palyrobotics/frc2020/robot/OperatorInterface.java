@@ -149,9 +149,14 @@ public class OperatorInterface {
 		if (mLimelight.getYawToTarget() <= mVisionConfig.acceptableYawError) {
 			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
 		}
-//		if (state.climberCurrentDraw >= mClimberConfig.currentDrawWhenClimbing) {
-//			commands.lightingWantedState = Lighting.State.CLIMBING;
-//		}
+
+		if (state.shooterHasBall) {
+			commands.lightingWantedState = Lighting.State.BALL_SHOT;
+		}
+
+		if (true) {
+			commands.lightingWantedState = Lighting.State.BALL_ENTERED;
+		}
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
