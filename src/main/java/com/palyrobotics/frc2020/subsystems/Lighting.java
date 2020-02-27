@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNING, ROBOT_ALIGNED, CLIMBING, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE
+		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNING, ROBOT_ALIGNED, CLIMBING, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT
 	}
 
 	public abstract static class LEDController {
@@ -121,6 +121,8 @@ public class Lighting extends SubsystemBase {
 				case SHOOTER_FULLRPM:
 					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 0.5, 5));
 					break;
+				case BALL_SHOT:
+					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kBlue, 1));
 			}
 		}
 		resetLedStrip();
