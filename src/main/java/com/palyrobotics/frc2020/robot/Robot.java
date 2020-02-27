@@ -186,6 +186,7 @@ public class Robot extends TimedRobot {
 		}
 		LiveGraph.add("visionEstimatedDistance", mLimelight.getEstimatedDistanceInches());
 		LiveGraph.add("isEnabled", isEnabled());
+		mOperatorInterface.resetPeriodic(mCommands);
 	}
 
 	@Override

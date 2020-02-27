@@ -115,36 +115,30 @@ public class OperatorInterface {
 	}
 
 	private void updateLightingCommands(Commands commands, @ReadOnly RobotState state) {
+		commands.lightingWantedState = Lighting.State.OFF;
 		if (mOperatorXboxController.getDPadLeftPressed()) {
 			commands.lightingWantedState = Lighting.State.INTAKE_EXTENDED;
+		}
+		if(mLimelight.isTargetFound()){
+			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
 		}
 		if (state.indexerHasFrontBall) {
 			commands.lightingWantedState = Lighting.State.BALL_ENTERED;
 		}
-		if (mTurnStick.getRawButtonPressed(4)) {
-			commands.lightingWantedState = Lighting.State.CLIMBING;
-		}
-		if (mLimelight.isTargetFound()) {
-			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
-		}
-
-		if (commands.visionWanted) {
-			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNING;
-		}
-		if (mLimelight.getYawToTarget() <= mVisionConfig.acceptableYawError) {
-			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
-		}
+//		if (commands.visionWanted) {
+//			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNING;
+//		}
+//		if (mLimelight.getYawToTarget() <= mVisionConfig.acceptableYawError) {
+//			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
+//		}
 		if (state.climberCurrentDraw >= mClimberConfig.currentDrawWhenClimbing) {
 			commands.lightingWantedState = Lighting.State.CLIMBING;
 		}
-
 		if (state.shooterHasBall) {
 			commands.lightingWantedState = Lighting.State.BALL_SHOT;
 		}
-
-		if (true) {
-			commands.lightingWantedState = Lighting.State.BALL_ENTERED;
-		}
+		System.out.println(mLimelight.isTargetFound());
+		System.out.println(commands.lightingWantedState);
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
@@ -217,6 +211,10 @@ public class OperatorInterface {
 		} else if (mOperatorXboxController.getYButtonPressed()) {
 			commands.addWantedRoutine(new SpinnerPositionControlRoutine());
 		}
+	}
+
+	public void resetPeriodic(Commands commands){
+		commands.lightingWantedState = Lighting.State.IDLE;
 	}
 
 	public void reset(Commands commands) {

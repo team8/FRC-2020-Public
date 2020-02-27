@@ -18,16 +18,16 @@ public class OneColorController extends Lighting.LEDController {
 	 * @param color      Color to be displayed
 	 */
 
-	public OneColorController(int startIndex, int lastIndex, Color.HSV color) {
-		super(startIndex, lastIndex);
+	public OneColorController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV color) {
+		super(startIndex, lastIndex, noDestroy);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mColor = color;
 		mTimer.start();
 	}
 
-	public OneColorController(int startIndex, int lastIndex, Color.HSV color, double duration) {
-		super(startIndex, lastIndex);
+	public OneColorController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV color, double duration) {
+		super(startIndex, lastIndex, noDestroy);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mColor = color;
