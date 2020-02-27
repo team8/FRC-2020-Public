@@ -12,6 +12,7 @@ public class DivergingBandsController extends Lighting.LEDController {
 	private int mBandLedCount;
 	private int mCurrentBandPosition;
 	private double mDuration = -1;
+	private long mOldModValue;
 
 	/**
 	 * Band color converges to center of strip
@@ -22,8 +23,8 @@ public class DivergingBandsController extends Lighting.LEDController {
 	 * @param backgroundColor Background color upon which converging effect will occur.
 	 */
 
-	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
-		super(startIndex, lastIndex);
+	public DivergingBandsController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
+		super(startIndex, lastIndex, noDestroy);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mBandColor = bandColor;
@@ -33,8 +34,8 @@ public class DivergingBandsController extends Lighting.LEDController {
 		mTimer.start();
 	}
 
-	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, double duration) {
-		super(startIndex, lastIndex);
+	public DivergingBandsController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration) {
+		super(startIndex, lastIndex, noDestroy);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mBandColor = bandColor;
@@ -47,9 +48,9 @@ public class DivergingBandsController extends Lighting.LEDController {
 
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
-		if (Math.round(mTimer.get() / mSpeed) % 2 == 1) {
+		if (Math.round(mTimer.get() / mSpeed) % 2 != mOldModValue) {
+			mOldModValue = Math.round(mTimer.get() / mSpeed) % 2;
 			mCurrentBandPosition += 1;
-			mTimer.reset();
 		}
 		for (var i = 0; i < (mLastIndex - mStartIndex) / 2 - 1; i++) {
 			if ((i + mCurrentBandPosition) / mBandLedCount % 2 == 0) {

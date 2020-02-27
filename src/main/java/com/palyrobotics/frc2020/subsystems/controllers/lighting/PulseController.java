@@ -7,9 +7,12 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
+import javax.print.attribute.HashPrintJobAttributeSet;
+
 public class PulseController extends Lighting.LEDController {
 
-	private int mPulseEndIndex;
+	public int mPulseEndIndex;
+	public int mPulseStartIndex;
 	private boolean mIsColorsInitialized;
 	private List<Color.HSV> mPulse;
 
@@ -22,11 +25,12 @@ public class PulseController extends Lighting.LEDController {
 	 * @param speed              Speed of pulse movement
 	 */
 
-	public PulseController(int startIndex, int lastIndex, List<Color.HSV> pulseColorSequence, double speed) {
-		super(startIndex, lastIndex);
+	public PulseController(int startIndex, int lastIndex, boolean noDestroy, List<Color.HSV> pulseColorSequence, double speed) {
+		super(startIndex, lastIndex, noDestroy);
 		mStartIndex = startIndex;
 		mLastIndex = startIndex + pulseColorSequence.size() - 1;
 		mPulseEndIndex = lastIndex;
+		mPulseStartIndex = startIndex;
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mTimer.start();
 		mPulse = pulseColorSequence;
@@ -44,6 +48,15 @@ public class PulseController extends Lighting.LEDController {
 			mLastIndex += 1;
 			mTimer.reset();
 		}
+	}
+
+	@Override
+	public boolean equals(Object object){
+		if (object instanceof PulseController) {
+			PulseController otherPulseController = (PulseController) object;
+			return otherPulseController.mPulseStartIndex == this.mPulseStartIndex && otherPulseController.mPulseEndIndex == this.mPulseEndIndex && otherPulseController.mPulse.equals(this.mPulse);
+		}
+		return false;
 	}
 
 	@Override
