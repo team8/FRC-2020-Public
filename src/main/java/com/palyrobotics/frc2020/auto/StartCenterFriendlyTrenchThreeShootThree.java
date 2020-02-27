@@ -26,25 +26,33 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 		// TODO: Refactor into AutoBase
 		var initialShoot = new ParallelRoutine(
 				new IntakeLowerRoutine(),
-				new ShooterVisionRoutine(5.0),
+				new ShooterVisionRoutine(4.0),
 				new SequentialRoutine(
 						new TimedRoutine(1), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
-						new IndexerFeedAllRoutine(5, false, false)));
+						new IndexerFeedAllRoutine(3, false, false)));
 
 		var turnAndGetBalls = new SequentialRoutine(
-				new DrivePathRoutine(newWaypoint(40, -35, 90)).driveInReverse(),
+				new DrivePathRoutine(newWaypoint(35, -20, 90))
+						.driveInReverse()
+						.setMovement(2.0, 3.0),
 				new ParallelRoutine(
 						new IntakeBallRoutine(6),
 						new IndexerTimeRoutine(6),
-						new DrivePathRoutine(
-								newWaypoint(80, 70, 0),
-								newWaypoint(170, 70, 0))));
+						new SequentialRoutine(
+								new DrivePathRoutine(
+										newWaypoint(50, 50, 45),
+										newWaypoint(70, 70, 0))
+												.setMovement(2.0, 4.0)
+												.endingVelocity(1.0),
+								new DrivePathRoutine(newWaypoint(170, 70, 0))
+										.startingVelocity(1.0)
+										.setMovement(1.0, 4.0))));
 
 		var turnAndShoot = new SequentialRoutine(
 				new DriveAlignYawAssistedRoutine(180, OperatorInterface.kOnesTimesZoomAlignButton),
 				new ParallelRoutine(
-						new ShooterVisionRoutine(5),
-						new IndexerFeedAllRoutine(5, true, true)));
+						new ShooterVisionRoutine(4),
+						new IndexerFeedAllRoutine(4, true, true)));
 
 		return new SequentialRoutine(setInitialOdometry, initialShoot, turnAndGetBalls, turnAndShoot);
 	}

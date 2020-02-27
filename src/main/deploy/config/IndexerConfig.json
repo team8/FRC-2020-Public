@@ -2,8 +2,8 @@
     "sparkIndexingOutput": 800.0,
     "leftTalonIndexingOutput": 0.35,
     "rightTalonIndexingOutput": 0.5,
-    "reverseTime": 0.15,
-    "feedingOutput": 900.0,
+    "reverseTime": 0.35,
+    "feedingOutput": 1200.0,
     "reversingOutput": 1000.0,
     "masterVelocityGains": {
         "p": 0.00018,
