@@ -116,13 +116,13 @@ public class HardwareWriter {
 		for (Spark spark : hardware.sparks) {
 			spark.restoreFactoryDefaults();
 			spark.enableVoltageCompensation(kVoltageCompensation);
-			spark.setOpenLoopRampRate(0.1);
-			spark.setClosedLoopRampRate(0.1);
+			spark.setOpenLoopRampRate(0.075);
+			spark.setClosedLoopRampRate(0.075);
 			spark.setInverted(true);
 			double maxOutput = 0.8;
 			spark.getController().setOutputRange(-maxOutput, maxOutput);
-//			spark.setSmartCurrentLimit((int) Math.round(40.0 / maxOutput));
-//			spark.setSecondaryCurrentLimit(50.0 / maxOutput);
+			spark.setSmartCurrentLimit((int) Math.round(40.0 / maxOutput));
+			spark.setSecondaryCurrentLimit(50.0 / maxOutput);
 		}
 		/* V-Belt Talons */
 		for (Talon vTalon : hardware.vTalons) {
