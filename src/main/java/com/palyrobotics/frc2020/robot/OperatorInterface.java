@@ -137,7 +137,7 @@ public class OperatorInterface {
 		if (mOperatorXboxController.getDPadLeftPressed()) {
 			commands.lightingWantedState = Lighting.State.INTAKE_EXTENDED;
 		}
-		if(mLimelight.isTargetFound()){
+		if (mLimelight.isTargetFound()) {
 			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
 		}
 		if (state.indexerHasFrontBall) {
@@ -226,7 +226,7 @@ public class OperatorInterface {
 		}
 	}
 
-	public void resetPeriodic(Commands commands){
+	public void resetPeriodic(Commands commands) {
 		commands.lightingWantedState = Lighting.State.IDLE;
 	}
 
