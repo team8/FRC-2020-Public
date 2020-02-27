@@ -7,8 +7,6 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
-import javax.print.attribute.HashPrintJobAttributeSet;
-
 public class PulseController extends Lighting.LEDController {
 
 	public int mPulseEndIndex;
@@ -51,7 +49,7 @@ public class PulseController extends Lighting.LEDController {
 	}
 
 	@Override
-	public boolean equals(Object object){
+	public boolean equals(Object object) {
 		if (object instanceof PulseController) {
 			PulseController otherPulseController = (PulseController) object;
 			return otherPulseController.mPulseStartIndex == this.mPulseStartIndex && otherPulseController.mPulseEndIndex == this.mPulseEndIndex && otherPulseController.mPulse.equals(this.mPulse);
