@@ -8,7 +8,7 @@ import com.palyrobotics.frc2020.util.Color;
 public class FadeOutController extends Lighting.LEDController {
 
 	private Color.HSV mFlashedColor;
-	private int mDuration = -1;
+	private double mDuration = -1;
 
 	/**
 	 * Color flashes with given delay
@@ -27,7 +27,7 @@ public class FadeOutController extends Lighting.LEDController {
 		mTimer.start();
 	}
 
-	public FadeOutController(int startIndex, int lastIndex, Color.HSV flashedColor, int delay, int duration) {
+	public FadeOutController(int startIndex, int lastIndex, Color.HSV flashedColor, int delay, double duration) {
 		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
