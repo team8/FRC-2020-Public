@@ -8,7 +8,7 @@ import com.palyrobotics.frc2020.util.Color;
 public class OneColorController extends Lighting.LEDController {
 
 	private Color.HSV mColor;
-	private int mDuration = -1;
+	private double mDuration = -1;
 
 	/**
 	 * Single color, no animation, led controller
@@ -26,7 +26,7 @@ public class OneColorController extends Lighting.LEDController {
 		mTimer.start();
 	}
 
-	public OneColorController(int startIndex, int lastIndex, Color.HSV color, int duration) {
+	public OneColorController(int startIndex, int lastIndex, Color.HSV color, double duration) {
 		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;

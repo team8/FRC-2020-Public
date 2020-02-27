@@ -11,7 +11,7 @@ public class DivergingBandsController extends Lighting.LEDController {
 	private Color.HSV mBackgroundColor;
 	private int mBandLedCount;
 	private int mCurrentBandPosition;
-	private int mDuration = -1;
+	private double mDuration = -1;
 
 	/**
 	 * Band color converges to center of strip
@@ -33,7 +33,7 @@ public class DivergingBandsController extends Lighting.LEDController {
 		mTimer.start();
 	}
 
-	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration) {
+	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, double duration) {
 		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;

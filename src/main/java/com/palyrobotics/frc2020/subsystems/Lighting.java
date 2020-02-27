@@ -122,7 +122,7 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 0.5, 5));
 					break;
 				case BALL_SHOT:
-					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kBlue, 1));
+					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kBlue, 0.5));
 			}
 		}
 		resetLedStrip();
