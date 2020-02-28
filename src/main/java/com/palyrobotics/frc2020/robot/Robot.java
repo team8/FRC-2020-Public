@@ -11,6 +11,7 @@ import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.subsystems.*;
+import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.commands.CommandReceiverService;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -181,14 +182,21 @@ public class Robot extends TimedRobot {
 		updateSubsystemsAndApplyOutputs();
 	}
 
+	public static LoopOverrunDebugger mDebugger = new LoopOverrunDebugger("teleop", 0.02);
+
 	@Override
 	public void teleopPeriodic() {
 //		mOperatorInterface.defaults(mCommands);
+		mDebugger.reset();
 		updateRobotState();
+		mDebugger.addPoint("robotState");
 		mOperatorInterface.updateCommands(mCommands, mRobotState);
+		mDebugger.addPoint("updateCommands");
 		mRoutineManager.update(mCommands, mRobotState);
-		resetOdometryIfWanted();
+		mDebugger.addPoint("routineManagerUpdate");
 		updateSubsystemsAndApplyOutputs();
+		mDebugger.addPoint("updateSubsystemsAndApplyOutputs");
+		mDebugger.finish();
 	}
 
 	@Override
@@ -224,8 +232,10 @@ public class Robot extends TimedRobot {
 		resetOdometryIfWanted();
 		for (SubsystemBase subsystem : mEnabledSubsystems) {
 			subsystem.update(mCommands, mRobotState);
+			mDebugger.addPoint(subsystem.getName());
 		}
 		if (kCanUseHardware) mHardwareWriter.updateHardware(mEnabledSubsystems);
+		mDebugger.addPoint("updateHardware");
 		updateVision(mCommands.visionWanted, mCommands.visionWantedPipeline);
 		updateCompressor();
 	}

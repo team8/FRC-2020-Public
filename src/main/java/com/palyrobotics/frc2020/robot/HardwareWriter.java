@@ -196,15 +196,23 @@ public class HardwareWriter {
 		mRumbleOutput = false;
 		if (!mRobotConfig.disableHardwareUpdates) {
 			if (enabledSubsystems.contains(mClimber)) updateClimber();
+			Robot.mDebugger.addPoint("Climber");
 			if (enabledSubsystems.contains(mDrive)) updateDrivetrain();
+			Robot.mDebugger.addPoint("Drive");
 			if (enabledSubsystems.contains(mIndexer)) updateIndexer();
+			Robot.mDebugger.addPoint("Indexer");
 			if (enabledSubsystems.contains(mIntake)) updateIntake();
+			Robot.mDebugger.addPoint("Intake");
 			if (enabledSubsystems.contains(mShooter)) updateShooter();
+			Robot.mDebugger.addPoint("Shooter");
 			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
+			Robot.mDebugger.addPoint("Spinner");
 			if (enabledSubsystems.contains(mLighting)) updateLighting();
+			Robot.mDebugger.addPoint("Lighting");
 		}
 		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
 		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
+		Robot.mDebugger.addPoint("setRumble");
 	}
 
 	private void updateClimber() {
@@ -225,6 +233,7 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
 		hardware.vTalons.forEach(Talon::handleReset);
 		hardware.masterSpark.setOutput(mIndexer.getMasterSparkOutput());
+		Robot.mDebugger.addPoint("masterSparkOutput");
 		hardware.slaveSpark.setOutput(mIndexer.getSlaveSparkOutput());
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());

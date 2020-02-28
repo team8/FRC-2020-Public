@@ -55,7 +55,6 @@ public class LoopOverrunDebugger {
 	}
 
 	public void reset() {
-		mTimer.stop();
 		mTimer.reset();
 		mMeasurements.clear();
 	}
