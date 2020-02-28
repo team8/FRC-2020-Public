@@ -12,6 +12,8 @@ public class Color {
 		public static final Color.HSV kBlue = new HSV(100, 150, 150),
 				kWhite = new HSV(0, 75, 20),
 				kLime = new HSV(60, 255, 20),
+				kYellow = new HSV(30, 255, 20),
+				kGreen = new HSV(70, 255, 20),
 				kOrange = new HSV(2, 247, 87),
 				kPurple = new HSV(180, 247, 20),
 				kAqua = new HSV(85, 247, 20),

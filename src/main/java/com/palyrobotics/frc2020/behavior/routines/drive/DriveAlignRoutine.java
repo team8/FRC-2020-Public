@@ -38,13 +38,12 @@ public class DriveAlignRoutine extends TimeoutRoutineBase {
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		commands.setDriveVisionAlign(mVisionPipeline);
-		commands.lightingWantedState = Lighting.State.ROBOT_ALIGNING;
 	}
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
 		commands.visionWanted = false;
-		commands.lightingWantedState = Lighting.State.TARGET_FOUND;
+		commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
 	}
 
 	@Override
