@@ -22,6 +22,11 @@
 		"d": 0.0005,
 		"iMax": 0.03
 	},
+<<<<<<< HEAD
 	"acceptableYawError": 0.2,
 	"alignSwitchYawAngleMin": 40.0
+=======
+	"acceptableYawError": 0.15,
+	"alignSwitchYawAngleMin": 20
+>>>>>>> fixed vision align flickering, checked each individual controller, simulated limeight, etc
 }
