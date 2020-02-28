@@ -11,10 +11,11 @@ import com.palyrobotics.frc2020.util.config.Configs;
 
 public abstract class SimpleControllerBase<TController extends Controller> {
 
-	private static final int kProfiledPositionSlot = 1, kProfiledVelocitySlot = 2;
+	private static final int kDefaultSlot = 0, kProfiledPositionSlot = 1, kProfiledVelocitySlot = 2, kVelocitySlot = 3;
 	private static Map<ControllerOutput.Mode, Integer> sModeToSlot = Map.of(
 			ControllerOutput.Mode.PROFILED_POSITION, kProfiledPositionSlot,
-			ControllerOutput.Mode.PROFILED_VELOCITY, kProfiledVelocitySlot);
+			ControllerOutput.Mode.PROFILED_VELOCITY, kProfiledVelocitySlot,
+			ControllerOutput.Mode.VELOCITY, kVelocitySlot);
 	protected RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 	protected TController mController;
 	protected boolean mHasCustomFrames;
@@ -38,7 +39,7 @@ public abstract class SimpleControllerBase<TController extends Controller> {
 		Robot.mDebugger.addPoint("getGains");
 		// Slot is determined based on control mode
 		// TODO add feature to add custom slots
-		int slot = sModeToSlot.getOrDefault(mode, 0);
+		int slot = sModeToSlot.getOrDefault(mode, kDefaultSlot);
 		updateGainsIfChanged(gains, slot);
 		Robot.mDebugger.addPoint("updateGainsIfChanged");
 		boolean areGainsEqual = !requiresGains || Objects.equals(gains, mLastGains.get(slot));
