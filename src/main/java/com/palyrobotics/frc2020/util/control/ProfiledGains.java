@@ -9,6 +9,14 @@ public class ProfiledGains extends Gains {
 	public ProfiledGains() {
 	}
 
+	public ProfiledGains(double p, double i, double d, double f, double iZone, double iMax, double acceleration, double velocity, double allowableError, double minimumOutputVelocity) {
+		super(p, i, d, f, iZone, iMax);
+		this.acceleration = acceleration;
+		this.velocity = velocity;
+		this.allowableError = allowableError;
+		this.minimumOutputVelocity = minimumOutputVelocity;
+	}
+
 	@Override // Auto-generated
 	public int hashCode() {
 		return Objects.hash(super.hashCode(), acceleration, velocity, allowableError, minimumOutputVelocity);
