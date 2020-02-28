@@ -116,8 +116,8 @@ public class HardwareWriter {
 		for (Spark spark : hardware.sparks) {
 			spark.restoreFactoryDefaults();
 			spark.enableVoltageCompensation(kVoltageCompensation);
-			spark.setOpenLoopRampRate(0.075);
-			spark.setClosedLoopRampRate(0.075);
+			spark.setOpenLoopRampRate(0.0825);
+			spark.setClosedLoopRampRate(0.0825);
 			spark.setInverted(true);
 			double maxOutput = 0.8;
 //			spark.getController().setOutputRange(-maxOutput, maxOutput);
@@ -133,8 +133,8 @@ public class HardwareWriter {
 			vTalon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
 			vTalon.configFrameTimings(40, 40);
 		}
-		hardware.leftVTalon.setInverted(true);
-		hardware.rightVTalon.setInverted(false);
+		hardware.leftVTalon.setInverted(false);
+		hardware.rightVTalon.setInverted(true);
 	}
 
 	private void configureIntakeHardware() {
@@ -160,7 +160,7 @@ public class HardwareWriter {
 		hardware.masterSpark.restoreFactoryDefaults();
 		hardware.slaveSpark.restoreFactoryDefaults();
 		hardware.slaveSpark.follow(hardware.masterSpark, true);
-		hardware.masterSpark.setInverted(false);
+		hardware.masterSpark.setInverted(true);
 		/* Flywheel velocity in RPM, adjusted for gearing ratio */
 		hardware.masterEncoder.setVelocityConversionFactor(1.0 / 0.76923076);
 		// TODO: Current limiting and closed/open loop ramp rates
@@ -261,8 +261,8 @@ public class HardwareWriter {
 	private void updateIntake() {
 		var hardware = HardwareAdapter.IntakeHardware.getInstance();
 		hardware.talon.handleReset();
-//		hardware.talon.setOutput(mIntake.getOutput());
-//		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
+		hardware.talon.setOutput(mIntake.getOutput());
+		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
 	}
 
 	public void updateLighting() {

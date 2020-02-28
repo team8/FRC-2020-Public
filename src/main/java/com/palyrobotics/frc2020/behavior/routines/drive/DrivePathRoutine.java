@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 public class DrivePathRoutine extends TimeoutRoutineBase {
 
 	private static final DriveConfig kConfig = Configs.get(DriveConfig.class);
-	private static final double kTimeoutMultiplier = 1.0;
+	private static final double kTimeoutMultiplier = 1.2;
 	private final List<Pose2d> mWaypoints;
 	private double mMaxVelocityMetersPerSecond = kConfig.pathVelocityMetersPerSecond,
 			mMaxAccelerationMetersPerSecondSq = kConfig.pathAccelerationMetersPerSecondSquared;
