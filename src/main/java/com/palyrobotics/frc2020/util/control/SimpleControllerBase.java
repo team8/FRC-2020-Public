@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
+import com.palyrobotics.frc2020.robot.Robot;
 import com.palyrobotics.frc2020.util.config.Configs;
 
 public abstract class SimpleControllerBase<TController extends Controller> {
@@ -29,16 +30,21 @@ public abstract class SimpleControllerBase<TController extends Controller> {
 
 	public boolean setOutput(ControllerOutput output) {
 		ControllerOutput.Mode mode = output.getControlMode();
+		Robot.mDebugger.addPoint("getControlMode");
 		// Checks to make sure we are using this properly
 		boolean isProfiled = mode == ControllerOutput.Mode.PROFILED_POSITION || mode == ControllerOutput.Mode.PROFILED_VELOCITY,
 				requiresGains = isProfiled || mode == ControllerOutput.Mode.POSITION || mode == ControllerOutput.Mode.VELOCITY;
 		Gains gains = output.getGains();
+		Robot.mDebugger.addPoint("getGains");
 		// Slot is determined based on control mode
 		// TODO add feature to add custom slots
 		int slot = sModeToSlot.getOrDefault(mode, 0);
 		updateGainsIfChanged(gains, slot);
+		Robot.mDebugger.addPoint("updateGainsIfChanged");
 		boolean areGainsEqual = !requiresGains || Objects.equals(gains, mLastGains.get(slot));
+		Robot.mDebugger.addPoint("areGainsEqual");
 		double reference = output.getReference(), arbitraryPercentOutput = output.getArbitraryDemand();
+		Robot.mDebugger.addPoint("getReference and arbitraryPercentOutput");
 		if (!areGainsEqual || slot != mLastSlot || mode != mLastMode || reference != mLastReference || arbitraryPercentOutput != mLastArbitraryPercentOutput) {
 			if (setReference(mode, slot, reference, arbitraryPercentOutput)) {
 				mLastSlot = slot;
@@ -50,6 +56,7 @@ public abstract class SimpleControllerBase<TController extends Controller> {
 					// when necessary.
 					// All other variables are trivial to set.
 					mLastGains.put(slot, Configs.copy(gains));
+					Robot.mDebugger.addPoint("mLastGains.put");
 				}
 				return true;
 				// System.out.printf("%s, %d, %f, %f, %s%n", type, slot, reference,
