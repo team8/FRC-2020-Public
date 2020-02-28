@@ -32,9 +32,9 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 						new IndexerFeedAllRoutine(3, false, false)));
 
 		var turnAndGetBalls = new SequentialRoutine(
-				new DrivePathRoutine(newWaypoint(35, -20, 90))
+				new DrivePathRoutine(newWaypoint(30, -20, 90))
 						.driveInReverse()
-						.setMovement(2.0, 3.0),
+						.setMovement(2.0, 4.0),
 				new ParallelRoutine(
 						new IntakeBallRoutine(6),
 						new IndexerTimeRoutine(6),

@@ -183,7 +183,8 @@ public class OperatorInterface {
 		if (mOperatorXboxController.getRightTriggerPressed()) {
 			commands.setShooterFlywheelSpinUpVelocity(mShooterConfig.noTargetSpinUpVelocity);
 			commands.setShooterVisionAssisted(commands.visionWantedPipeline);
-			commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
+			commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
+			commands.intakeWantedState = Intake.State.STOW;
 			commands.wantedCompression = false;
 		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
 			commands.setShooterIdle();

@@ -17,10 +17,6 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 	private final boolean mWaitForFlywheel;
 	private boolean mDoReverse;
 
-	public IndexerFeedAllRoutine() {
-		this(5.0);
-	}
-
 	public IndexerFeedAllRoutine(double timeoutSeconds) {
 		this(timeoutSeconds, false, true);
 	}
@@ -47,7 +43,7 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 				commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
 			}
 		}
-		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
+		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 	}
 
 	@Override
