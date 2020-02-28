@@ -55,7 +55,12 @@ public abstract class SimpleControllerBase<TController extends Controller> {
 					// Special check since the copy function creates garbage and should only be done
 					// when necessary.
 					// All other variables are trivial to set.
-					mLastGains.put(slot, Configs.copy(gains));
+					if (isProfiled) {
+						var profiledGains = (ProfiledGains) gains;
+						mLastGains.put(slot, new ProfiledGains(gains.p, gains.i, gains.d, gains.f, gains.iZone, gains.iMax, profiledGains.acceleration, profiledGains.velocity, profiledGains.allowableError, profiledGains.minimumOutputVelocity));
+					} else {
+						mLastGains.put(slot, new Gains(gains.p, gains.i, gains.d, gains.f, gains.iZone, gains.iMax));
+					}
 					Robot.mDebugger.addPoint("mLastGains.put");
 				}
 				return true;
