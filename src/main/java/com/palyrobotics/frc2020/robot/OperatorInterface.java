@@ -148,7 +148,7 @@ public class OperatorInterface {
 //			commands.lightingWantedState = Lighting.State.CLIMBING;
 //		}
 
-		if (state.indexerHasBackBall) {
+		if (state.shooterHasBall) {
 			commands.lightingWantedState = Lighting.State.BALL_SHOT;
 		}
 	}
