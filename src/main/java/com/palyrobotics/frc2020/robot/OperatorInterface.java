@@ -88,7 +88,6 @@ public class OperatorInterface {
 		if (commands.climberWantedState != Climber.State.MANUAL && handleDeadBand(commands.climberWantedManualPercentOutput, kDeadBand) != 0) {
 			commands.climberWantedState = Climber.State.MANUAL;
 		}
-//		}
 	}
 
 	private void updateDriveCommands(Commands commands) {
