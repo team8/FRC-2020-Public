@@ -96,8 +96,8 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, false, Color.HSV.kAqua));
 					break;
 				case TARGET_FOUND:
-					addToControllers(new FlashingLightsController(mConfig.totalSegmentFirstIndex,
-							mConfig.totalSegmentLastIndex, true, Color.HSV.kYellow, 0.5));
+					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex,
+							mConfig.spinnerSegmentLastIndex, false, Color.HSV.kYellow, 0.5, 2));
 					break;
 				case SPINNER_DONE:
 					addToControllers(new OneColorController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, false, Color.HSV.kBlue, 2));

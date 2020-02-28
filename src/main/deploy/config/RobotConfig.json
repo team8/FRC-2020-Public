@@ -5,7 +5,11 @@
 		"telemetryService"
 	],
 	"enabledSubsystems": [
-		"lighting"
+		"lighting",
+		"drive",
+		"intake",
+		"indexer",
+		"shooter"
 	],
 	"checkFaults": false,
 	"coastDriveWhenDisabled": false,
