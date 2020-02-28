@@ -35,8 +35,8 @@ public class Limelight {
 	 * @return Whether the limelight has any valid targets (0 or 1)
 	 */
 	public boolean isTargetFound() {
-//		return mTable.getEntry("tv").getDouble(0.0) != 0.0;
-		return true;
+		return mTable.getEntry("tv").getDouble(0.0) != 0.0;
+//		return true;
 	}
 
 	public boolean isAligned() {
