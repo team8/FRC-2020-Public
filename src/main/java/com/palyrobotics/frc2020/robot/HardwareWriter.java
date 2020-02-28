@@ -120,7 +120,7 @@ public class HardwareWriter {
 			spark.setClosedLoopRampRate(0.075);
 			spark.setInverted(true);
 			double maxOutput = 0.8;
-			spark.getController().setOutputRange(-maxOutput, maxOutput);
+//			spark.getController().setOutputRange(-maxOutput, maxOutput);
 			spark.setSmartCurrentLimit((int) Math.round(40.0 / maxOutput));
 			spark.setSecondaryCurrentLimit(50.0 / maxOutput);
 		}
