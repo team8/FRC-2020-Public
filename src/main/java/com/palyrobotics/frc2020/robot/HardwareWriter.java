@@ -232,13 +232,19 @@ public class HardwareWriter {
 	private void updateIndexer() {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
 		hardware.vTalons.forEach(Talon::handleReset);
+		Robot.mDebugger.addPoint("handleReset");
 		hardware.masterSpark.setOutput(mIndexer.getMasterSparkOutput());
-		Robot.mDebugger.addPoint("masterSparkOutput");
+		Robot.mDebugger.addPoint("masterSpark.setOutput");
 		hardware.slaveSpark.setOutput(mIndexer.getSlaveSparkOutput());
+		Robot.mDebugger.addPoint("slaveSpark.setOutput");
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
+		Robot.mDebugger.addPoint("hopperSolenoid.setExtended");
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
+		Robot.mDebugger.addPoint("blockingSolenoid.setExtended");
 		hardware.leftVTalon.setOutput(mIndexer.getLeftVTalonOutput());
+		Robot.mDebugger.addPoint("leftVTalon.setOutput");
 		hardware.rightVTalon.setOutput(mIndexer.getRightVTalonOutput());
+		Robot.mDebugger.addPoint("rightVTalon.setOutput");
 //		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
 //		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
 //		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
@@ -255,8 +261,8 @@ public class HardwareWriter {
 	private void updateIntake() {
 		var hardware = HardwareAdapter.IntakeHardware.getInstance();
 		hardware.talon.handleReset();
-		hardware.talon.setOutput(mIntake.getOutput());
-		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
+//		hardware.talon.setOutput(mIntake.getOutput());
+//		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
 	}
 
 	public void updateLighting() {
@@ -267,9 +273,13 @@ public class HardwareWriter {
 	private void updateShooter() {
 		var hardware = HardwareAdapter.ShooterHardware.getInstance();
 		handleReset(hardware.masterSpark, hardware.slaveSpark);
+//		Robot.mDebugger.addPoint("handleReset");
 		hardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
+//		Robot.mDebugger.addPoint("masterSpark.setOutput");
 		hardware.blockingSolenoid.setExtended(mShooter.getBlockingOutput());
+//		Robot.mDebugger.addPoint("blockingSolenoid.setOutput");
 		hardware.hoodSolenoid.setExtended(mShooter.getHoodOutput());
+//		Robot.mDebugger.addPoint("hoodSolenoid.setOutput");
 		mRumbleOutput |= mShooter.getRumbleOutput();
 	}
 
