@@ -18,7 +18,7 @@ public class FlashingLightsController extends Lighting.LEDController {
 	 * @param flashedColor Color to be flashed on white background
 	 */
 
-	public FlashingLightsController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV flashedColor, int delay) {
+	public FlashingLightsController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV flashedColor, double delay) {
 		super(startIndex, lastIndex, noDestroy);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
