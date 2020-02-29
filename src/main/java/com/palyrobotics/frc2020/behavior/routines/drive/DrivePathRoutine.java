@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2020.behavior.routines.drive;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import com.palyrobotics.frc2020.behavior.TimeoutRoutineBase;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
@@ -14,6 +15,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
 public class DrivePathRoutine extends TimeoutRoutineBase {
 
@@ -23,6 +25,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	private double mMaxVelocityMetersPerSecond = kConfig.pathVelocityMetersPerSecond,
 			mMaxAccelerationMetersPerSecondSq = kConfig.pathAccelerationMetersPerSecondSquared;
 	private double mStartingVelocityMetersPerSecond, mEndingVelocityMetersPerSecond;
+	private List<TrajectoryConstraint> mConstraints = new ArrayList<>();
 	private boolean mShouldReversePath, mDriveInReverse;
 	private Trajectory mTrajectory;
 
@@ -45,6 +48,11 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		return this;
 	}
 
+	public DrivePathRoutine addConstraint(TrajectoryConstraint constraint) {
+		mConstraints.add(constraint);
+		return this;
+	}
+
 	public DrivePathRoutine endingVelocity(double velocityMetersPerSecond) {
 		mEndingVelocityMetersPerSecond = velocityMetersPerSecond;
 		return this;
@@ -53,6 +61,25 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	public DrivePathRoutine setMovement(double velocityMetersPerSecond, double accelerationMetersPerSecondPerSecond) {
 		mMaxVelocityMetersPerSecond = velocityMetersPerSecond;
 		mMaxAccelerationMetersPerSecondSq = accelerationMetersPerSecondPerSecond;
+		return this;
+	}
+
+	public DrivePathRoutine limitWhen(double maxVelocityMetersPerSecond, Predicate<Pose2d> predicate) {
+		mConstraints.add(new TrajectoryConstraint() {
+
+			@Override
+			public double getMaxVelocityMetersPerSecond(Pose2d poseMeters, double curvatureRadPerMeter, double velocityMetersPerSecond) {
+				if (predicate.test(poseMeters)) {
+					return maxVelocityMetersPerSecond;
+				}
+				return Double.POSITIVE_INFINITY;
+			}
+
+			@Override
+			public MinMax getMinMaxAccelerationMetersPerSecondSq(Pose2d poseMeters, double curvatureRadPerMeter, double velocityMetersPerSecond) {
+				return new MinMax(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+			}
+		});
 		return this;
 	}
 
@@ -93,6 +120,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 			trajectoryConfig.setReversed(mDriveInReverse);
 			trajectoryConfig.setStartVelocity(mStartingVelocityMetersPerSecond);
 			trajectoryConfig.setEndVelocity(mEndingVelocityMetersPerSecond);
+			trajectoryConfig.addConstraints(mConstraints);
 			mTrajectory = TrajectoryGenerator.generateTrajectory(waypointsWithStart, trajectoryConfig);
 			mTimeout = mTrajectory.getTotalTimeSeconds() * kTimeoutMultiplier;
 		} else {

@@ -1,14 +1,21 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.util.Map;
-import java.util.Set;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
+import com.palyrobotics.frc2020.behavior.MultipleRoutineBase;
+import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
+import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
@@ -26,6 +33,9 @@ import com.palyrobotics.frc2020.vision.LimelightControlMode;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 public class Robot extends TimedRobot {
 
@@ -62,6 +72,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotInit() {
+		LiveWindow.disableAllTelemetry();
+
 		String setupSummary = setupSubsystemsAndServices();
 
 		if (kCanUseHardware) mHardwareWriter.configureHardware(mEnabledSubsystems);
@@ -80,40 +92,44 @@ public class Robot extends TimedRobot {
 	@Override
 	public void simulationInit() {
 //		Log.info(kLoggerTag, "Writing path CSV file...");
-//		pathToCsv();
+		pathToCsv();
 	}
 
-	//	private void pathToCsv() {
-//		var drivePath = new StartCenterRendezvousThree().getRoutine();
-//		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
-//			writer.write("x,y" + '\n');
-//			var seq = (SequentialRoutine) drivePath;
-//			List<RoutineBase> routines = seq.getRoutines();
-//			Pose2d lastPoint = new Pose2d();
-//			for (RoutineBase routine : routines) {
-//				if (routine instanceof DriveSetOdometryRoutine) {
-//					lastPoint = ((DriveSetOdometryRoutine) routine).getTargetPose();
-//				} else if (routine instanceof DrivePathRoutine) {
-//					var drivePathRoutine = (DrivePathRoutine) routine;
-//					drivePathRoutine.generateTrajectory(lastPoint);
-//					var path = drivePathRoutine.getTrajectory().getStates();
-//					for (var point : path) {
-//						lastPoint = point.poseMeters;
-//						writer.write(String.format("%f,%f%n", point.poseMeters.getTranslation().getX(),
-//								point.poseMeters.getTranslation().getY()));
-//					}
-//				} else if (routine instanceof DriveYawRoutine) {
-//					// do nothing
-//				}
-//			}
-//			// for (Trajectory.State state : drivePath.getTrajectory().getStates()) {
-//			// var point = state.poseMeters.getTranslation();
-//			// writer.write(String.format("%f,%f%n", point.getX(), point.getY()));
-//			// }
-//		} catch (IOException writeException) {
-//			writeException.printStackTrace();
-//		}
-//	}
+	private void pathToCsv() {
+		var drivePath = new StartCenterFriendlyTrenchThreeShootThree().getRoutine();
+		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
+			writer.write("x,y,d" + '\n');
+			var points = new LinkedList<Pose2d>();
+			recurseRoutine(drivePath, points);
+			for (Pose2d pose : points) {
+				Translation2d point = pose.getTranslation();
+				writer.write(String.format("%f,%f,%f%n", point.getY() * -39.37, point.getX() * 39.37, pose.getRotation().getDegrees()));
+			}
+		} catch (IOException writeException) {
+			writeException.printStackTrace();
+		}
+	}
+
+	private void recurseRoutine(RoutineBase routine, Deque<Pose2d> points) {
+		if (routine instanceof MultipleRoutineBase) {
+			var multiple = (MultipleRoutineBase) routine;
+			for (RoutineBase childRoutine : multiple.getRoutines()) {
+				recurseRoutine(childRoutine, points);
+			}
+		} else if (routine instanceof DriveSetOdometryRoutine) {
+			var odometry = (DriveSetOdometryRoutine) routine;
+			var pose = odometry.getTargetPose();
+			points.addLast(pose);
+		} else if (routine instanceof DrivePathRoutine) {
+			var path = (DrivePathRoutine) routine;
+			System.out.println(points.getLast());
+			path.generateTrajectory(points.getLast());
+			for (Trajectory.State state : path.getTrajectory().getStates()) {
+				var pose = state.poseMeters;
+				points.addLast(pose);
+			}
+		}
+	}
 
 	@Override
 	public void disabledInit() {

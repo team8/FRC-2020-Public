@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 public class RamseteDriveController extends Drive.DriveController {
 
-	public static final double kB = 2.1, kZeta = 0.8;
+	public static final double kB = 2.0, kZeta = 1.3;
 
 	private final Timer mTimer = new Timer();
 	private RamseteController mController;
