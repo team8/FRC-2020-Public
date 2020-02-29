@@ -128,10 +128,7 @@ public class OperatorInterface {
 		if (mTurnStick.getRawButton(3) || mTurnStick.getRawButton(4) && mLimelight.isAligned()) {
 			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
 		}
-
-		if (state.climberCurrentDraw >= mClimberConfig.currentDrawWhenClimbing) {
-			commands.lightingWantedState = Lighting.State.CLIMBING;
-		}
+		
 		if (state.shooterHasBall) {
 			commands.lightingWantedState = Lighting.State.BALL_SHOT;
 		}
