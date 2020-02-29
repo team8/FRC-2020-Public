@@ -11,9 +11,6 @@ public abstract class MultipleRoutineBase extends RoutineBase {
 	}
 
 	public MultipleRoutineBase(List<RoutineBase> routines) {
-		if (routines.size() <= 1) {
-			throw new IllegalArgumentException("Multiple routines should have more than one routine!");
-		}
 		mRoutines = routines;
 	}
 

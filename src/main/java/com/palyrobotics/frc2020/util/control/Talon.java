@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.esotericsoftware.minlog.Log;
+import com.palyrobotics.frc2020.robot.HardwareWriter;
 
 public class Talon extends TalonSRX implements Controller {
 
@@ -65,6 +66,7 @@ public class Talon extends TalonSRX implements Controller {
 					convertedReference = reference;
 					break;
 			}
+			mController.selectProfileSlot(slot, HardwareWriter.kPidIndex);
 			mController.set(controllerMode, convertedReference, DemandType.ArbitraryFeedForward, arbitraryPercentOutput);
 			return true;
 		}

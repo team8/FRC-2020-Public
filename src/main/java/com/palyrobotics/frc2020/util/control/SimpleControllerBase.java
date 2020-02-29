@@ -63,9 +63,8 @@ public abstract class SimpleControllerBase<TController extends Controller> {
 					}
 //					Robot.mDebugger.addPoint("mLastGains.put");
 				}
+//				System.out.printf("%s, %d, %f%n", mode, slot, reference);
 				return true;
-				// System.out.printf("%s, %d, %f, %f, %s%n", type, slot, reference,
-				// arbitraryPercentOutput, Configs.toJson(gains));
 			} else {
 				Log.error("controller", String.format("Error updating output on controller: %s", getName()));
 			}
