@@ -97,7 +97,7 @@ public class Lighting extends SubsystemBase {
 					break;
 				case TARGET_FOUND:
 					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex,
-							mConfig.spinnerSegmentLastIndex, false, Color.HSV.kYellow, 0.5, 2));
+							mConfig.spinnerSegmentLastIndex, false, Color.HSV.kYellow, 1, 2));
 					break;
 				case SPINNER_DONE:
 					addToControllers(new OneColorController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, false, Color.HSV.kBlue, 2));
@@ -106,7 +106,7 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
 							mConfig.frontLeftSegmentLastIndex, true, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
 					addToControllers(new PulseController(mConfig.frontRightSegmentLastIndex, mConfig.frontRightSegmentFirstIndex,
-							false, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
+							true, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
 					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 5));
 					break;
 				case CLIMBING:
@@ -121,7 +121,7 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, false, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
 					break;
 				case ROBOT_ALIGNED:
-					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kLime, 0.15, 2));
+					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kLime, 3, 2));
 					break;
 				case SHOOTER_FULLRPM:
 					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kGreen, 0.5, 5));
