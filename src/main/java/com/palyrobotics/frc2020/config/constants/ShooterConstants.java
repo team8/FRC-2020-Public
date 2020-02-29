@@ -29,6 +29,7 @@ public class ShooterConstants {
 		kTargetDistanceToVelocity.put(HoodState.MIDDLE, middleMap);
 		/* High Velocities */
 		var highMap = new InterpolatingDoubleTreeMap();
+
 		highMap.put(215.0, 3450.0);
 		highMap.put(237.0, 3550.0);
 		highMap.put(300.0, 3750.0);
