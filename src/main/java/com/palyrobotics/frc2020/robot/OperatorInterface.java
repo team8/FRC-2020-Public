@@ -43,16 +43,15 @@ public class OperatorInterface {
 
 		commands.shouldClearCurrentRoutines = mDriveStick.getTriggerPressed();
 
-		updateClimberCommands(commands, state);
+		updateClimberCommands(commands);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
-//		updateSpinnerCommands(commands);
+		updateSpinnerCommands(commands);
 		updateLightingCommands(commands);
 
 		// TODO: remove
 		if (mOperatorXboxController.getAButtonPressed()) {
-			var customVelocity = mShooterConfig.customVelocity;
-			commands.setShooterCustomFlywheelVelocity(customVelocity, Shooter.HoodState.MIDDLE);
+			commands.setShooterCustomFlywheelVelocity(mShooterConfig.noTargetSpinUpVelocity, Shooter.HoodState.LOW);
 		}
 
 		// TODO: remove
@@ -68,12 +67,7 @@ public class OperatorInterface {
 		mOperatorXboxController.updateLastInputs();
 	}
 
-	private void updateClimberCommands(Commands commands, @ReadOnly RobotState state) {
-//		if (DriverStation.getInstance().getMatchTime() < kClimberEnableControlTimeSeconds) {
-		if (mOperatorXboxController.getWindowButtonPressed()) {
-			commands.climberWantedState = Climber.State.CUSTOM_POSITIONING;
-			commands.climberPositionSetpoint = mClimberConfig.climberTopHeight;
-		}
+	private void updateClimberCommands(Commands commands) {
 
 		if (mOperatorXboxController.getDPadUpPressed()) {
 			if (commands.climberWantedState != Climber.State.LOCKED) {
@@ -87,6 +81,8 @@ public class OperatorInterface {
 
 		if (commands.climberWantedState != Climber.State.MANUAL && handleDeadBand(commands.climberWantedManualPercentOutput, kDeadBand) != 0) {
 			commands.climberWantedState = Climber.State.MANUAL;
+		} else if (commands.climberWantedState == Climber.State.IDLE && handleDeadBand(commands.climberWantedManualPercentOutput, kDeadBand) == 0) {
+			commands.climberWantedState = Climber.State.IDLE;
 		}
 	}
 
@@ -197,13 +193,13 @@ public class OperatorInterface {
 			// Shoot one ball
 			commands.addWantedRoutine(new IndexerFeedSingleRoutine());
 		} else if (mOperatorXboxController.getRightBumperPressed()) {
-			commands.addWantedRoutine(new IndexerFeedAllRoutine(5.0, false, true));
+			commands.addWantedRoutine(new IndexerFeedAllRoutine(10.0, false, true));
 		}
 
 	}
 
 	private void updateSpinnerCommands(Commands commands) {
-		if (mOperatorXboxController.getAButtonPressed()) {
+		if (mOperatorXboxController.getMenuButtonPressed()) {
 			commands.addWantedRoutine(new SpinnerRotationControlRoutine());
 		} else if (mOperatorXboxController.getYButtonPressed()) {
 			commands.addWantedRoutine(new SpinnerPositionControlRoutine());
