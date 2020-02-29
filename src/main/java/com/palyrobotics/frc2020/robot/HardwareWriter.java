@@ -133,8 +133,8 @@ public class HardwareWriter {
 			vTalon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
 			vTalon.configFrameTimings(40, 40);
 		}
-		hardware.leftVTalon.setInverted(false);
-		hardware.rightVTalon.setInverted(true);
+		hardware.leftVTalon.setInverted(true);
+		hardware.rightVTalon.setInverted(false);
 	}
 
 	private void configureIntakeHardware() {
