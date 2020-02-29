@@ -1,9 +1,9 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -30,6 +30,7 @@ import com.palyrobotics.frc2020.util.service.TelemetryService;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -40,6 +41,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 public class Robot extends TimedRobot {
 
 	public static final double kPeriod = 0.02;
+	public static final String robotName = getRobotName();
 	private static final String kLoggerTag = Util.classToJsonName(Robot.class);
 	private static final boolean kCanUseHardware = RobotBase.isReal() || !System.getProperty("os.name").startsWith("Mac");
 	private final RobotState mRobotState = new RobotState();
@@ -68,6 +70,16 @@ public class Robot extends TimedRobot {
 
 	public Robot() {
 		super(kPeriod);
+	}
+
+	private static String getRobotName() {
+		Path path = Paths.get(Filesystem.getOperatingDirectory().toString(), "name.cfg");
+		try (BufferedReader reader = Files.newBufferedReader(path)) {
+			return reader.readLine();
+		} catch (IOException readException) {
+			Log.warn(kLoggerTag, String.format("Did not find robot name at %s. Using default.", path));
+			return "Nari";
+		}
 	}
 
 	@Override
@@ -122,7 +134,6 @@ public class Robot extends TimedRobot {
 			points.addLast(pose);
 		} else if (routine instanceof DrivePathRoutine) {
 			var path = (DrivePathRoutine) routine;
-			System.out.println(points.getLast());
 			path.generateTrajectory(points.getLast());
 			for (Trajectory.State state : path.getTrajectory().getStates()) {
 				var pose = state.poseMeters;
