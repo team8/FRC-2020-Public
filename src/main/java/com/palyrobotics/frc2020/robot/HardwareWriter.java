@@ -134,6 +134,7 @@ public class HardwareWriter {
 			vTalon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
 			vTalon.configFrameTimings(40, 40);
 		}
+
 		hardware.leftVTalon.setInverted(true); // Cbot true
 		hardware.rightVTalon.setInverted(true); // Cbot true
 	}
