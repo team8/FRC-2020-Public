@@ -141,9 +141,10 @@ public class OperatorInterface {
 		}
 		if (mLimelight.isTargetFound()) {
 			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
-			if (mTurnStick.getRawButton(3) || mTurnStick.getRawButton(4) && mLimelight.getYawToTarget() <= mVisionConfig.acceptableYawError) {
-				commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
-			}
+		}
+
+		if (mTurnStick.getRawButton(3) || mTurnStick.getRawButton(4) && mLimelight.isAligned()) {
+			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
 		}
 
 		if (state.climberCurrentDraw >= mClimberConfig.currentDrawWhenClimbing) {
@@ -151,6 +152,10 @@ public class OperatorInterface {
 		}
 		if (state.shooterHasBall) {
 			commands.lightingWantedState = Lighting.State.BALL_SHOT;
+		}
+
+		if (Math.abs(state.shooterFlywheelVelocity - commands.getShooterWantedCustomFlywheelVelocity()) < 400) {
+			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
 		}
 	}
 

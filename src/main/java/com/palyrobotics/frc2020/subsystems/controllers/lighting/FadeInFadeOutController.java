@@ -34,6 +34,7 @@ public class FadeInFadeOutController extends Lighting.LEDController {
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mDuration = duration;
+		kPriority = 1;
 		mTimer.start();
 	}
 
