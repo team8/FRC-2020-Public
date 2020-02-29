@@ -134,8 +134,13 @@ public class HardwareWriter {
 			vTalon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
 			vTalon.configFrameTimings(40, 40);
 		}
+<<<<<<< HEAD
 		hardware.leftVTalon.setInverted(true); // Cbot true
 		hardware.rightVTalon.setInverted(true); // Cbot true
+=======
+		hardware.leftVTalon.setInverted(true); // Cbot false
+		hardware.rightVTalon.setInverted(false); // Cbot true
+>>>>>>> pbot stuff
 	}
 
 	private void configureIntakeHardware() {
@@ -161,7 +166,7 @@ public class HardwareWriter {
 		hardware.masterSpark.restoreFactoryDefaults();
 		hardware.slaveSpark.restoreFactoryDefaults();
 		hardware.slaveSpark.follow(hardware.masterSpark, true);
-		hardware.masterSpark.setInverted(true);
+		hardware.masterSpark.setInverted(false);
 		/* Flywheel velocity in RPM, adjusted for gearing ratio */
 		hardware.masterEncoder.setVelocityConversionFactor(1.0 / 0.76923076);
 		// TODO: Current limiting and closed/open loop ramp rates
