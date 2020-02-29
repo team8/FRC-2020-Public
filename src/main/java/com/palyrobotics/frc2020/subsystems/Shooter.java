@@ -34,6 +34,8 @@ public class Shooter extends SubsystemBase {
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
 	private ControllerOutput mFlywheelOutput = new ControllerOutput();
 	private boolean mHoodOutput, mBlockingOutput, mRumbleOutput;
+	private boolean targetVelocitySelected = false;
+	private double previousTargetVelocity;
 	private Timer mRumbleTimer = new Timer();
 	private boolean mIsReadyToShoot;
 	// TODO: Change the size of the median filter to better or worse filter out values
@@ -53,7 +55,7 @@ public class Shooter extends SubsystemBase {
 		/* Hood State */
 		HoodState hoodState = updateHood(commands, state, targetDistanceInches);
 		/* Flywheel Velocity */
-		double targetFlywheelVelocity = getTargetFlywheelVelocity(commands, hoodState, targetDistanceInches);
+		double targetFlywheelVelocity = getTargetFlywheelVelocity(commands, hoodState, targetDistanceInches, state);
 		if (targetFlywheelVelocity > kEpsilon) {
 			mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);
 		} else {
@@ -69,8 +71,8 @@ public class Shooter extends SubsystemBase {
 		updateRumble(commands, justChangedReadyToShoot);
 		/* Telemetry */
 		LiveGraph.add("shooterTargetDistance", targetDistanceInches == null ? -1 : targetDistanceInches);
-//		LiveGraph.add("shooterTargetVelocity", targetFlywheelVelocity);
-//		LiveGraph.add("shooterCurrentVelocity", state.shooterFlywheelVelocity);
+		LiveGraph.add("shooterTargetVelocity", targetFlywheelVelocity);
+		LiveGraph.add("shooterCurrentVelocity", state.shooterFlywheelVelocity);
 //		TelemetryService.putArbitrary("shooterTargetDistance", targetDistanceInches);
 //		TelemetryService.putArbitrary("shooterTargetVelocity", targetFlywheelVelocity);
 //		TelemetryService.putArbitrary("shooterFlywheelVelocity", state.shooterFlywheelVelocity);
@@ -83,7 +85,7 @@ public class Shooter extends SubsystemBase {
 		return null;
 	}
 
-	private double getTargetFlywheelVelocity(@ReadOnly Commands commands, HoodState hoodState, Double targetDistanceInches) {
+	private double getTargetFlywheelVelocity(@ReadOnly Commands commands, HoodState hoodState, Double targetDistanceInches, RobotState state) {
 		double targetFlywheelVelocity;
 		switch (commands.getShooterWantedState()) {
 			case CUSTOM_VELOCITY:
@@ -93,7 +95,16 @@ public class Shooter extends SubsystemBase {
 				if (targetDistanceInches == null) {
 					targetFlywheelVelocity = commands.getShooterWantedCustomFlywheelVelocity();
 				} else {
-					targetFlywheelVelocity = kTargetDistanceToVelocity.get(hoodState).getInterpolated(targetDistanceInches);
+					if (!targetVelocitySelected) {
+						targetFlywheelVelocity = kTargetDistanceToVelocity.get(hoodState).getInterpolated(targetDistanceInches);
+						previousTargetVelocity = targetFlywheelVelocity;
+						targetVelocitySelected = true;
+					} else {
+						targetFlywheelVelocity = previousTargetVelocity;
+					}
+					if (state.driveVelocityMetersPerSecond > mConfig.acceptableDriveVelocity) {
+						targetVelocitySelected = false;
+					}
 				}
 				break;
 			default:

@@ -14,7 +14,6 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.ColorMatch;
 
@@ -46,34 +45,15 @@ public class HardwareReader {
 	 */
 	void updateState(Set<SubsystemBase> enabledSubsystems, RobotState state) {
 		readGameAndFieldState(state);
-		if (enabledSubsystems.contains(Climber.getInstance())) readClimberState(state);
 		if (enabledSubsystems.contains(Drive.getInstance())) readDriveState(state);
 		if (enabledSubsystems.contains(Indexer.getInstance())) readIndexerState(state);
 		if (enabledSubsystems.contains(Intake.getInstance())) readIntakeState(state);
 		if (enabledSubsystems.contains(Shooter.getInstance())) readShooterState(state);
+		if (enabledSubsystems.contains(Spinner.getInstance())) readSpinnerState(state);
 	}
 
 	private void readGameAndFieldState(RobotState state) {
 		state.gameData = DriverStation.getInstance().getGameSpecificMessage();
-		state.detectedRGBValues = SpinnerHardware.getInstance().colorSensor.getColor();
-		state.closestColorRGB = mColorMatcher.matchClosestColor(state.detectedRGBValues);
-		if (state.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
-			state.closestColorString = "Cyan";
-		} else if (state.closestColorRGB.color == SpinnerConstants.kYellowCPTarget) {
-			state.closestColorString = "Yellow";
-		} else if (state.closestColorRGB.color == SpinnerConstants.kGreenCPTarget) {
-			state.closestColorString = "Green";
-		} else if (state.closestColorRGB.color == SpinnerConstants.kRedCPTarget) {
-			state.closestColorString = "Red";
-		}
-		state.closestColorConfidence = state.closestColorRGB.confidence;
-	}
-
-	private void readClimberState(RobotState state) {
-		var hardware = ClimberHardware.getInstance();
-		state.climberPosition = hardware.sparkEncoder.getPosition();
-		state.climberVelocity = hardware.sparkEncoder.getVelocity();
-		checkSparkFaults(hardware.spark);
 	}
 
 	private void readDriveState(RobotState state) {
@@ -130,7 +110,22 @@ public class HardwareReader {
 		state.shooterHoodIsInTransition = hardware.hoodSolenoid.isInTransition() || hardware.blockingSolenoid.isInTransition();
 		checkSparkFaults(hardware.masterSpark);
 		checkSparkFaults(hardware.slaveSpark);
-		LiveGraph.add("applied", hardware.masterSpark.getAppliedOutput());
+//		LiveGraph.add("applied", hardware.masterSpark.getAppliedOutput());
+	}
+
+	private void readSpinnerState(RobotState state) {
+		state.detectedRGBValues = SpinnerHardware.getInstance().colorSensor.getColor();
+		state.closestColorRGB = mColorMatcher.matchClosestColor(state.detectedRGBValues);
+		if (state.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
+			state.closestColorString = "Cyan";
+		} else if (state.closestColorRGB.color == SpinnerConstants.kYellowCPTarget) {
+			state.closestColorString = "Yellow";
+		} else if (state.closestColorRGB.color == SpinnerConstants.kGreenCPTarget) {
+			state.closestColorString = "Green";
+		} else if (state.closestColorRGB.color == SpinnerConstants.kRedCPTarget) {
+			state.closestColorString = "Red";
+		}
+		state.closestColorConfidence = state.closestColorRGB.confidence;
 	}
 
 	private void checkSparkFaults(Spark spark) {

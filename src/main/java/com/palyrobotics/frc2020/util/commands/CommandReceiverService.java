@@ -227,7 +227,7 @@ public class CommandReceiverService implements RobotService {
 //				commands.addWantedRoutine(new ShooterCustomVelocityRoutine(20.0, manualSpeed, hoodState));
 				commands.wantedCompression = false;
 				commands.addWantedRoutines(new ShooterCustomVelocityRoutine(15.0, manualSpeed, hoodState),
-						new SequentialRoutine(new TimedRoutine(3.0), new IndexerFeedAllRoutine(7.0)));
+						new SequentialRoutine(new TimedRoutine(3.0), new IndexerFeedAllRoutine(7.0, true, true)));
 				return String.format("Running with hood state %s and velocity %f", hoodState, manualSpeed);
 			}
 			default: {

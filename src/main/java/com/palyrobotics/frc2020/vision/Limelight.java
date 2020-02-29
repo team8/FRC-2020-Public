@@ -228,8 +228,8 @@ public class Limelight {
 //		if (Math.abs(add) > 0.2) _distance += add - Math.signum(add) * 0.2;
 //		return _distance;
 		// Tuned 2/10/20 using lowest mounting on original design
-		double oneTimesZoomAngle = 36.60555401;
-		double twoTimesZoomAngle = 31.88412543;
+		double oneTimesZoomAngle = 35.15378286; // pbot 36.60555401
+		double twoTimesZoomAngle = 30.85378286; // pbot 31.88412543
 		double a2 = getPitchToTarget();
 		double h1 = 32.75;
 		double h2 = 90.5;

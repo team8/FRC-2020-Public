@@ -134,7 +134,7 @@ public class HardwareWriter {
 			vTalon.configFrameTimings(40, 40);
 		}
 		hardware.leftVTalon.setInverted(true);
-		hardware.rightVTalon.setInverted(false);
+		hardware.rightVTalon.setInverted(true);
 	}
 
 	private void configureIntakeHardware() {

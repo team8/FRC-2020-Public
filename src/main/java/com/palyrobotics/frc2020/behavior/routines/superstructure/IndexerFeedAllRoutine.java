@@ -15,11 +15,7 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 
 	private final IndexerConfig mConfig = Configs.get(IndexerConfig.class);
 	private final boolean mWaitForFlywheel;
-	private boolean mDoReverse;
-
-	public IndexerFeedAllRoutine(double timeoutSeconds) {
-		this(timeoutSeconds, false, true);
-	}
+	private boolean mDoReverse, mHasSpunUpOnce = false;
 
 	public IndexerFeedAllRoutine(double timeoutSeconds, boolean waitForFlywheel, boolean doReverse) {
 		super(timeoutSeconds);
@@ -30,20 +26,25 @@ public class IndexerFeedAllRoutine extends TimeoutRoutineBase {
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		boolean shouldReverse = mTimer.get() < mConfig.reverseTime;
-		if (!mWaitForFlywheel || state.shooterIsReadyToShoot) {
-			if (mDoReverse) {
-				commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.FEED_ALL;
-			} else {
-				commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
-			}
-		} else {
-			if (mDoReverse) {
-				commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.WAITING_TO_FEED;
-			} else {
-				commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
-			}
+		if (state.shooterIsReadyToShoot) {
+			mHasSpunUpOnce = true;
 		}
-		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
+		if (mHasSpunUpOnce) {
+			if (!mWaitForFlywheel || state.shooterIsReadyToShoot) {
+				if (mDoReverse) {
+					commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.FEED_ALL;
+				} else {
+					commands.indexerWantedBeltState = Indexer.BeltState.FEED_ALL;
+				}
+			} else {
+				if (mDoReverse) {
+					commands.indexerWantedBeltState = shouldReverse ? Indexer.BeltState.REVERSING : Indexer.BeltState.WAITING_TO_FEED;
+				} else {
+					commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
+				}
+			}
+			commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
+		}
 	}
 
 	@Override

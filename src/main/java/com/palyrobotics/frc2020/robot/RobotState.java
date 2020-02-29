@@ -24,9 +24,6 @@ public class RobotState {
 
 	public static final String kLoggerTag = Util.classToJsonName(RobotState.class);
 
-	/* Climber */
-	public double climberPosition, climberVelocity;
-
 	/* Drive */
 	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());
 	public double driveYawDegrees, driveYawAngularVelocityDegrees;
@@ -68,7 +65,7 @@ public class RobotState {
 
 	public void updateOdometry(double yawDegrees, double leftMeters, double rightMeters) {
 		drivePoseMeters = driveOdometry.update(Rotation2d.fromDegrees(yawDegrees), leftMeters, rightMeters);
-		ChassisSpeeds speeds = DriveConstants.kKinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(driveLeftVelocity, driveRightPosition));
+		ChassisSpeeds speeds = DriveConstants.kKinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(driveLeftVelocity, driveRightVelocity));
 		driveVelocityMetersPerSecond = Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2));
 	}
 }
