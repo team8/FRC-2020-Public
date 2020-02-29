@@ -53,7 +53,6 @@ public class OperatorInterface {
 		updateSuperstructure(commands, state);
 		updateSpinnerCommands(commands);
 		updateLightingCommands(commands, state);
-
 		mOperatorXboxController.updateLastInputs();
 	}
 
