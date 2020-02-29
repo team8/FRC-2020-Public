@@ -1,13 +1,13 @@
 {
-  "ledCount" :  35,
+  "ledCount" :  29,
   "frontLeftSegmentFirstIndex"  : 0,
-  "frontLeftSegmentLastIndex"  : 8,
-  "frontRightSegmentFirstIndex"  : 10,
+  "frontLeftSegmentLastIndex"  : 7,
+  "frontRightSegmentFirstIndex"  : 8,
   "frontRightSegmentLastIndex"  : 15,
   "spinnerSegmentFirstIndex" : 16,
-  "spinnerSegmentLastIndex" : 34,
+  "spinnerSegmentLastIndex" : 28,
   "totalSegmentFirstIndex" : 0,
-  "totalSegmentLastIndex" : 34,
+  "totalSegmentLastIndex" : 28,
   "maximumBrightness" : 30,
   "minVoltageToFunction" : 11.5
 }
