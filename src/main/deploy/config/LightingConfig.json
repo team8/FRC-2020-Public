@@ -9,5 +9,5 @@
   "totalSegmentFirstIndex" : 0,
   "totalSegmentLastIndex" : 28,
   "maximumBrightness" : 30,
-  "minVoltageToFunction" : 11.5
+  "minVoltageToFunction" : 12
 }

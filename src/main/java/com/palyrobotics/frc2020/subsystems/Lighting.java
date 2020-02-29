@@ -32,6 +32,7 @@ public class Lighting extends SubsystemBase {
 		protected int mStartIndex;
 		protected int mLastIndex;
 		protected double mSpeed;
+		protected int kPriority;
 
 		protected LEDController(int startIndex, int lastIndex, boolean noDestroy) {
 			for (var i = 0; i <= Math.abs(lastIndex - startIndex); i++) {
@@ -66,7 +67,7 @@ public class Lighting extends SubsystemBase {
 	private LightingConfig mConfig = Configs.get(LightingConfig.class);
 	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
 	private State mState;
-	private List<LEDController> mLEDControllers = new ArrayList<>(); //array of active led controllers
+	private PriorityQueue<LEDController> mLEDControllers = new PriorityQueue<>(0, Comparator.comparingInt(o -> o.kPriority)); //array of active led controllers
 
 	private Lighting() {
 	}
@@ -103,31 +104,31 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new OneColorController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, false, Color.HSV.kBlue, 2));
 					break;
 				case BALL_ENTERED:
-					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
-							mConfig.frontLeftSegmentLastIndex, true, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
-					addToControllers(new PulseController(mConfig.frontRightSegmentLastIndex, mConfig.frontRightSegmentFirstIndex,
-							true, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
-					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 5));
+//					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
+//							mConfig.frontLeftSegmentLastIndex, true, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
+//					addToControllers(new PulseController(mConfig.frontRightSegmentLastIndex, mConfig.frontRightSegmentFirstIndex,
+//							true, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
+//					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 5));
 					break;
 				case CLIMBING:
 					addToControllers(new FadeInFadeOutController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, true, Color.HSV.kPink, 0.5, 3));
 					break;
 				case INTAKE_EXTENDED:
-					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
-							mConfig.frontLeftSegmentLastIndex, false, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1));
-					addToControllers(new PulseController(mConfig.frontRightSegmentFirstIndex,
-							mConfig.frontRightSegmentLastIndex, false, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1));
-					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, false, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
+//					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
+//							mConfig.frontLeftSegmentLastIndex, false, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1));
+//					addToControllers(new PulseController(mConfig.frontRightSegmentFirstIndex,
+//							mConfig.frontRightSegmentLastIndex, false, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1));
+//					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, false, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
 					break;
 				case ROBOT_ALIGNED:
-					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kLime, 3, 2));
+					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, false, Color.HSV.kLime, 2));
 					break;
 				case SHOOTER_FULLRPM:
 					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kGreen, 0.5, 5));
 					break;
 				case BALL_SHOT:
-					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kBlue, 0.25));
+//					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kBlue, 0.25));
 			}
 		}
 		resetLedStrip();

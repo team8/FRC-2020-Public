@@ -33,6 +33,7 @@ public class PulseController extends Lighting.LEDController {
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mTimer.start();
 		mPulse = pulseColorSequence;
+		kPriority = 0;
 		if (lastIndex <= startIndex) {
 			mIsReversed = true;
 		}

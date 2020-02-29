@@ -32,6 +32,7 @@ public class DivergingBandsController extends Lighting.LEDController {
 		mBandLedCount = bandLedCount;
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mTimer.start();
+		kPriority = 0;
 	}
 
 	public DivergingBandsController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration) {
