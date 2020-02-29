@@ -13,6 +13,7 @@ public class PulseController extends Lighting.LEDController {
 	public int mPulseStartIndex;
 	private boolean mIsColorsInitialized;
 	private List<Color.HSV> mPulse;
+	private boolean mIsReversed;
 
 	/**
 	 * Pulses array of color through entire led strip
@@ -32,6 +33,9 @@ public class PulseController extends Lighting.LEDController {
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mTimer.start();
 		mPulse = pulseColorSequence;
+		if (lastIndex <= startIndex) {
+			mIsReversed = true;
+		}
 	}
 
 	@Override
@@ -42,8 +46,13 @@ public class PulseController extends Lighting.LEDController {
 			mIsColorsInitialized = true;
 		}
 		if (Math.round(mTimer.get() / mSpeed) % 2 == 1) {
-			mStartIndex += 1;
-			mLastIndex += 1;
+			if (mIsReversed) {
+				mStartIndex -= 1;
+				mLastIndex -= 1;
+			} else {
+				mStartIndex += 1;
+				mLastIndex += 1;
+			}
 			mTimer.reset();
 		}
 	}
@@ -59,6 +68,10 @@ public class PulseController extends Lighting.LEDController {
 
 	@Override
 	public boolean checkFinished() {
-		return mLastIndex >= mPulseEndIndex;
+		if (mIsReversed) {
+			return mLastIndex <= mPulseEndIndex;
+		} else {
+			return mLastIndex >= mPulseEndIndex;
+		}
 	}
 }
