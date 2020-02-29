@@ -34,7 +34,7 @@ public class Lighting extends SubsystemBase {
 		protected double mSpeed;
 
 		protected LEDController(int startIndex, int lastIndex, boolean noDestroy) {
-			for (var i = startIndex; i <= lastIndex; i++) {
+			for (var i = 0; i <= Math.abs(lastIndex - startIndex); i++) {
 				mOutputs.lightingOutput.add(new Color.HSV());
 			}
 			mNoDestroy = noDestroy;
@@ -96,7 +96,7 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, false, Color.HSV.kAqua));
 					break;
 				case TARGET_FOUND:
-					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex,
+					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex,
 							mConfig.spinnerSegmentLastIndex, false, Color.HSV.kYellow, 0.5, 2));
 					break;
 				case SPINNER_DONE:
@@ -104,10 +104,10 @@ public class Lighting extends SubsystemBase {
 					break;
 				case BALL_ENTERED:
 					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
-							mConfig.frontLeftSegmentLastIndex, false, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
-					addToControllers(new PulseController(mConfig.frontRightSegmentFirstIndex,
-							mConfig.frontRightSegmentLastIndex, false, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
-					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
+							mConfig.frontLeftSegmentLastIndex, true, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
+					addToControllers(new PulseController(mConfig.frontRightSegmentLastIndex, mConfig.frontRightSegmentFirstIndex,
+							false, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1));
+					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, true, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 5));
 					break;
 				case CLIMBING:
 					addToControllers(new FadeInFadeOutController(mConfig.totalSegmentFirstIndex,
