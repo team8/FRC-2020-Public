@@ -156,6 +156,10 @@ public class Robot extends TimedRobot {
 		startStage(RobotState.GamePeriod.TELEOP);
 		mCommands.setDriveTeleop();
 		mCommands.lightingWantedState = Lighting.State.OFF;
+		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
+			mLighting.update(mCommands, mRobotState);
+			mHardwareWriter.updateLighting();
+		}
 	}
 
 	@Override
