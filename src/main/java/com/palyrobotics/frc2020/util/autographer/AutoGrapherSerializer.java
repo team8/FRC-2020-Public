@@ -33,7 +33,7 @@ public class AutoGrapherSerializer {
 		Class<?> autoClass = Class.forName(String.format("com.palyrobotics.frc2020.auto.%s", inputAuto));
 		ArrayList<RoutineBase> driveRoutineList = new ArrayList<>();
 
-		// split all sequential routines inside auto and retrieve all drive path and odometry routines
+		// split all sequential routines inside auto and retrieve all drive path, odometry, and drive yaw routines
 		multipleRoutineSplitter(((AutoBase) autoClass.getDeclaredConstructor().newInstance()).getRoutine(),
 				driveRoutineList,
 				DrivePathRoutine.class, DriveSetOdometryRoutine.class, DriveYawRoutine.class);

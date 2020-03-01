@@ -47,8 +47,7 @@ public class StartCenterFriendlyTrenchThreeShootThree extends AutoBase {
 						new IndexerTimeRoutine(5),
 						new SequentialRoutine(
 								new DrivePathRoutine(
-										newWaypoint(50, 50, 45),
-										newWaypoint(70, 70, 0))
+										newWaypoint(50, 50, 45))
 												.setMovement(2.0, 4.0)
 												.endingVelocity(1.0),
 								new DrivePathRoutine(newWaypoint(170, 70, 0))

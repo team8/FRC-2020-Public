@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -240,8 +239,6 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 						new Rotation2d(pose.getRotation().getRadians() * Math.toRadians(1))));
 				System.out.println(pose.getTranslation().getX() / 39.37);
 			}
-			ObjectMapper mapper = new ObjectMapper();
-			System.out.println(mapper.writeValueAsString(meterPoses));
 			return isReversed ? new DrivePathRoutine(meterPoses).driveInReverse() :
 					new DrivePathRoutine(meterPoses);
 		}
