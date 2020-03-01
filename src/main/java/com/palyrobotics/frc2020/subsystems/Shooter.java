@@ -34,12 +34,12 @@ public class Shooter extends SubsystemBase {
 	private ShooterConfig mConfig = Configs.get(ShooterConfig.class);
 	private ControllerOutput mFlywheelOutput = new ControllerOutput();
 	private boolean mHoodOutput, mBlockingOutput, mRumbleOutput;
-	private boolean targetVelocitySelected = false;
-	private double previousTargetVelocity;
+	private int mTargetVelocityCount;
+	private double mLastTargetVelocity;
 	private Timer mRumbleTimer = new Timer();
 	private boolean mIsReadyToShoot;
 	// TODO: Change the size of the median filter to better or worse filter out values
-	private MedianFilter distanceFilter = new MedianFilter(12);
+	private MedianFilter distanceFilter = new MedianFilter(15);
 
 	private Shooter() {
 	}
@@ -95,19 +95,20 @@ public class Shooter extends SubsystemBase {
 				if (targetDistanceInches == null) {
 					targetFlywheelVelocity = commands.getShooterWantedCustomFlywheelVelocity();
 				} else {
-					if (!targetVelocitySelected) {
-						targetFlywheelVelocity = kTargetDistanceToVelocity.get(hoodState).getInterpolated(targetDistanceInches);
-						previousTargetVelocity = targetFlywheelVelocity;
-						targetVelocitySelected = true;
+					if (mTargetVelocityCount > 10) {
+						targetFlywheelVelocity = mLastTargetVelocity;
 					} else {
-						targetFlywheelVelocity = previousTargetVelocity;
+						targetFlywheelVelocity = kTargetDistanceToVelocity.get(hoodState).getInterpolated(targetDistanceInches);
+						mLastTargetVelocity = targetFlywheelVelocity;
+						mTargetVelocityCount++;
 					}
-					if (state.driveVelocityMetersPerSecond > mConfig.acceptableDriveVelocity) {
-						targetVelocitySelected = false;
+					if (state.driveVelocityMetersPerSecond > mConfig.acceptableDriveVelocity || state.driveYawAngularVelocityDegrees > 5.0) {
+						mTargetVelocityCount = 0;
 					}
 				}
 				break;
 			default:
+				mTargetVelocityCount = 0;
 				targetFlywheelVelocity = 0.0;
 				break;
 		}

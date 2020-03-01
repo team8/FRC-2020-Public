@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.control.Gains;
 
 public class Indexer extends SubsystemBase {
 
@@ -48,7 +49,7 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = true;
 				break;
 			case INDEX:
-				setIndexerVelocity(mConfig.sparkIndexingOutput);
+				setProfiledVelocity(mConfig.sparkIndexingOutput);
 				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
 				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
 				mBlockOutput = true;
@@ -61,29 +62,42 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = false;
 				break;
 			case FEED_SINGLE:
-				setIndexerVelocity(mConfig.feedingOutput);
+				setProfiledVelocity(mConfig.feedingOutput);
 				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
 				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
 				mBlockOutput = false;
 				break;
 			case FEED_ALL:
-				setIndexerVelocity(mConfig.feedingOutput);
+				setProfiledVelocity(mConfig.feedingOutput);
 				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
 				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
 				mBlockOutput = false;
 				break;
 			case REVERSING:
-				setIndexerVelocity(-mConfig.reversingOutput);
+				setVelocity(-mConfig.reversingOutput);
 				mLeftVTalonOutput.setPercentOutput(-mConfig.leftTalonIndexingOutput);
 				mRightVTalonOutput.setPercentOutput(-mConfig.rightTalonIndexingOutput);
 				mBlockOutput = false;
+				break;
+			case MANUAL:
+				setProfiledVelocity(commands.indexerManualVelocity);
+				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
+				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
+				break;
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
 	}
 
-	private void setIndexerVelocity(double velocity) {
-		mMasterSparkOutput.setTargetVelocity(velocity, mConfig.masterVelocityGains);
-		mSlaveSparkOutput.setTargetVelocity(velocity, mConfig.slaveVelocityGains);
+	private void setProfiledVelocity(double velocity) {
+		mMasterSparkOutput.setTargetVelocityProfiled(velocity, mConfig.masterVelocityGains);
+		mSlaveSparkOutput.setTargetVelocityProfiled(velocity, mConfig.slaveVelocityGains);
+	}
+
+	private void setVelocity(double velocity) {
+		var mv = new Gains(mConfig.masterVelocityGains.p, mConfig.masterVelocityGains.i, mConfig.masterVelocityGains.d, mConfig.masterVelocityGains.f, mConfig.masterVelocityGains.iZone, mConfig.masterVelocityGains.iMax);
+		var sv = new Gains(mConfig.slaveVelocityGains.p, mConfig.slaveVelocityGains.i, mConfig.slaveVelocityGains.d, mConfig.slaveVelocityGains.f, mConfig.slaveVelocityGains.iZone, mConfig.slaveVelocityGains.iMax);
+		mMasterSparkOutput.setTargetVelocity(velocity, mv);
+		mSlaveSparkOutput.setTargetVelocity(velocity, sv);
 	}
 
 	public ControllerOutput getMasterSparkOutput() {
@@ -111,7 +125,7 @@ public class Indexer extends SubsystemBase {
 	}
 
 	public enum BeltState {
-		IDLE, INDEX, WAITING_TO_FEED, FEED_SINGLE, FEED_ALL, REVERSING
+		IDLE, INDEX, WAITING_TO_FEED, FEED_SINGLE, FEED_ALL, REVERSING, MANUAL
 	}
 
 	public enum HopperState {

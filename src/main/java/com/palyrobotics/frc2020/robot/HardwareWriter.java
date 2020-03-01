@@ -16,6 +16,7 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
@@ -70,7 +71,7 @@ public class HardwareWriter {
 		hardware.spark.setInverted(true);
 		hardware.sparkEncoder.setPosition(0.0);
 		hardware.spark.enableSoftLimit(SoftLimitDirection.kForward, true);
-		hardware.spark.setSoftLimit(SoftLimitDirection.kForward, 140.0f);
+		hardware.spark.setSoftLimit(SoftLimitDirection.kForward, 136.0f);
 		hardware.spark.enableSoftLimit(SoftLimitDirection.kReverse, true);
 		hardware.spark.setSoftLimit(SoftLimitDirection.kReverse, 0.0f);
 		hardware.spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -133,7 +134,7 @@ public class HardwareWriter {
 			vTalon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
 			vTalon.configFrameTimings(40, 40);
 		}
-		hardware.leftVTalon.setInverted(true); // Cbot false
+		hardware.leftVTalon.setInverted(true); // Cbot true
 		hardware.rightVTalon.setInverted(true); // Cbot true
 	}
 
@@ -219,6 +220,7 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.ClimberHardware.getInstance();
 		hardware.spark.setOutput(mClimber.getControllerOutput());
 		hardware.solenoid.setExtended(mClimber.getSolenoidOutput());
+		LiveGraph.add("climberPosition", hardware.sparkEncoder.getPosition());
 	}
 
 	private void updateDrivetrain() {
@@ -232,24 +234,17 @@ public class HardwareWriter {
 	private void updateIndexer() {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
 		hardware.vTalons.forEach(Talon::handleReset);
-		Robot.mDebugger.addPoint("handleReset");
 		hardware.masterSpark.setOutput(mIndexer.getMasterSparkOutput());
-		Robot.mDebugger.addPoint("masterSpark.setOutput");
 		hardware.slaveSpark.setOutput(mIndexer.getSlaveSparkOutput());
-		Robot.mDebugger.addPoint("slaveSpark.setOutput");
 		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
-		Robot.mDebugger.addPoint("hopperSolenoid.setExtended");
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
-		Robot.mDebugger.addPoint("blockingSolenoid.setExtended");
 		hardware.leftVTalon.setOutput(mIndexer.getLeftVTalonOutput());
-		Robot.mDebugger.addPoint("leftVTalon.setOutput");
 		hardware.rightVTalon.setOutput(mIndexer.getRightVTalonOutput());
-		Robot.mDebugger.addPoint("rightVTalon.setOutput");
-//		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
-//		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
-//		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
-//		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
-//		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
+		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
+		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
+		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
+		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
+		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
 //		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
 //		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
 //		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));

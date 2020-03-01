@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import com.palyrobotics.frc2020.behavior.ParallelRoutine;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
+import com.palyrobotics.frc2020.behavior.routines.ParallelRaceRoutine;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignYawAssistedRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveParallelPathRoutine;
@@ -19,7 +20,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.util.Units;
 
 /**
- * Start by aligning to the tower target, then backing up slowly and also make sure that just the
+ * Start by aligning to the tower target, then backing up slowoly and also make sure that just the
  * front bumper extends past the white line.
  */
 @SuppressWarnings ("Duplicates")
@@ -36,16 +37,16 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 				new SequentialRoutine(
 						new TimedRoutine(1), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
 						new IndexerFeedAllRoutine(3, false, true)));
-		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(80.0);
+		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(60.0);
 		var turnAndGetBalls = new SequentialRoutine(
 				new DrivePathRoutine(newWaypoint(10, -10, 90))
-						.setMovement(2.0, 1.2)
+						.setMovement(1.5, 1.0)
 						.driveInReverse(),
 				new DriveParallelPathRoutine(
 						new DrivePathRoutine(
 								newWaypoint(50, 70, 0),
 								newWaypoint(170, 70, 0))
-										.setMovement(2.0, 1.2)
+										.setMovement(2.0, 1.3)
 										// Slow down to intake balls
 										.limitWhen(1.2, inTrenchTest),
 						// Intake balls in trench
@@ -55,11 +56,15 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 						inTrenchTest));
 
 		var turnAndShoot = new SequentialRoutine(
-				new DriveAlignYawAssistedRoutine(180, OperatorInterface.kOnesTimesZoomAlignButton),
+				new ParallelRaceRoutine(
+						new IndexerTimeRoutine(0.5),
+						new DriveAlignYawAssistedRoutine(180, OperatorInterface.kOnesTimesZoomAlignButton)),
 				new ParallelRoutine(
-						new ShooterVisionRoutine(4),
-						new IndexerFeedAllRoutine(4, true, true)));
+						new ShooterVisionRoutine(4.0),
+						new SequentialRoutine(
+								new TimedRoutine(1.0),
+								new IndexerFeedAllRoutine(3.0, false, true))));
 
-		return new SequentialRoutine(setInitialOdometry, turnAndGetBalls, turnAndShoot);
+		return new SequentialRoutine(setInitialOdometry, initialShoot, turnAndGetBalls, turnAndShoot);
 	}
 }
