@@ -1,7 +1,7 @@
 {
 	"velocityGains": {
-		"f": 0.04781863509,
-		"p": 0.02
+		"f": 0.0478,
+		"p": 0.015
 	},
 	"turnGains": {
 		"f": 0.00145,
@@ -9,7 +9,7 @@
 		"velocity": 220.0,
 		"acceleration": 320.0
 	},
-	"turnGainsS": 0.065,
+	"turnGainsS": 0.05,
 	"quickStopWeight": 0.125,
 	"quickTurnScalar": 0.4,
 	"quickStopDeadBand": 0.5,
