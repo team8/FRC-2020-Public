@@ -21,7 +21,7 @@ public class DriveConstants {
 			kTrackWidthMeters = 0.67160389; // Tuned 2/12/20
 
 	public static final DifferentialDriveKinematics kKinematics = new DifferentialDriveKinematics(DriveConstants.kTrackWidthMeters);
-	public static final double kS = 0.343, kV = 2.76, kA = 0.382; // Tuned 2/12/20
+	public static final double kS = 0.298, kV = 2.78, kA = 0.404; // Tuned 2/12/20
 	public static final SimpleMotorFeedforward kFeedForward = new SimpleMotorFeedforward(kS, kV, kA);
 	public static final DifferentialDriveVoltageConstraint kVoltageConstraints = new DifferentialDriveVoltageConstraint(kFeedForward, kKinematics, kMaxVoltage);
 

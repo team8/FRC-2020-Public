@@ -35,19 +35,19 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 				new ShooterVisionRoutine(4.0),
 				new SequentialRoutine(
 						new TimedRoutine(1), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
-						new IndexerFeedAllRoutine(3, false, false)));
-		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(90.0);
+						new IndexerFeedAllRoutine(3, false, true)));
+		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(80.0);
 		var turnAndGetBalls = new SequentialRoutine(
-				new DrivePathRoutine(newWaypoint(30, -20, 90))
-						.setMovement(1.8, 2.0)
+				new DrivePathRoutine(newWaypoint(10, -10, 90))
+						.setMovement(2.0, 1.2)
 						.driveInReverse(),
 				new DriveParallelPathRoutine(
 						new DrivePathRoutine(
-								newWaypoint(70, 70, 0),
+								newWaypoint(50, 70, 0),
 								newWaypoint(170, 70, 0))
-										.setMovement(1.8, 2.0)
+										.setMovement(2.0, 1.2)
 										// Slow down to intake balls
-										.limitWhen(1.0, inTrenchTest),
+										.limitWhen(1.2, inTrenchTest),
 						// Intake balls in trench
 						new ParallelRoutine(
 								new IntakeBallRoutine(6),
@@ -60,6 +60,6 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 						new ShooterVisionRoutine(4),
 						new IndexerFeedAllRoutine(4, true, true)));
 
-		return new SequentialRoutine(setInitialOdometry, initialShoot, turnAndGetBalls, turnAndShoot);
+		return new SequentialRoutine(setInitialOdometry, turnAndGetBalls, turnAndShoot);
 	}
 }
