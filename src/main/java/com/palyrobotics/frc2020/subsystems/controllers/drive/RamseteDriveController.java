@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import edu.wpi.first.wpilibj.Timer;
@@ -44,7 +45,6 @@ public class RamseteDriveController extends Drive.DriveController {
 		mOutputs.rightOutput.setTargetVelocity(wheelSpeeds.rightMetersPerSecond, mConfig.velocityGains);
 //		mOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond, mConfig.profiledVelocityGains);
 //		mOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond, mConfig.profiledVelocityGains);
-
 		LiveGraph.add("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
 		LiveGraph.add("time", mTimer.get());
 		LiveGraph.add("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
