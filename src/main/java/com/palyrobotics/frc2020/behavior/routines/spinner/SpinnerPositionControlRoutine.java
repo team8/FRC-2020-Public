@@ -25,6 +25,7 @@ public class SpinnerPositionControlRoutine extends RoutineBase {
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		mTargetColor = state.gameData;
 		mCurrentColor = state.closestColorString;
+		System.out.println(mDirectionToGoalColor);
 
 		if (mDirectionToGoalColor < 0) {
 			commands.spinnerWantedState = Spinner.State.ROTATING_LEFT;
@@ -42,6 +43,11 @@ public class SpinnerPositionControlRoutine extends RoutineBase {
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
 		return mIsFinished;
+	}
+
+	@Override
+	protected void stop(Commands commands, @ReadOnly RobotState state) {
+		commands.spinnerWantedState = Spinner.State.IDLE;
 	}
 
 	@Override
