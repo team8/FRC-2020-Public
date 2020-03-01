@@ -18,8 +18,8 @@ public class FlashingLightsController extends Lighting.LEDController {
 	 * @param flashedColor Color to be flashed on white background
 	 */
 
-	public FlashingLightsController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV flashedColor, double delay) {
-		super(startIndex, lastIndex, noDestroy);
+	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay) {
+		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
@@ -28,13 +28,14 @@ public class FlashingLightsController extends Lighting.LEDController {
 		mTimer.start();
 	}
 
-	public FlashingLightsController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV flashedColor, double delay, double duration) {
-		super(startIndex, lastIndex, noDestroy);
+	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration) {
+		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mDuration = duration;
+		kPriority = 2;
 		mTimer.start();
 	}
 

@@ -19,7 +19,7 @@ public class FadeOutController extends Lighting.LEDController {
 	 */
 
 	public FadeOutController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV flashedColor, int delay) {
-		super(startIndex, lastIndex, noDestroy);
+		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
@@ -29,12 +29,13 @@ public class FadeOutController extends Lighting.LEDController {
 	}
 
 	public FadeOutController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV flashedColor, int delay, double duration) {
-		super(startIndex, lastIndex, noDestroy);
+		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mDuration = duration;
+		kPriority = 1;
 		mTimer.start();
 	}
 
