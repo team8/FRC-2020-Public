@@ -9,12 +9,11 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 
 public class SpinnerPositionControlRoutine extends RoutineBase {
 
-	private String mCurrentColor, mTargetColor;
 	private int mDirectionToGoalColor;
-	private boolean mIsFinished;
 
 	@Override
 	protected void start(Commands commands, @ReadOnly RobotState state) {
@@ -23,31 +22,18 @@ public class SpinnerPositionControlRoutine extends RoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		mTargetColor = state.gameData;
-		mCurrentColor = state.closestColorString;
-		System.out.println(mDirectionToGoalColor);
-
-		if (mDirectionToGoalColor < 0) {
-			commands.spinnerWantedState = Spinner.State.ROTATING_LEFT;
-		} else if (mDirectionToGoalColor > 0) {
-			commands.spinnerWantedState = Spinner.State.ROTATING_RIGHT;
-		}
-		mIsFinished = mTargetColor.equals(mCurrentColor);
-	}
-
-	@Override
-	protected void stop(Commands commands, @ReadOnly RobotState state) {
-		commands.lightingWantedState = Lighting.State.SPINNER_DONE;
+		commands.spinnerWantedState = mDirectionToGoalColor < 0 ? Spinner.State.ROTATING_RIGHT : Spinner.State.ROTATING_LEFT;
 	}
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		return mIsFinished;
+		return state.gameData.equals(state.closestColorString);
 	}
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
 		commands.spinnerWantedState = Spinner.State.IDLE;
+		commands.lightingWantedState = Lighting.State.SPINNER_DONE;
 	}
 
 	@Override

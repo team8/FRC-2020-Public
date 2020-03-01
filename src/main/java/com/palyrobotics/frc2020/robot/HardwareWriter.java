@@ -171,6 +171,7 @@ public class HardwareWriter {
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
 		talon.enableVoltageCompensation(true);
 		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
+		talon.setNeutralMode(NeutralMode.Brake);
 	}
 
 	public void resetDriveSensors(Pose2d pose) {

@@ -137,6 +137,7 @@ public class HardwareReader {
 			state.closestColorString = "R";
 		}
 		state.closestColorConfidence = state.closestColorRGB.confidence;
+//		System.out.println(Spinner.getInstance().directionToGoalColor(state.closestColorString, state.gameData));
 	}
 
 	private void checkSparkFaults(Spark spark) {

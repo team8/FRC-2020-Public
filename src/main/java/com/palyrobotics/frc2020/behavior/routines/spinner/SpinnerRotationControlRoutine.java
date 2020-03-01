@@ -17,33 +17,23 @@ public class SpinnerRotationControlRoutine extends RoutineBase {
 	private SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
 	private String mPreviousColor;
 	private int mColorChangeCounter = 0;
-	private boolean mIsFinished;
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		String currentColor = state.closestColorString;
-		if (!currentColor.equals(mPreviousColor)) {
-			mColorChangeCounter++;
-		}
-		mPreviousColor = currentColor;
+		mColorChangeCounter = !state.closestColorString.equals(mPreviousColor) ? mColorChangeCounter + 1 : mColorChangeCounter;
 		commands.spinnerWantedState = Spinner.State.ROTATING_RIGHT;
-		mIsFinished = mColorChangeCounter > mConfig.rotationControlColorChangeRequirementCount;
-	}
-
-	@Override
-	protected void stop(Commands commands, @ReadOnly RobotState state) {
-		commands.lightingWantedState = Lighting.State.SPINNER_DONE;
-		super.stop(commands, state);
+		mPreviousColor = state.closestColorString;
 	}
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		return mIsFinished;
+		return mColorChangeCounter >= mConfig.rotationControlColorChangeRequirementCount;
 	}
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
 		commands.spinnerWantedState = Spinner.State.IDLE;
+		commands.lightingWantedState = Lighting.State.SPINNER_DONE;
 	}
 
 	@Override
