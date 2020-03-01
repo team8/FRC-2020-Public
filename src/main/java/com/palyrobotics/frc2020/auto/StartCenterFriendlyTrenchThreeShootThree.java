@@ -65,6 +65,6 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 								new TimedRoutine(1.0),
 								new IndexerFeedAllRoutine(3.0, false, true))));
 
-		return new SequentialRoutine(setInitialOdometry, turnAndGetBalls, turnAndShoot);
+		return new SequentialRoutine(setInitialOdometry, initialShoot, turnAndGetBalls, turnAndShoot);
 	}
 }
