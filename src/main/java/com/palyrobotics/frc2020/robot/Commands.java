@@ -41,6 +41,7 @@ public class Commands {
 	/* Indexer */
 	public Indexer.BeltState indexerWantedBeltState;
 	public Indexer.HopperState indexerWantedHopperState;
+	public double indexerManualVelocity;
 	/* Intake */
 	public Intake.State intakeWantedState;
 	/* Shooter */

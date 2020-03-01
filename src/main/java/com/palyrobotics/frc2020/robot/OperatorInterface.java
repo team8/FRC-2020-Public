@@ -12,6 +12,7 @@ import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllR
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedSingleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerIdleRoutine;
 import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
+import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.Joysticks;
 import com.palyrobotics.frc2020.subsystems.*;
@@ -180,7 +181,6 @@ public class OperatorInterface {
 			commands.setShooterFlywheelSpinUpVelocity(mShooterConfig.noTargetSpinUpVelocity);
 			commands.setShooterVisionAssisted(commands.visionWantedPipeline);
 			commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
-			commands.intakeWantedState = Intake.State.STOW;
 			commands.wantedCompression = false;
 		} else if (mOperatorXboxController.getLeftTriggerPressed()) {
 			commands.setShooterIdle();
@@ -195,7 +195,13 @@ public class OperatorInterface {
 		} else if (mOperatorXboxController.getRightBumperPressed()) {
 			commands.addWantedRoutine(new IndexerFeedAllRoutine(10.0, false, true));
 		}
-
+		double indexerManualOutput = handleDeadBand(mOperatorXboxController.getY(Hand.kRight), 0.1);
+		if (Math.abs(indexerManualOutput) > 0.1) {
+			commands.indexerWantedBeltState = Indexer.BeltState.MANUAL;
+			commands.indexerManualVelocity = -indexerManualOutput * Configs.get(IndexerConfig.class).feedingOutput;
+		} else if (commands.indexerWantedBeltState == Indexer.BeltState.MANUAL) {
+			commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
+		}
 	}
 
 	private void updateSpinnerCommands(Commands commands) {
