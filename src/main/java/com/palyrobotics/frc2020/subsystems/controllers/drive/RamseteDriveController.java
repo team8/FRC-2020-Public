@@ -8,7 +8,6 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Drive;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;

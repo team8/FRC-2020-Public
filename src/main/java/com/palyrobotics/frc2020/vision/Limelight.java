@@ -37,7 +37,6 @@ public class Limelight {
 	 */
 	public boolean isTargetFound() {
 		return mTable.getEntry("tv").getDouble(0.0) != 0.0;
-//		return true;
 	}
 
 	public boolean isAligned() {
@@ -49,7 +48,6 @@ public class Limelight {
 	 */
 	public double getYawToTarget() {
 		return mTable.getEntry("tx").getDouble(0.0);
-//		return Math.sin(Timer.getFPGATimestamp()) * 50;
 	}
 
 	/**

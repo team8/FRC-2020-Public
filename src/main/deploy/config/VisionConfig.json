@@ -2,8 +2,8 @@
 	"profiledGains": {
 		"f": 0.00145,
 		"p": 0.0003,
-		"velocity": 180.0,
-		"acceleration": 180.0
+		"velocity": 140.0,
+		"acceleration": 140.0
 	},
 	"preciseGains": {
 		"p": 0.0084,
@@ -22,6 +22,6 @@
 		"d": 0.0005,
 		"iMax": 0.03
 	},
-	"acceptableYawError": 0.25,
+	"acceptableYawError": 0.2,
 	"alignSwitchYawAngleMin": 40.0
 }

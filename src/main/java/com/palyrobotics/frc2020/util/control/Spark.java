@@ -118,11 +118,6 @@ public class Spark extends CANSparkMax implements Controller {
 		clearFaults();
 	}
 
-	public void setOutputRange(double minimumOutput, double maximumOutput) {
-		CANPIDController controller = getController();
-		for (int slotIndex = 0; slotIndex <= 3; slotIndex++) controller.setOutputRange(minimumOutput, maximumOutput, slotIndex);
-	}
-
 	public String getName() {
 		return String.format("(Spark #%d), %s", getDeviceId(), mName);
 	}
