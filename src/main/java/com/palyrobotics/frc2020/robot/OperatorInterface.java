@@ -134,7 +134,7 @@ public class OperatorInterface {
 		if (mOperatorXboxController.getDPadLeftPressed()) {
 			commands.lightingWantedState = Lighting.State.INTAKE_EXTENDED;
 		}
-		if (state.indexerHasFrontBall) {
+		if (state.indexerHasBackBall) {
 			commands.lightingWantedState = Lighting.State.BALL_ENTERED;
 		}
 

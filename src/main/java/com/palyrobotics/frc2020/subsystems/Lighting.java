@@ -135,7 +135,7 @@ public class Lighting extends SubsystemBase {
 		if (mLEDControllers.removeIf(LEDController::checkFinished)) {
 			mState = State.DO_NOTHING;
 		}
-		System.out.println(mLEDControllers.toString());
+
 		for (LEDController ledController : mLEDControllers) {
 			LightingOutputs controllerOutput = ledController.update(commands, state);
 			for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
