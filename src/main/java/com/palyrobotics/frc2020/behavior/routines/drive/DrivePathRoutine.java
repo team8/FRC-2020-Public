@@ -13,6 +13,7 @@ import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
@@ -22,7 +23,8 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 
 	private static final DriveConfig kConfig = Configs.get(DriveConfig.class);
 	private static final double kTimeoutMultiplier = 1;
-	private final List<Pose2d> mWaypoints;
+	private final List<Pose2d> mPoses;
+	private List<Translation2d> mWaypoints;
 	private double mMaxVelocityMetersPerSecond = kConfig.pathVelocityMetersPerSecond,
 			mMaxAccelerationMetersPerSecondSq = kConfig.pathAccelerationMetersPerSecondSquared;
 	private double mStartingVelocityMetersPerSecond, mEndingVelocityMetersPerSecond;
@@ -31,17 +33,17 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	private Trajectory mTrajectory;
 
 	/**
-	 * @param waypoints Points to move towards from current pose. No initial pose needs to be supplied.
+	 * @param poses Points to move towards from current pose. No initial pose needs to be supplied.
 	 */
-	public DrivePathRoutine(Pose2d... waypoints) {
-		this(Arrays.asList(waypoints));
+	public DrivePathRoutine(Pose2d... poses) {
+		this(Arrays.asList(poses));
 	}
 
 	/**
 	 * @see #DrivePathRoutine(Pose2d...)
 	 */
-	public DrivePathRoutine(List<Pose2d> waypoints) {
-		mWaypoints = waypoints;
+	public DrivePathRoutine(List<Pose2d> poses) {
+		mPoses = poses;
 	}
 
 	public DrivePathRoutine startingVelocity(double velocityMetersPerSecond) {
@@ -84,6 +86,11 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 		return this;
 	}
 
+	public DrivePathRoutine waypoints(List<Translation2d> waypoints) {
+		mWaypoints = waypoints;
+		return this;
+	}
+
 	/**
 	 * Robot will try to drive in reverse while traversing the path. Does not reverse the path itself.
 	 */
@@ -112,18 +119,18 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 
 	public void generateTrajectory(Pose2d startingPose) {
 		if (mTrajectory == null) {
-			var waypointsWithStart = new LinkedList<>(mWaypoints);
+			var posesWithStart = new LinkedList<>(mPoses);
 			if (mShouldReversePath) {
-				Collections.reverse(waypointsWithStart);
+				Collections.reverse(posesWithStart);
 			}
-			waypointsWithStart.addFirst(startingPose);
+			posesWithStart.addFirst(startingPose);
 			var trajectoryConfig = DriveConstants.getTrajectoryConfig(mMaxVelocityMetersPerSecond, mMaxAccelerationMetersPerSecondSq);
 			trajectoryConfig.addConstraint(new CentripetalAccelerationConstraint(1.6));
 			trajectoryConfig.setReversed(mDriveInReverse);
 			trajectoryConfig.setStartVelocity(mStartingVelocityMetersPerSecond);
 			trajectoryConfig.setEndVelocity(mEndingVelocityMetersPerSecond);
 			trajectoryConfig.addConstraints(mConstraints);
-			mTrajectory = TrajectoryGenerator.generateTrajectory(waypointsWithStart, trajectoryConfig);
+			mTrajectory = mWaypoints == null ? TrajectoryGenerator.generateTrajectory(posesWithStart, trajectoryConfig) : TrajectoryGenerator.generateTrajectory(posesWithStart.getFirst(), mWaypoints, posesWithStart.getLast(), trajectoryConfig);
 			mTimeout = mTrajectory.getTotalTimeSeconds() * kTimeoutMultiplier;
 		} else {
 			throw new IllegalStateException("Trajectory already generated!");
