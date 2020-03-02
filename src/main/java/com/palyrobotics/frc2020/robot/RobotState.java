@@ -45,7 +45,6 @@ public class RobotState {
 	public boolean shooterIsReadyToShoot;
 	public boolean shooterIsHoodExtended, shooterIsBlockingExtended;
 	public boolean shooterHoodIsInTransition;
-	public boolean shooterHasBall;
 
 	/* Spinner */
 	public String closestColorString;
