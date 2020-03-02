@@ -33,22 +33,22 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 		// TODO: Refactor into AutoBase
 		var initialShoot = new ParallelRoutine(
 				new IntakeLowerRoutine(),
-				new ShooterVisionRoutine(4.0),
+				new ShooterVisionRoutine(3.5),
 				new SequentialRoutine(
 						new TimedRoutine(1), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
-						new IndexerFeedAllRoutine(3, false, true)));
+						new IndexerFeedAllRoutine(2.5, false, true)));
 		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(60.0);
 		var turnAndGetBalls = new SequentialRoutine(
-				new DrivePathRoutine(newWaypoint(10, -10, 90))
-						.setMovement(1.5, 1.0)
+				new DrivePathRoutine(newWaypoint(20, -10, 90))
+						.setMovement(2.5, 2.0)
 						.driveInReverse(),
 				new DriveParallelPathRoutine(
 						new DrivePathRoutine(
 								newWaypoint(50, 70, 0),
 								newWaypoint(170, 70, 0))
-										.setMovement(2.0, 1.3)
+										.setMovement(2.5, 2.5)
 										// Slow down to intake balls
-										.limitWhen(1.2, inTrenchTest),
+										.limitWhen(1.3, inTrenchTest),
 						// Intake balls in trench
 						new ParallelRoutine(
 								new IntakeBallRoutine(6),
@@ -57,7 +57,7 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 
 		var turnAndShoot = new SequentialRoutine(
 				new ParallelRaceRoutine(
-						new IndexerTimeRoutine(0.5),
+						new IndexerTimeRoutine(2.0),
 						new DriveAlignYawAssistedRoutine(180, OperatorInterface.kOnesTimesZoomAlignButton)),
 				new ParallelRoutine(
 						new ShooterVisionRoutine(4.0),
