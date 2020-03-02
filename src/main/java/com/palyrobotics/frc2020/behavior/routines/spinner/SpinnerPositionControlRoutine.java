@@ -9,7 +9,6 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 
 public class SpinnerPositionControlRoutine extends RoutineBase {
 

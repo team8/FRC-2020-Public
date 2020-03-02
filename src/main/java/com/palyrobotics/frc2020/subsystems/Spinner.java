@@ -16,7 +16,7 @@ public class Spinner extends SubsystemBase {
 
 	private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
 	private static Spinner sInstance = new Spinner();
-	ControllerOutput mOutput = new ControllerOutput();
+	private ControllerOutput mOutput = new ControllerOutput();
 
 	public static Spinner getInstance() {
 		return sInstance;
