@@ -54,18 +54,6 @@ public class HardwareReader {
 
 	private void readGameAndFieldState(RobotState state) {
 		state.gameData = DriverStation.getInstance().getGameSpecificMessage();
-		state.detectedRGBValues = SpinnerHardware.getInstance().colorSensor.getColor();
-		state.closestColorRGB = mColorMatcher.matchClosestColor(state.detectedRGBValues);
-		if (state.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
-			state.closestColorString = "Cyan";
-		} else if (state.closestColorRGB.color == SpinnerConstants.kYellowCPTarget) {
-			state.closestColorString = "Yellow";
-		} else if (state.closestColorRGB.color == SpinnerConstants.kGreenCPTarget) {
-			state.closestColorString = "Green";
-		} else if (state.closestColorRGB.color == SpinnerConstants.kRedCPTarget) {
-			state.closestColorString = "Red";
-		}
-		state.closestColorConfidence = state.closestColorRGB.confidence;
 	}
 
 	private void readClimberState(RobotState state) {
