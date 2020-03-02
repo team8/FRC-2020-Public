@@ -44,7 +44,7 @@ public class RamseteDriveController extends Drive.DriveController {
 		mOutputs.rightOutput.setTargetVelocity(wheelSpeeds.rightMetersPerSecond, mConfig.velocityGains);
 //		mOutputs.leftOutput.setTargetVelocityProfiled(wheelSpeeds.leftMetersPerSecond, mConfig.profiledVelocityGains);
 //		mOutputs.rightOutput.setTargetVelocityProfiled(wheelSpeeds.rightMetersPerSecond, mConfig.profiledVelocityGains);
-		LiveGraph.add("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
+//		LiveGraph.add("targetLeftVelocity", wheelSpeeds.leftMetersPerSecond);
 		LiveGraph.add("time", mTimer.get());
 		LiveGraph.add("targetRightVelocity", wheelSpeeds.rightMetersPerSecond);
 		LiveGraph.add("currentPoseX", state.drivePoseMeters.getTranslation().getX());
