@@ -213,9 +213,9 @@ public class OperatorInterface {
 	}
 
 	private void updateSpinnerCommands(Commands commands) {
-		if (mOperatorXboxController.getMenuButtonPressed()) {
+		if (mOperatorXboxController.getWindowButtonPressed()) {
 			commands.addWantedRoutine(new SpinnerRotationControlRoutine());
-		} else if (mOperatorXboxController.getYButtonPressed()) {
+		} else if (mOperatorXboxController.getMenuButtonPressed()) {
 			commands.addWantedRoutine(new SpinnerPositionControlRoutine());
 		}
 	}

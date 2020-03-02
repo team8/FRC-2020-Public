@@ -1,5 +1,5 @@
 {
 	"rotationControlColorChangeRequirementCount" : 30,
-	"rotationControlPercentOutput" : 0.25,
+	"rotationControlPercentOutput" : 0.75,
 	"positionControlPercentOutput" : 0.17
 }
