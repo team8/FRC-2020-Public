@@ -65,13 +65,7 @@ public class Lighting extends SubsystemBase {
 	private LightingConfig mConfig = Configs.get(LightingConfig.class);
 	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
 	private State mState;
-	private PriorityQueue<LEDController> mLEDControllers = new PriorityQueue<>(1, new Comparator<LEDController>() {
-
-		@Override
-		public int compare(LEDController o1, LEDController o2) {
-			return (o1.kPriority - o2.kPriority);
-		}
-	});
+	private PriorityQueue<LEDController> mLEDControllers = new PriorityQueue<>(1, Comparator.comparingInt(o -> o.kPriority));
 
 	private Lighting() {
 
