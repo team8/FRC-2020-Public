@@ -110,7 +110,7 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
 					break;
 				case CLIMBING:
-					addToControllers(new FadeInFadeOutController(mConfig.totalSegmentFirstIndex,
+					addToControllers(new FadeInController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, Color.HSV.kPink, 0.5, 3));
 					break;
 				case INTAKE_EXTENDED:
