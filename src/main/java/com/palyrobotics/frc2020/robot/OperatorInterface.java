@@ -145,11 +145,12 @@ public class OperatorInterface {
 			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
 		}
 
-//		if (state.climberCurrentDraw >= mClimberConfig.currentDrawWhenClimbing) {
+
+		//		if (state.climberCurrentDraw >= mClimberConfig.currentDrawWhenClimbing) {
 //			commands.lightingWantedState = Lighting.State.CLIMBING;
 //		}
 
-		if (state.shooterHasBall) {
+		if (state.indexerHasTopBall) {
 			commands.lightingWantedState = Lighting.State.BALL_SHOT;
 		}
 
