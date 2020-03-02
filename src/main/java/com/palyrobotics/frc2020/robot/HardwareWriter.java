@@ -121,7 +121,7 @@ public class HardwareWriter {
 			spark.setClosedLoopRampRate(0.0825);
 			spark.setInverted(true);
 			double maxOutput = 0.8;
-//			spark.getController().setOutputRange(-maxOutput, maxOutput);
+			spark.setOutputRange(-maxOutput, maxOutput);
 			spark.setSmartCurrentLimit((int) Math.round(40.0 / maxOutput));
 			spark.setSecondaryCurrentLimit(50.0 / maxOutput);
 		}
@@ -197,23 +197,15 @@ public class HardwareWriter {
 		mRumbleOutput = false;
 		if (!mRobotConfig.disableHardwareUpdates) {
 			if (enabledSubsystems.contains(mClimber)) updateClimber();
-			Robot.mDebugger.addPoint("Climber");
 			if (enabledSubsystems.contains(mDrive)) updateDrivetrain();
-			Robot.mDebugger.addPoint("Drive");
 			if (enabledSubsystems.contains(mIndexer)) updateIndexer();
-			Robot.mDebugger.addPoint("Indexer");
 			if (enabledSubsystems.contains(mIntake)) updateIntake();
-			Robot.mDebugger.addPoint("Intake");
 			if (enabledSubsystems.contains(mShooter)) updateShooter();
-			Robot.mDebugger.addPoint("Shooter");
 			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
-			Robot.mDebugger.addPoint("Spinner");
 			if (enabledSubsystems.contains(mLighting)) updateLighting();
-			Robot.mDebugger.addPoint("Lighting");
 		}
 		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
 		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
-		Robot.mDebugger.addPoint("setRumble");
 	}
 
 	private void updateClimber() {
@@ -240,6 +232,8 @@ public class HardwareWriter {
 		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
 		hardware.leftVTalon.setOutput(mIndexer.getLeftVTalonOutput());
 		hardware.rightVTalon.setOutput(mIndexer.getRightVTalonOutput());
+		handleReset(hardware.slaveSpark);
+		handleReset(hardware.masterSpark);
 		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
 		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
 		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
@@ -267,7 +261,7 @@ public class HardwareWriter {
 
 	private void updateShooter() {
 		var hardware = HardwareAdapter.ShooterHardware.getInstance();
-		handleReset(hardware.masterSpark, hardware.slaveSpark);
+//		handleReset(hardware.masterSpark, hardware.slaveSpark);
 //		Robot.mDebugger.addPoint("handleReset");
 		hardware.masterSpark.setOutput(mShooter.getFlywheelOutput());
 //		Robot.mDebugger.addPoint("masterSpark.setOutput");
@@ -284,11 +278,10 @@ public class HardwareWriter {
 		hardware.talon.setOutput(mSpinner.getOutput());
 	}
 
-	private void handleReset(Spark master, Spark slave) {
-//		if (slave.getStickyFault(FaultID.kHasReset)) {
-//			slave.follow(master);
-//			slave.clearFaults();
-//			Log.error(kLoggerTag, String.format("%s spark reset", slave.getName()));
+	private void handleReset(Spark spark) {
+//		if (spark.getStickyFault(FaultID.kHasReset)) {
+//			spark.clearFaults();
+//			Log.error(kLoggerTag, String.format("%s spark reset", spark.getName()));
 //		}
 	}
 

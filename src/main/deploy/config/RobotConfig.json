@@ -8,12 +8,13 @@
 		"drive",
 		"indexer",
 		"intake",
-		"climber",
 		"shooter",
-		"lighting"
+		"lighting",
+		"climber",
+		"spinner"
 	],
 	"checkFaults": false,
-	"coastDriveWhenDisabled": false,
+	"coastDriveWhenDisabled": true,
 	"enableVisionWhenDisabled": false,
 	"visionPipelineWhenDisabled": 0,
 	"motorOutputMultiplier": 1.0,

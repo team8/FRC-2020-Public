@@ -15,12 +15,13 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
 public class DrivePathRoutine extends TimeoutRoutineBase {
 
 	private static final DriveConfig kConfig = Configs.get(DriveConfig.class);
-	private static final double kTimeoutMultiplier = 1.1;
+	private static final double kTimeoutMultiplier = 1;
 	private final List<Pose2d> mWaypoints;
 	private double mMaxVelocityMetersPerSecond = kConfig.pathVelocityMetersPerSecond,
 			mMaxAccelerationMetersPerSecondSq = kConfig.pathAccelerationMetersPerSecondSquared;
@@ -117,6 +118,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 			}
 			waypointsWithStart.addFirst(startingPose);
 			var trajectoryConfig = DriveConstants.getTrajectoryConfig(mMaxVelocityMetersPerSecond, mMaxAccelerationMetersPerSecondSq);
+			trajectoryConfig.addConstraint(new CentripetalAccelerationConstraint(1.4));
 			trajectoryConfig.setReversed(mDriveInReverse);
 			trajectoryConfig.setStartVelocity(mStartingVelocityMetersPerSecond);
 			trajectoryConfig.setEndVelocity(mEndingVelocityMetersPerSecond);
