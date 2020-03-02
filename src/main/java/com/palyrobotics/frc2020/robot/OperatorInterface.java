@@ -160,7 +160,7 @@ public class OperatorInterface {
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
 		/* Intake Toggle */
-		if (mOperatorXboxController.getDPadDown()) {
+		if (mOperatorXboxController.getDPadDownPressed()) {
 			switch (commands.intakeWantedState) {
 				case LOWER:
 				case INTAKE:
