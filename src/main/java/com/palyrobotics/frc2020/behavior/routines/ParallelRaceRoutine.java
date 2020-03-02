@@ -19,10 +19,6 @@ public class ParallelRaceRoutine extends ParallelRoutine {
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		if (super.checkFinished(state)) return true;
-		for (RoutineBase runningRoutine : mRunningRoutines) {
-			if (runningRoutine.isFinished()) return true;
-		}
-		return false;
+		return mRoutines.stream().anyMatch(RoutineBase::isFinished);
 	}
 }

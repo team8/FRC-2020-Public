@@ -43,6 +43,6 @@ public class DriveParallelPathRoutine extends ParallelRoutine {
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		return mDrivePathRoutine.checkFinished(state);
+		return mDrivePathRoutine.isFinished();
 	}
 }

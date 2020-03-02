@@ -60,10 +60,12 @@ public class HardwareReader {
 		var hardware = DriveHardware.getInstance();
 		/* Gyro */
 		state.driveIsGyroReady = hardware.gyro.getState() == PigeonState.Ready;
-		hardware.gyro.getYawPitchRoll(mGyroAngles);
-		state.driveYawDegrees = mGyroAngles[kYawIndex];
-		hardware.gyro.getRawGyro(mGyroAngularVelocities);
-		state.driveYawAngularVelocityDegrees = mGyroAngularVelocities[kYawAngularVelocityIndex];
+		if (state.driveIsGyroReady) {
+			hardware.gyro.getYawPitchRoll(mGyroAngles);
+			state.driveYawDegrees = mGyroAngles[kYawIndex];
+			hardware.gyro.getRawGyro(mGyroAngularVelocities);
+			state.driveYawAngularVelocityDegrees = mGyroAngularVelocities[kYawAngularVelocityIndex];
+		}
 		/* Falcons */
 		state.driveLeftVelocity = hardware.leftMasterFalcon.getConvertedVelocity();
 		state.driveRightVelocity = hardware.rightMasterFalcon.getConvertedVelocity();

@@ -99,8 +99,8 @@ public class OperatorInterface {
 //					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
 //					new DrivePathRoutine(newWaypoint(30.0, 0.0, 0.0))));
 //			commands.addWantedRoutine(new SequentialRoutine(
-//					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),
-//					new DriveYawRoutine(180.0)));
+//					new DriveSetOdometryRoutine(0.0, 0.0, 180.0),
+//					new DriveYawRoutine(0.0)));
 			commands.addWantedRoutine(new DrivePathRoutine(newWaypoint(0.0, 0.0, 180.0)));
 //			commands.addWantedRoutine(new SequentialRoutine(
 //					new DriveSetOdometryRoutine(0.0, 0.0, 0.0),

@@ -11,15 +11,11 @@ public abstract class ProfiledControllerBase<TController extends Controller> ext
 		super.updateGains(isFirstInitialization, slot, newGains, lastGains);
 		if (newGains instanceof ProfiledGains) {
 			ProfiledGains lastProfiledGains = (ProfiledGains) lastGains, newProfiledGains = (ProfiledGains) newGains;
-			if (Double.compare(
-					lastProfiledGains.acceleration * mRobotConfig.motorOutputMultiplier,
-					newProfiledGains.acceleration * mRobotConfig.motorOutputMultiplier) != 0) {
-				setProfiledAcceleration(slot, newProfiledGains.acceleration * mRobotConfig.motorOutputMultiplier);
+			if (Double.compare(lastProfiledGains.acceleration, newProfiledGains.acceleration) != 0) {
+				setProfiledAcceleration(slot, newProfiledGains.acceleration);
 			}
-			if (Double.compare(
-					lastProfiledGains.velocity * mRobotConfig.motorOutputMultiplier,
-					newProfiledGains.velocity * mRobotConfig.motorOutputMultiplier) != 0) {
-				setProfiledCruiseVelocity(slot, newProfiledGains.velocity * mRobotConfig.motorOutputMultiplier);
+			if (Double.compare(lastProfiledGains.velocity, newProfiledGains.velocity) != 0) {
+				setProfiledCruiseVelocity(slot, newProfiledGains.velocity);
 			}
 			if (Double.compare(lastProfiledGains.allowableError, newProfiledGains.allowableError) != 0) {
 				setProfiledAllowableError(slot, newProfiledGains.allowableError);

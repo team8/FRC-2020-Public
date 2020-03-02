@@ -4,10 +4,10 @@
 		"p": 0.015
 	},
 	"turnGains": {
-		"f": 0.00145,
-		"p": 0.0003,
-		"velocity": 220.0,
-		"acceleration": 320.0
+		"f": 0.00122,
+		"p": 0.0005,
+		"velocity": 280.0,
+		"acceleration": 380.0
 	},
 	"turnGainsS": 0.05,
 	"quickStopWeight": 0.125,

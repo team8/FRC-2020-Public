@@ -46,7 +46,7 @@ public abstract class SimpleControllerBase<TController extends Controller> {
 		double reference = output.getReference(), arbitraryPercentOutput = output.getArbitraryDemand();
 //		Robot.mDebugger.addPoint("getReference and arbitraryPercentOutput");
 		if (!areGainsEqual || slot != mLastSlot || mode != mLastMode || reference != mLastReference || arbitraryPercentOutput != mLastArbitraryPercentOutput) {
-			if (setReference(mode, slot, reference, arbitraryPercentOutput)) {
+			if (setReference(mode, slot, reference * mRobotConfig.motorOutputMultiplier, arbitraryPercentOutput)) {
 				mLastSlot = slot;
 				mLastMode = mode;
 				mLastReference = reference;

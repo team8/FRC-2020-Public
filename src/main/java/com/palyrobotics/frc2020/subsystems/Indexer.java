@@ -27,10 +27,9 @@ public class Indexer extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		double leftMultiplier = 1.0, rightMultiplier = 1.0;
+		double multiplier = 1.0;
 		if (state.indexerHasBackBall) {
-			leftMultiplier = 0.0;
-			rightMultiplier = 0.0;
+			multiplier = 0.0;
 		}
 //		if ((Math.round(Timer.getFPGATimestamp() * mConfig.pulsePeriod) % 2L) == 0L) {
 //			leftMultiplier = 0.0;
@@ -50,8 +49,7 @@ public class Indexer extends SubsystemBase {
 				break;
 			case INDEX:
 				setProfiledVelocity(mConfig.sparkIndexingOutput);
-				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
-				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
+				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
 				mBlockOutput = true;
 				break;
 			case WAITING_TO_FEED:
@@ -62,30 +60,27 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = false;
 				break;
 			case FEED_SINGLE:
-				setProfiledVelocity(mConfig.feedingOutput);
-				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
-				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
-				mBlockOutput = false;
-				break;
 			case FEED_ALL:
 				setProfiledVelocity(mConfig.feedingOutput);
-				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
-				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
+				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
 				mBlockOutput = false;
 				break;
 			case REVERSING:
 				setVelocity(-mConfig.reversingOutput);
-				mLeftVTalonOutput.setPercentOutput(-mConfig.leftTalonIndexingOutput);
-				mRightVTalonOutput.setPercentOutput(-mConfig.rightTalonIndexingOutput);
+				setVTalonOutput(-mConfig.leftTalonIndexingOutput, -mConfig.rightTalonIndexingOutput, multiplier);
 				mBlockOutput = false;
 				break;
 			case MANUAL:
 				setProfiledVelocity(commands.indexerManualVelocity);
-				mLeftVTalonOutput.setPercentOutput(mConfig.leftTalonIndexingOutput * leftMultiplier);
-				mRightVTalonOutput.setPercentOutput(mConfig.rightTalonIndexingOutput * rightMultiplier);
+				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
 				break;
 		}
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
+	}
+
+	private void setVTalonOutput(double leftOutput, double rightOutput, double multiplier) {
+		mLeftVTalonOutput.setPercentOutput(leftOutput * multiplier);
+		mRightVTalonOutput.setPercentOutput(rightOutput * multiplier);
 	}
 
 	private void setProfiledVelocity(double velocity) {
@@ -94,10 +89,10 @@ public class Indexer extends SubsystemBase {
 	}
 
 	private void setVelocity(double velocity) {
-		var mv = new Gains(mConfig.masterVelocityGains.p, mConfig.masterVelocityGains.i, mConfig.masterVelocityGains.d, mConfig.masterVelocityGains.f, mConfig.masterVelocityGains.iZone, mConfig.masterVelocityGains.iMax);
-		var sv = new Gains(mConfig.slaveVelocityGains.p, mConfig.slaveVelocityGains.i, mConfig.slaveVelocityGains.d, mConfig.slaveVelocityGains.f, mConfig.slaveVelocityGains.iZone, mConfig.slaveVelocityGains.iMax);
-		mMasterSparkOutput.setTargetVelocity(velocity, mv);
-		mSlaveSparkOutput.setTargetVelocity(velocity, sv);
+		var masterGains = new Gains(mConfig.masterVelocityGains.p, mConfig.masterVelocityGains.i, mConfig.masterVelocityGains.d, mConfig.masterVelocityGains.f, mConfig.masterVelocityGains.iZone, mConfig.masterVelocityGains.iMax);
+		var slaveGains = new Gains(mConfig.slaveVelocityGains.p, mConfig.slaveVelocityGains.i, mConfig.slaveVelocityGains.d, mConfig.slaveVelocityGains.f, mConfig.slaveVelocityGains.iZone, mConfig.slaveVelocityGains.iMax);
+		mMasterSparkOutput.setTargetVelocity(velocity, masterGains);
+		mSlaveSparkOutput.setTargetVelocity(velocity, slaveGains);
 	}
 
 	public ControllerOutput getMasterSparkOutput() {

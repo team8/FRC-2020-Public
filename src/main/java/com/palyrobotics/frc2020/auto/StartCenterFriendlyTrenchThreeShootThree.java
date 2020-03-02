@@ -15,6 +15,7 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.*;
 import com.palyrobotics.frc2020.robot.OperatorInterface;
+import com.palyrobotics.frc2020.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.util.Units;
@@ -33,36 +34,38 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 		// TODO: Refactor into AutoBase
 		var initialShoot = new ParallelRoutine(
 				new IntakeLowerRoutine(),
-				new ShooterVisionRoutine(3.5),
+				new ShooterVisionRoutine(3.0),
 				new SequentialRoutine(
-						new TimedRoutine(1), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
-						new IndexerFeedAllRoutine(2.5, false, true)));
-		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(60.0);
+						new TimedRoutine(0.8), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
+						new IndexerFeedAllRoutine(2.2, false, true)));
+		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(30.0);
 		var turnAndGetBalls = new SequentialRoutine(
 				new DrivePathRoutine(newWaypoint(20, -10, 90))
-						.setMovement(2.7, 2.2)
+						.setMovement(1.45, 1.4)
 						.driveInReverse(),
+				new IntakeBallRoutine(0.1),
 				new DriveParallelPathRoutine(
 						new DrivePathRoutine(
-								newWaypoint(50, 70, 0),
-								newWaypoint(170, 70, 0))
-										.setMovement(2.5, 2.5)
+								newWaypoint(110, 73, 0),
+								newWaypoint(170, 73, 0))
+										.setMovement(3.2, 2.6)
 										// Slow down to intake balls
-										.limitWhen(1.3, inTrenchTest),
+										.limitWhen(1.1, inTrenchTest),
 						// Intake balls in trench
 						new ParallelRoutine(
-								new IntakeBallRoutine(6),
-								new IndexerTimeRoutine(6)),
+								new IntakeBallRoutine(Double.POSITIVE_INFINITY),
+								new IndexerTimeRoutine(Double.POSITIVE_INFINITY)),
 						inTrenchTest));
 
 		var turnAndShoot = new SequentialRoutine(
 				new ParallelRaceRoutine(
-						new IndexerTimeRoutine(2.0),
+						new IndexerTimeRoutine(Double.POSITIVE_INFINITY),
+						new ShooterCustomVelocityRoutine(Double.POSITIVE_INFINITY, 2000.0, Shooter.HoodState.HIGH),
 						new DriveAlignYawAssistedRoutine(180, OperatorInterface.kOnesTimesZoomAlignButton)),
 				new ParallelRoutine(
 						new ShooterVisionRoutine(4.0),
 						new SequentialRoutine(
-								new TimedRoutine(1.0),
+								new TimedRoutine(0.2),
 								new IndexerFeedAllRoutine(3.0, false, true))));
 
 		return new SequentialRoutine(setInitialOdometry, initialShoot, turnAndGetBalls, turnAndShoot);
