@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMBING, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
+		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
 	}
 
 	public abstract static class LEDController {
@@ -109,16 +109,16 @@ public class Lighting extends SubsystemBase {
 							List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1.0 / 5.0));
 					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
 					break;
-				case CLIMBING:
+				case CLIMB_DONE:
 					addToControllers(new FadeInController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, Color.HSV.kPink, 0.5, 3));
 					break;
 				case INTAKE_EXTENDED:
 					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
 							mConfig.frontLeftSegmentLastIndex, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1.0 / 5.0));
-					addToControllers(new PulseController(mConfig.frontRightSegmentFirstIndex,
-							mConfig.frontRightSegmentLastIndex, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1.0 / 6.0));
-					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
+					addToControllers(new PulseController(mConfig.frontRightSegmentLastIndex,
+							mConfig.frontRightSegmentFirstIndex, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1.0 / 6.0));
+					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kPurple, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
 					break;
 				case ROBOT_ALIGNED:
 					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2));

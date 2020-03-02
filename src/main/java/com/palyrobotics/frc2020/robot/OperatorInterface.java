@@ -130,8 +130,7 @@ public class OperatorInterface {
 	}
 
 	private void updateLightingCommands(Commands commands, @ReadOnly RobotState state) {
-
-		if (mOperatorXboxController.getDPadLeftPressed()) {
+		if (mOperatorXboxController.getDPadLeft()) {
 			commands.lightingWantedState = Lighting.State.INTAKE_EXTENDED;
 		}
 		if (state.indexerHasBackBall) {
@@ -146,10 +145,9 @@ public class OperatorInterface {
 			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
 		}
 
-
-		//		if (state.climberCurrentDraw >= mClimberConfig.currentDrawWhenClimbing) {
-//			commands.lightingWantedState = Lighting.State.CLIMBING;
-//		}
+		if (commands.climberWantedState == Climber.State.LOCKED) {
+			commands.lightingWantedState = Lighting.State.CLIMB_DONE;
+		}
 
 		if (state.indexerHasTopBall) {
 			commands.lightingWantedState = Lighting.State.BALL_SHOT;
