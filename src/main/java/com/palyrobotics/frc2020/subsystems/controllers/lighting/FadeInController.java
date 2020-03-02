@@ -24,8 +24,8 @@ public class FadeInController extends Lighting.LEDController {
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
-		mTimer.start();
 		kPriority = 1;
+		mTimer.start();
 	}
 
 	public FadeInController(int startIndex, int lastIndex, Color.HSV flashedColor, int delay, double duration) {
@@ -35,6 +35,7 @@ public class FadeInController extends Lighting.LEDController {
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mDuration = duration;
+		kPriority = 1;
 		mTimer.start();
 	}
 
