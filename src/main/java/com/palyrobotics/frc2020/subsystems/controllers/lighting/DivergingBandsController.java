@@ -66,7 +66,6 @@ public class DivergingBandsController extends Lighting.LEDController {
 						mBackgroundColor.getS(), mBackgroundColor.getV());
 			}
 		}
-		System.out.println(mTimer.get());
 	}
 
 	@Override

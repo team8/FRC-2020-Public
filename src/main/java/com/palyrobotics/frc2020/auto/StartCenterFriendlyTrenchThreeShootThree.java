@@ -40,7 +40,7 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(60.0);
 		var turnAndGetBalls = new SequentialRoutine(
 				new DrivePathRoutine(newWaypoint(20, -10, 90))
-						.setMovement(2.5, 2.0)
+						.setMovement(2.7, 2.2)
 						.driveInReverse(),
 				new DriveParallelPathRoutine(
 						new DrivePathRoutine(
