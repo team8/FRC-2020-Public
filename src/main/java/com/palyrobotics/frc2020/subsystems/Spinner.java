@@ -30,10 +30,10 @@ public class Spinner extends SubsystemBase {
 				mOutput.setIdle();
 				break;
 			case ROTATING_LEFT:
-				mOutput.setPercentOutput(mConfig.percentOutput);
+				mOutput.setPercentOutput(commands.spinnerWantedPercentOutput);
 				break;
 			case ROTATING_RIGHT:
-				mOutput.setPercentOutput(-mConfig.percentOutput);
+				mOutput.setPercentOutput(-commands.spinnerWantedPercentOutput);
 				break;
 		}
 	}

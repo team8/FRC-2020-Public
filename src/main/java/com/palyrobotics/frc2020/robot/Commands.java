@@ -48,6 +48,7 @@ public class Commands {
 	private double shooterWantedCustomFlywheelVelocity;
 	/* Spinner */
 	public Spinner.State spinnerWantedState;
+	public double spinnerWantedPercentOutput;
 	/* Vision */
 	public int visionWantedPipeline;
 	public boolean visionWanted;

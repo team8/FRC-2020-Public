@@ -3,12 +3,14 @@ package com.palyrobotics.frc2020.behavior.routines.spinner;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.behavior.RoutineBase;
+import com.palyrobotics.frc2020.config.subsystem.SpinnerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.subsystems.Spinner;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
+import com.palyrobotics.frc2020.util.config.Configs;
 
 public class SpinnerPositionControlRoutine extends RoutineBase {
 
@@ -17,6 +19,7 @@ public class SpinnerPositionControlRoutine extends RoutineBase {
 	@Override
 	protected void start(Commands commands, @ReadOnly RobotState state) {
 		mDirectionToGoalColor = mSpinner.directionToGoalColor(state.closestColorString, state.gameData);
+		commands.spinnerWantedPercentOutput = Configs.get(SpinnerConfig.class).positionControlPercentOutput;
 	}
 
 	@Override
