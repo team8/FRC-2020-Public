@@ -116,7 +116,7 @@ public class OperatorInterface {
 	private void updateLightingCommands(Commands commands, @ReadOnly RobotState state) {
 
 		if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.lightingWantedState = Lighting.State.INTAKE_EXTENDED;
+			commands.lightingWantedState = Lighting.State.INTAKE_EXTENDED; // TODO: Dpad left isn't for intake_extended
 		}
 		if (state.indexerHasBackBall) {
 			commands.lightingWantedState = Lighting.State.BALL_ENTERED;
@@ -128,9 +128,10 @@ public class OperatorInterface {
 		if (mTurnStick.getRawButton(3) || mTurnStick.getRawButton(4) && mLimelight.isAligned()) {
 			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
 		}
-		if (state.shooterHasBall) {
-			commands.lightingWantedState = Lighting.State.BALL_SHOT;
-		}
+
+//		if (state.shooterHasBall) {
+//			commands.lightingWantedState = Lighting.State.BALL_SHOT;
+//		}
 
 		if (state.shooterIsReadyToShoot) {
 			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;

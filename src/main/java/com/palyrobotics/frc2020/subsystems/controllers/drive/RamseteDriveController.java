@@ -2,7 +2,6 @@ package com.palyrobotics.frc2020.subsystems.controllers.drive;
 
 import static com.palyrobotics.frc2020.config.constants.DriveConstants.kKinematics;
 
-import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
