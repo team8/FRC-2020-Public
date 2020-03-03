@@ -13,5 +13,5 @@
     "rumbleDurationSeconds": 0.5,
     "hoodSwitchDistanceThreshold": 10.0,
     "noTargetSpinUpVelocity": 1900,
-    "customVelocity": 800
+    "customVelocity": 2000
 }

@@ -163,6 +163,10 @@ public class OperatorInterface {
 			}
 			commands.intakeWantedState = Intake.State.LOWER;
 		}
+
+		if (mOperatorXboxController.getAButtonPressed()) {
+			commands.setShooterCustomFlywheelVelocity(mShooterConfig.customVelocity, Shooter.HoodState.LOW);
+		}
 		/* Ball Intake Control */
 		if (mOperatorXboxController.getDPadLeft()) {
 			commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
