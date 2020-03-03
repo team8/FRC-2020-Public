@@ -31,7 +31,7 @@ public class DivergingBandsController extends Lighting.LEDController {
 		mBackgroundColor = backgroundColor;
 		mBandLedCount = bandLedCount;
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
-		kPriority = 0;
+		kPriority = 1;
 		mTimer.start();
 	}
 
@@ -44,7 +44,7 @@ public class DivergingBandsController extends Lighting.LEDController {
 		mBandLedCount = bandLedCount;
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mDuration = duration;
-		kPriority = 0;
+		kPriority = 1;
 		mTimer.start();
 	}
 
@@ -54,15 +54,15 @@ public class DivergingBandsController extends Lighting.LEDController {
 			mOldModValue = Math.round(mTimer.get() / mSpeed) % 2;
 			mCurrentBandPosition += 1;
 		}
-		for (var i = 0; i < (mLastIndex - mStartIndex) / 2 - 1; i++) {
+		for (var i = 0; i < (mLastIndex - mStartIndex) / 2 + 1; i++) {
 			if ((i + mCurrentBandPosition) / mBandLedCount % 2 == 0) {
 				mOutputs.lightingOutput.get(i).setHSV(mBandColor.getH(), mBandColor.getS(), mBandColor.getV());
-				mOutputs.lightingOutput.get(mLastIndex - mStartIndex - i - 1).setHSV(mBandColor.getH(),
+				mOutputs.lightingOutput.get(mLastIndex - mStartIndex - i).setHSV(mBandColor.getH(),
 						mBandColor.getS(), mBandColor.getV());
 			} else {
 				mOutputs.lightingOutput.get(i).setHSV(mBackgroundColor.getH(), mBackgroundColor.getS(),
 						mBackgroundColor.getV());
-				mOutputs.lightingOutput.get(mLastIndex - mStartIndex - i - 1).setHSV(mBackgroundColor.getH(),
+				mOutputs.lightingOutput.get(mLastIndex - mStartIndex - i).setHSV(mBackgroundColor.getH(),
 						mBackgroundColor.getS(), mBackgroundColor.getV());
 			}
 		}
