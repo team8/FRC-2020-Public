@@ -43,10 +43,10 @@ public class Lighting extends SubsystemBase {
 		}
 
 		@Override
-		public boolean equals(Object object){
-			if(object instanceof LEDController){
-				LEDController otherController = (LEDController)object;
-				if(otherController.mStartIndex == this.mStartIndex && otherController.mLastIndex == this.mLastIndex){
+		public boolean equals(Object object) {
+			if (object instanceof LEDController) {
+				LEDController otherController = (LEDController) object;
+				if (otherController.mStartIndex == this.mStartIndex && otherController.mLastIndex == this.mLastIndex) {
 					return true;
 				}
 			}
