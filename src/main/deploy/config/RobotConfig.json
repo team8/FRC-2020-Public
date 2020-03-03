@@ -10,8 +10,7 @@
 		"intake",
 		"shooter",
 		"lighting",
-		"climber",
-		"spinner"
+		"climber"
 	],
 	"checkFaults": false,
 	"coastDriveWhenDisabled": true,
