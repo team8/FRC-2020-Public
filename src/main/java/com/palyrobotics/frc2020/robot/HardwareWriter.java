@@ -70,9 +70,7 @@ public class HardwareWriter {
 		hardware.sparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
 		hardware.spark.setInverted(true);
 		hardware.sparkEncoder.setPosition(0.0);
-		hardware.spark.enableSoftLimit(SoftLimitDirection.kForward, true);
 		hardware.spark.setSoftLimit(SoftLimitDirection.kForward, 136.0f);
-		hardware.spark.enableSoftLimit(SoftLimitDirection.kReverse, true);
 		hardware.spark.setSoftLimit(SoftLimitDirection.kReverse, 0.0f);
 		hardware.spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 	}
@@ -188,6 +186,12 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.DriveHardware.getInstance();
 		hardware.leftMasterFalcon.setNeutralMode(neutralMode);
 		hardware.rightMasterFalcon.setNeutralMode(neutralMode);
+	}
+
+	void setClimberSoftLimitsEnabled(boolean isEnabled) {
+		var spark = HardwareAdapter.ClimberHardware.getInstance().spark;
+		spark.enableSoftLimit(SoftLimitDirection.kForward, isEnabled);
+		spark.enableSoftLimit(SoftLimitDirection.kReverse, isEnabled);
 	}
 
 	/**

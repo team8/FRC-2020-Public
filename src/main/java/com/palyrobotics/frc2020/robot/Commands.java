@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 /**
  * Commands represent what we want the robot to be doing.
- *
- * @author Nihar
  */
 @SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class Commands {
@@ -25,6 +23,7 @@ public class Commands {
 	public Climber.State climberWantedState;
 	public double climberPositionSetpoint;
 	public double climberWantedManualPercentOutput;
+	public boolean climberWantsSoftLimits;
 	/* Drive */
 	/* Drive Commands */
 	private Drive.State driveWantedState;

@@ -265,7 +265,10 @@ public class Robot extends TimedRobot {
 			subsystem.update(mCommands, mRobotState);
 			mDebugger.addPoint(subsystem.getName());
 		}
-		if (kCanUseHardware) mHardwareWriter.updateHardware(mEnabledSubsystems);
+		if (kCanUseHardware) {
+			mHardwareWriter.updateHardware(mEnabledSubsystems);
+			mHardwareWriter.setClimberSoftLimitsEnabled(mCommands.climberWantsSoftLimits);
+		}
 		mDebugger.addPoint("updateHardware");
 		updateVision(mCommands.visionWanted, mCommands.visionWantedPipeline);
 		updateCompressor();

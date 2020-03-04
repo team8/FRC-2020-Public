@@ -68,6 +68,12 @@ public class OperatorInterface {
 
 		commands.climberWantedManualPercentOutput = -mOperatorXboxController.getY(Hand.kLeft);
 
+		if (mOperatorXboxController.getStickButtonPressed(Hand.kLeft)) {
+			commands.climberWantsSoftLimits = false;
+		} else if (mOperatorXboxController.getStickButtonReleased(Hand.kLeft)) {
+			commands.climberWantsSoftLimits = true;
+		}
+
 		if (commands.climberWantedState != Climber.State.MANUAL && handleDeadBand(commands.climberWantedManualPercentOutput, kDeadBand) != 0) {
 			commands.climberWantedState = Climber.State.MANUAL;
 		} else if (commands.climberWantedState == Climber.State.IDLE && handleDeadBand(commands.climberWantedManualPercentOutput, kDeadBand) == 0) {
@@ -221,6 +227,7 @@ public class OperatorInterface {
 	public void reset(Commands commands) {
 		commands.routinesWanted.clear();
 		commands.climberWantedState = Climber.State.IDLE;
+		commands.climberWantsSoftLimits = true;
 		commands.setDriveNeutral();
 		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		commands.intakeWantedState = Intake.State.STOW;
