@@ -20,12 +20,11 @@ import com.palyrobotics.frc2020.subsystems.Indexer;
  * left ball should be centered in the intake from this configuration.
  */
 @SuppressWarnings ("Duplicates")
-public class TrenchStealTwoShootFive extends AutoBase {
+public class TrenchStealTwoShootFiveRendezvousTwo extends AutoBase {
 
 	@Override
 	public RoutineBase getRoutine() {
 		var setInitialOdometry = new DriveSetOdometryRoutine(0, 0, 0);
-
 		var getTrenchBalls = new ParallelRaceRoutine(
 				new SequentialRoutine(
 						new DrivePathRoutine(newWaypoint(92, 0, 0))
@@ -33,25 +32,45 @@ public class TrenchStealTwoShootFive extends AutoBase {
 						new DriveYawRoutine(15.0)),
 				new IndexerTimeRoutine(Double.POSITIVE_INFINITY),
 				new IntakeBallRoutine(Double.POSITIVE_INFINITY));
-
-		var goToShoot = new ParallelRoutine(
-				new DrivePathRoutine(newWaypoint(50, 150, 180))
-						.setMovement(5.0, 8.0)
+		var goToShoot = new ParallelRaceRoutine(
+				new DrivePathRoutine(newWaypoint(60, 70, 150))
+						.setMovement(1.5, 2.4)
 						.driveInReverse(),
-				new IndexerTimeRoutine(1.5),
+				new IndexerTimeRoutine(Double.POSITIVE_INFINITY),
 				new SequentialRoutine(
+						new TimedRoutine(0.2),
 						new IndexerHopperRoutine(Indexer.HopperState.OPEN),
-						new IndexerHopperRoutine(Indexer.HopperState.CLOSED),
-						new IndexerTimeRoutine(1.0)));
-
+						new TimedRoutine(Double.POSITIVE_INFINITY)));
 		var shootBalls = new SequentialRoutine(
 				new DriveAlignRoutine(0),
 				new ParallelRoutine(
 						new ShooterVisionRoutine(6),
 						new SequentialRoutine(
 								new TimedRoutine(1.0),
-								new IndexerFeedAllRoutine(5, false, true))));
-
-		return new SequentialRoutine(setInitialOdometry, getTrenchBalls, goToShoot, shootBalls);
+								new SequentialRoutine(
+										new IndexerFeedAllRoutine(0.4, false, true),
+										new IndexerFeedAllRoutine(4.6, false, true)))));
+		var turnAndIntake = new ParallelRaceRoutine(
+				new SequentialRoutine(
+						new DrivePathRoutine(newWaypoint(77, 113, 15.0))
+								.setMovement(2.0, 2.0),
+						new DriveYawRoutine(20.0)),
+				new IntakeBallRoutine(Double.POSITIVE_INFINITY),
+				new IndexerTimeRoutine(Double.POSITIVE_INFINITY));
+//        var backupAndShoot = new SequentialRoutine(
+//                new DrivePathRoutine(newWaypoint(40.0, 113.0, 150.0))
+//                        .driveInReverse(),
+//                new ParallelRoutine(
+//                        new DriveAlignRoutine(0),
+//                        new ShooterVisionRoutine(6),
+//                        new SequentialRoutine(
+//                                new TimedRoutine(1.0),
+//                                new SequentialRoutine(
+//                                        new IndexerFeedAllRoutine(0.4, false, true),
+//                                        new IndexerFeedAllRoutine(4.6, false, true)
+//                                )))
+//        );
+//        return new SequentialRoutine(setInitialOdometry, getTrenchBalls, goToShoot, shootBalls, turnAndIntake, backupAndShoot);
+		return new SequentialRoutine(setInitialOdometry, getTrenchBalls, goToShoot, shootBalls, turnAndIntake);
 	}
 }
