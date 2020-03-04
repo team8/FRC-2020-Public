@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMBING, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
+		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
 	}
 
 	public abstract static class LEDController {
@@ -28,7 +28,6 @@ public class Lighting extends SubsystemBase {
 		protected LightingOutputs mOutputs = new LightingOutputs();
 		protected Timer mTimer = new Timer();
 
-		protected boolean mNoDestroy;
 		protected int mStartIndex;
 		protected int mLastIndex;
 		protected double mSpeed;
@@ -39,16 +38,13 @@ public class Lighting extends SubsystemBase {
 				mOutputs.lightingOutput.add(new Color.HSV());
 			}
 			mTimer.reset();
-
 		}
 
 		@Override
 		public boolean equals(Object object) {
 			if (object instanceof LEDController) {
 				LEDController otherController = (LEDController) object;
-				if (otherController.mStartIndex == this.mStartIndex && otherController.mLastIndex == this.mLastIndex) {
-					return true;
-				}
+				return otherController.mStartIndex == this.mStartIndex && otherController.mLastIndex == this.mLastIndex && this.getClass().getName().equals(otherController.getClass().getName());
 			}
 			return false;
 		}
@@ -107,36 +103,29 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new OneColorController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, Color.HSV.kBlue, 2));
 					break;
 				case BALL_ENTERED:
-					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
-							mConfig.frontLeftSegmentLastIndex, List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1.0 / 5.0));
-					addToControllers(new PulseController(mConfig.frontRightSegmentLastIndex, mConfig.frontRightSegmentFirstIndex,
-							List.of(Color.HSV.kOrange, Color.HSV.kOrange, Color.HSV.kOrange), 1.0 / 5.0));
+					addToControllers(new DivergingBandsController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, Color.HSV.kOrange, Color.HSV.kWhite, 2, 1.0 / 6.0, 2));
 					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
 					break;
-				case CLIMBING:
-					addToControllers(new FadeInFadeOutController(mConfig.totalSegmentFirstIndex,
+				case CLIMB_DONE:
+					addToControllers(new FadeInController(mConfig.totalSegmentFirstIndex,
 							mConfig.totalSegmentLastIndex, Color.HSV.kPink, 0.5, 3));
 					break;
 				case INTAKE_EXTENDED:
-					addToControllers(new PulseController(mConfig.frontLeftSegmentFirstIndex,
-							mConfig.frontLeftSegmentLastIndex, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1.0 / 5.0));
-					addToControllers(new PulseController(mConfig.frontRightSegmentFirstIndex,
-							mConfig.frontRightSegmentLastIndex, List.of(Color.HSV.kPurple, Color.HSV.kPurple, Color.HSV.kPurple), 1.0 / 5.0));
-					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kOrange, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
+					addToControllers(new DivergingBandsController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, Color.HSV.kPurple, Color.HSV.kWhite, 2, 1.0 / 6.0, 2));
+					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kPurple, Color.HSV.kWhite, 3, 1.0 / 6.0, 2));
 					break;
 				case ROBOT_ALIGNED:
 					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2));
 					break;
 				case SHOOTER_FULLRPM:
-					addToControllers(new FlashingLightsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2, 2));
+					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kGreen, 0.5, 5));
 					break;
 				case BALL_SHOT:
-					addToControllers(new OneColorController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kBlue, 1));
+					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kBlue, 0.25));
 			}
 		}
 
 		resetLedStrip();
-
 		if (mLEDControllers.removeIf(LEDController::checkFinished)) {
 			mState = State.DO_NOTHING;
 		}
