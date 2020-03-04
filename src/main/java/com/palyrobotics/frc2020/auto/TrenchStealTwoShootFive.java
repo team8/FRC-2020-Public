@@ -32,7 +32,7 @@ public class TrenchStealTwoShootFive extends AutoBase {
 								.setMovement(1.5, 2.4),
 						new DriveYawRoutine(15.0)),
 				new IndexerTimeRoutine(Double.POSITIVE_INFINITY),
-				new IntakeBallRoutine(Double.POSITIVE_INFINITY));
+				new IntakeBallRoutine(Double.POSITIVE_INFINITY, 1.0));
 
 		var goToShoot = new ParallelRoutine(
 				new DrivePathRoutine(newWaypoint(50, 150, 180))

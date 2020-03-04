@@ -43,6 +43,7 @@ public class Commands {
 	public double indexerManualVelocity;
 	/* Intake */
 	public Intake.State intakeWantedState;
+	public double intakeWantedPercentOutput;
 	/* Shooter */
 	private Shooter.ShooterState shooterWantedState;
 	private double shooterWantedCustomFlywheelVelocity;

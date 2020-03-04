@@ -25,13 +25,11 @@ import edu.wpi.first.wpilibj.util.Units;
  * front bumper extends past the white line.
  */
 @SuppressWarnings ("Duplicates")
-public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRoutine {
+public class StartCenterFriendlyTrenchThreeShootThree extends AutoBase {
 
-	// Starts center, initial 180
 	@Override
 	public RoutineBase getRoutine() {
 		var setInitialOdometry = new DriveSetOdometryRoutine(0, 0, 180);
-		// TODO: Refactor into AutoBase
 		var initialShoot = new ParallelRoutine(
 				new IntakeLowerRoutine(),
 				new ShooterVisionRoutine(3.0),
@@ -43,7 +41,7 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 				new DrivePathRoutine(newWaypoint(20, -10, 90))
 						.setMovement(1.45, 1.4)
 						.driveInReverse(),
-				new IntakeBallRoutine(0.1),
+				new IntakeBallRoutine(0.1, 1.0),
 				new DriveParallelPathRoutine(
 						new DrivePathRoutine(
 								newWaypoint(110, 73, 0),
@@ -53,7 +51,7 @@ public class StartCenterFriendlyTrenchThreeShootThree extends FriendlyTrenchRout
 										.limitWhen(1.1, inTrenchTest),
 						// Intake balls in trench
 						new ParallelRoutine(
-								new IntakeBallRoutine(Double.POSITIVE_INFINITY),
+								new IntakeBallRoutine(Double.POSITIVE_INFINITY, 1.0),
 								new IndexerTimeRoutine(Double.POSITIVE_INFINITY)),
 						inTrenchTest));
 

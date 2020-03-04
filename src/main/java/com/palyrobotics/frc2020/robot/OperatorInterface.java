@@ -11,9 +11,8 @@ import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControl
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedSingleRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerIdleRoutine;
-import com.palyrobotics.frc2020.config.VisionConfig;
-import com.palyrobotics.frc2020.config.subsystem.ClimberConfig;
 import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
+import com.palyrobotics.frc2020.config.subsystem.IntakeConfig;
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.Joysticks;
 import com.palyrobotics.frc2020.subsystems.*;
@@ -30,16 +29,13 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 public class OperatorInterface {
 
 	public static final double kDeadBand = 0.05;
-	public static final double kClimberEnableControlTimeSeconds = 30;
 	public static final int kOnesTimesZoomAlignButton = 3, kTwoTimesZoomAlignButton = 4;
 	private final ShooterConfig mShooterConfig = Configs.get(ShooterConfig.class);
-	private final ClimberConfig mClimberConfig = Configs.get(ClimberConfig.class);
-	private final VisionConfig mVisionConfig = Configs.get(VisionConfig.class);
+	private final IntakeConfig mIntakeConfig = Configs.get(IntakeConfig.class);
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
 	private Limelight mLimelight = Limelight.getInstance();
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
-	private double mClimberLastVelocity;
 
 	/**
 	 * Modifies commands based on operator input devices.
@@ -177,10 +173,12 @@ public class OperatorInterface {
 		if (mOperatorXboxController.getDPadLeft()) {
 			commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 			commands.intakeWantedState = Intake.State.INTAKE;
+			commands.intakeWantedPercentOutput = mIntakeConfig.intakingOutput;
 			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
 		}
 		if (mOperatorXboxController.getDPadLeftReleased()) {
 			commands.intakeWantedState = Intake.State.LOWER;
+			commands.intakeWantedPercentOutput = 0.0;
 			commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		}
 		/* Shooting */
