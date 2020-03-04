@@ -128,15 +128,16 @@ public class HardwareReader {
 		state.detectedRGBValues = SpinnerHardware.getInstance().colorSensor.getColor();
 		state.closestColorRGB = mColorMatcher.matchClosestColor(state.detectedRGBValues);
 		if (state.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
-			state.closestColorString = "Cyan";
+			state.closestColorString = "C";
 		} else if (state.closestColorRGB.color == SpinnerConstants.kYellowCPTarget) {
-			state.closestColorString = "Yellow";
+			state.closestColorString = "Y";
 		} else if (state.closestColorRGB.color == SpinnerConstants.kGreenCPTarget) {
-			state.closestColorString = "Green";
+			state.closestColorString = "G";
 		} else if (state.closestColorRGB.color == SpinnerConstants.kRedCPTarget) {
-			state.closestColorString = "Red";
+			state.closestColorString = "R";
 		}
 		state.closestColorConfidence = state.closestColorRGB.confidence;
+//		System.out.println(Spinner.getInstance().directionToGoalColor(state.closestColorString, state.gameData));
 	}
 
 	private void checkSparkFaults(Spark spark) {

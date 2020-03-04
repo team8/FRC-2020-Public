@@ -16,7 +16,7 @@ public class Spinner extends SubsystemBase {
 
 	private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
 	private static Spinner sInstance = new Spinner();
-	ControllerOutput mOutput = new ControllerOutput();
+	private ControllerOutput mOutput = new ControllerOutput();
 
 	public static Spinner getInstance() {
 		return sInstance;
@@ -30,10 +30,10 @@ public class Spinner extends SubsystemBase {
 				mOutput.setIdle();
 				break;
 			case ROTATING_LEFT:
-				mOutput.setPercentOutput(mConfig.percentOutput);
+				mOutput.setPercentOutput(commands.spinnerWantedPercentOutput);
 				break;
 			case ROTATING_RIGHT:
-				mOutput.setPercentOutput(-mConfig.percentOutput);
+				mOutput.setPercentOutput(-commands.spinnerWantedPercentOutput);
 				break;
 		}
 	}
@@ -49,8 +49,8 @@ public class Spinner extends SubsystemBase {
 	public int directionToGoalColor(String currentColor, String gameTargetColor) {
 		int gameDataIndex = SpinnerConstants.kControlPanelColorOrder.indexOf(gameTargetColor),
 				currentColorIndex = SpinnerConstants.kControlPanelColorOrder.indexOf(currentColor);
-
-		return (gameDataIndex - currentColorIndex) % 4 <= 2 ? -1 : 1;
+		System.out.println((gameDataIndex - currentColorIndex) % 4);
+		return (gameDataIndex - currentColorIndex) % 4 < 2 ? -1 : 1;
 	}
 
 	public ControllerOutput getOutput() {
