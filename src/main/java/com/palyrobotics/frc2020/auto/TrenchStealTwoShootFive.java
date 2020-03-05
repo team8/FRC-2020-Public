@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.auto;
 
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
+import com.palyrobotics.frc2020.behavior.ConditionalRoutine;
 import com.palyrobotics.frc2020.behavior.ParallelRoutine;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
@@ -13,6 +14,7 @@ import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.*;
 import com.palyrobotics.frc2020.subsystems.Indexer;
+import com.palyrobotics.frc2020.vision.Limelight;
 
 /**
  * Start by facing and aligning the center of the intake to the middle of the two balls of the
@@ -39,10 +41,11 @@ public class TrenchStealTwoShootFive extends AutoBase {
 						.setMovement(5.0, 8.0)
 						.driveInReverse(),
 				new IndexerTimeRoutine(1.5),
-				new SequentialRoutine(
+				new ConditionalRoutine(new SequentialRoutine(
 						new IndexerHopperRoutine(Indexer.HopperState.OPEN),
 						new IndexerHopperRoutine(Indexer.HopperState.CLOSED),
-						new IndexerTimeRoutine(1.0)));
+						new IndexerTimeRoutine(1.0)),
+						state -> Limelight.getInstance().isAligned(1.5)));
 
 		var shootBalls = new SequentialRoutine(
 				new DriveAlignRoutine(0),

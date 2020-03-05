@@ -32,4 +32,36 @@ public class RoutineTests {
 
 	private static MockSubsystem mockSubsystem = new MockSubsystem();
 
+//	@Test
+//	public void testRoutine() {
+//		var conditional = new ConditionalRoutine(new RoutineBase() {
+//
+//			@Override
+//			public boolean checkFinished(@ReadOnly RobotState state) {
+//				return false;
+//			}
+//
+//			@Override
+//			protected void start(Commands commands, @ReadOnly RobotState state) {
+//				System.out.println("Start");
+//			}
+//
+//			@Override
+//			protected void update(Commands commands, @ReadOnly RobotState state) {
+//				System.out.println("u");
+//			}
+//
+//			@Override
+//			public Set<SubsystemBase> getRequiredSubsystems() {
+//				return Set.of();
+//			}
+//		}, state -> true);
+//		var commands = new Commands();
+//		commands.addWantedRoutine(conditional);
+//		var routineManger = new RoutineManager();
+//		var state = new RobotState();
+//		routineManger.update(commands, state);
+//		routineManger.update(commands, state);
+//		routineManger.update(commands, state);
+//	}
 }

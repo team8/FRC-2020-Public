@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
+import com.palyrobotics.frc2020.auto.AutoBase;
 import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
 import com.palyrobotics.frc2020.auto.TrenchStealTwoShootFive;
 import com.palyrobotics.frc2020.behavior.MultipleRoutineBase;
@@ -66,6 +67,17 @@ public class Robot extends TimedRobot {
 	private Set<RobotService> mServices = Set.of(new CommandReceiverService(), new NetworkLoggerService(),
 			new TelemetryService()),
 			mEnabledServices;
+
+	// ============================================================= //
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
+
+	public static AutoBase sChosenAuto = new TrenchStealTwoShootFive();
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
+	// ============================================================= //
+
+	private static Set<AutoBase> sAutos = Set.of(sChosenAuto, new StartCenterFriendlyTrenchThreeShootThree());
+	public static Map<String, AutoBase> sNameToAuto = sAutos.stream().collect(Collectors.toUnmodifiableMap(AutoBase::getName, Function.identity()));
 
 	public Robot() {
 		super(kPeriod);
@@ -157,8 +169,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
-		mCommands.addWantedRoutine(new TrenchStealTwoShootFive().getRoutine());
+//		mCommands.addWantedRoutine(new TrenchStealTwoShootFive().getRoutine());
 //		mCommands.addWantedRoutine(new StartCenterFriendlyTrenchThreeShootThree().getRoutine());
+		mCommands.addWantedRoutine(sChosenAuto.getRoutine());
 	}
 
 	private void startStage(RobotState.GamePeriod period) {

@@ -25,6 +25,7 @@ import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllR
 import com.palyrobotics.frc2020.behavior.routines.superstructure.ShooterCustomVelocityRoutine;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.Robot;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Shooter;
 import com.palyrobotics.frc2020.util.config.ConfigBase;
@@ -128,7 +129,7 @@ public class CommandReceiverService implements RobotService {
 	}
 
 	private String handleParsedCommand(Namespace parse, Commands commands) {
-		// TODO less nesting >:( refactor into functions
+		// TODO less nesting >:( refactor into functions`
 		var commandName = parse.getString("command");
 		switch (commandName) {
 			case "get":
@@ -136,8 +137,16 @@ public class CommandReceiverService implements RobotService {
 			case "save":
 			case "reload": {
 				String configName = parse.getString("config_name");
-				if (commandName.equals("get") && configName.equals("Configs")) {
-					return String.join(",", Configs.getActiveConfigNames());
+				// TODO: make cleaner
+				if (commandName.equals("get")) {
+					if (configName.equals("configs")) {
+						return String.join(",", Configs.getActiveConfigNames());
+					} else if (configName.equals("autos")) {
+						return String.join(",", Robot.sNameToAuto.keySet());
+					}
+				} else if (commandName.equals("set") && configName.equals("auto") && Robot.sNameToAuto.containsKey(parse.getString("config_field"))) {
+					Robot.sChosenAuto = Robot.sNameToAuto.get(parse.getString("config_field"));
+					return "Set auto!";
 				}
 				try {
 					Class<? extends ConfigBase> configClass = Configs.getClassFromName(configName);

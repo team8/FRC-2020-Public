@@ -37,11 +37,14 @@ public class Limelight {
 	 */
 	public boolean isTargetFound() {
 		return mTable.getEntry("tv").getDouble(0.0) != 0.0;
-//		return true;
 	}
 
 	public boolean isAligned() {
-		return isTargetFound() && getYawToTarget() < kVisionConfig.acceptableYawError;
+		return isAligned(kVisionConfig.acceptableYawError);
+	}
+
+	public boolean isAligned(double acceptableYawError) {
+		return isTargetFound() && getYawToTarget() < acceptableYawError;
 	}
 
 	/**

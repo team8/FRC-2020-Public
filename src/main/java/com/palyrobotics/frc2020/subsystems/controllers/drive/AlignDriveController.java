@@ -60,38 +60,38 @@ public class AlignDriveController extends ChezyDriveController {
 
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		double gyroYawDegrees = state.driveYawDegrees;
-		double gyroYawAngularVelocity = state.driveYawAngularVelocityDegrees;
-//		LiveGraph.add("isTargetFound", mLimelight.isTargetFound() ? 1.0 : 0.0);
-		if (mLimelight.isTargetFound()) {
-			double visionYawToTargetDegrees = mLimelight.getYawToTarget();
-//			LiveGraph.add("visionYawToTargetDegrees", visionYawToTargetDegrees);
-			mTargetGyroYaw = mTargetYawFilter.calculate(gyroYawDegrees - visionYawToTargetDegrees);
-			mTargetFoundCount++;
-//			LiveGraph.add("mTargetFoundCount", mTargetFoundCount);
+		if (state.driveIsGyroReady) {
+			double gyroYawDegrees = state.driveYawDegrees;
+			double gyroYawAngularVelocity = state.driveYawAngularVelocityDegrees;
+			if (mLimelight.isTargetFound()) {
+				double visionYawToTargetDegrees = mLimelight.getYawToTarget();
+				mTargetGyroYaw = mTargetYawFilter.calculate(gyroYawDegrees - visionYawToTargetDegrees);
+				mTargetFoundCount++;
+			} else {
+				mTargetFoundCount = 0;
+			}
+			if (mTargetFoundCount >= kFilterSize) {
+				calculate(mTargetGyroYaw, gyroYawDegrees, -gyroYawAngularVelocity);
+				return;
+			}
 		} else {
+			if (mLimelight.isTargetFound()) {
+				calculate(0.0, mLimelight.getYawToTarget(), null);
+			}
 			mTargetFoundCount = 0;
 		}
-		if (mTargetFoundCount >= kFilterSize) {
-			var preciseGains = mVisionConfig.preciseGains;
-			mPidController.setPID(preciseGains.p, preciseGains.i, preciseGains.d);
-//				mPidController.setIntegratorRange(-preciseGains.iMax, preciseGains.iMax);
-			mPidController.setSetpoint(mTargetGyroYaw);
-			double percentOutput = mPidController.calculate(gyroYawDegrees, -gyroYawAngularVelocity);
-			double s = mConfig.turnGainsS;
-			if (Math.abs(mPidController.getError()) < mVisionConfig.acceptableYawError) s *= 0.2;
-			double staticAdjustedPercentOutput = percentOutput + Math.signum(percentOutput) * s;
-//			LiveGraph.add("percentOutput", percentOutput);
-//			LiveGraph.add("gyroYawDegrees", gyroYawDegrees);
-//			LiveGraph.add("gyroYawAngularVelocity", -gyroYawAngularVelocity);
-//			LiveGraph.add("mTargetGyroYaw", mTargetGyroYaw);
-//			LiveGraph.add("staticAdjustedPercentOutput", staticAdjustedPercentOutput);
-//			LiveGraph.add("isDone", 0.0);
-			mOutputs.leftOutput.setPercentOutput(-staticAdjustedPercentOutput);
-			mOutputs.rightOutput.setPercentOutput(staticAdjustedPercentOutput);
-			return;
-		}
-//		LiveGraph.add("isDone", 1.0);
 		super.updateSignal(commands, state);
+	}
+
+	private void calculate(double targetDegrees, double degrees, Double degreesDerivative) {
+		var preciseGains = mVisionConfig.preciseGains;
+		mPidController.setPID(preciseGains.p, preciseGains.i, preciseGains.d);
+		mPidController.setSetpoint(targetDegrees);
+		double percentOutput = degreesDerivative == null ? mPidController.calculate(degrees) : mPidController.calculate(degrees, degreesDerivative);
+		double turnGainS = mConfig.turnGainsS;
+		if (Math.abs(mPidController.getError()) < mVisionConfig.acceptableYawError) turnGainS *= 0.2;
+		double staticAdjustedPercentOutput = percentOutput + Math.signum(percentOutput) * turnGainS;
+		mOutputs.leftOutput.setPercentOutput(-staticAdjustedPercentOutput);
+		mOutputs.rightOutput.setPercentOutput(staticAdjustedPercentOutput);
 	}
 }
