@@ -131,12 +131,16 @@ public class OperatorInterface {
 			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
 		}
 
-//		if (state.shooterHasBall) {
-//			commands.lightingWantedState = Lighting.State.BALL_SHOT;
-//		}
+		if (state.indexerHasTopBall) {
+			commands.lightingWantedState = Lighting.State.BALL_SHOT;
+		}
 
 		if (state.shooterIsReadyToShoot) {
 			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
+		}
+
+		if (commands.climberWantedState == Climber.State.LOCKED) {
+			commands.lightingWantedState = Lighting.State.CLIMB_DONE;
 		}
 	}
 

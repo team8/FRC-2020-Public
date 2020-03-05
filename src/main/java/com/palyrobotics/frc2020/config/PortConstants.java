@@ -43,7 +43,6 @@ public class PortConstants extends ConfigBase {
 	public int nariShooterMasterId, nariShooterSlaveId;
 	public int nariShooterHoodSolenoid;
 	public int nariShooterBlockingSolenoidId;
-	public int nariShooterInfraredDio;
 
 	/**
 	 * Spinner
