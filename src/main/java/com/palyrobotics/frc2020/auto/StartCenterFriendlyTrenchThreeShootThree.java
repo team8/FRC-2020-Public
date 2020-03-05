@@ -44,8 +44,8 @@ public class StartCenterFriendlyTrenchThreeShootThree extends AutoBase {
 				new IntakeBallRoutine(0.1, 1.0),
 				new DriveParallelPathRoutine(
 						new DrivePathRoutine(
-								newWaypoint(110, 73, 0),
-								newWaypoint(170, 73, 0))
+								newWaypoint(110, 71, 0),
+								newWaypoint(170, 71, 0))
 										.setMovement(3.2, 2.6)
 										// Slow down to intake balls
 										.limitWhen(1.1, inTrenchTest),

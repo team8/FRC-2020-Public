@@ -19,7 +19,7 @@ public class Color {
 				kAqua = new HSV(85, 247, 20),
 				kRed = new HSV(0, 255, 100),
 				kPink = new HSV(0, 200, 100),
-				kNothing = new HSV(0, 0, 0);
+				kOff = new HSV(0, 0, 0);
 
 		public HSV() {
 		}
