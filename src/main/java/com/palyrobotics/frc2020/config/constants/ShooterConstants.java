@@ -23,9 +23,9 @@ public class ShooterConstants {
 		kTargetDistanceToVelocity.put(HoodState.LOW, lowMap);
 		/* Middle Velocities */
 		var middleMap = new InterpolatingDoubleTreeMap();
-		middleMap.put(95.0, 3000.0);
-		middleMap.put(131.0, 3020.0);
-		middleMap.put(152.0, 3030.0);
+		middleMap.put(95.0, 2850.0); // 3000
+		middleMap.put(131.0, 2950.0); // 3020
+		middleMap.put(152.0, 3000.0); // 3030
 		kTargetDistanceToVelocity.put(HoodState.MIDDLE, middleMap);
 		/* High Velocities */
 		var highMap = new InterpolatingDoubleTreeMap();
@@ -35,10 +35,6 @@ public class ShooterConstants {
 		highMap.put(329.0, 3850.0);
 		highMap.put(343.0, 4400.0);
 		highMap.put(360.0, 4450.0);
-//		highMap.put(215.0, 3350.0);
-//		highMap.put(237.0, 3500.0);
-//		highMap.put(300.0, 3930.0);
-//		highMap.put(350.0, 4340.0); // 367+
 		kTargetDistanceToVelocity.put(HoodState.HIGH, highMap);
 		/* Hood States */
 		kTargetDistanceToHoodState.put(0.0, HoodState.LOW);
