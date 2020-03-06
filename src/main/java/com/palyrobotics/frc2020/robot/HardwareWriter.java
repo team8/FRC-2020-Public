@@ -20,6 +20,7 @@ import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class HardwareWriter {
@@ -70,7 +71,7 @@ public class HardwareWriter {
 		hardware.sparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
 		hardware.spark.setInverted(true);
 		hardware.sparkEncoder.setPosition(0.0);
-		hardware.spark.setSoftLimit(SoftLimitDirection.kForward, 136.0f);
+		hardware.spark.setSoftLimit(SoftLimitDirection.kForward, 160.0f);
 		hardware.spark.setSoftLimit(SoftLimitDirection.kReverse, 0.0f);
 		hardware.spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 	}
@@ -118,7 +119,7 @@ public class HardwareWriter {
 			spark.setOpenLoopRampRate(0.0825);
 			spark.setClosedLoopRampRate(0.0825);
 			spark.setInverted(true);
-			double maxOutput = 0.8;
+			double maxOutput = 0.9;
 			spark.setOutputRange(-maxOutput, maxOutput);
 			spark.setSmartCurrentLimit((int) Math.round(40.0 / maxOutput));
 			spark.setSecondaryCurrentLimit(50.0 / maxOutput);
@@ -217,7 +218,6 @@ public class HardwareWriter {
 		var hardware = HardwareAdapter.ClimberHardware.getInstance();
 		hardware.spark.setOutput(mClimber.getControllerOutput());
 		hardware.solenoid.setExtended(mClimber.getSolenoidOutput());
-		LiveGraph.add("climberPosition", hardware.sparkEncoder.getPosition());
 	}
 
 	private void updateDrivetrain() {
@@ -244,9 +244,9 @@ public class HardwareWriter {
 		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
 		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
 		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
-//		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
-//		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
-//		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
+		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
+		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
+		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
 //		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));
 //		LiveGraph.add("totalCurrent", pdp.getTotalCurrent());
 //		LiveGraph.add("batteryVoltage", RobotController.getBatteryVoltage());

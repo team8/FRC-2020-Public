@@ -32,6 +32,7 @@ public class StartCenterFriendlyTrenchThreeShootThree extends AutoBase {
 		var setInitialOdometry = new DriveSetOdometryRoutine(0, 0, 180);
 		var initialShoot = new ParallelRoutine(
 				new IntakeLowerRoutine(),
+//				new ShooterCustomVelocityRoutine(3.0, ),
 				new ShooterVisionRoutine(3.0),
 				new SequentialRoutine(
 						new TimedRoutine(0.8), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
