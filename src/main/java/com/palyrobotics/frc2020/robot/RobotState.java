@@ -36,6 +36,7 @@ public class RobotState {
 	/* Indexer */
 	public boolean indexerIsHopperExtended;
 	public boolean indexerHasBackBall, indexerHasFrontBall, indexerHasTopBall;
+	public double indexerMasterVelocity;
 
 	/* Intake */
 	public boolean intakeIsExtended;

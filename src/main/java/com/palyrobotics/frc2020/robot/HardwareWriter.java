@@ -122,7 +122,7 @@ public class HardwareWriter {
 			double maxOutput = 0.9;
 			spark.setOutputRange(-maxOutput, maxOutput);
 			spark.setSmartCurrentLimit((int) Math.round(40.0 / maxOutput));
-			spark.setSecondaryCurrentLimit(50.0 / maxOutput);
+			spark.setSecondaryCurrentLimit(70.0 / maxOutput, 10);
 		}
 		/* V-Belt Talons */
 		for (Talon vTalon : hardware.vTalons) {
@@ -144,7 +144,7 @@ public class HardwareWriter {
 		talon.enableVoltageCompensation(true);
 		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
-		talon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration);
+		talon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
 		talon.configFrameTimings(40, 40);
 	}
 

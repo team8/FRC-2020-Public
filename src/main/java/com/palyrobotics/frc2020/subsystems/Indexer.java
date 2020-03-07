@@ -4,6 +4,7 @@ import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.util.CircularBuffer;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 import com.palyrobotics.frc2020.util.control.Gains;
@@ -16,6 +17,7 @@ public class Indexer extends SubsystemBase {
 			mSlaveSparkOutput = new ControllerOutput(),
 			mLeftVTalonOutput = new ControllerOutput(),
 			mRightVTalonOutput = new ControllerOutput();
+	private CircularBuffer<Double> mMasterVelocityFilter = new CircularBuffer<>(30);
 	private boolean mHopperOutput, mBlockOutput;
 
 	private Indexer() {
@@ -48,7 +50,16 @@ public class Indexer extends SubsystemBase {
 				mBlockOutput = true;
 				break;
 			case INDEX:
-				setProfiledVelocity(mConfig.sparkIndexingOutput);
+				if (state.gamePeriod == RobotState.GamePeriod.AUTO) {
+					mMasterVelocityFilter.add(state.indexerMasterVelocity);
+					if (mMasterVelocityFilter.numberOfOccurrences(d -> (d < mConfig.sparkIndexingOutput * 0.2) && d > -0.1) > 20) {
+						setProfiledVelocity(-mConfig.reversingOutput);
+					} else {
+						setProfiledVelocity(mConfig.sparkIndexingOutput);
+					}
+				} else {
+					setProfiledVelocity(mConfig.sparkIndexingOutput);
+				}
 				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
 				mBlockOutput = true;
 				break;
@@ -61,7 +72,16 @@ public class Indexer extends SubsystemBase {
 				break;
 			case FEED_SINGLE:
 			case FEED_ALL:
-				setProfiledVelocity(mConfig.feedingOutput);
+				if (state.gamePeriod == RobotState.GamePeriod.AUTO) {
+					mMasterVelocityFilter.add(state.indexerMasterVelocity);
+					if (mMasterVelocityFilter.numberOfOccurrences(d -> (d < mConfig.feedingOutput * 0.2) && d > -0.1) > 20) {
+						setProfiledVelocity(-mConfig.reversingOutput);
+					} else {
+						setProfiledVelocity(mConfig.feedingOutput);
+					}
+				} else {
+					setProfiledVelocity(mConfig.feedingOutput);
+				}
 				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
 				mBlockOutput = false;
 				break;
@@ -72,9 +92,12 @@ public class Indexer extends SubsystemBase {
 				break;
 			case MANUAL:
 				setProfiledVelocity(commands.indexerManualVelocity);
-				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
+				setVTalonOutput(
+						Math.signum(commands.indexerManualVelocity) * mConfig.leftTalonIndexingOutput,
+						Math.signum(commands.indexerManualVelocity) * mConfig.rightTalonIndexingOutput, multiplier);
 				break;
 		}
+		if (commands.indexerWantedBeltState != BeltState.INDEX && commands.indexerWantedBeltState != BeltState.FEED_ALL) mMasterVelocityFilter.clear();
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
 	}
 
