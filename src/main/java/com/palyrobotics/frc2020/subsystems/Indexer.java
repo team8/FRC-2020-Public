@@ -53,7 +53,7 @@ public class Indexer extends SubsystemBase {
 				if (state.gamePeriod == RobotState.GamePeriod.AUTO) {
 					mMasterVelocityFilter.add(state.indexerMasterVelocity);
 					if (mMasterVelocityFilter.numberOfOccurrences(d -> (d < mConfig.sparkIndexingOutput * 0.2) && d > -0.1) > 20) {
-						setProfiledVelocity(-mConfig.reversingOutput);
+						setVelocity(-mConfig.reversingOutput);
 					} else {
 						setProfiledVelocity(mConfig.sparkIndexingOutput);
 					}
@@ -75,7 +75,7 @@ public class Indexer extends SubsystemBase {
 				if (state.gamePeriod == RobotState.GamePeriod.AUTO) {
 					mMasterVelocityFilter.add(state.indexerMasterVelocity);
 					if (mMasterVelocityFilter.numberOfOccurrences(d -> (d < mConfig.feedingOutput * 0.2) && d > -0.1) > 20) {
-						setProfiledVelocity(-mConfig.reversingOutput);
+						setVelocity(-mConfig.reversingOutput);
 					} else {
 						setProfiledVelocity(mConfig.feedingOutput);
 					}

@@ -199,11 +199,12 @@ public class HardwareWriter {
 	/**
 	 * Updates the hardware to run with output values of {@link SubsystemBase}'s.
 	 */
-	void updateHardware(Set<SubsystemBase> enabledSubsystems) {
+	void updateHardware(Set<SubsystemBase> enabledSubsystems, @ReadOnly RobotState robotState) {
 		mRumbleOutput = false;
 		if (!mRobotConfig.disableHardwareUpdates) {
 			if (enabledSubsystems.contains(mClimber)) updateClimber();
 			if (enabledSubsystems.contains(mDrive)) updateDrivetrain();
+//			if (enabledSubsystems.contains(mDrive) && robotState.gamePeriod != GamePeriod.TESTING) updateDrivetrain();
 			if (enabledSubsystems.contains(mIndexer)) updateIndexer();
 			if (enabledSubsystems.contains(mIntake)) updateIntake();
 			if (enabledSubsystems.contains(mShooter)) updateShooter();

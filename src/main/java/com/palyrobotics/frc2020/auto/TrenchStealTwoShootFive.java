@@ -47,10 +47,10 @@ public class TrenchStealTwoShootFive extends AutoBase {
 		var shootBalls = new SequentialRoutine(
 				new DriveAlignRoutine(0),
 				new ParallelRoutine(
-						new ShooterVisionRoutine(6),
+						new ShooterVisionRoutine(7.5),
 						new SequentialRoutine(
 								new TimedRoutine(1.0),
-								new IndexerFeedAllRoutine(5, false, true))));
+								new IndexerFeedAllRoutine(6.5, false, true))));
 
 		return new SequentialRoutine(setInitialOdometry, getTrenchBalls, goToShoot, shootBalls);
 	}
