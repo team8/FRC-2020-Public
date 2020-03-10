@@ -38,10 +38,12 @@ public class RoutineTests {
 
 		private int mTime;
 		private int mCycles;
+		private String mName;
 
-		public TestingRoutine(int cycles) {
+		public TestingRoutine(int cycles, String name) {
 			mTime = 0;
 			mCycles = cycles;
+			mName = name;
 		}
 
 		@Override
@@ -58,13 +60,18 @@ public class RoutineTests {
 		public Set<SubsystemBase> getRequiredSubsystems() {
 			return null;
 		}
+
+		@Override
+		public String getName() {
+			return mName;
+		}
 	}
 
 	private static MockSubsystem mockSubsystem = new MockSubsystem();
 
 	@Test
 	public void testRoutine() {
-		var conditionalFalse = new ConditionalRoutine(new TestingRoutine(10), new Predicate<RobotState>() {
+		var conditionalFalse = new ConditionalRoutine(new TestingRoutine(10, "True"), new Predicate<RobotState>() {
 
 			@Override
 			public boolean test(RobotState robotState) {
@@ -86,7 +93,7 @@ public class RoutineTests {
 				return null;
 			}
 		});
-		var conditionalTrue = new ConditionalRoutine(new TestingRoutine(10), new Predicate<RobotState>() {
+		var conditionalTrue = new ConditionalRoutine(new TestingRoutine(10, "False"), new Predicate<RobotState>() {
 
 			@Override
 			public boolean test(RobotState robotState) {
@@ -108,7 +115,7 @@ public class RoutineTests {
 				return null;
 			}
 		});
-		var twoConditionalFalse = new ConditionalRoutine(new TestingRoutine(10), new TestingRoutine(10), new Predicate<RobotState>() {
+		var twoConditionalFalse = new ConditionalRoutine(new TestingRoutine(10, "False1"), new TestingRoutine(10, "False2"), new Predicate<RobotState>() {
 
 			@Override
 			public boolean test(RobotState robotState) {
@@ -130,7 +137,7 @@ public class RoutineTests {
 				return null;
 			}
 		});
-		var twoConditionalTrue = new ConditionalRoutine(new TestingRoutine(10), new TestingRoutine(10), new Predicate<RobotState>() {
+		var twoConditionalTrue = new ConditionalRoutine(new TestingRoutine(10, "True1"), new TestingRoutine(10, "True2"), new Predicate<RobotState>() {
 
 			@Override
 			public boolean test(RobotState robotState) {
@@ -152,6 +159,10 @@ public class RoutineTests {
 				return null;
 			}
 		});
+
+		for (int i = 0; i < 10; i++) {
+
+		}
 	}
 
 //	@Test
