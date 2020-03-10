@@ -1,20 +1,18 @@
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.Arrays;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.palyrobotics.frc2020.behavior.ConditionalRoutine;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.robot.Robot;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class RoutineTests {
 
@@ -85,6 +83,7 @@ public class RoutineTests {
 		var twoConditionalFalse = new ConditionalRoutine(new TestingRoutine(10, "False1"), new TestingRoutine(9, "False2"), robotState -> false);
 		var twoConditionalTrue = new ConditionalRoutine(new TestingRoutine(10, "True1"), new TestingRoutine(9, "True2"), robotState -> true);
 		var twoConditionalSwitch = new ConditionalRoutine(new TestingRoutine(5, "First"), new TestingRoutine(5, "Second"), new Predicate<RobotState>() {
+
 			int iterations = 0;
 
 			@Override
