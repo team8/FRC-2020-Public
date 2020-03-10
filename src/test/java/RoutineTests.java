@@ -8,6 +8,7 @@ import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
+
 import org.junit.jupiter.api.Test;
 
 public class RoutineTests {
