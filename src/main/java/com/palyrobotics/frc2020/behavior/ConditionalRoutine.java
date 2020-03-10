@@ -11,10 +11,16 @@ import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 public class ConditionalRoutine extends RoutineBase {
 
 	protected RoutineBase mRoutine;
+	protected RoutineBase mBaseRoutine;
 	protected Predicate<RobotState> mPredicate;
 
 	public ConditionalRoutine(RoutineBase routine, Predicate<RobotState> predicate) {
+		this(routine, null, predicate);
+	}
+
+	public ConditionalRoutine(RoutineBase routine, RoutineBase defaultCase, Predicate<RobotState> predicate) {
 		mRoutine = routine;
+		mBaseRoutine = defaultCase;
 		mPredicate = predicate;
 	}
 
