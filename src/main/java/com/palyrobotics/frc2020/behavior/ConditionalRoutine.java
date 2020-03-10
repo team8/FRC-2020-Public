@@ -26,7 +26,13 @@ public class ConditionalRoutine extends RoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		mRoutine.execute(commands, state);
+		if (mPredicate.test(state)) {
+			if (mBaseRoutine != null) {
+				mBaseRoutine.execute(commands, state);
+			}
+		} else {
+			mRoutine.execute(commands, state);
+		}
 	}
 
 	@Override
@@ -37,10 +43,10 @@ public class ConditionalRoutine extends RoutineBase {
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		if (!mPredicate.test(state)) {
-			return mBaseRoutine == null || mBaseRoutine.isFinished();
-		} else {
+		if (mPredicate.test(state)) {
 			return mRoutine.isFinished();
+		} else {
+			return mBaseRoutine == null || mBaseRoutine.isFinished();
 		}
 	}
 
