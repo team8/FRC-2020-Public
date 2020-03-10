@@ -10,9 +10,9 @@ import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
 public class ConditionalRoutine extends RoutineBase {
 
-	protected RoutineBase mRoutine;
-	protected RoutineBase mBaseRoutine;
-	protected RoutineBase mAltRoutine;
+	protected RoutineBase mRunningRoutine;
+	protected RoutineBase mDefaultRoutine;
+	protected RoutineBase mAlternateRoutine;
 	protected Predicate<RobotState> mPredicate;
 
 	public ConditionalRoutine(RoutineBase routine, Predicate<RobotState> predicate) {
@@ -20,33 +20,33 @@ public class ConditionalRoutine extends RoutineBase {
 	}
 
 	public ConditionalRoutine(RoutineBase routine, RoutineBase defaultCase, Predicate<RobotState> predicate) {
-		mAltRoutine = routine;
-		mBaseRoutine = defaultCase;
+		mAlternateRoutine = routine;
+		mDefaultRoutine = defaultCase;
 		mPredicate = predicate;
 	}
 
 	@Override
 	protected void start(Commands commands, RobotState state) {
-		mRoutine = mPredicate.test(state) ? mAltRoutine : mBaseRoutine;
+		mRunningRoutine = mPredicate.test(state) ? mAlternateRoutine : mDefaultRoutine;
 	}
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		mRoutine.execute(commands, state);
+		mRunningRoutine.execute(commands, state);
 	}
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
-		mRoutine.stop(commands, state);
+		mRunningRoutine.stop(commands, state);
 	}
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		return !mPredicate.test(state) || mRoutine.isFinished();
+		return !mPredicate.test(state) || mRunningRoutine.isFinished();
 	}
 
 	@Override
 	public Set<SubsystemBase> getRequiredSubsystems() {
-		return mRoutine.getRequiredSubsystems();
+		return mRunningRoutine.getRequiredSubsystems();
 	}
 }
