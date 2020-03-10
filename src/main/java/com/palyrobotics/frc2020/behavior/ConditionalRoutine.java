@@ -12,6 +12,7 @@ public class ConditionalRoutine extends RoutineBase {
 
 	protected RoutineBase mRoutine;
 	protected RoutineBase mBaseRoutine;
+	protected RoutineBase mAltRoutine;
 	protected Predicate<RobotState> mPredicate;
 
 	public ConditionalRoutine(RoutineBase routine, Predicate<RobotState> predicate) {
@@ -19,35 +20,29 @@ public class ConditionalRoutine extends RoutineBase {
 	}
 
 	public ConditionalRoutine(RoutineBase routine, RoutineBase defaultCase, Predicate<RobotState> predicate) {
-		mRoutine = routine;
+		mAltRoutine = routine;
 		mBaseRoutine = defaultCase;
 		mPredicate = predicate;
 	}
 
 	@Override
+	protected void start(Commands commands, RobotState state) {
+		mRoutine = mPredicate.test(state) ? mBaseRoutine : mAltRoutine;
+	}
+
+	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		if (mPredicate.test(state)) {
-			if (mBaseRoutine != null) {
-				mBaseRoutine.execute(commands, state);
-			}
-		} else {
-			mRoutine.execute(commands, state);
-		}
+		mRoutine.execute(commands, state);
 	}
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
-		mBaseRoutine.stop(commands, state);
 		mRoutine.stop(commands, state);
 	}
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		if (mPredicate.test(state)) {
-			return mRoutine.isFinished();
-		} else {
-			return mBaseRoutine == null || mBaseRoutine.isFinished();
-		}
+		return !mPredicate.test(state) || mRoutine.isFinished();
 	}
 
 	@Override
