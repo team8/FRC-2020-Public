@@ -1,10 +1,14 @@
 
 import java.util.Set;
+import java.util.function.Predicate;
 
+import com.palyrobotics.frc2020.behavior.ConditionalRoutine;
+import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
+import org.junit.jupiter.api.Test;
 
 public class RoutineTests {
 
@@ -30,7 +34,59 @@ public class RoutineTests {
 	private static class TimedTwo extends TimedOne {
 	}
 
+	private class ConditionalTestingRoutine extends RoutineBase {
+
+		private int mTime;
+		private int mCycles;
+
+		public ConditionalTestingRoutine(int cycles) {
+			mTime = 0;
+			mCycles = cycles;
+		}
+
+		@Override
+		protected void update(Commands commands, RobotState state) {
+			mTime++;
+		}
+
+		@Override
+		public boolean checkFinished(RobotState state) {
+			return mCycles <= mTime;
+		}
+
+		@Override
+		public Set<SubsystemBase> getRequiredSubsystems() {
+			return null;
+		}
+	}
+
 	private static MockSubsystem mockSubsystem = new MockSubsystem();
+
+	@Test
+	public void testRoutine() {
+		var conditionalFalse = new ConditionalRoutine(new ConditionalTestingRoutine(10), new Predicate<RobotState>() {
+
+			@Override
+			public boolean test(RobotState robotState) {
+				return false;
+			}
+
+			@Override
+			public Predicate<RobotState> and(Predicate<? super RobotState> other) {
+				return null;
+			}
+
+			@Override
+			public Predicate<RobotState> negate() {
+				return null;
+			}
+
+			@Override
+			public Predicate<RobotState> or(Predicate<? super RobotState> other) {
+				return null;
+			}
+		});
+	}
 
 //	@Test
 //	public void testRoutine() {
