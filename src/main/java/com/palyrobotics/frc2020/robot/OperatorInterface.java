@@ -39,15 +39,14 @@ public class OperatorInterface {
 	 * Modifies commands based on operator input devices.
 	 */
 	void updateCommands(Commands commands, @ReadOnly RobotState state) {
-
 		commands.shouldClearCurrentRoutines = mDriveStick.getTriggerPressed();
-
 		updateClimberCommands(commands);
 		updateDriveCommands(commands);
 		updateSuperstructure(commands, state);
 		updateSpinnerCommands(commands);
 		updateLightingCommands(commands, state);
 		mOperatorXboxController.updateLastInputs();
+		Robot.sLoopDebugger.addPoint("updateCommands");
 	}
 
 	private void updateClimberCommands(Commands commands) {

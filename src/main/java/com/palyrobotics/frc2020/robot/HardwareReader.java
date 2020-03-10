@@ -44,19 +44,19 @@ public class HardwareReader {
 	 * Takes all of the sensor data from the hardware, and unwraps it into the current
 	 * {@link RobotState}.
 	 */
-	void updateState(Set<SubsystemBase> enabledSubsystems, RobotState state) {
+	void readState(Set<SubsystemBase> enabledSubsystems, RobotState state) {
 		readGameAndFieldState(state);
-		Robot.mDebugger.addPoint("readGameAndFieldState");
+		Robot.sLoopDebugger.addPoint("readGameAndFieldState");
 		if (enabledSubsystems.contains(Drive.getInstance())) readDriveState(state);
-		Robot.mDebugger.addPoint("Drive");
+		Robot.sLoopDebugger.addPoint("readDrive");
 		if (enabledSubsystems.contains(Indexer.getInstance())) readIndexerState(state);
-		Robot.mDebugger.addPoint("Indexer");
+		Robot.sLoopDebugger.addPoint("readIndexer");
 		if (enabledSubsystems.contains(Intake.getInstance())) readIntakeState(state);
-		Robot.mDebugger.addPoint("Intake");
+		Robot.sLoopDebugger.addPoint("readIntake");
 		if (enabledSubsystems.contains(Shooter.getInstance())) readShooterState(state);
-		Robot.mDebugger.addPoint("Shooter");
+		Robot.sLoopDebugger.addPoint("readShooter");
 		if (enabledSubsystems.contains(Spinner.getInstance())) readSpinnerState(state);
-		Robot.mDebugger.addPoint("Spinner");
+		Robot.sLoopDebugger.addPoint("readSpinner");
 	}
 
 	private void readGameAndFieldState(RobotState state) {

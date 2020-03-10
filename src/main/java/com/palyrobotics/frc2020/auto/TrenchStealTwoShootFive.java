@@ -21,8 +21,7 @@ import com.palyrobotics.frc2020.vision.Limelight;
  * opponent's trench. Pull the robot back until just the back bumper covers the initiation line. The
  * left ball should be centered in the intake from this configuration.
  */
-@SuppressWarnings ("Duplicates")
-public class TrenchStealTwoShootFive extends AutoBase {
+public class TrenchStealTwoShootFive implements AutoBase {
 
 	@Override
 	public RoutineBase getRoutine() {

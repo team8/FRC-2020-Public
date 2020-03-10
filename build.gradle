@@ -98,6 +98,7 @@ dependencies {
     implementation 'net.sourceforge.argparse4j:argparse4j:0.8.1'
     implementation 'kryonet:kryonet:2.21'
     implementation 'com.esotericsoftware:kryo:4.0.2'
+    implementation 'org.reflections:reflections:0.9.12'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'

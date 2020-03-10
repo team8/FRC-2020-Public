@@ -21,11 +21,10 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.util.Units;
 
 /**
- * Start by aligning to the tower target, then backing up slowoly and also make sure that just the
+ * Start by aligning to the tower target, then backing up slowly and also make sure that just the
  * front bumper extends past the white line.
  */
-@SuppressWarnings ("Duplicates")
-public class StartCenterFriendlyTrenchThreeShootThree extends AutoBase {
+public class StartCenterFriendlyTrenchThreeShootThree implements AutoBase {
 
 	@Override
 	public RoutineBase getRoutine() {

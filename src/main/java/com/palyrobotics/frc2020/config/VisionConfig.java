@@ -4,7 +4,7 @@ import com.palyrobotics.frc2020.util.config.ConfigBase;
 import com.palyrobotics.frc2020.util.control.Gains;
 import com.palyrobotics.frc2020.util.control.ProfiledGains;
 
-@SuppressWarnings ("squid:ClassVariableVisibilityCheck")
+@SuppressWarnings ("java:S1104")
 public class VisionConfig extends ConfigBase {
 
 	public ProfiledGains profiledGains;

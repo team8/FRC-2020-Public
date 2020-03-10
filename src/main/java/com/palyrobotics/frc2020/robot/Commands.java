@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 /**
  * Commands represent what we want the robot to be doing.
  */
-@SuppressWarnings ("squid:ClassVariableVisibilityCheck")
+@SuppressWarnings ("java:S1104")
 public class Commands {
 
 	/* Routines */
@@ -25,7 +25,6 @@ public class Commands {
 	public double climberWantedManualPercentOutput;
 	public boolean climberWantsSoftLimits;
 	/* Drive */
-	/* Drive Commands */
 	private Drive.State driveWantedState;
 	// Teleop
 	private double driveWantedThrottle, driveWantedWheel;

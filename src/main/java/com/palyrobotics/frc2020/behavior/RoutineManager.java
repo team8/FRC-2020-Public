@@ -5,6 +5,7 @@ import java.util.*;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.Robot;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.Util;
@@ -67,6 +68,7 @@ public class RoutineManager {
 		}
 		// Clears the wanted routines every update cycle
 		commands.routinesWanted.clear();
+		Robot.sLoopDebugger.addPoint("routineManagerUpdate");
 	}
 
 	public void clearRunningRoutines() {

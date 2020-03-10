@@ -2,7 +2,7 @@ package com.palyrobotics.frc2020.config;
 
 import com.palyrobotics.frc2020.util.config.ConfigBase;
 
-@SuppressWarnings ("squid:ClassVariableVisibilityCheck")
+@SuppressWarnings ("java:S1104")
 public class PortConstants extends ConfigBase {
 
 	/**

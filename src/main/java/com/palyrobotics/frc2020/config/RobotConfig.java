@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.palyrobotics.frc2020.util.config.ConfigBase;
 
-@SuppressWarnings ("squid:ClassVariableVisibilityCheck")
+@SuppressWarnings ("java:S1104")
 public class RobotConfig extends ConfigBase {
 
 	public boolean coastDriveWhenDisabled, disableHardwareUpdates, enableVisionWhenDisabled, checkFaults;

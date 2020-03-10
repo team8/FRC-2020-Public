@@ -10,6 +10,7 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
+import com.palyrobotics.frc2020.robot.RobotState.GamePeriod;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -199,20 +200,27 @@ public class HardwareWriter {
 	/**
 	 * Updates the hardware to run with output values of {@link SubsystemBase}'s.
 	 */
-	void updateHardware(Set<SubsystemBase> enabledSubsystems, @ReadOnly RobotState robotState) {
+	void writeHardware(Set<SubsystemBase> enabledSubsystems, @ReadOnly RobotState robotState) {
 		mRumbleOutput = false;
 		if (!mRobotConfig.disableHardwareUpdates) {
 			if (enabledSubsystems.contains(mClimber)) updateClimber();
-			if (enabledSubsystems.contains(mDrive)) updateDrivetrain();
-//			if (enabledSubsystems.contains(mDrive) && robotState.gamePeriod != GamePeriod.TESTING) updateDrivetrain();
+			Robot.sLoopDebugger.addPoint("writeClimber");
+			if (enabledSubsystems.contains(mDrive) && robotState.gamePeriod != GamePeriod.TESTING) updateDrivetrain();
+			Robot.sLoopDebugger.addPoint("writeDrive");
 			if (enabledSubsystems.contains(mIndexer)) updateIndexer();
+			Robot.sLoopDebugger.addPoint("writeIndexer");
 			if (enabledSubsystems.contains(mIntake)) updateIntake();
+			Robot.sLoopDebugger.addPoint("writeIntake");
 			if (enabledSubsystems.contains(mShooter)) updateShooter();
+			Robot.sLoopDebugger.addPoint("writeShooter");
 			if (enabledSubsystems.contains(mSpinner)) updateSpinner();
+			Robot.sLoopDebugger.addPoint("writeSpinner");
 			if (enabledSubsystems.contains(mLighting)) updateLighting();
+			Robot.sLoopDebugger.addPoint("writeLighting");
 		}
 		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
 		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
+		Robot.sLoopDebugger.addPoint("writeHardware");
 	}
 
 	private void updateClimber() {

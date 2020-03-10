@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.auto.AutoBase;
-import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
-import com.palyrobotics.frc2020.auto.TrenchStealTwoShootFive;
 import com.palyrobotics.frc2020.behavior.MultipleRoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
@@ -39,6 +37,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
+@SuppressWarnings ("java:S1104")
 public class Robot extends TimedRobot {
 
 	public static final double kPeriod = 0.02;
@@ -68,16 +67,7 @@ public class Robot extends TimedRobot {
 			new TelemetryService()),
 			mEnabledServices;
 
-	// ============================================================= //
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
-
-	public static AutoBase sChosenAuto = new TrenchStealTwoShootFive();
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= //
-	// ============================================================= //
-
-	private static Set<AutoBase> sAutos = Set.of(sChosenAuto, new StartCenterFriendlyTrenchThreeShootThree());
-	public static Map<String, AutoBase> sNameToAuto = sAutos.stream().collect(Collectors.toUnmodifiableMap(AutoBase::getName, Function.identity()));
+	public static final LoopOverrunDebugger sLoopDebugger = new LoopOverrunDebugger("teleop", kPeriod);
 
 	public Robot() {
 		super(kPeriod);
@@ -109,12 +99,12 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void simulationInit() {
-//		Log.info(kLoggerTag, "Writing path CSV file...");
+		Log.info(kLoggerTag, "Writing path CSV file...");
 		pathToCsv();
 	}
 
 	private void pathToCsv() {
-		var drivePath = new StartCenterFriendlyTrenchThreeShootThree().getRoutine();
+		RoutineBase drivePath = AutoSelector.getAuto().getRoutine();
 		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
 			writer.write("x,y,d" + '\n');
 			var points = new LinkedList<Pose2d>();
@@ -169,9 +159,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
-//		mCommands.addWantedRoutine(new TrenchStealTwoShootFive().getRoutine());
-//		mCommands.addWantedRoutine(new StartCenterFriendlyTrenchThreeShootThree().getRoutine());
-		mCommands.addWantedRoutine(sChosenAuto.getRoutine());
+		AutoBase auto = AutoSelector.getAuto();
+		Log.info(kLoggerTag, String.format("Running auto %s", auto.getName()));
+		mCommands.addWantedRoutine(auto.getRoutine());
 	}
 
 	private void startStage(RobotState.GamePeriod period) {
@@ -220,27 +210,21 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-//		mOperatorInterface.defaults(mCommands);
-		updateRobotState();
+		sLoopDebugger.reset();
+		readRobotState();
 		mRoutineManager.update(mCommands, mRobotState);
 		updateSubsystemsAndApplyOutputs();
+		sLoopDebugger.finish();
 	}
-
-	public static LoopOverrunDebugger mDebugger = new LoopOverrunDebugger("teleop", 0.02);
 
 	@Override
 	public void teleopPeriodic() {
-//		mOperatorInterface.defaults(mCommands);
-		mDebugger.reset();
-		updateRobotState();
-		mDebugger.addPoint("robotState");
+		sLoopDebugger.reset();
+		readRobotState();
 		mOperatorInterface.updateCommands(mCommands, mRobotState);
-		mDebugger.addPoint("updateCommands");
 		mRoutineManager.update(mCommands, mRobotState);
-		mDebugger.addPoint("routineManagerUpdate");
 		updateSubsystemsAndApplyOutputs();
-		mDebugger.addPoint("updateSubsystemsAndApplyOutputs");
-		mDebugger.finish();
+		sLoopDebugger.finish();
 	}
 
 	@Override
@@ -254,9 +238,10 @@ public class Robot extends TimedRobot {
 		updateSubsystemsAndApplyOutputs();
 	}
 
-	private void updateRobotState() {
-		if (kCanUseHardware) mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
+	private void readRobotState() {
+		if (kCanUseHardware) mHardwareReader.readState(mEnabledSubsystems, mRobotState);
 		mRobotState.shooterIsReadyToShoot = mShooter.isReadyToShoot();
+		sLoopDebugger.addPoint("readRobotState");
 	}
 
 	/**
@@ -276,15 +261,15 @@ public class Robot extends TimedRobot {
 		resetOdometryIfWanted();
 		for (SubsystemBase subsystem : mEnabledSubsystems) {
 			subsystem.update(mCommands, mRobotState);
-			mDebugger.addPoint(subsystem.getName());
+			sLoopDebugger.addPoint(subsystem.getName());
 		}
 		if (kCanUseHardware) {
-			mHardwareWriter.updateHardware(mEnabledSubsystems, mRobotState);
+			mHardwareWriter.writeHardware(mEnabledSubsystems, mRobotState);
 			mHardwareWriter.setClimberSoftLimitsEnabled(mCommands.climberWantsSoftLimits);
 		}
-		mDebugger.addPoint("updateHardware");
 		updateVision(mCommands.visionWanted, mCommands.visionWantedPipeline);
 		updateCompressor();
+		sLoopDebugger.addPoint("updateSubsystemsAndApplyOutputs");
 	}
 
 	private void updateCompressor() {
@@ -308,22 +293,21 @@ public class Robot extends TimedRobot {
 	}
 
 	private String setupSubsystemsAndServices() {
-		// TODO: same logic twice in a row
-		Map<String, RobotService> configToService = mServices.stream()
-				.collect(Collectors.toUnmodifiableMap(RobotService::getConfigName, Function.identity()));
-		mEnabledServices = mConfig.enabledServices.stream().map(configToService::get)
-				.collect(Collectors.toUnmodifiableSet());
+		var summaryBuilder = new StringBuilder("\n");
 		Map<String, SubsystemBase> configToSubsystem = mSubsystems.stream()
 				.collect(Collectors.toUnmodifiableMap(SubsystemBase::getName, Function.identity()));
 		mEnabledSubsystems = mConfig.enabledSubsystems.stream().map(configToSubsystem::get)
 				.collect(Collectors.toUnmodifiableSet());
-		var summaryBuilder = new StringBuilder("\n");
 		summaryBuilder.append("===================\n");
 		summaryBuilder.append("Enabled subsystems:\n");
 		summaryBuilder.append("-------------------\n");
 		for (SubsystemBase enabledSubsystem : mEnabledSubsystems) {
 			summaryBuilder.append(enabledSubsystem.getName()).append("\n");
 		}
+		Map<String, RobotService> configToService = mServices.stream()
+				.collect(Collectors.toUnmodifiableMap(RobotService::getConfigName, Function.identity()));
+		mEnabledServices = mConfig.enabledServices.stream().map(configToService::get)
+				.collect(Collectors.toUnmodifiableSet());
 		summaryBuilder.append("=================\n");
 		summaryBuilder.append("Enabled services:\n");
 		summaryBuilder.append("-----------------\n");
