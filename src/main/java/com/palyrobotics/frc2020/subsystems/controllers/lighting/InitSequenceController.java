@@ -22,7 +22,7 @@ public class InitSequenceController extends Lighting.LEDController {
 		mLastIndex = lastIndex;
 		mCurrentLedIndex = mStartIndex;
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
-		kPriority = 4;
+		mPriority = 4;
 		mTimer.start();
 	}
 

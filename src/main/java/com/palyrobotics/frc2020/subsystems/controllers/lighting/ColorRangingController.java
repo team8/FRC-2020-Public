@@ -20,7 +20,7 @@ public class ColorRangingController extends Lighting.LEDController {
 		super(startIndex, lastIndex);
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
-		kPriority = 4;
+		mPriority = 4;
 	}
 
 	@Override

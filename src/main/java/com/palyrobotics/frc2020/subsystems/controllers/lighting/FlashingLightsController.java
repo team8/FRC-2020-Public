@@ -24,7 +24,7 @@ public class FlashingLightsController extends Lighting.LEDController {
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
-		kPriority = 2;
+		mPriority = 2;
 		mTimer.start();
 	}
 
@@ -35,7 +35,7 @@ public class FlashingLightsController extends Lighting.LEDController {
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mDuration = duration;
-		kPriority = 2;
+		mPriority = 2;
 		mTimer.start();
 	}
 

@@ -7,9 +7,9 @@ public class Color {
 
 	public static class HSV {
 
-		private int h, s, v;
-		private int lastH, lastS, lastV;
-		public static final Color.HSV kBlue = new HSV(100, 150, 150),
+		private int mH, mS, mV;
+		private int mLastH, mLastS, mLastV;
+		public static final Color.HSV kBlue = new HSV(100, 255, 87),
 				kWhite = new HSV(0, 75, 20),
 				kLime = new HSV(60, 255, 20),
 				kYellow = new HSV(30, 255, 20),
@@ -25,99 +25,99 @@ public class Color {
 		}
 
 		public HSV(int h, int s, int v) {
-			this.h = h;
-			this.s = s;
-			this.v = v;
+			mH = h;
+			mS = s;
+			mV = v;
 		}
 
 		public int getH() {
-			return h;
+			return mH;
 		}
 
 		public int getS() {
-			return s;
+			return mS;
 		}
 
 		public int getV() {
-			return v;
+			return mV;
 		}
 
 		public int[] getHSV() {
-			return new int[] { h, s, v };
+			return new int[] { mH, mS, mV };
 		}
 
 		public void setH(int h) {
-			lastH = this.h;
-			this.h = h;
+			mLastH = mH;
+			mH = h;
 		}
 
 		public void setS(int s) {
-			lastS = this.s;
-			this.s = s;
+			mLastS = mS;
+			mS = s;
 		}
 
 		public void setV(int v) {
-			lastV = this.v;
-			this.v = v;
+			mLastV = mV;
+			mV = v;
 		}
 
 		public void setHSV(int h, int s, int v) {
-			lastH = this.h;
-			lastS = this.s;
-			lastV = this.v;
-			this.h = h;
-			this.s = s;
-			this.v = v;
+			mLastH = mH;
+			mLastS = mS;
+			mLastV = mV;
+			mH = h;
+			mS = s;
+			mV = v;
 		}
 
 		public Color.HSV getLastColor() {
-			return new HSV(lastH, lastS, lastV);
+			return new HSV(mLastH, mLastS, mLastV);
 		}
 	}
 
 	public static class RGB {
 
-		private int r, g, b;
+		private int mR, mG, mB;
 
 		public RGB(int r, int g, int b) {
-			this.r = r;
-			this.g = g;
-			this.b = b;
+			mR = r;
+			mG = g;
+			mB = b;
 		}
 
 		public int getR() {
-			return r;
+			return mR;
 		}
 
 		public int getG() {
-			return g;
+			return mG;
 		}
 
 		public int getB() {
-			return b;
+			return mB;
 		}
 
 		public int[] getRGB() {
-			return new int[] { r, g, b };
+			return new int[] { mR, mG, mB };
 		}
 
 		public void setR(int r) {
-			this.r = r;
+			mR = r;
 		}
 
 		public void setG(int g) {
-			this.g = g;
+			mG = g;
 
 		}
 
 		public void setB(int b) {
-			this.b = b;
+			mB = b;
 		}
 
 		public void setRGB(int r, int g, int b) {
-			this.r = r;
-			this.g = g;
-			this.b = b;
+			mR = r;
+			mG = g;
+			mB = b;
 		}
 	}
 }

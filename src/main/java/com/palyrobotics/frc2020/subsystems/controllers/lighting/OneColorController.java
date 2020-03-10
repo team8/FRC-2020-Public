@@ -23,7 +23,7 @@ public class OneColorController extends Lighting.LEDController {
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mColor = color;
-		kPriority = 3;
+		mPriority = 3;
 		mTimer.start();
 	}
 
@@ -33,7 +33,7 @@ public class OneColorController extends Lighting.LEDController {
 		mLastIndex = lastIndex;
 		mColor = color;
 		mDuration = duration;
-		kPriority = 3;
+		mPriority = 3;
 		mTimer.start();
 	}
 

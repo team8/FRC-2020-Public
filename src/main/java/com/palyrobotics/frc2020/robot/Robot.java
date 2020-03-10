@@ -89,10 +89,7 @@ public class Robot extends TimedRobot {
 			}
 		});
 		mCommands.lightingWantedState = Lighting.State.INIT;
-		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
-			mLighting.update(mCommands, mRobotState);
-			mHardwareWriter.updateLighting();
-		}
+		updateLighting();
 	}
 
 	@Override
@@ -148,10 +145,7 @@ public class Robot extends TimedRobot {
 		CSVWriter.write();
 
 		mCommands.lightingWantedState = Lighting.State.DISABLE;
-		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
-			mLighting.update(mCommands, mRobotState);
-			mHardwareWriter.updateLighting();
-		}
+		updateLighting();
 	}
 
 	@Override
@@ -174,10 +168,7 @@ public class Robot extends TimedRobot {
 		startStage(RobotState.GamePeriod.TELEOP);
 		mCommands.setDriveTeleop();
 		mCommands.lightingWantedState = Lighting.State.OFF;
-		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
-			mLighting.update(mCommands, mRobotState);
-			mHardwareWriter.updateLighting();
-		}
+		updateLighting();
 	}
 
 	@Override
@@ -322,5 +313,12 @@ public class Robot extends TimedRobot {
 
 	private void updateDriveNeutralMode(boolean isIdle) {
 		if (kCanUseHardware && mEnabledSubsystems.contains(mDrive)) mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
+	}
+
+	private void updateLighting() {
+		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
+			mLighting.update(mCommands, mRobotState);
+			mHardwareWriter.updateLighting();
+		}
 	}
 }
