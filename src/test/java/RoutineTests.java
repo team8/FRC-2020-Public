@@ -34,12 +34,12 @@ public class RoutineTests {
 	private static class TimedTwo extends TimedOne {
 	}
 
-	private class ConditionalTestingRoutine extends RoutineBase {
+	private class TestingRoutine extends RoutineBase {
 
 		private int mTime;
 		private int mCycles;
 
-		public ConditionalTestingRoutine(int cycles) {
+		public TestingRoutine(int cycles) {
 			mTime = 0;
 			mCycles = cycles;
 		}
@@ -64,11 +64,77 @@ public class RoutineTests {
 
 	@Test
 	public void testRoutine() {
-		var conditionalFalse = new ConditionalRoutine(new ConditionalTestingRoutine(10), new Predicate<RobotState>() {
+		var conditionalFalse = new ConditionalRoutine(new TestingRoutine(10), new Predicate<RobotState>() {
 
 			@Override
 			public boolean test(RobotState robotState) {
 				return false;
+			}
+
+			@Override
+			public Predicate<RobotState> and(Predicate<? super RobotState> other) {
+				return null;
+			}
+
+			@Override
+			public Predicate<RobotState> negate() {
+				return null;
+			}
+
+			@Override
+			public Predicate<RobotState> or(Predicate<? super RobotState> other) {
+				return null;
+			}
+		});
+		var conditionalTrue = new ConditionalRoutine(new TestingRoutine(10), new Predicate<RobotState>() {
+
+			@Override
+			public boolean test(RobotState robotState) {
+				return true;
+			}
+
+			@Override
+			public Predicate<RobotState> and(Predicate<? super RobotState> other) {
+				return null;
+			}
+
+			@Override
+			public Predicate<RobotState> negate() {
+				return null;
+			}
+
+			@Override
+			public Predicate<RobotState> or(Predicate<? super RobotState> other) {
+				return null;
+			}
+		});
+		var twoConditionalFalse = new ConditionalRoutine(new TestingRoutine(10), new TestingRoutine(10), new Predicate<RobotState>() {
+
+			@Override
+			public boolean test(RobotState robotState) {
+				return false;
+			}
+
+			@Override
+			public Predicate<RobotState> and(Predicate<? super RobotState> other) {
+				return null;
+			}
+
+			@Override
+			public Predicate<RobotState> negate() {
+				return null;
+			}
+
+			@Override
+			public Predicate<RobotState> or(Predicate<? super RobotState> other) {
+				return null;
+			}
+		});
+		var twoConditionalTrue = new ConditionalRoutine(new TestingRoutine(10), new TestingRoutine(10), new Predicate<RobotState>() {
+
+			@Override
+			public boolean test(RobotState robotState) {
+				return true;
 			}
 
 			@Override
