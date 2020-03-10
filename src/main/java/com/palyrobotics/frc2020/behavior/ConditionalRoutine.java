@@ -27,7 +27,7 @@ public class ConditionalRoutine extends RoutineBase {
 
 	@Override
 	protected void start(Commands commands, RobotState state) {
-		mRoutine = mPredicate.test(state) ? mBaseRoutine : mAltRoutine;
+		mRoutine = mPredicate.test(state) ? mAltRoutine : mBaseRoutine;
 	}
 
 	@Override
