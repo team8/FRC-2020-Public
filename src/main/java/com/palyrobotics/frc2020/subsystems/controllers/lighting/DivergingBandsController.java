@@ -25,8 +25,6 @@ public class DivergingBandsController extends Lighting.LEDController {
 
 	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
 		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
 		mBandColor = bandColor;
 		mBackgroundColor = backgroundColor;
 		mBandLedCount = bandLedCount;
@@ -37,8 +35,6 @@ public class DivergingBandsController extends Lighting.LEDController {
 
 	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration) {
 		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
 		mBandColor = bandColor;
 		mBackgroundColor = backgroundColor;
 		mBandLedCount = bandLedCount;

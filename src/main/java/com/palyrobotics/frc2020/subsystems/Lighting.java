@@ -38,6 +38,8 @@ public class Lighting extends SubsystemBase {
 				mOutputs.lightingOutput.add(new Color.HSV());
 			}
 			mTimer.reset();
+			mStartIndex = startIndex;
+			mLastIndex = lastIndex;
 		}
 
 		@Override

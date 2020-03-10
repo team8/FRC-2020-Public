@@ -20,8 +20,6 @@ public class FlashingLightsController extends Lighting.LEDController {
 
 	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay) {
 		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mPriority = 2;
@@ -30,8 +28,6 @@ public class FlashingLightsController extends Lighting.LEDController {
 
 	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration) {
 		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mDuration = duration;
