@@ -1,15 +1,20 @@
 
+import java.util.Arrays;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.palyrobotics.frc2020.behavior.ConditionalRoutine;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.Robot;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RoutineTests {
 
@@ -72,100 +77,54 @@ public class RoutineTests {
 
 	@Test
 	public void testRoutine() {
-		var conditionalFalse = new ConditionalRoutine(new TestingRoutine(10, "True"), new Predicate<RobotState>() {
+		var commands = new Commands();
+		var state = new RobotState();
+
+		var conditionalFalse = new ConditionalRoutine(new TestingRoutine(10, "False"), robotState -> false);
+		var conditionalTrue = new ConditionalRoutine(new TestingRoutine(10, "True"), robotState -> true);
+		var twoConditionalFalse = new ConditionalRoutine(new TestingRoutine(10, "False1"), new TestingRoutine(9, "False2"), robotState -> false);
+		var twoConditionalTrue = new ConditionalRoutine(new TestingRoutine(10, "True1"), new TestingRoutine(9, "True2"), robotState -> true);
+		var twoConditionalSwitch = new ConditionalRoutine(new TestingRoutine(5, "First"), new TestingRoutine(5, "Second"), new Predicate<RobotState>() {
+			int iterations = 0;
 
 			@Override
-			public boolean test(RobotState robotState) {
-				return false;
-			}
-
-			@Override
-			public Predicate<RobotState> and(Predicate<? super RobotState> other) {
-				return null;
-			}
-
-			@Override
-			public Predicate<RobotState> negate() {
-				return null;
-			}
-
-			@Override
-			public Predicate<RobotState> or(Predicate<? super RobotState> other) {
-				return null;
-			}
-		});
-		var conditionalTrue = new ConditionalRoutine(new TestingRoutine(10, "False"), new Predicate<RobotState>() {
-
-			@Override
-			public boolean test(RobotState robotState) {
-				return true;
-			}
-
-			@Override
-			public Predicate<RobotState> and(Predicate<? super RobotState> other) {
-				return null;
-			}
-
-			@Override
-			public Predicate<RobotState> negate() {
-				return null;
-			}
-
-			@Override
-			public Predicate<RobotState> or(Predicate<? super RobotState> other) {
-				return null;
-			}
-		});
-		var twoConditionalFalse = new ConditionalRoutine(new TestingRoutine(10, "False1"), new TestingRoutine(10, "False2"), new Predicate<RobotState>() {
-
-			@Override
-			public boolean test(RobotState robotState) {
-				return false;
-			}
-
-			@Override
-			public Predicate<RobotState> and(Predicate<? super RobotState> other) {
-				return null;
-			}
-
-			@Override
-			public Predicate<RobotState> negate() {
-				return null;
-			}
-
-			@Override
-			public Predicate<RobotState> or(Predicate<? super RobotState> other) {
-				return null;
-			}
-		});
-		var twoConditionalTrue = new ConditionalRoutine(new TestingRoutine(10, "True1"), new TestingRoutine(10, "True2"), new Predicate<RobotState>() {
-
-			@Override
-			public boolean test(RobotState robotState) {
-				return true;
-			}
-
-			@Override
-			public Predicate<RobotState> and(Predicate<? super RobotState> other) {
-				return null;
-			}
-
-			@Override
-			public Predicate<RobotState> negate() {
-				return null;
-			}
-
-			@Override
-			public Predicate<RobotState> or(Predicate<? super RobotState> other) {
-				return null;
+			public boolean test(RobotState state) {
+				iterations++;
+				return iterations < 3;
 			}
 		});
 
-		for (int i = 0; i < 10; i++) {
+		execute(commands, state, conditionalTrue, conditionalFalse);
+		assertTrue(conditionalFalse.isFinished());
+		assertFalse(conditionalTrue.isFinished());
 
-		}
+		execute(commands, state, 9, conditionalTrue);
+		assertTrue(conditionalTrue.isFinished());
+
+		execute(commands, state, 9, twoConditionalFalse, twoConditionalTrue);
+		assertTrue(twoConditionalFalse.isFinished());
+		assertFalse(twoConditionalTrue.isFinished());
+		execute(commands, state, twoConditionalTrue);
+		assertTrue(twoConditionalTrue.isFinished());
+
+		execute(commands, state, twoConditionalSwitch);
+		assertEquals("First", twoConditionalSwitch.getRunningRoutine().getName());
+		execute(commands, state, twoConditionalSwitch);
+		assertEquals("Second", twoConditionalSwitch.getRunningRoutine().getName());
+		assertFalse(twoConditionalSwitch.isFinished());
+		execute(commands, state, 4, twoConditionalSwitch);
+		assertTrue(twoConditionalSwitch.isFinished());
 	}
 
+	private void execute(Commands commands, RobotState state, RoutineBase... routines) {
+		Arrays.stream(routines).forEach(routineBase -> routineBase.execute(commands, state));
+	}
+
+	private void execute(Commands commands, RobotState state, int times, RoutineBase... routines) {
+		for (int i = 0; i < times; i++) {
+			Arrays.stream(routines).forEach(routineBase -> routineBase.execute(commands, state));
+		}
+	}
 //	@Test
 //	public void testRoutine() {
 //		var conditional = new ConditionalRoutine(new RoutineBase() {
