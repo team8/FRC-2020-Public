@@ -31,13 +31,14 @@ public class ConditionalRoutine extends RoutineBase {
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
+		mBaseRoutine.stop(commands, state);
 		mRoutine.stop(commands, state);
 	}
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
 		if (!mPredicate.test(state)) {
-			return mRoutine == null || mBaseRoutine.isFinished();
+			return mBaseRoutine == null || mBaseRoutine.isFinished();
 		} else {
 			return mRoutine.isFinished();
 		}
