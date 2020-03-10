@@ -36,7 +36,11 @@ public class ConditionalRoutine extends RoutineBase {
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		return !mPredicate.test(state) || mRoutine.isFinished();
+		if (!mPredicate.test(state)) {
+			return mRoutine == null || mBaseRoutine.isFinished();
+		} else {
+			return mRoutine.isFinished();
+		}
 	}
 
 	@Override
