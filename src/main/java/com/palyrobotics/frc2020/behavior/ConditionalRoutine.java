@@ -28,6 +28,10 @@ public class ConditionalRoutine extends RoutineBase {
 		mPredicate = predicate;
 	}
 
+	public RoutineBase getRunningRoutine() {
+		return mRunningRoutine;
+	}
+
 	private void checkState(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		if (!mPredicate.test(state) && !mRunningDefault) {
 			mRunningRoutine.stop(commands, state);
