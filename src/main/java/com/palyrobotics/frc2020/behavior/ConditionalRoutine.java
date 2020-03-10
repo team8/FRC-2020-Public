@@ -21,18 +21,17 @@ public class ConditionalRoutine extends RoutineBase {
 		this(routine, null, predicate);
 	}
 
-	public ConditionalRoutine(RoutineBase routine, RoutineBase baseRoutine, Predicate<RobotState> predicate) {
-		mAlternateRoutine = routine;
-		mDefaultRoutine = baseRoutine;
+	public ConditionalRoutine(RoutineBase defaultRoutine, RoutineBase alternateRoutine, Predicate<RobotState> predicate) {
+		mDefaultRoutine = defaultRoutine;
+		mRunningRoutine = defaultRoutine;
+		mAlternateRoutine = alternateRoutine;
 		mPredicate = predicate;
 	}
 
 	private void checkState(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		if (mPredicate.test(state) && !mRunningDefault) {
+		if (!mPredicate.test(state) && !mRunningDefault) {
 			mRunningRoutine.stop(commands, state);
 			mRunningRoutine = mAlternateRoutine;
-		} else {
-			mRunningRoutine = mDefaultRoutine;
 			mRunningDefault = true;
 		}
 	}
@@ -45,19 +44,16 @@ public class ConditionalRoutine extends RoutineBase {
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
 		checkState(commands, state);
-		if (mRunningRoutine == null) {
-			return;
+		if (mRunningRoutine != null) {
+			mRunningRoutine.execute(commands, state);
 		}
-		mRunningRoutine.execute(commands, state);
 	}
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
-		checkState(commands, state);
-		if (mRunningRoutine == null) {
-			return;
+		if (mRunningRoutine != null) {
+			mRunningRoutine.stop(commands, state);
 		}
-		mRunningRoutine.stop(commands, state);
 	}
 
 	@Override
