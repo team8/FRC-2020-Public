@@ -20,6 +20,7 @@ public class Limelight {
 	private static String kLoggerTag = Util.classToJsonName(Limelight.class);
 	private static final NetworkTableInstance sNetworkTableInstance = NetworkTableInstance.getDefault();
 	private static VisionConfig kVisionConfig = Configs.get(VisionConfig.class);
+	public static final String kLimelightIP = "10.0.8.1";
 
 	private static Limelight sInstance = new Limelight();
 	private NetworkTable mTable;

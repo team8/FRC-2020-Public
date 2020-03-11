@@ -146,7 +146,7 @@ public class OperatorInterface {
 
 		//Checks for limelight connection
 		try {
-			InetAddress.getAllByName("10.0.8.1");
+			InetAddress.getAllByName(Limelight.kLimelightIP);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			commands.lightingWantedState = Lighting.State.LIMELIGHT_RESTART;
