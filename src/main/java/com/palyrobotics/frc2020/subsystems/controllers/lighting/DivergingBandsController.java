@@ -25,26 +25,22 @@ public class DivergingBandsController extends Lighting.LEDController {
 
 	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
 		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
 		mBandColor = bandColor;
 		mBackgroundColor = backgroundColor;
 		mBandLedCount = bandLedCount;
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
-		kPriority = 1;
+		mPriority = 1;
 		mTimer.start();
 	}
 
 	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration) {
 		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
 		mBandColor = bandColor;
 		mBackgroundColor = backgroundColor;
 		mBandLedCount = bandLedCount;
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mDuration = duration;
-		kPriority = 1;
+		mPriority = 1;
 		mTimer.start();
 	}
 

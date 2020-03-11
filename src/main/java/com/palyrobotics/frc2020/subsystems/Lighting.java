@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
+		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULL_RPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING, LIMELIGHT_RESTART, PIGEON_DISCONNECT, CODE_EXCEPTION
 	}
 
 	public abstract static class LEDController {
@@ -31,13 +31,16 @@ public class Lighting extends SubsystemBase {
 		protected int mStartIndex;
 		protected int mLastIndex;
 		protected double mSpeed;
-		protected int kPriority;
+		protected int mPriority;
+		protected boolean mWantsReset = true;
 
 		protected LEDController(int startIndex, int lastIndex) {
 			for (var i = 0; i <= Math.abs(lastIndex - startIndex); i++) {
 				mOutputs.lightingOutput.add(new Color.HSV());
 			}
 			mTimer.reset();
+			mStartIndex = startIndex;
+			mLastIndex = lastIndex;
 		}
 
 		@Override
@@ -65,7 +68,7 @@ public class Lighting extends SubsystemBase {
 	private LightingConfig mConfig = Configs.get(LightingConfig.class);
 	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
 	private State mState;
-	private PriorityQueue<LEDController> mLEDControllers = new PriorityQueue<>(1, Comparator.comparingInt(o -> o.kPriority));
+	private PriorityQueue<LEDController> mLEDControllers = new PriorityQueue<>(1, Comparator.comparingInt(o -> o.mPriority));
 
 	private Lighting() {
 
@@ -117,16 +120,23 @@ public class Lighting extends SubsystemBase {
 				case ROBOT_ALIGNED:
 					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2));
 					break;
-				case SHOOTER_FULLRPM:
+				case SHOOTER_FULL_RPM:
 					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kGreen, 0.5, 5));
 					break;
 				case BALL_SHOT:
 					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kBlue, 0.25));
+					break;
+				case LIMELIGHT_RESTART:
+					addToControllers(new FlashTimesController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kRed, 3, 0.25));
+					break;
+				case PIGEON_DISCONNECT:
+					addToControllers(new FlashTimesController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kRed, 5, 0.25));
+					break;
 			}
 		}
 
 		resetLedStrip();
-		if (mLEDControllers.removeIf(LEDController::checkFinished)) {
+		if (mLEDControllers.removeIf(controller -> controller.mWantsReset && controller.checkFinished())) {
 			mState = State.DO_NOTHING;
 		}
 

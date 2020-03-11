@@ -5,37 +5,33 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
-public class FlashingLightsController extends Lighting.LEDController {
+public class FlashDurationController extends Lighting.LEDController {
 
 	private Color.HSV mFlashedColor;
 	private double mDuration = -1;
 
 	/**
-	 * Color flashes with given delay
+	 * Color flashes with given speed
 	 *
 	 * @param startIndex   Initial index upon which led patterns should start
 	 * @param lastIndex    End index upon which led patterns should stop
 	 * @param flashedColor Color to be flashed on white background
 	 */
 
-	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay) {
+	public FlashDurationController(int startIndex, int lastIndex, Color.HSV flashedColor, double speed) {
 		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
-		mSpeed = delay == 0 ? kZeroSpeed : delay;
-		kPriority = 2;
+		mSpeed = speed == 0 ? kZeroSpeed : speed;
+		mPriority = 2;
 		mTimer.start();
 	}
 
-	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration) {
+	public FlashDurationController(int startIndex, int lastIndex, Color.HSV flashedColor, double speed, double duration) {
 		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
-		mSpeed = delay == 0 ? kZeroSpeed : delay;
+		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mDuration = duration;
-		kPriority = 2;
+		mPriority = 2;
 		mTimer.start();
 	}
 

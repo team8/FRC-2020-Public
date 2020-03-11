@@ -9,8 +9,8 @@ import com.palyrobotics.frc2020.util.Color;
 
 public class PulseController extends Lighting.LEDController {
 
-	public int mPulseEndIndex;
-	public int mPulseStartIndex;
+	private int mPulseEndIndex;
+	private int mPulseStartIndex;
 	private boolean mIsColorsInitialized;
 	private List<Color.HSV> mPulse;
 	private boolean mIsReversed;
@@ -32,7 +32,7 @@ public class PulseController extends Lighting.LEDController {
 		mPulseStartIndex = startIndex;
 		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mPulse = pulseColorSequence;
-		kPriority = 0;
+		mPriority = 0;
 		if (lastIndex <= startIndex) {
 			mIsReversed = true;
 		}

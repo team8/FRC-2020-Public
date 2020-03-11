@@ -1,5 +1,9 @@
 package com.palyrobotics.frc2020.vision;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.VisionConfig;
 import com.palyrobotics.frc2020.util.Util;
@@ -20,12 +24,19 @@ public class Limelight {
 	private static String kLoggerTag = Util.classToJsonName(Limelight.class);
 	private static final NetworkTableInstance sNetworkTableInstance = NetworkTableInstance.getDefault();
 	private static VisionConfig kVisionConfig = Configs.get(VisionConfig.class);
+	public static final String kLimelightIP = "10.0.8.1";
 
 	private static Limelight sInstance = new Limelight();
 	private NetworkTable mTable;
+	private InetAddress mConnection;
 
 	public Limelight() {
 		mTable = sNetworkTableInstance.getTable("limelight");
+		try {
+			mConnection = InetAddress.getByName(kLimelightIP);
+		} catch (UnknownHostException e) {
+			System.out.println("Limelight not connected.");
+		}
 	}
 
 	public static Limelight getInstance() {
@@ -33,11 +44,10 @@ public class Limelight {
 	}
 
 	/**
-	 * @return Whether the limelight has any valid targets (0 or 1)
+	 * @return Whether the limelight has any valid targets
 	 */
 	public boolean isTargetFound() {
 		return mTable.getEntry("tv").getDouble(0.0) != 0.0;
-//		return true;
 	}
 
 	public boolean isAligned() {
@@ -278,4 +288,14 @@ public class Limelight {
 	public double getPnPYaw() {
 		return mTable.getEntry("camtran").getDoubleArray(new double[] { 0, 0, 0, 0, 0, 0 })[4];
 	}
+
+	public boolean isConnected() {
+		try {
+			return mConnection.isReachable(1000);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }

@@ -140,6 +140,15 @@ public class OperatorInterface {
 		if (commands.climberWantedState == Climber.State.LOCKED) {
 			commands.lightingWantedState = Lighting.State.CLIMB_DONE;
 		}
+
+		// Checks for limelight connection
+		if (mLimelight.isConnected()) {
+			commands.lightingWantedState = Lighting.State.LIMELIGHT_RESTART;
+		}
+
+		if (!state.driveIsGyroReady) {
+			commands.lightingWantedState = Lighting.State.PIGEON_DISCONNECT;
+		}
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
