@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULL_RPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
+		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULL_RPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING, LIMELIGHT_RESTART, PIGEON_DISCONNECT, CODE_EXCEPTION
 	}
 
 	public abstract static class LEDController {
@@ -32,6 +32,7 @@ public class Lighting extends SubsystemBase {
 		protected int mLastIndex;
 		protected double mSpeed;
 		protected int mPriority;
+		protected boolean mWantsReset = true;
 
 		protected LEDController(int startIndex, int lastIndex) {
 			for (var i = 0; i <= Math.abs(lastIndex - startIndex); i++) {
@@ -129,7 +130,7 @@ public class Lighting extends SubsystemBase {
 		}
 
 		resetLedStrip();
-		if (mLEDControllers.removeIf(LEDController::checkFinished)) {
+		if (mLEDControllers.removeIf(controller -> controller.mWantsReset && controller.checkFinished())) {
 			mState = State.DO_NOTHING;
 		}
 

@@ -4,6 +4,9 @@ import static com.palyrobotics.frc2020.util.Util.handleDeadBand;
 import static com.palyrobotics.frc2020.vision.Limelight.kOneTimesZoomPipelineId;
 import static com.palyrobotics.frc2020.vision.Limelight.kTwoTimesZoomPipelineId;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerPositionControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.spinner.SpinnerRotationControlRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
@@ -139,6 +142,14 @@ public class OperatorInterface {
 
 		if (commands.climberWantedState == Climber.State.LOCKED) {
 			commands.lightingWantedState = Lighting.State.CLIMB_DONE;
+		}
+
+		//Checks for limelight connection
+		try {
+			InetAddress.getAllByName("10.0.8.1");
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			commands.lightingWantedState = Lighting.State.LIMELIGHT_RESTART;
 		}
 	}
 

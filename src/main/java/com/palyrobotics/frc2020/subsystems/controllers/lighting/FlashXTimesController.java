@@ -20,6 +20,7 @@ public class FlashXTimesController extends Lighting.LEDController {
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mWantedNumOfTimes = numOfTimes;
 		mPriority = 1;
+		mWantsReset = false;
 		mTimer.start();
 	}
 
