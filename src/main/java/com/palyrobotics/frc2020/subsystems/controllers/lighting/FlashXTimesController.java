@@ -13,7 +13,7 @@ public class FlashXTimesController extends Lighting.LEDController {
 	private int mNumOfTimesFlashedCounter;
 	private int enteredCounter = 0;
 
-	protected FlashXTimesController(int startIndex, int lastIndex, Color.HSV flashedColor, int numOfTimes, double delay) {
+	public FlashXTimesController(int startIndex, int lastIndex, Color.HSV flashedColor, int numOfTimes, double delay) {
 		super(startIndex, lastIndex);
 		mSpeed = delay;
 		mFlashedColor = flashedColor;
