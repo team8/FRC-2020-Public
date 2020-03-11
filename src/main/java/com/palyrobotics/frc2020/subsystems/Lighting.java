@@ -127,10 +127,10 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kBlue, 0.25));
 					break;
 				case LIMELIGHT_RESTART:
-					addToControllers(new FlashXTimesController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kRed, 3, 0.25));
+					addToControllers(new FlashTimesController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kRed, 3, 0.25));
 					break;
 				case PIGEON_DISCONNECT:
-					addToControllers(new FlashXTimesController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kRed, 5, 0.25));
+					addToControllers(new FlashTimesController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex, Color.HSV.kRed, 5, 0.25));
 					break;
 			}
 		}

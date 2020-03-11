@@ -6,14 +6,14 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Lighting;
 import com.palyrobotics.frc2020.util.Color;
 
-public class FlashXTimesController extends Lighting.LEDController {
+public class FlashTimesController extends Lighting.LEDController {
 
 	private Color.HSV mFlashedColor;
 	private int mWantedNumOfTimes;
 	private int mNumOfTimesFlashedCounter;
 	private int enteredCounter = 0;
 
-	public FlashXTimesController(int startIndex, int lastIndex, Color.HSV flashedColor, int numOfTimes, double delay) {
+	public FlashTimesController(int startIndex, int lastIndex, Color.HSV flashedColor, int numOfTimes, double delay) {
 		super(startIndex, lastIndex);
 		mSpeed = delay;
 		mFlashedColor = flashedColor;
