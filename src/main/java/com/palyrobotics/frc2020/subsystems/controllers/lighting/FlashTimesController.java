@@ -11,7 +11,7 @@ public class FlashTimesController extends Lighting.LEDController {
 	private Color.HSV mFlashedColor;
 	private int mWantedNumOfTimes;
 	private int mNumOfTimesFlashedCounter;
-	private int enteredCounter = 0;
+	private int mEnteredCounter = 0;
 
 	public FlashTimesController(int startIndex, int lastIndex, Color.HSV flashedColor, int numOfTimes, double speed) {
 		super(startIndex, lastIndex);
@@ -27,14 +27,14 @@ public class FlashTimesController extends Lighting.LEDController {
 	@Override
 	public void updateSignal(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		if (Math.round(mTimer.get() / mSpeed) % 2 == 0) {
-			mNumOfTimesFlashedCounter = enteredCounter == 0 ? mNumOfTimesFlashedCounter + 1 : mNumOfTimesFlashedCounter;
-			enteredCounter++;
+			mNumOfTimesFlashedCounter = mEnteredCounter == 0 ? mNumOfTimesFlashedCounter + 1 : mNumOfTimesFlashedCounter;
+			mEnteredCounter++;
 			for (int i = mStartIndex; i < mLastIndex; i++) {
 				mOutputs.lightingOutput.get(i - mStartIndex).setHSV(mFlashedColor.getH(), mFlashedColor.getS(),
 						mFlashedColor.getV());
 			}
 		} else {
-			enteredCounter = 0;
+			mEnteredCounter = 0;
 			for (int i = mStartIndex; i < mLastIndex; i++) {
 				mOutputs.lightingOutput.get(i - mStartIndex).setHSV(0, 0, 0);
 			}
