@@ -13,11 +13,11 @@ public class FlashTimesController extends Lighting.LEDController {
 	private int mNumOfTimesFlashedCounter;
 	private int enteredCounter = 0;
 
-	public FlashTimesController(int startIndex, int lastIndex, Color.HSV flashedColor, int numOfTimes, double delay) {
+	public FlashTimesController(int startIndex, int lastIndex, Color.HSV flashedColor, int numOfTimes, double speed) {
 		super(startIndex, lastIndex);
-		mSpeed = delay;
+		mSpeed = speed;
 		mFlashedColor = flashedColor;
-		mSpeed = delay == 0 ? kZeroSpeed : delay;
+		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mWantedNumOfTimes = numOfTimes;
 		mPriority = 1;
 		mWantsReset = false;

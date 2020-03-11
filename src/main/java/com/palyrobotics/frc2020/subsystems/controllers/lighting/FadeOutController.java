@@ -11,25 +11,25 @@ public class FadeOutController extends Lighting.LEDController {
 	private double mDuration = -1;
 
 	/**
-	 * Color flashes with given delay
+	 * Color flashes with given speed
 	 *
 	 * @param startIndex   Initial index upon which led patterns should start
 	 * @param lastIndex    End index upon which led patterns should stop
 	 * @param flashedColor Color to be flashed on white background
 	 */
 
-	public FadeOutController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV flashedColor, int delay) {
+	public FadeOutController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV flashedColor, int speed) {
 		super(startIndex, lastIndex);
 		mFlashedColor = flashedColor;
-		mSpeed = delay == 0 ? kZeroSpeed : delay;
+		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mPriority = 1;
 		mTimer.start();
 	}
 
-	public FadeOutController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV flashedColor, int delay, double duration) {
+	public FadeOutController(int startIndex, int lastIndex, boolean noDestroy, Color.HSV flashedColor, int speed, double duration) {
 		super(startIndex, lastIndex);
 		mFlashedColor = flashedColor;
-		mSpeed = delay == 0 ? kZeroSpeed : delay;
+		mSpeed = speed == 0 ? kZeroSpeed : speed;
 		mDuration = duration;
 		mPriority = 1;
 		mTimer.start();

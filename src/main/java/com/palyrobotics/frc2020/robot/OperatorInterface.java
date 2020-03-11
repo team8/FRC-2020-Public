@@ -141,7 +141,7 @@ public class OperatorInterface {
 			commands.lightingWantedState = Lighting.State.CLIMB_DONE;
 		}
 
-		//Checks for limelight connection
+		// Checks for limelight connection
 		if (mLimelight.isConnected()) {
 			commands.lightingWantedState = Lighting.State.LIMELIGHT_RESTART;
 		}
