@@ -187,9 +187,6 @@ public class Commands {
 		return shooterWantedHoodState;
 	}
 
-	// public void copyTo(Commands other) {
-	// }
-
 	@Override
 	public String toString() {
 		var log = new StringBuilder();

@@ -2,6 +2,9 @@ package com.palyrobotics.frc2020.behavior;
 
 import java.util.List;
 
+/**
+ * Common base class for routines that manage a list of children routines.
+ */
 public abstract class MultipleRoutineBase extends RoutineBase {
 
 	protected final List<RoutineBase> mRoutines;

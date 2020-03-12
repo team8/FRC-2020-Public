@@ -3,10 +3,10 @@ package com.palyrobotics.frc2020.auto;
 import static com.palyrobotics.frc2020.util.Util.newWaypoint;
 
 import com.palyrobotics.frc2020.behavior.ConditionalRoutine;
+import com.palyrobotics.frc2020.behavior.ParallelRaceRoutine;
 import com.palyrobotics.frc2020.behavior.ParallelRoutine;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
-import com.palyrobotics.frc2020.behavior.routines.ParallelRaceRoutine;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
