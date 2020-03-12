@@ -82,7 +82,7 @@ public class RoutineTests {
 		var conditionalTrue = new ConditionalRoutine(new TestingRoutine(10, "True"), robotState -> true);
 		var twoConditionalFalse = new ConditionalRoutine(new TestingRoutine(10, "False1"), new TestingRoutine(9, "False2"), robotState -> false);
 		var twoConditionalTrue = new ConditionalRoutine(new TestingRoutine(10, "True1"), new TestingRoutine(9, "True2"), robotState -> true);
-		var twoConditionalSwitch = new ConditionalRoutine(new TestingRoutine(5, "First"), new TestingRoutine(5, "Second"), new Predicate<RobotState>() {
+		var twoConditionalSwitch = new ConditionalRoutine(new TestingRoutine(5, "First"), new TestingRoutine(5, "Second"), new Predicate<>() {
 
 			int iterations = 0;
 

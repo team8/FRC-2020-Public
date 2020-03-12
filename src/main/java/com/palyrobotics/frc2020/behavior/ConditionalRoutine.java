@@ -62,7 +62,7 @@ public class ConditionalRoutine extends RoutineBase {
 
 	@Override
 	public boolean checkFinished(@ReadOnly RobotState state) {
-		return !mPredicate.test(state) || mRunningRoutine == null || mRunningRoutine.isFinished();
+		return mRunningRoutine == null || mRunningRoutine.isFinished(); // idk if this will give a null pointer
 	}
 
 	@Override
