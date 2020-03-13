@@ -121,7 +121,7 @@ public class RoutineTests {
 
 	private void execute(Commands commands, RobotState state, int times, RoutineBase... routines) {
 		for (int i = 0; i < times; i++) {
-			Arrays.stream(routines).forEach(routineBase -> routineBase.execute(commands, state));
+			execute(commands, state, routines);
 		}
 	}
 //	@Test
