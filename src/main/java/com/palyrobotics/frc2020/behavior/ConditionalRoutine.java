@@ -15,8 +15,6 @@ public class ConditionalRoutine extends RoutineBase {
 	protected RoutineBase mAlternateRoutine;
 	protected Predicate<RobotState> mPredicate;
 
-	private boolean mRunningDefault = false;
-
 	public ConditionalRoutine(RoutineBase routine, Predicate<RobotState> predicate) {
 		this(routine, null, predicate);
 	}
@@ -33,10 +31,9 @@ public class ConditionalRoutine extends RoutineBase {
 	}
 
 	private void checkState(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		if (!mPredicate.test(state) && !mRunningDefault) {
+		if (!mPredicate.test(state) && mRunningRoutine == mDefaultRoutine) {
 			mRunningRoutine.stop(commands, state);
 			mRunningRoutine = mAlternateRoutine;
-			mRunningDefault = true;
 		}
 	}
 
