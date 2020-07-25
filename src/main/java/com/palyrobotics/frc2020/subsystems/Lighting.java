@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Lighting extends SubsystemBase {
 
-	public enum State {
+	public enum State{
 		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNING, CLIMB_EXTENDED, HOPPER_OPEN, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE
 	}
 
