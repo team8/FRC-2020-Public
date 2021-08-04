@@ -7,7 +7,6 @@ import com.palyrobotics.frc2020.subsystems.Lighting;
 
 public class DemoRainbowController extends Lighting.LEDController {
 
-	private int mCurrentHue = 0;
 	private int kOffset = 0;
 	private double kLastNum = 0;
 
@@ -35,15 +34,12 @@ public class DemoRainbowController extends Lighting.LEDController {
 			}
 			mOutputs.lightingOutput.get(i).setHSV((int) hue, 247, 83);
 		}
-		if (/*Math.round(mTimer.get()/0.3) % 2 == 0 && */Math.round(mTimer.get() / 0.07) != kLastNum) {
+		if (Math.round(mTimer.get() / 0.07) != kLastNum) {
 			kLastNum = Math.round(mTimer.get() / 0.07);
 			kOffset += 1;
 		}
 		if (kOffset >= mOutputs.lightingOutput.size()) {
 			kOffset = 0;
-		}
-		if (mCurrentHue >= 175) {
-			mCurrentHue = 0;
 		}
 	}
 }
