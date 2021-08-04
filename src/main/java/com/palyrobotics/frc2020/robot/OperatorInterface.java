@@ -115,31 +115,6 @@ public class OperatorInterface {
 
 	private void updateLightingCommands(Commands commands, @ReadOnly RobotState state) {
 
-		if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.lightingWantedState = Lighting.State.INTAKE_EXTENDED; // TODO: Dpad left isn't for intake_extended
-		}
-		if (state.indexerHasBackBall) {
-			commands.lightingWantedState = Lighting.State.BALL_ENTERED;
-		}
-		if (mLimelight.isTargetFound()) {
-			commands.lightingWantedState = Lighting.State.TARGET_FOUND;
-		}
-
-		if (mTurnStick.getRawButton(3) || mTurnStick.getRawButton(4) && mLimelight.isAligned()) {
-			commands.lightingWantedState = Lighting.State.ROBOT_ALIGNED;
-		}
-
-		if (state.indexerHasTopBall) {
-			commands.lightingWantedState = Lighting.State.BALL_SHOT;
-		}
-
-//		if (state.shooterIsReadyToShoot) {
-//			commands.lightingWantedState = Lighting.State.SHOOTER_FULLRPM;
-//		}
-
-		if (commands.climberWantedState == Climber.State.LOCKED) {
-			commands.lightingWantedState = Lighting.State.CLIMB_DONE;
-		}
 	}
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {

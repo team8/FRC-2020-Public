@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
 				updateDriveNeutralMode(config.coastDriveWhenDisabled);
 			}
 		});
-		mCommands.lightingWantedState = Lighting.State.INIT;
+		mCommands.lightingWantedState = Lighting.State.DEMO_LIGHTING;
 		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
 			mHardwareWriter.updateLighting();
@@ -147,7 +147,7 @@ public class Robot extends TimedRobot {
 
 		CSVWriter.write();
 
-		mCommands.lightingWantedState = Lighting.State.DISABLE;
+		//mCommands.lightingWantedState = Lighting.State.DISABLE;
 		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
 			mHardwareWriter.updateLighting();
@@ -173,7 +173,7 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		startStage(RobotState.GamePeriod.TELEOP);
 		mCommands.setDriveTeleop();
-		mCommands.lightingWantedState = Lighting.State.OFF;
+		//mCommands.lightingWantedState = Lighting.State.OFF;
 		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
 			mHardwareWriter.updateLighting();

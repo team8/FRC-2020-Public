@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
+		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING, DEMO_LIGHTING
 	}
 
 	public abstract static class LEDController {
@@ -88,6 +88,14 @@ public class Lighting extends SubsystemBase {
 					mLEDControllers.clear();
 					break;
 				case IDLE:
+					break;
+				case DEMO_LIGHTING:
+					resetLedStrip();
+					mLEDControllers.clear();
+//					addToControllers(new DemoRainbowController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontLeftSegmentLastIndex));
+//					addToControllers(new DemoRainbowController(mConfig.frontRightSegmentFirstIndex, mConfig.frontRightSegmentLastIndex));
+//					addToControllers(new DemoRainbowController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex));
+					addToControllers(new DemoRainbowController(mConfig.totalSegmentFirstIndex, mConfig.totalSegmentLastIndex));
 					break;
 				case INIT:
 				case DISABLE:
