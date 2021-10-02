@@ -4,149 +4,124 @@ import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
-import com.palyrobotics.frc2020.util.CircularBuffer;
+import com.palyrobotics.frc2020.subsystems.controllers.indexer.FeedColumnController;
+import com.palyrobotics.frc2020.subsystems.controllers.indexer.IndexColumnController;
+import com.palyrobotics.frc2020.subsystems.controllers.indexer.ReverseFeedColumnController;
+import com.palyrobotics.frc2020.subsystems.controllers.indexer.UnIndexColumnController;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
-import com.palyrobotics.frc2020.util.control.Gains;
 
 public class Indexer extends SubsystemBase {
 
-	private static Indexer sInstance = new Indexer();
-	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
-	private ControllerOutput mMasterSparkOutput = new ControllerOutput(),
-			mSlaveSparkOutput = new ControllerOutput(),
-			mLeftVTalonOutput = new ControllerOutput(),
-			mRightVTalonOutput = new ControllerOutput();
-	private CircularBuffer<Double> mMasterVelocityFilter = new CircularBuffer<>(30);
-	private boolean mHopperOutput, mBlockOutput;
-
-	private Indexer() {
+	public enum ColumnState {
+		INDEX, UN_INDEX, FEED, REVERSE_FEED, IDLE
 	}
+
+	public enum VSingulatorState {
+		FORWARD, REVERSE, IDLE
+	}
+
+	public abstract static class IndexerColumnController {
+
+		protected final IndexerConfig mConfig = Configs.get(IndexerConfig.class);
+		protected ControllerOutput mMasterSparkOutput = new ControllerOutput(), mSlaveSparkOutput = new ControllerOutput();
+
+		protected IndexerColumnController(@ReadOnly RobotState state) {
+		}
+
+		protected void update(@ReadOnly RobotState state) {
+		}
+
+		protected boolean isFinished(@ReadOnly RobotState state) {
+			return true;
+		}
+	}
+
+	private static final Indexer sInstance = new Indexer();
+	private static final IndexerConfig mConfig = Configs.get(IndexerConfig.class);
+	private static IndexerColumnController mRunningController = null;
+	private static ControllerOutput mMasterIndexerColumnOutput = new ControllerOutput(),
+			mSlaveIndexerColumnOutput = new ControllerOutput(), mRightVTalonOutput = new ControllerOutput(),
+			mLeftVTalonOutput = new ControllerOutput();
+	private static boolean mBlockingSolenoidOutput, mHopperSolenoidOutput;
 
 	public static Indexer getInstance() {
 		return sInstance;
 	}
 
 	@Override
-	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		double multiplier = 1.0;
-		if (state.indexerHasBackBall) {
-			multiplier = 0.0;
+	public void update(Commands commands, RobotState state) {
+		boolean isNewColumnState = mRunningController == null || mRunningController.isFinished(state);
+
+		if (isNewColumnState) {
+			switch (commands.indexerColumnWantedState) {
+				case FEED:
+					mRunningController = new FeedColumnController(state);
+					break;
+				case REVERSE_FEED:
+					mRunningController = new ReverseFeedColumnController(state);
+					break;
+				case INDEX:
+					mRunningController = new IndexColumnController(state);
+					break;
+				case UN_INDEX:
+					mRunningController = new UnIndexColumnController(state);
+					break;
+				default:
+					mRunningController = null;
+			}
 		}
-//		if ((Math.round(Timer.getFPGATimestamp() * mConfig.pulsePeriod) % 2L) == 0L) {
-//			leftMultiplier = 0.0;
-//			rightMultiplier = 0.6;
-//		} else {
-//			leftMultiplier = 0.4;
-//			rightMultiplier = 0.0;
-//		}
-
-		switch (commands.indexerWantedBeltState) {
-			case IDLE:
-				mMasterSparkOutput.setIdle();
-				mSlaveSparkOutput.setIdle();
-				mLeftVTalonOutput.setIdle();
-				mRightVTalonOutput.setIdle();
-				mBlockOutput = true;
-				break;
-			case INDEX:
-				if (state.gamePeriod == RobotState.GamePeriod.AUTO) {
-					mMasterVelocityFilter.add(state.indexerMasterVelocity);
-					if (mMasterVelocityFilter.numberOfOccurrences(d -> (d < mConfig.sparkIndexingOutput * 0.2) && d > -0.1) > 20) {
-						setVelocity(-mConfig.reversingOutput);
-					} else {
-						setProfiledVelocity(mConfig.sparkIndexingOutput);
-					}
-				} else {
-					setProfiledVelocity(mConfig.sparkIndexingOutput);
-				}
-				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
-				mBlockOutput = true;
-				break;
-			case WAITING_TO_FEED:
-				mMasterSparkOutput.setIdle();
-				mSlaveSparkOutput.setIdle();
-				mLeftVTalonOutput.setIdle();
-				mRightVTalonOutput.setIdle();
-				mBlockOutput = false;
-				break;
-			case FEED_SINGLE:
-			case FEED_ALL:
-				if (state.gamePeriod == RobotState.GamePeriod.AUTO) {
-					mMasterVelocityFilter.add(state.indexerMasterVelocity);
-					if (mMasterVelocityFilter.numberOfOccurrences(d -> (d < mConfig.feedingOutput * 0.2) && d > -0.1) > 20) {
-						setVelocity(-mConfig.reversingOutput);
-					} else {
-						setProfiledVelocity(mConfig.feedingOutput);
-					}
-				} else {
-					setProfiledVelocity(mConfig.feedingOutput);
-				}
-				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
-				mBlockOutput = false;
-				break;
-			case REVERSING:
-				setVelocity(-mConfig.reversingOutput);
-				setVTalonOutput(-mConfig.leftTalonIndexingOutput, -mConfig.rightTalonIndexingOutput, multiplier);
-				mBlockOutput = false;
-				break;
-			case MANUAL:
-				setProfiledVelocity(commands.indexerManualVelocity);
-				setVTalonOutput(
-						Math.signum(commands.indexerManualVelocity) * mConfig.leftTalonIndexingOutput,
-						Math.signum(commands.indexerManualVelocity) * mConfig.rightTalonIndexingOutput, multiplier);
-				break;
+		if (mRunningController != null) {
+			mRunningController.update(state);
+			mMasterIndexerColumnOutput = mRunningController.mMasterSparkOutput;
+			mSlaveIndexerColumnOutput = mRunningController.mSlaveSparkOutput;
+		} else {
+			System.out.println("Indexer @ Idle");
+			mMasterIndexerColumnOutput.setIdle();
+			mSlaveIndexerColumnOutput.setIdle();
 		}
-		if (commands.indexerWantedBeltState != BeltState.INDEX && commands.indexerWantedBeltState != BeltState.FEED_ALL) mMasterVelocityFilter.clear();
-		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
-	}
 
-	private void setVTalonOutput(double leftOutput, double rightOutput, double multiplier) {
-		mLeftVTalonOutput.setPercentOutput(leftOutput * multiplier);
-		mRightVTalonOutput.setPercentOutput(rightOutput * multiplier);
-	}
+		if (commands.indexerVSingulatorWantedState == VSingulatorState.FORWARD && commands.indexerColumnWantedState != ColumnState.INDEX && !state.indexerPos1Blocked) {
+			if ((int) state.gameTime % 2 == 0 || state.indexerPos4Blocked) {
+				mLeftVTalonOutput.setPercentOutput(mConfig.leftVTalonPo);
+				mRightVTalonOutput.setPercentOutput(mConfig.rightVTalonPo);
+			} else {
+				mLeftVTalonOutput.setPercentOutput(mConfig.leftVTalonPo);
+				mRightVTalonOutput.setPercentOutput(mConfig.rightVTalonSlowerPo);
+			}
 
-	private void setProfiledVelocity(double velocity) {
-		mMasterSparkOutput.setTargetVelocityProfiled(velocity, mConfig.masterVelocityGains);
-		mSlaveSparkOutput.setTargetVelocityProfiled(velocity, mConfig.slaveVelocityGains);
-	}
-
-	private void setVelocity(double velocity) {
-		var masterGains = new Gains(mConfig.masterVelocityGains.p, mConfig.masterVelocityGains.i, mConfig.masterVelocityGains.d, mConfig.masterVelocityGains.f, mConfig.masterVelocityGains.iZone, mConfig.masterVelocityGains.iMax);
-		var slaveGains = new Gains(mConfig.slaveVelocityGains.p, mConfig.slaveVelocityGains.i, mConfig.slaveVelocityGains.d, mConfig.slaveVelocityGains.f, mConfig.slaveVelocityGains.iZone, mConfig.slaveVelocityGains.iMax);
-		mMasterSparkOutput.setTargetVelocity(velocity, masterGains);
-		mSlaveSparkOutput.setTargetVelocity(velocity, slaveGains);
-	}
-
-	public ControllerOutput getMasterSparkOutput() {
-		return mMasterSparkOutput;
-	}
-
-	public ControllerOutput getSlaveSparkOutput() {
-		return mSlaveSparkOutput;
-	}
-
-	public ControllerOutput getLeftVTalonOutput() {
-		return mLeftVTalonOutput;
+		} else if (commands.indexerVSingulatorWantedState == VSingulatorState.REVERSE) {
+			mLeftVTalonOutput.setPercentOutput(-mConfig.leftVTalonPo);
+			mRightVTalonOutput.setPercentOutput(-mConfig.rightVTalonPo);
+		} else {
+			mLeftVTalonOutput.setIdle();
+			mRightVTalonOutput.setIdle();
+		}
+		mBlockingSolenoidOutput = !mConfig.blockingSolenoidExtended;
+		mHopperSolenoidOutput = mConfig.hopperSolenoidExtended;
 	}
 
 	public ControllerOutput getRightVTalonOutput() {
 		return mRightVTalonOutput;
 	}
 
-	public boolean getHopperOutput() {
-		return mHopperOutput;
+	public ControllerOutput getLeftVTalonOutput() {
+		return mLeftVTalonOutput;
 	}
 
-	public boolean getBlockOutput() {
-		return mBlockOutput;
+	public ControllerOutput getMasterIndexerColumnOutput() {
+		return mMasterIndexerColumnOutput;
 	}
 
-	public enum BeltState {
-		IDLE, INDEX, WAITING_TO_FEED, FEED_SINGLE, FEED_ALL, REVERSING, MANUAL
+	public ControllerOutput getSlaveIndexerColumnOutput() {
+		return mSlaveIndexerColumnOutput;
 	}
 
-	public enum HopperState {
-		OPEN, CLOSED
+	public boolean getBlockingSolenoidOutput() {
+		return mBlockingSolenoidOutput;
+	}
+
+	public boolean getHopperSolenoidOutput() {
+		return mHopperSolenoidOutput;
 	}
 }

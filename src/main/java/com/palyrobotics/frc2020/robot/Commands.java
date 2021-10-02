@@ -38,12 +38,11 @@ public class Commands {
 	// Turning
 	private double driveWantedYawDegrees;
 	/* Indexer */
-	public Indexer.BeltState indexerWantedBeltState;
-	public Indexer.HopperState indexerWantedHopperState;
-	public double indexerManualVelocity;
+	public Indexer.ColumnState indexerColumnWantedState;
+	public Indexer.VSingulatorState indexerVSingulatorWantedState;
 	/* Intake */
-	public Intake.State intakeWantedState;
-	public double intakeWantedPercentOutput;
+	private Intake.State intakeWantedState;
+	private double intakeWantedPo;
 	/* Shooter */
 	private Shooter.ShooterState shooterWantedState;
 	private double shooterWantedCustomFlywheelVelocity;
@@ -154,6 +153,24 @@ public class Commands {
 		return driveWantedSignal;
 	}
 
+	/* Intake */
+	public void setIntakeRunning(double intakeWantedPo) {
+		intakeWantedState = Intake.State.RUNNING;
+		this.intakeWantedPo = intakeWantedPo;
+	}
+
+	public void setIntakeStowed() {
+		intakeWantedState = Intake.State.STOWED;
+	}
+
+	public Intake.State getIntakeWantedState() {
+		return intakeWantedState;
+	}
+
+	public double getIntakeWantedPo() {
+		return intakeWantedPo;
+	}
+
 	/* Shooter */
 	public void setShooterIdle() {
 		shooterWantedState = Shooter.ShooterState.IDLE;
@@ -188,9 +205,6 @@ public class Commands {
 		return shooterWantedHoodState;
 	}
 
-	// public void copyTo(Commands other) {
-	// }
-
 	@Override
 	public String toString() {
 		var log = new StringBuilder();
@@ -199,15 +213,5 @@ public class Commands {
 			log.append(routine).append(" ");
 		}
 		return log.append("\n").toString();
-	}
-
-	public void copyTo(Commands other) {
-		other.driveWantedState = driveWantedState;
-		other.indexerWantedBeltState = indexerWantedBeltState;
-		other.spinnerWantedState = spinnerWantedState;
-		other.intakeWantedState = intakeWantedState;
-		other.shouldClearCurrentRoutines = shouldClearCurrentRoutines;
-		other.routinesWanted.addAll(routinesWanted);
-		other.climberWantedState = climberWantedState;
 	}
 }

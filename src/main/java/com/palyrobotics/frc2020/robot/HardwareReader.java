@@ -7,6 +7,7 @@ import com.ctre.phoenix.sensors.PigeonIMU.PigeonState;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
+import com.palyrobotics.frc2020.config.subsystem.IntakeConfig;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.*;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
@@ -25,6 +26,8 @@ public class HardwareReader {
 	private static final String kLoggerTag = Util.classToJsonName(HardwareReader.class);
 	private static final int kYawIndex = 0, kYawAngularVelocityIndex = 2;
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
+	private final IntakeConfig mIntakeConfig = Configs.get(IntakeConfig.class);
+
 	/**
 	 * A REV Color Match object is used to register and detect known colors. This can be calibrated
 	 * ahead of time or during operation. This object uses euclidean distance to estimate the closest
@@ -46,6 +49,8 @@ public class HardwareReader {
 	 */
 	void updateState(Set<SubsystemBase> enabledSubsystems, RobotState state) {
 		readGameAndFieldState(state);
+		readJoystickState(state);
+
 		Robot.mDebugger.addPoint("readGameAndFieldState");
 		if (enabledSubsystems.contains(Drive.getInstance())) readDriveState(state);
 		Robot.mDebugger.addPoint("Drive");
@@ -96,21 +101,35 @@ public class HardwareReader {
 	}
 
 	private void readIndexerState(RobotState state) {
-		var hardware = IndexerHardware.getInstance();
-		state.indexerHasBackBall = !hardware.backInfrared.get();
-		state.indexerHasFrontBall = !hardware.frontInfrared.get();
-		state.indexerHasTopBall = !hardware.topInfrared.get();
-		state.indexerIsHopperExtended = hardware.hopperSolenoid.isExtended();
-		state.indexerMasterVelocity = hardware.masterEncoder.getVelocity();
-		checkSparkFaults(hardware.masterSpark);
-		checkSparkFaults(hardware.slaveSpark);
-		checkTalonFaults(hardware.leftVTalon);
+		var hardware = HardwareAdapter.IndexerHardware.getInstance();
+		state.indexerPos1Blocked = !hardware.pos1Sensor.get();
+		state.indexerPos4Blocked = !hardware.pos4Sensor.get();
+		state.indexerMasterEncPosition = hardware.masterColumnSparkEncoder.getPosition();
+		state.indexerMasterEncVelocity = hardware.masterColumnSparkEncoder.getVelocity();
+		state.indexerSlaveEncPosition = hardware.slaveColumnSparkEncoder.getPosition();
+		state.indexerSlaveEncVelocity = hardware.slaveColumnSparkEncoder.getVelocity();
+		state.indexerRightVTalonCurrentDraw = hardware.rightVTalon.getStatorCurrent();
+		state.indexerLeftVTalonCurrentDraw = hardware.leftVTalon.getStatorCurrent();
+		state.indexerSlaveCurrentDraw = hardware.slaveColumnSpark.getOutputCurrent();
+		LiveGraph.add("masterIndexerEncoderPosition", state.indexerMasterEncPosition);
+		LiveGraph.add("masterIndexerEncoderVelocity", state.indexerMasterEncVelocity);
+		LiveGraph.add("slaveIndexerEncoderPosition", state.indexerSlaveEncPosition);
+		LiveGraph.add("rightVTalonCurrentDraw", state.indexerRightVTalonCurrentDraw);
+		LiveGraph.add("leftVTalonCurrentDraw", state.indexerLeftVTalonCurrentDraw);
+		LiveGraph.add("slaveIndexerCurrentDraw", state.indexerSlaveCurrentDraw);
+	}
+
+	private void readJoystickState(RobotState state) {
+		var joystickHardware = HardwareAdapter.Joysticks.getInstance();
+		state.joystickRightTriggerPressed = joystickHardware.operatorXboxController.getRightTrigger();
 	}
 
 	private void readIntakeState(RobotState state) {
 		var hardware = IntakeHardware.getInstance();
-		state.intakeIsExtended = hardware.solenoid.isExtended();
-		checkTalonFaults(hardware.talon);
+		state.intakeExtended = hardware.solenoid.get();
+		state.intakeTransitioning = hardware.solenoid.isInTransition();
+		state.intakeStalled = hardware.talon.getStatorCurrent() >= mIntakeConfig.rollerStallCurrent;
+		LiveGraph.add("intakeCurrentDraw", hardware.talon.getStatorCurrent());
 	}
 
 	private void readShooterState(RobotState state) {

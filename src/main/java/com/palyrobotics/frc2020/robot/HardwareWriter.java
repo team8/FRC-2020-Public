@@ -9,6 +9,7 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.RobotConfig;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
+import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.Util;
@@ -16,11 +17,9 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.Falcon;
 import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
-import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class HardwareWriter {
@@ -36,6 +35,7 @@ public class HardwareWriter {
 	public static final SupplyCurrentLimitConfiguration k30AmpCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(
 			true, 30.0, 35.0, 1.0);
 	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
+	private final IndexerConfig mIndexerConfig = Configs.get(IndexerConfig.class);
 	private final Climber mClimber = Climber.getInstance();
 	private final Drive mDrive = Drive.getInstance();
 	private final Indexer mIndexer = Indexer.getInstance();
@@ -112,29 +112,22 @@ public class HardwareWriter {
 
 	private void configureIndexerHardware() {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
-		// Sparks
-		for (Spark spark : hardware.sparks) {
+		for (Spark spark : hardware.columnSparks) {
 			spark.restoreFactoryDefaults();
 			spark.enableVoltageCompensation(kVoltageCompensation);
-			spark.setOpenLoopRampRate(0.0825);
-			spark.setClosedLoopRampRate(0.0825);
+			spark.setSmartCurrentLimit(mIndexerConfig.columnStallCurrentLimit, mIndexerConfig.columnFreeCurrentLimit);
+			spark.setOpenLoopRampRate(mIndexerConfig.rampRate);
 			spark.setInverted(true);
-			double maxOutput = 0.9;
-			spark.setOutputRange(-maxOutput, maxOutput);
-			spark.setSmartCurrentLimit((int) Math.round(40.0 / maxOutput));
-			spark.setSecondaryCurrentLimit(70.0 / maxOutput, 10);
 		}
-		/* V-Belt Talons */
-		for (Talon vTalon : hardware.vTalons) {
-			vTalon.configFactoryDefault(kTimeoutMs);
-			vTalon.enableVoltageCompensation(true);
-			vTalon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
-			vTalon.configOpenloopRamp(0.1, kTimeoutMs);
-			vTalon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
-			vTalon.configFrameTimings(40, 40);
+		hardware.masterColumnSparkEncoder.setPosition(0);
+		hardware.slaveColumnSparkEncoder.setPosition(0);
+		for (Talon talon : hardware.vTalons) {
+			talon.configFactoryDefault(kTimeoutMs);
+			SupplyCurrentLimitConfiguration vTalonSupplyCurrentLimit = new SupplyCurrentLimitConfiguration(true, mIndexerConfig.vTalonCurrentLimit, 0, kTimeoutMs / 1000.0);
+			talon.configVoltageCompSaturation(kVoltageCompensation);
+			talon.configSupplyCurrentLimit(vTalonSupplyCurrentLimit);
+			talon.setInverted(true);
 		}
-		hardware.leftVTalon.setInverted(true);
-		hardware.rightVTalon.setInverted(true);
 	}
 
 	private void configureIntakeHardware() {
@@ -231,26 +224,12 @@ public class HardwareWriter {
 
 	private void updateIndexer() {
 		var hardware = HardwareAdapter.IndexerHardware.getInstance();
-		hardware.vTalons.forEach(Talon::handleReset);
-		hardware.masterSpark.setOutput(mIndexer.getMasterSparkOutput());
-		hardware.slaveSpark.setOutput(mIndexer.getSlaveSparkOutput());
-		hardware.hopperSolenoid.setExtended(mIndexer.getHopperOutput());
-		hardware.blockingSolenoid.setExtended(mIndexer.getBlockOutput());
+		hardware.masterColumnSpark.setOutput(mIndexer.getMasterIndexerColumnOutput());
+		hardware.slaveColumnSpark.setOutput(mIndexer.getSlaveIndexerColumnOutput());
 		hardware.leftVTalon.setOutput(mIndexer.getLeftVTalonOutput());
 		hardware.rightVTalon.setOutput(mIndexer.getRightVTalonOutput());
-		handleReset(hardware.slaveSpark);
-		handleReset(hardware.masterSpark);
-		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
-		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
-		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
-		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
-		LiveGraph.add("indexerTargetVelocity", mIndexer.getMasterSparkOutput().getReference());
-		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
-		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
-		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
-//		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));
-//		LiveGraph.add("totalCurrent", pdp.getTotalCurrent());
-//		LiveGraph.add("batteryVoltage", RobotController.getBatteryVoltage());
+		hardware.blockingSolenoid.set(mIndexer.getBlockingSolenoidOutput());
+		hardware.hopperSolenoids.set(mIndexer.getHopperSolenoidOutput());
 	}
 
 	private void updateIntake() {

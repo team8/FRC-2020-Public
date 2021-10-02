@@ -5,5 +5,5 @@ import com.palyrobotics.frc2020.util.config.SubsystemConfigBase;
 @SuppressWarnings ("squid:ClassVariableVisibilityCheck")
 public class IntakeConfig extends SubsystemConfigBase {
 
-	public double intakingOutput;
+	public double rollerPo, rollerStallCurrent, solenoidActuationDurationSec;
 }

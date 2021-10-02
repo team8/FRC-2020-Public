@@ -73,19 +73,18 @@ public class HardwareAdapter {
 	 */
 	static class IndexerHardware {
 
-		private static IndexerHardware sInstance;
-		final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId, "Indexer Master"),
-				slaveSpark = new Spark(sPortConstants.nariIndexerSlaveId, "Indexer Slave");
-		final List<Spark> sparks = List.of(masterSpark, slaveSpark);
-		final CANEncoder masterEncoder = masterSpark.getEncoder(), slaveEncoder = slaveSpark.getEncoder();
-		final Talon leftVTalon = new Talon(sPortConstants.nariIndexerLeftVTalonId, "Indexer Left V"),
-				rightVTalon = new Talon(sPortConstants.nariIndexerRightVTalonId, "Indexer Right V");
-		final List<Talon> vTalons = List.of(leftVTalon, rightVTalon);
-		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
-				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);
-		final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDio),
-				frontInfrared = new DigitalInput(sPortConstants.nariIndexerFrontInfraredDio),
-				topInfrared = new DigitalInput(sPortConstants.nariIndexerTopInfraredDio);
+		final Spark slaveColumnSpark = new Spark(sPortConstants.nariIndexerSlaveId, "slaveColumnSpark"),
+				masterColumnSpark = new Spark(sPortConstants.nariIndexerMasterId, "masterColumnSpark");
+		final CANEncoder masterColumnSparkEncoder = masterColumnSpark.getEncoder();
+		final CANEncoder slaveColumnSparkEncoder = slaveColumnSpark.getEncoder();
+		final List<Spark> columnSparks = List.of(masterColumnSpark, slaveColumnSpark);
+		final Talon leftVTalon = new Talon(sPortConstants.nariIndexerLeftVTalonId, "leftVTalon"),
+				rightVTalon = new Talon(sPortConstants.nariIndexerRightVTalonId, "rightVTalon");
+		final List<Talon> vTalons = List.of(rightVTalon, leftVTalon);
+		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.nariIndexerBlockingSolenoidId),
+				hopperSolenoids = new Solenoid(sPortConstants.nariIndexerHopperSolenoidId);
+		final DigitalInput pos1Sensor = new DigitalInput(sPortConstants.nariIndexerPos1Infrared);
+		final DigitalInput pos4Sensor = new DigitalInput(sPortConstants.nariIndexerPos4Infrared);
 
 		private IndexerHardware() {
 		}

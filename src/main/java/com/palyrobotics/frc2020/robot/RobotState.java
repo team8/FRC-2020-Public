@@ -34,12 +34,12 @@ public class RobotState {
 	public boolean driveIsGyroReady;
 
 	/* Indexer */
-	public boolean indexerIsHopperExtended;
-	public boolean indexerHasBackBall, indexerHasFrontBall, indexerHasTopBall;
-	public double indexerMasterVelocity;
+	public boolean indexerPos1Blocked, indexerPos4Blocked;
+	public double indexerMasterEncPosition, indexerMasterEncVelocity, indexerSlaveEncPosition, indexerSlaveEncVelocity,
+			indexerLeftVTalonCurrentDraw, indexerRightVTalonCurrentDraw, indexerSlaveCurrentDraw;
 
 	/* Intake */
-	public boolean intakeIsExtended;
+	public boolean intakeExtended, intakeTransitioning, intakeStalled;
 
 	/* Shooter */
 	public double shooterFlywheelVelocity;
@@ -53,9 +53,13 @@ public class RobotState {
 	public Color detectedRGBValues;
 	public ColorMatchResult closestColorRGB;
 
+	/* Joystick */
+	public boolean joystickRightTriggerPressed;
+
 	/* Game and Field */
 	public GamePeriod gamePeriod = GamePeriod.DISABLED;
 	public String gameData;
+	public double gameTime;
 
 	public void resetOdometry(Pose2d pose) {
 		driveOdometry.resetPosition(pose, pose.getRotation());

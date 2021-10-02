@@ -1,21 +1,37 @@
 {
-    "sparkIndexingOutput": 800.0,
-    "leftTalonIndexingOutput": 0.5,
-    "rightTalonIndexingOutput": 0.7,
-    "reverseTime": 0.2,
-    "feedingOutput": 1100.0,
-    "reversingOutput": 700.0,
-    "masterVelocityGains": {
-        "p": 0.00023,
-        "f": 0.00045,
-        "acceleration": 2200.0,
-        "velocity": 1800.0
+    "columnStallCurrentLimit" : 30,
+    "columnFreeCurrentLimit" : 20,
+    "vTalonCurrentLimit" : 5,
+    "rampRate" : 0.2,
+    "masterSparkIndexDistance" : 3.0,
+    "slaveSparkIndexDistance" : 8.0,
+    "masterSparkUnIndexDistance" : 1,
+    "slaveSparkUnIndexDistance" : 2,
+    "masterSparkReverseFeedPo" : -0.6,
+    "slaveSparkReverseFeedPo" : -0.8,
+    "rightVTalonPo" : 0.6,
+    "leftVTalonPo" : 0.6,
+    "rightVTalonSlowerPo" : 0.3,
+    "blockingSolenoidExtended" : false,
+    "hopperSolenoidExtended" : false,
+    "indexFinishedMinThreshold" : 3,
+    "unIndexFinishedMinThreshold" : 0.7,
+    "maximumIndexerColumnPo" : 0.6,
+    "indexControllerTimeoutSec" : 3.0,
+    "masterSparkPositionGains": {
+        "p": 0.8,
+        "i": 0.01,
+        "d": 0.02
     },
-    "slaveVelocityGains": {
-        "p": 0.00015,
-        "f": 0.00021,
-        "acceleration": 2200.0,
-        "velocity": 1800.0
+    "masterSparkVelocityGains": {
+        "f": 0.02,
+        "p": 0.0003
     },
-    "pulsePeriod": 4
+    "slaveSparkPositionGains": {
+        "p": 0.1
+    },
+    "slaveSparkVelocityGains": {
+        "f": 0.02,
+        "p": 0.0003
+    }
 }
