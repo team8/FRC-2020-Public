@@ -23,7 +23,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 
 	private static final DriveConfig kConfig = Configs.get(DriveConfig.class);
 	private static final double kTimeoutMultiplier = 1;
-	private final List<Pose2d> mPoses;
+	protected final List<Pose2d> mPoses;
 	private List<Translation2d> mWaypoints;
 	private double mMaxVelocityMetersPerSecond = kConfig.pathVelocityMetersPerSecond,
 			mMaxAccelerationMetersPerSecondSq = kConfig.pathAccelerationMetersPerSecondSquared;
