@@ -7,44 +7,43 @@ import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Intake extends SubsystemBase {
 
-	public enum State {
-		STOW, LOWER, INTAKE
-	}
+    public enum State {
+        IDLE, INTAKE, LOWER
+    }
 
-	private static Intake sInstance = new Intake();
-	private ControllerOutput mOutput = new ControllerOutput();
-	private boolean mExtendedOutput;
+    private ControllerOutput mIntakeOutput = new ControllerOutput();
+    private boolean mExtended;
+    private static Intake sIntake = new Intake();
 
-	private Intake() {
-	}
+    private Intake() {}
 
-	public static Intake getInstance() {
-		return sInstance;
-	}
+    @Override
+    public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+        switch (commands.intakeWantedState) {
+            case IDLE:
+                mExtended = false;
+                break;
+            case INTAKE:
+                mExtended = false;
+                mIntakeOutput.setPercentOutput(commands.intakeWantedPercentOutput);
+                break;
+            case LOWER:
+                mExtended = true;
+                break;
 
-	@Override
-	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
-		switch (commands.intakeWantedState) {
-			case STOW:
-				mOutput.setIdle();
-				mExtendedOutput = false;
-				break;
-			case LOWER:
-				mOutput.setIdle();
-				mExtendedOutput = true;
-				break;
-			case INTAKE:
-				mOutput.setPercentOutput(commands.intakeWantedPercentOutput);
-				mExtendedOutput = true;
-				break;
-		}
-	}
+        }
+    }
 
-	public ControllerOutput getOutput() {
-		return mOutput;
-	}
+    public ControllerOutput getOutput() {
+        return mIntakeOutput;
+    }
 
-	public boolean getExtendedOutput() {
-		return mExtendedOutput;
-	}
+    public boolean getExtendedOutput() {
+        //return if extended
+        return mExtended;
+    }
+
+    public static Intake getInstance() {
+        return sIntake;
+    }
 }
