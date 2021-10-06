@@ -323,3 +323,4 @@ public class Robot extends TimedRobot {
 		if (kCanUseHardware && mEnabledSubsystems.contains(mDrive)) mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
 	}
 }
+
