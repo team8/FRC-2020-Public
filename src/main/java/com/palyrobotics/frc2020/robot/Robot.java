@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
-import com.palyrobotics.frc2020.auto.TrenchStealTwoShootFive;
+import com.palyrobotics.frc2020.auto.GoForwardTenMeters;
 import com.palyrobotics.frc2020.behavior.MultipleRoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
@@ -102,7 +101,7 @@ public class Robot extends TimedRobot {
 	}
 
 	private void pathToCsv() {
-		var drivePath = new StartCenterFriendlyTrenchThreeShootThree().getRoutine();
+		var drivePath = new GoForwardTenMeters().getRoutine();
 		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
 			writer.write("x,y,d" + '\n');
 			var points = new LinkedList<Pose2d>();
