@@ -157,8 +157,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
-		mCommands.addWantedRoutine(new TrenchStealTwoShootFive().getRoutine());
-//		mCommands.addWantedRoutine(new StartCenterFriendlyTrenchThreeShootThree().getRoutine());
+		mCommands.addWantedRoutine(new GoForwardTenMeters().getRoutine());
 	}
 
 	private void startStage(RobotState.GamePeriod period) {
