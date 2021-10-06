@@ -101,6 +101,7 @@ public class Robot extends TimedRobot {
 	}
 
 	private void pathToCsv() {
+		//var drivePath = new (AutoName).getRoutine();
 		var drivePath = new GoForwardTenMeters().getRoutine();
 		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
 			writer.write("x,y,d" + '\n');
