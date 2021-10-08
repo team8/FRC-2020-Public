@@ -115,9 +115,6 @@ public class OperatorInterface {
 
 	private void updateLightingCommands(Commands commands, @ReadOnly RobotState state) {
 
-		if (mOperatorXboxController.getDPadLeftPressed()) {
-			commands.lightingWantedState = Lighting.State.INTAKE_EXTENDED; // TODO: Dpad left isn't for intake_extended
-		}
 		if (state.indexerHasBackBall) {
 			commands.lightingWantedState = Lighting.State.BALL_ENTERED;
 		}
@@ -144,17 +141,8 @@ public class OperatorInterface {
 
 	private void updateSuperstructure(Commands commands, @ReadOnly RobotState state) {
 		/* Intake Toggle */
-		if (mOperatorXboxController.getDPadDownPressed()) {
-			switch (commands.intakeWantedState) {
-				case LOWER:
-				case INTAKE:
-					commands.intakeWantedState = Intake.State.STOW;
-					break;
-				case STOW:
-					commands.intakeWantedState = Intake.State.LOWER;
-					break;
-			}
-		}
+		//TODO: intake toggle
+
 		/* Indexer Hopper Control */
 		if (mOperatorXboxController.getDPadRightPressed()) {
 			if (commands.indexerWantedHopperState == Indexer.HopperState.CLOSED) {
@@ -165,7 +153,6 @@ public class OperatorInterface {
 				// Close hopper, lower intake, and advance balls a bit
 				commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
 			}
-			commands.intakeWantedState = Intake.State.LOWER;
 		}
 
 		if (mOperatorXboxController.getAButtonPressed()) {
@@ -174,12 +161,10 @@ public class OperatorInterface {
 		/* Ball Intake Control */
 		if (mOperatorXboxController.getDPadLeft()) {
 			commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
-			commands.intakeWantedState = Intake.State.INTAKE;
 			commands.intakeWantedPercentOutput = mIntakeConfig.intakingOutput;
 			commands.indexerWantedBeltState = Indexer.BeltState.INDEX;
 		}
 		if (mOperatorXboxController.getDPadLeftReleased()) {
-			commands.intakeWantedState = Intake.State.LOWER;
 			commands.intakeWantedPercentOutput = 0.0;
 			commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
 		}
@@ -230,7 +215,7 @@ public class OperatorInterface {
 		commands.climberWantsSoftLimits = true;
 		commands.setDriveNeutral();
 		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
-		commands.intakeWantedState = Intake.State.STOW;
+		// TODO: set intake reset command
 		commands.indexerWantedHopperState = Indexer.HopperState.OPEN;
 		commands.setShooterIdle();
 		commands.spinnerWantedState = Spinner.State.IDLE;

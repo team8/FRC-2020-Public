@@ -101,17 +101,7 @@ public class HardwareAdapter {
 	 */
 	static class IntakeHardware {
 
-		private static IntakeHardware sInstance;
-		final Talon talon = new Talon(sPortConstants.nariIntakeId, "Intake");
-		final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariIntakeSolenoidId, 1.0, false);
-
-		private IntakeHardware() {
-		}
-
-		static IntakeHardware getInstance() {
-			if (sInstance == null) sInstance = new IntakeHardware();
-			return sInstance;
-		}
+		//TODO: write intake hardware class
 	}
 
 	/**

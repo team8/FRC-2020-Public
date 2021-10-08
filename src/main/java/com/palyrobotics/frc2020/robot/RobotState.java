@@ -39,7 +39,8 @@ public class RobotState {
 	public double indexerMasterVelocity;
 
 	/* Intake */
-	public boolean intakeIsExtended;
+	// TODO: add RobotState variables
+
 
 	/* Shooter */
 	public double shooterFlywheelVelocity;

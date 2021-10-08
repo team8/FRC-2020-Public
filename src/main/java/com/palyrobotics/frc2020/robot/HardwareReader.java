@@ -51,8 +51,7 @@ public class HardwareReader {
 		Robot.mDebugger.addPoint("Drive");
 		if (enabledSubsystems.contains(Indexer.getInstance())) readIndexerState(state);
 		Robot.mDebugger.addPoint("Indexer");
-		if (enabledSubsystems.contains(Intake.getInstance())) readIntakeState(state);
-		Robot.mDebugger.addPoint("Intake");
+		//TODO: put intake stuff here
 		if (enabledSubsystems.contains(Shooter.getInstance())) readShooterState(state);
 		Robot.mDebugger.addPoint("Shooter");
 		if (enabledSubsystems.contains(Spinner.getInstance())) readSpinnerState(state);
@@ -108,9 +107,7 @@ public class HardwareReader {
 	}
 
 	private void readIntakeState(RobotState state) {
-		var hardware = IntakeHardware.getInstance();
-		state.intakeIsExtended = hardware.solenoid.isExtended();
-		checkTalonFaults(hardware.talon);
+		//TODO: write this
 	}
 
 	private void readShooterState(RobotState state) {

@@ -42,8 +42,7 @@ public class Commands {
 	public Indexer.HopperState indexerWantedHopperState;
 	public double indexerManualVelocity;
 	/* Intake */
-	public Intake.State intakeWantedState;
-	public double intakeWantedPercentOutput;
+	// TODO: add intake variables
 	/* Shooter */
 	private Shooter.ShooterState shooterWantedState;
 	private double shooterWantedCustomFlywheelVelocity;
@@ -205,7 +204,7 @@ public class Commands {
 		other.driveWantedState = driveWantedState;
 		other.indexerWantedBeltState = indexerWantedBeltState;
 		other.spinnerWantedState = spinnerWantedState;
-		other.intakeWantedState = intakeWantedState;
+		// TODO: intake stuff here
 		other.shouldClearCurrentRoutines = shouldClearCurrentRoutines;
 		other.routinesWanted.addAll(routinesWanted);
 		other.climberWantedState = climberWantedState;

@@ -254,10 +254,7 @@ public class HardwareWriter {
 	}
 
 	private void updateIntake() {
-		var hardware = HardwareAdapter.IntakeHardware.getInstance();
-		hardware.talon.handleReset();
-		hardware.talon.setOutput(mIntake.getOutput());
-		hardware.solenoid.setExtended(mIntake.getExtendedOutput());
+		//TODO: write this method
 	}
 
 	public void updateLighting() {
