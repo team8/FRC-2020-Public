@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
+import com.palyrobotics.frc2020.auto.StartCenterShootThreeRendezvousFiveShootFive;
 import com.palyrobotics.frc2020.auto.TrenchStealTwoShootFive;
 import com.palyrobotics.frc2020.behavior.MultipleRoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
@@ -157,7 +158,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
-		mCommands.addWantedRoutine(new TrenchStealTwoShootFive().getRoutine());
+		mCommands.addWantedRoutine(new StartCenterShootThreeRendezvousFiveShootFive().getRoutine());
 //		mCommands.addWantedRoutine(new StartCenterFriendlyTrenchThreeShootThree().getRoutine());
 	}
 

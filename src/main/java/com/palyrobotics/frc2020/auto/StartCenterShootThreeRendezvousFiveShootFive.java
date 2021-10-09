@@ -4,7 +4,6 @@ import com.palyrobotics.frc2020.behavior.ParallelRoutine;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveParallelPathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
@@ -24,14 +23,14 @@ public class StartCenterShootThreeRendezvousFiveShootFive extends AutoBase {
                         new TimedRoutine(0.8),
                         new IndexerFeedAllRoutine(2.2, false, true)));
         var getBalls = new SequentialRoutine(
-                new DrivePathRoutine(newWaypoint(211, 171, 200))
+                new DrivePathRoutine(newWaypoint(211, 171, 19))
                         .setMovement(1.6 , 1.4),
                 new IntakeBallRoutine(1),
-                new DrivePathRoutine(newWaypoint(294, 210, 160))
+                new DrivePathRoutine(newWaypoint(294, 210, -25))
                         .setMovement(1.6, 1.4),
-                new DrivePathRoutine(newWaypoint(298, 182, 250))
+                new DrivePathRoutine(newWaypoint(298, 182, 85))
                         .setMovement(1.6, 1.4),
-                new DrivePathRoutine(newWaypoint(216, 147, 270))
+                new DrivePathRoutine(newWaypoint(216, 147, 157))
                         .setMovement(1.6, 1.4));
         var shoot = new SequentialRoutine(
                 new ShooterVisionRoutine(5),
