@@ -7,14 +7,16 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.CircularBuffer;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
-import java.util.LinkedList;
 
 public class Indexer extends SubsystemBase {
-	private Indexer() {}
+
+	private Indexer() {
+	}
 
 	public enum BeltState {
 		INDEX, IDLE, MANUAL, REVERSING, FEED_SINGLE, FEED_ALL, WAITING_TO_FEED
 	}
+
 	public enum HopperState {
 		CLOSED, OPEN
 	}
@@ -31,6 +33,7 @@ public class Indexer extends SubsystemBase {
 	private ControllerOutput mRightVTalonOutput = new ControllerOutput();
 
 	private static Indexer sIndexer = new Indexer();
+
 	public static Indexer getInstance() {
 		return sIndexer;
 	}
@@ -42,7 +45,7 @@ public class Indexer extends SubsystemBase {
 				mBlocked = false;
 				mIndexerVelocityOutputs.add(state.indexerMasterVelocity);
 				if (state.gamePeriod == RobotState.GamePeriod.AUTO) {
-					if (mIndexerVelocityOutputs.numberOfOccurrences(d -> (d < mConfig.sparkIndexingOutput*kStuckPercent) && d > kForwardThreshold) > 20) {
+					if (mIndexerVelocityOutputs.numberOfOccurrences(d -> (d < mConfig.sparkIndexingOutput * kStuckPercent) && d > kForwardThreshold) > 20) {
 						setTalonTargetVelocity(-mConfig.reversingOutput);
 					} else {
 						setTalonTargetProfiledVelocity(mConfig.sparkIndexingOutput);
@@ -59,8 +62,8 @@ public class Indexer extends SubsystemBase {
 				mBlocked = true;
 				break;
 			case MANUAL:
-				mLeftVTalonOutput.setTargetVelocityProfiled(Math.signum(commands.indexerManualVelocity)*mConfig.leftTalonIndexingOutput, mConfig.masterVelocityGains);
-				mRightVTalonOutput.setTargetVelocityProfiled(Math.signum(commands.indexerManualVelocity)*mConfig.rightTalonIndexingOutput, mConfig.masterVelocityGains);
+				mLeftVTalonOutput.setTargetVelocityProfiled(Math.signum(commands.indexerManualVelocity) * mConfig.leftTalonIndexingOutput, mConfig.masterVelocityGains);
+				mRightVTalonOutput.setTargetVelocityProfiled(Math.signum(commands.indexerManualVelocity) * mConfig.rightTalonIndexingOutput, mConfig.masterVelocityGains);
 				break;
 			case REVERSING:
 				break;
@@ -68,7 +71,7 @@ public class Indexer extends SubsystemBase {
 			case FEED_ALL:
 				mIndexerVelocityOutputs.add(state.indexerMasterVelocity);
 				if (state.gamePeriod == RobotState.GamePeriod.AUTO) {
-					if (mIndexerVelocityOutputs.numberOfOccurrences(d -> (d < mConfig.reversingOutput*kStuckPercent) && d > kForwardThreshold) > 20) {
+					if (mIndexerVelocityOutputs.numberOfOccurrences(d -> (d < mConfig.reversingOutput * kStuckPercent) && d > kForwardThreshold) > 20) {
 						setSparkMaxVelocity(-mConfig.reversingOutput);
 					} else {
 						setSparkMaxProfiledVelocity(mConfig.sparkIndexingOutput);
@@ -140,6 +143,5 @@ public class Indexer extends SubsystemBase {
 	public ControllerOutput getRightVTalonOutput() {
 		return mRightVTalonOutput;
 	}
-
 
 }
