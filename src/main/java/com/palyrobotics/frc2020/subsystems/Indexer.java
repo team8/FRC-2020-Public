@@ -7,6 +7,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.CircularBuffer;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.control.Gains;
 
 public class Indexer extends SubsystemBase {
 
@@ -40,19 +41,26 @@ public class Indexer extends SubsystemBase {
 
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
+
+		double multiplier = 1;
+		if (state.indexerHasTopBall) {
+			multiplier = 0.0;
+		}
+
 		switch (commands.indexerWantedBeltState) {
 			case INDEX:
 				mBlocked = false;
 				mIndexerVelocityOutputs.add(state.indexerMasterVelocity);
 				if (state.gamePeriod == RobotState.GamePeriod.AUTO) {
 					if (mIndexerVelocityOutputs.numberOfOccurrences(d -> (d < mConfig.sparkIndexingOutput * kStuckPercent) && d > kForwardThreshold) > 20) {
-						setTalonTargetVelocity(-mConfig.reversingOutput);
+						setSparkMaxVelocity(-mConfig.reversingOutput);
 					} else {
-						setTalonTargetProfiledVelocity(mConfig.sparkIndexingOutput);
+						setSparkMaxProfiledVelocity(mConfig.sparkIndexingOutput);
 					}
 				} else {
-					setTalonTargetProfiledVelocity(mConfig.sparkIndexingOutput);
+					setSparkMaxProfiledVelocity(mConfig.sparkIndexingOutput);
 				}
+				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
 				break;
 			case IDLE:
 				mSlaveSparkOutput.setIdle();
@@ -62,8 +70,9 @@ public class Indexer extends SubsystemBase {
 				mBlocked = true;
 				break;
 			case MANUAL:
-				mLeftVTalonOutput.setTargetVelocityProfiled(Math.signum(commands.indexerManualVelocity) * mConfig.leftTalonIndexingOutput, mConfig.masterVelocityGains);
-				mRightVTalonOutput.setTargetVelocityProfiled(Math.signum(commands.indexerManualVelocity) * mConfig.rightTalonIndexingOutput, mConfig.masterVelocityGains);
+				setSparkMaxProfiledVelocity(commands.indexerManualVelocity);
+				setVTalonOutput(Math.signum(commands.indexerManualVelocity) * mConfig.leftTalonIndexingOutput,
+						Math.signum(commands.indexerManualVelocity) * mConfig.rightTalonIndexingOutput, multiplier);
 				break;
 			case REVERSING:
 				break;
@@ -74,18 +83,20 @@ public class Indexer extends SubsystemBase {
 					if (mIndexerVelocityOutputs.numberOfOccurrences(d -> (d < mConfig.reversingOutput * kStuckPercent) && d > kForwardThreshold) > 20) {
 						setSparkMaxVelocity(-mConfig.reversingOutput);
 					} else {
-						setSparkMaxProfiledVelocity(mConfig.sparkIndexingOutput);
+						setSparkMaxProfiledVelocity(mConfig.feedingOutput);
 					}
 				} else {
-					setSparkMaxProfiledVelocity(mConfig.sparkIndexingOutput);
+					setSparkMaxProfiledVelocity(mConfig.feedingOutput);
 				}
 				mBlocked = false;
+				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
 				break;
 			case WAITING_TO_FEED:
 				mSlaveSparkOutput.setIdle();
 				mMasterSparkOutput.setIdle();
 				mLeftVTalonOutput.setIdle();
 				mRightVTalonOutput.setIdle();
+				mBlocked = false;
 				break;
 
 		}
@@ -100,24 +111,21 @@ public class Indexer extends SubsystemBase {
 		}
 	}
 
-	public void setTalonTargetProfiledVelocity(double velocity) {
-		mLeftVTalonOutput.setTargetVelocityProfiled(velocity, mConfig.masterVelocityGains);
-		mRightVTalonOutput.setTargetVelocityProfiled(velocity, mConfig.masterVelocityGains);
-	}
-
-	public void setTalonTargetVelocity(double velocity) {
-		mLeftVTalonOutput.setTargetVelocity(velocity, mConfig.masterVelocityGains);
-		mRightVTalonOutput.setTargetVelocity(velocity, mConfig.masterVelocityGains);
+	public void setVTalonOutput(double leftTalonOutput, double rightTalonOutput, double multiplier) {
+		mLeftVTalonOutput.setPercentOutput(leftTalonOutput * multiplier);
+		mRightVTalonOutput.setPercentOutput(rightTalonOutput * multiplier);
 	}
 
 	public void setSparkMaxVelocity(double velocity) {
-		mSlaveSparkOutput.setTargetVelocity(velocity, mConfig.masterVelocityGains);
-		mMasterSparkOutput.setTargetVelocity(velocity, mConfig.masterVelocityGains);
+		var masterGains = new Gains(mConfig.masterVelocityGains.p, mConfig.masterVelocityGains.i, mConfig.masterVelocityGains.d, mConfig.masterVelocityGains.f, mConfig.masterVelocityGains.iZone, mConfig.masterVelocityGains.iMax);
+		var slaveGains = new Gains(mConfig.slaveVelocityGains.p, mConfig.slaveVelocityGains.i, mConfig.slaveVelocityGains.d, mConfig.slaveVelocityGains.f, mConfig.slaveVelocityGains.iZone, mConfig.slaveVelocityGains.iMax);
+		mMasterSparkOutput.setTargetVelocity(velocity, masterGains);
+		mSlaveSparkOutput.setTargetVelocity(velocity, slaveGains);
 	}
 
 	public void setSparkMaxProfiledVelocity(double velocity) {
-		mSlaveSparkOutput.setTargetVelocityProfiled(velocity, mConfig.masterVelocityGains);
 		mMasterSparkOutput.setTargetVelocityProfiled(velocity, mConfig.masterVelocityGains);
+		mSlaveSparkOutput.setTargetVelocityProfiled(velocity, mConfig.slaveVelocityGains);
 	}
 
 	public boolean getHopperOutput() {
