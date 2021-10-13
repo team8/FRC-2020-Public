@@ -9,8 +9,13 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 public class DrivePathPremadeRoutine extends DrivePathRoutine {
 
-	public List<Trajectory.State> generateTrajectory(String trajectoryFile) throws JsonProcessingException {
-		TrajectoryReader trajReader = new TrajectoryReader(trajectoryFile);
+	public String mTrajectoryFile;
+	public DrivePathPremadeRoutine(String trajectoryFile){
+		this.mTrajectoryFile = trajectoryFile;
+	}
+
+	public List<Trajectory.State> generateTrajectory() throws JsonProcessingException {
+		TrajectoryReader trajReader = new TrajectoryReader(mTrajectoryFile);
 		return trajReader.getTrajectory();
 	}
 }

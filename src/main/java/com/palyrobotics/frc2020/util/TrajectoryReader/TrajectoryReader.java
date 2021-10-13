@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 public class TrajectoryReader {
 
 	private String jsonString;
-
+//TODO: fix the pos2d thing, use custom assigner
 	public TrajectoryReader(String jsonString) {
 		this.jsonString = jsonString;
 	}

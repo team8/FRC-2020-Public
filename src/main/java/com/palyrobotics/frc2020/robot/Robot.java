@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.palyrobotics.frc2020.auto.PregeneratedAutoTest;
 import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
 import com.palyrobotics.frc2020.auto.TrenchStealTwoShootFive;
 import com.palyrobotics.frc2020.behavior.MultipleRoutineBase;
@@ -102,7 +104,13 @@ public class Robot extends TimedRobot {
 	}
 
 	private void pathToCsv() {
-		var drivePath = new StartCenterFriendlyTrenchThreeShootThree().getRoutine();
+		System.out.println("writing");
+		RoutineBase drivePath = null;
+		try {
+			drivePath = new PregeneratedAutoTest().getRoutine();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		try (var writer = new PrintWriter(new BufferedWriter(new FileWriter("auto.csv")))) {
 			writer.write("x,y,d" + '\n');
 			var points = new LinkedList<Pose2d>();
