@@ -1,9 +1,9 @@
 {
 	"nariClimberId": 15,
 	"nariClimberSolenoidId": 1,
-	"nariDriveLeftMasterId": 2,
+	"nariDriveLeftMasterId": 12,
 	"nariDriveLeftSlaveId": 13,
-	"nariDriveRightMasterId": 12,
+	"nariDriveRightMasterId": 2,
 	"nariDriveRightSlaveId": 3,
 	"nariDriveGyroId": 9,
 	"nariIndexerMasterId": 10,

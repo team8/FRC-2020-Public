@@ -101,7 +101,7 @@ public class HardwareWriter {
 		hardware.rightMasterFalcon.setInverted(true);
 		hardware.rightMasterFalcon.setFrameTimings(5, 5);
 		hardware.rightSlaveFalcon.follow(hardware.rightMasterFalcon);
-		hardware.rightSlaveFalcon.setInverted(false); // TODO: REMEMBER TO FIX THIS BACK SHORT TERM SOLUTION
+		hardware.rightSlaveFalcon.setInverted(InvertType.FollowMaster);
 		hardware.rightSlaveFalcon.setFrameTimings(40, 40);
 		/* Gyro */
 		// 10 ms update period for yaw degrees and yaw angular velocity in degrees per second
