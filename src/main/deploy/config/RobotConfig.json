@@ -13,7 +13,7 @@
 		"climber"
 	],
 	"checkFaults": false,
-	"coastDriveWhenDisabled": false,
+	"coastDriveWhenDisabled": true,
 	"enableVisionWhenDisabled": false,
 	"visionPipelineWhenDisabled": 0,
 	"motorOutputMultiplier": 1.0,
