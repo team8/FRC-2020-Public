@@ -172,6 +172,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		updateDriveNeutralMode(true);
+		//TODO: check rammifications of line above
 		startStage(RobotState.GamePeriod.TELEOP);
 		mCommands.setDriveTeleop();
 		mCommands.lightingWantedState = Lighting.State.OFF;
