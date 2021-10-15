@@ -186,10 +186,9 @@ public class HardwareWriter {
 
 	void setDriveNeutralMode(NeutralMode neutralMode) {
 		var hardware = HardwareAdapter.DriveHardware.getInstance();
-		hardware.leftMasterFalcon.setNeutralMode(neutralMode);
-		hardware.leftSlaveFalcon.setNeutralMode(neutralMode);
-		hardware.rightMasterFalcon.setNeutralMode(neutralMode);
-		hardware.rightSlaveFalcon.setNeutralMode(neutralMode);
+		for(Falcon f : hardware.falcons) {
+			f.setNeutralMode(neutralMode);
+		}
 	}
 
 	void setClimberSoftLimitsEnabled(boolean isEnabled) {
