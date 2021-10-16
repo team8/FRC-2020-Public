@@ -164,7 +164,7 @@ public class Robot extends TimedRobot {
 	private void startStage(RobotState.GamePeriod period) {
 		mRobotState.gamePeriod = period;
 		resetCommandsAndRoutines();
-		updateDriveNeutralMode(true);
+		updateDriveNeutralMode(false);
 		CSVWriter.cleanFile();
 		CSVWriter.resetTimer();
 	}
