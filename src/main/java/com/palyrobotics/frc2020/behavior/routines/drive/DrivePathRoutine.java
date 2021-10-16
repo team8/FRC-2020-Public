@@ -30,7 +30,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	private double mStartingVelocityMetersPerSecond, mEndingVelocityMetersPerSecond;
 	private List<TrajectoryConstraint> mConstraints = new ArrayList<>();
 	private boolean mShouldReversePath, mDriveInReverse;
-	private Trajectory mTrajectory;
+	protected Trajectory mTrajectory;
 
 	/**
 	 * @param poses Points to move towards from current pose. No initial pose needs to be supplied.

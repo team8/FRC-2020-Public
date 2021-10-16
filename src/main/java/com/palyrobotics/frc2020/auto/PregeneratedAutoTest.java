@@ -10,7 +10,7 @@ public class PregeneratedAutoTest extends AutoBase{
 
     @Override
     public RoutineBase getRoutine() throws JsonProcessingException {
-        var temp = new DrivePathPremadeRoutine("src/main/deploy/built-trajectories/output/2BallAuto.wpilib.json");
+        var temp = new DrivePathPremadeRoutine("2BallAuto.wpilib");
         return temp;
     }
 }

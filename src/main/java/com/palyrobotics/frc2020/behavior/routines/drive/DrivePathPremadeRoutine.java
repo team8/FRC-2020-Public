@@ -1,21 +1,38 @@
 package com.palyrobotics.frc2020.behavior.routines.drive;
 
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.palyrobotics.frc2020.util.TrajectoryReader.TrajectoryReader;
 
+import com.palyrobotics.frc2020.util.Util;
+import com.palyrobotics.frc2020.util.config.Configs;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 
 public class DrivePathPremadeRoutine extends DrivePathRoutine {
-
-	public String mTrajectoryFile;
-	public DrivePathPremadeRoutine(String trajectoryFile){
-		this.mTrajectoryFile = trajectoryFile;
+	private static final String kTrajFolderName = "built-trajectories", kLoggerTag = Util.classToJsonName(Configs.class);
+	private static final Path kConfigFolder = Paths.get(Filesystem.getDeployDirectory().toString(), kTrajFolderName);
+	private static Path resolveConfigPath(String name) {
+		return kConfigFolder.resolve(String.format("%s.json", name));
 	}
 
-	public List<Trajectory.State> generateTrajectory() throws JsonProcessingException {
-		TrajectoryReader trajReader = new TrajectoryReader(mTrajectoryFile);
-		return trajReader.getTrajectory();
+
+	private String mTrajectoryFileName;
+	public DrivePathPremadeRoutine(String trajectoryFileName) throws JsonProcessingException {
+		this.mTrajectoryFileName = trajectoryFileName;
+		try {
+			super.mTrajectory = generateTrajectory();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Trajectory generateTrajectory() throws IOException {
+		var resolvedConfigPath = resolveConfigPath(this.mTrajectoryFileName);
+		System.out.println(resolvedConfigPath.toString());
+		return  TrajectoryUtil.fromPathweaverJson(resolvedConfigPath);
 	}
 }

@@ -100,7 +100,12 @@ public class Robot extends TimedRobot {
 	@Override
 	public void simulationInit() {
 //		Log.info(kLoggerTag, "Writing path CSV file...");
-		pathToCsv();
+//		pathToCsv();
+		try {
+			mCommands.addWantedRoutine(new PregeneratedAutoTest().getRoutine());
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void pathToCsv() {
@@ -165,7 +170,11 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
-		mCommands.addWantedRoutine(new TrenchStealTwoShootFive().getRoutine());
+		try {
+			mCommands.addWantedRoutine(new PregeneratedAutoTest().getRoutine());
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 //		mCommands.addWantedRoutine(new StartCenterFriendlyTrenchThreeShootThree().getRoutine());
 	}
 
