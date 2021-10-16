@@ -164,14 +164,13 @@ public class Robot extends TimedRobot {
 	private void startStage(RobotState.GamePeriod period) {
 		mRobotState.gamePeriod = period;
 		resetCommandsAndRoutines();
-		updateDriveNeutralMode(false);
+		updateDriveNeutralMode(true);
 		CSVWriter.cleanFile();
 		CSVWriter.resetTimer();
 	}
 
 	@Override
 	public void teleopInit() {
-		updateDriveNeutralMode(true);
 		//TODO: check rammifications of line above
 		startStage(RobotState.GamePeriod.TELEOP);
 		mCommands.setDriveTeleop();
@@ -322,7 +321,7 @@ public class Robot extends TimedRobot {
 		return summaryBuilder.toString();
 	}
 
-	private void updateDriveNeutralMode(boolean isIdle) {
-		if (kCanUseHardware && mEnabledSubsystems.contains(mDrive)) mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
+	private void updateDriveNeutralMode(boolean shouldCoast) {
+		if (kCanUseHardware && mEnabledSubsystems.contains(mDrive)) mHardwareWriter.setDriveNeutralMode(shouldCoast? NeutralMode.Coast : NeutralMode.Brake);
 	}
 }
