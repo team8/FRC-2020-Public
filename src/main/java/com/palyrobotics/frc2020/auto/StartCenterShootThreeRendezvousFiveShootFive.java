@@ -20,7 +20,7 @@ public class StartCenterShootThreeRendezvousFiveShootFive extends AutoBase {
 		var setInitialOdometry = new DriveSetOdometryRoutine(126, 130, 180);
 
 		var initialShoot = new SequentialRoutine(
-				new DriveYawRoutine(230),
+				new DriveYawRoutine(213),
 				new ParallelRoutine(
 						new ShooterVisionRoutine(3.0),
 						new SequentialRoutine(
