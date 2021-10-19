@@ -26,8 +26,8 @@ public class IndexerFeedSingleRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
-		commands.indexerWantedBeltState = mTimer.get() < mConfig.reverseTime ? Indexer.BeltState.REVERSING : Indexer.BeltState.FEED_SINGLE;
+//		commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
+		commands.indexerColumnWantedState = Indexer.ColumnState.FEED;
 //		if (state.shooterIsReadyToShoot) {
 //			commands.indexerWantedBeltState = Indexer.BeltState.FEED_SINGLE;
 //		} else {
@@ -37,13 +37,13 @@ public class IndexerFeedSingleRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
-		commands.indexerWantedBeltState = Indexer.BeltState.WAITING_TO_FEED;
+		commands.indexerColumnWantedState = Indexer.ColumnState.IDLE;
 	}
 
 	@Override
 	public boolean checkIfFinishedEarly(RobotState state) {
-		boolean isFinished = mLastIndexerHasTopBall && !state.indexerHasTopBall;
-		mLastIndexerHasTopBall = state.indexerHasTopBall;
+		boolean isFinished = mLastIndexerHasTopBall && !state.indexerPos4Blocked;
+		mLastIndexerHasTopBall = state.indexerPos4Blocked;
 		return isFinished;
 	}
 

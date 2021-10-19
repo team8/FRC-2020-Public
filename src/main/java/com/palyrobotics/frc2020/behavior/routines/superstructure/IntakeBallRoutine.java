@@ -7,7 +7,6 @@ import com.palyrobotics.frc2020.config.subsystem.IntakeConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
-import com.palyrobotics.frc2020.subsystems.Intake;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
 import com.palyrobotics.frc2020.util.config.Configs;
 
@@ -17,7 +16,7 @@ public class IntakeBallRoutine extends TimeoutRoutineBase {
 
 	public IntakeBallRoutine(double durationSeconds) {
 		super(durationSeconds);
-		mPercentOutput = Configs.get(IntakeConfig.class).intakingOutput;
+		mPercentOutput = Configs.get(IntakeConfig.class).rollerPo;
 	}
 
 	public IntakeBallRoutine(double durationSeconds, double percentOutput) {
@@ -32,13 +31,12 @@ public class IntakeBallRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		commands.intakeWantedState = Intake.State.INTAKE;
-		commands.intakeWantedPercentOutput = mPercentOutput;
+		commands.setIntakeRunning(mPercentOutput);
 	}
 
 	@Override
 	protected void stop(Commands commands, @ReadOnly RobotState state) {
-		commands.intakeWantedState = Intake.State.LOWER;
+		commands.setIntakeRunning(0);
 	}
 
 	@Override

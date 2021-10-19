@@ -73,6 +73,8 @@ public class HardwareAdapter {
 	 */
 	static class IndexerHardware {
 
+		private static IndexerHardware sInstance;
+
 		final Spark slaveColumnSpark = new Spark(sPortConstants.nariIndexerSlaveId, "slaveColumnSpark"),
 				masterColumnSpark = new Spark(sPortConstants.nariIndexerMasterId, "masterColumnSpark");
 		final CANEncoder masterColumnSparkEncoder = masterColumnSpark.getEncoder();
@@ -83,8 +85,8 @@ public class HardwareAdapter {
 		final List<Talon> vTalons = List.of(rightVTalon, leftVTalon);
 		final Solenoid blockingSolenoid = new Solenoid(sPortConstants.nariIndexerBlockingSolenoidId),
 				hopperSolenoids = new Solenoid(sPortConstants.nariIndexerHopperSolenoidId);
-		final DigitalInput pos1Sensor = new DigitalInput(sPortConstants.nariIndexerPos1Infrared);
-		final DigitalInput pos4Sensor = new DigitalInput(sPortConstants.nariIndexerPos4Infrared);
+		final DigitalInput pos1Sensor = new DigitalInput(sPortConstants.nariIndexerPos1InfraredDio);
+		final DigitalInput pos4Sensor = new DigitalInput(sPortConstants.nariIndexerPos4InfraredDio);
 
 		private IndexerHardware() {
 		}

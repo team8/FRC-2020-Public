@@ -1,18 +1,14 @@
 package com.palyrobotics.frc2020.auto;
 
-import static com.palyrobotics.frc2020.util.Util.newWaypoint;
+import static com.palyrobotics.frc2020.util.Util.newWaypointInches;
 
 import com.palyrobotics.frc2020.behavior.ParallelRoutine;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.ParallelRaceRoutine;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
-import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.*;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.*;
-import com.palyrobotics.frc2020.subsystems.Indexer;
 
 /**
  * Start by facing and aligning the center of the intake to the middle of the two balls of the
@@ -27,22 +23,19 @@ public class TrenchStealTwoShootFiveRendezvousTwo extends AutoBase {
 		var setInitialOdometry = new DriveSetOdometryRoutine(0, 0, 0);
 		var getTrenchBalls = new ParallelRaceRoutine(
 				new SequentialRoutine(
-						new DrivePathRoutine(newWaypoint(92, 0, 0))
-								.setMovement(1.5, 2.4),
-						new DriveYawRoutine(15.0)),
-				new IndexerTimeRoutine(Double.POSITIVE_INFINITY),
-				new IntakeBallRoutine(Double.POSITIVE_INFINITY, 1.0));
+						new DrivePathRoutine(newWaypointInches(92, 0, 0))
+								.setMovement(1.5, 2.4)));
+
 		var goToShoot = new ParallelRaceRoutine(
-				new DrivePathRoutine(newWaypoint(60, 70, 150))
+				new DrivePathRoutine(newWaypointInches(60, 70, 150))
 						.setMovement(1.5, 2.4)
 						.driveInReverse(),
 				new IndexerTimeRoutine(Double.POSITIVE_INFINITY),
 				new SequentialRoutine(
 						new TimedRoutine(0.2),
-						new IndexerHopperRoutine(Indexer.HopperState.OPEN),
 						new TimedRoutine(Double.POSITIVE_INFINITY)));
 		var shootBalls = new SequentialRoutine(
-				new DriveAlignRoutine(0),
+				new DriveAlignYawAssistedRoutine(0, 0),
 				new ParallelRoutine(
 						new ShooterVisionRoutine(6),
 						new SequentialRoutine(
@@ -52,7 +45,7 @@ public class TrenchStealTwoShootFiveRendezvousTwo extends AutoBase {
 										new IndexerFeedAllRoutine(4.6, false, true)))));
 		var turnAndIntake = new ParallelRaceRoutine(
 				new SequentialRoutine(
-						new DrivePathRoutine(newWaypoint(77, 113, 15.0))
+						new DrivePathRoutine(newWaypointInches(77, 113, 15.0))
 								.setMovement(2.0, 2.0),
 						new DriveYawRoutine(20.0)),
 				new IntakeBallRoutine(Double.POSITIVE_INFINITY),

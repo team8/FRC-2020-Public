@@ -15,6 +15,8 @@
 	"nariIndexerBackInfraredDio": 1,
 	"nariIndexerFrontInfraredDio": 8,
 	"nariIndexerTopInfraredDio": 0,
+	"nariIndexerPos1InfraredDio": 1,
+	"nariIndexerPos4InfraredDio": 0,
 	"nariIntakeId": 8,
 	"nariIntakeSolenoidId": 0,
 	"nariLightingPwmPort": 9,

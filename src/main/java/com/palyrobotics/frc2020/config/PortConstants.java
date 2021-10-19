@@ -24,7 +24,8 @@ public class PortConstants extends ConfigBase {
 	public int nariIndexerMasterId, nariIndexerSlaveId, nariIndexerLeftVTalonId, nariIndexerRightVTalonId;
 	public int nariIndexerHopperSolenoidId;
 	public int nariIndexerBlockingSolenoidId;
-	public int nariIndexerPos1Infrared, nariIndexerPos4Infrared;
+	public int nariIndexerBackInfraredDio, nariIndexerFrontInfraredDio, nariIndexerTopInfraredDio;
+	public int nariIndexerPos1InfraredDio, nariIndexerPos4InfraredDio;
 
 	/**
 	 * Intake

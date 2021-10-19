@@ -34,14 +34,14 @@ public class ShooterRoutine extends DriveAlignYawAssistedRoutine {
 			mHasStartedShooting = true;
 			mReadyToShootTimer.start();
 		}
-		commands.indexerWantedBeltState = mHasStartedShooting ? Indexer.BeltState.FEED_ALL : Indexer.BeltState.WAITING_TO_FEED;
+		commands.indexerColumnWantedState = mHasStartedShooting ? Indexer.ColumnState.FEED : Indexer.ColumnState.IDLE;
 	}
 
 	@Override
 	public void stop(Commands commands, @ReadOnly RobotState state) {
 		super.stop(commands, state);
 		commands.setShooterIdle();
-		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
+		commands.indexerColumnWantedState = Indexer.ColumnState.IDLE;
 	}
 
 	@Override

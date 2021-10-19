@@ -24,14 +24,14 @@
         "d": 0.02
     },
     "masterSparkVelocityGains": {
-        "f": 0.02,
-        "p": 0.0003
+        "p": 0.00023,
+        "f": 0.00045
     },
     "slaveSparkPositionGains": {
         "p": 0.1
     },
     "slaveSparkVelocityGains": {
-        "f": 0.02,
-        "p": 0.0003
+        "p": 0.00015,
+        "f": 0.00021
     }
 }

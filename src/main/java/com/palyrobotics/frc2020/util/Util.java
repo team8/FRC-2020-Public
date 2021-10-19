@@ -19,6 +19,19 @@ public class Util {
 				Rotation2d.fromDegrees(yawDegrees));
 	}
 
+	public static Pose2d newWaypointMeters(double xMeters, double yMeters, double yawDegrees) {
+		return new Pose2d(xMeters, yMeters,
+				Rotation2d.fromDegrees(yawDegrees));
+	}
+
+	/**
+	 * @deprecated DO NOT USE THIS - This is there for old autos. Use the meters version of this
+	 */
+	public static Pose2d newWaypointInches(double xInches, double yInches, double yawDegrees) {
+		return new Pose2d(Units.inchesToMeters(xInches), Units.inchesToMeters(yInches),
+				Rotation2d.fromDegrees(yawDegrees));
+	}
+
 	/**
 	 * Neutralizes a value within a dead band
 	 *

@@ -13,7 +13,7 @@ public class IndexerIdleRoutine extends OneUpdateRoutineBase {
 
 	@Override
 	protected void updateOnce(Commands commands, @ReadOnly RobotState state) {
-		commands.indexerWantedBeltState = Indexer.BeltState.IDLE;
+		commands.indexerColumnWantedState = Indexer.ColumnState.IDLE;
 	}
 
 	@Override
