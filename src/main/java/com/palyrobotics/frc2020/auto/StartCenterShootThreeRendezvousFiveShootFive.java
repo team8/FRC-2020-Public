@@ -6,11 +6,13 @@ import com.palyrobotics.frc2020.behavior.ParallelRoutine;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.SequentialRoutine;
 import com.palyrobotics.frc2020.behavior.routines.TimedRoutine;
+import com.palyrobotics.frc2020.behavior.routines.drive.DriveAlignRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveYawRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerFeedAllRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.IntakeBallRoutine;
+import com.palyrobotics.frc2020.behavior.routines.superstructure.IntakeLowerRoutine;
 import com.palyrobotics.frc2020.behavior.routines.superstructure.ShooterVisionRoutine;
 
 public class StartCenterShootThreeRendezvousFiveShootFive extends AutoBase {
@@ -19,13 +21,13 @@ public class StartCenterShootThreeRendezvousFiveShootFive extends AutoBase {
 	public RoutineBase getRoutine() {
 		var setInitialOdometry = new DriveSetOdometryRoutine(126, 130, 180);
 
-		var initialShoot = new SequentialRoutine(
-				new DriveYawRoutine(213),
-				new ParallelRoutine(
-						new ShooterVisionRoutine(3.0),
-						new SequentialRoutine(
-								new TimedRoutine(0.8),
-								new IndexerFeedAllRoutine(2.2, false, true))));
+		var initialShoot = new ParallelRoutine(
+				new IntakeLowerRoutine(),
+				new DriveAlignRoutine(0),
+				new ShooterVisionRoutine(3.0),
+				new SequentialRoutine(
+						new TimedRoutine(0.8), // TODO: Modify IndexerFeedAllRoutine to wait only for initial shot
+						new IndexerFeedAllRoutine(2.2, false, true)));
 
 		var getBalls = new ParallelRoutine(new SequentialRoutine(
 				new DrivePathRoutine(newWaypoint(211, 171, 334))
