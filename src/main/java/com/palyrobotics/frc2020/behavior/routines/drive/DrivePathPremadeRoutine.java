@@ -23,16 +23,14 @@ public class DrivePathPremadeRoutine extends DrivePathRoutine {
 	private String mTrajectoryFileName;
 	public DrivePathPremadeRoutine(String trajectoryFileName) throws JsonProcessingException {
 		this.mTrajectoryFileName = trajectoryFileName;
+	}
+
+	public void generateTrajectory() throws IOException {
+		var resolvedConfigPath = resolveConfigPath(this.mTrajectoryFileName);
 		try {
-			super.mTrajectory = generateTrajectory();
+			super.mTrajectory = TrajectoryUtil.fromPathweaverJson(resolvedConfigPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public Trajectory generateTrajectory() throws IOException {
-		var resolvedConfigPath = resolveConfigPath(this.mTrajectoryFileName);
-		System.out.println(resolvedConfigPath.toString());
-		return  TrajectoryUtil.fromPathweaverJson(resolvedConfigPath);
 	}
 }
