@@ -186,7 +186,7 @@ public class HardwareWriter {
 
 	void setDriveNeutralMode(NeutralMode neutralMode) {
 		var hardware = HardwareAdapter.DriveHardware.getInstance();
-		for(Falcon f : hardware.falcons) {
+		for (Falcon f : hardware.falcons) {
 			f.setNeutralMode(neutralMode);
 		}
 	}
