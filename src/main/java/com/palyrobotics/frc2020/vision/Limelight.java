@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj.XboxController;
  * Wrapper around the Limelight's network tables
  */
 public class Limelight {
-
+	//TODO: update
+	public static final int kDistanceRatio = 0;
 	public static final int kOneTimesZoomPipelineId = 0, kTwoTimesZoomPipelineId = 1;
 	private static String kLoggerTag = Util.classToJsonName(Limelight.class);
 	private static final NetworkTableInstance sNetworkTableInstance = NetworkTableInstance.getDefault();
@@ -252,6 +253,14 @@ public class Limelight {
 	public double getRegressionDistanceZ() {
 		// TODO: implement or remove
 		return 24.6 * Math.pow(getTargetArea(), -0.64);
+	}
+
+	/**
+	 * Estimate distance using pixel height of an object
+	 */
+	public double geDigitaltDistance(){
+		double dist = kDistanceRatio / getTargetLength();
+		return Math.max(0,dist);
 	}
 
 	/**
