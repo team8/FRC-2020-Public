@@ -1,14 +1,30 @@
 package com.palyrobotics.frc2020.subsystems;
 
-import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.robot.ReadOnly;
-import com.palyrobotics.frc2020.robot.RobotState;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.palyrobotics.frc2020.robot.*;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Intake extends SubsystemBase {
 
+	public static final int kTimeoutMs = 150;
+	public static final double kVoltageCompensation = 12.0;
+	public static final SupplyCurrentLimitConfiguration k30AmpCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(
+			true, 30.0, 35.0, 1.0);
+
 	public enum State {
 		STOW, LOWER, INTAKE
+	}
+
+	public void configureIntakeHardware() {
+		var talon = HardwareAdapter.IntakeHardware.getInstance().talon;
+		talon.configFactoryDefault(kTimeoutMs);
+		talon.setInverted(true);
+		talon.enableVoltageCompensation(true);
+		talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
+		talon.configOpenloopRamp(0.1, kTimeoutMs);
+		talon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
+		talon.configFrameTimings(40, 40);
 	}
 
 	private static Intake sInstance = new Intake();
@@ -38,6 +54,13 @@ public class Intake extends SubsystemBase {
 				mExtendedOutput = true;
 				break;
 		}
+	}
+
+	public void updateIntake() {
+		var hardware = HardwareAdapter.IntakeHardware.getInstance();
+		hardware.talon.handleReset();
+		hardware.talon.setOutput(getOutput());
+		hardware.solenoid.setExtended(getExtendedOutput());
 	}
 
 	public ControllerOutput getOutput() {

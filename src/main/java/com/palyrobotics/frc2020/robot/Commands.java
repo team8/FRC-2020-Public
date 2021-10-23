@@ -61,7 +61,7 @@ public class Commands {
 	public boolean wantedRumble;
 	private Shooter.HoodState shooterWantedHoodState;
 
-	public void addWantedRoutines(RoutineBase... wantedRoutines) {
+		public void addWantedRoutines(RoutineBase... wantedRoutines) {
 		for (RoutineBase wantedRoutine : wantedRoutines) {
 			addWantedRoutine(wantedRoutine);
 		}

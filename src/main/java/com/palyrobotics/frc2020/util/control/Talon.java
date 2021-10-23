@@ -1,6 +1,5 @@
 package com.palyrobotics.frc2020.util.control;
 
-import static com.palyrobotics.frc2020.robot.HardwareWriter.kTimeoutMs;
 import static java.util.Map.entry;
 
 import java.util.Map;
@@ -9,9 +8,11 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.robot.HardwareWriter;
 
 public class Talon extends TalonSRX implements Controller {
+
+	static final int kTimeoutMs = 150, kPidIndex = 0;
+
 
 	static class BaseTalonController<T extends BaseTalon & Controller> extends ProfiledControllerBase<T> {
 
@@ -66,7 +67,7 @@ public class Talon extends TalonSRX implements Controller {
 					convertedReference = reference;
 					break;
 			}
-			mController.selectProfileSlot(slot, HardwareWriter.kPidIndex);
+			mController.selectProfileSlot(slot, kPidIndex);
 			mController.set(controllerMode, convertedReference, DemandType.ArbitraryFeedForward, arbitraryPercentOutput);
 			return true;
 		}

@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.controllers.lighting.*;
@@ -19,6 +20,13 @@ public class Lighting extends SubsystemBase {
 
 	public enum State {
 		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
+	}
+
+	public void configureLightingHardware() {
+		var hardware = HardwareAdapter.LightingHardware.getInstance();
+		hardware.ledStrip.setLength(Configs.get(LightingConfig.class).ledCount);
+		hardware.ledStrip.start();
+		hardware.ledStrip.setData(getOutput());
 	}
 
 	public abstract static class LEDController {
@@ -137,6 +145,11 @@ public class Lighting extends SubsystemBase {
 				mOutputBuffer.setHSV(i + ledController.mStartIndex, hsvValue.getH(), hsvValue.getS(), Math.min(hsvValue.getV(), mConfig.maximumBrightness));
 			}
 		}
+	}
+
+	public void updateLighting() {
+		var hardware = HardwareAdapter.LightingHardware.getInstance();
+		hardware.ledStrip.setData(getOutput());
 	}
 
 	private void addToControllers(LEDController controller) {

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -27,6 +28,17 @@ public class Shooter extends SubsystemBase {
 
 	public enum HoodState {
 		LOW, MIDDLE, HIGH
+	}
+
+	public void configureShooterHardware() {
+		var hardware = HardwareAdapter.ShooterHardware.getInstance();
+		hardware.masterSpark.restoreFactoryDefaults();
+		hardware.slaveSpark.restoreFactoryDefaults();
+		hardware.slaveSpark.follow(hardware.masterSpark, true);
+		hardware.masterSpark.setInverted(true);
+		/* Flywheel velocity in RPM, adjusted for gearing ratio */
+		hardware.masterEncoder.setVelocityConversionFactor(1.0 / 0.76923076);
+		// TODO: Current limiting and closed/open loop ramp rates
 	}
 
 	private static Shooter sInstance = new Shooter();
@@ -207,6 +219,19 @@ public class Shooter extends SubsystemBase {
 				break;
 		}
 		TelemetryService.putArbitrary("shooterWantsRumble", mRumbleOutput);
+	}
+
+	public void updateShooter() {
+		var hardware = HardwareAdapter.ShooterHardware.getInstance();
+//		handleReset(hardware.masterSpark, hardware.slaveSpark);
+//		Robot.mDebugger.addPoint("handleReset");
+		hardware.masterSpark.setOutput(getFlywheelOutput());
+//		Robot.mDebugger.addPoint("masterSpark.setOutput");
+		hardware.blockingSolenoid.setExtended(getBlockingOutput());
+//		Robot.mDebugger.addPoint("blockingSolenoid.setOutput");
+		hardware.hoodSolenoid.setExtended(getHoodOutput());
+//		Robot.mDebugger.addPoint("hoodSolenoid.setOutput");
+		mRumbleOutput |= getRumbleOutput();
 	}
 
 	public ControllerOutput getFlywheelOutput() {

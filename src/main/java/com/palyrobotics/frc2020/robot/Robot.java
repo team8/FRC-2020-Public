@@ -48,9 +48,8 @@ public class Robot extends TimedRobot {
 	private final RobotConfig mConfig = Configs.get(RobotConfig.class);
 	private final OperatorInterface mOperatorInterface = new OperatorInterface();
 	private final RoutineManager mRoutineManager = new RoutineManager();
-	private final HardwareReader mHardwareReader = new HardwareReader();
-	private final HardwareWriter mHardwareWriter = new HardwareWriter();
 	private final Commands mCommands = new Commands();
+	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
 
 	/* Subsystems */
 	private final Climber mClimber = Climber.getInstance();
@@ -60,6 +59,7 @@ public class Robot extends TimedRobot {
 	private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
 	private final Lighting mLighting = Lighting.getInstance();
+	private boolean mRumbleOutput;
 
 	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mLighting, mShooter, mSpinner),
 			mEnabledSubsystems;
@@ -77,7 +77,18 @@ public class Robot extends TimedRobot {
 
 		String setupSummary = setupSubsystemsAndServices();
 
-		if (kCanUseHardware) mHardwareWriter.configureHardware(mEnabledSubsystems);
+		if (kCanUseHardware) {
+			if (mEnabledSubsystems.contains(mClimber)) mClimber.configureClimberHardware();
+			if (mEnabledSubsystems.contains(mDrive)) mDrive.configureDriveHardware();
+			if (mEnabledSubsystems.contains(mIndexer)) mIndexer.configureIndexerHardware();
+			if (mEnabledSubsystems.contains(mIntake)) mIntake.configureIntakeHardware();
+			if (mEnabledSubsystems.contains(mLighting)) mLighting.configureLightingHardware();
+			if (mEnabledSubsystems.contains(mShooter)) mShooter.configureShooterHardware();
+			if (mEnabledSubsystems.contains(mSpinner)) mSpinner.configureSpinnerHardware();
+			var miscellaneousHardware = HardwareAdapter.MiscellaneousHardware.getInstance();
+			miscellaneousHardware.pdp.clearStickyFaults();
+			miscellaneousHardware.compressor.clearAllPCMStickyFaults();
+		}
 
 		mEnabledServices.forEach(RobotService::start);
 
@@ -91,7 +102,7 @@ public class Robot extends TimedRobot {
 		mCommands.lightingWantedState = Lighting.State.INIT;
 		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
-			mHardwareWriter.updateLighting();
+			mLighting.updateLighting();
 		}
 	}
 
@@ -150,7 +161,7 @@ public class Robot extends TimedRobot {
 		mCommands.lightingWantedState = Lighting.State.DISABLE;
 		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
-			mHardwareWriter.updateLighting();
+			mLighting.updateLighting();
 		}
 	}
 
@@ -176,7 +187,7 @@ public class Robot extends TimedRobot {
 		mCommands.lightingWantedState = Lighting.State.OFF;
 		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
-			mHardwareWriter.updateLighting();
+			mLighting.updateLighting();
 		}
 	}
 
@@ -242,7 +253,7 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateRobotState() {
-		if (kCanUseHardware) mHardwareReader.updateState(mEnabledSubsystems, mRobotState);
+		if (kCanUseHardware) mRobotState.updateState(mEnabledSubsystems);
 		mRobotState.shooterIsReadyToShoot = mShooter.isReadyToShoot();
 	}
 
@@ -254,7 +265,7 @@ public class Robot extends TimedRobot {
 		Pose2d wantedPose = mCommands.driveWantedOdometryPose;
 		if (wantedPose != null) {
 			mRobotState.resetOdometry(wantedPose);
-			if (kCanUseHardware) mHardwareWriter.resetDriveSensors(wantedPose);
+			if (kCanUseHardware) mDrive.resetDriveSensors(wantedPose);
 			mCommands.driveWantedOdometryPose = null;
 		}
 	}
@@ -266,8 +277,20 @@ public class Robot extends TimedRobot {
 			mDebugger.addPoint(subsystem.getName());
 		}
 		if (kCanUseHardware) {
-			mHardwareWriter.updateHardware(mEnabledSubsystems, mRobotState);
-			mHardwareWriter.setClimberSoftLimitsEnabled(mCommands.climberWantsSoftLimits);
+			mRumbleOutput = false;
+			if (!mRobotConfig.disableHardwareUpdates) {
+				if (mEnabledSubsystems.contains(mClimber)) mClimber.updateClimber();
+				if (mEnabledSubsystems.contains(mDrive)) mDrive.updateDrivetrain();
+//			if (enabledSubsystems.contains(mDrive) && robotState.gamePeriod != GamePeriod.TESTING) updateDrivetrain();
+				if (mEnabledSubsystems.contains(mIndexer)) mIndexer.updateIndexer();
+				if (mEnabledSubsystems.contains(mIntake)) mIntake.updateIntake();
+				if (mEnabledSubsystems.contains(mShooter)) mShooter.updateShooter();
+				if (mEnabledSubsystems.contains(mSpinner)) mSpinner.updateSpinner();
+				if (mEnabledSubsystems.contains(mLighting)) mLighting.updateLighting();
+			}
+			var joystickHardware = HardwareAdapter.Joysticks.getInstance();
+			joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
+			mClimber.setClimberSoftLimitsEnabled(mCommands.climberWantsSoftLimits);
 		}
 		mDebugger.addPoint("updateHardware");
 		updateVision(mCommands.visionWanted, mCommands.visionWantedPipeline);
@@ -321,6 +344,6 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateDriveNeutralMode(boolean isIdle) {
-		if (kCanUseHardware && mEnabledSubsystems.contains(mDrive)) mHardwareWriter.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
+		if (kCanUseHardware && mEnabledSubsystems.contains(mDrive)) mDrive.setDriveNeutralMode(isIdle ? NeutralMode.Coast : NeutralMode.Brake);
 	}
 }

@@ -1,15 +1,29 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
-import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.robot.ReadOnly;
-import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.robot.*;
 import com.palyrobotics.frc2020.util.CircularBuffer;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 import com.palyrobotics.frc2020.util.control.Gains;
+import com.palyrobotics.frc2020.util.control.Spark;
+import com.palyrobotics.frc2020.util.control.Talon;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
+import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 public class Indexer extends SubsystemBase {
+
+	public static final int kTimeoutMs = 150;
+	private static final String kLoggerTag = Util.classToJsonName(Indexer.class);
+	public static final double kVoltageCompensation = 12.0;
+	public static final SupplyCurrentLimitConfiguration k30AmpCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(
+			true, 30.0, 35.0, 1.0);
 
 	private static Indexer sInstance = new Indexer();
 	private IndexerConfig mConfig = Configs.get(IndexerConfig.class);
@@ -25,6 +39,33 @@ public class Indexer extends SubsystemBase {
 
 	public static Indexer getInstance() {
 		return sInstance;
+	}
+
+	public void configureIndexerHardware() {
+		var hardware = HardwareAdapter.IndexerHardware.getInstance();
+		// Sparks
+		for (Spark spark : hardware.sparks) {
+			spark.restoreFactoryDefaults();
+			spark.enableVoltageCompensation(kVoltageCompensation);
+			spark.setOpenLoopRampRate(0.0825);
+			spark.setClosedLoopRampRate(0.0825);
+			spark.setInverted(true);
+			double maxOutput = 0.9;
+			spark.setOutputRange(-maxOutput, maxOutput);
+			spark.setSmartCurrentLimit((int) Math.round(40.0 / maxOutput));
+			spark.setSecondaryCurrentLimit(70.0 / maxOutput, 10);
+		}
+		/* V-Belt Talons */
+		for (Talon vTalon : hardware.vTalons) {
+			vTalon.configFactoryDefault(kTimeoutMs);
+			vTalon.enableVoltageCompensation(true);
+			vTalon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
+			vTalon.configOpenloopRamp(0.1, kTimeoutMs);
+			vTalon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
+			vTalon.configFrameTimings(40, 40);
+		}
+		hardware.leftVTalon.setInverted(true);
+		hardware.rightVTalon.setInverted(true);
 	}
 
 	@Override
@@ -148,5 +189,36 @@ public class Indexer extends SubsystemBase {
 
 	public enum HopperState {
 		OPEN, CLOSED
+	}
+
+	public void updateIndexer() {
+		var hardware = HardwareAdapter.IndexerHardware.getInstance();
+		hardware.vTalons.forEach(Talon::handleReset);
+		hardware.masterSpark.setOutput(getMasterSparkOutput());
+		hardware.slaveSpark.setOutput(getSlaveSparkOutput());
+		hardware.hopperSolenoid.setExtended(getHopperOutput());
+		hardware.blockingSolenoid.setExtended(getBlockOutput());
+		hardware.leftVTalon.setOutput(getLeftVTalonOutput());
+		hardware.rightVTalon.setOutput(getRightVTalonOutput());
+		handleReset(hardware.slaveSpark);
+		handleReset(hardware.masterSpark);
+		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
+		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
+		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
+		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
+		LiveGraph.add("indexerTargetVelocity", getMasterSparkOutput().getReference());
+		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
+		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
+		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
+//		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));
+//		LiveGraph.add("totalCurrent", pdp.getTotalCurrent());
+//		LiveGraph.add("batteryVoltage", RobotController.getBatteryVoltage());
+	}
+
+	private void handleReset(Spark spark) {
+		if (spark.getStickyFault(CANSparkMax.FaultID.kHasReset)) {
+			spark.clearFaults();
+			Log.error(kLoggerTag, String.format("%s spark reset", spark.getName()));
+		}
 	}
 }

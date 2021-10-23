@@ -1,14 +1,30 @@
 package com.palyrobotics.frc2020.subsystems;
 
-import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.robot.ReadOnly;
-import com.palyrobotics.frc2020.robot.RobotState;
+import com.palyrobotics.frc2020.robot.*;
+import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.revrobotics.CANSparkMax;
 
 public class Climber extends SubsystemBase {
 
+	public static final double kVoltageCompensation = 12.0;
+
 	public enum State {
 		MANUAL, LOCKED, IDLE
+	}
+
+	public void configureClimberHardware() {
+		var hardware = HardwareAdapter.ClimberHardware.getInstance();
+		hardware.spark.restoreFactoryDefaults();
+		hardware.spark.enableVoltageCompensation(kVoltageCompensation);
+		/* Encoder units are inches and inches/sec */
+		hardware.sparkEncoder.setPositionConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
+		hardware.sparkEncoder.setVelocityConversionFactor((1.0 / 17.0666667) * 4.0 * Math.PI);
+		hardware.spark.setInverted(true);
+		hardware.sparkEncoder.setPosition(0.0);
+		hardware.spark.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 160.0f);
+		hardware.spark.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, 0.0f);
+		hardware.spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 	}
 
 	private static Climber sInstance = new Climber();
@@ -40,11 +56,23 @@ public class Climber extends SubsystemBase {
 		}
 	}
 
+	public void updateClimber() {
+		var hardware = HardwareAdapter.ClimberHardware.getInstance();
+		hardware.spark.setOutput(getControllerOutput());
+		hardware.solenoid.setExtended(getSolenoidOutput());
+	}
+
 	public ControllerOutput getControllerOutput() {
 		return mControllerOutput;
 	}
 
 	public boolean getSolenoidOutput() {
 		return mSolenoidOutput;
+	}
+
+	public void setClimberSoftLimitsEnabled(boolean isEnabled) {
+		var spark = HardwareAdapter.ClimberHardware.getInstance().spark;
+		spark.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, isEnabled);
+		spark.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, isEnabled);
 	}
 }

@@ -1,7 +1,5 @@
 package com.palyrobotics.frc2020.util.control;
 
-import static com.palyrobotics.frc2020.robot.HardwareWriter.kTimeoutMs;
-
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.util.control.Talon.BaseTalonController;
@@ -21,6 +19,7 @@ public class Falcon extends TalonFX implements Controller {
 	public Falcon(int deviceId, String name) {
 		super(deviceId);
 		mName = name;
+		int kTimeoutMs = 150;
 		clearStickyFaults(kTimeoutMs);
 	}
 

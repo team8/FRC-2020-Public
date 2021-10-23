@@ -15,11 +15,11 @@ import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.HardwareAdapter.Joysticks;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.config.Configs;
-import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * Used to produce {@link Commands}'s from human input. Should only be used in robot package.
@@ -30,8 +30,8 @@ public class OperatorInterface {
 	public static final int kOnesTimesZoomAlignButton = 3, kTwoTimesZoomAlignButton = 4;
 	private final ShooterConfig mShooterConfig = Configs.get(ShooterConfig.class);
 	private final IntakeConfig mIntakeConfig = Configs.get(IntakeConfig.class);
-	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
-			mTurnStick = Joysticks.getInstance().turnStick;
+	private final Joystick mDriveStick = Joysticks.getInstance().driveStick;
+	private final Joystick mTurnStick = Joysticks.getInstance().turnStick;
 	private Limelight mLimelight = Limelight.getInstance();
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
 
