@@ -2,7 +2,6 @@ package com.palyrobotics.frc2020.subsystems;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.palyrobotics.frc2020.robot.*;
-import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 
 public class Intake extends SubsystemBase {

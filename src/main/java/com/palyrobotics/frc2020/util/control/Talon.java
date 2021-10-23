@@ -13,7 +13,6 @@ public class Talon extends TalonSRX implements Controller {
 
 	static final int kTimeoutMs = 150, kPidIndex = 0;
 
-
 	static class BaseTalonController<T extends BaseTalon & Controller> extends ProfiledControllerBase<T> {
 
 		protected double mPositionConversion, mVelocityConversion;

@@ -1,8 +1,6 @@
 package com.palyrobotics.frc2020.subsystems;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.robot.*;
@@ -15,6 +13,7 @@ import com.palyrobotics.frc2020.util.control.Spark;
 import com.palyrobotics.frc2020.util.control.Talon;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 public class Indexer extends SubsystemBase {

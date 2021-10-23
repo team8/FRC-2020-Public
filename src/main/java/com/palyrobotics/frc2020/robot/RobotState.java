@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.robot;
 
+import java.util.Set;
+
 import com.ctre.phoenix.motorcontrol.StickyFaults;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.esotericsoftware.minlog.Log;
@@ -24,8 +26,6 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.util.Color;
-
-import java.util.Set;
 
 /**
  * Holds the current physical state of the robot from our sensors.

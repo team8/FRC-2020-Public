@@ -11,6 +11,7 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.*;
+import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.subsystems.controllers.drive.AlignDriveController;
 import com.palyrobotics.frc2020.subsystems.controllers.drive.ChezyDriveController;
 import com.palyrobotics.frc2020.subsystems.controllers.drive.RamseteDriveController;
@@ -19,8 +20,8 @@ import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.DriveOutputs;
 import com.palyrobotics.frc2020.util.control.Falcon;
+
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import com.palyrobotics.frc2020.robot.HardwareAdapter;
 
 /**
  * Represents the drivetrain. Uses {@link #mController} to generate {@link #mOutputs}.
@@ -29,11 +30,11 @@ public class Drive extends SubsystemBase {
 
 	private static final String kLoggerTag = Util.classToJsonName(Drive.class);
 	public static final int
-			// Blocks config calls for specified timeout
-			kTimeoutMs = 150,
-	// Different from slot index.
-	// 0 for Primary closed-loop. 1 for auxiliary closed-loop.
-	kPidIndex = 0;
+	// Blocks config calls for specified timeout
+	kTimeoutMs = 150,
+			// Different from slot index.
+			// 0 for Primary closed-loop. 1 for auxiliary closed-loop.
+			kPidIndex = 0;
 	public static double kVoltageCompensation = 12.0;
 
 	public enum State {
