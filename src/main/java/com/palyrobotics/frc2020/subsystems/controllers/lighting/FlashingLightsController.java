@@ -27,6 +27,8 @@ public class FlashingLightsController extends Lighting.LEDController {
 	public void initiallize(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration)
 	{
 		isOn = true;
+		mStartIndex = startIndex;
+		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mDuration = duration;
