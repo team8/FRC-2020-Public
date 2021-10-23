@@ -18,27 +18,21 @@ public class FlashingLightsController extends Lighting.LEDController {
 	 * @param flashedColor Color to be flashed on white background
 	 */
 
-	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay) {
-		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
-		mFlashedColor = flashedColor;
-		mSpeed = delay == 0 ? kZeroSpeed : delay;
-		kPriority = 2;
-		mTimer.start();
+	public FlashingLightsController() {
+		super(0, 28);
+		mStartIndex = 0;
+		mLastIndex = 28;
 	}
-
-	public FlashingLightsController(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration) {
-		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
+	
+	public void initiallize(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration)
+	{
+		isOn = true;
 		mFlashedColor = flashedColor;
 		mSpeed = delay == 0 ? kZeroSpeed : delay;
 		mDuration = duration;
 		kPriority = 2;
 		mTimer.start();
 	}
-
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		if (Math.round(mTimer.get() / mSpeed) % 2 == 0) {
@@ -55,6 +49,11 @@ public class FlashingLightsController extends Lighting.LEDController {
 
 	@Override
 	public boolean checkFinished() {
-		return mDuration != -1 && mTimer.hasElapsed(mDuration);
+		if(mDuration != -1 && mTimer.hasElapsed(mDuration))
+		{
+			isOn = false;
+			return true;
+		}
+		return false;
 	}
 }
