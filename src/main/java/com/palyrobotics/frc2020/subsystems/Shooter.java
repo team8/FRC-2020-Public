@@ -36,6 +36,7 @@ public class Shooter extends SubsystemBase {
 	private boolean mHoodOutput, mBlockingOutput, mRumbleOutput;
 	private Timer mRumbleTimer = new Timer();
 	private boolean mIsReadyToShoot;
+	private double targetFlywheelVelocity;
 	// TODO: Change the size of the median filter to better or worse filter out values
 	private MedianFilter distanceFilter = new MedianFilter(15);
 	private MedianFilter velocityFilter = new MedianFilter(15);
@@ -54,7 +55,7 @@ public class Shooter extends SubsystemBase {
 		/* Hood State */
 		HoodState hoodState = updateHood(commands, state, targetDistanceInches);
 		/* Flywheel Velocity */
-		double targetFlywheelVelocity = getTargetFlywheelVelocity(commands, hoodState, targetDistanceInches, state);
+		targetFlywheelVelocity = getTargetFlywheelVelocity(commands, hoodState, targetDistanceInches, state);
 		if (targetFlywheelVelocity > kEpsilon) {
 			mFlywheelOutput.setTargetVelocity(targetFlywheelVelocity, mConfig.velocityGains);
 		} else {
@@ -211,6 +212,11 @@ public class Shooter extends SubsystemBase {
 
 	public ControllerOutput getFlywheelOutput() {
 		return mFlywheelOutput;
+	}
+
+	public double getShooterVelocity()
+	{
+		return targetFlywheelVelocity;
 	}
 
 	public boolean getHoodOutput() {

@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
+		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SPINNER_NOT_DONE, SHOOTER_ON, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
 	}
 
 	public abstract static class LEDController {
@@ -32,6 +32,7 @@ public class Lighting extends SubsystemBase {
 		protected int mLastIndex;
 		protected double mSpeed;
 		protected int kPriority;
+		public boolean isOn = false;
 
 		protected LEDController(int startIndex, int lastIndex) {
 			for (var i = 0; i <= Math.abs(lastIndex - startIndex); i++) {
@@ -66,6 +67,11 @@ public class Lighting extends SubsystemBase {
 	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
 	private State mState;
 	private PriorityQueue<LEDController> mLEDControllers = new PriorityQueue<>(1, Comparator.comparingInt(o -> o.kPriority));
+	private int length;
+	private int orangeLEDs;
+	private final int maxShooterVelocity = 0;
+	private int firstIndex;
+	private int lastIndex;
 
 	private Lighting() {
 
@@ -78,6 +84,8 @@ public class Lighting extends SubsystemBase {
 	@Override
 	public void update(@ReadOnly Commands commands, @ReadOnly RobotState state) {
 		State wantedState = commands.lightingWantedState;
+		Shooter shooterInstance = Shooter.getInstance();
+		double shooterVelocity = shooterInstance.getShooterVelocity();
 		if (RobotController.getBatteryVoltage() < mConfig.minVoltageToFunction) wantedState = State.OFF;
 		boolean isNewState = mState != wantedState;
 		mState = wantedState;
@@ -99,6 +107,32 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex,
 							mConfig.spinnerSegmentLastIndex, Color.HSV.kYellow, 1, 2));
 					break;
+				case SPINNER_NOT_DONE:
+					length = (int) commands.spinnerWantedPercentOutput * 14;
+					orangeLEDs = 0;
+					if (Math.abs(((commands.spinnerWantedPercentOutput) * 14.0) - length) >= 0.2)
+					{
+						orangeLEDs++;
+					}
+					firstIndex = length;
+					lastIndex = mConfig.ledCount-firstIndex;
+					if (length != 0)
+					{
+						addToControllers(new FadeInFadeOutController(0, firstIndex-orangeLEDs, Color.HSV.kBlue, 0.5, 5));
+						addToControllers(new FadeInFadeOutController(lastIndex+orangeLEDs, mConfig.ledCount, Color.HSV.kBlue, 0.5, 5));
+
+						addToControllers(new FadeInFadeOutController(firstIndex-orangeLEDs, firstIndex, Color.HSV.kOrange, 0.5, 5));
+						addToControllers(new FadeInFadeOutController(lastIndex, lastIndex+orangeLEDs, Color.HSV.kOrange, 0.5, 5));
+
+						addToControllers(new FadeInFadeOutController(firstIndex, lastIndex, Color.HSV.kRed, 0.5, 5));
+					}
+					else
+					{
+						addToControllers(new FadeInFadeOutController(orangeLEDs, mConfig.ledCount-orangeLEDs, Color.HSV.kRed, 0.5, 5));
+
+						addToControllers(new FadeInFadeOutController(0, orangeLEDs, Color.HSV.kOrange, 0.5, 5));
+						addToControllers(new FadeInFadeOutController(mConfig.ledCount-orangeLEDs, mConfig.ledCount, Color.HSV.kOrange, 0.5, 5));
+					}
 				case SPINNER_DONE:
 					addToControllers(new OneColorController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, Color.HSV.kBlue, 2));
 					break;
@@ -117,8 +151,8 @@ public class Lighting extends SubsystemBase {
 				case ROBOT_ALIGNED:
 					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2));
 					break;
-				case SHOOTER_FULLRPM:
-					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kGreen, 0.5, 5));
+				case SHOOTER_ON:
+					//run ShooterColorController.initiallize() with param shooter velocity and max shooter velocity
 					break;
 				case BALL_SHOT:
 					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kBlue, 0.25));
@@ -131,6 +165,10 @@ public class Lighting extends SubsystemBase {
 		}
 
 		for (LEDController ledController : mLEDControllers) {
+			if (ledController.isOn == false)
+			{
+				continue;
+			}
 			LightingOutputs controllerOutput = ledController.update(commands, state);
 			for (int i = 0; i < controllerOutput.lightingOutput.size(); i++) {
 				Color.HSV hsvValue = controllerOutput.lightingOutput.get(i);

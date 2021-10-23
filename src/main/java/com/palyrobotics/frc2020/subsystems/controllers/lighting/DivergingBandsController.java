@@ -48,6 +48,11 @@ public class DivergingBandsController extends Lighting.LEDController {
 		mTimer.start();
 	}
 
+	public void initiallize()
+	{
+		isOn = true;
+	}
+
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		if (Math.round(mTimer.get() / mSpeed) % 2 != mOldModValue) {
