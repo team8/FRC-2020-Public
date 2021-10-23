@@ -18,17 +18,15 @@ public class OneColorController extends Lighting.LEDController {
 	 * @param color      Color to be displayed
 	 */
 
-	public OneColorController(int startIndex, int lastIndex, Color.HSV color) {
-		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
-		mColor = color;
-		kPriority = 3;
-		mTimer.start();
+	public OneColorController() {
+		super(0, 28);
+		mStartIndex = 0;
+		mLastIndex = 28;
 	}
-
-	public OneColorController(int startIndex, int lastIndex, Color.HSV color, double duration) {
-		super(startIndex, lastIndex);
+	
+	public void initallize(int startIndex, int lastIndex, Color.HSV color, double duration)
+	{
+		isOn = true;
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mColor = color;
@@ -36,7 +34,7 @@ public class OneColorController extends Lighting.LEDController {
 		kPriority = 3;
 		mTimer.start();
 	}
-
+	
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		for (int i = 0; i < mOutputs.lightingOutput.size(); i++) {
@@ -46,6 +44,11 @@ public class OneColorController extends Lighting.LEDController {
 
 	@Override
 	public boolean checkFinished() {
-		return mDuration != -1 && mTimer.hasElapsed(mDuration);
+		if(mDuration != -1 && mTimer.hasElapsed(mDuration))
+		{
+			isOn = false;
+			return true;
+		}
+		return false;
 	}
 }
