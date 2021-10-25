@@ -1,6 +1,7 @@
 package com.palyrobotics.frc2020.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.SpinnerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
@@ -9,18 +10,24 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.control.Talon;
+import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.I2C;
 
 public class Spinner extends SubsystemBase {
 
 	public static final int kTimeoutMs = 150;
 	public static double kVoltageCompensation = 12.0;
+	private static final PortConstants sPortConstants = Configs.get(PortConstants.class);
 
 	public enum State {
 		IDLE, ROTATING_LEFT, ROTATING_RIGHT
 	}
 
+	private final Talon talon = new Talon(sPortConstants.nariSpinnerId, "Spinner");
+	private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+
 	public void configureSpinnerHardware() {
-		var talon = HardwareAdapter.SpinnerHardware.getInstance().talon;
 		talon.configFactoryDefault(kTimeoutMs);
 		talon.configOpenloopRamp(0.1, kTimeoutMs);
 		talon.enableVoltageCompensation(true);
@@ -53,9 +60,8 @@ public class Spinner extends SubsystemBase {
 	}
 
 	public void updateSpinner() {
-		var hardware = HardwareAdapter.SpinnerHardware.getInstance();
-		hardware.talon.handleReset();
-		hardware.talon.setOutput(getOutput());
+		talon.handleReset();
+		talon.setOutput(getOutput());
 	}
 
 	/**

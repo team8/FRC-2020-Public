@@ -1,8 +1,12 @@
 package com.palyrobotics.frc2020.subsystems;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.robot.*;
+import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.control.Talon;
+import com.palyrobotics.frc2020.util.control.TimedSolenoid;
 
 public class Intake extends SubsystemBase {
 
@@ -10,13 +14,16 @@ public class Intake extends SubsystemBase {
 	public static final double kVoltageCompensation = 12.0;
 	public static final SupplyCurrentLimitConfiguration k30AmpCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(
 			true, 30.0, 35.0, 1.0);
+	private static final PortConstants sPortConstants = Configs.get(PortConstants.class);
 
 	public enum State {
 		STOW, LOWER, INTAKE
 	}
 
+	private final Talon talon = new Talon(sPortConstants.nariIntakeId, "Intake");
+	private final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariIntakeSolenoidId, 1.0, false);
+
 	public void configureIntakeHardware() {
-		var talon = HardwareAdapter.IntakeHardware.getInstance().talon;
 		talon.configFactoryDefault(kTimeoutMs);
 		talon.setInverted(true);
 		talon.enableVoltageCompensation(true);
@@ -56,10 +63,9 @@ public class Intake extends SubsystemBase {
 	}
 
 	public void updateIntake() {
-		var hardware = HardwareAdapter.IntakeHardware.getInstance();
-		hardware.talon.handleReset();
-		hardware.talon.setOutput(getOutput());
-		hardware.solenoid.setExtended(getExtendedOutput());
+		talon.handleReset();
+		talon.setOutput(getOutput());
+		solenoid.setExtended(getExtendedOutput());
 	}
 
 	public ControllerOutput getOutput() {

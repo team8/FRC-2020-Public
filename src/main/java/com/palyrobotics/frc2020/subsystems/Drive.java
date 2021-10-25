@@ -8,6 +8,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.esotericsoftware.minlog.Log;
+import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.*;
@@ -23,6 +24,8 @@ import com.palyrobotics.frc2020.util.control.Falcon;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
+import java.util.List;
+
 /**
  * Represents the drivetrain. Uses {@link #mController} to generate {@link #mOutputs}.
  */
@@ -36,15 +39,25 @@ public class Drive extends SubsystemBase {
 			// 0 for Primary closed-loop. 1 for auxiliary closed-loop.
 			kPidIndex = 0;
 	public static double kVoltageCompensation = 12.0;
+	private static final PortConstants sPortConstants = Configs.get(PortConstants.class);
 
 	public enum State {
 		NEUTRAL, TELEOP, OUTPUTS, FOLLOW_PATH, VISION_ALIGN, TURN
 	}
 
+	private final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId, "Drive Left Master"),
+			leftSlaveFalcon = new Falcon(sPortConstants.nariDriveLeftSlaveId, "Drive Left Slave");
+	private final Falcon rightMasterFalcon = new Falcon(sPortConstants.nariDriveRightMasterId, "Drive Right Master"),
+			rightSlaveFalcon = new Falcon(sPortConstants.nariDriveRightSlaveId, "Drive Right Slave");
+
+	private final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon,
+			rightMasterFalcon, rightSlaveFalcon);
+
+	private final PigeonIMU gyro = new PigeonIMU(sPortConstants.nariDriveGyroId);
+
 	public void configureDriveHardware() {
-		var hardware = HardwareAdapter.DriveHardware.getInstance();
 		/* Falcons */
-		for (Falcon falcon : hardware.falcons) {
+		for (Falcon falcon : falcons) {
 			falcon.configFactoryDefault(kTimeoutMs);
 			falcon.enableVoltageCompensation(true);
 			falcon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
@@ -57,20 +70,20 @@ public class Drive extends SubsystemBase {
 			falcon.configSensorConversions(DriveConstants.kDriveMetersPerTick, DriveConstants.kDriveMetersPerSecondPerTickPer100Ms);
 		}
 		// Left
-		hardware.leftMasterFalcon.setInverted(false);
-		hardware.leftMasterFalcon.setFrameTimings(5, 5);
-		hardware.leftSlaveFalcon.follow(hardware.leftMasterFalcon);
-		hardware.leftSlaveFalcon.setInverted(InvertType.FollowMaster);
-		hardware.leftSlaveFalcon.setFrameTimings(40, 40);
+		leftMasterFalcon.setInverted(false);
+		leftMasterFalcon.setFrameTimings(5, 5);
+		leftSlaveFalcon.follow(leftMasterFalcon);
+		leftSlaveFalcon.setInverted(InvertType.FollowMaster);
+		leftSlaveFalcon.setFrameTimings(40, 40);
 		// Right
-		hardware.rightMasterFalcon.setInverted(true);
-		hardware.rightMasterFalcon.setFrameTimings(5, 5);
-		hardware.rightSlaveFalcon.follow(hardware.rightMasterFalcon);
-		hardware.rightSlaveFalcon.setInverted(InvertType.FollowMaster);
-		hardware.rightSlaveFalcon.setFrameTimings(40, 40);
+		rightMasterFalcon.setInverted(true);
+		rightMasterFalcon.setFrameTimings(5, 5);
+		rightSlaveFalcon.follow(rightMasterFalcon);
+		rightSlaveFalcon.setInverted(InvertType.FollowMaster);
+		rightSlaveFalcon.setFrameTimings(40, 40);
 		/* Gyro */
 		// 10 ms update period for yaw degrees and yaw angular velocity in degrees per second
-		setPigeonStatusFramePeriods(hardware.gyro);
+		setPigeonStatusFramePeriods(gyro);
 		/* Falcons and Gyro */
 		resetDriveSensors(new Pose2d());
 	}
@@ -149,26 +162,23 @@ public class Drive extends SubsystemBase {
 	}
 
 	public void updateDrivetrain() {
-		var hardware = HardwareAdapter.DriveHardware.getInstance();
-		hardware.falcons.forEach(Falcon::handleReset);
-		hardware.leftMasterFalcon.setOutput(getDriveSignal().leftOutput);
-		hardware.rightMasterFalcon.setOutput(getDriveSignal().rightOutput);
-		handleReset(hardware.gyro);
+		falcons.forEach(Falcon::handleReset);
+		leftMasterFalcon.setOutput(getDriveSignal().leftOutput);
+		rightMasterFalcon.setOutput(getDriveSignal().rightOutput);
+		handleReset(gyro);
 	}
 
 	public void resetDriveSensors(Pose2d pose) {
 		double heading = pose.getRotation().getDegrees();
-		var hardware = HardwareAdapter.DriveHardware.getInstance();
-		hardware.gyro.setYaw(heading, kTimeoutMs);
-		hardware.leftMasterFalcon.setSelectedSensorPosition(0);
-		hardware.rightMasterFalcon.setSelectedSensorPosition(0);
+		gyro.setYaw(heading, kTimeoutMs);
+		leftMasterFalcon.setSelectedSensorPosition(0);
+		rightMasterFalcon.setSelectedSensorPosition(0);
 		Log.info(kLoggerTag, String.format("Drive sensors reset, gyro heading: %s", heading));
 	}
 
 	public void setDriveNeutralMode(NeutralMode neutralMode) {
-		var hardware = HardwareAdapter.DriveHardware.getInstance();
-		hardware.leftMasterFalcon.setNeutralMode(neutralMode);
-		hardware.rightMasterFalcon.setNeutralMode(neutralMode);
+		leftMasterFalcon.setNeutralMode(neutralMode);
+		rightMasterFalcon.setNeutralMode(neutralMode);
 	}
 
 	private void setPigeonStatusFramePeriods(PigeonIMU gyro) {

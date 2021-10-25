@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.subsystems;
 
 import java.util.*;
 
+import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.HardwareAdapter;
@@ -12,6 +13,7 @@ import com.palyrobotics.frc2020.util.Color;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.LightingOutputs;
 
+import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -21,12 +23,14 @@ public class Lighting extends SubsystemBase {
 	public enum State {
 		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
 	}
+	private static final PortConstants sPortConstants = Configs.get(PortConstants.class);
+
+	private final AddressableLED ledStrip = new AddressableLED(sPortConstants.nariLightingPwmPort);
 
 	public void configureLightingHardware() {
-		var hardware = HardwareAdapter.LightingHardware.getInstance();
-		hardware.ledStrip.setLength(Configs.get(LightingConfig.class).ledCount);
-		hardware.ledStrip.start();
-		hardware.ledStrip.setData(getOutput());
+		ledStrip.setLength(Configs.get(LightingConfig.class).ledCount);
+		ledStrip.start();
+		ledStrip.setData(getOutput());
 	}
 
 	public abstract static class LEDController {
@@ -148,8 +152,7 @@ public class Lighting extends SubsystemBase {
 	}
 
 	public void updateLighting() {
-		var hardware = HardwareAdapter.LightingHardware.getInstance();
-		hardware.ledStrip.setData(getOutput());
+		ledStrip.setData(getOutput());
 	}
 
 	private void addToControllers(LEDController controller) {

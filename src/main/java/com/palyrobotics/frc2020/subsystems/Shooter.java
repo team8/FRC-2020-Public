@@ -6,6 +6,7 @@ import static com.palyrobotics.frc2020.util.Util.*;
 
 import java.util.Map;
 
+import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.HardwareAdapter;
@@ -13,14 +14,19 @@ import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
+import com.palyrobotics.frc2020.util.control.Spark;
+import com.palyrobotics.frc2020.util.control.TimedSolenoid;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
 import com.palyrobotics.frc2020.util.service.TelemetryService;
 import com.palyrobotics.frc2020.vision.Limelight;
 
+import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj.MedianFilter;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Shooter extends SubsystemBase {
+
+	private static final PortConstants sPortConstants = Configs.get(PortConstants.class);
 
 	public enum ShooterState {
 		IDLE, CUSTOM_VELOCITY, VISION_VELOCITY
@@ -30,14 +36,19 @@ public class Shooter extends SubsystemBase {
 		LOW, MIDDLE, HIGH
 	}
 
+	private final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId, "Shooter Master"),
+			slaveSpark = new Spark(sPortConstants.nariShooterSlaveId, "Shooter Slave");
+	private final CANEncoder masterEncoder = masterSpark.getEncoder();
+	private final TimedSolenoid hoodSolenoid = new TimedSolenoid(sPortConstants.nariShooterHoodSolenoid, 0.4, true),
+			blockingSolenoid = new TimedSolenoid(sPortConstants.nariShooterBlockingSolenoidId, 0.2, false);
+
 	public void configureShooterHardware() {
-		var hardware = HardwareAdapter.ShooterHardware.getInstance();
-		hardware.masterSpark.restoreFactoryDefaults();
-		hardware.slaveSpark.restoreFactoryDefaults();
-		hardware.slaveSpark.follow(hardware.masterSpark, true);
-		hardware.masterSpark.setInverted(true);
+		masterSpark.restoreFactoryDefaults();
+		slaveSpark.restoreFactoryDefaults();
+		slaveSpark.follow(masterSpark, true);
+		masterSpark.setInverted(true);
 		/* Flywheel velocity in RPM, adjusted for gearing ratio */
-		hardware.masterEncoder.setVelocityConversionFactor(1.0 / 0.76923076);
+		masterEncoder.setVelocityConversionFactor(1.0 / 0.76923076);
 		// TODO: Current limiting and closed/open loop ramp rates
 	}
 
@@ -222,14 +233,13 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public void updateShooter() {
-		var hardware = HardwareAdapter.ShooterHardware.getInstance();
 //		handleReset(hardware.masterSpark, hardware.slaveSpark);
 //		Robot.mDebugger.addPoint("handleReset");
-		hardware.masterSpark.setOutput(getFlywheelOutput());
+		masterSpark.setOutput(getFlywheelOutput());
 //		Robot.mDebugger.addPoint("masterSpark.setOutput");
-		hardware.blockingSolenoid.setExtended(getBlockingOutput());
+		blockingSolenoid.setExtended(getBlockingOutput());
 //		Robot.mDebugger.addPoint("blockingSolenoid.setOutput");
-		hardware.hoodSolenoid.setExtended(getHoodOutput());
+		hoodSolenoid.setExtended(getHoodOutput());
 //		Robot.mDebugger.addPoint("hoodSolenoid.setOutput");
 		mRumbleOutput |= getRumbleOutput();
 	}
