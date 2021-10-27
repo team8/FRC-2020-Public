@@ -117,7 +117,7 @@ public class RobotState {
 	}
 
 	private void readDriveState() {
-		var hardware = HardwareAdapter.DriveHardware.getInstance();
+		var hardware = Drive.getInstance();
 		/* Gyro */
 		this.driveIsGyroReady = hardware.gyro.getState() == PigeonIMU.PigeonState.Ready;
 		if (this.driveIsGyroReady) {
@@ -149,7 +149,7 @@ public class RobotState {
 	}
 
 	private void readIndexerState() {
-		var hardware = HardwareAdapter.IndexerHardware.getInstance();
+		var hardware = Indexer.getInstance();
 		this.indexerHasBackBall = !hardware.backInfrared.get();
 		this.indexerHasFrontBall = !hardware.frontInfrared.get();
 		this.indexerHasTopBall = !hardware.topInfrared.get();
@@ -161,13 +161,13 @@ public class RobotState {
 	}
 
 	private void readIntakeState() {
-		var hardware = HardwareAdapter.IntakeHardware.getInstance();
+		var hardware = Intake.getInstance();
 		this.intakeIsExtended = hardware.solenoid.isExtended();
 		checkTalonFaults(hardware.talon);
 	}
 
 	private void readShooterState() {
-		var hardware = HardwareAdapter.ShooterHardware.getInstance();
+		var hardware = Shooter.getInstance();
 //		LiveGraph.add("shooterFlywheelVelocity", hardware.masterEncoder.getVelocity());
 //		LiveGraph.add("shooterAppliedOutput", hardware.masterSpark.getAppliedOutput());
 		this.shooterFlywheelVelocity = hardware.masterEncoder.getVelocity();
@@ -179,7 +179,7 @@ public class RobotState {
 	}
 
 	private void readSpinnerState() {
-		this.detectedRGBValues = HardwareAdapter.SpinnerHardware.getInstance().colorSensor.getColor();
+		this.detectedRGBValues = Spinner.getInstance().colorSensor.getColor();
 		this.closestColorRGB = mColorMatcher.matchClosestColor(this.detectedRGBValues);
 		if (this.closestColorRGB.color == SpinnerConstants.kCyanCPTarget) {
 			this.closestColorString = "C";

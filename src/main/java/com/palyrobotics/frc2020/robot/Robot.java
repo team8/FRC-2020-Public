@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
 	private final Shooter mShooter = Shooter.getInstance();
 	private final Spinner mSpinner = Spinner.getInstance();
 	private final Lighting mLighting = Lighting.getInstance();
+	private final Miscellaneous mMiscellaneous = Miscellaneous.getInstance();
 	private boolean mRumbleOutput;
 
 	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mLighting, mShooter, mSpinner),
@@ -85,9 +86,7 @@ public class Robot extends TimedRobot {
 			if (mEnabledSubsystems.contains(mLighting)) mLighting.configureLightingHardware();
 			if (mEnabledSubsystems.contains(mShooter)) mShooter.configureShooterHardware();
 			if (mEnabledSubsystems.contains(mSpinner)) mSpinner.configureSpinnerHardware();
-			var miscellaneousHardware = HardwareAdapter.MiscellaneousHardware.getInstance();
-			miscellaneousHardware.pdp.clearStickyFaults();
-			miscellaneousHardware.compressor.clearAllPCMStickyFaults();
+			mMiscellaneous.configureMiscellaneousHardware();
 		}
 
 		mEnabledServices.forEach(RobotService::start);
@@ -153,7 +152,7 @@ public class Robot extends TimedRobot {
 		mRobotState.gamePeriod = RobotState.GamePeriod.DISABLED;
 		resetCommandsAndRoutines();
 
-		HardwareAdapter.Joysticks.getInstance().operatorXboxController.setRumble(false);
+		Miscellaneous.getInstance().operatorXboxController.setRumble(false);
 		updateDriveNeutralMode(mConfig.coastDriveWhenDisabled);
 
 		CSVWriter.write();
@@ -288,7 +287,7 @@ public class Robot extends TimedRobot {
 				if (mEnabledSubsystems.contains(mSpinner)) mSpinner.updateSpinner();
 				if (mEnabledSubsystems.contains(mLighting)) mLighting.updateLighting();
 			}
-			var joystickHardware = HardwareAdapter.Joysticks.getInstance();
+			var joystickHardware = Miscellaneous.getInstance();
 			joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
 			mClimber.setClimberSoftLimitsEnabled(mCommands.climberWantsSoftLimits);
 		}
@@ -298,7 +297,7 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateCompressor() {
-		var compressor = HardwareAdapter.MiscellaneousHardware.getInstance().compressor;
+		var compressor = Miscellaneous.getInstance().compressor;
 		if (mCommands.wantedCompression) {
 			compressor.start();
 		} else {

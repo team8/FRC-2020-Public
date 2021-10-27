@@ -5,7 +5,6 @@ import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.SpinnerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -24,8 +23,8 @@ public class Spinner extends SubsystemBase {
 		IDLE, ROTATING_LEFT, ROTATING_RIGHT
 	}
 
-	private final Talon talon = new Talon(sPortConstants.nariSpinnerId, "Spinner");
-	private final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+	public final Talon talon = new Talon(sPortConstants.nariSpinnerId, "Spinner");
+	public final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
 	public void configureSpinnerHardware() {
 		talon.configFactoryDefault(kTimeoutMs);

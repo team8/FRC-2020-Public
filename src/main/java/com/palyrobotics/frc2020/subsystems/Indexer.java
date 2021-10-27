@@ -44,16 +44,16 @@ public class Indexer extends SubsystemBase {
 		return sInstance;
 	}
 
-	private final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId, "Indexer Master"),
+	public final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId, "Indexer Master"),
 			slaveSpark = new Spark(sPortConstants.nariIndexerSlaveId, "Indexer Slave");
-	private final List<Spark> sparks = List.of(masterSpark, slaveSpark);
-	private final CANEncoder masterEncoder = masterSpark.getEncoder(), slaveEncoder = slaveSpark.getEncoder();
-	private final Talon leftVTalon = new Talon(sPortConstants.nariIndexerLeftVTalonId, "Indexer Left V"),
+	public final List<Spark> sparks = List.of(masterSpark, slaveSpark);
+	public final CANEncoder masterEncoder = masterSpark.getEncoder(), slaveEncoder = slaveSpark.getEncoder();
+	public final Talon leftVTalon = new Talon(sPortConstants.nariIndexerLeftVTalonId, "Indexer Left V"),
 			rightVTalon = new Talon(sPortConstants.nariIndexerRightVTalonId, "Indexer Right V");
-	private final List<Talon> vTalons = List.of(leftVTalon, rightVTalon);
-	private final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
+	public final List<Talon> vTalons = List.of(leftVTalon, rightVTalon);
+	public final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
 			blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);
-	private final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDio),
+	public final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDio),
 			frontInfrared = new DigitalInput(sPortConstants.nariIndexerFrontInfraredDio),
 			topInfrared = new DigitalInput(sPortConstants.nariIndexerTopInfraredDio);
 
@@ -221,7 +221,7 @@ public class Indexer extends SubsystemBase {
 		LiveGraph.add("indexerSlaveAppliedOutput", slaveSpark.getAppliedOutput());
 		LiveGraph.add("indexerSlaveVelocity", slaveEncoder.getVelocity());
 		LiveGraph.add("indexerTargetVelocity", getMasterSparkOutput().getReference());
-		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
+		PowerDistributionPanel pdp = Miscellaneous.getInstance().pdp;
 		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
 		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
 //		LiveGraph.add("intakeCurrent8", pdp.getCurrent(8));

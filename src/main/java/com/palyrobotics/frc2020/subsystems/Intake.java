@@ -20,8 +20,8 @@ public class Intake extends SubsystemBase {
 		STOW, LOWER, INTAKE
 	}
 
-	private final Talon talon = new Talon(sPortConstants.nariIntakeId, "Intake");
-	private final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariIntakeSolenoidId, 1.0, false);
+	public final Talon talon = new Talon(sPortConstants.nariIntakeId, "Intake");
+	public final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariIntakeSolenoidId, 1.0, false);
 
 	public void configureIntakeHardware() {
 		talon.configFactoryDefault(kTimeoutMs);

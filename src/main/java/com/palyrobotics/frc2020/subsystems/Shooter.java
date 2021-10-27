@@ -9,7 +9,6 @@ import java.util.Map;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -36,10 +35,10 @@ public class Shooter extends SubsystemBase {
 		LOW, MIDDLE, HIGH
 	}
 
-	private final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId, "Shooter Master"),
+	public final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId, "Shooter Master"),
 			slaveSpark = new Spark(sPortConstants.nariShooterSlaveId, "Shooter Slave");
-	private final CANEncoder masterEncoder = masterSpark.getEncoder();
-	private final TimedSolenoid hoodSolenoid = new TimedSolenoid(sPortConstants.nariShooterHoodSolenoid, 0.4, true),
+	public final CANEncoder masterEncoder = masterSpark.getEncoder();
+	public final TimedSolenoid hoodSolenoid = new TimedSolenoid(sPortConstants.nariShooterHoodSolenoid, 0.4, true),
 			blockingSolenoid = new TimedSolenoid(sPortConstants.nariShooterBlockingSolenoidId, 0.2, false);
 
 	public void configureShooterHardware() {

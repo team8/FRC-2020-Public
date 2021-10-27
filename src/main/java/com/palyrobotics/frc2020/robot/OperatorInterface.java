@@ -12,7 +12,6 @@ import com.palyrobotics.frc2020.behavior.routines.superstructure.IndexerIdleRout
 import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.config.subsystem.IntakeConfig;
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
-import com.palyrobotics.frc2020.robot.HardwareAdapter.Joysticks;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.XboxController;
@@ -30,10 +29,10 @@ public class OperatorInterface {
 	public static final int kOnesTimesZoomAlignButton = 3, kTwoTimesZoomAlignButton = 4;
 	private final ShooterConfig mShooterConfig = Configs.get(ShooterConfig.class);
 	private final IntakeConfig mIntakeConfig = Configs.get(IntakeConfig.class);
-	private final Joystick mDriveStick = Joysticks.getInstance().driveStick;
-	private final Joystick mTurnStick = Joysticks.getInstance().turnStick;
+	private final Joystick mDriveStick = Miscellaneous.getInstance().driveStick;
+	private final Joystick mTurnStick = Miscellaneous.getInstance().turnStick;
 	private Limelight mLimelight = Limelight.getInstance();
-	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
+	private final XboxController mOperatorXboxController = Miscellaneous.getInstance().operatorXboxController;
 
 	/**
 	 * Modifies commands based on operator input devices.

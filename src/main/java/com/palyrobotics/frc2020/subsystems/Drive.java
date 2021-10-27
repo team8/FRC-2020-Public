@@ -12,7 +12,6 @@ import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.*;
-import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.subsystems.controllers.drive.AlignDriveController;
 import com.palyrobotics.frc2020.subsystems.controllers.drive.ChezyDriveController;
 import com.palyrobotics.frc2020.subsystems.controllers.drive.RamseteDriveController;
@@ -45,15 +44,15 @@ public class Drive extends SubsystemBase {
 		NEUTRAL, TELEOP, OUTPUTS, FOLLOW_PATH, VISION_ALIGN, TURN
 	}
 
-	private final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId, "Drive Left Master"),
+	public final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId, "Drive Left Master"),
 			leftSlaveFalcon = new Falcon(sPortConstants.nariDriveLeftSlaveId, "Drive Left Slave");
-	private final Falcon rightMasterFalcon = new Falcon(sPortConstants.nariDriveRightMasterId, "Drive Right Master"),
+	public final Falcon rightMasterFalcon = new Falcon(sPortConstants.nariDriveRightMasterId, "Drive Right Master"),
 			rightSlaveFalcon = new Falcon(sPortConstants.nariDriveRightSlaveId, "Drive Right Slave");
 
-	private final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon,
+	public final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon,
 			rightMasterFalcon, rightSlaveFalcon);
 
-	private final PigeonIMU gyro = new PigeonIMU(sPortConstants.nariDriveGyroId);
+	public final PigeonIMU gyro = new PigeonIMU(sPortConstants.nariDriveGyroId);
 
 	public void configureDriveHardware() {
 		/* Falcons */
