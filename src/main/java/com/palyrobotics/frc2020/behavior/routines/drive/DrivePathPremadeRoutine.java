@@ -5,6 +5,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.ReadOnly;
+import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.Util;
 import com.palyrobotics.frc2020.util.config.Configs;
 
@@ -24,6 +27,13 @@ public class DrivePathPremadeRoutine extends DrivePathRoutine {
 
 	public DrivePathPremadeRoutine(String trajectoryFileName) throws JsonProcessingException {
 		this.mTrajectoryFileName = trajectoryFileName;
+	}
+
+	@Override
+	public void start(Commands commands, @ReadOnly RobotState state) {
+		// Required to start the timeout timer
+		super.start(commands, state);
+		generateTrajectory();
 	}
 
 	public void generateTrajectory() {
