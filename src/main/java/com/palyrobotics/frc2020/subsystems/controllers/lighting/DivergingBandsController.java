@@ -14,6 +14,12 @@ public class DivergingBandsController extends Lighting.LEDController {
 	private double mDuration = -1;
 	private long mOldModValue;
 
+	public DivergingBandsController() {
+		super(0, 28);
+		mStartIndex = 0;
+		mLastIndex = 28;
+	}
+
 	/**
 	 * Band color converges to center of strip
 	 *
@@ -22,21 +28,9 @@ public class DivergingBandsController extends Lighting.LEDController {
 	 * @param bandColor       Color that should pulse through led strip
 	 * @param backgroundColor Background color upon which converging effect will occur.
 	 */
-
-	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed) {
-		super(startIndex, lastIndex);
-		mStartIndex = startIndex;
-		mLastIndex = lastIndex;
-		mBandColor = bandColor;
-		mBackgroundColor = backgroundColor;
-		mBandLedCount = bandLedCount;
-		mSpeed = speed == 0 ? kZeroSpeed : speed;
-		kPriority = 1;
-		mTimer.start();
-	}
-
-	public DivergingBandsController(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration) {
-		super(startIndex, lastIndex);
+	public void initiallize(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration)
+	{
+		isOn = true;
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mBandColor = bandColor;
@@ -46,11 +40,6 @@ public class DivergingBandsController extends Lighting.LEDController {
 		mDuration = duration;
 		kPriority = 1;
 		mTimer.start();
-	}
-
-	public void initiallize()
-	{
-		isOn = true;
 	}
 
 	@Override

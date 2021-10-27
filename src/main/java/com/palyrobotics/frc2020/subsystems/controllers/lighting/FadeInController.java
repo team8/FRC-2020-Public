@@ -10,6 +10,12 @@ public class FadeInController extends Lighting.LEDController {
 	private Color.HSV mFlashedColor;
 	private double mDuration = -1;
 
+	public FadeInController() {
+		super(0, 28);
+		mStartIndex = 0;
+		mLastIndex = 28;
+	}
+
 	/**
 	 * Color flashes with given delay
 	 *
@@ -17,13 +23,6 @@ public class FadeInController extends Lighting.LEDController {
 	 * @param lastIndex    End index upon which led patterns should stop
 	 * @param flashedColor Color to be flashed on white background
 	 */
-
-	public FadeInController() {
-		super(0, 28);
-		mStartIndex = 0;
-		mLastIndex = 28;
-	}
-	
 	public void initiallize(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration)
 	{
 		isOn = true;	

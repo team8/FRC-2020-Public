@@ -10,6 +10,12 @@ public class FlashingLightsController extends Lighting.LEDController {
 	private Color.HSV mFlashedColor;
 	private double mDuration = -1;
 
+	public FlashingLightsController() {
+		super(0, 28);
+		mStartIndex = 0;
+		mLastIndex = 28;
+	}
+
 	/**
 	 * Color flashes with given delay
 	 *
@@ -18,12 +24,6 @@ public class FlashingLightsController extends Lighting.LEDController {
 	 * @param flashedColor Color to be flashed on white background
 	 */
 
-	public FlashingLightsController() {
-		super(0, 28);
-		mStartIndex = 0;
-		mLastIndex = 28;
-	}
-	
 	public void initiallize(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration)
 	{
 		isOn = true;

@@ -15,6 +15,13 @@ public class PulseController extends Lighting.LEDController {
 	private List<Color.HSV> mPulse;
 	private boolean mIsReversed;
 
+
+	public PulseController() {
+		super(0, 28);
+		mStartIndex = 0;
+		mLastIndex = 28;
+	}
+
 	/**
 	 * Pulses array of color through entire led strip
 	 *
@@ -23,12 +30,6 @@ public class PulseController extends Lighting.LEDController {
 	 * @param pulseColorSequence Array of values which should move through led strip
 	 * @param speed              Speed of pulse movement
 	 */
-
-	public PulseController(int startIndex, int lastIndex, List<Color.HSV> pulseColorSequence, double speed) {
-		super(0, 28);
-		mStartIndex = 0;
-		mLastIndex = 28;
-	}
 
 	public void initiallize(int startIndex, int lastIndex, List<Color.HSV> pulseColorSequence, double speed)
 	{
