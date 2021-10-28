@@ -19,6 +19,8 @@ import com.palyrobotics.frc2020.subsystems.Indexer;
  * opponent's trench. Pull the robot back until just the back bumper covers the initiation line. The
  * left ball should be centered in the intake from this configuration.
  */
+
+//aight
 @SuppressWarnings ("Duplicates")
 public class TrenchStealTwoShootFive extends AutoBase {
 

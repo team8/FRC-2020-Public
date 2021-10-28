@@ -9,7 +9,8 @@
 		"indexer",
 		"intake",
 		"shooter",
-		"lighting"
+		"lighting",
+		"climber"
 	],
 	"checkFaults": false,
 	"coastDriveWhenDisabled": true,

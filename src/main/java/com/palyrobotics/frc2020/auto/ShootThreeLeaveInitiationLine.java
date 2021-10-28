@@ -13,6 +13,9 @@ import com.palyrobotics.frc2020.behavior.routines.superstructure.*;
  * Start with three balls, and align to the tower target or near it, facing the target. Front of
  * bumper should be on initiation line.
  */
+
+//Functional
+
 @SuppressWarnings ("Duplicates")
 public class ShootThreeLeaveInitiationLine extends AutoBase {
 
