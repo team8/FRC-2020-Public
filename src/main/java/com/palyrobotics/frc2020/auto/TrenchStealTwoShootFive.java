@@ -45,7 +45,7 @@ public class TrenchStealTwoShootFive extends AutoBase {
 						new IndexerHopperRoutine(Indexer.HopperState.OPEN),
 						new IndexerHopperRoutine(Indexer.HopperState.CLOSED),
 						new IndexerTimeRoutine(1.0)));
-
+		var indexerDownSlight = new IndexerTimeRoutine(0.25, true);
 		var shootBalls = new SequentialRoutine(
 				new DriveAlignRoutine(0),
 				new ParallelRoutine(
@@ -54,6 +54,6 @@ public class TrenchStealTwoShootFive extends AutoBase {
 								new TimedRoutine(1.0),
 								new IndexerFeedAllRoutine(6.5, false, true))));
 
-		return new SequentialRoutine(setInitialOdometry, getTrenchBalls, goToShoot, shootBalls);
+		return new SequentialRoutine(setInitialOdometry, getTrenchBalls, goToShoot, indexerDownSlight, shootBalls);
 	}
 }

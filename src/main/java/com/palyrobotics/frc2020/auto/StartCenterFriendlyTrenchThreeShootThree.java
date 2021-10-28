@@ -57,7 +57,7 @@ public class StartCenterFriendlyTrenchThreeShootThree extends AutoBase {
 								new IntakeBallRoutine(Double.POSITIVE_INFINITY, 1.0),
 								new IndexerTimeRoutine(Double.POSITIVE_INFINITY)),
 						inTrenchTest));
-
+		var indexerDownSlight = new IndexerTimeRoutine(0.25, true);
 		var turnAndShoot = new SequentialRoutine(
 				new ParallelRaceRoutine(
 						new IndexerTimeRoutine(Double.POSITIVE_INFINITY),
@@ -69,6 +69,6 @@ public class StartCenterFriendlyTrenchThreeShootThree extends AutoBase {
 								new TimedRoutine(0.2),
 								new IndexerFeedAllRoutine(3.0, false, true))));
 
-		return new SequentialRoutine(setInitialOdometry, initialShoot, turnAndGetBalls, turnAndShoot);
+		return new SequentialRoutine(setInitialOdometry, initialShoot, turnAndGetBalls, indexerDownSlight, turnAndShoot);
 	}
 }

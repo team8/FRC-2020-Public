@@ -22,6 +22,7 @@ public class ShootThreeLeaveInitiationLine extends AutoBase {
 	@Override
 	public RoutineBase getRoutine() {
 		var setInitialOdometry = new DriveSetOdometryRoutine(0, 0, 0);
+		var indexerDownSlight = new IndexerTimeRoutine(1, true);
 		var initialShoot = new ParallelRoutine(
 				new IntakeLowerRoutine(),
 				new DriveAlignRoutine(0),
