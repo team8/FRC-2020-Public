@@ -1,7 +1,7 @@
 {
     "sparkIndexingOutput": 800.0,
-    "leftTalonIndexingOutput": 0.5,
-    "rightTalonIndexingOutput": 0.7,
+    "leftTalonIndexingOutput": 0.25,
+    "rightTalonIndexingOutput": 0.55,
     "reverseTime": 0.2,
     "feedingOutput": 1100.0,
     "reversingOutput": 700.0,
