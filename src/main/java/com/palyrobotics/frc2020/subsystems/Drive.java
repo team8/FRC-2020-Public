@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -12,7 +14,6 @@ import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.config.subsystem.DriveConfig;
 import com.palyrobotics.frc2020.robot.*;
-import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.subsystems.controllers.drive.AlignDriveController;
 import com.palyrobotics.frc2020.subsystems.controllers.drive.ChezyDriveController;
 import com.palyrobotics.frc2020.subsystems.controllers.drive.RamseteDriveController;
@@ -24,13 +25,10 @@ import com.palyrobotics.frc2020.util.control.Falcon;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
-import java.util.List;
-
 /**
  * Represents the drivetrain. Uses {@link #mController} to generate {@link #mOutputs}.
  */
 public class
-
 
 Drive extends SubsystemBase {
 

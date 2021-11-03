@@ -5,7 +5,6 @@ import java.util.*;
 import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.robot.Commands;
-import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.controllers.lighting.*;
@@ -23,6 +22,7 @@ public class Lighting extends SubsystemBase {
 	public enum State {
 		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
 	}
+
 	private static final PortConstants sPortConstants = Configs.get(PortConstants.class);
 
 	private final AddressableLED ledStrip = new AddressableLED(sPortConstants.nariLightingPwmPort);

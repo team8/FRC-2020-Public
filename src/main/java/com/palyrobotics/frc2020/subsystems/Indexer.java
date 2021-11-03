@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.PortConstants;
@@ -15,8 +17,6 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-
-import java.util.List;
 
 public class Indexer extends SubsystemBase {
 
