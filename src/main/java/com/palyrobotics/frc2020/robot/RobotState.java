@@ -66,7 +66,7 @@ public class RobotState {
 	}
 
 	public void updateOdometry(double yawDegrees, double leftVelMeters, double rightVelMeters, double leftMeters, double rightMeters) {
-		drivePoseMeters = driveOdometry.update(Rotation2d.fromDegrees(yawDegrees), new DifferentialDriveWheelSpeeds(), leftMeters, rightMeters);
+		drivePoseMeters = driveOdometry.update(Rotation2d.fromDegrees(yawDegrees), new DifferentialDriveWheelSpeeds(leftVelMeters, rightVelMeters), leftMeters, rightMeters);
 		ChassisSpeeds speeds = DriveConstants.kKinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(driveLeftVelocity, driveRightVelocity));
 		driveVelocityMetersPerSecond = Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2));
 	}
