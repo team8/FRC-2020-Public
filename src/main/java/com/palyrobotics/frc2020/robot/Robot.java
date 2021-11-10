@@ -287,14 +287,16 @@ public class Robot extends TimedRobot {
 	}
 
 	private void updateVision(boolean visionWanted, int visionPipeline) {
-		if (visionWanted) {
+		/*if (visionWanted) {
 			mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
 			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
 		} else {
 			mLimelight.setCamMode(LimelightControlMode.CamMode.DRIVER);
 			mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_OFF);
-		}
-		mLimelight.setPipeline(visionPipeline);
+		}*/
+		mLimelight.setCamMode(LimelightControlMode.CamMode.VISION);
+		mLimelight.setLEDMode(LimelightControlMode.LedMode.FORCE_ON);
+		mLimelight.setPipeline(2);
 	}
 
 	private String setupSubsystemsAndServices() {

@@ -78,7 +78,8 @@ public class OperatorInterface {
 
 	private void updateDriveCommands(Commands commands) {
 		if (Joysticks.getInstance().driveStick.getRawButtonPressed(5)) {
-			PiCommunicator.getInstance().ping();
+			//PiCommunicator.getInstance().ping();
+			mLimelight.printCorners();
 
 		}
 		commands.setDriveSlowTurnLeft(mTurnStick.getPOV(0) == 270);

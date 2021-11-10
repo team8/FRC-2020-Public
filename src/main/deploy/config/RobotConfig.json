@@ -10,8 +10,8 @@
 	],
 	"checkFaults": false,
 	"coastDriveWhenDisabled": true,
-	"enableVisionWhenDisabled": false,
-	"visionPipelineWhenDisabled": 0,
+	"enableVisionWhenDisabled": true,
+	"visionPipelineWhenDisabled": 2,
 	"motorOutputMultiplier": 1.0,
 	"disableHardwareUpdates": false
 }

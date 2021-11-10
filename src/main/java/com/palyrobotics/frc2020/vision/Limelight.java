@@ -23,6 +23,7 @@ public class Limelight {
 
 	private static Limelight sInstance = new Limelight();
 	private NetworkTable mTable;
+	private double[] mZeroArray = new double[]{0, 0, 0, 0, 0, 0, 0, 0};
 
 	public Limelight() {
 		mTable = sNetworkTableInstance.getTable("limelight");
@@ -104,6 +105,18 @@ public class Limelight {
 			entry.setValue(ledMode.getValue());
 			sNetworkTableInstance.flush();
 		}
+	}
+
+	public void printCorners(){
+		double[] xCorners = mTable.getEntry("tcornx").getDoubleArray(mZeroArray);
+		double[] yCorners = mTable.getEntry("tcorny").getDoubleArray(mZeroArray);
+		double tx = mTable.getEntry("tx").getDouble(0.0);
+		String string = "";
+		for(int i = 0;i < xCorners.length;i++){
+			string += "(" + xCorners[i] + ", " + yCorners[i] + "), ";
+		}
+		string = Double.toString(tx);
+		System.out.println(string);
 	}
 
 	/**
@@ -241,7 +254,7 @@ public class Limelight {
 		} else if (getPipeline() == kTwoTimesZoomPipelineId) {
 			return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(twoTimesZoomAngle + a2))));
 		} else {
-			Log.warn(kLoggerTag, "Wrong pipeline used for distance estimation");
+			//Log.warn(kLoggerTag, "Wrong pipeline used for distance estimation");
 			return 0.0;
 		}
 	}
