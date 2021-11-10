@@ -138,13 +138,13 @@ public class Robot extends TimedRobot {
 			var pose = odometry.getTargetPose();
 			points.addLast(pose);
 		} else if (routine instanceof DrivePathRoutine) {
-			var path = (DrivePathRoutine) routine;
-			System.out.println(points.getLast());
-			path.generateTrajectory(points.getLast());
-			for (Trajectory.State state : path.getTrajectory().getStates()) {
-				var pose = state.poseMeters;
-				points.addLast(pose);
-			}
+//			var path = (DrivePathRoutine) routine;
+//			System.out.println(points.getLast());
+//			path.generateTrajectory(points.getLast());
+//			for (Trajectory.State state : path.getTrajectory().getStates()) {
+//				var pose = state.poseMeters;
+//				points.addLast(pose);
+//			}
 		}
 	}
 

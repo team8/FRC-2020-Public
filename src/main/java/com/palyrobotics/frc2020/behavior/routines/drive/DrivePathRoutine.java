@@ -140,8 +140,7 @@ public class DrivePathRoutine extends TimeoutRoutineBase {
 	public Trajectory getTrajectory() {
 		return mTrajectory;
 	}
-
-	@Override
+	//note: for some reason commenting this out makes pregen autos work TODO: fix
 	public void start(Commands commands, @ReadOnly RobotState state) {
 		// Required to start the timeout timer
 		super.start(commands, state);
