@@ -4,7 +4,7 @@ import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.util.Util;
 import com.revrobotics.ColorMatchResult;
-
+import edu.wpi.first.wpilibj.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
@@ -25,7 +25,8 @@ public class RobotState {
 	public static final String kLoggerTag = Util.classToJsonName(RobotState.class);
 
 	/* Drive */
-	private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(new Rotation2d());
+	//TODO: finish up with the uncertainty matrices
+	private final DifferentialDrivePoseEstimator driveOdometry = new DifferentialDrivePoseEstimator(new Rotation2d(), new Pose2d(0,0,new Rotation2d(0)), );
 	public double driveYawDegrees, driveYawAngularVelocityDegrees;
 	public boolean driveIsQuickTurning, driveIsSlowTurning;
 	public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;
@@ -59,13 +60,13 @@ public class RobotState {
 
 	public void resetOdometry(Pose2d pose) {
 		driveOdometry.resetPosition(pose, pose.getRotation());
-		drivePoseMeters = driveOdometry.getPoseMeters();
+		drivePoseMeters = driveOdometry.getEstimatedPosition();
 		driveVelocityMetersPerSecond = 0.0;
 		Log.info(kLoggerTag, String.format("Odometry reset to: %s", pose));
 	}
 
-	public void updateOdometry(double yawDegrees, double leftMeters, double rightMeters) {
-		drivePoseMeters = driveOdometry.update(Rotation2d.fromDegrees(yawDegrees), leftMeters, rightMeters);
+	public void updateOdometry(double yawDegrees, double leftVelMeters, double rightVelMeters, double leftMeters, double rightMeters) {
+		drivePoseMeters = driveOdometry.update(Rotation2d.fromDegrees(yawDegrees), new DifferentialDriveWheelSpeeds(), leftMeters, rightMeters);
 		ChassisSpeeds speeds = DriveConstants.kKinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(driveLeftVelocity, driveRightVelocity));
 		driveVelocityMetersPerSecond = Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2));
 	}

@@ -83,7 +83,7 @@ public class HardwareReader {
 //		LiveGraph.add("leftPosition", state.driveLeftPosition);
 //		LiveGraph.add("rightPosition", state.driveRightPosition);
 		/* Odometry */
-		state.updateOdometry(state.driveYawDegrees, state.driveLeftPosition, state.driveRightPosition);
+		state.updateOdometry(state.driveYawDegrees, state.driveLeftVelocity, state.driveRightVelocity, state.driveLeftPosition, state.driveRightPosition);
 //		LiveGraph.add("driveLeftPosition", state.driveLeftPosition);
 
 		LiveGraph.add("driveLeftVelocity", state.driveLeftVelocity);
