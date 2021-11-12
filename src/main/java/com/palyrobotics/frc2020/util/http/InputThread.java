@@ -15,11 +15,17 @@ public class InputThread implements Runnable {
 	private JSONArray array = new JSONArray();
 	private String dataType = null;
 
+	private final int logSize = 50;
+
 	@Override
 	public void run() {
 		//addLog(new LogEntry((long) time, 1, null, "test", null));
 		array.clear();
-		for (int i = 0; i < logs.size(); i++) {
+		int startInd = 0;
+		if (logs.size() > logSize) {
+			startInd = logs.size()-logSize;
+		}
+		for (int i = startInd; i < logs.size()-startInd; i++) {
 			array.put(logs.get(i).toString());
 		}
 		json.put("logs", array);
