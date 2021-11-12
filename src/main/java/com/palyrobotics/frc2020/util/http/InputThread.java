@@ -23,9 +23,9 @@ public class InputThread implements Runnable {
 		array.clear();
 		int startInd = 0;
 		if (logs.size() > logSize) {
-			startInd = logs.size()-logSize;
+			startInd = logs.size() - logSize;
 		}
-		for (int i = startInd; i < logs.size()-startInd; i++) {
+		for (int i = startInd; i < logs.size() - startInd; i++) {
 			array.put(logs.get(i).toString());
 		}
 		json.put("logs", array);
