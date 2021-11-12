@@ -49,7 +49,6 @@ public class Indexer extends SubsystemBase {
 
 		switch (commands.indexerWantedBeltState) {
 			case INDEX:
-				mBlocked = false;
 				mIndexerVelocityOutputs.add(state.indexerMasterVelocity);
 				if (state.gamePeriod == RobotState.GamePeriod.AUTO) {
 					if (mIndexerVelocityOutputs.numberOfOccurrences(d -> (d < mConfig.sparkIndexingOutput * kStuckPercent) && d > kForwardThreshold) > 20) {
@@ -61,6 +60,7 @@ public class Indexer extends SubsystemBase {
 					setSparkMaxProfiledVelocity(mConfig.sparkIndexingOutput);
 				}
 				setVTalonOutput(mConfig.leftTalonIndexingOutput, mConfig.rightTalonIndexingOutput, multiplier);
+				mBlocked = false;
 				break;
 			case IDLE:
 				mSlaveSparkOutput.setIdle();
