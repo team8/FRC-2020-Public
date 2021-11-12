@@ -2,7 +2,6 @@ package com.palyrobotics.frc2020.vision;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class PiCommunicator {
@@ -18,7 +17,6 @@ public class PiCommunicator {
 	private static final String kPingKey = "ping-pi";
 	private int kPingInt = 0;
 	//public NetworkTableEntry commEntry = sPiTable.getEntry("comm-key");
-
 
 	public PiCommunicator() {
 		setupListeners();
@@ -39,14 +37,13 @@ public class PiCommunicator {
 			System.out.println(key + " value change to: " + value.getValue());
 		}, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
-		try{
+		try {
 			Thread.sleep(10000);
-		}catch (InterruptedException ex){
+		} catch (InterruptedException ex) {
 			System.out.println("Interrupted");
 			Thread.currentThread().interrupt();
 			return;
 		}
-
 
 	}
 }
