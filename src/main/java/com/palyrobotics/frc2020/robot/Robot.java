@@ -25,9 +25,7 @@ import com.palyrobotics.frc2020.util.commands.CommandReceiverService;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
-import com.palyrobotics.frc2020.util.service.NetworkLoggerService;
-import com.palyrobotics.frc2020.util.service.RobotService;
-import com.palyrobotics.frc2020.util.service.TelemetryService;
+import com.palyrobotics.frc2020.util.service.*;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
@@ -67,6 +65,10 @@ public class Robot extends TimedRobot {
 			new TelemetryService()),
 			mEnabledServices;
 
+	private NetworkLoggerService mNetworkLogger = new NetworkLoggerService();
+	private ServerService mServerService = new ServerService();
+	private GraphingService mGraphingService = new GraphingService();
+
 	public Robot() {
 		super(kPeriod);
 	}
@@ -79,7 +81,10 @@ public class Robot extends TimedRobot {
 
 		if (kCanUseHardware) mHardwareWriter.configureHardware(mEnabledSubsystems);
 
-		mEnabledServices.forEach(RobotService::start);
+		//mEnabledServices.forEach(RobotService::start);
+		mServerService.start();
+		mNetworkLogger.start();
+		mGraphingService.start();
 
 		Log.info(kLoggerTag, setupSummary);
 

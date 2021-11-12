@@ -3,7 +3,6 @@ package com.palyrobotics.frc2020.util.service;
 import com.esotericsoftware.minlog.Log;
 import com.palyrobotics.frc2020.util.http.LightHttpServer;
 
-
 public abstract class ServerServiceBase implements RobotService {
 
 	protected String mLoggerTag = getConfigName();

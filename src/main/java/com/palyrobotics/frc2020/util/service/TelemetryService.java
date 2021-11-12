@@ -3,11 +3,9 @@ package com.palyrobotics.frc2020.util.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
-import com.palyrobotics.frc2020.util.config.Configs;
 
 public class TelemetryService extends ServerServiceBase {
 
@@ -39,7 +37,7 @@ public class TelemetryService extends ServerServiceBase {
 
 	@Override
 	public void update(@ReadOnly RobotState state, @ReadOnly Commands commands) {
-		if (mServer.getConnections().length > 0) {
+		/*if (mServer.getConnections().length > 0) {
 			mTelemetry.state = state;
 			mTelemetry.commands = commands;
 			try {
@@ -48,5 +46,7 @@ public class TelemetryService extends ServerServiceBase {
 			} catch (JsonProcessingException ignored) {
 			}
 		}
+		
+		*/
 	}
 }

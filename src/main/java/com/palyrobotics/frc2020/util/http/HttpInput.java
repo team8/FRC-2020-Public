@@ -1,61 +1,64 @@
 package com.palyrobotics.frc2020.util.http;
 
-import org.json.JSONObject;
-
 import java.util.Iterator;
 
+import org.json.JSONObject;
+
 public class HttpInput {
-    private String input = null;
-    private JSONObject output = new JSONObject();
-    private JSONObject logInput = new JSONObject();
-    private JSONObject chartInput = new JSONObject();
-    private HttpInput() {
 
-    }
+	private String input = null;
+	private JSONObject output = new JSONObject();
+	private JSONObject logInput = new JSONObject();
+	private JSONObject chartInput = new JSONObject();
 
-    public static HttpInput getInstance() {
-        return sHttpInput;
-    }
-    private static HttpInput sHttpInput = new HttpInput();
+	private HttpInput() {
 
-    public void setInput(String newInput) {
-        input = newInput;
-    }
+	}
 
-    public void setChartInput(JSONObject newInput) {
-        chartInput = newInput;
-    }
+	public static HttpInput getInstance() {
+		return sHttpInput;
+	}
 
-    public void setLogInput(JSONObject newInput) {
-        logInput = newInput;
-    }
+	private static HttpInput sHttpInput = new HttpInput();
 
-    public JSONObject getInput() {
+	public void setInput(String newInput) {
+		input = newInput;
+	}
 
-        if (!chartInput.isEmpty()) {
+	public void setChartInput(JSONObject newInput) {
+		chartInput = newInput;
+	}
 
-            Iterator<String> chartKeys = chartInput.keys();
+	public void setLogInput(JSONObject newInput) {
+		logInput = newInput;
+	}
 
-            while (chartKeys.hasNext()) {
-                String key = chartKeys.next();
-                if (key == "graphData") {
-                    output.put(key, chartInput.get(key));
-                }
-            }
-        }
+	public JSONObject getInput() {
 
-        if (!logInput.isEmpty()) {
+		if (!chartInput.isEmpty()) {
 
-            Iterator<String> logKeys = logInput.keys();
+			Iterator<String> chartKeys = chartInput.keys();
 
-            while (logKeys.hasNext()) {
-                String key = logKeys.next();
-                if (key == "logs") {
-                    output.put(key, logInput.get(key));
-                }
-            }
-        }
+			while (chartKeys.hasNext()) {
+				String key = chartKeys.next();
+				if (key == "graphData") {
+					output.put(key, chartInput.get(key));
+				}
+			}
+		}
 
-        return output;
-    }
+		if (!logInput.isEmpty()) {
+
+			Iterator<String> logKeys = logInput.keys();
+
+			while (logKeys.hasNext()) {
+				String key = logKeys.next();
+				if (key == "logs") {
+					output.put(key, logInput.get(key));
+				}
+			}
+		}
+
+		return output;
+	}
 }

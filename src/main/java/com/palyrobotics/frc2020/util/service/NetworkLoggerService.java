@@ -1,12 +1,14 @@
 package com.palyrobotics.frc2020.util.service;
 
-import com.palyrobotics.frc2020.util.http.InputThread;
-import com.palyrobotics.frc2020.util.http.LightHttpServer;
-import edu.wpi.first.wpilibj.Timer;
 import com.esotericsoftware.minlog.Log;
 import com.esotericsoftware.minlog.Log.Logger;
+import com.palyrobotics.frc2020.util.http.InputThread;
+import com.palyrobotics.frc2020.util.http.LightHttpServer;
+
+import edu.wpi.first.wpilibj.Timer;
 
 public class NetworkLoggerService extends ServerServiceBase implements RobotService {
+
 	private final int kPort = 4000;
 	private InputThread tThread = new InputThread();
 	private Timer mTimer = new Timer();
@@ -55,6 +57,5 @@ public class NetworkLoggerService extends ServerServiceBase implements RobotServ
 		//mServer.start();
 
 	}
-
 
 }

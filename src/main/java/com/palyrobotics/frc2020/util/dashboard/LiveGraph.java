@@ -2,6 +2,7 @@ package com.palyrobotics.frc2020.util.dashboard;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
 import org.json.JSONObject;
 
 public class LiveGraph {

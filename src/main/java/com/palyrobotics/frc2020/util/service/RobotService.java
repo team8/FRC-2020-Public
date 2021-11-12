@@ -6,6 +6,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.Util;
 
 public interface RobotService {
+
 	default void run() {
 
 	}
