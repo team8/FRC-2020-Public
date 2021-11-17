@@ -1,8 +1,10 @@
 package com.palyrobotics.frc2020.robot;
 
 import com.esotericsoftware.minlog.Log;
+import com.palyrobotics.frc2020.config.MeasurementConfig;
 import com.palyrobotics.frc2020.config.constants.DriveConstants;
 import com.palyrobotics.frc2020.util.Util;
+import com.palyrobotics.frc2020.util.config.Configs;
 import com.revrobotics.ColorMatchResult;
 import edu.wpi.first.wpilibj.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -11,6 +13,12 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpiutil.math.MatBuilder;
+import edu.wpi.first.wpiutil.math.Matrix;
+import edu.wpi.first.wpiutil.math.Nat;
+import org.ejml.simple.SimpleMatrix;
+
+import java.util.ArrayList;
 
 /**
  * Holds the current physical state of the robot from our sensors.
@@ -23,10 +31,14 @@ public class RobotState {
 	}
 
 	public static final String kLoggerTag = Util.classToJsonName(RobotState.class);
+	private final MeasurementConfig mMeasurementConfig = Configs.get(MeasurementConfig.class);
+	public Matrix stateStdDevs = fillNx1Matrix(mMeasurementConfig.stateStdDev, new Matrix(Nat.N5(), Nat.N1()));
+	public Matrix localMeasurementStdDevs = fillNx1Matrix(mMeasurementConfig.stateStdDev, new Matrix(Nat.N3(), Nat.N1()));
+	public Matrix visionMeasurementStdDevs = fillNx1Matrix(mMeasurementConfig.stateStdDev, new Matrix(Nat.N3(), Nat.N1()));
 
 	/* Drive */
 	//TODO: finish up with the uncertainty matrices
-	private final DifferentialDrivePoseEstimator driveOdometry = new DifferentialDrivePoseEstimator(new Rotation2d(), new Pose2d(0,0,new Rotation2d(0)), );
+	private final DifferentialDrivePoseEstimator driveOdometry = new DifferentialDrivePoseEstimator(new Rotation2d(), new Pose2d(0,0, new Rotation2d(0)), stateStdDevs, localMeasurementStdDevs,visionMeasurementStdDevs);
 	public double driveYawDegrees, driveYawAngularVelocityDegrees;
 	public boolean driveIsQuickTurning, driveIsSlowTurning;
 	public double driveLeftVelocity, driveRightVelocity, driveLeftPosition, driveRightPosition;
@@ -69,5 +81,12 @@ public class RobotState {
 		drivePoseMeters = driveOdometry.update(Rotation2d.fromDegrees(yawDegrees), new DifferentialDriveWheelSpeeds(leftVelMeters, rightVelMeters), leftMeters, rightMeters);
 		ChassisSpeeds speeds = DriveConstants.kKinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(driveLeftVelocity, driveRightVelocity));
 		driveVelocityMetersPerSecond = Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2));
+	}
+	private Matrix fillNx1Matrix(ArrayList<Double> data, Matrix matrix){
+		//I know this is ugly, but it's the only way I could get it to work
+		for (int i = 0; i < data.size(); i++){
+			matrix.set(0, i, data.get(i));
+		}
+		return matrix;
 	}
 }

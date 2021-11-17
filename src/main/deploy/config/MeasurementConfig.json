@@ -1,0 +1,5 @@
+{
+  "stateStdDev": [0.1,0.1,0.0174533,0.07,0.07],
+  "localMeasurementStdDevs": [0.09,0.09,0.0174533],
+  "visionMeasurementStdDevs": [0.3,0.3,0.0872665]
+}
