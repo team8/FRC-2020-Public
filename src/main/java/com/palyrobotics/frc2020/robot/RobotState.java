@@ -32,9 +32,9 @@ public class RobotState {
 
 	public static final String kLoggerTag = Util.classToJsonName(RobotState.class);
 	private final MeasurementConfig mMeasurementConfig = Configs.get(MeasurementConfig.class);
-	public Matrix stateStdDevs = fillNx1Matrix(mMeasurementConfig.stateStdDev, new Matrix(Nat.N5(), Nat.N1()));
-	public Matrix localMeasurementStdDevs = fillNx1Matrix(mMeasurementConfig.stateStdDev, new Matrix(Nat.N3(), Nat.N1()));
-	public Matrix visionMeasurementStdDevs = fillNx1Matrix(mMeasurementConfig.stateStdDev, new Matrix(Nat.N3(), Nat.N1()));
+	public Matrix stateStdDevs = fillNx1Matrix(mMeasurementConfig.stateStdDevs, new Matrix(Nat.N5(), Nat.N1()));
+	public Matrix localMeasurementStdDevs = fillNx1Matrix(mMeasurementConfig.localMeasurementStdDevs, new Matrix(Nat.N3(), Nat.N1()));
+	public Matrix visionMeasurementStdDevs = fillNx1Matrix(mMeasurementConfig.visionMeasurementStdDevs, new Matrix(Nat.N3(), Nat.N1()));
 
 	/* Drive */
 	//TODO: finish up with the uncertainty matrices
@@ -85,7 +85,7 @@ public class RobotState {
 	private Matrix fillNx1Matrix(ArrayList<Double> data, Matrix matrix){
 		//I know this is ugly, but it's the only way I could get it to work
 		for (int i = 0; i < data.size(); i++){
-			matrix.set(0, i, data.get(i));
+			matrix.set(i, 0, data.get(i));
 		}
 		return matrix;
 	}
