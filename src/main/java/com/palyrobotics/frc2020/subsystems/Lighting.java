@@ -2,7 +2,6 @@ package com.palyrobotics.frc2020.subsystems;
 
 import java.util.*;
 
-import com.palyrobotics.frc2020.config.PortConstants;
 import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
@@ -187,7 +186,7 @@ public class Lighting extends SubsystemBase {
 	}
 
 	private void addToControllers(LEDController controller) {
-		if(!mLEDControllers.contains(controller)) {
+		if (!mLEDControllers.contains(controller)) {
 			// mLEDControllers.removeIf(controller::equals);
 			mLEDControllers.add(controller);
 		}
