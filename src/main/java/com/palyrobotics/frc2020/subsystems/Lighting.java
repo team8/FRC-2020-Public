@@ -19,7 +19,7 @@ public class Lighting extends SubsystemBase {
 
 	public enum State {
 		// no LEDs
-		OFF, IDLE, INIT,
+		OFF, IDLE, INIT, SPINNER_DONE,
 		// use all LED strips
 		DISABLE, CLIMB_DONE,
 		// use front-left LED
