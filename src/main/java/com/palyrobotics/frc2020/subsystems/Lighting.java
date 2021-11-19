@@ -18,7 +18,16 @@ import edu.wpi.first.wpilibj.Timer;
 public class Lighting extends SubsystemBase {
 
 	public enum State {
-		OFF, IDLE, INIT, DISABLE, TARGET_FOUND, SHOOTER_FULLRPM, ROBOT_ALIGNED, CLIMB_DONE, INTAKE_EXTENDED, BALL_ENTERED, SPINNER_DONE, BALL_SHOT, DO_NOTHING
+		// subsystem states
+		OFF, IDLE,
+		// robot states
+		INIT, DISABLE, DO_NOTHING,
+		// shooter states
+		TARGET_FOUND, SHOOTER_FULL_RPM, ROBOT_ALIGNED, BALL_SHOT,
+		// climb states
+		CLIMB_DONE,
+		// intake states
+		INTAKE_EXTENDED, BALL_ENTERED
 	}
 
 	public abstract static class LEDController {
@@ -99,9 +108,6 @@ public class Lighting extends SubsystemBase {
 					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex,
 							mConfig.spinnerSegmentLastIndex, Color.HSV.kYellow, 1, 2));
 					break;
-				case SPINNER_DONE:
-					addToControllers(new OneColorController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, Color.HSV.kBlue, 2));
-					break;
 				case BALL_ENTERED:
 					addToControllers(new DivergingBandsController(mConfig.frontLeftSegmentFirstIndex, mConfig.frontRightSegmentLastIndex, Color.HSV.kOrange, Color.HSV.kOff, 2, 1.0 / 6.0, 2));
 					addToControllers(new DivergingBandsController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kOrange, Color.HSV.kOff, 3, 1.0 / 6.0, 2));
@@ -117,7 +123,7 @@ public class Lighting extends SubsystemBase {
 				case ROBOT_ALIGNED:
 					addToControllers(new OneColorController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kLime, 2));
 					break;
-				case SHOOTER_FULLRPM:
+				case SHOOTER_FULL_RPM:
 					addToControllers(new FadeInFadeOutController(mConfig.spinnerSegmentFirstIndex, mConfig.spinnerSegmentLastIndex, Color.HSV.kGreen, 0.5, 5));
 					break;
 				case BALL_SHOT:
@@ -140,8 +146,10 @@ public class Lighting extends SubsystemBase {
 	}
 
 	private void addToControllers(LEDController controller) {
-		mLEDControllers.removeIf(controller::equals);
-		mLEDControllers.add(controller);
+		if(!mLEDControllers.contains(controller)) {
+			// mLEDControllers.removeIf(controller::equals);
+			mLEDControllers.add(controller);
+		}
 	}
 
 	private void resetLedStrip() {
