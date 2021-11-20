@@ -34,6 +34,7 @@ public class OperatorInterface {
 	private final Joystick mDriveStick = Joysticks.getInstance().driveStick,
 			mTurnStick = Joysticks.getInstance().turnStick;
 	private Limelight mLimelight = Limelight.getInstance();
+	private PiCommunicator mPiCommunicator = PiCommunicator.getInstance();
 	private final XboxController mOperatorXboxController = Joysticks.getInstance().operatorXboxController;
 
 	/**
@@ -78,8 +79,9 @@ public class OperatorInterface {
 
 	private void updateDriveCommands(Commands commands) {
 		if (Joysticks.getInstance().driveStick.getRawButtonPressed(5)) {
-			double[] targetPos = PiCommunicator.getPositionTemp();
-			System.out.println("has target: " + PiCommunicator.hasTarget() + "; targetX: " + targetPos[0] + ", targetY: " + targetPos[1] + ", angle: " + targetPos[2]);
+			double[] targetPos = mPiCommunicator.getPositionTemp();
+			mPiCommunicator.printKeys();
+			System.out.println("has target: " + mPiCommunicator.hasTarget() + "; targetX: " + targetPos[0] + ", targetY: " + targetPos[1] + ", angle: " + targetPos[2]);
 		}
 		commands.setDriveSlowTurnLeft(mTurnStick.getPOV(0) == 270);
 		commands.setDriveTeleop(
