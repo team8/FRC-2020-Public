@@ -72,6 +72,14 @@ public class Lighting extends SubsystemBase {
 	private final int maxShooterVelocity = 0;
 	private int firstIndex;
 	private int lastIndex;
+	private ColorRangingController colorRangingController;
+	private DivergingBandsController divergingBandsController;
+	private FadeInFadeOutController fadeInFadeOutController;
+	private FlashingLightsController flashingLightsController;
+	private InitSequenceController initSequenceController;
+	private OneColorController oneColorController;
+	private PulseController pulseController;
+	private ShooterColorController shooterColorController;
 
 	private Lighting() {
 
