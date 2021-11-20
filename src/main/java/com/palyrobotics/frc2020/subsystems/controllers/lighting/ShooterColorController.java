@@ -12,12 +12,11 @@ public class ShooterColorController extends Lighting.LEDController {
 
     private LightingConfig mConfig = Configs.get(LightingConfig.class);
     private static ShooterColorController sInstance = new ShooterColorController();
-    private int shooterSpeed;
-    private int shooterMaxSpeed;
     private int length;
     private int firstIndex;
     private int lastIndex;
     private int orangeLEDs;
+    private int mDuration;
 
     public ShooterColorController()
     {
@@ -26,7 +25,7 @@ public class ShooterColorController extends Lighting.LEDController {
         mLastIndex = 28;
         kPriority = 1;
     }
-    public void initallize(int shooterVelocity, int maxShooterVelocity)
+    public void initallize(int shooterVelocity, int maxShooterVelocity, int duration)
     {
         length = (int) shooterVelocity/maxShooterVelocity * 8;
         orangeLEDs = 0;
@@ -37,6 +36,7 @@ public class ShooterColorController extends Lighting.LEDController {
         firstIndex = length;
         lastIndex = mConfig.ledCount-firstIndex;
         isOn = true;
+        mDuration = duration;
     }
     @Override
     public void updateSignal(Commands commands, RobotState state)
@@ -90,11 +90,16 @@ public class ShooterColorController extends Lighting.LEDController {
                 mOutputs.lightingOutput.get(i).setHSV(Color.HSV.kOrange.getH(), Color.HSV.kOrange.getS(), Color.HSV.kOrange.getV());
             }
         }
-        isOn = false;
     }
 
     @Override
-    public boolean checkFinished() {
-        return (!isOn);
+    public boolean checkFinished()
+    {
+        if (mDuration != -1 && mTimer.hasElapsed(mDuration))
+        {
+            isOn = false;
+            return true;
+        }
+        return false;
     }
 }
