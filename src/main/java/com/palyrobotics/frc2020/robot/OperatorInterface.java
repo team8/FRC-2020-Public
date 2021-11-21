@@ -21,6 +21,7 @@ import com.palyrobotics.frc2020.vision.Limelight;
 
 import com.palyrobotics.frc2020.vision.PiCommunicator;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 /**
  * Used to produce {@link Commands}'s from human input. Should only be used in robot package.
@@ -79,9 +80,8 @@ public class OperatorInterface {
 
 	private void updateDriveCommands(Commands commands) {
 		if (Joysticks.getInstance().driveStick.getRawButtonPressed(5)) {
-			double[] targetPos = mPiCommunicator.getPositionTemp();
-			mPiCommunicator.printKeys();
-			System.out.println("has target: " + mPiCommunicator.hasTarget() + "; targetX: " + targetPos[0] + ", targetY: " + targetPos[1] + ", angle: " + targetPos[2]);
+			Pose2d pos = PiCommunicator.getInstance().getRobotPositionFromTarget();
+			System.out.println("x: " + pos.getTranslation().getX() + ", y: " + pos.getTranslation().getY());
 		}
 		commands.setDriveSlowTurnLeft(mTurnStick.getPOV(0) == 270);
 		commands.setDriveTeleop(

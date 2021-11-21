@@ -3,7 +3,9 @@ package com.palyrobotics.frc2020.vision;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import org.photonvision.PhotonCamera;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+//import org.photonvision.PhotonCamera;
 
 import java.util.Iterator;
 
@@ -31,6 +33,26 @@ public class PiCommunicator {
 			return targetPos;
 		}
 		return mZeroArray;
+	}
+
+	public Pose2d getRobotPositionFromTarget(){
+		double[] position = getPositionTemp();
+		System.out.println("x: " + position[0] + ", y: " + position[1] + "angle: " + position[2]);
+		if(!position.equals(mZeroArray)){
+			double xDist = getDistanceFromTarget(position[0]);
+			double yDist = position[1];
+			double angle = position[2];
+			double hypot = Math.sqrt(Math.pow(xDist,2) + Math.pow(yDist, 2));
+			return new Pose2d(hypot * Math.cos(Math.toRadians(angle)), hypot * Math.sin(Math.toRadians(angle)), new Rotation2d());
+		}else{
+			return new Pose2d(0,0, new Rotation2d());
+		}
+	}
+
+	public double getDistanceFromTarget(double x){
+		double h1 = 33.50;
+		double h2 = 90.5;
+		return Math.sqrt(Math.pow(x, 2) - Math.pow(h2 - h1, 2));
 	}
 
 	public void printKeys() {
