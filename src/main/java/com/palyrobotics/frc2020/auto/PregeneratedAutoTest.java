@@ -23,12 +23,12 @@ public class PregeneratedAutoTest extends AutoBase {
 		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(30.0);
 		SequentialRoutine driveCollect = new SequentialRoutine(
 				new ParallelRoutine(
-						new DrivePathPremadeRoutine("DriveEnemyTrenchPt1.wpilib.json.wpilib"),
+						new DrivePathPremadeRoutine("output/DriveEnemyTrenchPt1.wpilib.json.wpilib"),
 						new SequentialRoutine(
 								new PredicateDriveWaitRoutine(inTrenchTest), new IntakeLowerRoutine()
 						)
 				),
-				new DrivePathPremadeRoutine("DriveEnemyTrenchPt2.wpilib.json.wpilib"));
+				new DrivePathPremadeRoutine("output/DriveEnemyTrenchPt2.wpilib.json.wpilib"));
 
 	    return driveCollect;
 	}
