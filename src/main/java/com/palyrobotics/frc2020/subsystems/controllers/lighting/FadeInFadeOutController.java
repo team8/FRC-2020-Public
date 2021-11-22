@@ -11,7 +11,6 @@ public class FadeInFadeOutController extends Lighting.LEDController {
 	private double mDuration = -1;
 
 	public FadeInFadeOutController() {
-		super(0, 28);
 		mStartIndex = 0;
 		mLastIndex = 28;
 	}

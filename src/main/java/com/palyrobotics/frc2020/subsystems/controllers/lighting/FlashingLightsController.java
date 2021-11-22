@@ -11,7 +11,6 @@ public class FlashingLightsController extends Lighting.LEDController {
 	private double mDuration = -1;
 
 	public FlashingLightsController() {
-		super(0, 28);
 		mStartIndex = 0;
 		mLastIndex = 28;
 	}

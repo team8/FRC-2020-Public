@@ -20,12 +20,11 @@ public class ShooterColorController extends Lighting.LEDController {
 
     public ShooterColorController()
     {
-        super(0, 28);
         mStartIndex = 0;
         mLastIndex = 28;
         kPriority = 1;
     }
-    public void initallize(int shooterVelocity, int maxShooterVelocity, int duration)
+    public void initallize(double shooterVelocity, int maxShooterVelocity, int duration)
     {
         length = (int) shooterVelocity/maxShooterVelocity * 8;
         orangeLEDs = 0;

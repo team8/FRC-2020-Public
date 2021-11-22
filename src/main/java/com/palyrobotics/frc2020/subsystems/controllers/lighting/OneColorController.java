@@ -12,7 +12,6 @@ public class OneColorController extends Lighting.LEDController {
 
 
 	public OneColorController() {
-		super(0, 28);
 		mStartIndex = 0;
 		mLastIndex = 28;
 	}

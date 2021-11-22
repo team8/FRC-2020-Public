@@ -19,7 +19,6 @@ public class RainbowColorController extends Lighting.LEDController {
     private int colorHSVValues[][];
     public RainbowColorController()
     {
-        super(0, 28);
         mStartIndex = 0;
         mLastIndex = 28;
         kPriority = 1;

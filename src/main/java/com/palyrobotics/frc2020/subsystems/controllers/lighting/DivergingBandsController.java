@@ -15,7 +15,6 @@ public class DivergingBandsController extends Lighting.LEDController {
 	private long mOldModValue;
 
 	public DivergingBandsController() {
-		super(0, 28);
 		mStartIndex = 0;
 		mLastIndex = 28;
 	}

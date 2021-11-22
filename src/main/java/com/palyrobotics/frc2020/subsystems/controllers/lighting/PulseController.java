@@ -17,7 +17,6 @@ public class PulseController extends Lighting.LEDController {
 
 
 	public PulseController() {
-		super(0, 28);
 		mStartIndex = 0;
 		mLastIndex = 28;
 	}
