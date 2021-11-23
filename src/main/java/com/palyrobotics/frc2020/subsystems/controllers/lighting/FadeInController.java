@@ -22,9 +22,8 @@ public class FadeInController extends Lighting.LEDController {
 	 * @param lastIndex    End index upon which led patterns should stop
 	 * @param flashedColor Color to be flashed on white background
 	 */
-	public void initiallize(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration)
-	{
-		isOn = true;	
+	public void initiallize(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration) {
+		isOn = true;
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
@@ -50,11 +49,10 @@ public class FadeInController extends Lighting.LEDController {
 
 	@Override
 	public boolean checkFinished() {
-		
-		if (mDuration != -1 && mTimer.get() > mDuration)
-		{
+
+		if (mDuration != -1 && mTimer.get() > mDuration) {
 			isOn = false;
-			return true;	
+			return true;
 		}
 		return false;
 	}

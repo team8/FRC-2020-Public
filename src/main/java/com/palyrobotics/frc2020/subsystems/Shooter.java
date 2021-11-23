@@ -214,8 +214,7 @@ public class Shooter extends SubsystemBase {
 		return mFlywheelOutput;
 	}
 
-	public double getShooterVelocity()
-	{
+	public double getShooterVelocity() {
 		return targetFlywheelVelocity;
 	}
 

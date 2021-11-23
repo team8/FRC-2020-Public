@@ -15,7 +15,6 @@ public class PulseController extends Lighting.LEDController {
 	private List<Color.HSV> mPulse;
 	private boolean mIsReversed;
 
-
 	public PulseController() {
 		mStartIndex = 0;
 		mLastIndex = 28;
@@ -30,8 +29,7 @@ public class PulseController extends Lighting.LEDController {
 	 * @param speed              Speed of pulse movement
 	 */
 
-	public void initiallize(int startIndex, int lastIndex, List<Color.HSV> pulseColorSequence, double speed)
-	{
+	public void initiallize(int startIndex, int lastIndex, List<Color.HSV> pulseColorSequence, double speed) {
 		isOn = true;
 		mStartIndex = startIndex;
 		mLastIndex = startIndex + pulseColorSequence.size() - 1;
@@ -45,6 +43,7 @@ public class PulseController extends Lighting.LEDController {
 		}
 		mTimer.start();
 	}
+
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 		if (!mIsColorsInitialized) {
@@ -76,16 +75,14 @@ public class PulseController extends Lighting.LEDController {
 	@Override
 	public boolean checkFinished() {
 		if (mIsReversed) {
-			if(mLastIndex <= mPulseEndIndex)
-			{
+			if (mLastIndex <= mPulseEndIndex) {
 				isOn = false;
-				return true;	
+				return true;
 			}
 		} else {
-			if(mLastIndex >= mPulseEndIndex)
-			{
+			if (mLastIndex >= mPulseEndIndex) {
 				isOn = false;
-				return true;	
+				return true;
 			}
 		}
 		return false;

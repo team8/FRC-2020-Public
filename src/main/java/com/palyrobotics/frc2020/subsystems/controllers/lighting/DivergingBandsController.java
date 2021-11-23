@@ -27,8 +27,7 @@ public class DivergingBandsController extends Lighting.LEDController {
 	 * @param bandColor       Color that should pulse through led strip
 	 * @param backgroundColor Background color upon which converging effect will occur.
 	 */
-	public void initiallize(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration)
-	{
+	public void initiallize(int startIndex, int lastIndex, Color.HSV bandColor, Color.HSV backgroundColor, int bandLedCount, double speed, int duration) {
 		isOn = true;
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;

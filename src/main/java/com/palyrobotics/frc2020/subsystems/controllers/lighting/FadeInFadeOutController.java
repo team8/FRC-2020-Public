@@ -23,9 +23,8 @@ public class FadeInFadeOutController extends Lighting.LEDController {
 	 * @param flashedColor Color to be flashed on white background
 	 */
 
-	public void initiallize(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration)
-	{
-		isOn = true;	
+	public void initiallize(int startIndex, int lastIndex, Color.HSV flashedColor, double delay, double duration) {
+		isOn = true;
 		mStartIndex = startIndex;
 		mLastIndex = lastIndex;
 		mFlashedColor = flashedColor;
@@ -34,6 +33,7 @@ public class FadeInFadeOutController extends Lighting.LEDController {
 		kPriority = 1;
 		mTimer.start();
 	}
+
 	@Override
 	public void updateSignal(Commands commands, RobotState state) {
 
@@ -62,10 +62,9 @@ public class FadeInFadeOutController extends Lighting.LEDController {
 
 	@Override
 	public boolean checkFinished() {
-		if (mDuration != -1 && mTimer.hasElapsed(mDuration))
-		{
+		if (mDuration != -1 && mTimer.hasElapsed(mDuration)) {
 			isOn = false;
-			return true;	
+			return true;
 		}
 		return false;
 	}

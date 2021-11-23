@@ -131,16 +131,16 @@ public class Lighting extends SubsystemBase {
 					{
 						addToControllers(new FadeInFadeOutController(0, firstIndex-orangeLEDs, Color.HSV.kBlue, 0.5, 5));
 						addToControllers(new FadeInFadeOutController(lastIndex+orangeLEDs, mConfig.ledCount, Color.HSV.kBlue, 0.5, 5));
-
+				
 						addToControllers(new FadeInFadeOutController(firstIndex-orangeLEDs, firstIndex, Color.HSV.kOrange, 0.5, 5));
 						addToControllers(new FadeInFadeOutController(lastIndex, lastIndex+orangeLEDs, Color.HSV.kOrange, 0.5, 5));
-
+				
 						addToControllers(new FadeInFadeOutController(firstIndex, lastIndex, Color.HSV.kRed, 0.5, 5));
 					}
 					else
 					{
 						addToControllers(new FadeInFadeOutController(orangeLEDs, mConfig.ledCount-orangeLEDs, Color.HSV.kRed, 0.5, 5));
-
+				
 						addToControllers(new FadeInFadeOutController(0, orangeLEDs, Color.HSV.kOrange, 0.5, 5));
 						addToControllers(new FadeInFadeOutController(mConfig.ledCount-orangeLEDs, mConfig.ledCount, Color.HSV.kOrange, 0.5, 5));
 					}   */
@@ -175,8 +175,7 @@ public class Lighting extends SubsystemBase {
 		}
 
 		for (LEDController ledController : mLEDControllers) {
-			if (ledController.isOn == false)
-			{
+			if (ledController.isOn == false) {
 				continue;
 			}
 			LightingOutputs controllerOutput = ledController.update(commands, state);
