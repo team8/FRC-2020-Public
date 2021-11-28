@@ -20,16 +20,17 @@ public class PregeneratedAutoTest extends AutoBase {
 
 	@Override
 	public RoutineBase getRoutine() throws JsonProcessingException {
-		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(30.0);
-		SequentialRoutine driveCollect = new SequentialRoutine(
-				new ParallelRoutine(
-						new DrivePathPremadeRoutine("output/DriveEnemyTrenchPt1.wpilib.json.wpilib"),
-						new SequentialRoutine(
-								new PredicateDriveWaitRoutine(inTrenchTest), new IntakeLowerRoutine()
-						)
-				),
-				new DrivePathPremadeRoutine("output/DriveEnemyTrenchPt2.wpilib.json.wpilib"));
-
-	    return driveCollect;
+//		Predicate<Pose2d> inTrenchTest = poseMeters -> poseMeters.getTranslation().getX() > Units.inchesToMeters(30.0);
+//		SequentialRoutine driveCollect = new SequentialRoutine(
+//				new ParallelRoutine(
+//						new DrivePathPremadeRoutine("output/DriveEnemyTrenchPt1.wpilib.json"),
+//						new SequentialRoutine(
+//								new PredicateDriveWaitRoutine(inTrenchTest), new IntakeLowerRoutine()
+//						)
+//				),
+//				new DrivePathPremadeRoutine("output/DriveEnemyTrenchPt2.wpilib.json"));
+//
+//	    return driveCollect;
+		return new DrivePathPremadeRoutine("output/DriveEnemyTrenchPt1.wpilib.json");
 	}
 }

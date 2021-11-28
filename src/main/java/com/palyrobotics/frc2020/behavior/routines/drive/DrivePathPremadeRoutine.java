@@ -19,11 +19,11 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 
 public class DrivePathPremadeRoutine extends DrivePathRoutine {
 
-	private static final String kTrajFolderName = "output";
-	private static final Path kConfigFolder = Paths.get(Filesystem.getDeployDirectory().toString(), kTrajFolderName);
+//	private static final String kTrajFolderName = "output";
+	private static final Path kConfigFolder = Paths.get(Filesystem.getDeployDirectory().toString());
 
 	private static Path resolveConfigPath(String name) {
-			return kConfigFolder.resolve(String.format("%s.json", name));
+			return kConfigFolder.resolve(name);
 	}
 
 	private String mTrajectoryFileName;
@@ -46,7 +46,7 @@ public class DrivePathPremadeRoutine extends DrivePathRoutine {
 			super.mTrajectory = TrajectoryUtil.fromPathweaverJson(resolvedConfigPath);
 		}
 	 	catch(IOException ex){
-				DriverStation.reportError("Unable to open trajectory", ex.getStackTrace());
+				DriverStation.reportError("Unable to open trajectory" + resolveConfigPath(this.mTrajectoryFileName).toString(), ex.getStackTrace());
 	 	}
 	}
 }
