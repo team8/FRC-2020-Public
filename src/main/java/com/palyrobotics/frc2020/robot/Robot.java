@@ -18,6 +18,7 @@ import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.config.RobotConfig;
+import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2020.util.Util;
@@ -98,6 +99,9 @@ public class Robot extends TimedRobot {
 			mLighting.update(mCommands, mRobotState);
 			mHardwareWriter.updateLighting();
 		}
+
+		Log.info(Configs.getActiveConfigNames().toString());
+		Log.info(Configs.get(IndexerConfig.class).toString());
 	}
 
 	@Override
@@ -192,6 +196,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
+		//Log.info(Configs.getActiveConfigNames().toString());
 		for (RobotService robotService : mEnabledServices) {
 			robotService.update(mRobotState, mCommands);
 		}

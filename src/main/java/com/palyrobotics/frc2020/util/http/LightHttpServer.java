@@ -1,16 +1,16 @@
 package com.palyrobotics.frc2020.util.http;
-
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Date;
-import java.util.Iterator;
-
+import com.esotericsoftware.minlog.Log;
 import org.json.JSONObject;
 
-public class LightHttpServer implements Runnable {
+import java.net.*;
+import java.io.*;
+import java.util.*;
 
-	private static final String newLine = "\r\n";
+import static com.palyrobotics.frc2020.util.http.HttpInput.getInstance;
+
+
+public class LightHttpServer implements Runnable {
+	private static final String newLine="\r\n";
 	private static ServerSocket socket;
 	private Thread httpThread;
 	private JSONObject lastInput = new JSONObject();
@@ -33,7 +33,7 @@ public class LightHttpServer implements Runnable {
 			socket = new ServerSocket(port);
 			connected = true;
 		} catch (Throwable tr) {
-			System.err.println("Could not start server: " + tr);
+			System.err.println("Could not start server: "+tr);
 		}
 	}
 
@@ -59,31 +59,59 @@ public class LightHttpServer implements Runnable {
 			//if (request == null) continue;
 
 			// we ignore the rest
-			while (true) {
-				String ignore = in.readLine();
-				if (ignore == null || ignore.length() == 0) break;
+			String ignore = "";
+			boolean isPost = request.startsWith("POST");
+			int contentLength = 0;
+			while (!(ignore = in.readLine()).equals("")) {
+				if (ignore.startsWith("Content-Length: ")) {
+					contentLength = Integer.parseInt(ignore.substring("Content-Length: ".length()));
+				}
+			}
+			StringBuilder body = new StringBuilder();
+			if (isPost) {
+				int c = 0;
+				for (int i = 0; i < contentLength; i++) {
+					c = in.read();
+					body.append((char) c);
+				}
 			}
 
-			if (!request.startsWith("GET ") || !(request.endsWith(" HTTP/1.0") || request.endsWith(" HTTP/1.1"))) {
+			// src/main/deploy/ << deploy folder
+			JSONObject config = new JSONObject(body.toString());
+
+			if (!(request.startsWith("GET ") || request.startsWith("POST ")) || !(request.endsWith(" HTTP/1.0") || request.endsWith(" HTTP/1.1"))) {
 				// bad request
 				pout.print("HTTP/1.0 400 Bad Request" + newLine + newLine);
 			} else {
-				JSONObject response = HttpInput.getInstance().getInput();
+				if (isPost) {
+					pout.print(
+							"HTTP/1.0 200 OK" + newLine +
+									"Access-Control-Allow-Origin: http://localhost:3000" + newLine +
+									"Content-Type: application/json" + newLine +
+									"Date: " + new Date() + newLine +
+									"Content-length: " + config.toString().length() + newLine + newLine +
+									config.toString()
+					);
+				} else {
+					JSONObject response = getInstance().getInput();
 
-				Iterator<String> responseKeys = response.keys();
 
-				while (responseKeys.hasNext()) {
-					String key = responseKeys.next();
-					lastInput.put(key, response.get(key));
+					Iterator<String> responseKeys = response.keys();
+
+					while (responseKeys.hasNext()) {
+						String key = responseKeys.next();
+						lastInput.put(key, response.get(key));
+					}
+
+					pout.print(
+							"HTTP/1.0 200 OK" + newLine +
+									"Access-Control-Allow-Origin: http://localhost:3000" + newLine +
+									"Content-Type: text/plain" + newLine +
+									"Date: " + new Date() + newLine +
+									"Content-length: " + lastInput.toString().length() + newLine + newLine +
+									lastInput.toString()
+					);
 				}
-
-				pout.print(
-						"HTTP/1.0 200 OK" + newLine +
-								"Access-Control-Allow-Origin: http://localhost:3000" + newLine +
-								"Content-Type: text/plain" + newLine +
-								"Date: " + new Date() + newLine +
-								"Content-length: " + lastInput.toString().length() + newLine + newLine +
-								lastInput.toString());
 			}
 
 			pout.close();
