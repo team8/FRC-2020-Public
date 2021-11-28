@@ -68,22 +68,25 @@ public class LightHttpServer implements Runnable {
 				}
 			}
 			StringBuilder body = new StringBuilder();
+			JSONObject config = new JSONObject();
 			if (isPost) {
 				int c = 0;
 				for (int i = 0; i < contentLength; i++) {
 					c = in.read();
 					body.append((char) c);
 				}
+				config = new JSONObject(body.toString());
 			}
 
 			// src/main/deploy/ << deploy folder
-			JSONObject config = new JSONObject(body.toString());
+
 
 			if (!(request.startsWith("GET ") || request.startsWith("POST ")) || !(request.endsWith(" HTTP/1.0") || request.endsWith(" HTTP/1.1"))) {
 				// bad request
 				pout.print("HTTP/1.0 400 Bad Request" + newLine + newLine);
 			} else {
 				if (isPost) {
+					System.out.println("POST REQUEST DETCETED");
 					pout.print(
 							"HTTP/1.0 200 OK" + newLine +
 									"Access-Control-Allow-Origin: http://localhost:3000" + newLine +
@@ -93,6 +96,7 @@ public class LightHttpServer implements Runnable {
 									config.toString()
 					);
 				} else {
+					System.out.println("GET REQUEST");
 					JSONObject response = getInstance().getInput();
 
 
