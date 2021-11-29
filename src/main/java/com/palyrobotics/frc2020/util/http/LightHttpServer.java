@@ -1,16 +1,16 @@
 package com.palyrobotics.frc2020.util.http;
-import com.esotericsoftware.minlog.Log;
-import org.json.JSONObject;
-
-import java.net.*;
-import java.io.*;
-import java.util.*;
 
 import static com.palyrobotics.frc2020.util.http.HttpInput.getInstance;
 
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+import org.json.JSONObject;
 
 public class LightHttpServer implements Runnable {
-	private static final String newLine="\r\n";
+
+	private static final String newLine = "\r\n";
 	private static ServerSocket socket;
 	private Thread httpThread;
 	private JSONObject lastInput = new JSONObject();
@@ -33,7 +33,7 @@ public class LightHttpServer implements Runnable {
 			socket = new ServerSocket(port);
 			connected = true;
 		} catch (Throwable tr) {
-			System.err.println("Could not start server: "+tr);
+			System.err.println("Could not start server: " + tr);
 		}
 	}
 
@@ -80,7 +80,6 @@ public class LightHttpServer implements Runnable {
 
 			// src/main/deploy/ << deploy folder
 
-
 			if (!(request.startsWith("GET ") || request.startsWith("POST ")) || !(request.endsWith(" HTTP/1.0") || request.endsWith(" HTTP/1.1"))) {
 				// bad request
 				pout.print("HTTP/1.0 400 Bad Request" + newLine + newLine);
@@ -93,12 +92,10 @@ public class LightHttpServer implements Runnable {
 									"Content-Type: application/json" + newLine +
 									"Date: " + new Date() + newLine +
 									"Content-length: " + config.toString().length() + newLine + newLine +
-									config.toString()
-					);
+									config.toString());
 				} else {
 					System.out.println("GET REQUEST");
 					JSONObject response = getInstance().getInput();
-
 
 					Iterator<String> responseKeys = response.keys();
 
@@ -113,8 +110,7 @@ public class LightHttpServer implements Runnable {
 									"Content-Type: text/plain" + newLine +
 									"Date: " + new Date() + newLine +
 									"Content-length: " + lastInput.toString().length() + newLine + newLine +
-									lastInput.toString()
-					);
+									lastInput.toString());
 				}
 			}
 
