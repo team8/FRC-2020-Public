@@ -26,6 +26,7 @@ import com.palyrobotics.frc2020.util.commands.CommandReceiverService;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
+import com.palyrobotics.frc2020.util.http.HttpInput;
 import com.palyrobotics.frc2020.util.service.*;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
@@ -36,6 +37,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import org.json.JSONObject;
 
 public class Robot extends TimedRobot {
 
@@ -100,6 +102,15 @@ public class Robot extends TimedRobot {
 			mHardwareWriter.updateLighting();
 		}
 
+		Iterator configIterator = Configs.getActiveConfigNames().iterator();
+		JSONObject configJson = new JSONObject();
+		Object temp;
+		while (configIterator.hasNext()) {
+			temp = configIterator.next();
+			configJson.put(temp.toString(), new JSONObject(Configs.get(Configs.getClassFromName(temp.toString())).toString()));
+		}
+		HttpInput.getInstance().setConfigInput(configJson);
+		//TODO: Remove these they have unnecessary imports
 		Log.info(Configs.getActiveConfigNames().toString());
 		Log.info(Configs.get(IndexerConfig.class).toString());
 	}

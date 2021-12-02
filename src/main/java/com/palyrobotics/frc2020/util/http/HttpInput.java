@@ -10,6 +10,7 @@ public class HttpInput {
 	private JSONObject output = new JSONObject();
 	private JSONObject logInput = new JSONObject();
 	private JSONObject chartInput = new JSONObject();
+	private JSONObject configInput = new JSONObject();
 
 	private HttpInput() {
 
@@ -33,7 +34,17 @@ public class HttpInput {
 		logInput = newInput;
 	}
 
+	public void setConfigInput(JSONObject newInput) {
+		configInput = newInput;
+	}
+
 	public JSONObject getInput() {
+
+		if (!configInput.isEmpty()) {
+
+			output.put("config", configInput);
+
+		}
 
 		if (!chartInput.isEmpty()) {
 

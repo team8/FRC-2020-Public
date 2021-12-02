@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import com.palyrobotics.frc2020.util.config.ConfigUploadManager;
 import org.json.JSONObject;
 
 public class LightHttpServer implements Runnable {
@@ -17,6 +18,7 @@ public class LightHttpServer implements Runnable {
 	private static boolean connected = false;
 	private static int port;
 	private static LightHttpServer sInstance = new LightHttpServer();
+	private static ConfigUploadManager configManager = new ConfigUploadManager();
 
 	@Override
 	public void run() {
@@ -76,6 +78,8 @@ public class LightHttpServer implements Runnable {
 					body.append((char) c);
 				}
 				config = new JSONObject(body.toString());
+
+				configManager.updateConfig(config);
 			}
 
 			// src/main/deploy/ << deploy folder
@@ -85,7 +89,6 @@ public class LightHttpServer implements Runnable {
 				pout.print("HTTP/1.0 400 Bad Request" + newLine + newLine);
 			} else {
 				if (isPost) {
-					System.out.println("POST REQUEST DETCETED");
 					pout.print(
 							"HTTP/1.0 200 OK" + newLine +
 									"Access-Control-Allow-Origin: http://localhost:3000" + newLine +
