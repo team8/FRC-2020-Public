@@ -72,6 +72,7 @@ public class Robot extends TimedRobot {
 	private NetworkLoggerService mNetworkLogger = new NetworkLoggerService();
 	private ServerService mServerService = new ServerService();
 	private GraphingService mGraphingService = new GraphingService();
+	private TelemetryService mTelemetryService = new TelemetryService();
 
 	public Robot() {
 		super(kPeriod);
@@ -89,6 +90,7 @@ public class Robot extends TimedRobot {
 		mServerService.start();
 		mNetworkLogger.start();
 		mGraphingService.start();
+		mTelemetryService.start();
 
 		Log.info(kLoggerTag, setupSummary);
 
@@ -212,6 +214,7 @@ public class Robot extends TimedRobot {
 		for (RobotService robotService : mEnabledServices) {
 			robotService.update(mRobotState, mCommands);
 		}
+		mTelemetryService.update(mRobotState, mCommands);
 		LiveGraph.add("visionEstimatedDistance", mLimelight.getEstimatedDistanceInches());
 		LiveGraph.add("isEnabled", isEnabled());
 		mOperatorInterface.resetPeriodic(mCommands);

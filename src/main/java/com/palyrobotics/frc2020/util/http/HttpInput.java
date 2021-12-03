@@ -11,6 +11,7 @@ public class HttpInput {
 	private JSONObject logInput = new JSONObject();
 	private JSONObject chartInput = new JSONObject();
 	private JSONObject configInput = new JSONObject();
+	private JSONObject telemetryInput = new JSONObject();
 
 	private HttpInput() {
 
@@ -38,7 +39,17 @@ public class HttpInput {
 		configInput = newInput;
 	}
 
+	public void setTelemetry(JSONObject newInput) {
+		telemetryInput = newInput;
+	}
+
 	public JSONObject getInput() {
+
+		if (!telemetryInput.isEmpty()) {
+
+			output.put("telemetry", telemetryInput);
+
+		}
 
 		if (!configInput.isEmpty()) {
 
