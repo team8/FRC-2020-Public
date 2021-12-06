@@ -18,8 +18,8 @@ import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.input.Joystick;
 import com.palyrobotics.frc2020.util.input.XboxController;
 import com.palyrobotics.frc2020.vision.Limelight;
-
 import com.palyrobotics.frc2020.vision.PiCommunicator;
+
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
