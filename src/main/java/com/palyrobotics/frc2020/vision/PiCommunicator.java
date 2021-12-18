@@ -41,17 +41,17 @@ public class PiCommunicator {
 	 */
 	public Pose2d getRobotPositionFromTarget(){
 		double[] position = getPositionTemp();
-		//conversion
-		double x = position[0] * kMetersToInches;
-		double y = position[0] * kMetersToInches;
 		//for debugging
-		System.out.println("x: " + x + ", y: " + y + "angle: " + position[2]);
+		//System.out.println("x: " + x + ", y: " + y + "angle: " + position[2]);
 		if(!Arrays.equals(position, mZeroArray)){
+			//conversion
+			double x = position[0] * kMetersToInches;
+			double y = position[1] * kMetersToInches;
 			/*necessary because the xDist given by solvePnP in PhotonVision
 			is relative to the plane between the target and the camera,
 			and is therefore kind of like a hypotenuse, needs to be "rotated"
 			such that it is on the flat ground plane.*/
-			double xDist = getDistanceFromTargetHypot(position[0]);
+			double xDist = getDistanceFromTargetPitch();
 			//in degrees
 			double angle = position[2];
 			double hypot = Math.sqrt(Math.pow(xDist,2) + Math.pow(y, 2));
@@ -59,6 +59,18 @@ public class PiCommunicator {
 		}else{
 			return new Pose2d(0,0, new Rotation2d());
 		}
+	}
+
+	public double getPitchToTarget(){
+		return mCameraTable.getEntry("targetPitch").getDouble(0.0);
+	}
+
+	public double getDistanceFromTargetPitch() {
+		double cameraPitch = 35.15378286; // NEED TO TUNE DOES NOT WORK LOL
+		double a2 = getPitchToTarget();
+		double h1 = 33.50; //NEED TO MEASURE AS WELL
+		double h2 = 90.5;
+		return Math.max(0.0, ((h2 - h1) / Math.tan(Math.toRadians(cameraPitch + a2))));
 	}
 
 	public double getDistanceFromTargetHypot(double x){
