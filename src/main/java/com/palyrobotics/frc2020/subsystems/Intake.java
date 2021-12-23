@@ -1,6 +1,9 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import static com.palyrobotics.frc2020.robot.HardwareWriter.*;
+
 import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
@@ -14,6 +17,7 @@ public class Intake extends SubsystemBase {
 	private static Intake sInstance = new Intake();
 	private ControllerOutput mOutput = new ControllerOutput();
 	private boolean mExtendedOutput;
+	private HardwareAdapter.IntakeHardware hardware = HardwareAdapter.IntakeHardware.getInstance();
 
 	private Intake() {
 	}
@@ -40,11 +44,21 @@ public class Intake extends SubsystemBase {
 		}
 	}
 
-	public ControllerOutput getOutput() {
-		return mOutput;
+	@Override
+	public void writeHardware(RobotState state) {
+		hardware.talon.handleReset();
+		hardware.talon.setOutput(mOutput);
+		hardware.solenoid.setExtended(mExtendedOutput);
 	}
 
-	public boolean getExtendedOutput() {
-		return mExtendedOutput;
+	@Override
+	public void configureHardware() {
+		hardware.talon.configFactoryDefault(kTimeoutMs);
+		hardware.talon.setInverted(true);
+		hardware.talon.enableVoltageCompensation(true);
+		hardware.talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
+		hardware.talon.configOpenloopRamp(0.1, kTimeoutMs);
+		hardware.talon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
+		hardware.talon.configFrameTimings(40, 40);
 	}
 }

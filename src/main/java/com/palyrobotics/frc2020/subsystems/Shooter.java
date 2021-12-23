@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.palyrobotics.frc2020.config.subsystem.ShooterConfig;
 import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -35,6 +36,7 @@ public class Shooter extends SubsystemBase {
 	private ControllerOutput mFlywheelOutput = new ControllerOutput();
 	private boolean mHoodOutput, mBlockingOutput, mRumbleOutput;
 	private Timer mRumbleTimer = new Timer();
+	private HardwareAdapter.ShooterHardware hardware = HardwareAdapter.ShooterHardware.getInstance();
 	private boolean mIsReadyToShoot;
 	// TODO: Change the size of the median filter to better or worse filter out values
 	private MedianFilter distanceFilter = new MedianFilter(15);
@@ -75,6 +77,25 @@ public class Shooter extends SubsystemBase {
 //		TelemetryService.putArbitrary("shooterTargetDistance", targetDistanceInches);
 //		TelemetryService.putArbitrary("shooterTargetVelocity", targetFlywheelVelocity);
 //		TelemetryService.putArbitrary("shooterFlywheelVelocity", state.shooterFlywheelVelocity);
+	}
+
+	@Override
+	public void writeHardware(RobotState state) {
+		hardware.masterSpark.setOutput(mFlywheelOutput);
+		hardware.blockingSolenoid.setExtended(mBlockingOutput);
+		hardware.hoodSolenoid.setExtended(mHoodOutput);
+		HardwareAdapter.Joysticks joystickHardware = HardwareAdapter.Joysticks.getInstance();
+		joystickHardware.operatorXboxController.setRumble(mRumbleOutput);
+	}
+
+	@Override
+	public void configureHardware() {
+		hardware.masterSpark.restoreFactoryDefaults();
+		hardware.slaveSpark.restoreFactoryDefaults();
+		hardware.slaveSpark.follow(hardware.masterSpark, true);
+		hardware.masterSpark.setInverted(true);
+		/* Flywheel velocity in RPM, adjusted for gearing ratio */
+		hardware.masterEncoder.setVelocityConversionFactor(1.0 / 0.76923076);
 	}
 
 	private Double getTargetDistanceInches(@ReadOnly Commands commands) {

@@ -10,9 +10,7 @@ import java.util.stream.Collectors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.auto.ShootThreeLeaveInitiationLine;
 import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
-import com.palyrobotics.frc2020.auto.StartCenterShootThreeRendezvousFiveShootFive;
 import com.palyrobotics.frc2020.auto.TrenchStealTwoShootFive;
 import com.palyrobotics.frc2020.behavior.MultipleRoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
@@ -79,7 +77,7 @@ public class Robot extends TimedRobot {
 
 		String setupSummary = setupSubsystemsAndServices();
 
-		if (kCanUseHardware) mHardwareWriter.configureHardware(mEnabledSubsystems);
+		if (kCanUseHardware) mEnabledSubsystems.forEach(SubsystemBase::configureHardware);
 
 		mEnabledServices.forEach(RobotService::start);
 
@@ -93,7 +91,7 @@ public class Robot extends TimedRobot {
 		mCommands.lightingWantedState = Lighting.State.INIT;
 		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
-			mHardwareWriter.updateLighting();
+			mLighting.writeHardware(mRobotState);
 		}
 	}
 
@@ -152,7 +150,7 @@ public class Robot extends TimedRobot {
 		mCommands.lightingWantedState = Lighting.State.DISABLE;
 		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
-			mHardwareWriter.updateLighting();
+			mLighting.writeHardware(mRobotState);
 		}
 	}
 
@@ -181,7 +179,7 @@ public class Robot extends TimedRobot {
 		mCommands.lightingWantedState = Lighting.State.OFF;
 		if (kCanUseHardware && mEnabledSubsystems.contains(mLighting)) {
 			mLighting.update(mCommands, mRobotState);
-			mHardwareWriter.updateLighting();
+			mLighting.writeHardware(mRobotState);
 		}
 	}
 
@@ -271,7 +269,7 @@ public class Robot extends TimedRobot {
 			mDebugger.addPoint(subsystem.getName());
 		}
 		if (kCanUseHardware) {
-			mHardwareWriter.updateHardware(mEnabledSubsystems, mRobotState);
+			mEnabledSubsystems.forEach(s -> s.writeHardware(mRobotState));
 			mHardwareWriter.setClimberSoftLimitsEnabled(mCommands.climberWantsSoftLimits);
 		}
 		mDebugger.addPoint("updateHardware");

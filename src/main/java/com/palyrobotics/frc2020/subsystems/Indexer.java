@@ -1,13 +1,21 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import static com.palyrobotics.frc2020.robot.HardwareWriter.*;
+
 import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.CircularBuffer;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.control.ControllerOutput;
 import com.palyrobotics.frc2020.util.control.Gains;
+import com.palyrobotics.frc2020.util.control.Spark;
+import com.palyrobotics.frc2020.util.control.Talon;
+import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
+
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 public class Indexer extends SubsystemBase {
 
@@ -18,6 +26,7 @@ public class Indexer extends SubsystemBase {
 			mLeftVTalonOutput = new ControllerOutput(),
 			mRightVTalonOutput = new ControllerOutput();
 	private CircularBuffer<Double> mMasterVelocityFilter = new CircularBuffer<>(30);
+	private HardwareAdapter.IndexerHardware hardware = HardwareAdapter.IndexerHardware.getInstance();
 	private boolean mHopperOutput, mBlockOutput;
 
 	private Indexer() {
@@ -101,6 +110,53 @@ public class Indexer extends SubsystemBase {
 		mHopperOutput = commands.indexerWantedHopperState == HopperState.OPEN;
 	}
 
+	@Override
+	public void writeHardware(RobotState state) {
+		hardware.vTalons.forEach(Talon::handleReset);
+		hardware.masterSpark.setOutput(mMasterSparkOutput);
+		hardware.slaveSpark.setOutput(mSlaveSparkOutput);
+		hardware.hopperSolenoid.setExtended(mHopperOutput);
+		hardware.blockingSolenoid.setExtended(mBlockOutput);
+		hardware.leftVTalon.setOutput(mLeftVTalonOutput);
+		hardware.rightVTalon.setOutput(mRightVTalonOutput);
+		handleReset(hardware.slaveSpark);
+		handleReset(hardware.masterSpark);
+		LiveGraph.add("indexerMasterAppliedOutput", hardware.masterSpark.getAppliedOutput());
+		LiveGraph.add("indexerMasterVelocity", hardware.masterEncoder.getVelocity());
+		LiveGraph.add("indexerSlaveAppliedOutput", hardware.slaveSpark.getAppliedOutput());
+		LiveGraph.add("indexerSlaveVelocity", hardware.slaveEncoder.getVelocity());
+		LiveGraph.add("indexerTargetVelocity", mMasterSparkOutput.getReference());
+		PowerDistributionPanel pdp = HardwareAdapter.MiscellaneousHardware.getInstance().pdp;
+		LiveGraph.add("indexerCurrent10", pdp.getCurrent(10));
+		LiveGraph.add("indexerCurrent11", pdp.getCurrent(11));
+	}
+
+	@Override
+	public void configureHardware() {
+		for (Spark spark : hardware.sparks) {
+			spark.restoreFactoryDefaults();
+			spark.enableVoltageCompensation(kVoltageCompensation);
+			spark.setOpenLoopRampRate(0.0825);
+			spark.setClosedLoopRampRate(0.0825);
+			spark.setInverted(true);
+			double maxOutput = 0.9;
+			spark.setOutputRange(-maxOutput, maxOutput);
+			spark.setSmartCurrentLimit((int) Math.round(40.0 / maxOutput));
+			spark.setSecondaryCurrentLimit(70.0 / maxOutput, 10);
+		}
+		/* V-Belt Talons */
+		for (Talon vTalon : hardware.vTalons) {
+			vTalon.configFactoryDefault(kTimeoutMs);
+			vTalon.enableVoltageCompensation(true);
+			vTalon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
+			vTalon.configOpenloopRamp(0.1, kTimeoutMs);
+			vTalon.configSupplyCurrentLimit(k30AmpCurrentLimitConfiguration, kTimeoutMs);
+			vTalon.configFrameTimings(40, 40);
+		}
+		hardware.leftVTalon.setInverted(true);
+		hardware.rightVTalon.setInverted(true);
+	}
+
 	private void setVTalonOutput(double leftOutput, double rightOutput, double multiplier) {
 		mLeftVTalonOutput.setPercentOutput(leftOutput * multiplier);
 		mRightVTalonOutput.setPercentOutput(rightOutput * multiplier);
@@ -116,30 +172,6 @@ public class Indexer extends SubsystemBase {
 		var slaveGains = new Gains(mConfig.slaveVelocityGains.p, mConfig.slaveVelocityGains.i, mConfig.slaveVelocityGains.d, mConfig.slaveVelocityGains.f, mConfig.slaveVelocityGains.iZone, mConfig.slaveVelocityGains.iMax);
 		mMasterSparkOutput.setTargetVelocity(velocity, masterGains);
 		mSlaveSparkOutput.setTargetVelocity(velocity, slaveGains);
-	}
-
-	public ControllerOutput getMasterSparkOutput() {
-		return mMasterSparkOutput;
-	}
-
-	public ControllerOutput getSlaveSparkOutput() {
-		return mSlaveSparkOutput;
-	}
-
-	public ControllerOutput getLeftVTalonOutput() {
-		return mLeftVTalonOutput;
-	}
-
-	public ControllerOutput getRightVTalonOutput() {
-		return mRightVTalonOutput;
-	}
-
-	public boolean getHopperOutput() {
-		return mHopperOutput;
-	}
-
-	public boolean getBlockOutput() {
-		return mBlockOutput;
 	}
 
 	public enum BeltState {

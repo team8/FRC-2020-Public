@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.palyrobotics.frc2020.config.subsystem.LightingConfig;
 import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.controllers.lighting.*;
@@ -65,6 +66,7 @@ public class Lighting extends SubsystemBase {
 	private LightingConfig mConfig = Configs.get(LightingConfig.class);
 	private AddressableLEDBuffer mOutputBuffer = new AddressableLEDBuffer(mConfig.ledCount);
 	private State mState;
+	private HardwareAdapter.LightingHardware hardware = HardwareAdapter.LightingHardware.getInstance();
 	private PriorityQueue<LEDController> mLEDControllers = new PriorityQueue<>(1, Comparator.comparingInt(o -> o.kPriority));
 
 	private Lighting() {
@@ -139,6 +141,18 @@ public class Lighting extends SubsystemBase {
 		}
 	}
 
+	@Override
+	public void writeHardware(RobotState state) {
+		hardware.ledStrip.setData(mOutputBuffer);
+	}
+
+	@Override
+	public void configureHardware() {
+		hardware.ledStrip.setLength(Configs.get(LightingConfig.class).ledCount);
+		hardware.ledStrip.start();
+		hardware.ledStrip.setData(mOutputBuffer);
+	}
+
 	private void addToControllers(LEDController controller) {
 		mLEDControllers.removeIf(controller::equals);
 		mLEDControllers.add(controller);
@@ -148,9 +162,5 @@ public class Lighting extends SubsystemBase {
 		for (int i = 0; i < mOutputBuffer.getLength(); i++) {
 			mOutputBuffer.setRGB(i, 0, 0, 0);
 		}
-	}
-
-	public AddressableLEDBuffer getOutput() {
-		return mOutputBuffer;
 	}
 }

@@ -1,8 +1,13 @@
 package com.palyrobotics.frc2020.subsystems;
 
+import static com.palyrobotics.frc2020.robot.HardwareWriter.kTimeoutMs;
+import static com.palyrobotics.frc2020.robot.HardwareWriter.kVoltageCompensation;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.palyrobotics.frc2020.config.constants.SpinnerConstants;
 import com.palyrobotics.frc2020.config.subsystem.SpinnerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
+import com.palyrobotics.frc2020.robot.HardwareAdapter;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
@@ -17,6 +22,7 @@ public class Spinner extends SubsystemBase {
 	private static final SpinnerConfig mConfig = Configs.get(SpinnerConfig.class);
 	private static Spinner sInstance = new Spinner();
 	private ControllerOutput mOutput = new ControllerOutput();
+	private HardwareAdapter.SpinnerHardware hardware = HardwareAdapter.SpinnerHardware.getInstance();
 
 	public static Spinner getInstance() {
 		return sInstance;
@@ -36,6 +42,21 @@ public class Spinner extends SubsystemBase {
 				mOutput.setPercentOutput(-commands.spinnerWantedPercentOutput);
 				break;
 		}
+	}
+
+	@Override
+	public void writeHardware(RobotState state) {
+		hardware.talon.handleReset();
+		hardware.talon.setOutput(mOutput);
+	}
+
+	@Override
+	public void configureHardware() {
+		hardware.talon.configFactoryDefault(kTimeoutMs);
+		hardware.talon.configOpenloopRamp(0.1, kTimeoutMs);
+		hardware.talon.enableVoltageCompensation(true);
+		hardware.talon.configVoltageCompSaturation(kVoltageCompensation, kTimeoutMs);
+		hardware.talon.setNeutralMode(NeutralMode.Brake);
 	}
 
 	/**

@@ -15,6 +15,10 @@ public abstract class SubsystemBase {
 
 	public abstract void update(@ReadOnly Commands commands, @ReadOnly RobotState state);
 
+	public abstract void writeHardware(@ReadOnly RobotState state);
+
+	public abstract void configureHardware();
+
 	@Override
 	public String toString() {
 		return getName();

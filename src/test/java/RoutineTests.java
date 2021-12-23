@@ -13,6 +13,16 @@ public class RoutineTests {
 		@Override
 		public void update(Commands commands, RobotState state) {
 		}
+
+		@Override
+		public void writeHardware(RobotState state) {
+
+		}
+
+		@Override
+		public void configureHardware() {
+
+		}
 	}
 
 	private static class TimedOne extends TimedRoutine {
