@@ -25,17 +25,17 @@ public class HardwareAdapter {
 	/**
 	 * 1 NEO (controlled by Spark MAX), 1 Solenoid
 	 */
-	static class ClimberHardware {
+	public static class ClimberHardware {
 
 		private static ClimberHardware sInstance;
-		final Spark spark = new Spark(sPortConstants.nariClimberId, "Climber");
-		final CANEncoder sparkEncoder = spark.getEncoder();
-		final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariClimberSolenoidId, 0.2, true);
+		public final Spark spark = new Spark(sPortConstants.nariClimberId, "Climber");
+		public final CANEncoder sparkEncoder = spark.getEncoder();
+		public final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariClimberSolenoidId, 0.2, true);
 
 		ClimberHardware() {
 		}
 
-		static ClimberHardware getInstance() {
+		public static ClimberHardware getInstance() {
 			if (sInstance == null) sInstance = new ClimberHardware();
 			return sInstance;
 		}
@@ -44,24 +44,24 @@ public class HardwareAdapter {
 	/**
 	 * 4 Falcon 500s (controlled by Talon FX), 1 Pigeon IMU Gyro connected via Talon SRX data cable.
 	 */
-	static class DriveHardware {
+	public static class DriveHardware {
 
 		private static DriveHardware sInstance;
 
-		final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId, "Drive Left Master"),
+		public final Falcon leftMasterFalcon = new Falcon(sPortConstants.nariDriveLeftMasterId, "Drive Left Master"),
 				leftSlaveFalcon = new Falcon(sPortConstants.nariDriveLeftSlaveId, "Drive Left Slave");
-		final Falcon rightMasterFalcon = new Falcon(sPortConstants.nariDriveRightMasterId, "Drive Right Master"),
+		public final Falcon rightMasterFalcon = new Falcon(sPortConstants.nariDriveRightMasterId, "Drive Right Master"),
 				rightSlaveFalcon = new Falcon(sPortConstants.nariDriveRightSlaveId, "Drive Right Slave");
 
-		final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon,
+		public final List<Falcon> falcons = List.of(leftMasterFalcon, leftSlaveFalcon,
 				rightMasterFalcon, rightSlaveFalcon);
 
-		final PigeonIMU gyro = new PigeonIMU(sPortConstants.nariDriveGyroId);
+		public final PigeonIMU gyro = new PigeonIMU(sPortConstants.nariDriveGyroId);
 
 		private DriveHardware() {
 		}
 
-		static DriveHardware getInstance() {
+		public static DriveHardware getInstance() {
 			if (sInstance == null) sInstance = new DriveHardware();
 			return sInstance;
 		}
@@ -71,26 +71,26 @@ public class HardwareAdapter {
 	 * 2 NEOs (controlled by Spark MAX), 2 775s (controlled by Talon SRX), 2 Single Solenoids, 3
 	 * Infrared Sensors
 	 */
-	static class IndexerHardware {
+	public static class IndexerHardware {
 
 		private static IndexerHardware sInstance;
-		final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId, "Indexer Master"),
+		public final Spark masterSpark = new Spark(sPortConstants.nariIndexerMasterId, "Indexer Master"),
 				slaveSpark = new Spark(sPortConstants.nariIndexerSlaveId, "Indexer Slave");
-		final List<Spark> sparks = List.of(masterSpark, slaveSpark);
-		final CANEncoder masterEncoder = masterSpark.getEncoder(), slaveEncoder = slaveSpark.getEncoder();
-		final Talon leftVTalon = new Talon(sPortConstants.nariIndexerLeftVTalonId, "Indexer Left V"),
+		public final List<Spark> sparks = List.of(masterSpark, slaveSpark);
+		public final CANEncoder masterEncoder = masterSpark.getEncoder(), slaveEncoder = slaveSpark.getEncoder();
+		public final Talon leftVTalon = new Talon(sPortConstants.nariIndexerLeftVTalonId, "Indexer Left V"),
 				rightVTalon = new Talon(sPortConstants.nariIndexerRightVTalonId, "Indexer Right V");
-		final List<Talon> vTalons = List.of(leftVTalon, rightVTalon);
-		final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
+		public final List<Talon> vTalons = List.of(leftVTalon, rightVTalon);
+		public final TimedSolenoid hopperSolenoid = new TimedSolenoid(sPortConstants.nariIndexerHopperSolenoidId, 0.8, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariIndexerBlockingSolenoidId, 0.2, true);
-		final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDio),
+		public final DigitalInput backInfrared = new DigitalInput(sPortConstants.nariIndexerBackInfraredDio),
 				frontInfrared = new DigitalInput(sPortConstants.nariIndexerFrontInfraredDio),
 				topInfrared = new DigitalInput(sPortConstants.nariIndexerTopInfraredDio);
 
 		private IndexerHardware() {
 		}
 
-		static IndexerHardware getInstance() {
+		public static IndexerHardware getInstance() {
 			if (sInstance == null) sInstance = new IndexerHardware();
 			return sInstance;
 		}
@@ -99,16 +99,16 @@ public class HardwareAdapter {
 	/**
 	 * 1 775 (controlled by Talon SRX), 2 Solenoids
 	 */
-	static class IntakeHardware {
+	public static class IntakeHardware {
 
 		private static IntakeHardware sInstance;
-		final Talon talon = new Talon(sPortConstants.nariIntakeId, "Intake");
-		final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariIntakeSolenoidId, 1.0, false);
+		public final Talon talon = new Talon(sPortConstants.nariIntakeId, "Intake");
+		public final TimedSolenoid solenoid = new TimedSolenoid(sPortConstants.nariIntakeSolenoidId, 1.0, false);
 
 		private IntakeHardware() {
 		}
 
-		static IntakeHardware getInstance() {
+		public static IntakeHardware getInstance() {
 			if (sInstance == null) sInstance = new IntakeHardware();
 			return sInstance;
 		}
@@ -117,15 +117,15 @@ public class HardwareAdapter {
 	/**
 	 * 1 WS2812B LED Strip connected to roboRIO via PWM
 	 */
-	static class LightingHardware {
+	public static class LightingHardware {
 
 		private static LightingHardware sInstance;
-		final AddressableLED ledStrip = new AddressableLED(sPortConstants.nariLightingPwmPort);
+		public final AddressableLED ledStrip = new AddressableLED(sPortConstants.nariLightingPwmPort);
 
 		private LightingHardware() {
 		}
 
-		static LightingHardware getInstance() {
+		public static LightingHardware getInstance() {
 			if (sInstance == null) sInstance = new LightingHardware();
 			return sInstance;
 		}
@@ -134,19 +134,19 @@ public class HardwareAdapter {
 	/**
 	 * 2 NEO (controlled by Spark MAX), 3 Solenoids
 	 */
-	static class ShooterHardware {
+	public static class ShooterHardware {
 
 		private static ShooterHardware sInstance;
-		final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId, "Shooter Master"),
+		public final Spark masterSpark = new Spark(sPortConstants.nariShooterMasterId, "Shooter Master"),
 				slaveSpark = new Spark(sPortConstants.nariShooterSlaveId, "Shooter Slave");
-		final CANEncoder masterEncoder = masterSpark.getEncoder();
-		final TimedSolenoid hoodSolenoid = new TimedSolenoid(sPortConstants.nariShooterHoodSolenoid, 0.4, true),
+		public final CANEncoder masterEncoder = masterSpark.getEncoder();
+		public final TimedSolenoid hoodSolenoid = new TimedSolenoid(sPortConstants.nariShooterHoodSolenoid, 0.4, true),
 				blockingSolenoid = new TimedSolenoid(sPortConstants.nariShooterBlockingSolenoidId, 0.2, false);
 
 		private ShooterHardware() {
 		}
 
-		static ShooterHardware getInstance() {
+		public static ShooterHardware getInstance() {
 			if (sInstance == null) sInstance = new ShooterHardware();
 			return sInstance;
 		}
@@ -155,16 +155,16 @@ public class HardwareAdapter {
 	/**
 	 * 1 775 (controlled by Talon SRX), 1 Color Sensor V3
 	 */
-	static class SpinnerHardware {
+	public static class SpinnerHardware {
 
 		private static SpinnerHardware sInstance = new SpinnerHardware();
-		final Talon talon = new Talon(sPortConstants.nariSpinnerId, "Spinner");
-		final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+		public final Talon talon = new Talon(sPortConstants.nariSpinnerId, "Spinner");
+		public final ColorSensorV3 colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
 		private SpinnerHardware() {
 		}
 
-		static SpinnerHardware getInstance() {
+		public static SpinnerHardware getInstance() {
 			if (sInstance == null) sInstance = new SpinnerHardware();
 			return sInstance;
 		}
@@ -173,18 +173,18 @@ public class HardwareAdapter {
 	/**
 	 * 1 Compressor, 1 PDP, 1 Fisheye USB Camera
 	 */
-	static class MiscellaneousHardware {
+	public static class MiscellaneousHardware {
 
 		private static MiscellaneousHardware sInstance;
-		final Compressor compressor = new Compressor();
-		final PowerDistributionPanel pdp = new PowerDistributionPanel();
+		public final Compressor compressor = new Compressor();
+		public final PowerDistributionPanel pdp = new PowerDistributionPanel();
 //		final UsbCamera fisheyeCam = CameraServer.getInstance().startAutomaticCapture();
 
 		private MiscellaneousHardware() {
 			compressor.stop();
 		}
 
-		static MiscellaneousHardware getInstance() {
+		public static MiscellaneousHardware getInstance() {
 			if (sInstance == null) sInstance = new MiscellaneousHardware();
 			return sInstance;
 		}
@@ -193,16 +193,16 @@ public class HardwareAdapter {
 	/**
 	 * 2 Joysticks, 1 Xbox Controller
 	 */
-	static class Joysticks {
+	public static class Joysticks {
 
 		private static final Joysticks sInstance = new Joysticks();
-		final Joystick driveStick = new Joystick(0), turnStick = new Joystick(1);
-		final XboxController operatorXboxController = new XboxController(2);
+		public final Joystick driveStick = new Joystick(0), turnStick = new Joystick(1);
+		public final XboxController operatorXboxController = new XboxController(2);
 
 		private Joysticks() {
 		}
 
-		static Joysticks getInstance() {
+		public static Joysticks getInstance() {
 			return sInstance;
 		}
 	}
