@@ -26,17 +26,8 @@ public class HardwareWriter {
 	public static final double kVoltageCompensation = 12.0;
 	public static final SupplyCurrentLimitConfiguration k30AmpCurrentLimitConfiguration = new SupplyCurrentLimitConfiguration(
 			true, 30.0, 35.0, 1.0);
-	private final RobotConfig mRobotConfig = Configs.get(RobotConfig.class);
-	private final Climber mClimber = Climber.getInstance();
-	private final Drive mDrive = Drive.getInstance();
-	private final Indexer mIndexer = Indexer.getInstance();
-	private final Intake mIntake = Intake.getInstance();
-	private final Lighting mLighting = Lighting.getInstance();
-	private final Shooter mShooter = Shooter.getInstance();
-	private final Spinner mSpinner = Spinner.getInstance();
-	private boolean mRumbleOutput;
 
-	private void configureMiscellaneousHardware() {
+	void configureMiscellaneousHardware() {
 		var hardware = HardwareAdapter.MiscellaneousHardware.getInstance();
 		hardware.pdp.clearStickyFaults();
 		hardware.compressor.clearAllPCMStickyFaults();

@@ -77,7 +77,10 @@ public class Robot extends TimedRobot {
 
 		String setupSummary = setupSubsystemsAndServices();
 
-		if (kCanUseHardware) mEnabledSubsystems.forEach(SubsystemBase::configureHardware);
+		if (kCanUseHardware) {
+			mEnabledSubsystems.forEach(SubsystemBase::configureHardware);
+			mHardwareWriter.configureMiscellaneousHardware();
+		}
 
 		mEnabledServices.forEach(RobotService::start);
 
