@@ -22,11 +22,9 @@ import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2020.util.Util;
-import com.palyrobotics.frc2020.util.commands.CommandReceiverService;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
-import com.palyrobotics.frc2020.util.http.HttpInput;
 import com.palyrobotics.frc2020.util.service.*;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
@@ -65,14 +63,14 @@ public class Robot extends TimedRobot {
 
 	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mLighting, mShooter, mSpinner),
 			mEnabledSubsystems;
-	private Set<RobotService> mServices = Set.of(new CommandReceiverService(), new NetworkLoggerService(),
-			new TelemetryService()),
-			mEnabledServices;
+	//private Set<RobotService> mServices = Set.of(new CommandReceiverService(), new NetworkLoggerService(),
+	//		new TelemetryService()),
+	//		mEnabledServices;
 
-	private NetworkLoggerService mNetworkLogger = new NetworkLoggerService();
-	private ServerService mServerService = new ServerService();
-	private GraphingService mGraphingService = new GraphingService();
-	private TelemetryService mTelemetryService = new TelemetryService();
+	//private NetworkLoggerService mNetworkLogger = new NetworkLoggerService();
+	//private ServerService mServerService = new ServerService();
+	//private GraphingService mGraphingService = new GraphingService();
+	//private TelemetryService mTelemetryService = new TelemetryService();
 
 	public Robot() {
 		super(kPeriod);
@@ -87,10 +85,10 @@ public class Robot extends TimedRobot {
 		if (kCanUseHardware) mHardwareWriter.configureHardware(mEnabledSubsystems);
 
 		//mEnabledServices.forEach(RobotService::start);
-		mServerService.start();
-		mNetworkLogger.start();
-		mGraphingService.start();
-		mTelemetryService.start();
+		//mServerService.start();
+		//mNetworkLogger.start();
+		//mGraphingService.start();
+		//mTelemetryService.start();
 
 		Log.info(kLoggerTag, setupSummary);
 
@@ -112,7 +110,8 @@ public class Robot extends TimedRobot {
 			temp = configIterator.next();
 			configJson.put(temp.toString(), new JSONObject(Configs.get(Configs.getClassFromName(temp.toString())).toString()));
 		}
-		HttpInput.getInstance().setConfigInput(configJson);
+		//HttpInput.getInstance().setConfigInput(configJson);
+		System.out.println(configJson.toString());
 		//TODO: Remove these they have unnecessary imports
 		Log.info(Configs.getActiveConfigNames().toString());
 		Log.info(Configs.get(IndexerConfig.class).toString());
@@ -211,10 +210,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		//Log.info(Configs.getActiveConfigNames().toString());
-		for (RobotService robotService : mEnabledServices) {
-			robotService.update(mRobotState, mCommands);
-		}
-		mTelemetryService.update(mRobotState, mCommands);
+		//for (RobotService robotService : mEnabledServices) {
+		//	robotService.update(mRobotState, mCommands);
+		//}
+		//mTelemetryService.update(mRobotState, mCommands);
 		LiveGraph.add("visionEstimatedDistance", mLimelight.getEstimatedDistanceInches());
 		LiveGraph.add("isEnabled", isEnabled());
 		mOperatorInterface.resetPeriodic(mCommands);
@@ -321,10 +320,10 @@ public class Robot extends TimedRobot {
 
 	private String setupSubsystemsAndServices() {
 		// TODO: same logic twice in a row
-		Map<String, RobotService> configToService = mServices.stream()
-				.collect(Collectors.toUnmodifiableMap(RobotService::getConfigName, Function.identity()));
-		mEnabledServices = mConfig.enabledServices.stream().map(configToService::get)
-				.collect(Collectors.toUnmodifiableSet());
+//		Map<String, RobotService> configToService = mServices.stream()
+//				.collect(Collectors.toUnmodifiableMap(RobotService::getConfigName, Function.identity()));
+//		mEnabledServices = mConfig.enabledServices.stream().map(configToService::get)
+//				.collect(Collectors.toUnmodifiableSet());
 		Map<String, SubsystemBase> configToSubsystem = mSubsystems.stream()
 				.collect(Collectors.toUnmodifiableMap(SubsystemBase::getName, Function.identity()));
 		mEnabledSubsystems = mConfig.enabledSubsystems.stream().map(configToSubsystem::get)
@@ -339,9 +338,9 @@ public class Robot extends TimedRobot {
 		summaryBuilder.append("=================\n");
 		summaryBuilder.append("Enabled services:\n");
 		summaryBuilder.append("-----------------\n");
-		for (RobotService enabledService : mEnabledServices) {
-			summaryBuilder.append(enabledService.getConfigName()).append("\n");
-		}
+//		for (RobotService enabledService : mEnabledServices) {
+//			summaryBuilder.append(enabledService.getConfigName()).append("\n");
+//		}
 		return summaryBuilder.toString();
 	}
 

@@ -29,12 +29,13 @@ public class ConfigUploadManager {
 		}
 	}
 
-	private boolean update() throws IllegalAccessException, NoSuchFieldException {
+	public boolean update() throws IllegalAccessException, NoSuchFieldException {
 		if (!config.isEmpty()) {
 			Iterator<String> keys = new JSONObject(config.get("config")).keys();
 
 			while (keys.hasNext()) {
 				String currentKey = keys.next();
+				System.out.println(currentKey);
 				JSONObject currentConfig = new JSONObject(config.get(currentKey));
 				Class<? extends ConfigBase> configClass = Configs.getClassFromName(currentKey);
 				ConfigBase configObject = Configs.get(configClass);
@@ -57,6 +58,7 @@ public class ConfigUploadManager {
 
 			return true;
 		} else {
+			System.out.println("idk");
 			return false;
 		}
 	}

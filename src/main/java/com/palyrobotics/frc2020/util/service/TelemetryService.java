@@ -10,6 +10,7 @@ import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.http.HttpInput;
 import com.palyrobotics.frc2020.util.http.LightHttpServer;
+
 import org.json.JSONObject;
 
 public class TelemetryService extends ServerServiceBase {
@@ -41,6 +42,11 @@ public class TelemetryService extends ServerServiceBase {
 	}
 
 	@Override
+	public void start() {
+
+	}
+
+	@Override
 	public void update(@ReadOnly RobotState state, @ReadOnly Commands commands) {
 		if (LightHttpServer.getServer().getConnected()) {
 			mTelemetry.state = state;
@@ -51,7 +57,6 @@ public class TelemetryService extends ServerServiceBase {
 			} catch (JsonProcessingException ignored) {
 			}
 		}
-		
 
 	}
 }

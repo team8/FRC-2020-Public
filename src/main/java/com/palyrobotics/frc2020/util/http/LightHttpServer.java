@@ -24,8 +24,9 @@ public class LightHttpServer implements Runnable {
 	@Override
 	public void run() {
 		try {
+			configManager.update();
 			runServer();
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException e) {
 			e.printStackTrace();
 		}
 	}
