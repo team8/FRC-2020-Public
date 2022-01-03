@@ -67,9 +67,9 @@ public class Robot extends TimedRobot {
 	//		new TelemetryService()),
 	//		mEnabledServices;
 
-	//private NetworkLoggerService mNetworkLogger = new NetworkLoggerService();
-	//private ServerService mServerService = new ServerService();
-	//private GraphingService mGraphingService = new GraphingService();
+	private NetworkLoggerService mNetworkLogger = new NetworkLoggerService();
+	private ServerService mServerService = new ServerService();
+	private GraphingService mGraphingService = new GraphingService();
 	//private TelemetryService mTelemetryService = new TelemetryService();
 
 	public Robot() {
@@ -85,9 +85,9 @@ public class Robot extends TimedRobot {
 		if (kCanUseHardware) mHardwareWriter.configureHardware(mEnabledSubsystems);
 
 		//mEnabledServices.forEach(RobotService::start);
-		//mServerService.start();
-		//mNetworkLogger.start();
-		//mGraphingService.start();
+		mServerService.start();
+		mNetworkLogger.start();
+		mGraphingService.start();
 		//mTelemetryService.start();
 
 		Log.info(kLoggerTag, setupSummary);

@@ -14,7 +14,8 @@ public class HttpInput {
 	private JSONObject telemetryInput = new JSONObject();
 
 	private HttpInput() {
-
+		output.put("telemetry", telemetryInput);
+		output.put("config", configInput);
 	}
 
 	public static HttpInput getInstance() {
