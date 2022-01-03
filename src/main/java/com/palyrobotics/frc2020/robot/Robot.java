@@ -22,9 +22,12 @@ import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2020.util.Util;
+import com.palyrobotics.frc2020.util.config.ConfigUploadManager;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
+import com.palyrobotics.frc2020.util.http.HttpInput;
+import com.palyrobotics.frc2020.util.http.LightHttpServer;
 import com.palyrobotics.frc2020.util.service.*;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
@@ -110,7 +113,8 @@ public class Robot extends TimedRobot {
 			temp = configIterator.next();
 			configJson.put(temp.toString(), new JSONObject(Configs.get(Configs.getClassFromName(temp.toString())).toString()));
 		}
-		//HttpInput.getInstance().setConfigInput(configJson);
+		HttpInput.getInstance().setConfigInput(configJson);
+		ConfigUploadManager.getInstance().updateConfig(configJson);
 		System.out.println(configJson.toString());
 		//TODO: Remove these they have unnecessary imports
 		Log.info(Configs.getActiveConfigNames().toString());
@@ -214,6 +218,7 @@ public class Robot extends TimedRobot {
 		//	robotService.update(mRobotState, mCommands);
 		//}
 		//mTelemetryService.update(mRobotState, mCommands);
+		LightHttpServer.getServer().run();
 		LiveGraph.add("visionEstimatedDistance", mLimelight.getEstimatedDistanceInches());
 		LiveGraph.add("isEnabled", isEnabled());
 		mOperatorInterface.resetPeriodic(mCommands);

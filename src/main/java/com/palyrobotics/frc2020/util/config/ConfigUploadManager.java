@@ -16,8 +16,13 @@ import org.json.JSONObject;
 public class ConfigUploadManager {
 
 	private JSONObject config = new JSONObject();
+	private static ConfigUploadManager mUploadManager = new ConfigUploadManager();
 
-	public ConfigUploadManager() {
+	private ConfigUploadManager() {
+	}
+
+	public static ConfigUploadManager getInstance() {
+		return mUploadManager;
 	}
 
 	public void updateConfig(JSONObject newConfig) {

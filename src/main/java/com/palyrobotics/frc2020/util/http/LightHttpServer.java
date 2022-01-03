@@ -19,12 +19,11 @@ public class LightHttpServer implements Runnable {
 	private static boolean connected = false;
 	private static int port;
 	private static LightHttpServer sInstance = new LightHttpServer();
-	private static ConfigUploadManager configManager = new ConfigUploadManager();
 
 	@Override
 	public void run() {
 		try {
-			configManager.update();
+			ConfigUploadManager.getInstance().update();
 			runServer();
 		} catch (IOException | InterruptedException | IllegalAccessException | NoSuchFieldException e) {
 			e.printStackTrace();
@@ -81,7 +80,7 @@ public class LightHttpServer implements Runnable {
 				}
 				config = new JSONObject(body.toString());
 
-				configManager.updateConfig(config);
+				ConfigUploadManager.getInstance().updateConfig(config);
 			}
 
 			// src/main/deploy/ << deploy folder
