@@ -113,9 +113,9 @@ public class Robot extends TimedRobot {
 			temp = configIterator.next();
 			configJson.put(temp.toString(), new JSONObject(Configs.get(Configs.getClassFromName(temp.toString())).toString()));
 		}
+		Log.info(configJson.toString());
 		HttpInput.getInstance().setConfigInput(configJson);
 		ConfigUploadManager.getInstance().updateConfig(configJson);
-		System.out.println(configJson.toString());
 		//TODO: Remove these they have unnecessary imports
 		Log.info(Configs.getActiveConfigNames().toString());
 		Log.info(Configs.get(IndexerConfig.class).toString());
