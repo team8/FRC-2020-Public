@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
 	private NetworkLoggerService mNetworkLogger = new NetworkLoggerService();
 	private ServerService mServerService = new ServerService();
 	private GraphingService mGraphingService = new GraphingService();
-	//private TelemetryService mTelemetryService = new TelemetryService();
+	private TelemetryService mTelemetryService = new TelemetryService();
 
 	public Robot() {
 		super(kPeriod);
@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
 		mServerService.start();
 		mNetworkLogger.start();
 		mGraphingService.start();
-		//mTelemetryService.start();
+		mTelemetryService.start();
 
 		Log.info(kLoggerTag, setupSummary);
 

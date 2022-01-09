@@ -43,7 +43,11 @@ public class TelemetryService extends ServerServiceBase {
 
 	@Override
 	public void start() {
-
+		try {
+			String json = Configs.getMapper().writeValueAsString(mTelemetry);
+			HttpInput.getInstance().setTelemetry(new JSONObject(json));
+		} catch (JsonProcessingException ignored) {
+		}
 	}
 
 	@Override
