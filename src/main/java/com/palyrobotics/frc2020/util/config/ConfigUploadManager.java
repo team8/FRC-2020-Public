@@ -1,5 +1,7 @@
 package com.palyrobotics.frc2020.util.config;
 
+import static java.util.Objects.isNull;
+
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.*;
@@ -74,6 +76,8 @@ public class ConfigUploadManager {
 							} catch (Exception e) {
 								System.out.println(e);
 							}*/
+						} else if (isNull(currentConfig.get(temp))) {
+							Log.debug("NULL VALUE ENCOUNTERED");
 						} else {
 							Configs.set(configObject, configObject, field, field.getType().getName() == "double" ? ((BigDecimal) currentConfig.get(temp)).doubleValue() : currentConfig.get(temp));
 						}

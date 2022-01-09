@@ -37,7 +37,7 @@ public class NetworkLoggerService extends ServerServiceBase implements RobotServ
 				}
 			} else {
 				tThread.run();
-				LightHttpServer.getServer().run();
+				//LightHttpServer.getServer().run();
 			}
 		}
 	};
