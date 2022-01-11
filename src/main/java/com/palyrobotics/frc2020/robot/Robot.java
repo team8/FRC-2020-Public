@@ -10,9 +10,7 @@ import java.util.stream.Collectors;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.esotericsoftware.minlog.Log;
-import com.palyrobotics.frc2020.auto.ShootThreeLeaveInitiationLine;
 import com.palyrobotics.frc2020.auto.StartCenterFriendlyTrenchThreeShootThree;
-import com.palyrobotics.frc2020.auto.TrenchStealTwoShootFive;
 import com.palyrobotics.frc2020.behavior.MultipleRoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineBase;
 import com.palyrobotics.frc2020.behavior.RoutineManager;
@@ -26,6 +24,7 @@ import com.palyrobotics.frc2020.util.commands.CommandReceiverService;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
+import com.palyrobotics.frc2020.util.dashboard.ShuffleboardWriter;
 import com.palyrobotics.frc2020.util.service.NetworkLoggerService;
 import com.palyrobotics.frc2020.util.service.RobotService;
 import com.palyrobotics.frc2020.util.service.TelemetryService;
@@ -37,8 +36,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 public class Robot extends TimedRobot {
@@ -70,7 +67,7 @@ public class Robot extends TimedRobot {
 			new TelemetryService()),
 			mEnabledServices;
 
-	private SendableChooser<RoutineBase> mChooser = new SendableChooser<>();
+	private ShuffleboardWriter mShuffleboard = new ShuffleboardWriter();
 
 	public Robot() {
 		super(kPeriod);
@@ -101,10 +98,6 @@ public class Robot extends TimedRobot {
 			mLighting.update(mCommands, mRobotState);
 			mLighting.writeHardware(mRobotState);
 		}
-
-		mChooser.setDefaultOption("ShootThreeLeaveInitiationLine", new ShootThreeLeaveInitiationLine().getRoutine());
-		mChooser.addOption("TrenchStealTwoShootFive", new TrenchStealTwoShootFive().getRoutine());
-		SmartDashboard.putData(mChooser);
 	}
 
 	@Override
@@ -169,12 +162,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		startStage(RobotState.GamePeriod.AUTO);
-		mCommands.addWantedRoutine(mChooser.getSelected());
-
-//		mCommands.addWantedRoutine(new ShootThreeLeaveInitiationLine().getRoutine());
-//		mCommands.addWantedRoutine(new StartCenterFriendlyTrenchThreeShootThree().getRoutine());
-//		mCommands.addWantedRoutine(new TrenchStealTwoShootFive().getRoutine());
-//		mCommands.addWantedRoutine(new StartCenterFriendlyTrenchThreeShootThree().getRoutine());
+		mCommands.addWantedRoutine(mShuffleboard.getSelectedAuto());
 	}
 
 	private void startStage(RobotState.GamePeriod period) {
