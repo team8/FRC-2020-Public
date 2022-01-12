@@ -3,22 +3,23 @@ package com.palyrobotics.frc2020.behavior.routines.superstructure;
 import java.util.Set;
 
 import com.palyrobotics.frc2020.behavior.TimeoutRoutineBase;
+import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.subsystems.Indexer;
 import com.palyrobotics.frc2020.subsystems.Indexer.BeltState;
 import com.palyrobotics.frc2020.subsystems.SubsystemBase;
+import com.palyrobotics.frc2020.util.config.Configs;
 
 public class IndexerTimeRoutine extends TimeoutRoutineBase {
 
 	boolean goBackwards = false;
-
 	public IndexerTimeRoutine(double durationSeconds) {
 		super(durationSeconds);
 	}
 
-	public IndexerTimeRoutine(double durationSeconds, boolean backwards) {
+	public IndexerTimeRoutine(double durationSeconds, boolean backwards){
 		super(durationSeconds);
 		goBackwards = backwards;
 	}
@@ -30,10 +31,10 @@ public class IndexerTimeRoutine extends TimeoutRoutineBase {
 
 	@Override
 	protected void update(Commands commands, @ReadOnly RobotState state) {
-		if (!goBackwards) {
+		if(!goBackwards){
 			commands.indexerWantedBeltState = BeltState.INDEX;
 			commands.indexerWantedHopperState = Indexer.HopperState.CLOSED;
-		} else {
+		}else{
 			//commands.indexerManualVelocity = 0.2 * Configs.get(IndexerConfig.class).feedingOutput;
 			//commands.indexerWantedBeltState = BeltState.MANUAL;
 			commands.indexerWantedBeltState = BeltState.REVERSING;
