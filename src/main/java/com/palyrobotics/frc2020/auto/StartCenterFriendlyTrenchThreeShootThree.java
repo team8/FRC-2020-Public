@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.util.Units;
 
 /**
- * Start by aligning center of the bot to the center of the tower target, then backing up slowoly and also make sure that just the
- * front bumper extends past the white line.
+ * Start by aligning center of the bot to the center of the tower target, then backing up slowoly
+ * and also make sure that just the front bumper extends past the white line.
  */
 
 //50% gucci (maybe not gucci)
