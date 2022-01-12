@@ -8,6 +8,10 @@ import com.palyrobotics.frc2020.robot.Commands;
 import com.palyrobotics.frc2020.robot.ReadOnly;
 import com.palyrobotics.frc2020.robot.RobotState;
 import com.palyrobotics.frc2020.util.config.Configs;
+import com.palyrobotics.frc2020.util.http.HttpInput;
+import com.palyrobotics.frc2020.util.http.LightHttpServer;
+
+import org.json.JSONObject;
 
 public class TelemetryService extends ServerServiceBase {
 
@@ -27,8 +31,8 @@ public class TelemetryService extends ServerServiceBase {
 	}
 
 	@Override
-	int getPort() {
-		return 5807;
+	public int getPort() {
+		return 4000;
 	}
 
 	public static void putArbitrary(String name, Object value) {
@@ -38,15 +42,21 @@ public class TelemetryService extends ServerServiceBase {
 	}
 
 	@Override
+	public void start() {
+
+	}
+
+	@Override
 	public void update(@ReadOnly RobotState state, @ReadOnly Commands commands) {
-		if (mServer.getConnections().length > 0) {
+		if (LightHttpServer.getServer().getConnected()) {
 			mTelemetry.state = state;
 			mTelemetry.commands = commands;
 			try {
 				String json = Configs.getMapper().writeValueAsString(mTelemetry);
-				mServer.sendToAllUDP(json);
+				HttpInput.getInstance().setTelemetry(new JSONObject(json));
 			} catch (JsonProcessingException ignored) {
 			}
 		}
+
 	}
 }
