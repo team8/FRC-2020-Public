@@ -12,8 +12,8 @@ public class WebService implements Runnable {
 		Process process = null;
 		try {
 			System.out.println("web setup beginning");
-			process = Runtime.getRuntime().exec("npm i", null, new File("src/main/java/com/palyrobotics/frc2020/util/http/Control-Center-2"));
-			process = Runtime.getRuntime().exec("npm run dev", null, new File("src/main/java/com/palyrobotics/frc2020/util/http/Control-Center-2"));
+			process = Runtime.getRuntime().exec("python3 -m http.server", null, new File("/home/lvuser/deploy/out"));
+
 			System.out.println("web setup complete");
 		} catch (IOException e) {
 			e.printStackTrace();

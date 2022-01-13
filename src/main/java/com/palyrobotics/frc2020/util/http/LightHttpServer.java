@@ -92,7 +92,7 @@ public class LightHttpServer implements Runnable {
 				if (isPost) {
 					pout.print(
 							"HTTP/1.0 200 OK" + newLine +
-									"Access-Control-Allow-Origin: http://localhost:3000" + newLine +
+									"Access-Control-Allow-Origin: http://10.0.8.2:8000" + newLine +
 									"Content-Type: application/json" + newLine +
 									"Date: " + new Date() + newLine +
 									"Content-length: " + config.toString().length() + newLine + newLine +
@@ -110,7 +110,7 @@ public class LightHttpServer implements Runnable {
 
 					pout.print(
 							"HTTP/1.0 200 OK" + newLine +
-									"Access-Control-Allow-Origin: http://localhost:3000" + newLine +
+									"Access-Control-Allow-Origin: *" + newLine +
 									"Content-Type: text/plain" + newLine +
 									"Date: " + new Date() + newLine +
 									"Content-length: " + lastInput.toString().length() + newLine + newLine +
