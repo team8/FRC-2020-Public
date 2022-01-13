@@ -14,7 +14,7 @@ public class WebService implements Runnable, RobotService {
 		Process process = null;
 		try {
 			Log.info("Beginning Website Setup");
-			process = Runtime.getRuntime().exec("python3 -m http.server", null, new File("/home/lvuser/deploy/out"));
+			process = Runtime.getRuntime().exec("python3 -m http.server", null, new File("/home/lvuser/deploy/website"));
 			Log.info("Finished Website Setup");
 		} catch (IOException e) {
 			e.printStackTrace();
