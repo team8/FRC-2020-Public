@@ -9,7 +9,7 @@ import org.json.*;
 
 public class InputThread implements Runnable {
 
-	private Thread tThread;
+	private Thread mThread;
 	private JSONObject json = new JSONObject();
 	private ArrayList<LogEntry> logs = new ArrayList<>();
 	private JSONArray array = new JSONArray();
@@ -19,7 +19,6 @@ public class InputThread implements Runnable {
 
 	@Override
 	public void run() {
-		//addLog(new LogEntry((long) time, 1, null, "test", null));
 		array.clear();
 		for (int i = 0; i < logs.size(); i++) {
 			array.put(logs.get(i).toString());
@@ -31,7 +30,6 @@ public class InputThread implements Runnable {
 		} else if (dataType.equals("chart")) {
 			HttpInput.getInstance().setChartInput(json);
 		}
-		//}
 
 	}
 
@@ -41,9 +39,9 @@ public class InputThread implements Runnable {
 
 	public void start(String sendType) {
 		dataType = sendType;
-		if (tThread == null) {
-			tThread = new Thread(this, "inputThread");
-			tThread.start();
+		if (mThread == null) {
+			mThread = new Thread(this, "inputThread");
+			mThread.start();
 		}
 	}
 }

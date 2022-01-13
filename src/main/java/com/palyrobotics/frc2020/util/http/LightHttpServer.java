@@ -57,11 +57,8 @@ public class LightHttpServer implements Runnable {
 			OutputStream out = new BufferedOutputStream(connection.getOutputStream());
 			PrintStream pout = new PrintStream(out);
 
-			// read first line of request
 			String request = in.readLine();
-			//if (request == null) continue;
 
-			// we ignore the rest
 			String ignore = "";
 			boolean isPost = request.startsWith("POST");
 			int contentLength = 0;
@@ -86,19 +83,17 @@ public class LightHttpServer implements Runnable {
 			// src/main/deploy/ << deploy folder
 
 			if (!(request.startsWith("GET ") || request.startsWith("POST ")) || !(request.endsWith(" HTTP/1.0") || request.endsWith(" HTTP/1.1"))) {
-				// bad request
 				pout.print("HTTP/1.0 400 Bad Request" + newLine + newLine);
 			} else {
 				if (isPost) {
 					pout.print(
 							"HTTP/1.0 200 OK" + newLine +
-									"Access-Control-Allow-Origin: http://10.0.8.2:8000" + newLine +
+									"Access-Control-Allow-Origin: *" + newLine +
 									"Content-Type: application/json" + newLine +
 									"Date: " + new Date() + newLine +
 									"Content-length: " + config.toString().length() + newLine + newLine +
 									config.toString());
 				} else {
-					System.out.println("GET REQUEST");
 					JSONObject response = getInstance().getInput();
 
 					Iterator<String> responseKeys = response.keys();
@@ -122,7 +117,6 @@ public class LightHttpServer implements Runnable {
 		} catch (Throwable tri) {
 			System.err.println("Error handling request: " + tri);
 		}
-		//}
 	}
 
 	public void start() {

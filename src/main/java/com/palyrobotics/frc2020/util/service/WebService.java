@@ -3,7 +3,9 @@ package com.palyrobotics.frc2020.util.service;
 import java.io.File;
 import java.io.IOException;
 
-public class WebService implements Runnable {
+import com.esotericsoftware.minlog.Log;
+
+public class WebService implements Runnable, RobotService {
 
 	private Thread webThread;
 
@@ -11,10 +13,9 @@ public class WebService implements Runnable {
 	public void run() {
 		Process process = null;
 		try {
-			System.out.println("web setup beginning");
+			Log.info("Beginning Website Setup");
 			process = Runtime.getRuntime().exec("python3 -m http.server", null, new File("/home/lvuser/deploy/out"));
-
-			System.out.println("web setup complete");
+			Log.info("Finished Website Setup");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

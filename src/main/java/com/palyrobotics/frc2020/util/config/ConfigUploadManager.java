@@ -53,7 +53,6 @@ public class ConfigUploadManager {
 				while (configKeys.hasNext()) {
 					String temp = configKeys.next();
 					Field field = getField(configClass, temp);
-//					Object newFieldValue = sMapper.readValue((String) currentConfig.get(temp), field.getType());
 					try {
 						if (field.getType().getName() == "com.palyrobotics.frc2020.util.control.Gains") {
 							JSONObject internalJson = (JSONObject) currentConfig.get(temp);
@@ -64,25 +63,12 @@ public class ConfigUploadManager {
 							ProfiledGains tGains = new ProfiledGains(internalJson.getBigDecimal("p").doubleValue(), internalJson.getBigDecimal("i").doubleValue(), internalJson.getBigDecimal("d").doubleValue(), internalJson.getBigDecimal("f").doubleValue(), internalJson.getBigDecimal("iZone").doubleValue(), internalJson.getBigDecimal("iMax").doubleValue(), internalJson.getBigDecimal("acceleration").doubleValue(), internalJson.getBigDecimal("velocity").doubleValue(), internalJson.getBigDecimal("allowableError").doubleValue(), internalJson.getBigDecimal("minimumOutputVelocity").doubleValue());
 							Configs.set(configObject, configObject, field, tGains);
 						} else if (field.getType().getName() == "java.util.List") {
-							/*try {
-								List<Integer> tJsonList = new ArrayList(Arrays.asList((JSONArray) currentConfig.get(temp)));
-								Configs.set(configObject, configObject, field, tJsonList);
-							} catch (Exception e) {
-								System.out.println(e);
-							}
-							try {
-								List<String> tJsonList = new ArrayList(Arrays.asList((JSONArray) currentConfig.get(temp)));
-								Configs.set(configObject, configObject, field, tJsonList);
-							} catch (Exception e) {
-								System.out.println(e);
-							}*/
 						} else if (isNull(currentConfig.get(temp))) {
 							Log.debug("NULL VALUE ENCOUNTERED");
 						} else {
 							Configs.set(configObject, configObject, field, field.getType().getName() == "double" ? ((BigDecimal) currentConfig.get(temp)).doubleValue() : currentConfig.get(temp));
 						}
 					} catch (Exception e) {
-						System.out.println(e);
 					}
 					Configs.save(configClass);
 				}

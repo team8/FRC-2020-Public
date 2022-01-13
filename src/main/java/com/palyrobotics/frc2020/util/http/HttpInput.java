@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 public class HttpInput {
 
-	private String input = null;
 	private JSONObject output = new JSONObject();
 	private JSONObject logInput = new JSONObject();
 	private JSONObject chartInput = new JSONObject();
@@ -23,10 +22,6 @@ public class HttpInput {
 	}
 
 	private static HttpInput sHttpInput = new HttpInput();
-
-	public void setInput(String newInput) {
-		input = newInput;
-	}
 
 	public void setChartInput(JSONObject newInput) {
 		chartInput = newInput;

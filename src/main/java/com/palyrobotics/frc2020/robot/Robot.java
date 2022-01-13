@@ -63,15 +63,9 @@ public class Robot extends TimedRobot {
 
 	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mLighting, mShooter, mSpinner),
 			mEnabledSubsystems;
-	//private Set<RobotService> mServices = Set.of(new CommandReceiverService(), new NetworkLoggerService(),
-	//		new TelemetryService()),
-	//		mEnabledServices;
-
-	private NetworkLoggerService mNetworkLogger = new NetworkLoggerService();
-	private ServerService mServerService = new ServerService();
-	private GraphingService mGraphingService = new GraphingService();
-	private TelemetryService mTelemetryService = new TelemetryService();
-	private WebService mWebsite = new WebService();
+	private Set<RobotService> mServices = Set.of(new ServerService(), new NetworkLoggerService(),
+			new GraphingService(), new TelemetryService(), new WebService()),
+			mEnabledServices;
 
 	public Robot() {
 		super(kPeriod);
@@ -85,12 +79,7 @@ public class Robot extends TimedRobot {
 
 		if (kCanUseHardware) mHardwareWriter.configureHardware(mEnabledSubsystems);
 
-		//mEnabledServices.forEach(RobotService::start);
-		mServerService.start();
-		mNetworkLogger.start();
-		mGraphingService.start();
-		mTelemetryService.start();
-		mWebsite.start();
+		mServices.forEach(RobotService::start);
 
 		Log.info(kLoggerTag, setupSummary);
 
