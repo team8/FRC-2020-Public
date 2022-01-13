@@ -1,9 +1,6 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -74,6 +71,7 @@ public class Robot extends TimedRobot {
 	private ServerService mServerService = new ServerService();
 	private GraphingService mGraphingService = new GraphingService();
 	private TelemetryService mTelemetryService = new TelemetryService();
+	private WebService mWebsite = new WebService();
 
 	public Robot() {
 		super(kPeriod);
@@ -92,6 +90,7 @@ public class Robot extends TimedRobot {
 		mNetworkLogger.start();
 		mGraphingService.start();
 		mTelemetryService.start();
+		mWebsite.start();
 
 		Log.info(kLoggerTag, setupSummary);
 
