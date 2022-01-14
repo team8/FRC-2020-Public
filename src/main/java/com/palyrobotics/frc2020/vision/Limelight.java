@@ -24,7 +24,6 @@ public class Limelight {
 
 	private static Limelight sInstance = new Limelight();
 	private NetworkTable mTable;
-	private double[] mZeroArray = new double[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 	public Limelight() {
 		mTable = sNetworkTableInstance.getTable("limelight");
@@ -106,27 +105,6 @@ public class Limelight {
 			entry.setValue(ledMode.getValue());
 			sNetworkTableInstance.flush();
 		}
-	}
-
-	public void printKeys() {
-		Iterator<String> keyIterator = mTable.getKeys().iterator();
-		String str = "";
-		while (keyIterator.hasNext()) {
-			str += keyIterator.next() + ", ";
-		}
-		System.out.println(str);
-	}
-
-	public void printDebug() {
-		double[] xCorners = mTable.getEntry("tcornx").getDoubleArray(mZeroArray);
-		double[] yCorners = mTable.getEntry("tcorny").getDoubleArray(mZeroArray);
-		double tx = mTable.getEntry("tx").getDouble(0.0);
-		String string = "";
-		for (int i = 0; i < xCorners.length; i++) {
-			string += "(" + xCorners[i] + ", " + yCorners[i] + "), ";
-		}
-		string = Double.toString(tx);
-		System.out.println(string);
 	}
 
 	/**
