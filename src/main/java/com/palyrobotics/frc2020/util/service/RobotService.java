@@ -7,6 +7,14 @@ import com.palyrobotics.frc2020.util.Util;
 
 public interface RobotService {
 
+	default void run() {
+
+	}
+
+	default void out() {
+
+	}
+
 	default void start() {
 	}
 

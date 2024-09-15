@@ -1,9 +1,6 @@
 package com.palyrobotics.frc2020.robot;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,16 +17,17 @@ import com.palyrobotics.frc2020.behavior.RoutineManager;
 import com.palyrobotics.frc2020.behavior.routines.drive.DrivePathRoutine;
 import com.palyrobotics.frc2020.behavior.routines.drive.DriveSetOdometryRoutine;
 import com.palyrobotics.frc2020.config.RobotConfig;
+import com.palyrobotics.frc2020.config.subsystem.IndexerConfig;
 import com.palyrobotics.frc2020.subsystems.*;
 import com.palyrobotics.frc2020.util.LoopOverrunDebugger;
 import com.palyrobotics.frc2020.util.Util;
-import com.palyrobotics.frc2020.util.commands.CommandReceiverService;
+import com.palyrobotics.frc2020.util.config.ConfigUploadManager;
 import com.palyrobotics.frc2020.util.config.Configs;
 import com.palyrobotics.frc2020.util.csvlogger.CSVWriter;
 import com.palyrobotics.frc2020.util.dashboard.LiveGraph;
-import com.palyrobotics.frc2020.util.service.NetworkLoggerService;
-import com.palyrobotics.frc2020.util.service.RobotService;
-import com.palyrobotics.frc2020.util.service.TelemetryService;
+import com.palyrobotics.frc2020.util.http.HttpInput;
+import com.palyrobotics.frc2020.util.http.LightHttpServer;
+import com.palyrobotics.frc2020.util.service.*;
 import com.palyrobotics.frc2020.vision.Limelight;
 import com.palyrobotics.frc2020.vision.LimelightControlMode;
 
@@ -39,6 +37,8 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+
+import org.json.JSONObject;
 
 public class Robot extends TimedRobot {
 
@@ -65,8 +65,8 @@ public class Robot extends TimedRobot {
 
 	private Set<SubsystemBase> mSubsystems = Set.of(mClimber, mDrive, mIndexer, mIntake, mLighting, mShooter, mSpinner),
 			mEnabledSubsystems;
-	private Set<RobotService> mServices = Set.of(new CommandReceiverService(), new NetworkLoggerService(),
-			new TelemetryService()),
+	private Set<RobotService> mServices = Set.of(new ServerService(), new NetworkLoggerService(),
+			new GraphingService(), new TelemetryService(), new WebService()),
 			mEnabledServices;
 
 	public Robot() {
@@ -81,7 +81,7 @@ public class Robot extends TimedRobot {
 
 		if (kCanUseHardware) mHardwareWriter.configureHardware(mEnabledSubsystems);
 
-		mEnabledServices.forEach(RobotService::start);
+		mServices.forEach(RobotService::start);
 
 		Log.info(kLoggerTag, setupSummary);
 
@@ -95,6 +95,20 @@ public class Robot extends TimedRobot {
 			mLighting.update(mCommands, mRobotState);
 			mHardwareWriter.updateLighting();
 		}
+
+		Iterator configIterator = Configs.getActiveConfigNames().iterator();
+		JSONObject configJson = new JSONObject();
+		Object temp;
+		while (configIterator.hasNext()) {
+			temp = configIterator.next();
+			configJson.put(temp.toString(), new JSONObject(Configs.get(Configs.getClassFromName(temp.toString())).toString()));
+		}
+		Log.info(configJson.toString());
+		HttpInput.getInstance().setConfigInput(configJson);
+		ConfigUploadManager.getInstance().updateConfig(configJson);
+		//TODO: Remove these they have unnecessary imports
+		Log.info(Configs.getActiveConfigNames().toString());
+		Log.info(Configs.get(IndexerConfig.class).toString());
 	}
 
 	@Override
@@ -192,9 +206,12 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void robotPeriodic() {
-		for (RobotService robotService : mEnabledServices) {
-			robotService.update(mRobotState, mCommands);
-		}
+		//Log.info(Configs.getActiveConfigNames().toString());
+		//for (RobotService robotService : mEnabledServices) {
+		//	robotService.update(mRobotState, mCommands);
+		//}
+		//mTelemetryService.update(mRobotState, mCommands);
+		LightHttpServer.getServer().run();
 		LiveGraph.add("visionEstimatedDistance", mLimelight.getEstimatedDistanceInches());
 		LiveGraph.add("isEnabled", isEnabled());
 		mOperatorInterface.resetPeriodic(mCommands);
@@ -301,10 +318,10 @@ public class Robot extends TimedRobot {
 
 	private String setupSubsystemsAndServices() {
 		// TODO: same logic twice in a row
-		Map<String, RobotService> configToService = mServices.stream()
-				.collect(Collectors.toUnmodifiableMap(RobotService::getConfigName, Function.identity()));
-		mEnabledServices = mConfig.enabledServices.stream().map(configToService::get)
-				.collect(Collectors.toUnmodifiableSet());
+//		Map<String, RobotService> configToService = mServices.stream()
+//				.collect(Collectors.toUnmodifiableMap(RobotService::getConfigName, Function.identity()));
+//		mEnabledServices = mConfig.enabledServices.stream().map(configToService::get)
+//				.collect(Collectors.toUnmodifiableSet());
 		Map<String, SubsystemBase> configToSubsystem = mSubsystems.stream()
 				.collect(Collectors.toUnmodifiableMap(SubsystemBase::getName, Function.identity()));
 		mEnabledSubsystems = mConfig.enabledSubsystems.stream().map(configToSubsystem::get)
@@ -319,9 +336,9 @@ public class Robot extends TimedRobot {
 		summaryBuilder.append("=================\n");
 		summaryBuilder.append("Enabled services:\n");
 		summaryBuilder.append("-----------------\n");
-		for (RobotService enabledService : mEnabledServices) {
-			summaryBuilder.append(enabledService.getConfigName()).append("\n");
-		}
+//		for (RobotService enabledService : mEnabledServices) {
+//			summaryBuilder.append(enabledService.getConfigName()).append("\n");
+//		}
 		return summaryBuilder.toString();
 	}
 
